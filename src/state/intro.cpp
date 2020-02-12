@@ -44,11 +44,13 @@ float CITY_SHIP_SHOT_2     = 22.2f;
 float CITY_SHIP_SHOT_3     = 24.5f;
 float CITY_SHIP_SHOT_4     = 24.7f;
 float CITY_SHIP_SHOT_TIME  = 0.1f;
-float CITY_SHIP_START_Y    = 260;
-float CITY_SHIP_END_Y      = 210;
+float CITY_SHIP_START_Y    = 260.f;
+float CITY_SHIP_END_Y      = 210.f;
 
 float SP_SHIP_STOP         = 14.f;
 float SP_SHIP_MAX_SCALE    = 1.8f;
+float SP_SHIP_START_Y      = 200.f;
+float SP_SHIP_END_Y        = 240.f;
 
 const float MAX_TEXT_TIME = 3.8;
 
@@ -187,7 +189,8 @@ void Intro::update(float delta) {
                 float fly_progress = time / SP_SHIP_STOP;
                 fly_progress = fly_progress > 0 ? fly_progress : 0;
                 float ship_scale = (1.f - fly_progress) * SP_SHIP_MAX_SCALE;
-                draw_manager.draw(id_sp_ship, IMG_INTRO_SH2_SHIP, {440, 230, 0.5, 0.5, ship_scale});
+                int ship_y = SP_SHIP_START_Y + (int)((SP_SHIP_END_Y - SP_SHIP_START_Y) * fly_progress);
+                draw_manager.draw(id_sp_ship, IMG_INTRO_SH2_SHIP, {440, ship_y, 0.5, 0.5, ship_scale});
             }
 
             draw_text();
