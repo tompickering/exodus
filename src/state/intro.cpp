@@ -155,7 +155,7 @@ void Intro::update(float delta) {
 
                 int ship_y = CITY_SHIP_START_Y + (int)((CITY_SHIP_END_Y - CITY_SHIP_START_Y) * fly_progress);
 
-                draw_manager.draw(id_city_ship, ship, {10 + SCREEN_WIDTH / 2, ship_y, 0.5, 0.5, ship_scale});
+                draw_manager.draw(id_city_ship, ship, {10 + SCREEN_WIDTH / 2, ship_y, 0.5, 0.5, ship_scale, ship_scale});
             }
 
             if (text_idx >= 1 && text_time > MAX_TEXT_TIME) {
@@ -191,7 +191,7 @@ void Intro::update(float delta) {
                 fly_progress = fly_progress > 0 ? fly_progress : 0;
                 float ship_scale = (1.f - fly_progress) * SP_SHIP_MAX_SCALE;
                 int ship_y = SP_SHIP_START_Y + (int)((SP_SHIP_END_Y - SP_SHIP_START_Y) * fly_progress);
-                draw_manager.draw(id_sp_ship, IMG_INTRO_SH2_SHIP, {440, ship_y, 0.5, 0.5, ship_scale});
+                draw_manager.draw(id_sp_ship, IMG_INTRO_SH2_SHIP, {440, ship_y, 0.5, 0.5, ship_scale, ship_scale});
             }
 
             draw_text();
@@ -199,7 +199,7 @@ void Intro::update(float delta) {
         case Corridor:
             if (!stage_started) {
                 draw_manager.draw(IMG_INTRO_CORRIDOR);
-                draw_manager.draw(IMG_INTRO_FI1_FIRE1, {460, 105, 0, 0, 1});
+                draw_manager.draw(IMG_INTRO_FI1_FIRE1, {462, 104, 0, 0, 2.0, 1.0});
                 text_idx++;
                 break;
             }

@@ -207,10 +207,10 @@ void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawTransform t
     int spr_w = spr->w;
     int spr_h = spr->h;
     DrawArea area;
-    area.x = t.x - (t.anchor_x * spr_w * t.scale);
-    area.y = t.y - (t.anchor_y * spr_h * t.scale);
-    area.w = spr_w * t.scale;
-    area.h = spr_h * t.scale;
+    area.x = t.x - (t.anchor_x * spr_w * t.scale_x);
+    area.y = t.y - (t.anchor_y * spr_h * t.scale_y);
+    area.w = spr_w * t.scale_x;
+    area.h = spr_h * t.scale_y;
 
     draw(tgt, spr_key, &area, id);
 }

@@ -31,7 +31,8 @@ typedef struct {
     int y;
     float anchor_x;
     float anchor_y;
-    float scale;
+    float scale_x;
+    float scale_y;
 
 } DrawTransform;
 
