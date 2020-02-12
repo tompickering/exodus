@@ -28,3 +28,8 @@ bool ExodusSDL::init() {
 
     return Exodus::init();
 }
+
+void ExodusSDL::cleanup() {
+    L.info("Cleaning up...");
+    SDL_Quit();
+}

@@ -9,6 +9,7 @@ class ExodusSDL : public Exodus {
         virtual ~ExodusSDL() override;
     protected:
         virtual bool init() override;
+        virtual void cleanup() override;
 };
 
 #endif

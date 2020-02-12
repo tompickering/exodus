@@ -7,7 +7,8 @@ class Exodus {
         virtual ~Exodus();
         int run(int argc, char** argv);
     protected:
-        virtual bool init();
+        virtual bool init() = 0;
+        virtual void cleanup() = 0;
 };
 
 #ifdef SDL

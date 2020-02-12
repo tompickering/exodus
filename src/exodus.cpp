@@ -59,5 +59,7 @@ int Exodus::run(int argc, char** argv) {
         delta_time = frame_timer.get_delta();
     }
 
+    cleanup();
+
     return 0;
 }
