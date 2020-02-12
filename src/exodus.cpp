@@ -6,6 +6,7 @@
 #include "timer/timer.h"
 #include "audio/audio.h"
 #include "draw/draw.h"
+#include "input/input.h"
 
 #include <csignal>
 
@@ -15,6 +16,7 @@ const float MIN_FRAME_DELTA = 1.f / MAX_FPS;
 Log::Logger L(Log::Level::DEBUG);
 AUDIOMANAGER audio_manager;
 DRAWMANAGER draw_manager;
+INPUTMANAGER input_manager;
 
 volatile bool running;
 
@@ -54,6 +56,14 @@ int Exodus::run(int argc, char** argv) {
         frame_timer.start();
 
         draw_manager.update();
+
+        if (!input_manager.update()) {
+            running = false;
+        }
+
+        if (input_manager.read(Input::Escape, true)) {
+            running = false;
+        }
 
         frame_timer.sleep_until(MIN_FRAME_DELTA);
         delta_time = frame_timer.get_delta();

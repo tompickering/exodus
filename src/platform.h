@@ -19,6 +19,7 @@
 #define EXODUS ExodusSDL
 #define AUDIOMANAGER AudioManagerSDL
 #define DRAWMANAGER DrawManagerSDL
+#define INPUTMANAGER InputManagerSDL
 #endif
 
 #ifdef LINUX
