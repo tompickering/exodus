@@ -34,9 +34,11 @@ bool Exodus::init() {
     L.info("Initialising Exodus...");
     signal(SIGINT, signal_handler);
 
-    bool ok = true
-        && draw_manager.init()
-        && audio_manager.init();
+    bool ok = draw_manager.init();
+
+    if (!audio_manager.init()) {
+        L.error("Audio subsystem failed to initialise - game will not feature sound");
+    }
 
     return ok;
 }

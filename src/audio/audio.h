@@ -16,6 +16,7 @@ class AudioManager {
         virtual void play_sfx(SFX) = 0;
         virtual void target_music(string) = 0;
     protected:
+        bool enabled;
         map<SFX, void*> sfx_data;
         string target_track;
         string playing_track;
