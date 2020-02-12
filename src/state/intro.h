@@ -4,6 +4,7 @@
 #include "state_base.h"
 
 #include "../platform.h"
+#include "../draw/draw.h"
 
 class Intro : StateBase {
     public:

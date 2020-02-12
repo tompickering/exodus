@@ -128,30 +128,57 @@ void* DrawManagerSDL::get_sprite_data(const char* img_path) {
 }
 
 void DrawManagerSDL::draw(const char* spr_key) {
-    draw(surf, spr_key, nullptr);
+    draw(surf, spr_key, nullptr, nullptr);
 }
 
 void DrawManagerSDL::draw(const char* spr_key, DrawArea area) {
-    draw(surf, spr_key, &area);
+    draw(surf, spr_key, &area, nullptr);
 }
 
 void DrawManagerSDL::draw(const char* spr_key, DrawTransform t) {
-    draw(surf, spr_key, t);
+    draw(surf, spr_key, t, nullptr);
+}
+
+void DrawManagerSDL::draw(SprID id, const char* spr_key, DrawTransform t) {
+    draw(surf, spr_key, t, &id);
 }
 
 void DrawManagerSDL::pixelswap_draw(const char* spr_key) {
-    draw(pixelswap_src, spr_key, nullptr);
+    draw(pixelswap_src, spr_key, nullptr, nullptr);
 }
 
 void DrawManagerSDL::pixelswap_draw(const char* spr_key, DrawArea area) {
-    draw(pixelswap_src, spr_key, &area);
+    draw(pixelswap_src, spr_key, &area, nullptr);
 }
 
 void DrawManagerSDL::pixelswap_draw(const char* spr_key, DrawTransform t) {
-    draw(pixelswap_src, spr_key, t);
+    draw(pixelswap_src, spr_key, t, nullptr);
 }
 
-void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawArea* area) {
+void DrawManagerSDL::pixelswap_draw(SprID id, const char* spr_key, DrawTransform t) {
+    draw(pixelswap_src, spr_key, t, &id);
+}
+
+void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawArea* area, SprID* id) {
+    DrawArea *dirty_area;
+    if (id) {
+        dirty_area = get_drawn_area(*id);
+        if (dirty_area) {
+            // We know where this sprite was drawn previously.
+            // Wipe that area with the background.
+            SDL_Rect r = {dirty_area->x, dirty_area->y, dirty_area->w, dirty_area->h};
+            SDL_BlitSurface(background, &r, tgt, &r);
+            // Update the old area to be redrawn with this draw's area
+            *dirty_area = *area;
+        } else {
+            if (area) {
+                drawn_spr_info.push_back({*id, *area});
+            } else {
+                L.warn("ID image draw without specific area - not saving");
+            }
+        }
+    }
+
     SDL_Surface *spr = (SDL_Surface*)get_sprite_data(spr_key);
     if (!spr) {
         L.warn("Unknown sprite: %s", spr_key);
@@ -169,7 +196,7 @@ void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawArea* area)
     }
 }
 
-void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawTransform t) {
+void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawTransform t, SprID* id) {
     SDL_Surface *spr = (SDL_Surface*)get_sprite_data(spr_key);
     if (!spr) {
         L.warn("Unknown sprite: %s", spr_key);
@@ -184,7 +211,7 @@ void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawTransform t
     area.w = spr_w * t.scale;
     area.h = spr_h * t.scale;
 
-    draw(tgt, spr_key, &area);
+    draw(tgt, spr_key, &area, id);
 }
 
 void DrawManagerSDL::draw_text(const char* text, Justify jst, int x, int y, RGB rgb) {

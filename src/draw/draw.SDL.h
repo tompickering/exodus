@@ -15,10 +15,12 @@ class DrawManagerSDL : public DrawManager {
         virtual void draw(const char*) override;
         virtual void draw(const char*, DrawArea) override;
         virtual void draw(const char*, DrawTransform) override;
+        virtual void draw(SprID, const char*, DrawTransform) override;
         virtual void pixelswap_clear() override;
         virtual void pixelswap_draw(const char*) override;
         virtual void pixelswap_draw(const char*, DrawArea) override;
         virtual void pixelswap_draw(const char*, DrawTransform) override;
+        virtual void pixelswap_draw(SprID, const char*, DrawTransform) override;
         virtual void pixelswap_start() override;
         virtual void pixelswap_start(DrawArea*) override;
         virtual bool pixelswap_active() override;
@@ -33,8 +35,8 @@ class DrawManagerSDL : public DrawManager {
         SDL_Surface *background;
         SDL_Surface *pixelswap_src;
         unsigned int pixelswap_stage;
-        void draw(SDL_Surface*, const char*, DrawArea*);
-        void draw(SDL_Surface*, const char*, DrawTransform);
+        void draw(SDL_Surface*, const char*, DrawArea*, SprID*);
+        void draw(SDL_Surface*, const char*, DrawTransform, SprID*);
         void draw_text(const char*, Justify, int, int, RGB*, RGB*);
 };
 

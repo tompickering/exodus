@@ -67,13 +67,17 @@ class DrawManager {
         virtual void save_background() = 0;
         virtual void clear();
         virtual SprID new_sprite_id();
+        virtual void release_sprite_id(SprID);
+        virtual DrawArea* get_drawn_area(SprID);
         virtual void draw(const char*) = 0;
         virtual void draw(const char*, DrawArea) = 0;
         virtual void draw(const char*, DrawTransform) = 0;
+        virtual void draw(SprID, const char*, DrawTransform) = 0;
         virtual void pixelswap_clear() = 0;
         virtual void pixelswap_draw(const char*) = 0;
         virtual void pixelswap_draw(const char*, DrawArea) = 0;
         virtual void pixelswap_draw(const char*, DrawTransform) = 0;
+        virtual void pixelswap_draw(SprID, const char*, DrawTransform) = 0;
         virtual void pixelswap_start() = 0;
         virtual void pixelswap_start(DrawArea*) = 0;
         virtual bool pixelswap_active() = 0;
