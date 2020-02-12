@@ -47,8 +47,8 @@ float CITY_SHIP_SHOT_TIME  = 0.1f;
 float CITY_SHIP_START_Y    = 260;
 float CITY_SHIP_END_Y      = 210;
 
-float SP_SHIP_STOP         = 8.f;
-float SP_SHIP_MAX_SCALE    = 1.4f;
+float SP_SHIP_STOP         = 14.f;
+float SP_SHIP_MAX_SCALE    = 1.8f;
 
 const float MAX_TEXT_TIME = 3.8;
 
@@ -68,11 +68,14 @@ void Intro::enter() {
 
 void Intro::exit() {
     StateBase::exit();
+    draw_manager.release_sprite_id(id_city_ship);
+    draw_manager.release_sprite_id(id_sp_ship);
 }
 
 void Intro::update(float delta) {
     float time = timer.get_delta();
     float text_time = text_timer.get_delta();
+    static bool text_delay_complete = false;
 
     switch(stage) {
         case None:
@@ -86,9 +89,24 @@ void Intro::update(float delta) {
             break;
         case Earth:
             if (!stage_started) {
-                draw_manager.draw(IMG_INTRO_EARTH);
+                draw_manager.clear();
+                draw_manager.pixelswap_clear();
+                draw_manager.pixelswap_draw(IMG_INTRO_EARTH);
+                draw_manager.pixelswap_start(nullptr);
                 break;
             }
+
+            if (draw_manager.pixelswap_active()) {
+                return;
+            }
+
+            if (time < 1.8) {
+                return;
+            } else if (!text_delay_complete) {
+                text_delay_complete = true;
+                text_timer.start();
+            }
+
 
             if (text_time > MAX_TEXT_TIME) {
                 if (text_idx == 0) {
@@ -152,6 +170,7 @@ void Intro::update(float delta) {
             if (!stage_started) {
                 draw_manager.draw(IMG_INTRO_STARPORT);
                 draw_manager.save_background();
+                text_idx++;
                 break;
             }
 
@@ -168,7 +187,7 @@ void Intro::update(float delta) {
                 float fly_progress = time / SP_SHIP_STOP;
                 fly_progress = fly_progress > 0 ? fly_progress : 0;
                 float ship_scale = (1.f - fly_progress) * SP_SHIP_MAX_SCALE;
-                draw_manager.draw(id_sp_ship, IMG_INTRO_SH2_SHIP, {480, 180, 0.5, 0.5, ship_scale});
+                draw_manager.draw(id_sp_ship, IMG_INTRO_SH2_SHIP, {440, 230, 0.5, 0.5, ship_scale});
             }
 
             draw_text();
