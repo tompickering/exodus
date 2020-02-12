@@ -47,6 +47,9 @@ float CITY_SHIP_SHOT_TIME  = 0.1f;
 float CITY_SHIP_START_Y    = 260;
 float CITY_SHIP_END_Y      = 210;
 
+float SP_SHIP_STOP         = 8.f;
+float SP_SHIP_MAX_SCALE    = 1.4f;
+
 const float MAX_TEXT_TIME = 3.8;
 
 Intro::Intro() : StateBase("Intro", false), text_idx(0) {
@@ -80,7 +83,9 @@ void Intro::update(float delta) {
         case Earth:
             if (!stage_started) {
                 draw_manager.draw(IMG_INTRO_EARTH);
+                break;
             }
+
             if (text_time > MAX_TEXT_TIME) {
                 if (text_idx == 0) {
                     ++text_idx;
@@ -136,14 +141,31 @@ void Intro::update(float delta) {
                 }
             }
 
-            text_brightness = determine_text_brightness(0, text_timer.get_delta());
-            draw_manager.draw_text(
-                    intro_text[text_idx],
-                    Justify::Centre,
-                    SCREEN_WIDTH / 2,
-                    SCREEN_HEIGHT - 26,
-                    {text_brightness, text_brightness, text_brightness},
-                    {0, 0, 0});
+            draw_text();
+            break;
+        case Starport:
+            if (!stage_started) {
+                draw_manager.draw(IMG_INTRO_STARPORT);
+                break;
+            }
+
+            if (text_idx >= 8 && text_time > MAX_TEXT_TIME) {
+                if (text_idx < 13) {
+                    ++text_idx;
+                    text_timer.start();
+                } else {
+                    next_stage(); return;
+                }
+            }
+
+            if (time < SP_SHIP_STOP) {
+                float fly_progress = time / SP_SHIP_STOP;
+                fly_progress = fly_progress > 0 ? fly_progress : 0;
+                float ship_scale = (1.f - fly_progress) * SP_SHIP_MAX_SCALE;
+                draw_manager.draw(IMG_INTRO_SH2_SHIP, {480, 180, 0.5, 0.5, ship_scale});
+            }
+
+            draw_text();
             break;
         default:
             break;
