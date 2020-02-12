@@ -16,7 +16,7 @@ SprID DrawManager::new_sprite_id() {
 }
 
 void DrawManager::release_sprite_id(SprID id) {
-    for (int i = 0; i < drawn_spr_info.size(); ++i) {
+    for (std::vector<DrawnSprite>::size_type i = 0; i < drawn_spr_info.size(); ++i) {
         if (drawn_spr_info[i].id == id) {
             drawn_spr_info.erase(drawn_spr_info.begin() + i);
             break;
@@ -25,7 +25,7 @@ void DrawManager::release_sprite_id(SprID id) {
 }
 
 DrawArea* DrawManager::get_drawn_area(SprID id) {
-    for (int i = 0; i < drawn_spr_info.size(); ++i) {
+    for (std::vector<DrawnSprite>::size_type i = 0; i < drawn_spr_info.size(); ++i) {
         if (drawn_spr_info[i].id == id) {
             return &(drawn_spr_info[i].area);
         }
