@@ -14,6 +14,8 @@ class DrawManager {
     public:
         virtual bool init() = 0;
         virtual void update() = 0;
+        virtual void draw_text(const char*, int, int, int, int,
+                               unsigned char, unsigned char, unsigned char) = 0;
     protected:
         map<string, void*> sprite_data;
         virtual void* get_sprite_data(string) = 0;

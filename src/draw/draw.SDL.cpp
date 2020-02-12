@@ -59,4 +59,19 @@ void* DrawManagerSDL::get_sprite_data(string img_path) {
     return nullptr;
 }
 
+void DrawManagerSDL::draw_text(const char* text, int x, int y, int w, int h,
+                               unsigned char r, unsigned char g, unsigned char b) {
+
+    SDL_Color colour = {r, g, b};
+    SDL_Surface *msg_surf = TTF_RenderText_Blended((TTF_Font*)font, text, colour);
+
+    SDL_Rect msg_rect;
+    msg_rect.x = x;
+    msg_rect.y = y;
+    msg_rect.w = w;
+    msg_rect.h = h;
+
+    SDL_BlitSurface(msg_surf, nullptr, surf, &msg_rect);
+}
+
 #endif
