@@ -20,7 +20,7 @@ bool DrawManagerSDL::init() {
                            SDL_WINDOWPOS_UNDEFINED,
                            SCREEN_WIDTH,
                            SCREEN_HEIGHT,
-                           SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN);
+                           SDL_WINDOW_SHOWN); // | SDL_WINDOW_FULLSCREEN);
     if (!win) {
         L.error("Could not create SDL window");
         return false;
