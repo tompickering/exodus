@@ -68,7 +68,6 @@ void Intro::exit() {
 void Intro::update(float delta) {
     float time = timer.get_delta();
     float text_time = text_timer.get_delta();
-    unsigned char text_brightness = 0;
 
     switch(stage) {
         case None:
@@ -112,6 +111,7 @@ void Intro::update(float delta) {
             if (text_idx == 1) {
                 ++text_idx;
                 text_timer.start();
+                draw_manager.save_background();
             }
 
             if (time > CITY_SHIP_START) {
@@ -146,6 +146,7 @@ void Intro::update(float delta) {
         case Starport:
             if (!stage_started) {
                 draw_manager.draw(IMG_INTRO_STARPORT);
+                draw_manager.save_background();
                 break;
             }
 
