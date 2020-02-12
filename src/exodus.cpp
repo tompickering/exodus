@@ -46,16 +46,17 @@ int Exodus::run(int argc, char** argv) {
 
     running = true;
 
-    TIMER timer;
+    TIMER game_timer;
+    TIMER frame_timer;
     float delta_time = 0.f;
 
     while (running) {
-        timer.start();
+        frame_timer.start();
 
         draw_manager.update();
 
-        timer.sleep_until(MIN_FRAME_DELTA);
-        delta_time = timer.get_delta();
+        frame_timer.sleep_until(MIN_FRAME_DELTA);
+        delta_time = frame_timer.get_delta();
     }
 
     return 0;
