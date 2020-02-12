@@ -9,6 +9,7 @@
 #include <SDL2/SDL_ttf.h>
 
 #include "../shared.h"
+#include "../assetpaths.h"
 
 using std::string;
 
@@ -32,7 +33,7 @@ bool DrawManagerSDL::init() {
         return false;
     }
 
-    font = TTF_OpenFont("font/audiowide/Audiowide-Regular.ttf", 20);
+    font = TTF_OpenFont(PATH_FONT_AUDIOWIDE, 20);
     if (!font) {
         L.error("Could not load font Audiowide");
         return false;
