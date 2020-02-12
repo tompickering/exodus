@@ -89,7 +89,7 @@ unsigned char keys_to_input = 3;
 bool interactive_sequence_completed = false;
 bool launchpad_light_toggle = false;
 
-Intro::Intro() : StateBase("Intro", false), text_idx(0) {
+Intro::Intro() : StateBase("Intro"), text_idx(0) {
 }
 
 void Intro::enter() {
@@ -349,6 +349,8 @@ ExodusState Intro::update(float delta) {
             if (!stage_started) {
                 draw_manager.draw(IMG_INTRO_KEYPAD);
                 text_idx = 18;
+                draw_manager.save_background();
+                draw_manager.show_cursor(true);
                 break;
             }
 
@@ -377,6 +379,8 @@ ExodusState Intro::update(float delta) {
                         draw_manager.draw(IMG_INTRO_PH1_PUSH_8, {254, 288, 0, 0, 2, 2});
                     if (input_manager.is_num_held(9))
                         draw_manager.draw(IMG_INTRO_PH1_PUSH_9, {354, 302, 0, 0, 2, 2});
+
+                    draw_manager.save_background();
                 }
 
                 if (text_timer.get_delta() < MAX_TEXT_TIME / 2) {
@@ -467,6 +471,7 @@ ExodusState Intro::update(float delta) {
             break;
         case Success:
             if (!stage_started) {
+                draw_manager.show_cursor(false);
                 draw_manager.draw(IMG_INTRO_DOOR);
                 draw_manager.draw(IMG_INTRO_OD1_BEHIND, {319, 218, 0.5, 0.5, 2.0, 1.0});
                 draw_manager.save_background();

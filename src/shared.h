@@ -22,6 +22,9 @@ typedef struct {
 
 extern EXODUS exodus;
 
+extern const float UPSCALE_X;
+extern const float UPSCALE_Y;
+
 extern Log::Logger L;
 
 // We need forward-declarations here so manager

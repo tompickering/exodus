@@ -31,11 +31,19 @@ bool InputManager::_read(Input input, bool reset) {
 }
 
 MousePos InputManager::get_mouse_pos() {
-    return mouse_pos;
+    return {(int)((float)mouse_pos.x / UPSCALE_X),
+            (int)((float)mouse_pos.y / UPSCALE_Y)};
 }
 
 MousePos InputManager::read_click() {
-    MousePos result = click_pos;
+    MousePos result;
+    if (click_pos.x > 0 && click_pos.y > 0) {
+        result.x =(int)((float)click_pos.x / UPSCALE_X);
+        result.y =(int)((float)click_pos.y / UPSCALE_Y);
+    } else {
+        result.x = -1;
+        result.y = -1;
+    }
     click_pos.x = -1;
     click_pos.y = -1;
     return result;

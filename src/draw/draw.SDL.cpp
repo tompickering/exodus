@@ -13,9 +13,6 @@
 #include "../shared.h"
 #include "../assetpaths.h"
 
-const float UPSCALE_X = (float)SCREEN_WIDTH  / (float)RES_X;
-const float UPSCALE_Y = (float)SCREEN_HEIGHT / (float)RES_Y;
-
 bool DrawManagerSDL::init() {
     L.info("DrawManager Init...");
     win = SDL_CreateWindow(PROG_NAME,
@@ -56,6 +53,8 @@ bool DrawManagerSDL::init() {
         L.error("Could not create pixelswap source surface");
         return false;
     }
+
+    SDL_ShowCursor(false);
 
     return true;
 }
@@ -117,6 +116,11 @@ void DrawManagerSDL::update(MousePos mouse_pos, MousePos click_pos) {
             clear();
         }
     }
+
+    if (draw_cursor) {
+        draw(ID_CURSOR, IMG_INTRO_SH4_BLINK1, {mouse_pos.x, mouse_pos.y, 0.5, 0.5, 1, 1});
+    }
+
     SDL_UpdateWindowSurface(win);
 }
 

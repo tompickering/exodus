@@ -29,6 +29,8 @@ using std::vector;
 
 typedef unsigned int SprID;
 
+extern const SprID ID_CURSOR;
+
 typedef struct {
     int x;
     int y;
@@ -91,6 +93,7 @@ class DrawManager {
         virtual void draw_text(const char*, Justify, int, int, RGB, RGB) = 0;
         virtual void fade_black(float, int) = 0;
         virtual bool fade_active() = 0;
+        virtual void show_cursor(bool);
     protected:
         map<const char*, void*> sprite_data;
         virtual void* get_sprite_data(const char*) = 0;
@@ -103,6 +106,7 @@ class DrawManager {
         float fade_seconds;
         int fade_stage;
         int fade_stages;
+        bool draw_cursor;
 };
 
 #ifdef SDL

@@ -2,11 +2,7 @@
 
 #include "../shared.h"
 
-StateBase::StateBase(const char *name) : draw_cursor(false) {
-}
-
-StateBase::StateBase(const char *name, bool draw_cursor)
-    : draw_cursor(draw_cursor), name(name) {
+StateBase::StateBase(const char *name) : name(name) {
 }
 
 StateBase::~StateBase() {
@@ -19,6 +15,7 @@ void StateBase::enter() {
 
 void StateBase::exit() {
     L.debug("Exiting state: %s", name);
+    draw_manager.show_cursor(false);
 }
 
 ExodusState StateBase::update(float delta) {
