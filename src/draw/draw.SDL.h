@@ -8,7 +8,7 @@
 class DrawManagerSDL : public DrawManager {
     public:
         virtual bool init() override;
-        virtual void update() override;
+        virtual void update(MousePos, MousePos) override;
         virtual void draw_text(const char*, int, int, int, int,
                                unsigned char, unsigned char, unsigned char) override;
     protected:

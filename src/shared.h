@@ -8,4 +8,9 @@
 
 extern Log::Logger L;
 
+typedef struct {
+    int x;
+    int y;
+} MousePos;
+
 #endif

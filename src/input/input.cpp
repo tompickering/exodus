@@ -22,6 +22,10 @@ bool InputManager::read(Input input, bool reset) {
     return result;
 }
 
+MousePos InputManager::get_mouse_pos() {
+    return mouse_pos;
+}
+
 MousePos InputManager::read_click() {
     MousePos result = click_pos;
     click_pos.x = -1;

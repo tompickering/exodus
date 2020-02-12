@@ -1,20 +1,18 @@
 #ifndef GUARD_INPUT_H
 #define GUARD_INPUT_H
 
+#include "../shared.h"
+
 enum Input {
     Space,
     Escape,
 };
 
-typedef struct {
-    int x;
-    int y;
-} MousePos;
-
 class InputManager {
     public:
         InputManager();
         bool read(Input, bool reset);
+        MousePos get_mouse_pos();
         MousePos read_click();
     protected:
         bool space;

@@ -45,7 +45,7 @@ bool DrawManagerSDL::init() {
     return true;
 }
 
-void DrawManagerSDL::update() {
+void DrawManagerSDL::update(MousePos mouse_pos, MousePos click_pos) {
     SDL_UpdateWindowSurface(win);
 }
 

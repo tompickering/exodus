@@ -54,10 +54,13 @@ int Exodus::run(int argc, char** argv) {
     TIMER frame_timer;
     float delta_time = 0.f;
 
+    MousePos mouse_pos = {-1, -1};
+    MousePos click_pos = {-1, -1};
+
     while (running) {
         frame_timer.start();
 
-        draw_manager.update();
+        draw_manager.update(mouse_pos, click_pos);
 
         if (!input_manager.update()) {
             running = false;
@@ -66,6 +69,9 @@ int Exodus::run(int argc, char** argv) {
         if (input_manager.read(Input::Escape, true)) {
             running = false;
         }
+
+        mouse_pos = input_manager.get_mouse_pos();
+        click_pos = input_manager.read_click();
 
         frame_timer.sleep_until(MIN_FRAME_DELTA);
         delta_time = frame_timer.get_delta();

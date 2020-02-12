@@ -4,6 +4,8 @@
 #include <map>
 #include <string>
 
+#include "../shared.h"
+
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 512
 
@@ -13,7 +15,7 @@ using std::string;
 class DrawManager {
     public:
         virtual bool init() = 0;
-        virtual void update() = 0;
+        virtual void update(MousePos, MousePos) = 0;
         virtual void draw_text(const char*, int, int, int, int,
                                unsigned char, unsigned char, unsigned char) = 0;
     protected:
