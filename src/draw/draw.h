@@ -17,6 +17,7 @@ class DrawManager {
     protected:
         map<string, void*> sprite_data;
         virtual void* get_sprite_data(string) = 0;
+        void *font;
 };
 
 #ifdef SDL

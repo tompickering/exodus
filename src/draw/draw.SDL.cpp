@@ -6,6 +6,7 @@
 #include <string>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 #include "../shared.h"
 
@@ -28,6 +29,12 @@ bool DrawManagerSDL::init() {
 
     if (!surf) {
         L.error("Could not create SDL surface");
+        return false;
+    }
+
+    font = TTF_OpenFont("font/audiowide/Audiowide-Regular.ttf", 20);
+    if (!font) {
+        L.error("Could not load font Audiowide");
         return false;
     }
 
