@@ -212,6 +212,9 @@ void Intro::update(float delta) {
                     next_stage(); return;
                 }
             }
+
+            draw_text();
+            break;
         default:
             break;
     }
