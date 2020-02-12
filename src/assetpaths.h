@@ -10,6 +10,8 @@ extern const char *FONT_AUDIOWIDE;
 
 extern const char *IMG_INTRO_EARTH;
 extern const char *IMG_INTRO_CITY;
+extern const char *IMG_INTRO_STARPORT;
+
 extern const char *IMG_INTRO_PH1_PUSH_5;
 extern const char *IMG_INTRO_OD1_BEHIND;
 extern const char *IMG_INTRO_PH1_PUSH_9;

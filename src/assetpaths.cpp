@@ -1,10 +1,12 @@
 #ifdef LINUX
 
+#define D_PIC "assets/img/pictures/"
+
 const char *FONT_AUDIOWIDE = "font/audiowide/Audiowide-Regular.ttf";
 
-#define D_INTRO_SCENE "assets/img/scene/intro/"
-const char *IMG_INTRO_EARTH = D_INTRO_SCENE "earth";
-const char *IMG_INTRO_CITY  = D_INTRO_SCENE "city";
+const char *IMG_INTRO_EARTH     = D_PIC "ea1";
+const char *IMG_INTRO_CITY      = D_PIC "ct1";
+const char *IMG_INTRO_STARPORT  = D_PIC "cn1";
 
 #define D_INTRO "assets/img/intro/"
 const char *IMG_INTRO_BT1_FALL1    = D_INTRO "BT1_fall1";
