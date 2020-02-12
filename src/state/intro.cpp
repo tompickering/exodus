@@ -89,14 +89,8 @@ void Intro::update(float delta) {
                     next_stage(); return;
                 }
             }
-            text_brightness = determine_text_brightness(0, text_time);
-            draw_manager.draw_text(
-                    intro_text[text_idx],
-                    Justify::Centre,
-                    SCREEN_WIDTH / 2,
-                    SCREEN_HEIGHT - 26,
-                    {text_brightness, text_brightness, text_brightness},
-                    {0, 0, 0});
+
+            draw_text();
             break;
         case City:
             if (!stage_started) {
@@ -165,6 +159,17 @@ void Intro::next_stage() {
     }
     timer.start();
     text_timer.start();
+}
+
+void Intro::draw_text() {
+    unsigned char brightness = determine_text_brightness(0, text_timer.get_delta());
+    draw_manager.draw_text(
+            intro_text[text_idx],
+            Justify::Centre,
+            SCREEN_WIDTH / 2,
+            SCREEN_HEIGHT - 26,
+            {brightness, brightness, brightness},
+            {0, 0, 0});
 }
 
 /*
