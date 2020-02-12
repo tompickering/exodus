@@ -111,6 +111,7 @@ void DrawManagerSDL::pixelswap_clear() {
 }
 
 void DrawManagerSDL::save_background() {
+    L.debug("Saving background");
     if (SDL_BlitSurface(surf, nullptr, background, nullptr)) {
         L.warn("Background blit failed");
     }

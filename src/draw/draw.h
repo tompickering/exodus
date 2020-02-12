@@ -61,6 +61,7 @@ typedef struct {
 
 class DrawManager {
     public:
+        DrawManager();
         virtual bool init() = 0;
         virtual void load_resources() = 0;
         virtual void update(MousePos, MousePos) = 0;
