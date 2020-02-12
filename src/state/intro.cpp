@@ -52,6 +52,9 @@ float SP_SHIP_MAX_SCALE    = 1.4f;
 
 const float MAX_TEXT_TIME = 3.8;
 
+SprID id_city_ship;
+SprID id_sp_ship;
+
 Intro::Intro() : StateBase("Intro", false), text_idx(0) {
 }
 
@@ -59,6 +62,8 @@ void Intro::enter() {
     StateBase::enter();
     stage = Stage::None;
     stage_started = false;
+    id_city_ship = draw_manager.new_sprite_id();
+    id_sp_ship = draw_manager.new_sprite_id();
 }
 
 void Intro::exit() {
@@ -129,7 +134,7 @@ void Intro::update(float delta) {
 
                 int ship_y = CITY_SHIP_START_Y + (int)((CITY_SHIP_END_Y - CITY_SHIP_START_Y) * fly_progress);
 
-                draw_manager.draw(ship, {10 + SCREEN_WIDTH / 2, ship_y, 0.5, 0.5, ship_scale});
+                draw_manager.draw(id_city_ship, ship, {10 + SCREEN_WIDTH / 2, ship_y, 0.5, 0.5, ship_scale});
             }
 
             if (text_idx >= 1 && text_time > MAX_TEXT_TIME) {
@@ -163,7 +168,7 @@ void Intro::update(float delta) {
                 float fly_progress = time / SP_SHIP_STOP;
                 fly_progress = fly_progress > 0 ? fly_progress : 0;
                 float ship_scale = (1.f - fly_progress) * SP_SHIP_MAX_SCALE;
-                draw_manager.draw(IMG_INTRO_SH2_SHIP, {480, 180, 0.5, 0.5, ship_scale});
+                draw_manager.draw(id_sp_ship, IMG_INTRO_SH2_SHIP, {480, 180, 0.5, 0.5, ship_scale});
             }
 
             draw_text();
