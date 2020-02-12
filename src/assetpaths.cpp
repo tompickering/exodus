@@ -7,6 +7,7 @@ const char *FONT_AUDIOWIDE = "font/audiowide/Audiowide-Regular.ttf";
 const char *IMG_INTRO_EARTH     = D_PIC "ea1";
 const char *IMG_INTRO_CITY      = D_PIC "ct1";
 const char *IMG_INTRO_STARPORT  = D_PIC "cn1";
+const char *IMG_INTRO_CORRIDOR  = D_PIC "cr1";
 
 #define D_INTRO "assets/img/intro/"
 const char *IMG_INTRO_BT1_FALL1    = D_INTRO "BT1_fall1";
@@ -66,6 +67,7 @@ const char *ASSETS_IMG[] = {
     IMG_INTRO_EARTH,
     IMG_INTRO_CITY,
     IMG_INTRO_STARPORT,
+    IMG_INTRO_CORRIDOR,
 
     IMG_INTRO_BT1_FALL1,
     IMG_INTRO_BT1_FALL2,

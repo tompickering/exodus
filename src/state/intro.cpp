@@ -62,7 +62,8 @@ Intro::Intro() : StateBase("Intro", false), text_idx(0) {
 
 void Intro::enter() {
     StateBase::enter();
-    stage = Stage::None;
+    stage = Stage::Starport;
+    text_idx = 11;
     stage_started = false;
     id_city_ship = draw_manager.new_sprite_id();
     id_sp_ship = draw_manager.new_sprite_id();
@@ -195,6 +196,22 @@ void Intro::update(float delta) {
 
             draw_text();
             break;
+        case Corridor:
+            if (!stage_started) {
+                draw_manager.draw(IMG_INTRO_CORRIDOR);
+                draw_manager.draw(IMG_INTRO_FI1_FIRE1, {460, 105, 0, 0, 1});
+                text_idx++;
+                break;
+            }
+
+            if (text_idx >= 13 && text_time > MAX_TEXT_TIME) {
+                if (text_idx < 17) {
+                    ++text_idx;
+                    text_timer.start();
+                } else {
+                    next_stage(); return;
+                }
+            }
         default:
             break;
     }
