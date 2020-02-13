@@ -68,6 +68,11 @@ SprID id_shoot;
 SprID id_shot;
 SprID id_guardshot;
 
+unsigned int nums_held = 0;
+unsigned int prev_nums_held = 0;
+unsigned int input_code = 0;
+unsigned char keys_to_input = 3;
+
 Intro::Intro() : StateBase("Intro", false), text_idx(0) {
 }
 
@@ -97,6 +102,7 @@ void Intro::update(float delta) {
     float time = timer.get_delta();
     float text_time = text_timer.get_delta();
     static bool text_delay_complete = false;
+    unsigned int released_keys;
 
     switch(stage) {
         case None:
@@ -312,15 +318,38 @@ void Intro::update(float delta) {
             }
 
             break;
-        case Code:
+        case Keypad:
             if (!stage_started) {
                 draw_manager.draw(IMG_INTRO_KEYPAD);
-                draw_manager.save_background();
+                break;
             }
 
-            if (time > 1) {
-                next_stage(); return;
+            nums_held = input_manager.read_numbers();
+
+            if (keys_to_input) {
+                // State changed - just redraw everything
+                if (prev_nums_held != nums_held) {
+                    draw_manager.draw(IMG_INTRO_KEYPAD);
+                }
+
+                released_keys = prev_nums_held & ~nums_held;
+                if (released_keys) {
+                    for (int i = 0; i < 10; ++i) {
+                        if ((released_keys >> i) & 1) {
+                            unsigned int digit = 1;
+                            if (keys_to_input == 2) digit = 10;
+                            if (keys_to_input == 3) digit = 100;
+                            input_code += i * digit;
+                            --keys_to_input;
+                        }
+                    }
+                }
+                prev_nums_held = nums_held;
+            } else {
+                ONCE(oid_code) L.debug("Entered code: %d", input_code);
+                ONCE(oid_padddone) draw_manager.draw(IMG_INTRO_KEYPAD);
             }
+
 
             break;
         case Success:

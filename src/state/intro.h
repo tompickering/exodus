@@ -27,7 +27,7 @@ class Intro : StateBase {
             Guard,
             Shoot,
             GuardShot,
-            Code,
+            Keypad,
             Success,
             DepartShuttle,
             DepartShip,
