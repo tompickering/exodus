@@ -255,32 +255,32 @@ void Intro::update(float delta) {
             }
 
             if (time < SHOOT_START) {
-                draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE1, {462, 104, 0, 0, 2.0, 1.0});
+                ONCE(oid_shoot_1) draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE1, {462, 104, 0, 0, 2.0, 1.0});
             } else if (time < SHOOT_START + SHOOT_FRAME * 1) {
-                draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE2, {442, 82, 0, 0, 2.0, 1.0});
+                ONCE(oid_shoot_2) draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE2, {442, 82, 0, 0, 2.0, 1.0});
             } else if (time < SHOOT_START + SHOOT_FRAME * 2) {
-                draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE3, {422, 62, 0, 0, 2.0, 1.0});
+                ONCE(oid_shoot_3) draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE3, {422, 62, 0, 0, 2.0, 1.0});
             } else if (time < SHOOT_START + SHOOT_FRAME * 3) {
-                draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE4, {320, 69, 0, 0, 2.0, 1.0});
+                ONCE(oid_shoot_4) draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE4, {320, 69, 0, 0, 2.0, 1.0});
             } else if (time < SHOOT_START + SHOOT_FRAME * 4) {
-                draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE5, {294, 78, 0, 0, 2.0, 1.0});
+                ONCE(oid_shoot_5) draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE5, {294, 78, 0, 0, 2.0, 1.0});
             } else if (time < SHOOT_START + SHOOT_FRAME * 5) {
-                draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE6, {332, 84, 0, 0, 2.0, 1.0});
-                draw_manager.save_background();
+                ONCE(oid_shoot_6) draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE6, {332, 84, 0, 0, 2.0, 1.0});
+                ONCE(oid_shoot_bg) draw_manager.save_background();
             }
 
             if (time > SHOT_START) {
                 if (time < SHOT_START + SHOT_FRAME) {
-                    draw_manager.draw(id_shot, IMG_INTRO_FI1_SHOT1, {280, 144, 0, 0, 2.0, 2.0});
-                    draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE6, {332, 84, 0, 0, 2.0, 1.0});
+                    ONCE(oid_shot_1) draw_manager.draw(id_shot, IMG_INTRO_FI1_SHOT1, {280, 144, 0, 0, 2.0, 2.0});
+                    ONCE(oid_shot_fire) draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE6, {332, 84, 0, 0, 2.0, 1.0});
                 } else if (time < SHOT_START + SHOT_FRAME * 2) {
-                    draw_manager.draw(id_shot, IMG_INTRO_FI1_SHOT2, {204, 155, 0, 0, 2.0, 2.0});
+                    ONCE(oid_shot_2) draw_manager.draw(id_shot, IMG_INTRO_FI1_SHOT2, {204, 155, 0, 0, 2.0, 2.0});
                 } else if (time < SHOT_START + SHOT_FRAME * 3) {
-                    draw_manager.draw(id_shot, IMG_INTRO_FI1_SHOT3, {136, 162, 0, 0, 2.0, 2.0});
+                    ONCE(oid_shot_3) draw_manager.draw(id_shot, IMG_INTRO_FI1_SHOT3, {136, 162, 0, 0, 2.0, 2.0});
                 } else if (time < SHOT_START + SHOT_FRAME * 4) {
-                    draw_manager.draw(id_shot, IMG_INTRO_FI1_SHOT4, {68, 172, 0, 0, 2.0, 2.0});
+                    ONCE(oid_shot_4) draw_manager.draw(id_shot, IMG_INTRO_FI1_SHOT4, {68, 172, 0, 0, 2.0, 2.0});
                 } else if (time < SHOT_START + SHOT_FRAME * 5) {
-                    draw_manager.draw(id_shot, IMG_INTRO_FI1_SHOT5, {0, 180, 0, 0, 2.0, 2.0});
+                    ONCE(oid_shot_5) draw_manager.draw(id_shot, IMG_INTRO_FI1_SHOT5, {0, 180, 0, 0, 2.0, 2.0});
                 } else {
                     next_stage(); return;
                 }
@@ -294,19 +294,19 @@ void Intro::update(float delta) {
             }
 
             if (time < GUARD_FRAME) {
-                draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL1, {315, 271, 0.5, 0.5, 2.0, 2.0});
+                ONCE(oid_guard_1) draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL1, {315, 271, 0.5, 0.5, 2.0, 2.0});
             } else if (time < GUARD_FRAME * 2) {
-                draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL2, {291, 300, 0.5, 0.5, 2.0, 2.0});
+                ONCE(oid_guard_2) draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL2, {291, 300, 0.5, 0.5, 2.0, 2.0});
             } else if (time < GUARD_FRAME * 3) {
-                draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL3, {293, 307, 0.5, 0.5, 2.0, 2.0});
+                ONCE(oid_guard_3) draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL3, {293, 307, 0.5, 0.5, 2.0, 2.0});
             } else if (time < GUARD_FRAME * 4) {
-                draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL4, {285, 391, 0.5, 0.5, 2.0, 2.0});
+                ONCE(oid_guard_4) draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL4, {285, 391, 0.5, 0.5, 2.0, 2.0});
             } else if (time < GUARD_FRAME * 5) {
-                draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL5, {272, 484, 0.5, 1.0, 2.0, 2.0});
+                ONCE(oid_guard_5) draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL5, {272, 484, 0.5, 1.0, 2.0, 2.0});
             } else if (time < GUARD_FRAME * 6) {
-                draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL6, {272, 484, 0.5, 1.0, 2.0, 2.0});
+                ONCE(oid_guard_6) draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL6, {272, 484, 0.5, 1.0, 2.0, 2.0});
             } else if (time < GUARD_FRAME * 7) {
-                draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL7, {272, 484, 0.5, 1.0, 2.0, 2.0});
+                ONCE(oid_guard_7) draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL7, {272, 484, 0.5, 1.0, 2.0, 2.0});
             } else {
                 next_stage(); return;
             }
