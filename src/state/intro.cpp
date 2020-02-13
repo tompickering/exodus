@@ -25,7 +25,7 @@ static const char* intro_text[] = {
     "that may help to steal this vessel",
     "and escape from Earth",
     "together with many other homeless people.",
-    "Enter the secret code at offset",
+    "Enter the secret code 594",
     "Access denied.",
     "Access admitted.",
     "The people have succeeded.",
@@ -73,7 +73,7 @@ Intro::Intro() : StateBase("Intro", false), text_idx(0) {
 
 void Intro::enter() {
     StateBase::enter();
-    stage = Stage::Shoot;
+    stage = Stage::GuardShot;
     text_idx = 0;
     stage_started = false;
     timer.start();
@@ -286,7 +286,7 @@ void Intro::update(float delta) {
                 }
             }
 
-            return;
+            break;
         case GuardShot:
             if (!stage_started) {
                 draw_manager.draw(IMG_INTRO_DOOR);
@@ -311,7 +311,18 @@ void Intro::update(float delta) {
                 next_stage(); return;
             }
 
+            break;
         case Code:
+            if (!stage_started) {
+                draw_manager.draw(IMG_INTRO_KEYPAD);
+                draw_manager.save_background();
+            }
+
+            if (time > 1) {
+                next_stage(); return;
+            }
+
+            break;
         case Success:
         case DepartShuttle:
         case DepartShip:
