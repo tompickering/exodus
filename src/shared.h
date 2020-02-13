@@ -15,6 +15,10 @@ typedef struct {
 
 #define PROG_NAME "Exodus"
 
+// Facility to execute a single statement or block once only.
+// Requires a unique name within the context - but this is checked at compile time.
+#define ONCE(once_id) static bool once_id = true; if (once_id && !(once_id = false))
+
 extern Log::Logger L;
 
 // We need forward-declarations here so manager
