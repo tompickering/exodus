@@ -330,11 +330,27 @@ void Intro::update(float delta) {
                 // State changed - just redraw everything
                 if (prev_nums_held != nums_held) {
                     draw_manager.draw(IMG_INTRO_KEYPAD);
+                    if (is_num_held()) {
+                    }
+            /*
+             * WHEN 1:pa=376:pb=650
+             * WHEN 2:pa=571:pb=626
+             * WHEN 3:pa=748:pb=605
+             * WHEN 4:pa=352:pb=479
+             * WHEN 5:pa=547:pb=455
+             * WHEN 6:pa=733:pb=431
+             * WHEN 7:pa=301:pb=281
+             * WHEN 8:pa=508:pb=251
+             * WHEN 9:pa=709:pb=218
+             *
+             */
+            draw_manager.draw(IMG_INTRO_PH1_PUSH_1, {187, 110, 0, 0, 2, 2});
                 }
 
                 released_keys = prev_nums_held & ~nums_held;
                 if (released_keys) {
-                    for (int i = 0; i < 10; ++i) {
+                    // There is no 0 key, so start from 1
+                    for (int i = 1; i < 10; ++i) {
                         if ((released_keys >> i) & 1) {
                             unsigned int digit = 1;
                             if (keys_to_input == 2) digit = 10;
