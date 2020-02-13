@@ -60,7 +60,7 @@ float SHOT_FRAME           = 0.08f;
 float GUARD_FRAME          = 0.15f;
 
 
-const float MAX_TEXT_TIME = 0.8f;// 3.8;
+const float MAX_TEXT_TIME  = 3.8;
 
 SprID id_city_ship;
 SprID id_sp_ship;
@@ -73,7 +73,7 @@ Intro::Intro() : StateBase("Intro", false), text_idx(0) {
 
 void Intro::enter() {
     StateBase::enter();
-    stage = Stage::GuardShot;
+    stage = Stage::None;
     text_idx = 0;
     stage_started = false;
     timer.start();
