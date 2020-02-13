@@ -52,28 +52,34 @@ float SP_SHIP_MAX_SCALE    = 1.8f;
 float SP_SHIP_START_Y      = 200.f;
 float SP_SHIP_END_Y        = 240.f;
 
-const float MAX_TEXT_TIME = 3.8;
+float SHOOT_START          = 1.f;
+float SHOOT_FRAME          = 0.08f;
+
+const float MAX_TEXT_TIME = 0.8f;// 3.8;
 
 SprID id_city_ship;
 SprID id_sp_ship;
+SprID id_shoot;
 
 Intro::Intro() : StateBase("Intro", false), text_idx(0) {
 }
 
 void Intro::enter() {
     StateBase::enter();
-    stage = Stage::None;
+    stage = Stage::Shoot;
     text_idx = 0;
     stage_started = false;
     timer.start();
     id_city_ship = draw_manager.new_sprite_id();
     id_sp_ship = draw_manager.new_sprite_id();
+    id_shoot = draw_manager.new_sprite_id();
 }
 
 void Intro::exit() {
     StateBase::exit();
     draw_manager.release_sprite_id(id_city_ship);
     draw_manager.release_sprite_id(id_sp_ship);
+    draw_manager.release_sprite_id(id_shoot);
 }
 
 void Intro::update(float delta) {
@@ -233,21 +239,22 @@ void Intro::update(float delta) {
         case Shoot:
             if (!stage_started) {
                 draw_manager.draw(IMG_INTRO_CORRIDOR);
+                draw_manager.save_background();
                 break;
             }
-            //return;
-            if (time < 1.0) {
-                draw_manager.draw(IMG_INTRO_FI1_FIRE1, {462, 104, 0, 0, 2.0, 1.0});
-            } else if (time < 1.1) {
-                draw_manager.draw(IMG_INTRO_FI1_FIRE2, {440, 82, 0, 0, 2.0, 1.0});
-            } else if (time < 1.2) {
-                draw_manager.draw(IMG_INTRO_FI1_FIRE3, {422, 62, 0, 0, 2.0, 1.0});
-            } else if (time < 1.3) {
-                draw_manager.draw(IMG_INTRO_FI1_FIRE4, {320, 69, 0, 0, 2.0, 1.0});
-            } else if (time < 1.4) {
-                //draw_manager.draw(IMG_INTRO_FI1_FIRE5, {462, 104, 0, 0, 2.0, 1.0});
-            } else if (time < 1.5) {
-                //draw_manager.draw(IMG_INTRO_FI1_FIRE6, {462, 104, 0, 0, 2.0, 1.0});
+
+            if (time < SHOOT_START) {
+                draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE1, {462, 104, 0, 0, 2.0, 1.0});
+            } else if (time < SHOOT_START + SHOOT_FRAME * 1) {
+                draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE2, {442, 82, 0, 0, 2.0, 1.0});
+            } else if (time < SHOOT_START + SHOOT_FRAME * 2) {
+                draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE3, {422, 62, 0, 0, 2.0, 1.0});
+            } else if (time < SHOOT_START + SHOOT_FRAME * 3) {
+                draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE4, {320, 69, 0, 0, 2.0, 1.0});
+            } else if (time < SHOOT_START + SHOOT_FRAME * 4) {
+                draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE5, {294, 78, 0, 0, 2.0, 1.0});
+            } else if (time < SHOOT_START + SHOOT_FRAME * 5) {
+                draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE6, {332, 84, 0, 0, 2.0, 1.0});
             }
 
         default:
