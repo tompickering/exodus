@@ -330,21 +330,25 @@ void Intro::update(float delta) {
                 // State changed - just redraw everything
                 if (prev_nums_held != nums_held) {
                     draw_manager.draw(IMG_INTRO_KEYPAD);
-                    if (is_num_held()) {
-                    }
-            /*
-             * WHEN 1:pa=376:pb=650
-             * WHEN 2:pa=571:pb=626
-             * WHEN 3:pa=748:pb=605
-             * WHEN 4:pa=352:pb=479
-             * WHEN 5:pa=547:pb=455
-             * WHEN 6:pa=733:pb=431
-             * WHEN 7:pa=301:pb=281
-             * WHEN 8:pa=508:pb=251
-             * WHEN 9:pa=709:pb=218
-             *
-             */
-            draw_manager.draw(IMG_INTRO_PH1_PUSH_1, {187, 110, 0, 0, 2, 2});
+
+                    if (input_manager.is_num_held(1))
+                        draw_manager.draw(IMG_INTRO_PH1_PUSH_1, {188, 110, 0, 0, 2, 2});
+                    if (input_manager.is_num_held(2))
+                        draw_manager.draw(IMG_INTRO_PH1_PUSH_2, {285, 113, 0, 0, 2, 2});
+                    if (input_manager.is_num_held(3))
+                        draw_manager.draw(IMG_INTRO_PH1_PUSH_3, {374, 120, 0, 0, 2, 2});
+                    if (input_manager.is_num_held(4))
+                        draw_manager.draw(IMG_INTRO_PH1_PUSH_4, {176, 190, 0, 0, 2, 2});
+                    if (input_manager.is_num_held(5))
+                        draw_manager.draw(IMG_INTRO_PH1_PUSH_5, {272, 198, 0, 0, 2, 2});
+                    if (input_manager.is_num_held(6))
+                        draw_manager.draw(IMG_INTRO_PH1_PUSH_6, {366, 208, 0, 0, 2, 2});
+                    if (input_manager.is_num_held(7))
+                        draw_manager.draw(IMG_INTRO_PH1_PUSH_7, {150, 274, 0, 0, 2, 2});
+                    if (input_manager.is_num_held(8))
+                        draw_manager.draw(IMG_INTRO_PH1_PUSH_8, {254, 288, 0, 0, 2, 2});
+                    if (input_manager.is_num_held(9))
+                        draw_manager.draw(IMG_INTRO_PH1_PUSH_9, {354, 302, 0, 0, 2, 2});
                 }
 
                 released_keys = prev_nums_held & ~nums_held;
@@ -361,11 +365,13 @@ void Intro::update(float delta) {
                     }
                 }
                 prev_nums_held = nums_held;
-            } else {
-                ONCE(oid_code) L.debug("Entered code: %d", input_code);
-                ONCE(oid_padddone) draw_manager.draw(IMG_INTRO_KEYPAD);
+                return;
             }
 
+            ONCE(oid_code) L.debug("Entered code: %d", input_code);
+            ONCE(oid_padddone) draw_manager.draw(IMG_INTRO_KEYPAD);
+            // PROCcodefadeout  ?
+            next_stage(); return;
 
             break;
         case Success:
