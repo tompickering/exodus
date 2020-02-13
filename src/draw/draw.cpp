@@ -14,14 +14,14 @@ DrawManager::DrawManager() {
 }
 
 SprID DrawManager::new_sprite_id() {
-    if (++next_id == 0) {
+    if (next_id == 0) {
         // Should we congratulate the player on their playtime?
         // Or me for us not having crashed by this point? ;)
         L.warn("Sprite ID wrapping");
         next_id = ID_CURSOR + 1;
     }
     L.debug("Allocating SprID %d", next_id);
-    return next_id;
+    return next_id++;
 }
 
 void DrawManager::release_sprite_id(SprID id) {
