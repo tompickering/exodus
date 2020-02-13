@@ -49,3 +49,8 @@ unsigned int InputManagerSDL::read_numbers() {
     }
     return numbers;
 }
+
+bool InputManagerSDL::is_num_held(unsigned char n) {
+    return (bool)((read_numbers() >> n) & 1);
+
+}

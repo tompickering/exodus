@@ -6,7 +6,8 @@
 class InputManagerSDL : public InputManager {
     public:
         virtual bool update() override;
-        virtual unsigned int read_numbers();
+        virtual unsigned int read_numbers() override;
+        virtual bool is_num_held(unsigned char) override;
 };
 
 #endif
