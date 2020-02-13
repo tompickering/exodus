@@ -15,6 +15,7 @@ using std::string;
 class DrawManager {
     public:
         virtual bool init() = 0;
+        virtual void load_resources() = 0;
         virtual void update(MousePos, MousePos) = 0;
         virtual void draw_text(const char*, int, int, int, int,
                                unsigned char, unsigned char, unsigned char) = 0;

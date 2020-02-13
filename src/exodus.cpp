@@ -48,6 +48,8 @@ int Exodus::run(int argc, char** argv) {
         return 1;
     }
 
+    draw_manager.load_resources();
+
     running = true;
 
     TIMER game_timer;

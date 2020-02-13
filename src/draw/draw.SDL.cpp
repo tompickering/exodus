@@ -45,6 +45,16 @@ bool DrawManagerSDL::init() {
     return true;
 }
 
+void DrawManagerSDL::load_resources() {
+    for (unsigned int i = 0;; ++i) {
+        const char* img_path = ASSETS_IMG[i];
+        if (img_path[0] == '\0')
+            break;
+        L.debug("Loading %s", img_path);
+        sprite_data[string(img_path)] = (void*) IMG_Load(img_path);
+    }
+}
+
 void DrawManagerSDL::update(MousePos mouse_pos, MousePos click_pos) {
     SDL_UpdateWindowSurface(win);
 }
