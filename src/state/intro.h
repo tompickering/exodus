@@ -28,12 +28,12 @@ class Intro : StateBase {
             Shoot,
             GuardShot,
             Code,
-            Fail,
             Success,
             DepartShuttle,
             DepartShip,
             Title,
             End,
+            Fail,
         };
 
         Stage stage;

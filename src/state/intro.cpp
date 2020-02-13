@@ -57,12 +57,16 @@ float SHOOT_FRAME          = 0.08f;
 float SHOT_START           = 1.55f;
 float SHOT_FRAME           = 0.08f;
 
+float GUARD_FRAME          = 0.15f;
+
+
 const float MAX_TEXT_TIME = 0.8f;// 3.8;
 
 SprID id_city_ship;
 SprID id_sp_ship;
 SprID id_shoot;
 SprID id_shot;
+SprID id_guardshot;
 
 Intro::Intro() : StateBase("Intro", false), text_idx(0) {
 }
@@ -77,6 +81,7 @@ void Intro::enter() {
     id_sp_ship = draw_manager.new_sprite_id();
     id_shoot = draw_manager.new_sprite_id();
     id_shot = draw_manager.new_sprite_id();
+    id_guardshot = draw_manager.new_sprite_id();
 }
 
 void Intro::exit() {
@@ -85,6 +90,7 @@ void Intro::exit() {
     draw_manager.release_sprite_id(id_sp_ship);
     draw_manager.release_sprite_id(id_shoot);
     draw_manager.release_sprite_id(id_shot);
+    draw_manager.release_sprite_id(id_guardshot);
 }
 
 void Intro::update(float delta) {
@@ -280,6 +286,38 @@ void Intro::update(float delta) {
                 }
             }
 
+            return;
+        case GuardShot:
+            if (!stage_started) {
+                draw_manager.draw(IMG_INTRO_DOOR);
+                draw_manager.save_background();
+            }
+
+            if (time < GUARD_FRAME) {
+                draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL1, {315, 271, 0.5, 0.5, 2.0, 2.0});
+            } else if (time < GUARD_FRAME * 2) {
+                draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL2, {291, 300, 0.5, 0.5, 2.0, 2.0});
+            } else if (time < GUARD_FRAME * 3) {
+                draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL3, {293, 307, 0.5, 0.5, 2.0, 2.0});
+            } else if (time < GUARD_FRAME * 4) {
+                draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL4, {285, 391, 0.5, 0.5, 2.0, 2.0});
+            } else if (time < GUARD_FRAME * 5) {
+                draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL5, {272, 484, 0.5, 1.0, 2.0, 2.0});
+            } else if (time < GUARD_FRAME * 6) {
+                draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL6, {272, 484, 0.5, 1.0, 2.0, 2.0});
+            } else if (time < GUARD_FRAME * 7) {
+                draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL7, {272, 484, 0.5, 1.0, 2.0, 2.0});
+            } else {
+                next_stage(); return;
+            }
+
+        case Code:
+        case Success:
+        case DepartShuttle:
+        case DepartShip:
+        case Title:
+        case End:
+        case Fail:
         default:
             break;
     }
