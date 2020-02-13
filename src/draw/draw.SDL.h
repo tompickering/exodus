@@ -13,7 +13,7 @@ class DrawManagerSDL : public DrawManager {
         virtual void draw_text(const char*, int, int, int, int,
                                unsigned char, unsigned char, unsigned char) override;
     protected:
-        virtual void* get_sprite_data(string) override;
+        virtual void* get_sprite_data(const char*) override;
     private:
         SDL_Window *win;
         SDL_Surface *surf;

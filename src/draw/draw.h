@@ -2,7 +2,6 @@
 #define GUARD_DRAW_H
 
 #include <map>
-#include <string>
 
 #include "../shared.h"
 
@@ -10,7 +9,6 @@
 #define SCREEN_HEIGHT 512
 
 using std::map;
-using std::string;
 
 class DrawManager {
     public:
@@ -20,8 +18,8 @@ class DrawManager {
         virtual void draw_text(const char*, int, int, int, int,
                                unsigned char, unsigned char, unsigned char) = 0;
     protected:
-        map<string, void*> sprite_data;
-        virtual void* get_sprite_data(string) = 0;
+        map<const char*, void*> sprite_data;
+        virtual void* get_sprite_data(const char*) = 0;
         void *font;
 };
 

@@ -3,15 +3,14 @@
 
 #include "draw.SDL.h"
 
-#include <string>
+#include <cstring>
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
 #include "../shared.h"
 #include "../assetpaths.h"
-
-using std::string;
 
 bool DrawManagerSDL::init() {
     L.info("DrawManager Init...");
@@ -51,7 +50,7 @@ void DrawManagerSDL::load_resources() {
         if (img_path[0] == '\0')
             break;
         L.debug("Loading %s", img_path);
-        sprite_data[string(img_path)] = (void*) IMG_Load(img_path);
+        sprite_data[img_path] = (void*) IMG_Load(img_path);
     }
 }
 
@@ -59,10 +58,10 @@ void DrawManagerSDL::update(MousePos mouse_pos, MousePos click_pos) {
     SDL_UpdateWindowSurface(win);
 }
 
-void* DrawManagerSDL::get_sprite_data(string img_path) {
-    if (img_path != "") {
+void* DrawManagerSDL::get_sprite_data(const char* img_path) {
+    if (strnlen(img_path, 1)) {
         if (!sprite_data.count(img_path)) {
-            sprite_data[img_path] = (void*) IMG_Load(img_path.c_str());
+            sprite_data[img_path] = (void*) IMG_Load(img_path);
             return sprite_data[img_path];
         }
         return sprite_data[img_path];
