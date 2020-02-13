@@ -5,13 +5,13 @@
 
 using std::map;
 
-enum ExodusState {
+enum ExodusMode {
     ST_None,
     ST_Intro,
     ST_MainMenu,
 };
 
-class StateBase;
+class ModeBase;
 
 class Exodus {
     public:
@@ -22,9 +22,9 @@ class Exodus {
         virtual bool init() = 0;
         virtual void cleanup() = 0;
     private:
-        StateBase *state;
-        map<ExodusState, StateBase*> state_map;
-        void set_state(ExodusState);
+        ModeBase *mode;
+        map<ExodusMode, ModeBase*> mode_map;
+        void set_mode(ExodusMode);
 };
 
 #ifdef SDL

@@ -89,11 +89,11 @@ unsigned char keys_to_input = 3;
 bool interactive_sequence_completed = false;
 bool launchpad_light_toggle = false;
 
-Intro::Intro() : StateBase("Intro"), text_idx(0) {
+Intro::Intro() : ModeBase("Intro"), text_idx(0) {
 }
 
 void Intro::enter() {
-    StateBase::enter();
+    ModeBase::enter();
     stage = Stage::None;
     text_idx = 0;
     stage_started = false;
@@ -110,7 +110,7 @@ void Intro::enter() {
 }
 
 void Intro::exit() {
-    StateBase::exit();
+    ModeBase::exit();
     draw_manager.release_sprite_id(id_city_ship);
     draw_manager.release_sprite_id(id_sp_ship);
     draw_manager.release_sprite_id(id_shoot);
@@ -121,7 +121,7 @@ void Intro::exit() {
     draw_manager.release_sprite_id(id_shuttle_launch);
 }
 
-ExodusState Intro::update(float delta) {
+ExodusMode Intro::update(float delta) {
     float time = timer.get_delta();
     float text_time = text_timer.get_delta();
     static bool text_delay_complete = false;
@@ -131,13 +131,13 @@ ExodusState Intro::update(float delta) {
 
     switch(stage) {
         case None:
-            next_stage(); return ExodusState::ST_None;
+            next_stage(); return ExodusMode::ST_None;
             break;
         case Init:
-            next_stage(); return ExodusState::ST_None;
+            next_stage(); return ExodusMode::ST_None;
             break;
         case Artex:
-            next_stage(); return ExodusState::ST_None;
+            next_stage(); return ExodusMode::ST_None;
             break;
         case Earth:
             if (!stage_started) {
@@ -149,11 +149,11 @@ ExodusState Intro::update(float delta) {
             }
 
             if (draw_manager.pixelswap_active()) {
-                return ExodusState::ST_None;
+                return ExodusMode::ST_None;
             }
 
             if (time < 1.8) {
-                return ExodusState::ST_None;
+                return ExodusMode::ST_None;
             } else if (!text_delay_complete) {
                 text_delay_complete = true;
                 text_timer.start();
@@ -165,7 +165,7 @@ ExodusState Intro::update(float delta) {
                     ++text_idx;
                     text_timer.start();
                 } else {
-                    next_stage(); return ExodusState::ST_None;
+                    next_stage(); return ExodusMode::ST_None;
                 }
             }
 
@@ -180,7 +180,7 @@ ExodusState Intro::update(float delta) {
             }
 
             if (draw_manager.pixelswap_active()) {
-                return ExodusState::ST_None;
+                return ExodusMode::ST_None;
             }
 
             if (text_idx == 1) {
@@ -212,7 +212,7 @@ ExodusState Intro::update(float delta) {
                     ++text_idx;
                     text_timer.start();
                 } else {
-                    next_stage(); return ExodusState::ST_None;
+                    next_stage(); return ExodusMode::ST_None;
                 }
             }
 
@@ -231,7 +231,7 @@ ExodusState Intro::update(float delta) {
                     ++text_idx;
                     text_timer.start();
                 } else {
-                    next_stage(); return ExodusState::ST_None;
+                    next_stage(); return ExodusMode::ST_None;
                 }
             }
 
@@ -260,7 +260,7 @@ ExodusState Intro::update(float delta) {
                     ++text_idx;
                     text_timer.start();
                 } else {
-                    next_stage(); return ExodusState::ST_None;
+                    next_stage(); return ExodusMode::ST_None;
                 }
             }
 
@@ -274,10 +274,10 @@ ExodusState Intro::update(float delta) {
             }
 
             if (time < 1.8) {
-                return ExodusState::ST_None;
+                return ExodusMode::ST_None;
             }
 
-            next_stage(); return ExodusState::ST_None;
+            next_stage(); return ExodusMode::ST_None;
 
             break;
         case Shoot:
@@ -315,7 +315,7 @@ ExodusState Intro::update(float delta) {
                 } else if (time < SHOT_START + SHOT_FRAME * 5) {
                     ONCE(oid_shot_5) draw_manager.draw(id_shot, IMG_INTRO_FI1_SHOT5, {0, 180, 0, 0, 2.0, 2.0});
                 } else {
-                    next_stage(); return ExodusState::ST_None;
+                    next_stage(); return ExodusMode::ST_None;
                 }
             }
 
@@ -341,7 +341,7 @@ ExodusState Intro::update(float delta) {
             } else if (time < GUARD_FRAME * 7) {
                 ONCE(oid_guard_7) draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL7, {272, 484, 0.5, 1.0, 2.0, 2.0});
             } else {
-                next_stage(); return ExodusState::ST_None;
+                next_stage(); return ExodusMode::ST_None;
             }
 
             break;
@@ -357,7 +357,7 @@ ExodusState Intro::update(float delta) {
             nums_held = input_manager.read_numbers();
 
             if (keys_to_input) {
-                // State changed - just redraw everything
+                // Mode changed - just redraw everything
                 if (prev_nums_held != nums_held) {
                     draw_manager.draw(IMG_INTRO_KEYPAD);
 
@@ -412,7 +412,7 @@ ExodusState Intro::update(float delta) {
                     }
                 }
                 prev_nums_held = nums_held;
-                return ExodusState::ST_None;
+                return ExodusMode::ST_None;
             }
 
             ONCE(oid_code) L.debug("Entered code: %d", input_code);
@@ -435,7 +435,7 @@ ExodusState Intro::update(float delta) {
                         RES_Y - 26,
                         {brightness, brightness, brightness},
                         {0, 0, 0});
-                return ExodusState::ST_None;
+                return ExodusMode::ST_None;
             } else {
                 interactive_sequence_completed = true;
             }
@@ -447,25 +447,25 @@ ExodusState Intro::update(float delta) {
                     text_idx = 19;
                 }
                 text_timer.start();
-                return ExodusState::ST_None;
+                return ExodusMode::ST_None;
             }
 
             draw_text();
 
             if (text_time < MAX_TEXT_TIME) {
-                return ExodusState::ST_None;
+                return ExodusMode::ST_None;
             }
 
             if (input_code == 594) {
                 ONCE(coode_startface) draw_manager.fade_black(1.2f, 12);
                 if (draw_manager.fade_active() || text_time < MAX_TEXT_TIME + 2.4) {
-                    return ExodusState::ST_None;
+                    return ExodusMode::ST_None;
                 }
-                next_stage(); return ExodusState::ST_None;
+                next_stage(); return ExodusMode::ST_None;
             } else {
                 stage = Fail;
                 stage_started = false;
-                return ExodusState::ST_None;
+                return ExodusMode::ST_None;
             }
 
             break;
@@ -495,9 +495,9 @@ ExodusState Intro::update(float delta) {
                 ONCE(oid_dooropen) text_timer.start();
                 draw_text();
                 if (text_timer.get_delta() < MAX_TEXT_TIME) {
-                    return ExodusState::ST_None;
+                    return ExodusMode::ST_None;
                 } else {
-                    next_stage(); return ExodusState::ST_None;
+                    next_stage(); return ExodusMode::ST_None;
                 }
             }
 
@@ -515,7 +515,7 @@ ExodusState Intro::update(float delta) {
                     ++text_idx;
                     text_timer.start();
                 } else {
-                    next_stage(); return ExodusState::ST_None;
+                    next_stage(); return ExodusMode::ST_None;
                 }
             }
 
@@ -572,7 +572,7 @@ ExodusState Intro::update(float delta) {
                     ++text_idx;
                     text_timer.start();
                 } else {
-                    next_stage(); return ExodusState::ST_None;
+                    next_stage(); return ExodusMode::ST_None;
                 }
             }
 
@@ -580,10 +580,10 @@ ExodusState Intro::update(float delta) {
 
             break;
         case Title:
-            next_stage(); return ExodusState::ST_None;
+            next_stage(); return ExodusMode::ST_None;
             break;
         case End:
-            next_stage(); return ExodusState::ST_MainMenu;
+            next_stage(); return ExodusMode::ST_MainMenu;
             break;
         case Fail:
             if (!stage_started) {
@@ -595,7 +595,7 @@ ExodusState Intro::update(float delta) {
     }
 
     stage_started = true;
-    return ExodusState::ST_None;
+    return ExodusMode::ST_None;
 }
 
 void Intro::next_stage() {

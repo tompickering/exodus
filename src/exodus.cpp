@@ -8,8 +8,8 @@
 #include "draw/draw.h"
 #include "input/input.h"
 
-#include "state/state_base.h"
-#include "state/intro.h"
+#include "mode/mode_base.h"
+#include "mode/intro.h"
 
 #include <csignal>
 
@@ -28,7 +28,7 @@ void signal_handler(int signum) {
 }
 
 Exodus::Exodus() {
-    state = nullptr;
+    mode = nullptr;
 }
 
 Exodus::~Exodus() {
@@ -55,9 +55,9 @@ int Exodus::run(int argc, char** argv) {
     draw_manager.load_resources();
 
     Intro st_intro;
-    state_map[ST_Intro] = (StateBase*) &st_intro;
+    mode_map[ST_Intro] = (ModeBase*) &st_intro;
 
-    set_state(ST_Intro);
+    set_mode(ST_Intro);
 
     running = true;
 
@@ -71,9 +71,9 @@ int Exodus::run(int argc, char** argv) {
     while (running) {
         frame_timer.start();
 
-        ExodusState next = state->update(delta_time);
-        if (next != ExodusState::ST_None) {
-            set_state(next);
+        ExodusMode next = mode->update(delta_time);
+        if (next != ExodusMode::ST_None) {
+            set_mode(next);
         }
 
         draw_manager.update(mouse_pos, click_pos);
@@ -98,11 +98,11 @@ int Exodus::run(int argc, char** argv) {
     return 0;
 }
 
-void Exodus::set_state(ExodusState new_state) {
-    const char* state_name = state ? state->name : "<NONE>";
-    if (state) state->exit();
-    state = state_map[new_state];
-    const char* new_state_name = state->name;
-    L.debug("STATE: %s -> %s", state_name, new_state_name);
-    state->enter();
+void Exodus::set_mode(ExodusMode new_mode) {
+    const char* mode_name = mode ? mode->name : "<NONE>";
+    if (mode) mode->exit();
+    mode = mode_map[new_mode];
+    const char* new_mode_name = mode->name;
+    L.debug("MODE: %s -> %s", mode_name, new_mode_name);
+    mode->enter();
 }

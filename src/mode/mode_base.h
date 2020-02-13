@@ -1,18 +1,18 @@
-#ifndef GUARD_STATE_BASE_H
-#define GUARD_STATE_BASE_H
+#ifndef GUARD_MODE_BASE_H
+#define GUARD_MODE_BASE_H
 
 #include "../exodus.h"
 #include "../platform.h"
 #include "../timer/timer.h"
 
-class StateBase {
+class ModeBase {
     public:
-        StateBase(const char*);
-        StateBase(const char*, bool);
-        virtual ~StateBase();
+        ModeBase(const char*);
+        ModeBase(const char*, bool);
+        virtual ~ModeBase();
         virtual void enter();
         virtual void exit();
-        virtual ExodusState update(float) = 0;
+        virtual ExodusMode update(float) = 0;
         bool draw_cursor;
         const char* get_name();
         const char *name;

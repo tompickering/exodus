@@ -1,17 +1,17 @@
 #ifndef GUARD_INTRO_H
 #define GUARD_INTRO_H
 
-#include "state_base.h"
+#include "mode_base.h"
 
 #include "../platform.h"
 #include "../draw/draw.h"
 
-class Intro : StateBase {
+class Intro : ModeBase {
     public:
         Intro();
         virtual void enter() override;
         virtual void exit() override;
-        virtual ExodusState update(float) override;
+        virtual ExodusMode update(float) override;
     private:
         TIMER timer;
         TIMER text_timer;
