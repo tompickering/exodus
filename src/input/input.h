@@ -15,6 +15,7 @@ class InputManager {
         bool consume(Input);
         MousePos get_mouse_pos();
         MousePos read_click();
+        virtual unsigned int read_numbers() = 0;
     protected:
         bool space;
         bool escape;

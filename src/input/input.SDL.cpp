@@ -37,3 +37,15 @@ bool InputManagerSDL::update() {
 
     return true;
 }
+
+unsigned int InputManagerSDL::read_numbers() {
+    SDL_PumpEvents();
+    unsigned int numbers = 0;
+    const Uint8 *state = SDL_GetKeyboardState(nullptr);
+    for (int i = 0; i <= 9; ++i) {
+        if (state[SDL_SCANCODE_1 + ((i + 9) % 10)]) {
+            numbers |= (1 << i);
+        }
+    }
+    return numbers;
+}
