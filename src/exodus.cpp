@@ -10,6 +10,7 @@
 
 #include "mode/mode_base.h"
 #include "mode/intro.h"
+#include "mode/menu.h"
 
 #include <csignal>
 
@@ -55,7 +56,9 @@ int Exodus::run(int argc, char** argv) {
     draw_manager.load_resources();
 
     Intro mode_intro;
+    Menu  mode_menu;
     mode_map[MODE_Intro] = (ModeBase*) &mode_intro;
+    mode_map[MODE_Menu] = (ModeBase*) &mode_menu;
 
     set_mode(MODE_Intro);
 

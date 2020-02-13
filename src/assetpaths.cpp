@@ -13,6 +13,7 @@ const char *IMG_INTRO_KEYPAD    = D_PIC "ts1";
 const char *IMG_INTRO_FAIL      = D_PIC "go1";
 const char *IMG_INTRO_LAUNCH    = D_PIC "ho1";
 const char *IMG_INTRO_SPACE     = D_PIC "js1";
+const char *IMG_MENU_BG_INITIAL = D_PIC "st11";
 
 #define D_INTRO "assets/img/intro/"
 const char *IMG_INTRO_BT1_FALL1    = D_INTRO "BT1_fall1";
@@ -78,6 +79,7 @@ const char *ASSETS_IMG[] = {
     IMG_INTRO_FAIL,
     IMG_INTRO_LAUNCH,
     IMG_INTRO_SPACE,
+    IMG_MENU_BG_INITIAL,
 
     IMG_INTRO_BT1_FALL1,
     IMG_INTRO_BT1_FALL2,

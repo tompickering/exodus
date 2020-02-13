@@ -8,7 +8,7 @@ using std::map;
 enum ExodusMode {
     MODE_None,
     MODE_Intro,
-    MODE_MainMenu,
+    MODE_Menu,
 };
 
 class ModeBase;

@@ -583,7 +583,7 @@ ExodusMode Intro::update(float delta) {
             next_stage(); return ExodusMode::MODE_None;
             break;
         case End:
-            next_stage(); return ExodusMode::MODE_MainMenu;
+            next_stage(); return ExodusMode::MODE_Menu;
             break;
         case Fail:
             if (!stage_started) {

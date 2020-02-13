@@ -69,6 +69,8 @@ extern const char *IMG_INTRO_OD1_SEPP;
 extern const char *IMG_INTRO_FI1_SHOT2;
 extern const char *IMG_INTRO_SH3_CRUISER2;
 
+extern const char *IMG_MENU_BG_INITIAL;
+
 extern const char *ASSETS_IMG[];
 
 #endif
