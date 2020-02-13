@@ -54,10 +54,10 @@ int Exodus::run(int argc, char** argv) {
 
     draw_manager.load_resources();
 
-    Intro st_intro;
-    mode_map[ST_Intro] = (ModeBase*) &st_intro;
+    Intro mode_intro;
+    mode_map[MODE_Intro] = (ModeBase*) &mode_intro;
 
-    set_mode(ST_Intro);
+    set_mode(MODE_Intro);
 
     running = true;
 
@@ -72,7 +72,7 @@ int Exodus::run(int argc, char** argv) {
         frame_timer.start();
 
         ExodusMode next = mode->update(delta_time);
-        if (next != ExodusMode::ST_None) {
+        if (next != ExodusMode::MODE_None) {
             set_mode(next);
         }
 

@@ -131,13 +131,13 @@ ExodusMode Intro::update(float delta) {
 
     switch(stage) {
         case None:
-            next_stage(); return ExodusMode::ST_None;
+            next_stage(); return ExodusMode::MODE_None;
             break;
         case Init:
-            next_stage(); return ExodusMode::ST_None;
+            next_stage(); return ExodusMode::MODE_None;
             break;
         case Artex:
-            next_stage(); return ExodusMode::ST_None;
+            next_stage(); return ExodusMode::MODE_None;
             break;
         case Earth:
             if (!stage_started) {
@@ -149,11 +149,11 @@ ExodusMode Intro::update(float delta) {
             }
 
             if (draw_manager.pixelswap_active()) {
-                return ExodusMode::ST_None;
+                return ExodusMode::MODE_None;
             }
 
             if (time < 1.8) {
-                return ExodusMode::ST_None;
+                return ExodusMode::MODE_None;
             } else if (!text_delay_complete) {
                 text_delay_complete = true;
                 text_timer.start();
@@ -165,7 +165,7 @@ ExodusMode Intro::update(float delta) {
                     ++text_idx;
                     text_timer.start();
                 } else {
-                    next_stage(); return ExodusMode::ST_None;
+                    next_stage(); return ExodusMode::MODE_None;
                 }
             }
 
@@ -180,7 +180,7 @@ ExodusMode Intro::update(float delta) {
             }
 
             if (draw_manager.pixelswap_active()) {
-                return ExodusMode::ST_None;
+                return ExodusMode::MODE_None;
             }
 
             if (text_idx == 1) {
@@ -212,7 +212,7 @@ ExodusMode Intro::update(float delta) {
                     ++text_idx;
                     text_timer.start();
                 } else {
-                    next_stage(); return ExodusMode::ST_None;
+                    next_stage(); return ExodusMode::MODE_None;
                 }
             }
 
@@ -231,7 +231,7 @@ ExodusMode Intro::update(float delta) {
                     ++text_idx;
                     text_timer.start();
                 } else {
-                    next_stage(); return ExodusMode::ST_None;
+                    next_stage(); return ExodusMode::MODE_None;
                 }
             }
 
@@ -260,7 +260,7 @@ ExodusMode Intro::update(float delta) {
                     ++text_idx;
                     text_timer.start();
                 } else {
-                    next_stage(); return ExodusMode::ST_None;
+                    next_stage(); return ExodusMode::MODE_None;
                 }
             }
 
@@ -274,10 +274,10 @@ ExodusMode Intro::update(float delta) {
             }
 
             if (time < 1.8) {
-                return ExodusMode::ST_None;
+                return ExodusMode::MODE_None;
             }
 
-            next_stage(); return ExodusMode::ST_None;
+            next_stage(); return ExodusMode::MODE_None;
 
             break;
         case Shoot:
@@ -315,7 +315,7 @@ ExodusMode Intro::update(float delta) {
                 } else if (time < SHOT_START + SHOT_FRAME * 5) {
                     ONCE(oid_shot_5) draw_manager.draw(id_shot, IMG_INTRO_FI1_SHOT5, {0, 180, 0, 0, 2.0, 2.0});
                 } else {
-                    next_stage(); return ExodusMode::ST_None;
+                    next_stage(); return ExodusMode::MODE_None;
                 }
             }
 
@@ -341,7 +341,7 @@ ExodusMode Intro::update(float delta) {
             } else if (time < GUARD_FRAME * 7) {
                 ONCE(oid_guard_7) draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL7, {272, 484, 0.5, 1.0, 2.0, 2.0});
             } else {
-                next_stage(); return ExodusMode::ST_None;
+                next_stage(); return ExodusMode::MODE_None;
             }
 
             break;
@@ -412,7 +412,7 @@ ExodusMode Intro::update(float delta) {
                     }
                 }
                 prev_nums_held = nums_held;
-                return ExodusMode::ST_None;
+                return ExodusMode::MODE_None;
             }
 
             ONCE(oid_code) L.debug("Entered code: %d", input_code);
@@ -435,7 +435,7 @@ ExodusMode Intro::update(float delta) {
                         RES_Y - 26,
                         {brightness, brightness, brightness},
                         {0, 0, 0});
-                return ExodusMode::ST_None;
+                return ExodusMode::MODE_None;
             } else {
                 interactive_sequence_completed = true;
             }
@@ -447,25 +447,25 @@ ExodusMode Intro::update(float delta) {
                     text_idx = 19;
                 }
                 text_timer.start();
-                return ExodusMode::ST_None;
+                return ExodusMode::MODE_None;
             }
 
             draw_text();
 
             if (text_time < MAX_TEXT_TIME) {
-                return ExodusMode::ST_None;
+                return ExodusMode::MODE_None;
             }
 
             if (input_code == 594) {
                 ONCE(coode_startface) draw_manager.fade_black(1.2f, 12);
                 if (draw_manager.fade_active() || text_time < MAX_TEXT_TIME + 2.4) {
-                    return ExodusMode::ST_None;
+                    return ExodusMode::MODE_None;
                 }
-                next_stage(); return ExodusMode::ST_None;
+                next_stage(); return ExodusMode::MODE_None;
             } else {
                 stage = Fail;
                 stage_started = false;
-                return ExodusMode::ST_None;
+                return ExodusMode::MODE_None;
             }
 
             break;
@@ -495,9 +495,9 @@ ExodusMode Intro::update(float delta) {
                 ONCE(oid_dooropen) text_timer.start();
                 draw_text();
                 if (text_timer.get_delta() < MAX_TEXT_TIME) {
-                    return ExodusMode::ST_None;
+                    return ExodusMode::MODE_None;
                 } else {
-                    next_stage(); return ExodusMode::ST_None;
+                    next_stage(); return ExodusMode::MODE_None;
                 }
             }
 
@@ -515,7 +515,7 @@ ExodusMode Intro::update(float delta) {
                     ++text_idx;
                     text_timer.start();
                 } else {
-                    next_stage(); return ExodusMode::ST_None;
+                    next_stage(); return ExodusMode::MODE_None;
                 }
             }
 
@@ -572,7 +572,7 @@ ExodusMode Intro::update(float delta) {
                     ++text_idx;
                     text_timer.start();
                 } else {
-                    next_stage(); return ExodusMode::ST_None;
+                    next_stage(); return ExodusMode::MODE_None;
                 }
             }
 
@@ -580,10 +580,10 @@ ExodusMode Intro::update(float delta) {
 
             break;
         case Title:
-            next_stage(); return ExodusMode::ST_None;
+            next_stage(); return ExodusMode::MODE_None;
             break;
         case End:
-            next_stage(); return ExodusMode::ST_MainMenu;
+            next_stage(); return ExodusMode::MODE_MainMenu;
             break;
         case Fail:
             if (!stage_started) {
@@ -595,7 +595,7 @@ ExodusMode Intro::update(float delta) {
     }
 
     stage_started = true;
-    return ExodusMode::ST_None;
+    return ExodusMode::MODE_None;
 }
 
 void Intro::next_stage() {

@@ -19,5 +19,5 @@ void ModeBase::exit() {
 }
 
 ExodusMode ModeBase::update(float delta) {
-    return ExodusMode::ST_None;
+    return ExodusMode::MODE_None;
 }
