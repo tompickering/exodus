@@ -11,6 +11,7 @@ typedef struct {
 
 #include "draw/draw.h"
 #include "audio/audio.h"
+#include "input/input.h"
 
 #define PROG_NAME "Exodus"
 
@@ -21,8 +22,10 @@ extern Log::Logger L;
 // an as-yet undefined type.
 class DRAWMANAGER;
 class AUDIOMANAGER;
+class INPUTMANAGER;
 
 extern DRAWMANAGER draw_manager;
 extern AUDIOMANAGER audio_manager;
+extern INPUTMANAGER input_manager;
 
 #endif
