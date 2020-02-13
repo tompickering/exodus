@@ -11,7 +11,8 @@ enum Input {
 class InputManager {
     public:
         InputManager();
-        bool read(Input, bool reset);
+        bool read(Input);
+        bool consume(Input);
         MousePos get_mouse_pos();
         MousePos read_click();
     protected:
@@ -20,6 +21,8 @@ class InputManager {
         MousePos mouse_pos;
         MousePos click_pos;
         virtual bool update() = 0;
+    private:
+        bool _read(Input input, bool reset);
 };
 
 #ifdef SDL

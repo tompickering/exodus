@@ -7,7 +7,15 @@ InputManager::InputManager() {
     click_pos.y = -1;
 }
 
-bool InputManager::read(Input input, bool reset) {
+bool InputManager::consume(Input input) {
+    return _read(input, true);
+}
+
+bool InputManager::read(Input input) {
+    return _read(input, false);
+}
+
+bool InputManager::_read(Input input, bool reset) {
     bool result;
     switch (input) {
         case Space:

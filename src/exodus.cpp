@@ -75,7 +75,7 @@ int Exodus::run(int argc, char** argv) {
             running = false;
         }
 
-        if (input_manager.read(Input::Escape, true)) {
+        if (input_manager.consume(Input::Escape)) {
             running = false;
         }
 
