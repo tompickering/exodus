@@ -14,7 +14,7 @@ class StateBase {
         virtual void exit();
         virtual ExodusState update(float) = 0;
         bool draw_cursor;
-    protected:
+        const char* get_name();
         const char *name;
 };
 

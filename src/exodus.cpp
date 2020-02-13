@@ -8,6 +8,7 @@
 #include "draw/draw.h"
 #include "input/input.h"
 
+#include "state/state_base.h"
 #include "state/intro.h"
 
 #include <csignal>
@@ -27,6 +28,7 @@ void signal_handler(int signum) {
 }
 
 Exodus::Exodus() {
+    state = nullptr;
 }
 
 Exodus::~Exodus() {
@@ -52,14 +54,16 @@ int Exodus::run(int argc, char** argv) {
 
     draw_manager.load_resources();
 
+    Intro st_intro;
+    state_map[ST_Intro] = (StateBase*) &st_intro;
+
+    set_state(ST_Intro);
+
     running = true;
 
     TIMER game_timer;
     TIMER frame_timer;
     float delta_time = 0.f;
-
-    Intro intro;
-    intro.enter();
 
     MousePos mouse_pos = {-1, -1};
     MousePos click_pos = {-1, -1};
@@ -67,9 +71,9 @@ int Exodus::run(int argc, char** argv) {
     while (running) {
         frame_timer.start();
 
-        ExodusState next = intro.update(delta_time);
+        ExodusState next = state->update(delta_time);
         if (next != ExodusState::ST_None) {
-            L.debug("State change requested: %d", next);
+            set_state(next);
         }
 
         draw_manager.update(mouse_pos, click_pos);
@@ -92,4 +96,13 @@ int Exodus::run(int argc, char** argv) {
     cleanup();
 
     return 0;
+}
+
+void Exodus::set_state(ExodusState new_state) {
+    const char* state_name = state ? state->name : "<NONE>";
+    if (state) state->exit();
+    state = state_map[new_state];
+    const char* new_state_name = state->name;
+    L.debug("STATE: %s -> %s", state_name, new_state_name);
+    state->enter();
 }
