@@ -54,12 +54,15 @@ float SP_SHIP_END_Y        = 240.f;
 
 float SHOOT_START          = 1.f;
 float SHOOT_FRAME          = 0.08f;
+float SHOT_START           = 1.55f;
+float SHOT_FRAME           = 0.08f;
 
 const float MAX_TEXT_TIME = 0.8f;// 3.8;
 
 SprID id_city_ship;
 SprID id_sp_ship;
 SprID id_shoot;
+SprID id_shot;
 
 Intro::Intro() : StateBase("Intro", false), text_idx(0) {
 }
@@ -73,6 +76,7 @@ void Intro::enter() {
     id_city_ship = draw_manager.new_sprite_id();
     id_sp_ship = draw_manager.new_sprite_id();
     id_shoot = draw_manager.new_sprite_id();
+    id_shot = draw_manager.new_sprite_id();
 }
 
 void Intro::exit() {
@@ -80,6 +84,7 @@ void Intro::exit() {
     draw_manager.release_sprite_id(id_city_ship);
     draw_manager.release_sprite_id(id_sp_ship);
     draw_manager.release_sprite_id(id_shoot);
+    draw_manager.release_sprite_id(id_shot);
 }
 
 void Intro::update(float delta) {
@@ -255,6 +260,24 @@ void Intro::update(float delta) {
                 draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE5, {294, 78, 0, 0, 2.0, 1.0});
             } else if (time < SHOOT_START + SHOOT_FRAME * 5) {
                 draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE6, {332, 84, 0, 0, 2.0, 1.0});
+                draw_manager.save_background();
+            }
+
+            if (time > SHOT_START) {
+                if (time < SHOT_START + SHOT_FRAME) {
+                    draw_manager.draw(id_shot, IMG_INTRO_FI1_SHOT1, {280, 144, 0, 0, 2.0, 2.0});
+                    draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE6, {332, 84, 0, 0, 2.0, 1.0});
+                } else if (time < SHOT_START + SHOT_FRAME * 2) {
+                    draw_manager.draw(id_shot, IMG_INTRO_FI1_SHOT2, {204, 155, 0, 0, 2.0, 2.0});
+                } else if (time < SHOT_START + SHOT_FRAME * 3) {
+                    draw_manager.draw(id_shot, IMG_INTRO_FI1_SHOT3, {136, 162, 0, 0, 2.0, 2.0});
+                } else if (time < SHOT_START + SHOT_FRAME * 4) {
+                    draw_manager.draw(id_shot, IMG_INTRO_FI1_SHOT4, {68, 172, 0, 0, 2.0, 2.0});
+                } else if (time < SHOT_START + SHOT_FRAME * 5) {
+                    draw_manager.draw(id_shot, IMG_INTRO_FI1_SHOT5, {0, 180, 0, 0, 2.0, 2.0});
+                } else {
+                    next_stage(); return;
+                }
             }
 
         default:
