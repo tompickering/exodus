@@ -7,7 +7,7 @@ Menu::Menu() : ModeBase("Menu") {
 
 void Menu::enter() {
     ModeBase::enter();
-    draw_manager.pixelswap_draw(IMG_MENU_BG_INITIAL);
+    draw_manager.pixelswap_draw(IMG_BG_STARS7);
     draw_manager.pixelswap_start();
 }
 
