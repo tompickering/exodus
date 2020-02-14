@@ -3,8 +3,10 @@
 #include <cmath>
 
 #include "../assetpaths.h"
-#include "../draw/draw.h"
-#include "../shared.h"
+
+// Facility to execute a single statement or block once only.
+// Requires a unique name within the context - but this is checked at compile time.
+#define ONCE(once_id) static bool once_id = true; if (once_id && !(once_id = false))
 
 static const char* intro_text[] = {
     "It is the year 3011.",

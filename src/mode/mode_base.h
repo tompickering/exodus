@@ -5,6 +5,14 @@
 #include "../platform.h"
 #include "../timer/timer.h"
 
+#include "../draw/draw.h"
+#include "../audio/audio.h"
+#include "../input/input.h"
+
+extern DRAWMANAGER draw_manager;
+extern AUDIOMANAGER audio_manager;
+extern INPUTMANAGER input_manager;
+
 class ModeBase {
     public:
         ModeBase(const char*);
