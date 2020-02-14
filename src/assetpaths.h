@@ -9,6 +9,7 @@
 extern const char *FONT_AUDIOWIDE;
 
 extern const char *IMG_INTRO_EARTH;
+extern const char *IMG_INTRO_CITY;
 
 extern const char *ASSETS_IMG[];
 

@@ -8,6 +8,8 @@
 #include "draw/draw.h"
 #include "input/input.h"
 
+#include "state/intro.h"
+
 #include <csignal>
 
 const float MAX_FPS = 60.f;
@@ -56,11 +58,16 @@ int Exodus::run(int argc, char** argv) {
     TIMER frame_timer;
     float delta_time = 0.f;
 
+    Intro intro;
+    intro.enter();
+
     MousePos mouse_pos = {-1, -1};
     MousePos click_pos = {-1, -1};
 
     while (running) {
         frame_timer.start();
+
+        intro.update(delta_time);
 
         draw_manager.update(mouse_pos, click_pos);
 
