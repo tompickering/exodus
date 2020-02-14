@@ -53,6 +53,12 @@ typedef struct {
     DrawArea area;
 } DrawnSprite;
 
+typedef struct {
+    SprID id;
+    float x;
+    float y;
+} SpriteClick;
+
 enum Justify {
     Left,
     Centre,
@@ -94,7 +100,7 @@ class DrawManager {
         virtual void fade_black(float, int) = 0;
         virtual bool fade_active() = 0;
         virtual void show_cursor(bool);
-        virtual SprID get_clicked_sprite();
+        virtual SpriteClick get_clicked_sprite();
     protected:
         map<const char*, void*> sprite_data;
         virtual void* get_sprite_data(const char*) = 0;
@@ -109,7 +115,7 @@ class DrawManager {
         int fade_stages;
         bool draw_cursor;
     private:
-        SprID clicked_sprite;
+        SpriteClick sprite_click;
 };
 
 #ifdef SDL

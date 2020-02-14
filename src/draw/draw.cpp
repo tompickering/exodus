@@ -12,31 +12,39 @@ DrawManager::DrawManager() {
     fade_seconds = 0;
     fade_stage = 0;
     draw_cursor = false;
-    clicked_sprite = ID_NONE;
+    sprite_click.id = ID_NONE;
 }
 
 void DrawManager::update(MousePos mouse_pos, MousePos click_pos) {
     DrawArea *area = nullptr;
-    clicked_sprite = ID_NONE;
-    if (click_pos.x >= 0 && click_pos.y >= 0) {
+    sprite_click.id = ID_NONE;
+    if (draw_cursor && click_pos.x >= 0 && click_pos.y >= 0) {
         for (std::vector<DrawnSprite>::size_type i = 0; i < drawn_spr_info.size(); ++i) {
+            if (drawn_spr_info[i].id == ID_CURSOR)
+                continue;
             area = &(drawn_spr_info[i].area);
-            if (   click_pos.x >= area->x
-                && click_pos.y >= area->y
-                && click_pos.x <= area->x + area->w
-                && click_pos.y <= area->y + area->h) {
-                clicked_sprite = drawn_spr_info[i].id;
+            if (area->w == 0 || area->h == 0)
+                continue;
+            float spr_x = (float)(click_pos.x - area->x) / (float)area->w;
+            float spr_y = (float)(click_pos.y - area->y) / (float)area->h;
+            if (   spr_x >= 0 && spr_x <= 1
+                && spr_y >= 0 && spr_y <= 1) {
+                sprite_click.id = drawn_spr_info[i].id;
+                sprite_click.x = spr_x;
+                sprite_click.y = spr_y;
+                // Don't break in case multiple sprites overlap, in
+                // which case we probably care about the later one.
             }
         }
     }
 
-    if (clicked_sprite != ID_NONE) {
-        L.debug("CLICKED: %d", clicked_sprite);
+    if (sprite_click.id != ID_NONE) {
+        L.debug("CLICK: %d: %f, %f", sprite_click.id, sprite_click.x, sprite_click.y);
     }
 }
 
-SprID DrawManager::get_clicked_sprite() {
-    return clicked_sprite;
+SpriteClick DrawManager::get_clicked_sprite() {
+    return sprite_click;
 }
 
 SprID DrawManager::new_sprite_id() {
