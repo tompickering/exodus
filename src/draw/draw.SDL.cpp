@@ -187,6 +187,10 @@ void DrawManagerSDL::draw(const char* spr_key, DrawTransform t) {
     draw(surf, spr_key, t, nullptr);
 }
 
+void DrawManagerSDL::draw(SprID id, const char* spr_key) {
+    draw(surf, spr_key, nullptr, &id);
+}
+
 void DrawManagerSDL::draw(SprID id, const char* spr_key, DrawTransform t) {
     draw(surf, spr_key, t, &id);
 }
@@ -201,6 +205,10 @@ void DrawManagerSDL::pixelswap_draw(const char* spr_key, DrawArea area) {
 
 void DrawManagerSDL::pixelswap_draw(const char* spr_key, DrawTransform t) {
     draw(temp_surf, spr_key, t, nullptr);
+}
+
+void DrawManagerSDL::pixelswap_draw(SprID id, const char* spr_key) {
+    draw(temp_surf, spr_key, nullptr, &id);
 }
 
 void DrawManagerSDL::pixelswap_draw(SprID id, const char* spr_key, DrawTransform t) {

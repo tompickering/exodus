@@ -15,11 +15,13 @@ class DrawManagerSDL : public DrawManager {
         virtual void draw(const char*) override;
         virtual void draw(const char*, DrawArea) override;
         virtual void draw(const char*, DrawTransform) override;
+        virtual void draw(SprID, const char*) override;
         virtual void draw(SprID, const char*, DrawTransform) override;
         virtual void pixelswap_clear() override;
         virtual void pixelswap_draw(const char*) override;
         virtual void pixelswap_draw(const char*, DrawArea) override;
         virtual void pixelswap_draw(const char*, DrawTransform) override;
+        virtual void pixelswap_draw(SprID, const char*) override;
         virtual void pixelswap_draw(SprID, const char*, DrawTransform) override;
         virtual void pixelswap_start() override;
         virtual void pixelswap_start(DrawArea*) override;
