@@ -75,6 +75,23 @@ float SHUTTLE_P2_END       = 4.5f;
 float SHUTTLE_P2_END_X     = 90.f;
 float SHUTTLE_P2_END_Y     = 30.f;
 
+float SPC_SHIP_START_X     = 173.f;
+float SPC_SHIP_START_Y     = 111.f;
+float SPC_SHUTTLE_START_X  = 400.f;
+float SPC_SHUTTLE_START_Y  = 240.f;
+float SPC_SHUTTLE_END_X    = SPC_SHIP_START_X + 40;
+float SPC_SHUTTLE_END_Y    = SPC_SHIP_START_Y + 26;
+float SPC_SHUTTLE_END      = 9.f;
+float SPC_SHIP_DOOR_START  = SPC_SHUTTLE_END + 4.f;
+float SPC_SHIP_DOOR_STEP   = 0.3f;
+float SPC_SHIP_START       = SPC_SHIP_DOOR_START + 4.f;
+float SPC_SHIP_END         = SPC_SHIP_START + 8;
+float SPC_SHIP_END_X       = 366.f;
+float SPC_SHIP_END_Y       = 256.f;
+float SPC_WARP_START       = SPC_SHIP_END + 0.4;
+float SPC_WARP_END         = SPC_WARP_START + 0.8;
+float SPC_FADE_START       = SPC_WARP_END + 3;
+
 const float MAX_TEXT_TIME  = 3.8;
 
 enum ID {
@@ -87,6 +104,9 @@ enum ID {
     DOOR_L,
     DOOR_R,
     SHUTTLE_LAUNCH,
+    SPC_SHUTTLE,
+    SPC_SHIP,
+    SPC_WARP,
 
     END,
 };
@@ -573,16 +593,58 @@ ExodusMode Intro::update(float delta) {
         case DepartShip:
             if (!stage_started) {
                 draw_manager.draw(IMG_INTRO_SPACE);
+                draw_manager.draw(IDs[ID::SPC_SHIP], IMG_INTRO_SH3_CRUISER, {(int)SPC_SHIP_START_X, (int)SPC_SHIP_START_Y, 0.5, 0.5, 2.0, 2.0});
                 draw_manager.save_background();
                 text_idx = 24;
                 break;
+            }
+
+            if (time < SPC_SHUTTLE_END) {
+                float interp = time / SPC_SHUTTLE_END;
+                float scale = 0.1 + 2 * (1 - interp);
+                int x = SPC_SHUTTLE_START_X + (SPC_SHUTTLE_END_X - SPC_SHUTTLE_START_X) * interp;
+                int y = SPC_SHUTTLE_START_Y + (SPC_SHUTTLE_END_Y - SPC_SHUTTLE_START_Y) * interp;
+                draw_manager.draw(IDs[ID::SPC_SHUTTLE], IMG_INTRO_SH3_SHUTTLE, {x, y, 0.5, 0.5, scale, scale});
+            } else {
+                ONCE(oid_hideshuttle) {
+                    draw_manager.draw(IMG_INTRO_SPACE);
+                    draw_manager.save_background();
+                    draw_manager.draw(IDs[ID::SPC_SHIP], IMG_INTRO_SH3_CRUISER, {(int)SPC_SHIP_START_X, (int)SPC_SHIP_START_Y, 0.5, 0.5, 2.0, 2.0});
+                }
+            }
+
+            if (time >= SPC_SHIP_DOOR_START) {
+                ONCE(oid_door0) draw_manager.draw(IDs[ID::SPC_SHIP], IMG_INTRO_SH3_CRUISER, {(int)SPC_SHIP_START_X, (int)SPC_SHIP_START_Y, 0.5, 0.5, 2.0, 2.0});
+            }
+
+            if (time >= SPC_SHIP_DOOR_START + SPC_SHIP_DOOR_STEP) {
+                ONCE(oid_door1) draw_manager.draw(IDs[ID::SPC_SHIP], IMG_INTRO_SH3_CRUISER2, {(int)SPC_SHIP_START_X, (int)SPC_SHIP_START_Y, 0.5, 0.5, 2.0, 2.0});
+            }
+
+            if (time >= SPC_SHIP_DOOR_START + SPC_SHIP_DOOR_STEP * 2) {
+                ONCE(oid_door2) draw_manager.draw(IDs[ID::SPC_SHIP], IMG_INTRO_SH3_CRUISER1, {(int)SPC_SHIP_START_X, (int)SPC_SHIP_START_Y, 0.5, 0.5, 2.0, 2.0});
+            }
+
+            if (time >= SPC_SHIP_START) {
+                float interp = (time - SPC_SHIP_START) / (SPC_SHIP_END - SPC_SHIP_START);
+                interp = interp > 1 ? 1 : interp;
+                float anim_interp = pow(interp, 2);
+                float scale = 2 * (1 - anim_interp);
+                int x = SPC_SHIP_START_X + (SPC_SHIP_END_X - SPC_SHIP_START_X) * anim_interp;
+                int y = SPC_SHIP_START_Y + (SPC_SHIP_END_Y - SPC_SHIP_START_Y) * anim_interp;
+                draw_manager.draw(IDs[ID::SPC_SHIP], IMG_INTRO_SH3_CRUISER1, {x, y, 0.5, 0.5, scale, scale});
             }
 
             if (text_time > MAX_TEXT_TIME) {
                 if (text_idx < 26) {
                     ++text_idx;
                     text_timer.start();
-                } else {
+                }
+            }
+
+            if (time > SPC_FADE_START) {
+                ONCE(oid_spcfade) draw_manager.fade_black(1.2f, 12);
+                if (!draw_manager.fade_active()) {
                     next_stage(); return ExodusMode::MODE_None;
                 }
             }
