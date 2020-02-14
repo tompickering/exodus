@@ -483,8 +483,44 @@ void Intro::update(float delta) {
 
             break;
         case DepartShuttle:
+            if (!stage_started) {
+                draw_manager.draw(IMG_INTRO_LAUNCH);
+                draw_manager.save_background();
+                text_idx = 22;
+                break;
+            }
+
+            if (text_time > MAX_TEXT_TIME) {
+                if (text_idx < 23) {
+                    ++text_idx;
+                    text_timer.start();
+                } else {
+                    next_stage(); return;
+                }
+            }
+
+            draw_text();
+
             break;
         case DepartShip:
+            if (!stage_started) {
+                draw_manager.draw(IMG_INTRO_SPACE);
+                draw_manager.save_background();
+                text_idx = 24;
+                break;
+            }
+
+            if (text_time > MAX_TEXT_TIME) {
+                if (text_idx < 26) {
+                    ++text_idx;
+                    text_timer.start();
+                } else {
+                    next_stage(); return;
+                }
+            }
+
+            draw_text();
+
             break;
         case Title:
             break;
