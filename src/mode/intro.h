@@ -4,7 +4,6 @@
 #include "mode_base.h"
 
 #include "../platform.h"
-#include "../draw/draw.h"
 
 class Intro : ModeBase {
     public:
