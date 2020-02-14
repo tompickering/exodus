@@ -78,6 +78,7 @@ unsigned int prev_nums_held = 0;
 unsigned int input_code = 0;
 unsigned char keys_to_input = 3;
 bool interactive_sequence_completed = false;
+bool launchpad_light_toggle = false;
 
 Intro::Intro() : StateBase("Intro", false), text_idx(0) {
 }
@@ -497,6 +498,18 @@ void Intro::update(float delta) {
                 } else {
                     next_stage(); return;
                 }
+            }
+
+            if (!launchpad_light_toggle && fmod(time, 1.4) < 0.1) {
+                draw_manager.draw(IMG_INTRO_SH4_BLINK1 , { 30, 211, 0.5, 0.5, 2.0, 1.0});
+                draw_manager.draw(IMG_INTRO_SH4_BLINK2 , {497, 158, 0.5, 0.5, 2.0, 1.0});
+                draw_manager.draw(IMG_INTRO_SH4_BLINK3 , {540, 244, 0.5, 0.5, 2.0, 1.0});
+                launchpad_light_toggle = true;
+            }
+
+            if (launchpad_light_toggle && (fmod(time, 1.4) >= 0.1)) {
+                draw_manager.draw(IMG_INTRO_LAUNCH);
+                launchpad_light_toggle = false;
             }
 
             draw_text();
