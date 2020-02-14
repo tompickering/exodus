@@ -91,6 +91,30 @@ unsigned char keys_to_input = 3;
 bool interactive_sequence_completed = false;
 bool launchpad_light_toggle = false;
 
+const char* KP_KEYS[] = {
+    IMG_INTRO_PH1_PUSH_1,
+    IMG_INTRO_PH1_PUSH_2,
+    IMG_INTRO_PH1_PUSH_3,
+    IMG_INTRO_PH1_PUSH_4,
+    IMG_INTRO_PH1_PUSH_5,
+    IMG_INTRO_PH1_PUSH_6,
+    IMG_INTRO_PH1_PUSH_7,
+    IMG_INTRO_PH1_PUSH_8,
+    IMG_INTRO_PH1_PUSH_9,
+};
+
+const DrawTransform KP_TRANSFORMS[] = {
+    {188, 110, 0, 0, 2, 2},
+    {285, 113, 0, 0, 2, 2},
+    {374, 120, 0, 0, 2, 2},
+    {176, 190, 0, 0, 2, 2},
+    {272, 198, 0, 0, 2, 2},
+    {366, 208, 0, 0, 2, 2},
+    {150, 274, 0, 0, 2, 2},
+    {254, 288, 0, 0, 2, 2},
+    {354, 302, 0, 0, 2, 2},
+};
+
 Intro::Intro() : ModeBase("Intro"), text_idx(0) {
 }
 
@@ -363,24 +387,11 @@ ExodusMode Intro::update(float delta) {
                 if (prev_nums_held != nums_held) {
                     draw_manager.draw(IMG_INTRO_KEYPAD);
 
-                    if (input_manager.is_num_held(1))
-                        draw_manager.draw(IMG_INTRO_PH1_PUSH_1, {188, 110, 0, 0, 2, 2});
-                    if (input_manager.is_num_held(2))
-                        draw_manager.draw(IMG_INTRO_PH1_PUSH_2, {285, 113, 0, 0, 2, 2});
-                    if (input_manager.is_num_held(3))
-                        draw_manager.draw(IMG_INTRO_PH1_PUSH_3, {374, 120, 0, 0, 2, 2});
-                    if (input_manager.is_num_held(4))
-                        draw_manager.draw(IMG_INTRO_PH1_PUSH_4, {176, 190, 0, 0, 2, 2});
-                    if (input_manager.is_num_held(5))
-                        draw_manager.draw(IMG_INTRO_PH1_PUSH_5, {272, 198, 0, 0, 2, 2});
-                    if (input_manager.is_num_held(6))
-                        draw_manager.draw(IMG_INTRO_PH1_PUSH_6, {366, 208, 0, 0, 2, 2});
-                    if (input_manager.is_num_held(7))
-                        draw_manager.draw(IMG_INTRO_PH1_PUSH_7, {150, 274, 0, 0, 2, 2});
-                    if (input_manager.is_num_held(8))
-                        draw_manager.draw(IMG_INTRO_PH1_PUSH_8, {254, 288, 0, 0, 2, 2});
-                    if (input_manager.is_num_held(9))
-                        draw_manager.draw(IMG_INTRO_PH1_PUSH_9, {354, 302, 0, 0, 2, 2});
+
+                    for (int i = 1; i <= 9; ++i) {
+                        if (input_manager.is_num_held(i))
+                            draw_manager.draw(KP_KEYS[i - 1], KP_TRANSFORMS[i - 1]);
+                    }
 
                     draw_manager.save_background();
                 }
