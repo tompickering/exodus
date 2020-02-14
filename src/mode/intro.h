@@ -41,6 +41,8 @@ class Intro : ModeBase {
         int text_idx;
         void draw_text();
         unsigned char determine_text_brightness(float, float);
+        float kp_num_held_seconds[9];
+        unsigned int kp_held_nums(float);
 };
 
 #endif

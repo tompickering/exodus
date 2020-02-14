@@ -4,6 +4,8 @@
 
 #include "../assetpaths.h"
 
+#include "../util/value.h"
+
 // Facility to execute a single statement or block once only.
 // Requires a unique name within the context - but this is checked at compile time.
 #define ONCE(once_id) static bool once_id = true; if (once_id && !(once_id = false))
@@ -75,14 +77,21 @@ float SHUTTLE_P2_END_Y     = 30.f;
 
 const float MAX_TEXT_TIME  = 3.8;
 
-SprID id_city_ship;
-SprID id_sp_ship;
-SprID id_shoot;
-SprID id_shot;
-SprID id_guardshot;
-SprID id_door_l;
-SprID id_door_r;
-SprID id_shuttle_launch;
+enum ID {
+    CITY_SHIP,
+    SP_SHIP,
+    SHOOT,
+    SHOT,
+    GUARDSHOT,
+    KEYPAD,
+    DOOR_L,
+    DOOR_R,
+    SHUTTLE_LAUNCH,
+
+    END,
+};
+
+SprID IDs[(int)ID::END];
 
 unsigned int nums_held = 0;
 unsigned int prev_nums_held = 0;
@@ -104,15 +113,15 @@ const char* KP_KEYS[] = {
 };
 
 const DrawTransform KP_TRANSFORMS[] = {
-    {188, 110, 0, 0, 2, 2},
-    {285, 113, 0, 0, 2, 2},
-    {374, 120, 0, 0, 2, 2},
-    {176, 190, 0, 0, 2, 2},
-    {272, 198, 0, 0, 2, 2},
-    {366, 208, 0, 0, 2, 2},
-    {150, 274, 0, 0, 2, 2},
-    {254, 288, 0, 0, 2, 2},
-    {354, 302, 0, 0, 2, 2},
+    {238, 150, 0.5, 0.5, 2, 2},
+    {328, 156, 0.5, 0.5, 2, 2},
+    {420, 165, 0.5, 0.5, 2, 2},
+    {224, 232, 0.5, 0.5, 2, 2},
+    {316, 242, 0.5, 0.5, 2, 2},
+    {413, 254, 0.5, 0.5, 2, 2},
+    {203, 324, 0.5, 0.5, 2, 2},
+    {301, 339, 0.5, 0.5, 2, 2},
+    {401, 354, 0.5, 0.5, 2, 2},
 };
 
 Intro::Intro() : ModeBase("Intro"), text_idx(0) {
@@ -125,26 +134,16 @@ void Intro::enter() {
     stage_started = false;
     timer.start();
     text_timer.start();
-    id_city_ship = draw_manager.new_sprite_id();
-    id_sp_ship = draw_manager.new_sprite_id();
-    id_shoot = draw_manager.new_sprite_id();
-    id_shot = draw_manager.new_sprite_id();
-    id_guardshot = draw_manager.new_sprite_id();
-    id_door_l = draw_manager.new_sprite_id();
-    id_door_r = draw_manager.new_sprite_id();
-    id_shuttle_launch = draw_manager.new_sprite_id();
+    for (int i = 0; i < (int)ID::END; ++i)
+        IDs[i] = draw_manager.new_sprite_id();
+    for (int i = 0; i < 9; ++i)
+        kp_num_held_seconds[i] = 0;
 }
 
 void Intro::exit() {
     ModeBase::exit();
-    draw_manager.release_sprite_id(id_city_ship);
-    draw_manager.release_sprite_id(id_sp_ship);
-    draw_manager.release_sprite_id(id_shoot);
-    draw_manager.release_sprite_id(id_shot);
-    draw_manager.release_sprite_id(id_guardshot);
-    draw_manager.release_sprite_id(id_door_l);
-    draw_manager.release_sprite_id(id_door_r);
-    draw_manager.release_sprite_id(id_shuttle_launch);
+    for (int i = 0; i < (int)ID::END; ++i)
+        draw_manager.release_sprite_id(IDs[i]);
 }
 
 ExodusMode Intro::update(float delta) {
@@ -230,7 +229,7 @@ ExodusMode Intro::update(float delta) {
 
                 int ship_y = CITY_SHIP_START_Y + (int)((CITY_SHIP_END_Y - CITY_SHIP_START_Y) * fly_progress);
 
-                draw_manager.draw(id_city_ship, ship, {10 + RES_X / 2, ship_y, 0.5, 0.5, ship_scale, ship_scale});
+                draw_manager.draw(IDs[ID::CITY_SHIP], ship, {10 + RES_X / 2, ship_y, 0.5, 0.5, ship_scale, ship_scale});
             }
 
             if (text_idx >= 1 && text_time > MAX_TEXT_TIME) {
@@ -266,7 +265,7 @@ ExodusMode Intro::update(float delta) {
                 fly_progress = fly_progress > 0 ? fly_progress : 0;
                 float ship_scale = (1.f - fly_progress) * SP_SHIP_MAX_SCALE;
                 int ship_y = SP_SHIP_START_Y + (int)((SP_SHIP_END_Y - SP_SHIP_START_Y) * fly_progress);
-                draw_manager.draw(id_sp_ship, IMG_INTRO_SH2_SHIP,
+                draw_manager.draw(IDs[ID::SP_SHIP], IMG_INTRO_SH2_SHIP,
                         {(int)SP_SHIP_X, (int)ship_y,
                         0.5, 0.5, ship_scale, ship_scale});
             }
@@ -314,32 +313,32 @@ ExodusMode Intro::update(float delta) {
             }
 
             if (time < SHOOT_START) {
-                ONCE(oid_shoot_1) draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE1, {462, 104, 0, 0, 2.0, 1.0});
+                ONCE(oid_shoot_1) draw_manager.draw(IDs[ID::SHOOT], IMG_INTRO_FI1_FIRE1, {462, 104, 0, 0, 2.0, 1.0});
             } else if (time < SHOOT_START + SHOOT_FRAME * 1) {
-                ONCE(oid_shoot_2) draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE2, {442, 82, 0, 0, 2.0, 1.0});
+                ONCE(oid_shoot_2) draw_manager.draw(IDs[ID::SHOOT], IMG_INTRO_FI1_FIRE2, {442, 82, 0, 0, 2.0, 1.0});
             } else if (time < SHOOT_START + SHOOT_FRAME * 2) {
-                ONCE(oid_shoot_3) draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE3, {422, 62, 0, 0, 2.0, 1.0});
+                ONCE(oid_shoot_3) draw_manager.draw(IDs[ID::SHOOT], IMG_INTRO_FI1_FIRE3, {422, 62, 0, 0, 2.0, 1.0});
             } else if (time < SHOOT_START + SHOOT_FRAME * 3) {
-                ONCE(oid_shoot_4) draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE4, {320, 69, 0, 0, 2.0, 1.0});
+                ONCE(oid_shoot_4) draw_manager.draw(IDs[ID::SHOOT], IMG_INTRO_FI1_FIRE4, {320, 69, 0, 0, 2.0, 1.0});
             } else if (time < SHOOT_START + SHOOT_FRAME * 4) {
-                ONCE(oid_shoot_5) draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE5, {294, 78, 0, 0, 2.0, 1.0});
+                ONCE(oid_shoot_5) draw_manager.draw(IDs[ID::SHOOT], IMG_INTRO_FI1_FIRE5, {294, 78, 0, 0, 2.0, 1.0});
             } else if (time < SHOOT_START + SHOOT_FRAME * 5) {
-                ONCE(oid_shoot_6) draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE6, {332, 84, 0, 0, 2.0, 1.0});
+                ONCE(oid_shoot_6) draw_manager.draw(IDs[ID::SHOOT], IMG_INTRO_FI1_FIRE6, {332, 84, 0, 0, 2.0, 1.0});
                 ONCE(oid_shoot_bg) draw_manager.save_background();
             }
 
             if (time > SHOT_START) {
                 if (time < SHOT_START + SHOT_FRAME) {
-                    ONCE(oid_shot_1) draw_manager.draw(id_shot, IMG_INTRO_FI1_SHOT1, {280, 144, 0, 0, 2.0, 2.0});
-                    ONCE(oid_shot_fire) draw_manager.draw(id_shoot, IMG_INTRO_FI1_FIRE6, {332, 84, 0, 0, 2.0, 1.0});
+                    ONCE(oid_shot_1) draw_manager.draw(IDs[ID::SHOT], IMG_INTRO_FI1_SHOT1, {280, 144, 0, 0, 2.0, 2.0});
+                    ONCE(oid_shot_fire) draw_manager.draw(IDs[ID::SHOOT], IMG_INTRO_FI1_FIRE6, {332, 84, 0, 0, 2.0, 1.0});
                 } else if (time < SHOT_START + SHOT_FRAME * 2) {
-                    ONCE(oid_shot_2) draw_manager.draw(id_shot, IMG_INTRO_FI1_SHOT2, {204, 155, 0, 0, 2.0, 2.0});
+                    ONCE(oid_shot_2) draw_manager.draw(IDs[ID::SHOT], IMG_INTRO_FI1_SHOT2, {204, 155, 0, 0, 2.0, 2.0});
                 } else if (time < SHOT_START + SHOT_FRAME * 3) {
-                    ONCE(oid_shot_3) draw_manager.draw(id_shot, IMG_INTRO_FI1_SHOT3, {136, 162, 0, 0, 2.0, 2.0});
+                    ONCE(oid_shot_3) draw_manager.draw(IDs[ID::SHOT], IMG_INTRO_FI1_SHOT3, {136, 162, 0, 0, 2.0, 2.0});
                 } else if (time < SHOT_START + SHOT_FRAME * 4) {
-                    ONCE(oid_shot_4) draw_manager.draw(id_shot, IMG_INTRO_FI1_SHOT4, {68, 172, 0, 0, 2.0, 2.0});
+                    ONCE(oid_shot_4) draw_manager.draw(IDs[ID::SHOT], IMG_INTRO_FI1_SHOT4, {68, 172, 0, 0, 2.0, 2.0});
                 } else if (time < SHOT_START + SHOT_FRAME * 5) {
-                    ONCE(oid_shot_5) draw_manager.draw(id_shot, IMG_INTRO_FI1_SHOT5, {0, 180, 0, 0, 2.0, 2.0});
+                    ONCE(oid_shot_5) draw_manager.draw(IDs[ID::SHOT], IMG_INTRO_FI1_SHOT5, {0, 180, 0, 0, 2.0, 2.0});
                 } else {
                     next_stage(); return ExodusMode::MODE_None;
                 }
@@ -353,19 +352,19 @@ ExodusMode Intro::update(float delta) {
             }
 
             if (time < GUARD_FRAME) {
-                ONCE(oid_guard_1) draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL1, {315, 271, 0.5, 0.5, 2.0, 2.0});
+                ONCE(oid_guard_1) draw_manager.draw(IDs[ID::GUARDSHOT], IMG_INTRO_BT1_FALL1, {315, 271, 0.5, 0.5, 2.0, 2.0});
             } else if (time < GUARD_FRAME * 2) {
-                ONCE(oid_guard_2) draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL2, {291, 300, 0.5, 0.5, 2.0, 2.0});
+                ONCE(oid_guard_2) draw_manager.draw(IDs[ID::GUARDSHOT], IMG_INTRO_BT1_FALL2, {291, 300, 0.5, 0.5, 2.0, 2.0});
             } else if (time < GUARD_FRAME * 3) {
-                ONCE(oid_guard_3) draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL3, {293, 307, 0.5, 0.5, 2.0, 2.0});
+                ONCE(oid_guard_3) draw_manager.draw(IDs[ID::GUARDSHOT], IMG_INTRO_BT1_FALL3, {293, 307, 0.5, 0.5, 2.0, 2.0});
             } else if (time < GUARD_FRAME * 4) {
-                ONCE(oid_guard_4) draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL4, {285, 391, 0.5, 0.5, 2.0, 2.0});
+                ONCE(oid_guard_4) draw_manager.draw(IDs[ID::GUARDSHOT], IMG_INTRO_BT1_FALL4, {285, 391, 0.5, 0.5, 2.0, 2.0});
             } else if (time < GUARD_FRAME * 5) {
-                ONCE(oid_guard_5) draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL5, {272, 484, 0.5, 1.0, 2.0, 2.0});
+                ONCE(oid_guard_5) draw_manager.draw(IDs[ID::GUARDSHOT], IMG_INTRO_BT1_FALL5, {272, 484, 0.5, 1.0, 2.0, 2.0});
             } else if (time < GUARD_FRAME * 6) {
-                ONCE(oid_guard_6) draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL6, {272, 484, 0.5, 1.0, 2.0, 2.0});
+                ONCE(oid_guard_6) draw_manager.draw(IDs[ID::GUARDSHOT], IMG_INTRO_BT1_FALL6, {272, 484, 0.5, 1.0, 2.0, 2.0});
             } else if (time < GUARD_FRAME * 7) {
-                ONCE(oid_guard_7) draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL7, {272, 484, 0.5, 1.0, 2.0, 2.0});
+                ONCE(oid_guard_7) draw_manager.draw(IDs[ID::GUARDSHOT], IMG_INTRO_BT1_FALL7, {272, 484, 0.5, 1.0, 2.0, 2.0});
             } else {
                 next_stage(); return ExodusMode::MODE_None;
             }
@@ -373,23 +372,22 @@ ExodusMode Intro::update(float delta) {
             break;
         case Keypad:
             if (!stage_started) {
-                draw_manager.draw(IMG_INTRO_KEYPAD);
+                draw_manager.draw(IDs[ID::KEYPAD], IMG_INTRO_KEYPAD);
                 text_idx = 18;
                 draw_manager.save_background();
                 draw_manager.show_cursor(true);
                 break;
             }
 
-            nums_held = input_manager.read_numbers();
+            nums_held = kp_held_nums(delta);
 
             if (keys_to_input) {
-                // Mode changed - just redraw everything
+                // State changed - just redraw everything
                 if (prev_nums_held != nums_held) {
-                    draw_manager.draw(IMG_INTRO_KEYPAD);
-
+                    draw_manager.draw(IDs[ID::KEYPAD], IMG_INTRO_KEYPAD);
 
                     for (int i = 1; i <= 9; ++i) {
-                        if (input_manager.is_num_held(i))
+                        if ((nums_held >> i) & 1)
                             draw_manager.draw(KP_KEYS[i - 1], KP_TRANSFORMS[i - 1]);
                     }
 
@@ -494,8 +492,8 @@ ExodusMode Intro::update(float delta) {
 
             door_time = time - 2.6f;
             door_time = door_time < 0 ? 0 : door_time;
-            draw_manager.draw(id_door_l, IMG_INTRO_OD1_DOOR_L, {(int)(319 - door_time * DOOR_PX_PER_SEC), 218, 1.0, 0.5, 2.0, 1.0});
-            draw_manager.draw(id_door_r, IMG_INTRO_OD1_DOOR_R, {(int)(319 + door_time * DOOR_PX_PER_SEC), 218, 0.0, 0.5, 2.0, 1.0});
+            draw_manager.draw(IDs[ID::DOOR_L], IMG_INTRO_OD1_DOOR_L, {(int)(319 - door_time * DOOR_PX_PER_SEC), 218, 1.0, 0.5, 2.0, 1.0});
+            draw_manager.draw(IDs[ID::DOOR_R], IMG_INTRO_OD1_DOOR_R, {(int)(319 + door_time * DOOR_PX_PER_SEC), 218, 0.0, 0.5, 2.0, 1.0});
             draw_manager.draw(IMG_INTRO_OD1_FRAME , {319, 212, 0.5, 0.5, 2.0, 1.0});
             draw_manager.draw(IMG_INTRO_OD1_SEPP  , {319, 482, 0.5, 1.0, 2.0, 1.0});
 
@@ -556,7 +554,7 @@ ExodusMode Intro::update(float delta) {
                 } else {
                     ship = IMG_INTRO_SH4_SHUTTLE4;
                 }
-                draw_manager.draw(id_shuttle_launch, ship, {(int)SHUTTLE_P1_END_X, (int)shuttle_y, 0.5, 0.5, 2.0, 2.0});
+                draw_manager.draw(IDs[ID::SHUTTLE_LAUNCH], ship, {(int)SHUTTLE_P1_END_X, (int)shuttle_y, 0.5, 0.5, 2.0, 2.0});
                 draw_manager.draw(IMG_INTRO_SH4_MOVEOUT , {318, 249, 0.5, 0.5, 2.0, 1.0});
             } else if (time > SHUTTLE_P2_START){
                 float phase2_linear_interp = (time - SHUTTLE_P2_START) / SHUTTLE_P2_END;
@@ -564,9 +562,9 @@ ExodusMode Intro::update(float delta) {
                 float shuttle_x = SHUTTLE_P1_END_X - (SHUTTLE_P1_END_X - SHUTTLE_P2_END_X) * phase2_anim_interp;
                 float shuttle_y = SHUTTLE_P1_END_Y - (SHUTTLE_P1_END_Y - SHUTTLE_P2_END_Y) * phase2_anim_interp;
                 float scale = 2 * (1.f - (0.2 * phase2_anim_interp));
-                draw_manager.draw(id_shuttle_launch, IMG_INTRO_SH4_SHUTTLE4, {(int)shuttle_x, (int)shuttle_y, 0.5, 0.5, scale, scale});
+                draw_manager.draw(IDs[ID::SHUTTLE_LAUNCH], IMG_INTRO_SH4_SHUTTLE4, {(int)shuttle_x, (int)shuttle_y, 0.5, 0.5, scale, scale});
             } else {
-                draw_manager.draw(id_shuttle_launch, IMG_INTRO_SH4_SHUTTLE4, {(int)SHUTTLE_P1_END_X, (int)SHUTTLE_P1_END_Y, 0.5, 0.5, 2.0, 2.0});
+                draw_manager.draw(IDs[ID::SHUTTLE_LAUNCH], IMG_INTRO_SH4_SHUTTLE4, {(int)SHUTTLE_P1_END_X, (int)SHUTTLE_P1_END_Y, 0.5, 0.5, 2.0, 2.0});
             }
 
             draw_text();
@@ -649,3 +647,28 @@ unsigned char Intro::determine_text_brightness(float started, float now) {
         return 0xFF;
     }
 }
+
+unsigned int Intro::kp_held_nums(float delta) {
+    unsigned int nums_held = input_manager.read_numbers();
+    SpriteClick click = draw_manager.query_click(IDs[ID::KEYPAD]);
+    if (click.id) {
+        for (int i = 0; i < 9; ++i) {
+            if (in_radius(click.x, click.y,
+                          (float)KP_TRANSFORMS[i].x/RES_X,
+                          (float)KP_TRANSFORMS[i].y/RES_Y, 0.08)) {
+                kp_num_held_seconds[i] = 0.2;
+            }
+        }
+    }
+    for (int i = 0; i < 9; ++i) {
+        if (kp_num_held_seconds[i] > 0) {
+            float newval = kp_num_held_seconds[i] - delta;
+            nums_held |= 1 << (i+1);
+            newval = newval < 0 ? 0 : newval;
+            kp_num_held_seconds[i] = newval;
+        }
+    }
+    return nums_held;
+}
+
+
