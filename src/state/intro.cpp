@@ -60,6 +60,8 @@ float SHOT_FRAME           = 0.08f;
 
 float GUARD_FRAME          = 0.15f;
 
+float DOOR_PX_PER_SEC      = 10.f;
+
 
 const float MAX_TEXT_TIME  = 3.8;
 
@@ -68,6 +70,8 @@ SprID id_sp_ship;
 SprID id_shoot;
 SprID id_shot;
 SprID id_guardshot;
+SprID id_door_l;
+SprID id_door_r;
 
 unsigned int nums_held = 0;
 unsigned int prev_nums_held = 0;
@@ -90,6 +94,8 @@ void Intro::enter() {
     id_shoot = draw_manager.new_sprite_id();
     id_shot = draw_manager.new_sprite_id();
     id_guardshot = draw_manager.new_sprite_id();
+    id_door_l = draw_manager.new_sprite_id();
+    id_door_r = draw_manager.new_sprite_id();
 }
 
 void Intro::exit() {
@@ -99,6 +105,8 @@ void Intro::exit() {
     draw_manager.release_sprite_id(id_shoot);
     draw_manager.release_sprite_id(id_shot);
     draw_manager.release_sprite_id(id_guardshot);
+    draw_manager.release_sprite_id(id_door_l);
+    draw_manager.release_sprite_id(id_door_r);
 }
 
 void Intro::update(float delta) {
@@ -107,6 +115,7 @@ void Intro::update(float delta) {
     static bool text_delay_complete = false;
     unsigned int released_keys;
     unsigned char brightness;
+    float door_time;
 
     switch(stage) {
         case None:
@@ -446,15 +455,31 @@ void Intro::update(float delta) {
                 draw_manager.draw(IMG_INTRO_DOOR);
                 draw_manager.draw(IMG_INTRO_OD1_BEHIND, {319, 218, 0.5, 0.5, 2.0, 1.0});
                 draw_manager.save_background();
+                text_idx = 21;
                 break;
             }
 
-            draw_manager.draw(IMG_INTRO_OD1_DOOR_L, {319, 218, 1.0, 0.5, 2.0, 1.0});
-            draw_manager.draw(IMG_INTRO_OD1_DOOR_R, {319, 218, 0.0, 0.5, 2.0, 1.0});
-            draw_manager.draw(IMG_INTRO_OD1_FRAME , {319, 218, 0.5, 0.5, 2.0, 1.0});
-            draw_manager.draw(IMG_INTRO_OD1_OFF   , {180,  80, 0.5, 0.5, 2.0, 2.0});
-            draw_manager.draw(IMG_INTRO_OD1_ON    , {180, 130, 0.5, 0.5, 2.0, 2.0});
+            door_time = time - 2.6f;
+            door_time = door_time < 0 ? 0 : door_time;
+            draw_manager.draw(id_door_l, IMG_INTRO_OD1_DOOR_L, {319 - door_time * DOOR_PX_PER_SEC, 218, 1.0, 0.5, 2.0, 1.0});
+            draw_manager.draw(id_door_r, IMG_INTRO_OD1_DOOR_R, {319 + door_time * DOOR_PX_PER_SEC, 218, 0.0, 0.5, 2.0, 1.0});
+            draw_manager.draw(IMG_INTRO_OD1_FRAME , {319, 212, 0.5, 0.5, 2.0, 1.0});
             draw_manager.draw(IMG_INTRO_OD1_SEPP  , {319, 482, 0.5, 1.0, 2.0, 1.0});
+
+            if (time > 0.9) {
+                draw_manager.draw(IMG_INTRO_OD1_OFF, {151,  97, 0.5, 0.5, 2.0, 2.0});
+            }
+
+            if (time > 2.15) {
+                draw_manager.draw(IMG_INTRO_OD1_ON , {151, 97, 0.5, 0.5, 2.0, 2.0});
+                ONCE(oid_dooropen) text_timer.start();
+                draw_text();
+                if (text_timer.get_delta() < MAX_TEXT_TIME) {
+                    return;
+                } else {
+                    next_stage(); return;
+                }
+            }
 
             break;
         case DepartShuttle:
