@@ -59,12 +59,21 @@ bool DrawManagerSDL::init() {
 
 void DrawManagerSDL::load_resources() {
     char img_path[ASSET_PATH_LEN_MAX];
+    SDL_Surface *load_surf;
     for (unsigned int i = 0;; ++i) {
         if (ASSETS_IMG[i][0] == '\0')
             break;
         strncpy(img_path, ASSETS_IMG[i], ASSET_PATH_LEN_MAX);
         strcat(img_path, ".png");
-        sprite_data[ASSETS_IMG[i]] = (void*) IMG_Load(img_path);
+        load_surf = IMG_Load(img_path);
+        // Ensure image is normalised to RGBA8888
+        // This helps to ensure that we don't try to use
+        // unsupported operations like scaled blits between
+        // certain format combinations, which will fail.
+        sprite_data[ASSETS_IMG[i]] =
+            SDL_ConvertSurfaceFormat(
+                    load_surf, SDL_PIXELFORMAT_RGBA8888, 0);
+        SDL_FreeSurface(load_surf);
         if (sprite_data[ASSETS_IMG[i]]) {
             L.debug("Loaded %s", img_path);
         } else {
