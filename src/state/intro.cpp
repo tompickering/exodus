@@ -73,6 +73,7 @@ unsigned int nums_held = 0;
 unsigned int prev_nums_held = 0;
 unsigned int input_code = 0;
 unsigned char keys_to_input = 3;
+bool interactive_sequence_completed = false;
 
 Intro::Intro() : StateBase("Intro", false), text_idx(0) {
 }
@@ -83,6 +84,7 @@ void Intro::enter() {
     text_idx = 0;
     stage_started = false;
     timer.start();
+    text_timer.start();
     id_city_ship = draw_manager.new_sprite_id();
     id_sp_ship = draw_manager.new_sprite_id();
     id_shoot = draw_manager.new_sprite_id();
@@ -104,6 +106,7 @@ void Intro::update(float delta) {
     float text_time = text_timer.get_delta();
     static bool text_delay_complete = false;
     unsigned int released_keys;
+    unsigned char brightness;
 
     switch(stage) {
         case None:
@@ -331,14 +334,6 @@ void Intro::update(float delta) {
             nums_held = input_manager.read_numbers();
 
             if (keys_to_input) {
-                draw_manager.draw_text(
-                        intro_text[18],
-                        Justify::Centre,
-                        SCREEN_WIDTH / 2,
-                        SCREEN_HEIGHT - 26,
-                        {0xFF, 0xFF, 0xFF},
-                        {0, 0, 0});
-
                 // State changed - just redraw everything
                 if (prev_nums_held != nums_held) {
                     draw_manager.draw(IMG_INTRO_KEYPAD);
@@ -363,6 +358,21 @@ void Intro::update(float delta) {
                         draw_manager.draw(IMG_INTRO_PH1_PUSH_9, {354, 302, 0, 0, 2, 2});
                 }
 
+                if (text_timer.get_delta() < MAX_TEXT_TIME / 2) {
+                    brightness = determine_text_brightness(0, text_timer.get_delta());
+                } else {
+                    brightness = 0xFF;
+                }
+
+                draw_manager.draw_text(
+                        intro_text[text_idx],
+                        Justify::Centre,
+                        SCREEN_WIDTH / 2,
+                        SCREEN_HEIGHT - 26,
+                        {brightness, brightness, brightness},
+                        {0, 0, 0});
+
+
                 released_keys = prev_nums_held & ~nums_held;
                 if (released_keys) {
                     // There is no 0 key, so start from 1
@@ -383,6 +393,28 @@ void Intro::update(float delta) {
             ONCE(oid_code) L.debug("Entered code: %d", input_code);
             ONCE(oid_padddone) draw_manager.draw(IMG_INTRO_KEYPAD);
 
+            ONCE(oid_codedone_fadetext) text_timer.start();
+
+
+            // We only want to do the fade-out half, so pretend
+            // we started half-max-time ago.
+            if (!interactive_sequence_completed
+                && text_timer.get_delta() < MAX_TEXT_TIME / 2) {
+                brightness = determine_text_brightness(
+                    -MAX_TEXT_TIME / 2 , text_timer.get_delta());
+
+                draw_manager.draw_text(
+                        intro_text[text_idx],
+                        Justify::Centre,
+                        SCREEN_WIDTH / 2,
+                        SCREEN_HEIGHT - 26,
+                        {brightness, brightness, brightness},
+                        {0, 0, 0});
+                return;
+            } else {
+                interactive_sequence_completed = true;
+            }
+
             ONCE(oid_codedone) {
                 if (input_code == 594) {
                     text_idx = 20;
@@ -392,7 +424,6 @@ void Intro::update(float delta) {
                 text_timer.start();
                 return;
             }
-
 
             draw_text();
 
