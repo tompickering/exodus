@@ -469,6 +469,7 @@ ExodusMode Intro::update(float delta) {
 
             if (input_code == 594) {
                 ONCE(coode_startface) draw_manager.fade_black(1.2f, 12);
+                draw_manager.show_cursor(false);
                 if (draw_manager.fade_active() || text_time < MAX_TEXT_TIME + 2.4) {
                     return ExodusMode::MODE_None;
                 }
@@ -482,7 +483,6 @@ ExodusMode Intro::update(float delta) {
             break;
         case Success:
             if (!stage_started) {
-                draw_manager.show_cursor(false);
                 draw_manager.draw(IMG_INTRO_DOOR);
                 draw_manager.draw(IMG_INTRO_OD1_BEHIND, {319, 218, 0.5, 0.5, 2.0, 1.0});
                 draw_manager.save_background();
