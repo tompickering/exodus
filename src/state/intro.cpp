@@ -442,6 +442,20 @@ void Intro::update(float delta) {
 
             break;
         case Success:
+            if (!stage_started) {
+                draw_manager.draw(IMG_INTRO_DOOR);
+                draw_manager.draw(IMG_INTRO_OD1_BEHIND, {319, 218, 0.5, 0.5, 2.0, 1.0});
+                draw_manager.save_background();
+                break;
+            }
+
+            draw_manager.draw(IMG_INTRO_OD1_DOOR_L, {319, 218, 1.0, 0.5, 2.0, 1.0});
+            draw_manager.draw(IMG_INTRO_OD1_DOOR_R, {319, 218, 0.0, 0.5, 2.0, 1.0});
+            draw_manager.draw(IMG_INTRO_OD1_FRAME , {319, 218, 0.5, 0.5, 2.0, 1.0});
+            draw_manager.draw(IMG_INTRO_OD1_OFF   , {180,  80, 0.5, 0.5, 2.0, 2.0});
+            draw_manager.draw(IMG_INTRO_OD1_ON    , {180, 130, 0.5, 0.5, 2.0, 2.0});
+            draw_manager.draw(IMG_INTRO_OD1_SEPP  , {319, 482, 0.5, 1.0, 2.0, 1.0});
+
             break;
         case DepartShuttle:
             break;
