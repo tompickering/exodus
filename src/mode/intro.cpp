@@ -71,7 +71,7 @@ float SHUTTLE_P1_END_X     = 320.f;
 float SHUTTLE_P1_END_Y     = 140.f;
 float SHUTTLE_P1_END       = 4.f;
 float SHUTTLE_P2_START     = 4.4f;
-float SHUTTLE_P2_END       = 3.0f;
+float SHUTTLE_P2_END       = 4.5f;
 float SHUTTLE_P2_END_X     = 90.f;
 float SHUTTLE_P2_END_Y     = 30.f;
 
