@@ -321,12 +321,21 @@ void Intro::update(float delta) {
         case Keypad:
             if (!stage_started) {
                 draw_manager.draw(IMG_INTRO_KEYPAD);
+                text_idx = 18;
                 break;
             }
 
             nums_held = input_manager.read_numbers();
 
             if (keys_to_input) {
+                draw_manager.draw_text(
+                        intro_text[18],
+                        Justify::Centre,
+                        SCREEN_WIDTH / 2,
+                        SCREEN_HEIGHT - 26,
+                        {0xFF, 0xFF, 0xFF},
+                        {0, 0, 0});
+
                 // State changed - just redraw everything
                 if (prev_nums_held != nums_held) {
                     draw_manager.draw(IMG_INTRO_KEYPAD);
@@ -370,16 +379,49 @@ void Intro::update(float delta) {
 
             ONCE(oid_code) L.debug("Entered code: %d", input_code);
             ONCE(oid_padddone) draw_manager.draw(IMG_INTRO_KEYPAD);
-            // PROCcodefadeout  ?
-            next_stage(); return;
+
+            ONCE(oid_codedone) {
+                if (input_code == 594) {
+                    text_idx = 20;
+                } else {
+                    text_idx = 19;
+                }
+                text_timer.start();
+                return;
+            }
+
+
+            draw_text();
+
+            if (text_time < MAX_TEXT_TIME) {
+                return;
+            }
+
+            if (input_code == 594) {
+                // PROCcodefadeout  ?
+                next_stage(); return;
+            } else {
+                stage = Fail;
+                stage_started = false;
+                return;
+            }
 
             break;
         case Success:
+            break;
         case DepartShuttle:
+            break;
         case DepartShip:
+            break;
         case Title:
+            break;
         case End:
+            break;
         case Fail:
+            if (!stage_started) {
+                draw_manager.draw(IMG_INTRO_FAIL);
+            }
+            break;
         default:
             break;
     }
