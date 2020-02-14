@@ -15,9 +15,10 @@ DrawManager::DrawManager() {
     sprite_click.id = ID_NONE;
 }
 
-void DrawManager::update(MousePos mouse_pos, MousePos click_pos) {
+void DrawManager::update(MousePos mouse_pos, MousePos new_click_pos) {
     DrawArea *area = nullptr;
     sprite_click.id = ID_NONE;
+    click_pos = new_click_pos;
     if (draw_cursor && click_pos.x >= 0 && click_pos.y >= 0) {
         for (std::vector<DrawnSprite>::size_type i = 0; i < drawn_spr_info.size(); ++i) {
             if (drawn_spr_info[i].id == ID_CURSOR)
@@ -45,6 +46,36 @@ void DrawManager::update(MousePos mouse_pos, MousePos click_pos) {
 
 SpriteClick DrawManager::get_clicked_sprite() {
     return sprite_click;
+}
+
+SpriteClick DrawManager::query_click(SprID query) {
+    DrawArea *area = nullptr;
+    SpriteClick res;
+    res.id = ID_NONE;
+
+    if (!draw_cursor)
+        return res;
+    if (click_pos.x < 0 || click_pos.y < 0)
+        return res;
+
+    for (std::vector<DrawnSprite>::size_type i = 0; i < drawn_spr_info.size(); ++i) {
+        if (drawn_spr_info[i].id != query)
+            continue;
+        area = &(drawn_spr_info[i].area);
+        if (area->w == 0 || area->h == 0)
+            continue;
+        float spr_x = (float)(click_pos.x - area->x) / (float)area->w;
+        float spr_y = (float)(click_pos.y - area->y) / (float)area->h;
+        if (   spr_x >= 0 && spr_x <= 1
+            && spr_y >= 0 && spr_y <= 1) {
+            res.id = drawn_spr_info[i].id;
+            res.x = spr_x;
+            res.y = spr_y;
+            break;
+        }
+    }
+
+    return res;
 }
 
 SprID DrawManager::new_sprite_id() {

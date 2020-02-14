@@ -103,6 +103,7 @@ class DrawManager {
         virtual bool fade_active() = 0;
         virtual void show_cursor(bool);
         virtual SpriteClick get_clicked_sprite();
+        virtual SpriteClick query_click(SprID);
     protected:
         map<const char*, void*> sprite_data;
         virtual void* get_sprite_data(const char*) = 0;
@@ -117,6 +118,7 @@ class DrawManager {
         int fade_stages;
         bool draw_cursor;
     private:
+        MousePos click_pos;
         SpriteClick sprite_click;
 };
 
