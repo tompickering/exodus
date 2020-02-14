@@ -36,7 +36,7 @@ bool DrawManagerSDL::init() {
         return false;
     }
 
-    font = TTF_OpenFont(FONT_AUDIOWIDE, 14);
+    font = TTF_OpenFont(FONT_AUDIOWIDE, 14 * UPSCALE_X);
 
     if (!font) {
         L.error("Could not load font Audiowide");
