@@ -1,15 +1,15 @@
 #ifndef GUARD_ASSETPATH_H
 #define GUARD_ASSETPATH_H
 
-#ifdef LINUX
-const char* PATH_FONT_AUDIOWIDE = "font/audiowide/Audiowide-Regular.ttf";
+// Can be overly large with no real impact.
+// Just a guarantee that we can give when loading resources.
+// Includes file extensions (e.g. .png).
+#define ASSET_PATH_LEN_MAX 512
 
-const char* PATH_IMG_SCENE_INTRO_EARTH = "assets/img/scene/intro/earth.png";
+extern const char *FONT_AUDIOWIDE;
 
-const char* ASSETS_IMG[] = {
-    PATH_IMG_SCENE_INTRO_EARTH,
-    "",
-};
-#endif
+extern const char *IMG_INTRO_EARTH;
+
+extern const char *ASSETS_IMG[];
 
 #endif

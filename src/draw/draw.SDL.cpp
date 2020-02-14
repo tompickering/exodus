@@ -32,7 +32,7 @@ bool DrawManagerSDL::init() {
         return false;
     }
 
-    font = TTF_OpenFont(PATH_FONT_AUDIOWIDE, 14);
+    font = TTF_OpenFont(FONT_AUDIOWIDE, 14);
 
     if (!font) {
         L.error("Could not load font Audiowide");
@@ -45,12 +45,18 @@ bool DrawManagerSDL::init() {
 }
 
 void DrawManagerSDL::load_resources() {
+    char img_path[ASSET_PATH_LEN_MAX];
     for (unsigned int i = 0;; ++i) {
-        const char* img_path = ASSETS_IMG[i];
-        if (img_path[0] == '\0')
+        if (ASSETS_IMG[i][0] == '\0')
             break;
-        L.debug("Loading %s", img_path);
+        strncpy(img_path, ASSETS_IMG[i], ASSET_PATH_LEN_MAX);
+        strcat(img_path, ".png");
         sprite_data[img_path] = (void*) IMG_Load(img_path);
+        if (sprite_data[img_path]) {
+            L.debug("Loaded %s", img_path);
+        } else {
+            L.warn("Could not load %s", img_path);
+        }
     }
 }
 
