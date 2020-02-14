@@ -10,6 +10,8 @@ class DrawManagerSDL : public DrawManager {
         virtual bool init() override;
         virtual void load_resources() override;
         virtual void update(MousePos, MousePos) override;
+        virtual void clear() override;
+        virtual void save_background() override;
         virtual void draw_text(const char*, int, int, int, int,
                                unsigned char, unsigned char, unsigned char) override;
     protected:
@@ -17,6 +19,7 @@ class DrawManagerSDL : public DrawManager {
     private:
         SDL_Window *win;
         SDL_Surface *surf;
+        SDL_Surface *background;
 };
 
 #endif

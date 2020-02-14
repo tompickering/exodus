@@ -64,6 +64,15 @@ void DrawManagerSDL::update(MousePos mouse_pos, MousePos click_pos) {
     SDL_UpdateWindowSurface(win);
 }
 
+void DrawManagerSDL::clear() {
+    DrawManager::clear();
+    SDL_FillRect(surf, nullptr, SDL_MapRGB(surf->format, 0x0, 0x0, 0x0));
+}
+
+void DrawManagerSDL::save_background() {
+    // TODO: Copy window surface data into a background surface
+}
+
 void* DrawManagerSDL::get_sprite_data(const char* img_path) {
     if (strnlen(img_path, 1)) {
         if (!sprite_data.count(img_path)) {
