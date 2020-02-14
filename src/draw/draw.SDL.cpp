@@ -40,6 +40,12 @@ bool DrawManagerSDL::init() {
     }
 
     SDL_FillRect(surf, nullptr, SDL_MapRGB(surf->format, 0x0, 0x0, 0x0));
+    background = SDL_CreateRGBSurface(0, surf->w, surf->h, 8, 0, 0, 0, 0);
+
+    if (!background) {
+        L.error("Could not create background surface");
+        return false;
+    }
 
     return true;
 }
@@ -51,8 +57,8 @@ void DrawManagerSDL::load_resources() {
             break;
         strncpy(img_path, ASSETS_IMG[i], ASSET_PATH_LEN_MAX);
         strcat(img_path, ".png");
-        sprite_data[img_path] = (void*) IMG_Load(img_path);
-        if (sprite_data[img_path]) {
+        sprite_data[ASSETS_IMG[i]] = (void*) IMG_Load(img_path);
+        if (sprite_data[ASSETS_IMG[i]]) {
             L.debug("Loaded %s", img_path);
         } else {
             L.warn("Could not load %s", img_path);
@@ -70,7 +76,9 @@ void DrawManagerSDL::clear() {
 }
 
 void DrawManagerSDL::save_background() {
-    // TODO: Copy window surface data into a background surface
+    if (SDL_BlitSurface(surf, nullptr, background, nullptr)) {
+        L.warn("Background blit failed");
+    }
 }
 
 void* DrawManagerSDL::get_sprite_data(const char* img_path) {
@@ -82,6 +90,29 @@ void* DrawManagerSDL::get_sprite_data(const char* img_path) {
         return sprite_data[img_path];
     }
     return nullptr;
+}
+
+void DrawManagerSDL::draw(const char* spr_key, int x, int y, int w, int h) {
+    SDL_Surface *spr = (SDL_Surface*)get_sprite_data(spr_key);
+    if (!spr) {
+        L.warn("Unknown sprite: %s", spr_key);
+        return;
+    }
+    SDL_Rect dst_rect = {x, y, w, h};
+    if (SDL_BlitSurface(spr, nullptr, surf, &dst_rect)) {
+        L.debug("Blit unsuccessful: %s", spr_key);
+    }
+}
+
+void DrawManagerSDL::draw(const char* spr_key) {
+    SDL_Surface *spr = (SDL_Surface*)get_sprite_data(spr_key);
+    if (!spr) {
+        L.warn("Unknown sprite: %s", spr_key);
+        return;
+    }
+    if (SDL_BlitSurface(spr, nullptr, surf, nullptr)) {
+        L.debug("Blit unsuccessful: %s", spr_key);
+    }
 }
 
 void DrawManagerSDL::draw_text(const char* text, int x, int y, int w, int h,

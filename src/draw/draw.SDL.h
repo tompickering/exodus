@@ -12,6 +12,8 @@ class DrawManagerSDL : public DrawManager {
         virtual void update(MousePos, MousePos) override;
         virtual void clear() override;
         virtual void save_background() override;
+        virtual void draw(const char*) override;
+        virtual void draw(const char*, int, int, int, int) override;
         virtual void draw_text(const char*, int, int, int, int,
                                unsigned char, unsigned char, unsigned char) override;
     protected:
