@@ -13,6 +13,9 @@
 #include "../shared.h"
 #include "../assetpaths.h"
 
+const float UPSCALE_X = (float)SCREEN_WIDTH  / (float)RES_X;
+const float UPSCALE_Y = (float)SCREEN_HEIGHT / (float)RES_Y;
+
 bool DrawManagerSDL::init() {
     L.info("DrawManager Init...");
     win = SDL_CreateWindow(PROG_NAME,
@@ -95,11 +98,13 @@ void DrawManagerSDL::pixelswap_update() {
             return;
         }
 
-        for (int y = 0; y < SCREEN_HEIGHT / 2; ++y) {
-            for (int x = 0; x < SCREEN_WIDTH / 2; ++x) {
+        const int PX_W = (int)(.5f + 2.f * UPSCALE_X);
+        const int PX_H = (int)(.5f + 2.f * UPSCALE_Y);
+        for (int y = 0; y < SCREEN_HEIGHT / PX_H; ++y) {
+            for (int x = 0; x < SCREEN_WIDTH / PX_W; ++x) {
                 bool swap = (random() % pixelswap_stage) == 0;
                 if (swap) {
-                    SDL_Rect r = {x * 2, y * 2, 2, 2};
+                    SDL_Rect r = {x * PX_W, y * PX_H, PX_W, PX_H};
                     SDL_BlitSurface(pixelswap_src, &r, surf, &r);
                 }
             }
@@ -171,6 +176,17 @@ void DrawManagerSDL::pixelswap_draw(SprID id, const char* spr_key, DrawTransform
 
 void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawArea* area, SprID* id) {
     DrawArea *dirty_area;
+    DrawArea default_area = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+
+    if (area) {
+        area->x *= UPSCALE_X;
+        area->y *= UPSCALE_Y;
+        area->w *= UPSCALE_X;
+        area->h *= UPSCALE_Y;
+    } else {
+        area = &default_area;
+    }
+
     if (id) {
         dirty_area = get_drawn_area(*id);
         if (dirty_area) {
@@ -244,8 +260,8 @@ void DrawManagerSDL::draw_text(const char* text, Justify jst, int x, int y, RGB*
     }
 
     SDL_Rect msg_rect;
-    msg_rect.x = x;
-    msg_rect.y = y;
+    msg_rect.x = UPSCALE_X * x;
+    msg_rect.y = UPSCALE_Y * y;
 
     if (jst != Justify::Left) {
         int render_w, render_h;

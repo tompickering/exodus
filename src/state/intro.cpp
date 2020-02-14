@@ -183,7 +183,7 @@ void Intro::update(float delta) {
 
                 int ship_y = CITY_SHIP_START_Y + (int)((CITY_SHIP_END_Y - CITY_SHIP_START_Y) * fly_progress);
 
-                draw_manager.draw(id_city_ship, ship, {10 + SCREEN_WIDTH / 2, ship_y, 0.5, 0.5, ship_scale, ship_scale});
+                draw_manager.draw(id_city_ship, ship, {10 + RES_X / 2, ship_y, 0.5, 0.5, ship_scale, ship_scale});
             }
 
             if (text_idx >= 1 && text_time > MAX_TEXT_TIME) {
@@ -367,8 +367,8 @@ void Intro::update(float delta) {
                 draw_manager.draw_text(
                         intro_text[text_idx],
                         Justify::Centre,
-                        SCREEN_WIDTH / 2,
-                        SCREEN_HEIGHT - 26,
+                        RES_X / 2,
+                        RES_Y - 26,
                         {brightness, brightness, brightness},
                         {0, 0, 0});
 
@@ -406,8 +406,8 @@ void Intro::update(float delta) {
                 draw_manager.draw_text(
                         intro_text[text_idx],
                         Justify::Centre,
-                        SCREEN_WIDTH / 2,
-                        SCREEN_HEIGHT - 26,
+                        RES_X / 2,
+                        RES_Y - 26,
                         {brightness, brightness, brightness},
                         {0, 0, 0});
                 return;
@@ -491,8 +491,8 @@ void Intro::draw_text() {
     draw_manager.draw_text(
             intro_text[text_idx],
             Justify::Centre,
-            SCREEN_WIDTH / 2,
-            SCREEN_HEIGHT - 26,
+            RES_X / 2,
+            RES_Y - 26,
             {brightness, brightness, brightness},
             {0, 0, 0});
 }

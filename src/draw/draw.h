@@ -7,8 +7,11 @@
 #include "../timer/timer.h"
 #include "../shared.h"
 
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 512
+#define SCREEN_WIDTH 960
+#define SCREEN_HEIGHT 768
+
+#define RES_X 640
+#define RES_Y 512
 
 using std::map;
 using std::vector;
