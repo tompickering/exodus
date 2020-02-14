@@ -1,0 +1,10 @@
+exodus
+*.swp
+src/*.d
+src/*.o
+src/*.gch
+src/*.swp
+src/*/*.d
+src/*/*.o
+src/*/*.gch
+src/*/*.swp
