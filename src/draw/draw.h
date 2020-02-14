@@ -70,7 +70,7 @@ class DrawManager {
         DrawManager();
         virtual bool init() = 0;
         virtual void load_resources() = 0;
-        virtual void update(MousePos, MousePos) = 0;
+        virtual void update(MousePos, MousePos);
         virtual void save_background() = 0;
         virtual void clear();
         virtual SprID new_sprite_id();
@@ -94,6 +94,7 @@ class DrawManager {
         virtual void fade_black(float, int) = 0;
         virtual bool fade_active() = 0;
         virtual void show_cursor(bool);
+        virtual SprID get_clicked_sprite();
     protected:
         map<const char*, void*> sprite_data;
         virtual void* get_sprite_data(const char*) = 0;
@@ -107,6 +108,8 @@ class DrawManager {
         int fade_stage;
         int fade_stages;
         bool draw_cursor;
+    private:
+        SprID clicked_sprite;
 };
 
 #ifdef SDL

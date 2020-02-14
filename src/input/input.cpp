@@ -35,15 +35,16 @@ MousePos InputManager::get_mouse_pos() {
             (int)((float)mouse_pos.y / UPSCALE_Y)};
 }
 
+/*
+ * Read MousePos describing click location, or
+ * {-1, -1} if no click has been recorded.
+ * Resets the click state, so no two things may
+ * read the same click information.
+ * Returns in screen-space - not resolution-space.
+ */
 MousePos InputManager::read_click() {
     MousePos result;
-    if (click_pos.x > 0 && click_pos.y > 0) {
-        result.x =(int)((float)click_pos.x / UPSCALE_X);
-        result.y =(int)((float)click_pos.y / UPSCALE_Y);
-    } else {
-        result.x = -1;
-        result.y = -1;
-    }
+    result = click_pos;
     click_pos.x = -1;
     click_pos.y = -1;
     return result;

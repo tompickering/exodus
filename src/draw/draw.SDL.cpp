@@ -85,6 +85,7 @@ void DrawManagerSDL::load_resources() {
 }
 
 void DrawManagerSDL::update(MousePos mouse_pos, MousePos click_pos) {
+    DrawManager::update(mouse_pos, click_pos);
     if (pixelswap_active()) {
         pixelswap_update();
     }
