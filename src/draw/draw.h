@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 
+#include "../timer/timer.h"
 #include "../shared.h"
 
 #define SCREEN_WIDTH 640
@@ -65,6 +66,7 @@ class DrawManager {
         virtual void pixelswap_start() = 0;
         virtual void pixelswap_start(DrawArea*) = 0;
         virtual bool pixelswap_active() = 0;
+        virtual void pixelswap_update() = 0;
         virtual void draw_text(const char*, Justify, int, int, RGB) = 0;
     protected:
         map<const char*, void*> sprite_data;
@@ -73,6 +75,7 @@ class DrawManager {
         SprID next_id;
         vector<DrawnSprite> drawn_spr_info;
         DrawArea pixelswap_region;
+        TIMER pixelswap_timer;
 };
 
 #ifdef SDL

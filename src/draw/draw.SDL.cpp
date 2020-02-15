@@ -4,6 +4,7 @@
 #include "draw.SDL.h"
 
 #include <cstring>
+#include <cstdlib>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -41,13 +42,13 @@ bool DrawManagerSDL::init() {
 
     SDL_FillRect(surf, nullptr, SDL_MapRGB(surf->format, 0x0, 0x0, 0x0));
 
-    background = SDL_CreateRGBSurface(0, surf->w, surf->h, 8, 0, 0, 0, 0);
+    background = SDL_CreateRGBSurface(0, surf->w, surf->h, 32, 0, 0, 0, 0);
     if (!background) {
         L.error("Could not create background surface");
         return false;
     }
 
-    pixelswap_src = SDL_CreateRGBSurface(0, surf->w, surf->h, 8, 0, 0, 0, 0);
+    pixelswap_src = SDL_CreateRGBSurface(0, surf->w, surf->h, 32, 0, 0, 0, 0);
     if (!pixelswap_src) {
         L.error("Could not create pixelswap source surface");
         return false;
@@ -73,7 +74,31 @@ void DrawManagerSDL::load_resources() {
 }
 
 void DrawManagerSDL::update(MousePos mouse_pos, MousePos click_pos) {
+    if (pixelswap_active()) {
+        pixelswap_update();
+    }
     SDL_UpdateWindowSurface(win);
+}
+
+void DrawManagerSDL::pixelswap_update() {
+    if (pixelswap_timer.get_delta() > 0.01) {
+        if (!pixelswap_stage || !--pixelswap_stage) {
+            return;
+        }
+
+        for (int y = 0; y < SCREEN_HEIGHT / 2; ++y) {
+            for (int x = 0; x < SCREEN_WIDTH / 2; ++x) {
+                bool swap = (random() % pixelswap_stage) == 0;
+                if (swap) {
+                    SDL_Rect r = {x * 2, y * 2, 2, 2};
+                    SDL_BlitSurface(pixelswap_src, &r, surf, &r);
+                }
+            }
+        }
+
+        pixelswap_timer.start();
+    }
+
 }
 
 void DrawManagerSDL::clear() {
@@ -111,7 +136,7 @@ void DrawManagerSDL::draw(const char* spr_key, DrawArea* area) {
 }
 
 void DrawManagerSDL::pixelswap_draw(const char* spr_key) {
-    draw(pixelswap_src, spr_key, nullptr);
+    pixelswap_draw(spr_key, nullptr);
 }
 
 void DrawManagerSDL::pixelswap_draw(const char* spr_key, DrawArea* area) {
@@ -158,12 +183,13 @@ void DrawManagerSDL::pixelswap_start() {
 }
 
 void DrawManagerSDL::pixelswap_start(DrawArea* area) {
-    pixelswap_stage = 10;
+    pixelswap_stage = 20;
     if (area) {
         pixelswap_region = *area;
     } else {
         pixelswap_region = {0, 0, 0, 0};
     }
+    pixelswap_timer.start();
 }
 
 bool DrawManagerSDL::pixelswap_active() {
