@@ -70,11 +70,15 @@ void Intro::update(float delta) {
             if (!stage_started) {
                 draw_manager.draw(IMG_INTRO_EARTH);
             }
-            if (time > text_time * 2) {
-                next_stage(); return;
+            if (time > text_time) {
+                if (text_idx == 0) {
+                    ++text_idx;
+                    timer.start();
+                } else {
+                    next_stage(); return;
+                }
             }
-            text_idx = time < text_time ? 0 : 1;
-            text_brightness = determine_text_brightness(text_idx == 0 ? 0 : text_time, time);
+            text_brightness = determine_text_brightness(0, time);
             draw_manager.draw_text(
                     intro_text[text_idx],
                     Justify::Centre,
