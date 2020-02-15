@@ -60,7 +60,7 @@ float SHOT_FRAME           = 0.08f;
 
 float GUARD_FRAME          = 0.25f;
 
-float DOOR_PX_PER_SEC      = 10.f;
+float DOOR_PX_PER_SEC      = 14.f;
 
 float SHUTTLE_P1_START_Y   = 240.f;
 float SHUTTLE_P1_END_X     = 320.f;
@@ -454,7 +454,7 @@ ExodusState Intro::update(float delta) {
 
             if (input_code == 594) {
                 ONCE(coode_startface) draw_manager.fade_black(1.2f, 12);
-                if (draw_manager.fade_active()) {
+                if (draw_manager.fade_active() || text_time < MAX_TEXT_TIME + 2.4) {
                     return ExodusState::ST_None;
                 }
                 next_stage(); return ExodusState::ST_None;
@@ -545,7 +545,7 @@ ExodusState Intro::update(float delta) {
                 float phase2_anim_interp = pow(phase2_linear_interp, 1.3);
                 float shuttle_x = SHUTTLE_P1_END_X - (SHUTTLE_P1_END_X - SHUTTLE_P2_END_X) * phase2_anim_interp;
                 float shuttle_y = SHUTTLE_P1_END_Y - (SHUTTLE_P1_END_Y - SHUTTLE_P2_END_Y) * phase2_anim_interp;
-                float scale = 2 * (1.f - (0.5 * phase2_anim_interp));
+                float scale = 2 * (1.f - (0.2 * phase2_anim_interp));
                 draw_manager.draw(id_shuttle_launch, IMG_INTRO_SH4_SHUTTLE4, {(int)shuttle_x, (int)shuttle_y, 0.5, 0.5, scale, scale});
             } else {
                 draw_manager.draw(id_shuttle_launch, IMG_INTRO_SH4_SHUTTLE4, {(int)SHUTTLE_P1_END_X, (int)SHUTTLE_P1_END_Y, 0.5, 0.5, 2.0, 2.0});
