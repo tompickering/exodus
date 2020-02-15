@@ -58,7 +58,13 @@ class DrawManager {
         virtual void clear();
         virtual SprID new_sprite_id();
         virtual void draw(const char*) = 0;
-        virtual void draw(const char*, int, int, int, int) = 0;
+        virtual void draw(const char*, DrawArea*) = 0;
+        virtual void pixelswap_clear() = 0;
+        virtual void pixelswap_draw(const char*) = 0;
+        virtual void pixelswap_draw(const char*, DrawArea*) = 0;
+        virtual void pixelswap_start() = 0;
+        virtual void pixelswap_start(DrawArea*) = 0;
+        virtual bool pixelswap_active() = 0;
         virtual void draw_text(const char*, Justify, int, int, RGB) = 0;
     protected:
         map<const char*, void*> sprite_data;
@@ -66,6 +72,7 @@ class DrawManager {
         void *font;
         SprID next_id;
         vector<DrawnSprite> drawn_spr_info;
+        DrawArea pixelswap_region;
 };
 
 #ifdef SDL

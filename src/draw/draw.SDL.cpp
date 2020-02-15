@@ -40,10 +40,16 @@ bool DrawManagerSDL::init() {
     }
 
     SDL_FillRect(surf, nullptr, SDL_MapRGB(surf->format, 0x0, 0x0, 0x0));
-    background = SDL_CreateRGBSurface(0, surf->w, surf->h, 8, 0, 0, 0, 0);
 
+    background = SDL_CreateRGBSurface(0, surf->w, surf->h, 8, 0, 0, 0, 0);
     if (!background) {
         L.error("Could not create background surface");
+        return false;
+    }
+
+    pixelswap_src = SDL_CreateRGBSurface(0, surf->w, surf->h, 8, 0, 0, 0, 0);
+    if (!pixelswap_src) {
+        L.error("Could not create pixelswap source surface");
         return false;
     }
 
@@ -75,6 +81,10 @@ void DrawManagerSDL::clear() {
     SDL_FillRect(surf, nullptr, SDL_MapRGB(surf->format, 0x0, 0x0, 0x0));
 }
 
+void DrawManagerSDL::pixelswap_clear() {
+    SDL_FillRect(pixelswap_src, nullptr, SDL_MapRGB(surf->format, 0x0, 0x0, 0x0));
+}
+
 void DrawManagerSDL::save_background() {
     if (SDL_BlitSurface(surf, nullptr, background, nullptr)) {
         L.warn("Background blit failed");
@@ -92,26 +102,37 @@ void* DrawManagerSDL::get_sprite_data(const char* img_path) {
     return nullptr;
 }
 
-void DrawManagerSDL::draw(const char* spr_key, int x, int y, int w, int h) {
-    SDL_Surface *spr = (SDL_Surface*)get_sprite_data(spr_key);
-    if (!spr) {
-        L.warn("Unknown sprite: %s", spr_key);
-        return;
-    }
-    SDL_Rect dst_rect = {x, y, w, h};
-    if (SDL_BlitSurface(spr, nullptr, surf, &dst_rect)) {
-        L.debug("Blit unsuccessful: %s", spr_key);
-    }
+void DrawManagerSDL::draw(const char* spr_key) {
+    draw(spr_key, nullptr);
 }
 
-void DrawManagerSDL::draw(const char* spr_key) {
+void DrawManagerSDL::draw(const char* spr_key, DrawArea* area) {
+    draw(surf, spr_key, area);
+}
+
+void DrawManagerSDL::pixelswap_draw(const char* spr_key) {
+    draw(pixelswap_src, spr_key, nullptr);
+}
+
+void DrawManagerSDL::pixelswap_draw(const char* spr_key, DrawArea* area) {
+    draw(pixelswap_src, spr_key, area);
+}
+
+void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawArea* area) {
     SDL_Surface *spr = (SDL_Surface*)get_sprite_data(spr_key);
     if (!spr) {
         L.warn("Unknown sprite: %s", spr_key);
         return;
     }
-    if (SDL_BlitSurface(spr, nullptr, surf, nullptr)) {
-        L.debug("Blit unsuccessful: %s", spr_key);
+    if (area) {
+        SDL_Rect dst_rect = {area->x, area->y, area->w, area->h};
+        if (SDL_BlitSurface(spr, nullptr, tgt, &dst_rect)) {
+            L.debug("Blit unsuccessful: %s", spr_key);
+        }
+    } else {
+        if (SDL_BlitSurface(spr, nullptr, tgt, nullptr)) {
+            L.debug("Blit unsuccessful: %s", spr_key);
+        }
     }
 }
 
@@ -130,6 +151,23 @@ void DrawManagerSDL::draw_text(const char* text, Justify jst, int x, int y, RGB 
     }
 
     SDL_BlitSurface(msg_surf, nullptr, surf, &msg_rect);
+}
+
+void DrawManagerSDL::pixelswap_start() {
+    pixelswap_start(nullptr);
+}
+
+void DrawManagerSDL::pixelswap_start(DrawArea* area) {
+    pixelswap_stage = 10;
+    if (area) {
+        pixelswap_region = *area;
+    } else {
+        pixelswap_region = {0, 0, 0, 0};
+    }
+}
+
+bool DrawManagerSDL::pixelswap_active() {
+    return pixelswap_stage > 0;
 }
 
 #endif

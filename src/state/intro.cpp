@@ -84,10 +84,14 @@ void Intro::update(float delta) {
             break;
         case City:
             if (!stage_started) {
-                draw_manager.draw(IMG_INTRO_CITY);
-                draw_manager.save_background();
+                draw_manager.pixelswap_clear();
+                draw_manager.pixelswap_draw(IMG_INTRO_CITY);
+                draw_manager.pixelswap_start(nullptr);
             }
             if (time > 2) {
+                //static SprID shipid = new_sprite_id();
+            }
+            if (time > 8) {
                 next_stage(); return;
             }
             break;
