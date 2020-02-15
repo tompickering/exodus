@@ -473,8 +473,8 @@ ExodusState Intro::update(float delta) {
 
             door_time = time - 2.6f;
             door_time = door_time < 0 ? 0 : door_time;
-            draw_manager.draw(id_door_l, IMG_INTRO_OD1_DOOR_L, {319 - door_time * DOOR_PX_PER_SEC, 218, 1.0, 0.5, 2.0, 1.0});
-            draw_manager.draw(id_door_r, IMG_INTRO_OD1_DOOR_R, {319 + door_time * DOOR_PX_PER_SEC, 218, 0.0, 0.5, 2.0, 1.0});
+            draw_manager.draw(id_door_l, IMG_INTRO_OD1_DOOR_L, {(int)(319 - door_time * DOOR_PX_PER_SEC), 218, 1.0, 0.5, 2.0, 1.0});
+            draw_manager.draw(id_door_r, IMG_INTRO_OD1_DOOR_R, {(int)(319 + door_time * DOOR_PX_PER_SEC), 218, 0.0, 0.5, 2.0, 1.0});
             draw_manager.draw(IMG_INTRO_OD1_FRAME , {319, 212, 0.5, 0.5, 2.0, 1.0});
             draw_manager.draw(IMG_INTRO_OD1_SEPP  , {319, 482, 0.5, 1.0, 2.0, 1.0});
 
