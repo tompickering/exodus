@@ -27,13 +27,15 @@ class DrawManagerSDL : public DrawManager {
         virtual void pixelswap_update() override;
         virtual void draw_text(const char*, Justify, int, int, RGB) override;
         virtual void draw_text(const char*, Justify, int, int, RGB, RGB) override;
+        virtual void fade_black(float, int) override;
+        virtual bool fade_active() override;
     protected:
         virtual void* get_sprite_data(const char*) override;
     private:
         SDL_Window *win;
         SDL_Surface *surf;
         SDL_Surface *background;
-        SDL_Surface *pixelswap_src;
+        SDL_Surface *temp_surf;
         unsigned int pixelswap_stage;
         void draw(SDL_Surface*, const char*, DrawArea*, SprID*);
         void draw(SDL_Surface*, const char*, DrawTransform, SprID*);

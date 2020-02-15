@@ -51,8 +51,8 @@ bool DrawManagerSDL::init() {
         return false;
     }
 
-    pixelswap_src = SDL_CreateRGBSurface(0, surf->w, surf->h, 32, 0, 0, 0, 0);
-    if (!pixelswap_src) {
+    temp_surf = SDL_CreateRGBSurface(0, surf->w, surf->h, 32, 0, 0, 0, 0);
+    if (!temp_surf) {
         L.error("Could not create pixelswap source surface");
         return false;
     }
@@ -89,6 +89,34 @@ void DrawManagerSDL::update(MousePos mouse_pos, MousePos click_pos) {
     if (pixelswap_active()) {
         pixelswap_update();
     }
+    if (fade_active()) {
+        float fade_progress = fade_timer.get_delta() / (float) fade_seconds;
+        if (fade_progress < 1) {
+            int this_fade_stage = (int)(fade_progress * (float)fade_stages);
+            if (this_fade_stage != fade_stage) {
+                uint32_t *px = ((uint32_t*)(temp_surf->pixels));
+                fade_stage = this_fade_stage;
+                for (int i = 0; i < surf->w * surf->h; ++i) {
+                    uint32_t new_col = 0;
+                    uint8_t r = (px[i] & 0x00FF0000) >> 16;
+                    uint8_t g = (px[i] & 0x0000FF00) >> 8;
+                    uint8_t b = (px[i] & 0x000000FF);
+                    uint8_t new_r = uint8_t((float)r * (1.f - fade_progress));
+                    uint8_t new_g = uint8_t((float)g * (1.f - fade_progress));
+                    uint8_t new_b = uint8_t((float)b * (1.f - fade_progress));
+                    new_col |= new_r;
+                    new_col <<= 8;
+                    new_col |= new_g;
+                    new_col <<= 8;
+                    new_col |= new_b;
+                    ((uint32_t*)(surf->pixels))[i] = new_col;
+                }
+            }
+        } else {
+            fade_stages = 0;
+            clear();
+        }
+    }
     SDL_UpdateWindowSurface(win);
 }
 
@@ -105,7 +133,7 @@ void DrawManagerSDL::pixelswap_update() {
                 bool swap = (random() % pixelswap_stage) == 0;
                 if (swap) {
                     SDL_Rect r = {x * PX_W, y * PX_H, PX_W, PX_H};
-                    SDL_BlitSurface(pixelswap_src, &r, surf, &r);
+                    SDL_BlitSurface(temp_surf, &r, surf, &r);
                 }
             }
         }
@@ -121,7 +149,7 @@ void DrawManagerSDL::clear() {
 }
 
 void DrawManagerSDL::pixelswap_clear() {
-    SDL_FillRect(pixelswap_src, nullptr, SDL_MapRGB(surf->format, 0x0, 0x0, 0x0));
+    SDL_FillRect(temp_surf, nullptr, SDL_MapRGB(surf->format, 0x0, 0x0, 0x0));
 }
 
 void DrawManagerSDL::save_background() {
@@ -159,19 +187,19 @@ void DrawManagerSDL::draw(SprID id, const char* spr_key, DrawTransform t) {
 }
 
 void DrawManagerSDL::pixelswap_draw(const char* spr_key) {
-    draw(pixelswap_src, spr_key, nullptr, nullptr);
+    draw(temp_surf, spr_key, nullptr, nullptr);
 }
 
 void DrawManagerSDL::pixelswap_draw(const char* spr_key, DrawArea area) {
-    draw(pixelswap_src, spr_key, &area, nullptr);
+    draw(temp_surf, spr_key, &area, nullptr);
 }
 
 void DrawManagerSDL::pixelswap_draw(const char* spr_key, DrawTransform t) {
-    draw(pixelswap_src, spr_key, t, nullptr);
+    draw(temp_surf, spr_key, t, nullptr);
 }
 
 void DrawManagerSDL::pixelswap_draw(SprID id, const char* spr_key, DrawTransform t) {
-    draw(pixelswap_src, spr_key, t, &id);
+    draw(temp_surf, spr_key, t, &id);
 }
 
 void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawArea* area, SprID* id) {
@@ -288,6 +316,18 @@ void DrawManagerSDL::pixelswap_start(DrawArea* area) {
 
 bool DrawManagerSDL::pixelswap_active() {
     return pixelswap_stage > 0;
+}
+
+void DrawManagerSDL::fade_black(float seconds, int stages) {
+    SDL_BlitSurface(surf, nullptr, temp_surf, nullptr);
+    fade_seconds = seconds;
+    fade_stage = 0;
+    fade_stages = stages;
+    fade_timer.start();
+}
+
+bool DrawManagerSDL::fade_active() {
+    return fade_stages > 0;
 }
 
 #endif

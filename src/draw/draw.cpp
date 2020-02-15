@@ -2,6 +2,9 @@
 
 DrawManager::DrawManager() {
     next_id = 0;
+    fade_timer.start();
+    fade_seconds = 0;
+    fade_stage = 0;
 }
 
 SprID DrawManager::new_sprite_id() {

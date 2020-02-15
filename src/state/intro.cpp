@@ -453,7 +453,10 @@ ExodusState Intro::update(float delta) {
             }
 
             if (input_code == 594) {
-                // PROCcodefadeout  ?
+                ONCE(coode_startface) draw_manager.fade_black(1.2f, 12);
+                if (draw_manager.fade_active()) {
+                    return ExodusState::ST_None;
+                }
                 next_stage(); return ExodusState::ST_None;
             } else {
                 stage = Fail;

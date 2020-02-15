@@ -22,4 +22,5 @@ void StateBase::exit() {
 }
 
 ExodusState StateBase::update(float delta) {
+    return ExodusState::ST_None;
 }
