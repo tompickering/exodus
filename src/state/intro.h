@@ -36,6 +36,7 @@ class Intro : StateBase {
         Stage stage;
         bool stage_started;
         void next_stage();
+        int text_idx;
 };
 
 #endif

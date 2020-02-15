@@ -115,7 +115,7 @@ void DrawManagerSDL::draw(const char* spr_key) {
     }
 }
 
-void DrawManagerSDL::draw_text(const char* text, int x, int y, int w, int h,
+void DrawManagerSDL::draw_text(const char* text, Justify jst, int x, int y,
                                unsigned char r, unsigned char g, unsigned char b) {
 
     SDL_Color colour = {r, g, b};
@@ -124,8 +124,12 @@ void DrawManagerSDL::draw_text(const char* text, int x, int y, int w, int h,
     SDL_Rect msg_rect;
     msg_rect.x = x;
     msg_rect.y = y;
-    msg_rect.w = w;
-    msg_rect.h = h;
+
+    if (jst != Justify::Left) {
+        int render_w, render_h;
+        TTF_SizeText((TTF_Font*)font, text, &render_w, &render_h);
+        msg_rect.x -= (jst == Justify::Right) ? render_w : render_w / 2;
+    }
 
     SDL_BlitSurface(msg_surf, nullptr, surf, &msg_rect);
 }

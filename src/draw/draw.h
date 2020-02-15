@@ -37,6 +37,12 @@ typedef struct {
     DrawArea area;
 } DrawnSprite;
 
+enum Justify {
+    Left,
+    Centre,
+    Right,
+};
+
 class DrawManager {
     public:
         virtual bool init() = 0;
@@ -47,7 +53,7 @@ class DrawManager {
         virtual SprID new_sprite_id();
         virtual void draw(const char*) = 0;
         virtual void draw(const char*, int, int, int, int) = 0;
-        virtual void draw_text(const char*, int, int, int, int,
+        virtual void draw_text(const char*, Justify, int, int,
                                unsigned char, unsigned char, unsigned char) = 0;
     protected:
         map<const char*, void*> sprite_data;
