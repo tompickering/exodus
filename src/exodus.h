@@ -4,10 +4,14 @@
 class Exodus {
     public:
         Exodus();
-        ~Exodus();
+        virtual ~Exodus();
         int run(int argc, char** argv);
-    private:
-        bool init();
+    protected:
+        virtual bool init();
 };
+
+#ifdef SDL
+#include "exodus.SDL.h"
+#endif
 
 #endif

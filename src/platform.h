@@ -15,6 +15,10 @@
  *    appropriate specific header for this platform.
  */
 
+#ifdef SDL
+#define EXODUS ExodusSDL
+#endif
+
 #ifdef LINUX
 #define TIMER TimerChrono
 #endif
