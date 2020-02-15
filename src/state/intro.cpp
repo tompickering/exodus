@@ -58,7 +58,7 @@ float SHOOT_FRAME          = 0.08f;
 float SHOT_START           = 1.55f;
 float SHOT_FRAME           = 0.08f;
 
-float GUARD_FRAME          = 0.15f;
+float GUARD_FRAME          = 0.25f;
 
 float DOOR_PX_PER_SEC      = 10.f;
 
