@@ -4,6 +4,7 @@
 
 #include "platform.h"
 #include "timer/timer.h"
+#include "draw/draw.h"
 
 #include <csignal>
 
@@ -11,6 +12,7 @@ const float MAX_FPS = 60.f;
 const float MIN_FRAME_DELTA = 1.f / MAX_FPS;
 
 Log::Logger L(Log::Level::DEBUG);
+DRAWMANAGER draw_manager;
 
 volatile bool running;
 
@@ -25,9 +27,13 @@ Exodus::~Exodus() {
 }
 
 bool Exodus::init() {
-    L.info("Initialising...");
+    L.info("Initialising Exodus...");
     signal(SIGINT, signal_handler);
-    return true;
+
+    bool ok = true
+        && draw_manager.init();
+
+    return ok;
 }
 
 int Exodus::run(int argc, char** argv) {
@@ -42,7 +48,9 @@ int Exodus::run(int argc, char** argv) {
 
     while (running) {
         timer.start();
-        // TODO: The game.
+
+        draw_manager.update();
+
         timer.sleep_until(MIN_FRAME_DELTA);
         delta_time = timer.get_delta();
     }

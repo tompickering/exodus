@@ -12,10 +12,6 @@ ExodusSDL::~ExodusSDL() {
 }
 
 bool ExodusSDL::init() {
-    bool res = Exodus::init();
-    if (!res)
-        return res;
-
     L.info("Initialising SDL...");
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
@@ -30,5 +26,5 @@ bool ExodusSDL::init() {
 
     L.info("SDL initialised.");
 
-    return res;
+    return Exodus::init();
 }

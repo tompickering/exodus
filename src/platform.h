@@ -17,6 +17,7 @@
 
 #ifdef SDL
 #define EXODUS ExodusSDL
+#define DRAWMANAGER DrawManagerSDL
 #endif
 
 #ifdef LINUX
