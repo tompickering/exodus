@@ -9,6 +9,7 @@ typedef struct {
 #include "logger.h"
 #include "platform.h"
 
+#include "exodus.h"
 #include "draw/draw.h"
 #include "audio/audio.h"
 #include "input/input.h"
@@ -18,6 +19,8 @@ typedef struct {
 // Facility to execute a single statement or block once only.
 // Requires a unique name within the context - but this is checked at compile time.
 #define ONCE(once_id) static bool once_id = true; if (once_id && !(once_id = false))
+
+extern EXODUS exodus;
 
 extern Log::Logger L;
 

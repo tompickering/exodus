@@ -1,6 +1,8 @@
 #include "platform.h"
 #include "exodus.h"
 
+EXODUS exodus;
+
 int main(int argc, char** argv) {
-    return EXODUS().run(argc, argv);
+    return exodus.run(argc, argv);
 }
