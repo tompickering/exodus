@@ -62,7 +62,7 @@ float GUARD_FRAME          = 0.15f;
 
 float DOOR_PX_PER_SEC      = 10.f;
 
-float SHUTTLE_P1_START_Y   = 200.f;
+float SHUTTLE_P1_START_Y   = 240.f;
 float SHUTTLE_P1_END_X     = 320.f;
 float SHUTTLE_P1_END_Y     = 140.f;
 float SHUTTLE_P1_END       = 4.f;
@@ -539,7 +539,7 @@ ExodusState Intro::update(float delta) {
                 draw_manager.draw(IMG_INTRO_SH4_MOVEOUT , {318, 249, 0.5, 0.5, 2.0, 1.0});
             } else if (time > SHUTTLE_P2_START){
                 float phase2_linear_interp = (time - SHUTTLE_P2_START) / SHUTTLE_P2_END;
-                float phase2_anim_interp = phase2_linear_interp * phase2_linear_interp;
+                float phase2_anim_interp = pow(phase2_linear_interp, 1.3);
                 float shuttle_x = SHUTTLE_P1_END_X - (SHUTTLE_P1_END_X - SHUTTLE_P2_END_X) * phase2_anim_interp;
                 float shuttle_y = SHUTTLE_P1_END_Y - (SHUTTLE_P1_END_Y - SHUTTLE_P2_END_Y) * phase2_anim_interp;
                 float scale = 2 * (1.f - (0.5 * phase2_anim_interp));
