@@ -36,7 +36,7 @@ static const char* intro_text[] = {
     "and dangerous journey.",
 };
 
-const int text_time = 6;
+const int text_time = 5;
 
 Intro::Intro() : StateBase("Intro", false), text_idx(0) {
 }
@@ -118,11 +118,11 @@ unsigned char Intro::determine_text_brightness(float started, float now) {
     float progress = (now - started) / text_time;
     if (progress < 0.0 || progress > 1.0) {
         return 0x00;
-    } else if (progress < 0.4) {
-        float fade_in_progress = progress / 0.4;
+    } else if (progress < 0.3) {
+        float fade_in_progress = progress / 0.3;
         return (int)(fade_in_progress * 0xFF);
-    } else if (progress > 0.6) {
-        float fade_out_progress = (progress - 0.6) / 0.4;
+    } else if (progress > 0.7) {
+        float fade_out_progress = (progress - 0.7) / 0.3;
         return (int)((1.f - fade_out_progress) * 0xFF);
     } else {
         return 0xFF;
