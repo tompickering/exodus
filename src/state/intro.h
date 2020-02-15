@@ -37,6 +37,7 @@ class Intro : StateBase {
         bool stage_started;
         void next_stage();
         int text_idx;
+        unsigned char determine_text_brightness(float, float);
 };
 
 #endif

@@ -70,17 +70,17 @@ void Intro::update(float delta) {
             if (!stage_started) {
                 draw_manager.draw(IMG_INTRO_EARTH);
             }
+            if (time > text_time * 2) {
+                next_stage(); return;
+            }
             text_idx = time < text_time ? 0 : 1;
-            text_brightness = (int)((fmod(time, (float)text_time) * 0xFF) / text_time);
+            text_brightness = determine_text_brightness(text_idx == 0 ? 0 : text_time, time);
             draw_manager.draw_text(
                     intro_text[text_idx],
                     Justify::Centre,
                     SCREEN_WIDTH / 2,
                     SCREEN_HEIGHT - 26,
                     {text_brightness, text_brightness, text_brightness});
-            if (time > text_time * 2) {
-                next_stage(); return;
-            }
             break;
         case City:
             if (!stage_started) {
@@ -104,4 +104,23 @@ void Intro::next_stage() {
         stage_started = false;
     }
     timer.start();
+}
+
+/*
+ * Given then number of seconds that we've been displaying the text,
+ * determine how brightly the text should be rendered based on text_time
+ */
+unsigned char Intro::determine_text_brightness(float started, float now) {
+    float progress = (now - started) / text_time;
+    if (progress < 0.0 || progress > 1.0) {
+        return 0x00;
+    } else if (progress < 0.4) {
+        float fade_in_progress = progress / 0.4;
+        return (int)(fade_in_progress * 0xFF);
+    } else if (progress > 0.6) {
+        float fade_out_progress = (progress - 0.6) / 0.4;
+        return (int)((1.f - fade_out_progress) * 0xFF);
+    } else {
+        return 0xFF;
+    }
 }
