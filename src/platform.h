@@ -17,6 +17,7 @@
 
 #ifdef SDL
 #define EXODUS ExodusSDL
+#define AUDIOMANAGER AudioManagerSDL
 #define DRAWMANAGER DrawManagerSDL
 #endif
 

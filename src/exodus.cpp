@@ -4,6 +4,7 @@
 
 #include "platform.h"
 #include "timer/timer.h"
+#include "audio/audio.h"
 #include "draw/draw.h"
 
 #include <csignal>
@@ -12,6 +13,7 @@ const float MAX_FPS = 60.f;
 const float MIN_FRAME_DELTA = 1.f / MAX_FPS;
 
 Log::Logger L(Log::Level::DEBUG);
+AUDIOMANAGER audio_manager;
 DRAWMANAGER draw_manager;
 
 volatile bool running;
@@ -31,7 +33,8 @@ bool Exodus::init() {
     signal(SIGINT, signal_handler);
 
     bool ok = true
-        && draw_manager.init();
+        && draw_manager.init()
+        && audio_manager.init();
 
     return ok;
 }
