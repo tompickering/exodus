@@ -18,6 +18,24 @@ namespace Log {
     }
 
     void Logger::vlog(Level lev, const char* fmt, va_list args) {
+        switch (lev) {
+            case FATAL:
+                printf("FATAL : ");
+                break;
+            case ERROR:
+                printf("ERROR : ");
+                break;
+            case WARN:
+                printf("WARN  : ");
+                break;
+            case INFO:
+                printf("INFO  : ");
+                break;
+            case DEBUG:
+                printf("DEBUG : ");
+                break;
+        }
+
         vprintf(fmt, args);
         printf("\n");
     }
@@ -68,7 +86,7 @@ namespace Log {
     void Logger::fatal(const char* fmt, ...) {
         va_list args;
         va_start(args, fmt);
-        vlog(Level::ERROR, fmt, args);
+        vlog(Level::FATAL, fmt, args);
         va_end(args);
         exit(1);
     }

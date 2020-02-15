@@ -5,7 +5,7 @@
 
 namespace Log {
 
-    enum Level {DEBUG, INFO, WARN, ERROR};
+    enum Level {DEBUG, INFO, WARN, ERROR, FATAL};
 
     class Logger {
         public:
