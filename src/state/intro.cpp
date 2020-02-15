@@ -62,6 +62,14 @@ float GUARD_FRAME          = 0.15f;
 
 float DOOR_PX_PER_SEC      = 10.f;
 
+float SHUTTLE_P1_START_Y   = 200.f;
+float SHUTTLE_P1_END_X     = 320.f;
+float SHUTTLE_P1_END_Y     = 140.f;
+float SHUTTLE_P1_END       = 4.f;
+float SHUTTLE_P2_START     = 4.4f;
+float SHUTTLE_P2_END       = 3.0f;
+float SHUTTLE_P2_END_X     = 90.f;
+float SHUTTLE_P2_END_Y     = 30.f;
 
 const float MAX_TEXT_TIME  = 3.8;
 
@@ -72,6 +80,7 @@ SprID id_shot;
 SprID id_guardshot;
 SprID id_door_l;
 SprID id_door_r;
+SprID id_shuttle_launch;
 
 unsigned int nums_held = 0;
 unsigned int prev_nums_held = 0;
@@ -97,6 +106,7 @@ void Intro::enter() {
     id_guardshot = draw_manager.new_sprite_id();
     id_door_l = draw_manager.new_sprite_id();
     id_door_r = draw_manager.new_sprite_id();
+    id_shuttle_launch = draw_manager.new_sprite_id();
 }
 
 void Intro::exit() {
@@ -108,6 +118,7 @@ void Intro::exit() {
     draw_manager.release_sprite_id(id_guardshot);
     draw_manager.release_sprite_id(id_door_l);
     draw_manager.release_sprite_id(id_door_r);
+    draw_manager.release_sprite_id(id_shuttle_launch);
 }
 
 void Intro::update(float delta) {
@@ -510,6 +521,31 @@ void Intro::update(float delta) {
             if (launchpad_light_toggle && (fmod(time, 1.4) >= 0.1)) {
                 draw_manager.draw(IMG_INTRO_LAUNCH);
                 launchpad_light_toggle = false;
+            }
+
+            if (time < SHUTTLE_P1_END) {
+                const char *ship = IMG_INTRO_SH4_SHUTTLE1;
+                float phase1_linear_interp = time / SHUTTLE_P1_END;
+                float phase1_anim_intetrp = sqrt(phase1_linear_interp);
+                float shuttle_y = SHUTTLE_P1_START_Y - ((SHUTTLE_P1_START_Y - SHUTTLE_P1_END_Y) * phase1_anim_intetrp);
+                if (time < 0.7 * SHUTTLE_P1_END) {
+                    ship = IMG_INTRO_SH4_SHUTTLE2;
+                } else if (time < 0.8 * SHUTTLE_P1_END) {
+                    ship = IMG_INTRO_SH4_SHUTTLE3;
+                } else {
+                    ship = IMG_INTRO_SH4_SHUTTLE4;
+                }
+                draw_manager.draw(id_shuttle_launch, ship, {(int)SHUTTLE_P1_END_X, (int)shuttle_y, 0.5, 0.5, 2.0, 2.0});
+                draw_manager.draw(IMG_INTRO_SH4_MOVEOUT , {318, 249, 0.5, 0.5, 2.0, 1.0});
+            } else if (time > SHUTTLE_P2_START){
+                float phase2_linear_interp = (time - SHUTTLE_P2_START) / SHUTTLE_P2_END;
+                float phase2_anim_interp = phase2_linear_interp * phase2_linear_interp;
+                float shuttle_x = SHUTTLE_P1_END_X - (SHUTTLE_P1_END_X - SHUTTLE_P2_END_X) * phase2_anim_interp;
+                float shuttle_y = SHUTTLE_P1_END_Y - (SHUTTLE_P1_END_Y - SHUTTLE_P2_END_Y) * phase2_anim_interp;
+                float scale = 2 * (1.f - (0.5 * phase2_anim_interp));
+                draw_manager.draw(id_shuttle_launch, IMG_INTRO_SH4_SHUTTLE4, {(int)shuttle_x, (int)shuttle_y, 0.5, 0.5, scale, scale});
+            } else {
+                draw_manager.draw(id_shuttle_launch, IMG_INTRO_SH4_SHUTTLE4, {(int)SHUTTLE_P1_END_X, (int)SHUTTLE_P1_END_Y, 0.5, 0.5, 2.0, 2.0});
             }
 
             draw_text();
