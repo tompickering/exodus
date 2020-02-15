@@ -1,6 +1,12 @@
 #ifndef GUARD_EXODUS_H
 #define GUARD_EXODUS_H
 
+enum ExodusState {
+    ST_None,
+    ST_Intro,
+    ST_MainMenu,
+};
+
 class Exodus {
     public:
         Exodus();

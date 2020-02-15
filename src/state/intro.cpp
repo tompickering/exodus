@@ -121,7 +121,7 @@ void Intro::exit() {
     draw_manager.release_sprite_id(id_shuttle_launch);
 }
 
-void Intro::update(float delta) {
+ExodusState Intro::update(float delta) {
     float time = timer.get_delta();
     float text_time = text_timer.get_delta();
     static bool text_delay_complete = false;
@@ -131,13 +131,13 @@ void Intro::update(float delta) {
 
     switch(stage) {
         case None:
-            next_stage(); return;
+            next_stage(); return ExodusState::ST_None;
             break;
         case Init:
-            next_stage(); return;
+            next_stage(); return ExodusState::ST_None;
             break;
         case Artex:
-            next_stage(); return;
+            next_stage(); return ExodusState::ST_None;
             break;
         case Earth:
             if (!stage_started) {
@@ -149,11 +149,11 @@ void Intro::update(float delta) {
             }
 
             if (draw_manager.pixelswap_active()) {
-                return;
+                return ExodusState::ST_None;
             }
 
             if (time < 1.8) {
-                return;
+                return ExodusState::ST_None;
             } else if (!text_delay_complete) {
                 text_delay_complete = true;
                 text_timer.start();
@@ -165,7 +165,7 @@ void Intro::update(float delta) {
                     ++text_idx;
                     text_timer.start();
                 } else {
-                    next_stage(); return;
+                    next_stage(); return ExodusState::ST_None;
                 }
             }
 
@@ -180,7 +180,7 @@ void Intro::update(float delta) {
             }
 
             if (draw_manager.pixelswap_active()) {
-                return;
+                return ExodusState::ST_None;
             }
 
             if (text_idx == 1) {
@@ -212,7 +212,7 @@ void Intro::update(float delta) {
                     ++text_idx;
                     text_timer.start();
                 } else {
-                    next_stage(); return;
+                    next_stage(); return ExodusState::ST_None;
                 }
             }
 
@@ -231,7 +231,7 @@ void Intro::update(float delta) {
                     ++text_idx;
                     text_timer.start();
                 } else {
-                    next_stage(); return;
+                    next_stage(); return ExodusState::ST_None;
                 }
             }
 
@@ -260,7 +260,7 @@ void Intro::update(float delta) {
                     ++text_idx;
                     text_timer.start();
                 } else {
-                    next_stage(); return;
+                    next_stage(); return ExodusState::ST_None;
                 }
             }
 
@@ -274,10 +274,10 @@ void Intro::update(float delta) {
             }
 
             if (time < 1.8) {
-                return;
+                return ExodusState::ST_None;
             }
 
-            next_stage(); return;
+            next_stage(); return ExodusState::ST_None;
 
             break;
         case Shoot:
@@ -315,7 +315,7 @@ void Intro::update(float delta) {
                 } else if (time < SHOT_START + SHOT_FRAME * 5) {
                     ONCE(oid_shot_5) draw_manager.draw(id_shot, IMG_INTRO_FI1_SHOT5, {0, 180, 0, 0, 2.0, 2.0});
                 } else {
-                    next_stage(); return;
+                    next_stage(); return ExodusState::ST_None;
                 }
             }
 
@@ -341,7 +341,7 @@ void Intro::update(float delta) {
             } else if (time < GUARD_FRAME * 7) {
                 ONCE(oid_guard_7) draw_manager.draw(id_guardshot, IMG_INTRO_BT1_FALL7, {272, 484, 0.5, 1.0, 2.0, 2.0});
             } else {
-                next_stage(); return;
+                next_stage(); return ExodusState::ST_None;
             }
 
             break;
@@ -408,7 +408,7 @@ void Intro::update(float delta) {
                     }
                 }
                 prev_nums_held = nums_held;
-                return;
+                return ExodusState::ST_None;
             }
 
             ONCE(oid_code) L.debug("Entered code: %d", input_code);
@@ -431,7 +431,7 @@ void Intro::update(float delta) {
                         RES_Y - 26,
                         {brightness, brightness, brightness},
                         {0, 0, 0});
-                return;
+                return ExodusState::ST_None;
             } else {
                 interactive_sequence_completed = true;
             }
@@ -443,22 +443,22 @@ void Intro::update(float delta) {
                     text_idx = 19;
                 }
                 text_timer.start();
-                return;
+                return ExodusState::ST_None;
             }
 
             draw_text();
 
             if (text_time < MAX_TEXT_TIME) {
-                return;
+                return ExodusState::ST_None;
             }
 
             if (input_code == 594) {
                 // PROCcodefadeout  ?
-                next_stage(); return;
+                next_stage(); return ExodusState::ST_None;
             } else {
                 stage = Fail;
                 stage_started = false;
-                return;
+                return ExodusState::ST_None;
             }
 
             break;
@@ -487,9 +487,9 @@ void Intro::update(float delta) {
                 ONCE(oid_dooropen) text_timer.start();
                 draw_text();
                 if (text_timer.get_delta() < MAX_TEXT_TIME) {
-                    return;
+                    return ExodusState::ST_None;
                 } else {
-                    next_stage(); return;
+                    next_stage(); return ExodusState::ST_None;
                 }
             }
 
@@ -507,7 +507,7 @@ void Intro::update(float delta) {
                     ++text_idx;
                     text_timer.start();
                 } else {
-                    next_stage(); return;
+                    next_stage(); return ExodusState::ST_None;
                 }
             }
 
@@ -564,7 +564,7 @@ void Intro::update(float delta) {
                     ++text_idx;
                     text_timer.start();
                 } else {
-                    next_stage(); return;
+                    next_stage(); return ExodusState::ST_None;
                 }
             }
 
@@ -572,8 +572,10 @@ void Intro::update(float delta) {
 
             break;
         case Title:
+            next_stage(); return ExodusState::ST_None;
             break;
         case End:
+            next_stage(); return ExodusState::ST_MainMenu;
             break;
         case Fail:
             if (!stage_started) {
@@ -585,6 +587,7 @@ void Intro::update(float delta) {
     }
 
     stage_started = true;
+    return ExodusState::ST_None;
 }
 
 void Intro::next_stage() {

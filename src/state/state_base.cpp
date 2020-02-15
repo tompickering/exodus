@@ -21,5 +21,5 @@ void StateBase::exit() {
     L.debug("Exiting state: %s", name);
 }
 
-void StateBase::update(float delta) {
+ExodusState StateBase::update(float delta) {
 }

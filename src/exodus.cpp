@@ -67,7 +67,10 @@ int Exodus::run(int argc, char** argv) {
     while (running) {
         frame_timer.start();
 
-        intro.update(delta_time);
+        ExodusState next = intro.update(delta_time);
+        if (next != ExodusState::ST_None) {
+            L.debug("State change requested: %d", next);
+        }
 
         draw_manager.update(mouse_pos, click_pos);
 

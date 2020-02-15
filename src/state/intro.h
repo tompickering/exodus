@@ -9,9 +9,9 @@
 class Intro : StateBase {
     public:
         Intro();
-        virtual void enter();
-        virtual void exit();
-        virtual void update(float) override;
+        virtual void enter() override;
+        virtual void exit() override;
+        virtual ExodusState update(float) override;
     private:
         TIMER timer;
         TIMER text_timer;
