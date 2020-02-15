@@ -43,6 +43,12 @@ enum Justify {
     Right,
 };
 
+typedef struct {
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+} RGB;
+
 class DrawManager {
     public:
         virtual bool init() = 0;
@@ -53,8 +59,7 @@ class DrawManager {
         virtual SprID new_sprite_id();
         virtual void draw(const char*) = 0;
         virtual void draw(const char*, int, int, int, int) = 0;
-        virtual void draw_text(const char*, Justify, int, int,
-                               unsigned char, unsigned char, unsigned char) = 0;
+        virtual void draw_text(const char*, Justify, int, int, RGB) = 0;
     protected:
         map<const char*, void*> sprite_data;
         virtual void* get_sprite_data(const char*) = 0;

@@ -115,10 +115,8 @@ void DrawManagerSDL::draw(const char* spr_key) {
     }
 }
 
-void DrawManagerSDL::draw_text(const char* text, Justify jst, int x, int y,
-                               unsigned char r, unsigned char g, unsigned char b) {
-
-    SDL_Color colour = {r, g, b};
+void DrawManagerSDL::draw_text(const char* text, Justify jst, int x, int y, RGB rgb) {
+    SDL_Color colour = {rgb.r, rgb.g, rgb.b};
     SDL_Surface *msg_surf = TTF_RenderText_Blended((TTF_Font*)font, text, colour);
 
     SDL_Rect msg_rect;

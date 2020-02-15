@@ -14,8 +14,7 @@ class DrawManagerSDL : public DrawManager {
         virtual void save_background() override;
         virtual void draw(const char*) override;
         virtual void draw(const char*, int, int, int, int) override;
-        virtual void draw_text(const char*, Justify, int, int,
-                               unsigned char, unsigned char, unsigned char) override;
+        virtual void draw_text(const char*, Justify, int, int, RGB) override;
     protected:
         virtual void* get_sprite_data(const char*) override;
     private:

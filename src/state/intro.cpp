@@ -36,7 +36,7 @@ static const char* intro_text[] = {
     "and dangerous journey.",
 };
 
-const int text_time = 3;
+const int text_time = 6;
 
 Intro::Intro() : StateBase("Intro", false), text_idx(0) {
 }
@@ -54,7 +54,7 @@ void Intro::exit() {
 
 void Intro::update(float delta) {
     float time = timer.get_delta();
-    int text_brightness = 0;
+    unsigned char text_brightness = 0;
 
     switch(stage) {
         case None:
@@ -77,7 +77,7 @@ void Intro::update(float delta) {
                     Justify::Centre,
                     SCREEN_WIDTH / 2,
                     SCREEN_HEIGHT - 26,
-                    text_brightness, text_brightness, text_brightness);
+                    {text_brightness, text_brightness, text_brightness});
             if (time > text_time * 2) {
                 next_stage(); return;
             }
