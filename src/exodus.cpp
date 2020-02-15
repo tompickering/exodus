@@ -1,5 +1,7 @@
 #include "exodus.h"
 
+#include "shared.h"
+
 #include "platform.h"
 #include "timer/timer.h"
 
@@ -7,6 +9,8 @@
 
 const float MAX_FPS = 60.f;
 const float MIN_FRAME_DELTA = 1.f / MAX_FPS;
+
+Log::Logger L(Log::Level::DEBUG);
 
 volatile bool running;
 
@@ -21,6 +25,7 @@ Exodus::~Exodus() {
 }
 
 bool Exodus::init() {
+    L.info("Initialising...");
     signal(SIGINT, signal_handler);
     return true;
 }
