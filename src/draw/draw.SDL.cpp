@@ -128,19 +128,27 @@ void* DrawManagerSDL::get_sprite_data(const char* img_path) {
 }
 
 void DrawManagerSDL::draw(const char* spr_key) {
-    draw(spr_key, nullptr);
+    draw(surf, spr_key, nullptr);
 }
 
-void DrawManagerSDL::draw(const char* spr_key, DrawArea* area) {
-    draw(surf, spr_key, area);
+void DrawManagerSDL::draw(const char* spr_key, DrawArea area) {
+    draw(surf, spr_key, &area);
+}
+
+void DrawManagerSDL::draw(const char* spr_key, DrawTransform t) {
+    draw(surf, spr_key, t);
 }
 
 void DrawManagerSDL::pixelswap_draw(const char* spr_key) {
-    pixelswap_draw(spr_key, nullptr);
+    draw(pixelswap_src, spr_key, nullptr);
 }
 
-void DrawManagerSDL::pixelswap_draw(const char* spr_key, DrawArea* area) {
-    draw(pixelswap_src, spr_key, area);
+void DrawManagerSDL::pixelswap_draw(const char* spr_key, DrawArea area) {
+    draw(pixelswap_src, spr_key, &area);
+}
+
+void DrawManagerSDL::pixelswap_draw(const char* spr_key, DrawTransform t) {
+    draw(pixelswap_src, spr_key, t);
 }
 
 void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawArea* area) {
@@ -151,7 +159,7 @@ void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawArea* area)
     }
     if (area) {
         SDL_Rect dst_rect = {area->x, area->y, area->w, area->h};
-        if (SDL_BlitSurface(spr, nullptr, tgt, &dst_rect)) {
+        if (SDL_BlitScaled(spr, nullptr, tgt, &dst_rect)) {
             L.debug("Blit unsuccessful: %s", spr_key);
         }
     } else {
@@ -159,6 +167,24 @@ void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawArea* area)
             L.debug("Blit unsuccessful: %s", spr_key);
         }
     }
+}
+
+void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawTransform t) {
+    SDL_Surface *spr = (SDL_Surface*)get_sprite_data(spr_key);
+    if (!spr) {
+        L.warn("Unknown sprite: %s", spr_key);
+        return;
+    }
+
+    int spr_w = spr->w;
+    int spr_h = spr->h;
+    DrawArea area;
+    area.x = t.x - (t.anchor_x * spr_w * t.scale);
+    area.y = t.y - (t.anchor_y * spr_h * t.scale);
+    area.w = spr_w * t.scale;
+    area.h = spr_h * t.scale;
+
+    draw(tgt, spr_key, &area);
 }
 
 void DrawManagerSDL::draw_text(const char* text, Justify jst, int x, int y, RGB rgb) {

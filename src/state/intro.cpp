@@ -36,7 +36,16 @@ static const char* intro_text[] = {
     "and dangerous journey.",
 };
 
-const float MAX_TEXT_TIME = 1;
+float CITY_SHIP_START      = 5.f;
+float CITY_SHIP_SPEED      = 0.12f;
+float CITY_SHIP_MAX_SCALE  = 1.7f;
+float CITY_SHIP_SHOT_1     = 22.0f;
+float CITY_SHIP_SHOT_2     = 22.2f;
+float CITY_SHIP_SHOT_3     = 24.5f;
+float CITY_SHIP_SHOT_4     = 24.7f;
+float CITY_SHIP_SHOT_TIME  = 0.1f;
+
+const float MAX_TEXT_TIME = 3.8;
 
 Intro::Intro() : StateBase("Intro", false), text_idx(0) {
 }
@@ -104,8 +113,21 @@ void Intro::update(float delta) {
                 text_timer.start();
             }
 
+            if (time > CITY_SHIP_START) {
+                float ship_scale = CITY_SHIP_SPEED * (time - CITY_SHIP_START);
+                const char *ship = IMG_INTRO_SH1_SHIP;
+                if (   (time > CITY_SHIP_SHOT_1 && time < CITY_SHIP_SHOT_1 + CITY_SHIP_SHOT_TIME)
+                    || (time > CITY_SHIP_SHOT_2 && time < CITY_SHIP_SHOT_2 + CITY_SHIP_SHOT_TIME)
+                    || (time > CITY_SHIP_SHOT_3 && time < CITY_SHIP_SHOT_3 + CITY_SHIP_SHOT_TIME)
+                    || (time > CITY_SHIP_SHOT_4 && time < CITY_SHIP_SHOT_4 + CITY_SHIP_SHOT_TIME)) {
+                    ship = IMG_INTRO_SH1_SHIP2;
+                }
+                ship_scale = ship_scale < CITY_SHIP_MAX_SCALE ? ship_scale : CITY_SHIP_MAX_SCALE;
+                draw_manager.draw(ship, {10 + SCREEN_WIDTH / 2, 210, 0.5, 0.5, ship_scale});
+            }
+
             if (text_idx >= 1 && text_time > MAX_TEXT_TIME) {
-                if (text_idx < 5) {
+                if (text_idx < 8) {
                     ++text_idx;
                     text_timer.start();
                 } else {

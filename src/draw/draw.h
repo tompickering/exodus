@@ -29,6 +29,15 @@ typedef unsigned int SprID;
 typedef struct {
     int x;
     int y;
+    float anchor_x;
+    float anchor_y;
+    float scale;
+
+} DrawTransform;
+
+typedef struct {
+    int x;
+    int y;
     int w;
     int h;
 } DrawArea;
@@ -59,10 +68,12 @@ class DrawManager {
         virtual void clear();
         virtual SprID new_sprite_id();
         virtual void draw(const char*) = 0;
-        virtual void draw(const char*, DrawArea*) = 0;
+        virtual void draw(const char*, DrawArea) = 0;
+        virtual void draw(const char*, DrawTransform) = 0;
         virtual void pixelswap_clear() = 0;
         virtual void pixelswap_draw(const char*) = 0;
-        virtual void pixelswap_draw(const char*, DrawArea*) = 0;
+        virtual void pixelswap_draw(const char*, DrawArea) = 0;
+        virtual void pixelswap_draw(const char*, DrawTransform) = 0;
         virtual void pixelswap_start() = 0;
         virtual void pixelswap_start(DrawArea*) = 0;
         virtual bool pixelswap_active() = 0;
