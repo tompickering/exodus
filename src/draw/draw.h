@@ -68,6 +68,7 @@ class DrawManager {
         virtual bool pixelswap_active() = 0;
         virtual void pixelswap_update() = 0;
         virtual void draw_text(const char*, Justify, int, int, RGB) = 0;
+        virtual void draw_text(const char*, Justify, int, int, RGB, RGB) = 0;
     protected:
         map<const char*, void*> sprite_data;
         virtual void* get_sprite_data(const char*) = 0;

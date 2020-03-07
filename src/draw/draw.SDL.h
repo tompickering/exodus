@@ -22,7 +22,7 @@ class DrawManagerSDL : public DrawManager {
         virtual bool pixelswap_active() override;
         virtual void pixelswap_update() override;
         virtual void draw_text(const char*, Justify, int, int, RGB) override;
-        void draw(SDL_Surface*, const char*, DrawArea*);
+        virtual void draw_text(const char*, Justify, int, int, RGB, RGB) override;
     protected:
         virtual void* get_sprite_data(const char*) override;
     private:
@@ -31,6 +31,8 @@ class DrawManagerSDL : public DrawManager {
         SDL_Surface *background;
         SDL_Surface *pixelswap_src;
         unsigned int pixelswap_stage;
+        void draw(SDL_Surface*, const char*, DrawArea*);
+        void draw_text(const char*, Justify, int, int, RGB*, RGB*);
 };
 
 #endif

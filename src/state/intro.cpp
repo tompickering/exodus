@@ -84,7 +84,8 @@ void Intro::update(float delta) {
                     Justify::Centre,
                     SCREEN_WIDTH / 2,
                     SCREEN_HEIGHT - 26,
-                    {text_brightness, text_brightness, text_brightness});
+                    {text_brightness, text_brightness, text_brightness},
+                    {0, 0, 0});
             break;
         case City:
             if (!stage_started) {
@@ -118,7 +119,8 @@ void Intro::update(float delta) {
                     Justify::Centre,
                     SCREEN_WIDTH / 2,
                     SCREEN_HEIGHT - 26,
-                    {text_brightness, text_brightness, text_brightness});
+                    {text_brightness, text_brightness, text_brightness},
+                    {0, 0, 0});
             break;
         default:
             break;

@@ -162,8 +162,23 @@ void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawArea* area)
 }
 
 void DrawManagerSDL::draw_text(const char* text, Justify jst, int x, int y, RGB rgb) {
-    SDL_Color colour = {rgb.r, rgb.g, rgb.b};
-    SDL_Surface *msg_surf = TTF_RenderText_Blended((TTF_Font*)font, text, colour);
+    draw_text(text, jst, x, y, &rgb, nullptr);
+}
+
+void DrawManagerSDL::draw_text(const char* text, Justify jst, int x, int y, RGB rgb, RGB bg_rgb) {
+    draw_text(text, jst, x, y, &rgb, &bg_rgb);
+}
+
+void DrawManagerSDL::draw_text(const char* text, Justify jst, int x, int y, RGB* rgb, RGB* bg_rgb) {
+    SDL_Color colour = {rgb->r, rgb->g, rgb->b};
+    SDL_Surface *msg_surf;
+
+    if (bg_rgb) {
+        SDL_Color bg_colour = {bg_rgb->r, bg_rgb->g, bg_rgb->b};
+        msg_surf = TTF_RenderText_Shaded((TTF_Font*)font, text, colour, bg_colour);
+    } else {
+        msg_surf = TTF_RenderText_Blended((TTF_Font*)font, text, colour);
+    }
 
     SDL_Rect msg_rect;
     msg_rect.x = x;
