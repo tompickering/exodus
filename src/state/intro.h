@@ -13,6 +13,7 @@ class Intro : StateBase {
         virtual void update(float) override;
     private:
         TIMER timer;
+        TIMER text_timer;
 
         enum Stage {
             None,

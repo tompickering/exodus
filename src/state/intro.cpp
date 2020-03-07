@@ -36,7 +36,7 @@ static const char* intro_text[] = {
     "and dangerous journey.",
 };
 
-const int text_time = 5;
+const float MAX_TEXT_TIME = 1;
 
 Intro::Intro() : StateBase("Intro", false), text_idx(0) {
 }
@@ -45,7 +45,6 @@ void Intro::enter() {
     StateBase::enter();
     stage = Stage::None;
     stage_started = false;
-    timer.start();
 }
 
 void Intro::exit() {
@@ -54,6 +53,7 @@ void Intro::exit() {
 
 void Intro::update(float delta) {
     float time = timer.get_delta();
+    float text_time = text_timer.get_delta();
     unsigned char text_brightness = 0;
 
     switch(stage) {
@@ -70,15 +70,15 @@ void Intro::update(float delta) {
             if (!stage_started) {
                 draw_manager.draw(IMG_INTRO_EARTH);
             }
-            if (time > text_time) {
+            if (text_time > MAX_TEXT_TIME) {
                 if (text_idx == 0) {
                     ++text_idx;
-                    timer.start();
+                    text_timer.start();
                 } else {
                     next_stage(); return;
                 }
             }
-            text_brightness = determine_text_brightness(0, time);
+            text_brightness = determine_text_brightness(0, text_time);
             draw_manager.draw_text(
                     intro_text[text_idx],
                     Justify::Centre,
@@ -91,13 +91,34 @@ void Intro::update(float delta) {
                 draw_manager.pixelswap_clear();
                 draw_manager.pixelswap_draw(IMG_INTRO_CITY);
                 draw_manager.pixelswap_start(nullptr);
+                break;
             }
-            if (time > 2) {
-                //static SprID shipid = new_sprite_id();
+
+            if (draw_manager.pixelswap_active()) {
+                return;
             }
-            if (time > 8) {
-                next_stage(); return;
+
+            if (text_idx == 1) {
+                ++text_idx;
+                text_timer.start();
             }
+
+            if (text_idx >= 1 && text_time > MAX_TEXT_TIME) {
+                if (text_idx < 5) {
+                    ++text_idx;
+                    text_timer.start();
+                } else {
+                    next_stage(); return;
+                }
+            }
+
+            text_brightness = determine_text_brightness(0, text_timer.get_delta());
+            draw_manager.draw_text(
+                    intro_text[text_idx],
+                    Justify::Centre,
+                    SCREEN_WIDTH / 2,
+                    SCREEN_HEIGHT - 26,
+                    {text_brightness, text_brightness, text_brightness});
             break;
         default:
             break;
@@ -112,14 +133,15 @@ void Intro::next_stage() {
         stage_started = false;
     }
     timer.start();
+    text_timer.start();
 }
 
 /*
  * Given then number of seconds that we've been displaying the text,
- * determine how brightly the text should be rendered based on text_time
+ * determine how brightly the text should be rendered based on MAX_TEXT_TIME
  */
 unsigned char Intro::determine_text_brightness(float started, float now) {
-    float progress = (now - started) / text_time;
+    float progress = (now - started) / MAX_TEXT_TIME;
     if (progress < 0.0 || progress > 1.0) {
         return 0x00;
     } else if (progress < 0.3) {
