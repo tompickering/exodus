@@ -12,6 +12,11 @@ extern const char *IMG_INTRO_EARTH;
 extern const char *IMG_INTRO_CITY;
 extern const char *IMG_INTRO_STARPORT;
 extern const char *IMG_INTRO_CORRIDOR;
+extern const char *IMG_INTRO_DOOR;
+extern const char *IMG_INTRO_KEYPAD;
+extern const char *IMG_INTRO_FAIL;
+extern const char *IMG_INTRO_LAUNCH;
+extern const char *IMG_INTRO_SPACE;
 
 extern const char *IMG_INTRO_PH1_PUSH_5;
 extern const char *IMG_INTRO_OD1_BEHIND;

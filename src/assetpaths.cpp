@@ -8,6 +8,11 @@ const char *IMG_INTRO_EARTH     = D_PIC "ea1";
 const char *IMG_INTRO_CITY      = D_PIC "ct1";
 const char *IMG_INTRO_STARPORT  = D_PIC "cn1";
 const char *IMG_INTRO_CORRIDOR  = D_PIC "cr1";
+const char *IMG_INTRO_DOOR      = D_PIC "dr1";
+const char *IMG_INTRO_KEYPAD    = D_PIC "ts1";
+const char *IMG_INTRO_FAIL      = D_PIC "go1";
+const char *IMG_INTRO_LAUNCH    = D_PIC "ho1";
+const char *IMG_INTRO_SPACE     = D_PIC "js1";
 
 #define D_INTRO "assets/img/intro/"
 const char *IMG_INTRO_BT1_FALL1    = D_INTRO "BT1_fall1";
@@ -68,6 +73,11 @@ const char *ASSETS_IMG[] = {
     IMG_INTRO_CITY,
     IMG_INTRO_STARPORT,
     IMG_INTRO_CORRIDOR,
+    IMG_INTRO_DOOR,
+    IMG_INTRO_KEYPAD,
+    IMG_INTRO_FAIL,
+    IMG_INTRO_LAUNCH,
+    IMG_INTRO_SPACE,
 
     IMG_INTRO_BT1_FALL1,
     IMG_INTRO_BT1_FALL2,
