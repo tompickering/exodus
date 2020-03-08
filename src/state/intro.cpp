@@ -65,6 +65,7 @@ void Intro::enter() {
     stage = Stage::None;
     text_idx = 0;
     stage_started = false;
+    timer.start();
     id_city_ship = draw_manager.new_sprite_id();
     id_sp_ship = draw_manager.new_sprite_id();
 }
@@ -222,9 +223,11 @@ void Intro::update(float delta) {
                 break;
             }
 
-            if (time > 1.8) {
-                next_stage(); return;
+            if (time < 1.8) {
+                return;
             }
+
+            next_stage(); return;
 
             break;
         case Shoot:
@@ -232,8 +235,21 @@ void Intro::update(float delta) {
                 draw_manager.draw(IMG_INTRO_CORRIDOR);
                 break;
             }
+            //return;
+            if (time < 1.0) {
+                draw_manager.draw(IMG_INTRO_FI1_FIRE1, {462, 104, 0, 0, 2.0, 1.0});
+            } else if (time < 1.1) {
+                draw_manager.draw(IMG_INTRO_FI1_FIRE2, {440, 82, 0, 0, 2.0, 1.0});
+            } else if (time < 1.2) {
+                draw_manager.draw(IMG_INTRO_FI1_FIRE3, {422, 62, 0, 0, 2.0, 1.0});
+            } else if (time < 1.3) {
+                draw_manager.draw(IMG_INTRO_FI1_FIRE4, {320, 69, 0, 0, 2.0, 1.0});
+            } else if (time < 1.4) {
+                //draw_manager.draw(IMG_INTRO_FI1_FIRE5, {462, 104, 0, 0, 2.0, 1.0});
+            } else if (time < 1.5) {
+                //draw_manager.draw(IMG_INTRO_FI1_FIRE6, {462, 104, 0, 0, 2.0, 1.0});
+            }
 
-            draw_manager.draw(IMG_INTRO_FI1_FIRE1, {462, 104, 0, 0, 2.0, 1.0});
         default:
             break;
     }
