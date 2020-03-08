@@ -62,8 +62,8 @@ Intro::Intro() : StateBase("Intro", false), text_idx(0) {
 
 void Intro::enter() {
     StateBase::enter();
-    stage = Stage::Starport;
-    text_idx = 11;
+    stage = Stage::None;
+    text_idx = 0;
     stage_started = false;
     id_city_ship = draw_manager.new_sprite_id();
     id_sp_ship = draw_manager.new_sprite_id();
