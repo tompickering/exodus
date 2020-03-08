@@ -215,6 +215,25 @@ void Intro::update(float delta) {
 
             draw_text();
             break;
+        case Guard:
+            if (!stage_started) {
+                draw_manager.draw(IMG_INTRO_DOOR);
+                draw_manager.draw(IMG_INTRO_GU1_GUARD, {330, 257, 0.5, 0.5, 2.0, 1.0});
+                break;
+            }
+
+            if (time > 1.8) {
+                next_stage(); return;
+            }
+
+            break;
+        case Shoot:
+            if (!stage_started) {
+                draw_manager.draw(IMG_INTRO_CORRIDOR);
+                break;
+            }
+
+            draw_manager.draw(IMG_INTRO_FI1_FIRE1, {462, 104, 0, 0, 2.0, 1.0});
         default:
             break;
     }
