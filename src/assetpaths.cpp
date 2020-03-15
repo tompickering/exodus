@@ -2,7 +2,7 @@
 
 #define D_PIC "assets/img/pictures/"
 
-const char *FONT_AUDIOWIDE = "font/audiowide/Audiowide-Regular.ttf";
+const char *FONT_AUDIOWIDE = "assets/font/audiowide/Audiowide-Regular.ttf";
 
 const char *IMG_CURSOR          = "assets/img/cursor";
 
