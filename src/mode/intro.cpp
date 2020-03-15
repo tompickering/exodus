@@ -295,7 +295,7 @@ ExodusMode Intro::update(float delta) {
         case Corridor:
             if (!stage_started) {
                 draw_manager.draw(IMG_INTRO_CORRIDOR);
-                draw_manager.draw(IMG_INTRO_FI1_FIRE1, {462, 104, 0, 0, 2.0, 1.0});
+                draw_manager.draw(IMG_INTRO_FI1_FIRE1, {468, 104, 0, 0, 1.0, 1.0});
                 text_idx++;
                 break;
             }
@@ -314,7 +314,7 @@ ExodusMode Intro::update(float delta) {
         case Guard:
             if (!stage_started) {
                 draw_manager.draw(IMG_INTRO_DOOR);
-                draw_manager.draw(IMG_INTRO_GU1_GUARD, {330, 257, 0.5, 0.5, 2.0, 1.0});
+                draw_manager.draw(IMG_INTRO_GU1_GUARD, {330, 257, 0.5, 0.5, 1.0, 1.0});
                 break;
             }
 
@@ -333,24 +333,24 @@ ExodusMode Intro::update(float delta) {
             }
 
             if (time < SHOOT_START) {
-                ONCE(oid_shoot_1) draw_manager.draw(IDs[ID::SHOOT], IMG_INTRO_FI1_FIRE1, {462, 104, 0, 0, 2.0, 1.0});
+                ONCE(oid_shoot_1) draw_manager.draw(IDs[ID::SHOOT], IMG_INTRO_FI1_FIRE1, {468, 104, 0, 0, 1.0, 1.0});
             } else if (time < SHOOT_START + SHOOT_FRAME * 1) {
-                ONCE(oid_shoot_2) draw_manager.draw(IDs[ID::SHOOT], IMG_INTRO_FI1_FIRE2, {442, 82, 0, 0, 2.0, 1.0});
+                ONCE(oid_shoot_2) draw_manager.draw(IDs[ID::SHOOT], IMG_INTRO_FI1_FIRE2, {442, 82, 0, 0, 1.0, 1.0});
             } else if (time < SHOOT_START + SHOOT_FRAME * 2) {
-                ONCE(oid_shoot_3) draw_manager.draw(IDs[ID::SHOOT], IMG_INTRO_FI1_FIRE3, {422, 62, 0, 0, 2.0, 1.0});
+                ONCE(oid_shoot_3) draw_manager.draw(IDs[ID::SHOOT], IMG_INTRO_FI1_FIRE3, {422, 62, 0, 0, 1.0, 1.0});
             } else if (time < SHOOT_START + SHOOT_FRAME * 3) {
-                ONCE(oid_shoot_4) draw_manager.draw(IDs[ID::SHOOT], IMG_INTRO_FI1_FIRE4, {320, 69, 0, 0, 2.0, 1.0});
+                ONCE(oid_shoot_4) draw_manager.draw(IDs[ID::SHOOT], IMG_INTRO_FI1_FIRE4, {320, 68, 0, 0, 1.0, 1.0});
             } else if (time < SHOOT_START + SHOOT_FRAME * 4) {
-                ONCE(oid_shoot_5) draw_manager.draw(IDs[ID::SHOOT], IMG_INTRO_FI1_FIRE5, {294, 78, 0, 0, 2.0, 1.0});
+                ONCE(oid_shoot_5) draw_manager.draw(IDs[ID::SHOOT], IMG_INTRO_FI1_FIRE5, {294, 78, 0, 0, 1.0, 1.0});
             } else if (time < SHOOT_START + SHOOT_FRAME * 5) {
-                ONCE(oid_shoot_6) draw_manager.draw(IDs[ID::SHOOT], IMG_INTRO_FI1_FIRE6, {332, 84, 0, 0, 2.0, 1.0});
+                ONCE(oid_shoot_6) draw_manager.draw(IDs[ID::SHOOT], IMG_INTRO_FI1_FIRE6, {332, 84, 0, 0, 1.0, 1.0});
                 ONCE(oid_shoot_bg) draw_manager.save_background();
             }
 
             if (time > SHOT_START) {
                 if (time < SHOT_START + SHOT_FRAME) {
                     ONCE(oid_shot_1) draw_manager.draw(IDs[ID::SHOT], IMG_INTRO_FI1_SHOT1, {280, 144, 0, 0, 2.0, 2.0});
-                    ONCE(oid_shot_fire) draw_manager.draw(IDs[ID::SHOOT], IMG_INTRO_FI1_FIRE6, {332, 84, 0, 0, 2.0, 1.0});
+                    ONCE(oid_shot_fire) draw_manager.draw(IDs[ID::SHOOT], IMG_INTRO_FI1_FIRE6, {332, 84, 0, 0, 1.0, 1.0});
                 } else if (time < SHOT_START + SHOT_FRAME * 2) {
                     ONCE(oid_shot_2) draw_manager.draw(IDs[ID::SHOT], IMG_INTRO_FI1_SHOT2, {204, 155, 0, 0, 2.0, 2.0});
                 } else if (time < SHOT_START + SHOT_FRAME * 3) {
@@ -504,7 +504,7 @@ ExodusMode Intro::update(float delta) {
         case Success:
             if (!stage_started) {
                 draw_manager.draw(IMG_INTRO_DOOR);
-                draw_manager.draw(IMG_INTRO_OD1_BEHIND, {319, 218, 0.5, 0.5, 2.0, 1.0});
+                draw_manager.draw(IMG_INTRO_OD1_BEHIND, {319, 218, 0.5, 0.5, 1.0, 1.0});
                 draw_manager.save_background();
                 text_idx = 21;
                 break;
@@ -512,10 +512,10 @@ ExodusMode Intro::update(float delta) {
 
             door_time = time - 2.6f;
             door_time = door_time < 0 ? 0 : door_time;
-            draw_manager.draw(IDs[ID::DOOR_L], IMG_INTRO_OD1_DOOR_L, {(int)(319 - door_time * DOOR_PX_PER_SEC), 218, 1.0, 0.5, 2.0, 1.0});
-            draw_manager.draw(IDs[ID::DOOR_R], IMG_INTRO_OD1_DOOR_R, {(int)(319 + door_time * DOOR_PX_PER_SEC), 218, 0.0, 0.5, 2.0, 1.0});
-            draw_manager.draw(IMG_INTRO_OD1_FRAME , {319, 212, 0.5, 0.5, 2.0, 1.0});
-            draw_manager.draw(IMG_INTRO_OD1_SEPP  , {319, 482, 0.5, 1.0, 2.0, 1.0});
+            draw_manager.draw(IDs[ID::DOOR_L], IMG_INTRO_OD1_DOOR_L, {(int)(319 - door_time * DOOR_PX_PER_SEC), 218, 1.0, 0.5, 1.0, 1.0});
+            draw_manager.draw(IDs[ID::DOOR_R], IMG_INTRO_OD1_DOOR_R, {(int)(319 + door_time * DOOR_PX_PER_SEC), 218, 0.0, 0.5, 1.0, 1.0});
+            draw_manager.draw(IMG_INTRO_OD1_FRAME , {319, 212, 0.5, 0.5, 1.0, 1.0});
+            draw_manager.draw(IMG_INTRO_OD1_SEPP  , {319, 482, 0.5, 1.0, 1.0, 1.0});
 
             if (time > 0.9) {
                 draw_manager.draw(IMG_INTRO_OD1_OFF, {151,  97, 0.5, 0.5, 2.0, 2.0});
@@ -551,9 +551,9 @@ ExodusMode Intro::update(float delta) {
             }
 
             if (!launchpad_light_toggle && fmod(time, 1.4) < 0.1) {
-                draw_manager.draw(IMG_INTRO_SH4_BLINK1 , { 30, 211, 0.5, 0.5, 2.0, 1.0});
-                draw_manager.draw(IMG_INTRO_SH4_BLINK2 , {497, 158, 0.5, 0.5, 2.0, 1.0});
-                draw_manager.draw(IMG_INTRO_SH4_BLINK3 , {540, 244, 0.5, 0.5, 2.0, 1.0});
+                draw_manager.draw(IMG_INTRO_SH4_BLINK1 , { 30, 211, 0.5, 0.5, 1.0, 1.0});
+                draw_manager.draw(IMG_INTRO_SH4_BLINK2 , {497, 158, 0.5, 0.5, 1.0, 1.0});
+                draw_manager.draw(IMG_INTRO_SH4_BLINK3 , {540, 244, 0.5, 0.5, 1.0, 1.0});
                 launchpad_light_toggle = true;
             }
 
@@ -575,7 +575,7 @@ ExodusMode Intro::update(float delta) {
                     ship = IMG_INTRO_SH4_SHUTTLE4;
                 }
                 draw_manager.draw(IDs[ID::SHUTTLE_LAUNCH], ship, {(int)SHUTTLE_P1_END_X, (int)shuttle_y, 0.5, 0.5, 2.0, 2.0});
-                draw_manager.draw(IMG_INTRO_SH4_MOVEOUT , {318, 249, 0.5, 0.5, 2.0, 1.0});
+                draw_manager.draw(IMG_INTRO_SH4_MOVEOUT , {318, 249, 0.5, 0.5, 1.0, 1.0});
             } else if (time > SHUTTLE_P2_START){
                 float phase2_linear_interp = (time - SHUTTLE_P2_START) / SHUTTLE_P2_END;
                 float phase2_anim_interp = pow(phase2_linear_interp, 1.3);
