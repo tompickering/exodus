@@ -33,13 +33,6 @@ bool DrawManagerSDL::init() {
         return false;
     }
 
-    font = TTF_OpenFont(FONT_AUDIOWIDE, 14 * UPSCALE_X);
-
-    if (!font) {
-        L.error("Could not load font Audiowide");
-        return false;
-    }
-
     SDL_FillRect(surf, nullptr, SDL_MapRGB(surf->format, 0x0, 0x0, 0x0));
 
     background = SDL_CreateRGBSurface(0, surf->w, surf->h, 32, 0, 0, 0, 0);
@@ -61,6 +54,10 @@ bool DrawManagerSDL::init() {
 
 void DrawManagerSDL::load_resources() {
     char img_path[ASSET_PATH_LEN_MAX];
+
+    font_data[Font::Default] = (void*)TTF_OpenFont(FONT_AUDIOWIDE, 14 * UPSCALE_X);
+    font_data[Font::Large] = (void*)TTF_OpenFont(FONT_AUDIOWIDE, 28 * UPSCALE_X);
+
     SDL_Surface *load_surf;
     for (unsigned int i = 0;; ++i) {
         if (ASSETS_IMG[i][0] == '\0')
@@ -282,22 +279,46 @@ void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawTransform t
 }
 
 void DrawManagerSDL::draw_text(const char* text, Justify jst, int x, int y, RGB rgb) {
-    draw_text(text, jst, x, y, &rgb, nullptr);
+    draw_text(surf, Font::Default, text, jst, x, y, &rgb, nullptr);
 }
 
 void DrawManagerSDL::draw_text(const char* text, Justify jst, int x, int y, RGB rgb, RGB bg_rgb) {
-    draw_text(text, jst, x, y, &rgb, &bg_rgb);
+    draw_text(surf, Font::Default, text, jst, x, y, &rgb, &bg_rgb);
 }
 
-void DrawManagerSDL::draw_text(const char* text, Justify jst, int x, int y, RGB* rgb, RGB* bg_rgb) {
+void DrawManagerSDL::draw_text(Font font, const char* text, Justify jst, int x, int y, RGB rgb) {
+    draw_text(surf, font, text, jst, x, y, &rgb, nullptr);
+}
+
+void DrawManagerSDL::draw_text(Font font, const char* text, Justify jst, int x, int y, RGB rgb, RGB bg_rgb) {
+    draw_text(surf, font, text, jst, x, y, &rgb, &bg_rgb);
+}
+
+void DrawManagerSDL::pixelswap_draw_text(const char* text, Justify jst, int x, int y, RGB rgb) {
+    draw_text(temp_surf, Font::Default, text, jst, x, y, &rgb, nullptr);
+}
+
+void DrawManagerSDL::pixelswap_draw_text(const char* text, Justify jst, int x, int y, RGB rgb, RGB bg_rgb) {
+    draw_text(temp_surf, Font::Default, text, jst, x, y, &rgb, &bg_rgb);
+}
+
+void DrawManagerSDL::pixelswap_draw_text(Font font, const char* text, Justify jst, int x, int y, RGB rgb) {
+    draw_text(temp_surf, font, text, jst, x, y, &rgb, nullptr);
+}
+
+void DrawManagerSDL::pixelswap_draw_text(Font font, const char* text, Justify jst, int x, int y, RGB rgb, RGB bg_rgb) {
+    draw_text(temp_surf, font, text, jst, x, y, &rgb, &bg_rgb);
+}
+
+void DrawManagerSDL::draw_text(SDL_Surface *tgt, Font font, const char* text, Justify jst, int x, int y, RGB* rgb, RGB* bg_rgb) {
     SDL_Color colour = {rgb->r, rgb->g, rgb->b};
     SDL_Surface *msg_surf;
 
     if (bg_rgb) {
         SDL_Color bg_colour = {bg_rgb->r, bg_rgb->g, bg_rgb->b};
-        msg_surf = TTF_RenderText_Shaded((TTF_Font*)font, text, colour, bg_colour);
+        msg_surf = TTF_RenderText_Shaded((TTF_Font*)font_data[font], text, colour, bg_colour);
     } else {
-        msg_surf = TTF_RenderText_Blended((TTF_Font*)font, text, colour);
+        msg_surf = TTF_RenderText_Blended((TTF_Font*)font_data[font], text, colour);
     }
 
     SDL_Rect msg_rect;
@@ -306,11 +327,11 @@ void DrawManagerSDL::draw_text(const char* text, Justify jst, int x, int y, RGB*
 
     if (jst != Justify::Left) {
         int render_w, render_h;
-        TTF_SizeText((TTF_Font*)font, text, &render_w, &render_h);
+        TTF_SizeText((TTF_Font*)font_data[font], text, &render_w, &render_h);
         msg_rect.x -= (jst == Justify::Right) ? render_w : render_w / 2;
     }
 
-    SDL_BlitSurface(msg_surf, nullptr, surf, &msg_rect);
+    SDL_BlitSurface(msg_surf, nullptr, tgt, &msg_rect);
 }
 
 void DrawManagerSDL::pixelswap_start() {
