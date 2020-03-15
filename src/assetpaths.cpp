@@ -4,6 +4,8 @@
 
 const char *FONT_AUDIOWIDE = "font/audiowide/Audiowide-Regular.ttf";
 
+const char *IMG_CURSOR          = "assets/img/cursor";
+
 const char *IMG_INTRO_EARTH     = D_PIC "ea1";
 const char *IMG_INTRO_CITY      = D_PIC "ct1";
 const char *IMG_INTRO_STARPORT  = D_PIC "cn1";
@@ -119,6 +121,8 @@ const char *IMG_INTRO_SH4_SHUTTLE4 = D_INTRO "SH4_shuttle4";
 #endif  // LINUX
 
 const char *ASSETS_IMG[] = {
+    IMG_CURSOR,
+
     IMG_INTRO_EARTH,
     IMG_INTRO_CITY,
     IMG_INTRO_STARPORT,

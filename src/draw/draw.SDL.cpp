@@ -119,7 +119,7 @@ void DrawManagerSDL::update(MousePos mouse_pos, MousePos new_click_pos) {
     }
 
     if (draw_cursor) {
-        draw(ID_CURSOR, IMG_INTRO_SH4_BLINK1, {mouse_pos.x, mouse_pos.y, 0.5, 0.5, 1, 1});
+        draw(ID_CURSOR, IMG_CURSOR, {mouse_pos.x, mouse_pos.y, 0.5, 0.5, 1, 1});
     }
 
     SDL_UpdateWindowSurface(win);
