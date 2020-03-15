@@ -29,6 +29,12 @@ class DrawManagerSDL : public DrawManager {
         virtual void pixelswap_update() override;
         virtual void draw_text(const char*, Justify, int, int, RGB) override;
         virtual void draw_text(const char*, Justify, int, int, RGB, RGB) override;
+        virtual void draw_text(Font, const char*, Justify, int, int, RGB) override;
+        virtual void draw_text(Font, const char*, Justify, int, int, RGB, RGB) override;
+        virtual void pixelswap_draw_text(const char*, Justify, int, int, RGB) override;
+        virtual void pixelswap_draw_text(const char*, Justify, int, int, RGB, RGB) override;
+        virtual void pixelswap_draw_text(Font, const char*, Justify, int, int, RGB) override;
+        virtual void pixelswap_draw_text(Font, const char*, Justify, int, int, RGB, RGB) override;
         virtual void fade_black(float, int) override;
         virtual bool fade_active() override;
     protected:
@@ -41,7 +47,7 @@ class DrawManagerSDL : public DrawManager {
         unsigned int pixelswap_stage;
         void draw(SDL_Surface*, const char*, DrawArea*, SprID*);
         void draw(SDL_Surface*, const char*, DrawTransform, SprID*);
-        void draw_text(const char*, Justify, int, int, RGB*, RGB*);
+        void draw_text(SDL_Surface*, Font, const char*, Justify, int, int, RGB*, RGB*);
 };
 
 #endif

@@ -59,6 +59,11 @@ typedef struct {
     float y;
 } SpriteClick;
 
+enum Font {
+    Default,
+    Large,
+};
+
 enum Justify {
     Left,
     Centre,
@@ -99,6 +104,12 @@ class DrawManager {
         virtual void pixelswap_update() = 0;
         virtual void draw_text(const char*, Justify, int, int, RGB) = 0;
         virtual void draw_text(const char*, Justify, int, int, RGB, RGB) = 0;
+        virtual void draw_text(Font, const char*, Justify, int, int, RGB) = 0;
+        virtual void draw_text(Font, const char*, Justify, int, int, RGB, RGB) = 0;
+        virtual void pixelswap_draw_text(const char*, Justify, int, int, RGB) = 0;
+        virtual void pixelswap_draw_text(const char*, Justify, int, int, RGB, RGB) = 0;
+        virtual void pixelswap_draw_text(Font, const char*, Justify, int, int, RGB) = 0;
+        virtual void pixelswap_draw_text(Font, const char*, Justify, int, int, RGB, RGB) = 0;
         virtual void fade_black(float, int) = 0;
         virtual bool fade_active() = 0;
         virtual void show_cursor(bool);
@@ -107,7 +118,7 @@ class DrawManager {
     protected:
         map<const char*, void*> sprite_data;
         virtual void* get_sprite_data(const char*) = 0;
-        void *font;
+        map<Font, void*> font_data;
         SprID next_id;
         vector<DrawnSprite> drawn_spr_info;
         DrawArea pixelswap_region;
