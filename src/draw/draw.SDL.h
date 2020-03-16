@@ -12,6 +12,7 @@ class DrawManagerSDL : public DrawManager {
         virtual void update(MousePos, MousePos) override;
         virtual void clear() override;
         virtual void save_background() override;
+        virtual void draw_init_image() override;
         virtual void draw(const char*) override;
         virtual void draw(const char*, DrawArea) override;
         virtual void draw(const char*, DrawTransform) override;
@@ -45,6 +46,7 @@ class DrawManagerSDL : public DrawManager {
         SDL_Surface *background;
         SDL_Surface *temp_surf;
         unsigned int pixelswap_stage;
+        SDL_Surface *load_normalised_image(const char*);
         void draw(SDL_Surface*, const char*, DrawArea*, SprID*);
         void draw(SDL_Surface*, const char*, DrawTransform, SprID*);
         void draw_text(SDL_Surface*, Font, const char*, Justify, int, int, RGB*, RGB*);

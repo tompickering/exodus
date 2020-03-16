@@ -87,6 +87,7 @@ class DrawManager {
         virtual SprID new_sprite_id();
         virtual void release_sprite_id(SprID);
         virtual DrawArea* get_drawn_area(SprID);
+        virtual void draw_init_image() = 0;
         virtual void draw(const char*) = 0;
         virtual void draw(const char*, DrawArea) = 0;
         virtual void draw(const char*, DrawTransform) = 0;

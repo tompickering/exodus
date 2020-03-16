@@ -52,32 +52,42 @@ bool DrawManagerSDL::init() {
     return true;
 }
 
-void DrawManagerSDL::load_resources() {
+SDL_Surface* DrawManagerSDL::load_normalised_image(const char* path) {
     char img_path[ASSET_PATH_LEN_MAX];
+    SDL_Surface *load_surf;
+    SDL_Surface *normalised;
+    strncpy(img_path, path, ASSET_PATH_LEN_MAX);
+    strcat(img_path, ".png");
+    load_surf = IMG_Load(img_path);
+    // Ensure image is normalised to RGBA8888
+    // This helps to ensure that we don't try to use
+    // unsupported operations like scaled blits between
+    // certain format combinations, which will fail.
+    normalised = SDL_ConvertSurfaceFormat(load_surf, SDL_PIXELFORMAT_RGBA8888, 0);
+    SDL_FreeSurface(load_surf);
+    if (normalised) {
+        L.debug("Loaded %s", img_path);
+    } else {
+        L.warn("Could not load %s", img_path);
+    }
+    return normalised;
+}
 
+void DrawManagerSDL::draw_init_image() {
+    sprite_data[INIT_IMG] = load_normalised_image(INIT_IMG);
+    clear();
+    draw(INIT_IMG, {RES_X/2, RES_Y/2, 0.5, 0.5, 1, 1});
+    SDL_UpdateWindowSurface(win);
+}
+
+void DrawManagerSDL::load_resources() {
     font_data[Font::Default] = (void*)TTF_OpenFont(FONT_AUDIOWIDE, 14 * UPSCALE_X);
     font_data[Font::Large] = (void*)TTF_OpenFont(FONT_AUDIOWIDE, 28 * UPSCALE_X);
 
-    SDL_Surface *load_surf;
     for (unsigned int i = 0;; ++i) {
         if (ASSETS_IMG[i][0] == '\0')
             break;
-        strncpy(img_path, ASSETS_IMG[i], ASSET_PATH_LEN_MAX);
-        strcat(img_path, ".png");
-        load_surf = IMG_Load(img_path);
-        // Ensure image is normalised to RGBA8888
-        // This helps to ensure that we don't try to use
-        // unsupported operations like scaled blits between
-        // certain format combinations, which will fail.
-        sprite_data[ASSETS_IMG[i]] =
-            SDL_ConvertSurfaceFormat(
-                    load_surf, SDL_PIXELFORMAT_RGBA8888, 0);
-        SDL_FreeSurface(load_surf);
-        if (sprite_data[ASSETS_IMG[i]]) {
-            L.debug("Loaded %s", img_path);
-        } else {
-            L.warn("Could not load %s", img_path);
-        }
+        sprite_data[ASSETS_IMG[i]] = load_normalised_image(ASSETS_IMG[i]);
     }
 }
 

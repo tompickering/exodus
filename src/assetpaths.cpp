@@ -3962,6 +3962,10 @@ const char *IMG_WD1_WELL         = D_GRA "wd1_well";
 
 #endif  // LINUX
 
+// Special case - we load and display this one first.
+// It doesn't need to be present in ASSETS_IMG.
+const char *INIT_IMG = IMG_ST1_INITSPR;
+
 const char *ASSETS_IMG[] = {
     IMG_CURSOR,
 
@@ -7665,7 +7669,6 @@ const char *ASSETS_IMG[] = {
     IMG_SP1_SHP3,
     IMG_SP1_SHP4,
     IMG_SP1_SHP5,
-    IMG_ST1_INITSPR,
     IMG_SU1_ALLOW0,
     IMG_SU1_ALLOW1,
     IMG_SU1_B_0,

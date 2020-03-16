@@ -3960,6 +3960,8 @@ extern const char *IMG_VS6_VESSEL;
 extern const char *IMG_WD1_DONE;
 extern const char *IMG_WD1_WELL;
 
+extern const char *INIT_IMG;
+
 extern const char *ASSETS_IMG[];
 
 #endif

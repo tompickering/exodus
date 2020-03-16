@@ -53,6 +53,19 @@ int Exodus::run(int argc, char** argv) {
         return 1;
     }
 
+    TIMER game_timer;
+    TIMER frame_timer;
+    float delta_time = 0.f;
+
+    game_timer.start();
+
+#ifdef SDL
+    // FIXME: SDL seems to require some time before
+    //        renders will work reliably...
+    game_timer.sleep_until(0.05);
+#endif
+
+    draw_manager.draw_init_image();
     draw_manager.load_resources();
 
     Intro mode_intro;
@@ -63,10 +76,6 @@ int Exodus::run(int argc, char** argv) {
     set_mode(MODE_Intro);
 
     running = true;
-
-    TIMER game_timer;
-    TIMER frame_timer;
-    float delta_time = 0.f;
 
     MousePos mouse_pos = {-1, -1};
     MousePos click_pos = {-1, -1};
