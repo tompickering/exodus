@@ -79,8 +79,8 @@ float SPC_SHIP_START_X     = 173.f;
 float SPC_SHIP_START_Y     = 111.f;
 float SPC_SHUTTLE_START_X  = 400.f;
 float SPC_SHUTTLE_START_Y  = 240.f;
-float SPC_SHUTTLE_END_X    = SPC_SHIP_START_X + 40;
-float SPC_SHUTTLE_END_Y    = SPC_SHIP_START_Y + 26;
+float SPC_SHUTTLE_END_X    = SPC_SHIP_START_X + 30;
+float SPC_SHUTTLE_END_Y    = SPC_SHIP_START_Y + 22;
 float SPC_SHUTTLE_END      = 9.f;
 float SPC_SHIP_DOOR_START  = SPC_SHUTTLE_END + 4.f;
 float SPC_SHIP_DOOR_STEP   = 0.3f;
@@ -601,7 +601,7 @@ ExodusMode Intro::update(float delta) {
 
             if (time < SPC_SHUTTLE_END) {
                 float interp = time / SPC_SHUTTLE_END;
-                float scale = 0.1 + 2 * (1 - interp);
+                float scale = 0.02 + 2 * (1 - interp);
                 int x = SPC_SHUTTLE_START_X + (SPC_SHUTTLE_END_X - SPC_SHUTTLE_START_X) * interp;
                 int y = SPC_SHUTTLE_START_Y + (SPC_SHUTTLE_END_Y - SPC_SHUTTLE_START_Y) * interp;
                 draw_manager.draw(IDs[ID::SPC_SHUTTLE], IMG_INTRO_SH3_SHUTTLE, {x, y, 0.5, 0.5, scale, scale});
