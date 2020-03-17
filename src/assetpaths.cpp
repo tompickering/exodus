@@ -1,11 +1,12 @@
 #ifdef LINUX
 
-#define D_PIC "assets/img/pictures/"
+#define D_SUB "assets/img/sub/"
 
 const char *FONT_AUDIOWIDE = "assets/font/audiowide/Audiowide-Regular.ttf";
 
 const char *IMG_CURSOR          = "assets/img/cursor";
 
+#define D_PIC "assets/img/pictures/"
 const char *IMG_INTRO_EARTH     = D_PIC "ea1";
 const char *IMG_INTRO_CITY      = D_PIC "ct1";
 const char *IMG_INTRO_STARPORT  = D_PIC "cn1";
@@ -989,11 +990,11 @@ const char *IMG_HF4_PICTURE2     = D_GRA "hf4_picture2";
 const char *IMG_HF5_PICTURE2     = D_GRA "hf5_picture2";
 const char *IMG_HF6_PICTURE2     = D_GRA "hf6_picture2";
 const char *IMG_HF8_PICTURE2     = D_GRA "hf8_picture2";
-const char *IMG_HP1_HYP1         = D_GRA "hp1_hyp1";
-const char *IMG_HP1_HYP2         = D_GRA "hp1_hyp2";
-const char *IMG_HP1_HYP3         = D_GRA "hp1_hyp3";
-const char *IMG_HP1_HYP4         = D_GRA "hp1_hyp4";
-const char *IMG_HP1_HYP5         = D_GRA "hp1_hyp5";
+const char *IMG_HP1_HYP1         = D_SUB "hp1_hyp1";
+const char *IMG_HP1_HYP2         = D_SUB "hp1_hyp2";
+const char *IMG_HP1_HYP3         = D_SUB "hp1_hyp3";
+const char *IMG_HP1_HYP4         = D_SUB "hp1_hyp4";
+const char *IMG_HP1_HYP5         = D_SUB "hp1_hyp5";
 const char *IMG_HS1_F10          = D_GRA "hs1_f10";
 const char *IMG_HS1_F11          = D_GRA "hs1_f11";
 const char *IMG_HS1_F1           = D_GRA "hs1_f1";
