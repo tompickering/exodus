@@ -253,6 +253,9 @@ void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawArea* area,
         }
     }
 
+    if (!spr_key)
+        return;
+
     SDL_Surface *spr = (SDL_Surface*)get_sprite_data(spr_key);
     if (!spr) {
         L.warn("Unknown sprite: %s", spr_key);

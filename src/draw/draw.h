@@ -25,6 +25,9 @@ using std::vector;
  * drawn, along with the area over which they were drawn, and if we re-draw the same
  * sprite (as identified by the ID - not the sprite itself in case we are using the
  * new frame in an animation), then we'll refresh that area of background first.
+ *
+ * Sprites with IDs should be removed from the screen by calling draw with that
+ * ID and a null pointer as the sprite key.
  */
 
 typedef unsigned int SprID;
