@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+#include "../anim.h"
+
 #include "../assetpaths.h"
 
 #include "../util/value.h"
@@ -89,8 +91,9 @@ float SPC_SHIP_END         = SPC_SHIP_START + 8;
 float SPC_SHIP_END_X       = 366.f;
 float SPC_SHIP_END_Y       = 256.f;
 float SPC_WARP_START       = SPC_SHIP_END + 0.4;
-float SPC_WARP_END         = SPC_WARP_START + 0.8;
-float SPC_FADE_START       = SPC_WARP_END + 3;
+float SPC_WARP_END         = SPC_WARP_START + 1.8;
+int   SPC_WARP_STAGES      = 10;
+float SPC_FADE_START       = SPC_WARP_END + 2;
 
 const float MAX_TEXT_TIME  = 3.8;
 
@@ -119,6 +122,16 @@ unsigned int input_code = 0;
 unsigned char keys_to_input = 3;
 bool interactive_sequence_completed = false;
 bool launchpad_light_toggle = false;
+unsigned int warp_stage = 0;
+
+Anim anim_spc_warp(
+    5,
+    IMG_HP1_HYP1,
+    IMG_HP1_HYP2,
+    IMG_HP1_HYP3,
+    IMG_HP1_HYP4,
+    IMG_HP1_HYP5
+);
 
 const char* KP_KEYS[] = {
     IMG_INTRO_PH1_PUSH_1,
@@ -633,6 +646,28 @@ ExodusMode Intro::update(float delta) {
                 int x = SPC_SHIP_START_X + (SPC_SHIP_END_X - SPC_SHIP_START_X) * anim_interp;
                 int y = SPC_SHIP_START_Y + (SPC_SHIP_END_Y - SPC_SHIP_START_Y) * anim_interp;
                 draw_manager.draw(IDs[ID::SPC_SHIP], IMG_INTRO_SH3_CRUISER1, {x, y, 0.5, 0.5, scale, scale});
+            }
+
+            if (time >= SPC_WARP_START) {
+                float interp = (time - SPC_WARP_START) / (SPC_WARP_END - SPC_WARP_START);
+                interp = interp > 1 ? 1 : interp;
+                float stage_interp = warp_stage / (float)SPC_WARP_STAGES;
+                if (interp > stage_interp) {
+                    ++warp_stage;
+                    stage_interp = warp_stage / (float)SPC_WARP_STAGES;
+                    float scale_interp = stage_interp < 0.5 ? stage_interp : 1 - stage_interp;
+                    float scale = 16 * pow(scale_interp, 2);
+                    draw_manager.draw(
+                            IDs[ID::SPC_WARP],
+                            anim_spc_warp.frame(warp_stage),
+                            {(int)SPC_SHIP_END_X,
+                             (int)SPC_SHIP_END_Y,
+                             0.5, 0.5, scale, scale});
+                }
+            }
+
+            if (time >= SPC_WARP_END) {
+                ONCE(oid_warpend) draw_manager.draw(IDs[ID::SPC_WARP], nullptr);
             }
 
             if (text_time > MAX_TEXT_TIME) {
