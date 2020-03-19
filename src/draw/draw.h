@@ -32,6 +32,7 @@ using std::vector;
 
 typedef unsigned int SprID;
 
+extern const SprID ID_NONE;
 extern const SprID ID_CURSOR;
 
 typedef struct {
@@ -110,6 +111,8 @@ class DrawManager {
         virtual void draw_text(const char*, Justify, int, int, RGB, RGB) = 0;
         virtual void draw_text(Font, const char*, Justify, int, int, RGB) = 0;
         virtual void draw_text(Font, const char*, Justify, int, int, RGB, RGB) = 0;
+        virtual void draw_text(SprID, const char*, Justify, int, int, RGB) = 0;
+        virtual void draw_text(SprID, Font, const char*, Justify, int, int, RGB) = 0;
         virtual void pixelswap_draw_text(const char*, Justify, int, int, RGB) = 0;
         virtual void pixelswap_draw_text(const char*, Justify, int, int, RGB, RGB) = 0;
         virtual void pixelswap_draw_text(Font, const char*, Justify, int, int, RGB) = 0;

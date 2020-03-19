@@ -234,8 +234,21 @@ void DrawManagerSDL::pixelswap_draw(SprID id, const char* spr_key, DrawTransform
     draw(src_surf_0, spr_key, t, &id);
 }
 
+void DrawManagerSDL::update_dirty_area(SprID id, DrawArea area) {
+    DrawArea *dirty_area = get_drawn_area(id);
+    if (dirty_area) {
+        // We know where this sprite was drawn previously.
+        // Wipe that area with the background.
+        SDL_Rect r = {dirty_area->x, dirty_area->y, dirty_area->w, dirty_area->h};
+        SDL_BlitSurface(background, &r, surf, &r);
+        // Update the old area to be redrawn with this draw's area
+        *dirty_area = area;
+    } else {
+        drawn_spr_info.push_back({id, area});
+    }
+}
+
 void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawArea* area, SprID* id) {
-    DrawArea *dirty_area;
     DrawArea default_area = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
 
     if (area) {
@@ -247,22 +260,8 @@ void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawArea* area,
         area = &default_area;
     }
 
-    if (id) {
-        dirty_area = get_drawn_area(*id);
-        if (dirty_area) {
-            // We know where this sprite was drawn previously.
-            // Wipe that area with the background.
-            SDL_Rect r = {dirty_area->x, dirty_area->y, dirty_area->w, dirty_area->h};
-            SDL_BlitSurface(background, &r, tgt, &r);
-            // Update the old area to be redrawn with this draw's area
-            *dirty_area = *area;
-        } else {
-            if (area) {
-                drawn_spr_info.push_back({*id, *area});
-            } else {
-                L.warn("ID image draw without specific area - not saving");
-            }
-        }
+    if (id && tgt == surf) {
+        update_dirty_area(*id, *area);
     }
 
     if (!spr_key)
@@ -304,38 +303,46 @@ void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawTransform t
 }
 
 void DrawManagerSDL::draw_text(const char* text, Justify jst, int x, int y, RGB rgb) {
-    draw_text(surf, Font::Default, text, jst, x, y, &rgb, nullptr);
+    draw_text(surf, ID_NONE, Font::Default, text, jst, x, y, &rgb, nullptr);
 }
 
 void DrawManagerSDL::draw_text(const char* text, Justify jst, int x, int y, RGB rgb, RGB bg_rgb) {
-    draw_text(surf, Font::Default, text, jst, x, y, &rgb, &bg_rgb);
+    draw_text(surf, ID_NONE, Font::Default, text, jst, x, y, &rgb, &bg_rgb);
 }
 
 void DrawManagerSDL::draw_text(Font font, const char* text, Justify jst, int x, int y, RGB rgb) {
-    draw_text(surf, font, text, jst, x, y, &rgb, nullptr);
+    draw_text(surf, ID_NONE, font, text, jst, x, y, &rgb, nullptr);
 }
 
 void DrawManagerSDL::draw_text(Font font, const char* text, Justify jst, int x, int y, RGB rgb, RGB bg_rgb) {
-    draw_text(surf, font, text, jst, x, y, &rgb, &bg_rgb);
+    draw_text(surf, ID_NONE, font, text, jst, x, y, &rgb, &bg_rgb);
+}
+
+void DrawManagerSDL::draw_text(SprID id, const char* text, Justify jst, int x, int y, RGB rgb) {
+    draw_text(surf, id, Font::Default, text, jst, x, y, &rgb, nullptr);
+}
+
+void DrawManagerSDL::draw_text(SprID id, Font font, const char* text, Justify jst, int x, int y, RGB rgb) {
+    draw_text(surf, id, font, text, jst, x, y, &rgb, nullptr);
 }
 
 void DrawManagerSDL::pixelswap_draw_text(const char* text, Justify jst, int x, int y, RGB rgb) {
-    draw_text(src_surf_0, Font::Default, text, jst, x, y, &rgb, nullptr);
+    draw_text(src_surf_0, ID_NONE, Font::Default, text, jst, x, y, &rgb, nullptr);
 }
 
 void DrawManagerSDL::pixelswap_draw_text(const char* text, Justify jst, int x, int y, RGB rgb, RGB bg_rgb) {
-    draw_text(src_surf_0, Font::Default, text, jst, x, y, &rgb, &bg_rgb);
+    draw_text(src_surf_0, ID_NONE, Font::Default, text, jst, x, y, &rgb, &bg_rgb);
 }
 
 void DrawManagerSDL::pixelswap_draw_text(Font font, const char* text, Justify jst, int x, int y, RGB rgb) {
-    draw_text(src_surf_0, font, text, jst, x, y, &rgb, nullptr);
+    draw_text(src_surf_0, ID_NONE, font, text, jst, x, y, &rgb, nullptr);
 }
 
 void DrawManagerSDL::pixelswap_draw_text(Font font, const char* text, Justify jst, int x, int y, RGB rgb, RGB bg_rgb) {
-    draw_text(src_surf_0, font, text, jst, x, y, &rgb, &bg_rgb);
+    draw_text(src_surf_0, ID_NONE, font, text, jst, x, y, &rgb, &bg_rgb);
 }
 
-void DrawManagerSDL::draw_text(SDL_Surface *tgt, Font font, const char* text, Justify jst, int x, int y, RGB* rgb, RGB* bg_rgb) {
+void DrawManagerSDL::draw_text(SDL_Surface *tgt, SprID id, Font font, const char* text, Justify jst, int x, int y, RGB* rgb, RGB* bg_rgb) {
     SDL_Color colour = {rgb->r, rgb->g, rgb->b};
     SDL_Surface *msg_surf;
 
@@ -350,10 +357,20 @@ void DrawManagerSDL::draw_text(SDL_Surface *tgt, Font font, const char* text, Ju
     msg_rect.x = UPSCALE_X * x;
     msg_rect.y = UPSCALE_Y * y;
 
+    int render_w, render_h;
+    TTF_SizeText((TTF_Font*)font_data[font], text, &render_w, &render_h);
+
     if (jst != Justify::Left) {
-        int render_w, render_h;
-        TTF_SizeText((TTF_Font*)font_data[font], text, &render_w, &render_h);
         msg_rect.x -= (jst == Justify::Right) ? render_w : render_w / 2;
+    }
+
+    if (id && tgt == surf) {
+        DrawArea area;
+        area.x = msg_rect.x;
+        area.y = msg_rect.y;
+        area.w = render_w;
+        area.h = render_h;
+        update_dirty_area(id, area);
     }
 
     SDL_BlitSurface(msg_surf, nullptr, tgt, &msg_rect);

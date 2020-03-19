@@ -32,6 +32,8 @@ class DrawManagerSDL : public DrawManager {
         virtual void draw_text(const char*, Justify, int, int, RGB, RGB) override;
         virtual void draw_text(Font, const char*, Justify, int, int, RGB) override;
         virtual void draw_text(Font, const char*, Justify, int, int, RGB, RGB) override;
+        virtual void draw_text(SprID, const char*, Justify, int, int, RGB) override;
+        virtual void draw_text(SprID, Font, const char*, Justify, int, int, RGB) override;
         virtual void pixelswap_draw_text(const char*, Justify, int, int, RGB) override;
         virtual void pixelswap_draw_text(const char*, Justify, int, int, RGB, RGB) override;
         virtual void pixelswap_draw_text(Font, const char*, Justify, int, int, RGB) override;
@@ -50,7 +52,8 @@ class DrawManagerSDL : public DrawManager {
         SDL_Surface *load_normalised_image(const char*);
         void draw(SDL_Surface*, const char*, DrawArea*, SprID*);
         void draw(SDL_Surface*, const char*, DrawTransform, SprID*);
-        void draw_text(SDL_Surface*, Font, const char*, Justify, int, int, RGB*, RGB*);
+        void draw_text(SDL_Surface*, SprID, Font, const char*, Justify, int, int, RGB*, RGB*);
+        void update_dirty_area(SprID, DrawArea);
 };
 
 #endif
