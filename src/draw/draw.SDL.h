@@ -44,7 +44,8 @@ class DrawManagerSDL : public DrawManager {
         SDL_Window *win;
         SDL_Surface *surf;
         SDL_Surface *background;
-        SDL_Surface *temp_surf;
+        SDL_Surface *src_surf_0; // Used for pixelswap source, fade source
+        SDL_Surface *src_surf_1; // Used for fade target
         unsigned int pixelswap_stage;
         SDL_Surface *load_normalised_image(const char*);
         void draw(SDL_Surface*, const char*, DrawArea*, SprID*);
