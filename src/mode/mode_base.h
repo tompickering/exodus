@@ -9,6 +9,8 @@
 #include "../audio/audio.h"
 #include "../input/input.h"
 
+#define MAX_STATIC_IDS 50
+
 extern DRAWMANAGER draw_manager;
 extern AUDIOMANAGER audio_manager;
 extern INPUTMANAGER input_manager;
@@ -19,11 +21,19 @@ class ModeBase {
         ModeBase(const char*, bool);
         virtual ~ModeBase();
         virtual void enter();
+        virtual void enter(unsigned int);
         virtual void exit();
         virtual ExodusMode update(float) = 0;
         bool draw_cursor;
         const char* get_name();
         const char *name;
+    protected:
+        SprID id(unsigned int);
+    private:
+        unsigned int id_max;
+        void register_ids(unsigned int);
+        void unregister_ids();
+        SprID ids[MAX_STATIC_IDS];
 };
 
 #endif
