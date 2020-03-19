@@ -169,10 +169,6 @@ void Intro::enter() {
         kp_num_held_seconds[i] = 0;
 }
 
-void Intro::exit() {
-    ModeBase::exit();
-}
-
 ExodusMode Intro::update(float delta) {
     float time = timer.get_delta();
     float text_time = text_timer.get_delta();

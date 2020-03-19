@@ -9,7 +9,6 @@ class Intro : ModeBase {
     public:
         Intro();
         virtual void enter() override;
-        virtual void exit() override;
         virtual ExodusMode update(float) override;
     private:
         TIMER timer;
