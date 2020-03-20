@@ -188,18 +188,18 @@ const char *IMG_STARTGR_FL5_9_4       = D_SGR "fl5_9-4";
 const char *IMG_STARTGR_FL5_9_5       = D_SGR "fl5_9-5";
 const char *IMG_STARTGR_FL5_FLEET     = D_SGR "fl5_fleet";
 const char *IMG_STARTGR_FL6_STARS     = D_SGR "fl6_stars";
-const char *IMG_STARTGR_GR1_PICCY1    = D_SGR "gr1_piccy1";
-const char *IMG_STARTGR_GR1_PICCY2    = D_SGR "gr1_piccy2";
-const char *IMG_STARTGR_GR1_PICCY3    = D_SGR "gr1_piccy3";
-const char *IMG_STARTGR_GR3_PICCY1    = D_SGR "gr3_piccy1";
-const char *IMG_STARTGR_GR3_PICCY2    = D_SGR "gr3_piccy2";
-const char *IMG_STARTGR_GR3_PICCY3    = D_SGR "gr3_piccy3";
-const char *IMG_STARTGR_GR5_PICCY1    = D_SGR "gr5_piccy1";
-const char *IMG_STARTGR_GR5_PICCY2    = D_SGR "gr5_piccy2";
-const char *IMG_STARTGR_GR5_PICCY3    = D_SGR "gr5_piccy3";
-const char *IMG_STARTGR_GR7_PICCY1    = D_SGR "gr7_piccy1";
-const char *IMG_STARTGR_GR7_PICCY2    = D_SGR "gr7_piccy2";
-const char *IMG_STARTGR_GR7_PICCY3    = D_SGR "gr7_piccy3";
+const char *IMG_STARTGR_GAL_S         = D_SGR "gr1_piccy1";
+const char *IMG_STARTGR_GAL_M         = D_SGR "gr1_piccy2";
+const char *IMG_STARTGR_GAL_L         = D_SGR "gr1_piccy3";
+const char *IMG_STARTGR_AIM_MIGHT     = D_SGR "gr3_piccy1";
+const char *IMG_STARTGR_AIM_MONEY     = D_SGR "gr3_piccy2";
+const char *IMG_STARTGR_AIM_CIV       = D_SGR "gr3_piccy3";
+const char *IMG_STARTGR_STR_WEAK      = D_SGR "gr5_piccy1";
+const char *IMG_STARTGR_STR_MEDIUM    = D_SGR "gr5_piccy2";
+const char *IMG_STARTGR_STR_STRONG    = D_SGR "gr5_piccy3";
+const char *IMG_STARTGR_MPSTR_NONE    = D_SGR "gr7_piccy1";
+const char *IMG_STARTGR_MPSTR_WEAK    = D_SGR "gr7_piccy2";
+const char *IMG_STARTGR_MPSTR_STRONG  = D_SGR "gr7_piccy3";
 
 #define D_GRA "assets/img/graphic/"
 const char *IMG_AL1_1_2          = D_GRA "al1_1-2";
@@ -4148,18 +4148,18 @@ const char *ASSETS_IMG[] = {
     IMG_STARTGR_FL5_9_5,
     IMG_STARTGR_FL5_FLEET,
     IMG_STARTGR_FL6_STARS,
-    IMG_STARTGR_GR1_PICCY1,
-    IMG_STARTGR_GR1_PICCY2,
-    IMG_STARTGR_GR1_PICCY3,
-    IMG_STARTGR_GR3_PICCY1,
-    IMG_STARTGR_GR3_PICCY2,
-    IMG_STARTGR_GR3_PICCY3,
-    IMG_STARTGR_GR5_PICCY1,
-    IMG_STARTGR_GR5_PICCY2,
-    IMG_STARTGR_GR5_PICCY3,
-    IMG_STARTGR_GR7_PICCY1,
-    IMG_STARTGR_GR7_PICCY2,
-    IMG_STARTGR_GR7_PICCY3,
+    IMG_STARTGR_GAL_S,
+    IMG_STARTGR_GAL_M,
+    IMG_STARTGR_GAL_L,
+    IMG_STARTGR_AIM_MIGHT,
+    IMG_STARTGR_AIM_MONEY,
+    IMG_STARTGR_AIM_CIV,
+    IMG_STARTGR_STR_WEAK,
+    IMG_STARTGR_STR_MEDIUM,
+    IMG_STARTGR_STR_STRONG,
+    IMG_STARTGR_MPSTR_NONE,
+    IMG_STARTGR_MPSTR_WEAK,
+    IMG_STARTGR_MPSTR_STRONG,
 
     IMG_AL1_1_2,
     IMG_AL1_13,
