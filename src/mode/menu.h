@@ -10,7 +10,6 @@ class Menu : ModeBase {
     public:
         Menu();
         virtual void enter() override;
-        virtual void exit() override;
         virtual ExodusMode update(float) override;
     private:
         bool pixelswap_done;
