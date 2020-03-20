@@ -117,11 +117,14 @@ class DrawManager {
         virtual void pixelswap_draw_text(const char*, Justify, int, int, RGB, RGB) = 0;
         virtual void pixelswap_draw_text(Font, const char*, Justify, int, int, RGB) = 0;
         virtual void pixelswap_draw_text(Font, const char*, Justify, int, int, RGB, RGB) = 0;
+        virtual void pixelswap_draw_text(SprID, Font, const char*, Justify, int, int, RGB) = 0;
+        virtual void pixelswap_draw_text(SprID, Font, const char*, Justify, int, int, RGB, RGB) = 0;
         virtual void fade_black(float, int) = 0;
         virtual bool fade_active() = 0;
         virtual void show_cursor(bool);
         virtual SpriteClick get_clicked_sprite();
         virtual SpriteClick query_click(SprID);
+        virtual void clear_sprite_ids();
     protected:
         map<const char*, void*> sprite_data;
         virtual void* get_sprite_data(const char*) = 0;

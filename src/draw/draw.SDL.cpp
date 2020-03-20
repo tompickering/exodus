@@ -234,13 +234,19 @@ void DrawManagerSDL::pixelswap_draw(SprID id, const char* spr_key, DrawTransform
     draw(src_surf_0, spr_key, t, &id);
 }
 
-void DrawManagerSDL::update_dirty_area(SprID id, DrawArea area) {
+void DrawManagerSDL::repair_dirty_area(SprID id, DrawArea area) {
     DrawArea *dirty_area = get_drawn_area(id);
     if (dirty_area) {
         // We know where this sprite was drawn previously.
         // Wipe that area with the background.
         SDL_Rect r = {dirty_area->x, dirty_area->y, dirty_area->w, dirty_area->h};
         SDL_BlitSurface(background, &r, surf, &r);
+    }
+}
+
+void DrawManagerSDL::update_dirty_area(SprID id, DrawArea area) {
+    DrawArea *dirty_area = get_drawn_area(id);
+    if (dirty_area) {
         // Update the old area to be redrawn with this draw's area
         *dirty_area = area;
     } else {
@@ -260,7 +266,10 @@ void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawArea* area,
         area = &default_area;
     }
 
-    if (id && tgt == surf) {
+    if (id) {
+        if (tgt == surf) {
+            repair_dirty_area(*id, *area);
+        }
         update_dirty_area(*id, *area);
     }
 
@@ -342,6 +351,14 @@ void DrawManagerSDL::pixelswap_draw_text(Font font, const char* text, Justify js
     draw_text(src_surf_0, ID_NONE, font, text, jst, x, y, &rgb, &bg_rgb);
 }
 
+void DrawManagerSDL::pixelswap_draw_text(SprID id, Font font, const char* text, Justify jst, int x, int y, RGB rgb) {
+    draw_text(src_surf_0, id, font, text, jst, x, y, &rgb, nullptr);
+}
+
+void DrawManagerSDL::pixelswap_draw_text(SprID id, Font font, const char* text, Justify jst, int x, int y, RGB rgb, RGB bg_rgb) {
+    draw_text(src_surf_0, id, font, text, jst, x, y, &rgb, &bg_rgb);
+}
+
 void DrawManagerSDL::draw_text(SDL_Surface *tgt, SprID id, Font font, const char* text, Justify jst, int x, int y, RGB* rgb, RGB* bg_rgb) {
     SDL_Color colour = {rgb->r, rgb->g, rgb->b};
     SDL_Surface *msg_surf;
@@ -364,12 +381,15 @@ void DrawManagerSDL::draw_text(SDL_Surface *tgt, SprID id, Font font, const char
         msg_rect.x -= (jst == Justify::Right) ? render_w : render_w / 2;
     }
 
-    if (id && tgt == surf) {
+    if (id) {
         DrawArea area;
         area.x = msg_rect.x;
         area.y = msg_rect.y;
         area.w = render_w;
         area.h = render_h;
+        if (tgt == surf) {
+            repair_dirty_area(id, area);
+        }
         update_dirty_area(id, area);
     }
 
