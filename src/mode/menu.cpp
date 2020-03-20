@@ -6,6 +6,13 @@
 #define OPT_1 {95, 280, 0.0, 0.5, 1, 1}
 #define OPT_2 {RES_X - 95, 413, 1.0, 0.5, 1, 1}
 
+#define TXT_0_X 95
+#define TXT_0_Y 117
+#define TXT_1_X RES_X - 95
+#define TXT_1_Y 250
+#define TXT_2_X 95
+#define TXT_2_Y 383
+
 enum ID {
     NEWGAME_TXT,
     LOADGAME_TXT,
@@ -61,6 +68,7 @@ ExodusMode Menu::update(float delta) {
             if (trans_state == None) {
                 draw_manager.pixelswap_draw(IMG_BG_MENU0);
                 draw_manager.pixelswap_draw_text(Font::Large, "Galaxy size", Justify::Left, 20, 30, {0xEE, 0xEE, 0xAA});
+
                 draw_manager.pixelswap_draw(
                         id(GAL_SZ_SMALL),
                         IMG_STARTGR_GAL_S,
@@ -73,6 +81,37 @@ ExodusMode Menu::update(float delta) {
                         id(GAL_SZ_MEDIUM),
                         IMG_STARTGR_GAL_L,
                         OPT_2);
+
+                draw_manager.pixelswap_draw_text(
+                        "Small",
+                        Justify::Left, TXT_0_X, TXT_0_Y, {0xFF, 0xFF, 0xFF});
+                draw_manager.pixelswap_draw_text(
+                        "Desperate fights for the",
+                        Justify::Left, TXT_0_X, TXT_0_Y + 20, {0xFF, 0xFF, 0xFF});
+                draw_manager.pixelswap_draw_text(
+                        "few resources.",
+                        Justify::Left, TXT_0_X, TXT_0_Y + 40, {0xFF, 0xFF, 0xFF});
+
+                draw_manager.pixelswap_draw_text(
+                        "Medium",
+                        Justify::Right, TXT_1_X, TXT_1_Y, {0xFF, 0xFF, 0xFF});
+                draw_manager.pixelswap_draw_text(
+                        "Hardly enough stars to",
+                        Justify::Right, TXT_1_X, TXT_1_Y + 20, {0xFF, 0xFF, 0xFF});
+                draw_manager.pixelswap_draw_text(
+                        "live together in peace.",
+                        Justify::Right, TXT_1_X, TXT_1_Y + 40, {0xFF, 0xFF, 0xFF});
+
+                draw_manager.pixelswap_draw_text(
+                        "Large",
+                        Justify::Left, TXT_2_X, TXT_2_Y, {0xFF, 0xFF, 0xFF});
+                draw_manager.pixelswap_draw_text(
+                        "Free expansion",
+                        Justify::Left, TXT_2_X, TXT_2_Y + 20, {0xFF, 0xFF, 0xFF});
+                draw_manager.pixelswap_draw_text(
+                        "into space.",
+                        Justify::Left, TXT_2_X, TXT_2_Y + 40, {0xFF, 0xFF, 0xFF});
+
                 draw_manager.pixelswap_start();
                 trans_state = Started;
             } else if (trans_state == Started) {
