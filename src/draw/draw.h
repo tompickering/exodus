@@ -107,6 +107,7 @@ class DrawManager {
         virtual void pixelswap_start(DrawArea*) = 0;
         virtual bool pixelswap_active() = 0;
         virtual void pixelswap_update() = 0;
+        virtual void pattern_fill(DrawArea area) = 0;
         virtual void draw_text(const char*, Justify, int, int, RGB) = 0;
         virtual void draw_text(const char*, Justify, int, int, RGB, RGB) = 0;
         virtual void draw_text(Font, const char*, Justify, int, int, RGB) = 0;

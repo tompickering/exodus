@@ -53,6 +53,12 @@ bool DrawManagerSDL::init() {
         return false;
     }
 
+    pattern = SDL_CreateRGBSurface(0, surf->w, surf->h, 32, 0, 0, 0, 0);
+    if (!pattern) {
+        L.error("Could not create pattern surface");
+        return false;
+    }
+
     SDL_ShowCursor(false);
 
     return true;
@@ -94,6 +100,13 @@ void DrawManagerSDL::load_resources() {
         if (ASSETS_IMG[i][0] == '\0')
             break;
         sprite_data[ASSETS_IMG[i]] = load_normalised_image(ASSETS_IMG[i]);
+    }
+
+    for (int j = 0; j < 3; ++j) {
+        for (int i = 0; i < 4; ++i) {
+            DrawArea area = {i*172, j*172, 172, 172};
+            draw(pattern, IMG_PT1_PATTERN, &area, nullptr);
+        }
     }
 }
 
@@ -412,6 +425,15 @@ void DrawManagerSDL::pixelswap_start(DrawArea* area) {
 
 bool DrawManagerSDL::pixelswap_active() {
     return pixelswap_stage > 0;
+}
+
+void DrawManagerSDL::pattern_fill(DrawArea area) {
+    SDL_Rect r;
+    r.x = area.x * UPSCALE_X;
+    r.y = area.y * UPSCALE_Y;
+    r.w = area.w * UPSCALE_X;
+    r.h = area.h * UPSCALE_Y;
+    SDL_BlitSurface(pattern, &r, surf, &r);
 }
 
 void DrawManagerSDL::fade_black(float seconds, int stages) {

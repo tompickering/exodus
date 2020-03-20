@@ -28,6 +28,7 @@ class DrawManagerSDL : public DrawManager {
         virtual void pixelswap_start(DrawArea*) override;
         virtual bool pixelswap_active() override;
         virtual void pixelswap_update() override;
+        virtual void pattern_fill(DrawArea) override;
         virtual void draw_text(const char*, Justify, int, int, RGB) override;
         virtual void draw_text(const char*, Justify, int, int, RGB, RGB) override;
         virtual void draw_text(Font, const char*, Justify, int, int, RGB) override;
@@ -50,6 +51,7 @@ class DrawManagerSDL : public DrawManager {
         SDL_Surface *background;
         SDL_Surface *src_surf_0; // Used for pixelswap source, fade source
         SDL_Surface *src_surf_1; // Used for fade target
+        SDL_Surface *pattern;
         unsigned int pixelswap_stage;
         SDL_Surface *load_normalised_image(const char*);
         void draw(SDL_Surface*, const char*, DrawArea*, SprID*);
