@@ -64,6 +64,7 @@ class Menu : ModeBase {
 
         Stage stage;
         TransitionState trans_state;
+        unsigned char current_player;
 
         void set_stage(Stage);
 
