@@ -37,6 +37,9 @@ enum ID {
     FLAG_12,
     FLAG_13,
     FLAG_14,
+    AIM_MIGHT,
+    AIM_MONEY,
+    AIM_CIV,
     END,
 };
 
@@ -324,6 +327,69 @@ ExodusMode Menu::update(float delta) {
 
             break;
         case Aim:
+            if (trans_state == None) {
+                draw_manager.draw(IMG_BG_MENU0);
+                draw_manager.draw_text(
+                    Font::Large,
+                    "The aim",
+                    Justify::Left,
+                    20, 30, {0xEE, 0xEE, 0xAA});
+
+                draw_manager.draw(
+                        id(AIM_MIGHT),
+                        IMG_STARTGR_AIM_MIGHT,
+                        OPT_0);
+                draw_manager.draw(
+                        id(AIM_MONEY),
+                        IMG_STARTGR_AIM_MONEY,
+                        OPT_1);
+                draw_manager.draw(
+                        id(AIM_CIV),
+                        IMG_STARTGR_AIM_CIV,
+                        OPT_2);
+
+                draw_manager.draw_text(
+                        "Might",
+                        Justify::Left, TXT_0_X, TXT_0_Y, {0xFF, 0xFF, 0xFF});
+                draw_manager.draw_text(
+                        "Conquer the galaxy",
+                        Justify::Left, TXT_0_X, TXT_0_Y + 20, {0xFF, 0xFF, 0xFF});
+                draw_manager.draw_text(
+                        "within 200 months.",
+                        Justify::Left, TXT_0_X, TXT_0_Y + 40, {0xFF, 0xFF, 0xFF});
+
+                draw_manager.draw_text(
+                        "Money",
+                        Justify::Right, TXT_1_X, TXT_1_Y, {0xFF, 0xFF, 0xFF});
+                draw_manager.draw_text(
+                        "Earn 1000 MC monthly",
+                        Justify::Right, TXT_1_X, TXT_1_Y + 20, {0xFF, 0xFF, 0xFF});
+                draw_manager.draw_text(
+                        "after 200 months.",
+                        Justify::Right, TXT_1_X, TXT_1_Y + 40, {0xFF, 0xFF, 0xFF});
+
+                draw_manager.draw_text(
+                        "Civilization",
+                        Justify::Left, TXT_2_X, TXT_2_Y, {0xFF, 0xFF, 0xFF});
+                draw_manager.draw_text(
+                        "Own 30 planets and a high",
+                        Justify::Left, TXT_2_X, TXT_2_Y + 20, {0xFF, 0xFF, 0xFF});
+                draw_manager.draw_text(
+                        "technology after 350 months.",
+                        Justify::Left, TXT_2_X, TXT_2_Y + 40, {0xFF, 0xFF, 0xFF});
+
+                draw_manager.save_background();
+                trans_state = Done;
+            }
+
+            if (draw_manager.query_click(id(AIM_MIGHT)).id) {
+                set_stage(Difficulty);
+            } else if (draw_manager.query_click(id(AIM_MONEY)).id) {
+                set_stage(Difficulty);
+            } else if (draw_manager.query_click(id(AIM_CIV)).id) {
+                set_stage(Difficulty);
+            }
+
             break;
         case Difficulty:
             break;
