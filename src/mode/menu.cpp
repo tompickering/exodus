@@ -19,6 +19,7 @@ enum ID {
     GAL_SZ_SMALL,
     GAL_SZ_MEDIUM,
     GAL_SZ_LARGE,
+    NPLAYER_TXT,
     END,
 };
 
@@ -28,6 +29,9 @@ Menu::Menu() : ModeBase("Menu") {
 void Menu::enter() {
     ModeBase::enter(ID::END);
     stage = Main;
+
+    config.n_players = 1;
+
     draw_manager.pixelswap_draw(IMG_BG_STARS2);
     draw_manager.pixelswap_draw_text(Font::Large, "Please select.", Justify::Centre, RES_X/2, 135, {0xEE, 0xEE, 0xAA});
     draw_manager.pixelswap_draw_text(id(NEWGAME_TXT), Font::Large, "Conquer the stars", Justify::Centre, RES_X/2, 205, {0xFF, 0xFF, 0xFF});
@@ -142,8 +146,20 @@ ExodusMode Menu::update(float delta) {
                 draw_manager.draw_text(
                         "How many human players wish to play?",
                         Justify::Centre, RES_X/2, 90, {0xEE, 0xEE, 0xAA});
+                draw_manager.pattern_fill({260, 230, 40, 40});
+                draw_manager.save_background();
                 trans_state = Done;
             }
+
+            char n[2];
+            n[0] = '1' + (config.n_players - 1);
+            n[1] = '\0';
+            draw_manager.draw_text(
+                    id(ID::NPLAYER_TXT),
+                    n,
+                    Justify::Centre,
+                    280, 240,
+                    {0xFF, 0xFF, 0xFF});
 
             break;
         case Name:
