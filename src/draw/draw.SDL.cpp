@@ -121,9 +121,9 @@ void DrawManagerSDL::update(MousePos mouse_pos, MousePos new_click_pos) {
             int this_fade_stage = (int)(fade_progress * (float)fade_stages);
             if (this_fade_stage != fade_stage) {
                 // Intial values
-                uint32_t *px0 = ((uint32_t*)(src_surf_0->pixels));
+                uint32_t *px0 = ((uint32_t*)(src_surf_1->pixels));
                 // Target values
-                uint32_t *px1 = ((uint32_t*)(src_surf_1->pixels));
+                uint32_t *px1 = ((uint32_t*)(src_surf_0->pixels));
                 fade_stage = this_fade_stage;
                 for (int i = 0; i < surf->w * surf->h; ++i) {
                     uint32_t new_col = 0;
@@ -146,7 +146,7 @@ void DrawManagerSDL::update(MousePos mouse_pos, MousePos new_click_pos) {
             }
         } else {
             fade_stages = 0;
-            clear();
+            SDL_BlitSurface(src_surf_0, nullptr, surf, nullptr);
         }
     }
 
@@ -445,13 +445,19 @@ void DrawManagerSDL::pattern_fill(DrawArea area) {
     SDL_BlitSurface(pattern, &r, surf, &r);
 }
 
-void DrawManagerSDL::fade_black(float seconds, int stages) {
-    SDL_BlitSurface(surf, nullptr, src_surf_0, nullptr);
-    SDL_FillRect(src_surf_1, nullptr, SDL_MapRGB(surf->format, 0x0, 0x0, 0x0));
+void DrawManagerSDL::fade_start(float seconds, int stages) {
+    // Save source image (current screen contents)
+    SDL_BlitSurface(surf, nullptr, src_surf_1, nullptr);
     fade_seconds = seconds;
     fade_stage = 0;
     fade_stages = stages;
     fade_timer.start();
+}
+
+void DrawManagerSDL::fade_black(float seconds, int stages) {
+    // Fill target image with black
+    SDL_FillRect(src_surf_0, nullptr, SDL_MapRGB(surf->format, 0x0, 0x0, 0x0));
+    fade_start(seconds, stages);
 }
 
 bool DrawManagerSDL::fade_active() {
