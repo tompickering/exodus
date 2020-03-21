@@ -4,7 +4,7 @@
 
 const char *FONT_AUDIOWIDE = "assets/font/audiowide/Audiowide-Regular.ttf";
 
-#define D_MUS "assets/img/music/"
+#define D_MUS "assets/music/"
 const char *MUS_INTRO           = D_MUS "ST1_1";
 const char *MUS_ST1_10          = D_MUS "ST1_10";
 const char *MUS_END             = D_MUS "ST2_1";
@@ -4020,6 +4020,8 @@ const char *ASSETS_MUS[] = {
     MUS_GUILD,
     MUS_OVERWORLD_ANGRY,
     MUS_ST3_58,
+
+    "",
 };
 
 const char *ASSETS_IMG[] = {
