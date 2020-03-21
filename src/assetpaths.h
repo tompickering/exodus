@@ -20,7 +20,7 @@ extern const char *SFX_WALK2;
 extern const char *SFX_BEEP;
 
 extern const char *MUS_INTRO;
-extern const char *MUS_ST1_1;
+extern const char *MUS_ST1_10;
 extern const char *MUS_END;
 extern const char *MUS_ST2_E;
 extern const char *MUS_OVERVIEW;
