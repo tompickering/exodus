@@ -16,7 +16,6 @@ class Intro : ModeBase {
 
         enum Stage {
             None,
-            Init,
             Artex,
             Earth,
             City,
