@@ -40,6 +40,10 @@ enum ID {
     AIM_MIGHT,
     AIM_MONEY,
     AIM_CIV,
+    OTHERS_NONE,
+    OTHERS_WEAK,
+    OTHERS_MEDIUM,
+    OTHERS_STRONG,
     END,
 };
 
@@ -60,6 +64,22 @@ const char* flags[] = {
     IMG_TS1_FLAG2,
     IMG_TS1_FLAG3,
 };
+
+const char *diff_none_0 = "None";
+const char *diff_none_1 = "The ultimate competition";
+const char *diff_none_2 = "of the human race.";
+
+const char *diff_weak_0 = "Weak";
+const char *diff_weak_1 = "Your enemies start the";
+const char *diff_weak_2 = "same way you do.";
+
+const char *diff_medium_0 = "Advanced";
+const char *diff_medium_1 = "Intelligence is needed";
+const char *diff_medium_2 = "to stay alive.";
+
+const char *diff_strong_0 = "Strong";
+const char *diff_strong_1 = "A real challenge.";
+const char *diff_strong_2 = "";
 
 Menu::Menu() : ModeBase("Menu") {
 }
@@ -87,6 +107,10 @@ ExodusMode Menu::update(float delta) {
         draw_manager.show_cursor(false);
         return ExodusMode::MODE_None;
     }
+
+    SprID id_diff_0;
+    SprID id_diff_1;
+    SprID id_diff_2;
 
     switch(stage) {
         case Main:
@@ -392,6 +416,101 @@ ExodusMode Menu::update(float delta) {
 
             break;
         case Difficulty:
+            if (trans_state == None) {
+                draw_manager.draw(IMG_BG_MENU0);
+                draw_manager.draw_text(
+                    Font::Large,
+                    "Other races",
+                    Justify::Left,
+                    20, 30, {0xEE, 0xEE, 0xAA});
+
+                // TODO: Multiplayer variants
+                id_diff_0 = id(OTHERS_WEAK);
+                id_diff_1 = id(OTHERS_MEDIUM);
+                id_diff_2 = id(OTHERS_STRONG);
+                const char* img_diff_0 = IMG_STARTGR_STR_WEAK;
+                const char* img_diff_1 = IMG_STARTGR_STR_MEDIUM;
+                const char* img_diff_2 = IMG_STARTGR_STR_STRONG;
+                const char* txt0_0 = diff_weak_0;
+                const char* txt0_1 = diff_weak_1;
+                const char* txt0_2 = diff_weak_2;
+                const char* txt1_0 = diff_medium_0;
+                const char* txt1_1 = diff_medium_1;
+                const char* txt1_2 = diff_medium_2;
+                const char* txt2_0 = diff_strong_0;
+                const char* txt2_1 = diff_strong_1;
+                const char* txt2_2 = diff_strong_2;
+
+                draw_manager.draw(
+                        id_diff_0,
+                        img_diff_0,
+                        OPT_0);
+                draw_manager.draw(
+                        id_diff_1,
+                        img_diff_1,
+                        OPT_1);
+                draw_manager.draw(
+                        id_diff_2,
+                        img_diff_2,
+                        OPT_2);
+
+                draw_manager.draw_text(
+                        txt0_0,
+                        Justify::Left,
+                        TXT_0_X, TXT_0_Y,
+                        {0xFF, 0xFF, 0xFF});
+                draw_manager.draw_text(
+                        txt0_1,
+                        Justify::Left,
+                        TXT_0_X, TXT_0_Y + 20,
+                        {0xFF, 0xFF, 0xFF});
+                draw_manager.draw_text(
+                        txt0_2,
+                        Justify::Left,
+                        TXT_0_X, TXT_0_Y + 40,
+                        {0xFF, 0xFF, 0xFF});
+
+                draw_manager.draw_text(
+                        txt1_0,
+                        Justify::Right, TXT_1_X, TXT_1_Y, {0xFF, 0xFF, 0xFF});
+                draw_manager.draw_text(
+                        txt1_1,
+                        Justify::Right,
+                        TXT_1_X, TXT_1_Y + 20,
+                        {0xFF, 0xFF, 0xFF});
+                draw_manager.draw_text(
+                        txt1_2,
+                        Justify::Right,
+                        TXT_1_X, TXT_1_Y + 40,
+                        {0xFF, 0xFF, 0xFF});
+
+                draw_manager.draw_text(
+                        txt2_0,
+                        Justify::Left,
+                        TXT_2_X, TXT_2_Y,
+                        {0xFF, 0xFF, 0xFF});
+                draw_manager.draw_text(
+                        txt2_1,
+                        Justify::Left,
+                        TXT_2_X, TXT_2_Y + 20,
+                        {0xFF, 0xFF, 0xFF});
+                draw_manager.draw_text(
+                        txt2_2,
+                        Justify::Left,
+                        TXT_2_X, TXT_2_Y + 40,
+                        {0xFF, 0xFF, 0xFF});
+
+                draw_manager.save_background();
+                trans_state = Done;
+            }
+
+            if (draw_manager.query_click(id_diff_0).id) {
+                set_stage(Confirm);
+            } else if (draw_manager.query_click(id_diff_1).id) {
+                set_stage(Confirm);
+            } else if (draw_manager.query_click(id_diff_2).id) {
+                set_stage(Confirm);
+            }
             break;
         case Confirm:
             break;
