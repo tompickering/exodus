@@ -8,6 +8,17 @@
 
 extern const char *FONT_AUDIOWIDE;
 
+extern const char *SFX_SHOT;
+extern const char *SFX_EXPLOSION;
+extern const char *SFX_HEAVYSHOT;
+extern const char *SFX_GLIDE_LOW;
+extern const char *SFX_GLIDE_MED;
+extern const char *SFX_GLIDE_HIGH;
+extern const char *SFX_WALK0;
+extern const char *SFX_WALK1;
+extern const char *SFX_WALK2;
+extern const char *SFX_BEEP;
+
 extern const char *MUS_INTRO;
 extern const char *MUS_ST1_1;
 extern const char *MUS_END;
@@ -3988,6 +3999,7 @@ extern const char *IMG_WD1_WELL;
 
 extern const char *INIT_IMG;
 
+extern const char *ASSETS_SFX[];
 extern const char *ASSETS_MUS[];
 extern const char *ASSETS_IMG[];
 

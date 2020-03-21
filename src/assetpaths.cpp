@@ -4,6 +4,18 @@
 
 const char *FONT_AUDIOWIDE = "assets/font/audiowide/Audiowide-Regular.ttf";
 
+#define D_SFX "assets/sfx/"
+const char *SFX_SHOT            = D_SFX "1_2000";
+const char *SFX_EXPLOSION       = D_SFX "2_2000";
+const char *SFX_HEAVYSHOT       = D_SFX "3_500";
+const char *SFX_GLIDE_LOW       = D_SFX "4_800";
+const char *SFX_GLIDE_MED       = D_SFX "4_1000";
+const char *SFX_GLIDE_HIGH      = D_SFX "4_1500";
+const char *SFX_WALK0           = D_SFX "5_1C00";
+const char *SFX_WALK1           = D_SFX "6_1C00";
+const char *SFX_WALK2           = D_SFX "7_1C00";
+const char *SFX_BEEP            = D_SFX "8_2500";
+
 #define D_MUS "assets/music/"
 const char *MUS_INTRO           = D_MUS "ST1_1";
 const char *MUS_ST1_10          = D_MUS "ST1_10";
@@ -3993,6 +4005,19 @@ const char *IMG_WD1_WELL         = D_GRA "wd1_well";
 // Special case - we load and display this one first.
 // It doesn't need to be present in ASSETS_IMG.
 const char *INIT_IMG = IMG_ST1_INITSPR;
+
+const char *ASSETS_SFX[] = {
+    SFX_SHOT,
+    SFX_EXPLOSION,
+    SFX_HEAVYSHOT,
+    SFX_GLIDE_LOW,
+    SFX_GLIDE_MED,
+    SFX_GLIDE_HIGH,
+    SFX_WALK0,
+    SFX_WALK1,
+    SFX_WALK2,
+    SFX_BEEP,
+};
 
 const char *ASSETS_MUS[] = {
     MUS_INTRO,
