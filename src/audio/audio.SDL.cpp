@@ -37,6 +37,19 @@ void AudioManagerSDL::load_resources() {
             L.warn("Could not load %s", mus_path);
         }
     }
+
+    for (unsigned int i = 0;; ++i) {
+        if (ASSETS_SFX[i][0] == '\0')
+            break;
+        strncpy(mus_path, ASSETS_SFX[i], ASSET_PATH_LEN_MAX);
+        strcat(mus_path, ".wav");
+        sfx_data[ASSETS_SFX[i]] = Mix_LoadWAV(mus_path);
+        if (sfx_data[ASSETS_SFX[i]]) {
+            L.debug("Loaded %s", mus_path);
+        } else {
+            L.warn("Could not load %s", mus_path);
+        }
+    }
 }
 
 void AudioManagerSDL::target_music(const char* track) {
@@ -48,8 +61,9 @@ void AudioManagerSDL::target_music(const char* track) {
     playing_track = target_track;
 }
 
-void AudioManagerSDL::play_sfx(SFX sfx) {
+void AudioManagerSDL::play_sfx(const char* sfx) {
     if (!enabled)
         return;
-    L.debug("Playing SFX: %d", (int) sfx);
+    L.debug("Playing SFX: %s", sfx);
+    Mix_PlayChannel(-1, (Mix_Chunk*)sfx_data[sfx], 0);
 }

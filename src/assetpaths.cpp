@@ -4017,6 +4017,8 @@ const char *ASSETS_SFX[] = {
     SFX_WALK1,
     SFX_WALK2,
     SFX_BEEP,
+
+    "",
 };
 
 const char *ASSETS_MUS[] = {
