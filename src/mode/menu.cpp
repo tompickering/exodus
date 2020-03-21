@@ -513,6 +513,15 @@ ExodusMode Menu::update(float delta) {
             }
             break;
         case Confirm:
+            if (trans_state == None) {
+                draw_manager.draw(IMG_BG_STARS0);
+                draw_manager.draw_text(
+                    "Let me repeat.",
+                    Justify::Centre, RES_X/2, 60,
+                    {0xEE, 0xEE, 0xAA});
+
+                draw_manager.save_background();
+            }
             break;
     }
 
