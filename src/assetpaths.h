@@ -8,6 +8,32 @@
 
 extern const char *FONT_AUDIOWIDE;
 
+extern const char *MUS_INTRO;
+extern const char *MUS_ST1_1;
+extern const char *MUS_END;
+extern const char *MUS_ST2_E;
+extern const char *MUS_OVERVIEW;
+extern const char *MUS_ST3_A;
+extern const char *MUS_ST3_F;
+extern const char *MUS_BATTLE_PREP;
+extern const char *MUS_BATTLE_WON;
+extern const char *MUS_TRADE;
+extern const char *MUS_ST3_27;
+extern const char *MUS_INVASION;
+extern const char *MUS_BATTLE_LOST;
+extern const char *MUS_ACHIEVEMENT;
+extern const char *MUS_MINIGAME;
+extern const char *MUS_GAMESTART;
+extern const char *MUS_OVERWORLD;
+extern const char *MUS_ALIENSHIP;
+extern const char *MUS_ST3_42;
+extern const char *MUS_BATTLEWAIT;
+extern const char *MUS_ST3_4D;
+extern const char *MUS_CELEBRATE;
+extern const char *MUS_GUILD;
+extern const char *MUS_OVERWORLD_ANGRY;
+extern const char *MUS_ST3_58;
+
 extern const char *IMG_CURSOR;
 
 extern const char *IMG_INTRO_EARTH;
@@ -3962,6 +3988,7 @@ extern const char *IMG_WD1_WELL;
 
 extern const char *INIT_IMG;
 
+extern const char *ASSETS_MUS[];
 extern const char *ASSETS_IMG[];
 
 #endif

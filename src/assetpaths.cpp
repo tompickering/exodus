@@ -4,6 +4,33 @@
 
 const char *FONT_AUDIOWIDE = "assets/font/audiowide/Audiowide-Regular.ttf";
 
+#define D_MUS "assets/img/music/"
+const char *MUS_INTRO           = D_MUS "ST1_1";
+const char *MUS_ST1_10          = D_MUS "ST1_10";
+const char *MUS_END             = D_MUS "ST2_1";
+const char *MUS_ST2_E           = D_MUS "ST2_E";
+const char *MUS_OVERVIEW        = D_MUS "ST3_0";
+const char *MUS_ST3_A           = D_MUS "ST3_A";
+const char *MUS_ST3_F           = D_MUS "ST3_F";
+const char *MUS_BATTLE_PREP     = D_MUS "ST3_13";
+const char *MUS_BATTLE_WON      = D_MUS "ST3_17";
+const char *MUS_TRADE           = D_MUS "ST3_23";
+const char *MUS_ST3_27          = D_MUS "ST3_27";
+const char *MUS_INVASION        = D_MUS "ST3_2A";
+const char *MUS_BATTLE_LOST     = D_MUS "ST3_2B";
+const char *MUS_ACHIEVEMENT     = D_MUS "ST3_2C";
+const char *MUS_MINIGAME        = D_MUS "ST3_2E";
+const char *MUS_GAMESTART       = D_MUS "ST3_34";
+const char *MUS_OVERWORLD       = D_MUS "ST3_36";
+const char *MUS_ALIENSHIP       = D_MUS "ST3_3C";
+const char *MUS_ST3_42          = D_MUS "ST3_42";
+const char *MUS_BATTLEWAIT      = D_MUS "ST3_48";
+const char *MUS_ST3_4D          = D_MUS "ST3_4D";
+const char *MUS_CELEBRATE       = D_MUS "ST3_51";
+const char *MUS_GUILD           = D_MUS "ST3_52";
+const char *MUS_OVERWORLD_ANGRY = D_MUS "ST3_55";
+const char *MUS_ST3_58          = D_MUS "ST3_58";
+
 const char *IMG_CURSOR          = "assets/img/cursor";
 
 #define D_PIC "assets/img/pictures/"
@@ -3966,6 +3993,34 @@ const char *IMG_WD1_WELL         = D_GRA "wd1_well";
 // Special case - we load and display this one first.
 // It doesn't need to be present in ASSETS_IMG.
 const char *INIT_IMG = IMG_ST1_INITSPR;
+
+const char *ASSETS_MUS[] = {
+    MUS_INTRO,
+    MUS_ST1_10,
+    MUS_END,
+    MUS_ST2_E,
+    MUS_OVERVIEW,
+    MUS_ST3_A,
+    MUS_ST3_F,
+    MUS_BATTLE_PREP,
+    MUS_BATTLE_WON,
+    MUS_TRADE,
+    MUS_ST3_27,
+    MUS_INVASION,
+    MUS_BATTLE_LOST,
+    MUS_ACHIEVEMENT,
+    MUS_MINIGAME,
+    MUS_GAMESTART,
+    MUS_OVERWORLD,
+    MUS_ALIENSHIP,
+    MUS_ST3_42,
+    MUS_BATTLEWAIT,
+    MUS_ST3_4D,
+    MUS_CELEBRATE,
+    MUS_GUILD,
+    MUS_OVERWORLD_ANGRY,
+    MUS_ST3_58,
+};
 
 const char *ASSETS_IMG[] = {
     IMG_CURSOR,
