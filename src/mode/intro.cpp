@@ -194,6 +194,11 @@ ExodusMode Intro::update(float delta) {
     unsigned char brightness;
     float door_time;
 
+    if (input_manager.consume(K_Space)) {
+        stage = End;
+        return ExodusMode::MODE_None;
+    }
+
     switch(stage) {
         case None:
             next_stage(); return ExodusMode::MODE_None;
