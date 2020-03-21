@@ -9,6 +9,7 @@ enum Input {
     K_Space,
     K_Escape,
     K_Enter,
+    K_Backspace,
 
     K_END,
 };
@@ -25,6 +26,7 @@ class InputManager {
         virtual bool is_num_held(unsigned char) = 0;
         virtual void start_text_input() = 0;
         virtual void stop_text_input() = 0;
+        void backspace();
     protected:
         bool space;
         bool escape;

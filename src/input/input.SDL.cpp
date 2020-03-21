@@ -9,6 +9,7 @@ int sdl_input_key[] = {
     SDLK_SPACE,
     SDLK_ESCAPE,
     SDLK_RETURN,
+    SDLK_BACKSPACE,
 };
 
 bool InputManagerSDL::update() {

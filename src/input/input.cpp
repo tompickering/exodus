@@ -60,3 +60,13 @@ MousePos InputManager::read_click() {
 const char* InputManager::get_input_text() {
     return (const char*) text;
 }
+
+void InputManager::backspace() {
+    int i = 0;
+    for (; i < INPUT_MAX_TEXT; ++i) {
+        if (text[i] == '\0')
+            break;
+    }
+
+    if (i > 0) text[i-1] = '\0';
+}
