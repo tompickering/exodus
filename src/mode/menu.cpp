@@ -99,6 +99,10 @@ void Menu::enter() {
     trans_state = Started;
 }
 
+SprID id_diff_0;
+SprID id_diff_1;
+SprID id_diff_2;
+
 /*
  * Main > size > #humans > name/geneder/welcome > flag > aim > other races > confirm
  */
@@ -107,10 +111,6 @@ ExodusMode Menu::update(float delta) {
         draw_manager.show_cursor(false);
         return ExodusMode::MODE_None;
     }
-
-    SprID id_diff_0;
-    SprID id_diff_1;
-    SprID id_diff_2;
 
     switch(stage) {
         case Main:
@@ -417,6 +417,7 @@ ExodusMode Menu::update(float delta) {
             break;
         case Difficulty:
             if (trans_state == None) {
+                draw_manager.clear_sprite_ids();
                 draw_manager.draw(IMG_BG_MENU0);
                 draw_manager.draw_text(
                     Font::Large,
@@ -521,6 +522,7 @@ ExodusMode Menu::update(float delta) {
                     {0xEE, 0xEE, 0xAA});
 
                 draw_manager.save_background();
+                trans_state = Done;
             }
             break;
     }
