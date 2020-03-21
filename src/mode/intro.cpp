@@ -570,9 +570,9 @@ ExodusMode Intro::update(float delta) {
                 float phase1_linear_interp = time / SHUTTLE_P1_END;
                 float phase1_anim_intetrp = sqrt(phase1_linear_interp);
                 float shuttle_y = SHUTTLE_P1_START_Y - ((SHUTTLE_P1_START_Y - SHUTTLE_P1_END_Y) * phase1_anim_intetrp);
-                if (time < 0.7 * SHUTTLE_P1_END) {
+                if (time < 0.8 * SHUTTLE_P1_END) {
                     ship = IMG_INTRO_SH4_SHUTTLE2;
-                } else if (time < 0.8 * SHUTTLE_P1_END) {
+                } else if (time < 0.9 * SHUTTLE_P1_END) {
                     ship = IMG_INTRO_SH4_SHUTTLE3;
                 } else {
                     ship = IMG_INTRO_SH4_SHUTTLE4;
