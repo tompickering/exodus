@@ -32,7 +32,7 @@ enum EnemyStart {
 typedef struct {
     GalaxySize size;
     unsigned char n_players;
-    PlayerInfo info[4];
+    PlayerInfo info[5];
     Aim aim;
     EnemyStart enemy_start;
 } GameConfig;
