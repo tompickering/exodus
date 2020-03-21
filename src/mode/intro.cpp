@@ -95,6 +95,20 @@ float SPC_WARP_END         = SPC_WARP_START + 1.8;
 int   SPC_WARP_STAGES      = 10;
 float SPC_FADE_START       = SPC_WARP_END + 2;
 
+float TTL_FADE_START       = 1.f;
+float TTL_FADE_TIME        = 1.2f;
+float TTL_JK_START         = TTL_FADE_START + TTL_FADE_TIME + 1.2f;
+float TTL_JK_END           = TTL_JK_START + 3.f;
+float TTL_PRESENTS_START   = TTL_JK_END + .8f;
+float TTL_PRESENTS_END     = TTL_PRESENTS_START + 3.f;
+float TTL_EXODUS_START     = TTL_PRESENTS_END + 1.f;
+float TTL_EXODUS_END       = TTL_EXODUS_START + 2.f;
+float TTL_SUBTTL_START     = TTL_EXODUS_END + 0.2;
+float TTL_SUBTTL_CHAR      = 0.1;
+float TTL_FADEOUT_START    = TTL_SUBTTL_START + TTL_SUBTTL_CHAR * 25 + 2.f;
+float TTL_FADEOUT_TIME     = 1.2f;
+float TTL_END              = TTL_FADEOUT_START + TTL_FADEOUT_TIME + .6f;
+
 const float MAX_TEXT_TIME  = 3.8;
 
 enum ID {
@@ -110,6 +124,9 @@ enum ID {
     SPC_SHUTTLE,
     SPC_SHIP,
     SPC_WARP,
+    TTL_JK,
+    TTL_PRESENTS,
+    TTL_EXODUS,
 
     END,
 };
@@ -678,7 +695,76 @@ ExodusMode Intro::update(float delta) {
 
             break;
         case Title:
-            next_stage(); return ExodusMode::MODE_None;
+            if (time < TTL_FADE_START) {
+                return ExodusMode::MODE_None;
+            }
+
+            if (!stage_started) {
+                draw_manager.pixelswap_draw(IMG_INTRO_SPACE, {RES_X/2, 0, 1, 0, 1, 1});
+                draw_manager.pixelswap_draw(IMG_INTRO_SPACE, {RES_X/2, 0, 0, 0, 1, 1});
+                draw_manager.fade_start(TTL_FADE_TIME, 12);
+                break;
+            }
+
+            ONCE(oid_titlebg) draw_manager.save_background();
+
+            if (time < TTL_JK_START) {
+                return ExodusMode::MODE_None;
+            } else if (time < TTL_JK_END) {
+                float interp = (time - TTL_JK_START) / (TTL_JK_END - TTL_JK_START);
+                float anim_interp = 1.f;
+                if (interp < 0.2)
+                    anim_interp = interp * (1.f / .2f);
+                if (interp > 0.8)
+                    anim_interp = (1 - interp) * (1.f / .2f);
+                draw_manager.draw(id(ID::TTL_JK), IMG_FILM_1_SPR_2_3, {RES_X/2, RES_Y/2, 0.5, 0.5, 1, anim_interp});
+            } else {
+                ONCE(oid_removejk) draw_manager.draw(id(ID::TTL_JK), nullptr);
+            }
+
+            if (time < TTL_PRESENTS_START) {
+                return ExodusMode::MODE_None;
+            } else if (time < TTL_PRESENTS_END) {
+                float interp = (time - TTL_PRESENTS_START) / (TTL_PRESENTS_END - TTL_PRESENTS_START);
+                float anim_interp = 1.f;
+                if (interp < 0.2)
+                    anim_interp = interp * (1.f / .2f);
+                if (interp > 0.8)
+                    anim_interp = (1 - interp) * (1.f / .2f);
+                draw_manager.draw(id(ID::TTL_PRESENTS), IMG_FILM_1_SPR_3_3, {RES_X/2, RES_Y/2, 0.5, 0.5, 1, anim_interp});
+            } else {
+                ONCE(oid_removepresents) draw_manager.draw(id(ID::TTL_PRESENTS), nullptr);
+            }
+
+            if (time < TTL_EXODUS_START) {
+                return ExodusMode::MODE_None;
+            } else if (time < TTL_EXODUS_END) {
+                float interp = (time - TTL_EXODUS_START) / (TTL_EXODUS_END - TTL_EXODUS_START);
+                float sc = interp;
+                draw_manager.draw(id(ID::TTL_EXODUS), IMG_FILM_1_SPR_1, {RES_X/2, RES_Y/2, 0.5, 0.5, sc, sc});
+            }
+
+            if (time < TTL_SUBTTL_START) {
+                return ExodusMode::MODE_None;
+            } else if (time < TTL_FADEOUT_START) {
+                int nchars = (int)((time - TTL_SUBTTL_START) / TTL_SUBTTL_CHAR);
+                if (nchars > 25)
+                    nchars = 25;
+                char subttl[] = "THE COLONIZATION OF SPACE";
+                subttl[nchars] = '\0';
+                draw_manager.draw_text(subttl, Justify::Left, 180, 320, {0xFF, 0xFF, 0xFF});
+            }
+
+            if (time > TTL_FADEOUT_START) {
+                ONCE(oid_ttlfadeout) draw_manager.fade_black(TTL_FADEOUT_TIME, 12);
+            }
+
+            if (time > TTL_END) {
+                next_stage();
+                return ExodusMode::MODE_None;
+            }
+
+            return ExodusMode::MODE_None;
             break;
         case End:
             next_stage(); return ExodusMode::MODE_Menu;
