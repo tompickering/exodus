@@ -57,7 +57,9 @@ MousePos InputManager::read_click() {
     return result;
 }
 
-const char* InputManager::get_input_text() {
+const char* InputManager::get_input_text(int max_len) {
+    if (max_len > 0 && max_len <= INPUT_MAX_TEXT)
+        text[max_len] = '\0';
     return (const char*) text;
 }
 

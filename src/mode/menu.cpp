@@ -240,7 +240,7 @@ ExodusMode Menu::update(float delta) {
             }
 
             draw_manager.draw_text(
-                    input_manager.get_input_text(),
+                    input_manager.get_input_text(12),
                     Justify::Left,
                     265, 238,
                     {0xFF, 0xFF, 0xFF});

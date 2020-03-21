@@ -21,7 +21,7 @@ class InputManager {
         bool consume(Input);
         MousePos get_mouse_pos();
         MousePos read_click();
-        const char* get_input_text();
+        const char* get_input_text(int);
         virtual unsigned int read_numbers() = 0;
         virtual bool is_num_held(unsigned char) = 0;
         virtual void start_text_input() = 0;
