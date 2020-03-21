@@ -427,6 +427,15 @@ bool DrawManagerSDL::pixelswap_active() {
     return pixelswap_stage > 0;
 }
 
+void DrawManagerSDL::fill(DrawArea area, RGB col) {
+    SDL_Rect r;
+    r.x = area.x * UPSCALE_X;
+    r.y = area.y * UPSCALE_Y;
+    r.w = area.w * UPSCALE_X;
+    r.h = area.h * UPSCALE_Y;
+    SDL_FillRect(surf, &r, SDL_MapRGB(surf->format, col.r, col.g, col.b));
+}
+
 void DrawManagerSDL::pattern_fill(DrawArea area) {
     SDL_Rect r;
     r.x = area.x * UPSCALE_X;

@@ -219,6 +219,14 @@ ExodusMode Menu::update(float delta) {
                 draw_manager.draw_text(
                     txt, Justify::Centre, RES_X/2, 90, {0xFF, 0xFF, 0xFF});
 
+                draw_manager.fill({260, 230, 120, 36}, {0, 0, 0});
+
+                draw_manager.draw_text(
+                        "Name:",
+                        Justify::Right,
+                        255, 238,
+                        {0xEE, 0xEE, 0xAA});
+
                 draw_manager.save_background();
 
                 trans_state = Done;
