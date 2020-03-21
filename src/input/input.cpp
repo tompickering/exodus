@@ -17,17 +17,24 @@ bool InputManager::read(Input input) {
 }
 
 bool InputManager::_read(Input key, bool reset) {
+    bool result = false;
     int input_idx = 0;
     int input_bit = 0;
     for (int i = 0; i < Input::K_END; ++i) {
         if ((Input)i == key) {
             input_idx = i / 32;
             input_bit = i % 32;
-            return (bool)(input[input_idx] & (1 << input_bit));
+            result = (bool)(input[input_idx] & (1 << input_bit));
+            if (result) {
+                if (reset) {
+                    input[input_idx] &= (input[input_idx] & ~(1 << input_bit));
+                }
+                break;
+            }
         }
     }
 
-    return false;
+    return result;
 }
 
 MousePos InputManager::get_mouse_pos() {
