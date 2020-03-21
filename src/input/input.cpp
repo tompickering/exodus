@@ -5,6 +5,7 @@ InputManager::InputManager() {
     mouse_pos.y = -1;
     click_pos.x = -1;
     click_pos.y = -1;
+    text[INPUT_MAX_TEXT] = '\0';
 }
 
 bool InputManager::consume(Input input) {
@@ -48,4 +49,8 @@ MousePos InputManager::read_click() {
     click_pos.x = -1;
     click_pos.y = -1;
     return result;
+}
+
+const char* InputManager::get_input_text() {
+    return (const char*) text;
 }
