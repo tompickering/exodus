@@ -240,7 +240,7 @@ ExodusMode Menu::update(float delta) {
                     265, 238,
                     {0xFF, 0xFF, 0xFF});
 
-            if (input_manager.consume(Enter)) {
+            if (input_manager.consume(K_Enter)) {
                 set_stage(Title);
             }
 

@@ -6,9 +6,11 @@
 #include "../shared.h"
 
 enum Input {
-    Space,
-    Escape,
-    Enter,
+    K_Space,
+    K_Escape,
+    K_Enter,
+
+    K_END,
 };
 
 class InputManager {
@@ -30,6 +32,7 @@ class InputManager {
         MousePos mouse_pos;
         MousePos click_pos;
         virtual bool update() = 0;
+        uint32_t input[1 + K_END / 32];
         char text[INPUT_MAX_TEXT + 1];
     private:
         bool _read(Input input, bool reset);

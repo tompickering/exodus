@@ -4,6 +4,13 @@
 
 #include "../shared.h"
 
+// Must have 1:1 correspondence with Input
+int sdl_input_key[] = {
+    SDLK_SPACE,
+    SDLK_ESCAPE,
+    SDLK_RETURN,
+};
+
 bool InputManagerSDL::update() {
     SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
 
@@ -12,28 +19,24 @@ bool InputManagerSDL::update() {
         if (e.type == SDL_QUIT) {
             return false;
         } else if (e.type == SDL_KEYDOWN && !e.key.repeat) {
-            switch(e.key.keysym.sym) {
-                case SDLK_SPACE:
-                    space = true;
-                    break;
-                case SDLK_ESCAPE:
-                    escape = true;
-                    break;
-                case SDLK_RETURN:
-                    enter = true;
-                    break;
+            int input_idx = 0;
+            int input_bit = 0;
+            for (int i = 0; i < Input::K_END; ++i) {
+                if (e.key.keysym.sym == sdl_input_key[i]) {
+                    input_idx = i / 32;
+                    input_bit = i % 32;
+                    input[input_idx] |= 1 << input_bit;
+                }
             }
         } else if (e.type == SDL_KEYUP) {
-            switch(e.key.keysym.sym) {
-                case SDLK_SPACE:
-                    space = false;
-                    break;
-                case SDLK_ESCAPE:
-                    escape = false;
-                    break;
-                case SDLK_RETURN:
-                    enter = false;
-                    break;
+            int input_idx = 0;
+            int input_bit = 0;
+            for (int i = 0; i < Input::K_END; ++i) {
+                if (e.key.keysym.sym == sdl_input_key[i]) {
+                    input_idx = i / 32;
+                    input_bit = i % 32;
+                    input[input_idx] &= ~(1 << input_bit);
+                }
             }
         } else if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT) {
             SDL_GetMouseState(&click_pos.x, &click_pos.y);

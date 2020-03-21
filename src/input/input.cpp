@@ -16,23 +16,18 @@ bool InputManager::read(Input input) {
     return _read(input, false);
 }
 
-bool InputManager::_read(Input input, bool reset) {
-    bool result;
-    switch (input) {
-        case Space:
-            result = space;
-            space = space && !reset;
-            break;
-        case Escape:
-            result = escape;
-            escape = escape && !reset;
-            break;
-        case Enter:
-            result = enter;
-            enter = enter && !reset;
-            break;
+bool InputManager::_read(Input key, bool reset) {
+    int input_idx = 0;
+    int input_bit = 0;
+    for (int i = 0; i < Input::K_END; ++i) {
+        if ((Input)i == key) {
+            input_idx = i / 32;
+            input_bit = i % 32;
+            return (bool)(input[input_idx] & (1 << input_bit));
+        }
     }
-    return result;
+
+    return false;
 }
 
 MousePos InputManager::get_mouse_pos() {
