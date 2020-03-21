@@ -8,6 +8,7 @@
 enum Input {
     Space,
     Escape,
+    Enter,
 };
 
 class InputManager {
@@ -25,6 +26,7 @@ class InputManager {
     protected:
         bool space;
         bool escape;
+        bool enter;
         MousePos mouse_pos;
         MousePos click_pos;
         virtual bool update() = 0;

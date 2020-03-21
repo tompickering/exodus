@@ -192,6 +192,7 @@ ExodusMode Menu::update(float delta) {
             break;
         case Name:
             if (trans_state == None) {
+                draw_manager.show_cursor(false);
                 draw_manager.draw(IMG_BG_MENU0);
 
                 char *txt;
@@ -228,11 +229,28 @@ ExodusMode Menu::update(float delta) {
                         {0xEE, 0xEE, 0xAA});
 
                 draw_manager.save_background();
+                input_manager.start_text_input();
 
                 trans_state = Done;
             }
+
+            draw_manager.draw_text(
+                    input_manager.get_input_text(),
+                    Justify::Left,
+                    265, 238,
+                    {0xFF, 0xFF, 0xFF});
+
+            if (input_manager.consume(Enter)) {
+                set_stage(Title);
+            }
+
             break;
         case Title:
+            if (trans_state == None) {
+                draw_manager.save_background();
+                draw_manager.show_cursor(true);
+                trans_state = Done;
+            }
             break;
         case Flag:
             break;

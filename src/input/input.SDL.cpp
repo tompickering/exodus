@@ -19,6 +19,9 @@ bool InputManagerSDL::update() {
                 case SDLK_ESCAPE:
                     escape = true;
                     break;
+                case SDLK_RETURN:
+                    enter = true;
+                    break;
             }
         } else if (e.type == SDL_KEYUP) {
             switch(e.key.keysym.sym) {
@@ -27,6 +30,9 @@ bool InputManagerSDL::update() {
                     break;
                 case SDLK_ESCAPE:
                     escape = false;
+                    break;
+                case SDLK_RETURN:
+                    enter = false;
                     break;
             }
         } else if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT) {

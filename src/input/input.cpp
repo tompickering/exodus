@@ -27,6 +27,10 @@ bool InputManager::_read(Input input, bool reset) {
             result = escape;
             escape = escape && !reset;
             break;
+        case Enter:
+            result = enter;
+            enter = enter && !reset;
+            break;
     }
     return result;
 }
