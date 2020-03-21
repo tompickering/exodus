@@ -8,6 +8,8 @@
 #include "draw/draw.h"
 #include "input/input.h"
 
+#include "state/exodus_state.h"
+
 #include "mode/mode_base.h"
 #include "mode/intro.h"
 #include "mode/menu.h"
@@ -21,6 +23,8 @@ Log::Logger L(Log::Level::DEBUG);
 AUDIOMANAGER audio_manager;
 DRAWMANAGER draw_manager;
 INPUTMANAGER input_manager;
+
+ExodusState exostate;
 
 volatile bool running;
 

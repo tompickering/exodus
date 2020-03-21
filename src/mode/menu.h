@@ -6,36 +6,9 @@
 #include "../platform.h"
 #include "../draw/draw.h"
 
-enum GalaxySize {
-    GAL_Small,
-    GAL_Medium,
-    GAL_Large,
-};
+#include "../state/exodus_state.h"
 
-typedef struct {
-    char name[16];
-} PlayerInfo;
-
-enum Aim {
-    AIM_Might,
-    AIM_Money,
-    AIM_Civilization,
-};
-
-enum EnemyStart {
-    ENEMY_None,
-    ENEMY_Weak,
-    ENEMY_Medium,
-    ENEMY_Strong,
-};
-
-typedef struct {
-    GalaxySize size;
-    unsigned char n_players;
-    PlayerInfo info[5];
-    Aim aim;
-    EnemyStart enemy_start;
-} GameConfig;
+extern ExodusState exostate;
 
 class Menu : ModeBase {
     public:
