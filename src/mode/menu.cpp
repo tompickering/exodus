@@ -22,7 +22,40 @@ enum ID {
     NPLAYER_LR,
     NPLAYER_OK,
     NPLAYER_TXT,
+    FLAG_0,
+    FLAG_1,
+    FLAG_2,
+    FLAG_3,
+    FLAG_4,
+    FLAG_5,
+    FLAG_6,
+    FLAG_7,
+    FLAG_8,
+    FLAG_9,
+    FLAG_10,
+    FLAG_11,
+    FLAG_12,
+    FLAG_13,
+    FLAG_14,
     END,
+};
+
+const char* flags[] = {
+    IMG_TS1_FLAG13,
+    IMG_TS1_FLAG14,
+    IMG_TS1_FLAG15,
+    IMG_TS1_FLAG10,
+    IMG_TS1_FLAG11,
+    IMG_TS1_FLAG12,
+    IMG_TS1_FLAG7,
+    IMG_TS1_FLAG8,
+    IMG_TS1_FLAG9,
+    IMG_TS1_FLAG4,
+    IMG_TS1_FLAG5,
+    IMG_TS1_FLAG6,
+    IMG_TS1_FLAG1,
+    IMG_TS1_FLAG2,
+    IMG_TS1_FLAG3,
 };
 
 Menu::Menu() : ModeBase("Menu") {
@@ -256,8 +289,39 @@ ExodusMode Menu::update(float delta) {
                 draw_manager.show_cursor(true);
                 trans_state = Done;
             }
+
+            set_stage(Flag);
             break;
         case Flag:
+            if (trans_state == None) {
+                draw_manager.draw(IMG_BG_MENU0);
+                draw_manager.draw_text(
+                    "Please choose one of the flags.",
+                    Justify::Centre, RES_X/2, 60,
+                    {0xEE, 0xEE, 0xAA});
+                for (int j = 0; j < 5; ++j) {
+                    for (int i = 0; i < 3; ++i) {
+                        int flag_idx = (j*3) + i;
+                        draw_manager.draw(
+                            id(ID::FLAG_0 + flag_idx),
+                            flags[flag_idx],
+                            {RES_X/4 + i*RES_X/4,
+                             140 + j*RES_Y/7,
+                             0.5, 0.5, 1, 1});
+                    }
+                }
+                draw_manager.save_background();
+                draw_manager.show_cursor(true);
+                trans_state = Done;
+            }
+
+            for (int i = 0; i < 15; ++i) {
+                if (draw_manager.query_click(id(ID::FLAG_0 + i)).id) {
+                    L.debug("Chose flag: %d", i);
+                    set_stage(Aim);
+                }
+            }
+
             break;
         case Aim:
             break;
