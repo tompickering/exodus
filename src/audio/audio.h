@@ -15,13 +15,13 @@ class AudioManager {
         virtual bool init() = 0;
         virtual void load_resources() = 0;
         virtual void play_sfx(SFX) = 0;
-        virtual void target_music(string) = 0;
+        virtual void target_music(const char*) = 0;
     protected:
         bool enabled;
         map<const char*, void*> music_data;
         map<SFX, void*> sfx_data;
-        string target_track;
-        string playing_track;
+        const char *target_track;
+        const char *playing_track;
 };
 
 #ifdef SDL

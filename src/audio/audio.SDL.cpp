@@ -39,10 +39,13 @@ void AudioManagerSDL::load_resources() {
     }
 }
 
-void AudioManagerSDL::target_music(string track) {
+void AudioManagerSDL::target_music(const char* track) {
     if (!enabled)
         return;
     L.debug("Targetting music: %s", track);
+    target_track = track;
+    Mix_PlayMusic((Mix_Music*)music_data[target_track], -1);
+    playing_track = target_track;
 }
 
 void AudioManagerSDL::play_sfx(SFX sfx) {

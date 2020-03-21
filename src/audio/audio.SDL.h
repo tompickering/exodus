@@ -12,7 +12,7 @@ class AudioManagerSDL : public AudioManager {
         virtual bool init() override;
         virtual void load_resources() override;
         virtual void play_sfx(SFX) override;
-        virtual void target_music(string) override;
+        virtual void target_music(const char*) override;
 };
 
 #endif
