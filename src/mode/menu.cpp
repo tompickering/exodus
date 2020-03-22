@@ -521,6 +521,58 @@ ExodusMode Menu::update(float delta) {
                     Justify::Centre, RES_X/2, 60,
                     {0xEE, 0xEE, 0xAA});
 
+                constexpr int line0_sz = 8 + MAX_PLAYER_TITLE + MAX_PLAYER_NAME;
+                char line0[line0_sz];
+                PlayerInfo *info = &(config.info[0]);
+                snprintf(line0, line0_sz, "You, %s %s,", info->title, info->name);
+
+
+                char *line1 = (char*)"arrived at a small galaxy,";
+                if (config.size == GAL_Medium)
+                    line1 = (char*)"arrived at a medium galaxy,";
+                if (config.size == GAL_Large)
+                    line1 = (char*)"arrived at a large galaxy,";
+
+                char *line2 = (char*)"have the mission to";
+
+                char *line3 = (char*)"show who is the best";
+                if (config.aim == AIM_Might)
+                    line3 = (char*)"conquer the stars";
+                if (config.aim == AIM_Money)
+                    line3 = (char*)"gain financial power";
+                if (config.aim == AIM_Civilization)
+                    line3 = (char*)"build a great civilization";
+
+                char *line4;
+                if (config.enemy_start == ENEMY_None)
+                    line4 = (char*)"There are no other races.";
+                if (config.enemy_start == ENEMY_Weak)
+                    line4 = (char*)"Your enemies are weak.";
+                if (config.enemy_start == ENEMY_Medium)
+                    line4 = (char*)"Your enemies are advanced.";
+                if (config.enemy_start == ENEMY_Strong)
+                    line4 = (char*)"Your enemies are strong.";
+
+                char *lines[] = {
+                    line0,
+                    line1,
+                    line2,
+                    line3,
+                    line4,
+                };
+
+                for (int i = 0; i < 5; ++i) {
+                    draw_manager.draw_text(
+                        lines[i],
+                        Justify::Centre, RES_X/2, 130 + 30 * i,
+                        {0xFF, 0xFF, 0xFF});
+                }
+
+                draw_manager.draw_text(
+                    "Is this correct?",
+                    Justify::Centre, RES_X/2, 300,
+                    {0xEE, 0xEE, 0xAA});
+
                 draw_manager.save_background();
                 trans_state = Done;
             }
