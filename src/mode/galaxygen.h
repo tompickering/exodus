@@ -15,6 +15,8 @@ class GalaxyGen : ModeBase {
         GalaxyGen();
         virtual void enter() override;
         virtual ExodusMode update(float) override;
+    private:
+        bool gen_required;
 };
 
 #endif

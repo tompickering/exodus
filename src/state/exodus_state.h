@@ -59,6 +59,8 @@ class ExodusState {
     public:
         ExodusState();
         void init(GameConfig);
+        void generate_galaxy();
+        void finalise_galaxy();
     private:
         GalaxySize size;
         unsigned int n_players;
@@ -66,6 +68,7 @@ class ExodusState {
         Aim aim;
         EnemyStart enemy_start;
         Galaxy galaxy;
+        bool galaxy_finalised;
 };
 
 #endif

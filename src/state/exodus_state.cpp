@@ -24,9 +24,11 @@ const char* flags[] = {
 };
 
 ExodusState::ExodusState() {
+    galaxy_finalised = false;
 }
 
 void ExodusState::init(GameConfig config) {
+    galaxy_finalised = false;
     size = config.size;
     n_players = config.n_players;
     for (unsigned int i = 0; i < n_players; ++i) {
@@ -43,4 +45,14 @@ void ExodusState::init(GameConfig config) {
     }
     L.debug("       Aim: %d", aim);
     L.debug("   Enemies: %d", enemy_start);
+}
+
+void ExodusState::generate_galaxy() {
+    if (galaxy_finalised) {
+        L.error("Cannot regenerate galaxy after finalisation");
+    }
+}
+
+void ExodusState::finalise_galaxy() {
+    galaxy_finalised = true;
 }
