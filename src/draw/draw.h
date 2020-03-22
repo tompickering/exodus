@@ -123,6 +123,7 @@ class DrawManager {
         virtual void pixelswap_draw_text(SprID, Font, const char*, Justify, int, int, RGB, RGB) = 0;
         virtual void fade_start(float, int) = 0;
         virtual void fade_black(float, int) = 0;
+        virtual void fade_white(float, int) = 0;
         virtual bool fade_active() = 0;
         virtual void show_cursor(bool);
         virtual SpriteClick get_clicked_sprite();

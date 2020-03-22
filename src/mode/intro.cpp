@@ -42,6 +42,9 @@ static const char* intro_text[] = {
     "and dangerous journey.",
 };
 
+float START_FADEIN         = 1.f;
+float START_FADEOUT        = START_FADEIN + 3.f;
+
 float CITY_SHIP_START      = 5.f;
 float CITY_SHIP_STOP       = 17.f;
 float CITY_SHIP_MAX_SCALE  = 1.6f;
@@ -204,8 +207,26 @@ ExodusMode Intro::update(float delta) {
             next_stage(); return ExodusMode::MODE_None;
             break;
         case Artex:
-            audio_manager.target_music(MUS_INTRO);
-            next_stage(); return ExodusMode::MODE_None;
+            if (time < START_FADEIN) {
+                ONCE(oid_startclear) draw_manager.clear();
+                return ExodusMode::MODE_None;
+            }
+
+            ONCE(oid_start_fadein) {
+                audio_manager.target_music(MUS_INTRO);
+                draw_manager.fade_white(1.2f, 24);
+            }
+
+            if (time > START_FADEOUT) {
+                ONCE(oid_start_fadeout) {
+                    draw_manager.fade_black(1.2f, 24);
+                }
+            }
+
+            if (time > START_FADEOUT + 1.6f) {
+                next_stage(); return ExodusMode::MODE_None;
+            }
+
             break;
         case Earth:
             if (!stage_started) {

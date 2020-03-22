@@ -44,6 +44,7 @@ class DrawManagerSDL : public DrawManager {
         virtual void pixelswap_draw_text(SprID, Font, const char*, Justify, int, int, RGB, RGB) override;
         virtual void fade_start(float, int) override;
         virtual void fade_black(float, int) override;
+        virtual void fade_white(float, int) override;
         virtual bool fade_active() override;
     protected:
         virtual void* get_sprite_data(const char*) override;

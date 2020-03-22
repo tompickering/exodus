@@ -460,6 +460,12 @@ void DrawManagerSDL::fade_black(float seconds, int stages) {
     fade_start(seconds, stages);
 }
 
+void DrawManagerSDL::fade_white(float seconds, int stages) {
+    // Fill target image with white
+    SDL_FillRect(src_surf_0, nullptr, SDL_MapRGB(surf->format, 0xFF, 0xFF, 0xFF));
+    fade_start(seconds, stages);
+}
+
 bool DrawManagerSDL::fade_active() {
     return fade_stages > 0;
 }
