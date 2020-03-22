@@ -27,6 +27,7 @@ class Menu : ModeBase {
             Aim,
             Difficulty,
             Confirm,
+            End,
         };
 
         enum TransitionState {

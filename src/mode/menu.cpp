@@ -46,6 +46,8 @@ enum ID {
     OTHERS_WEAK,
     OTHERS_MEDIUM,
     OTHERS_STRONG,
+    PROCEED,
+    RESTART,
     END,
 };
 
@@ -71,16 +73,7 @@ Menu::Menu() : ModeBase("Menu") {
 void Menu::enter() {
     ModeBase::enter(ID::END);
     stage = Main;
-
-    config.n_players = 1;
-    current_player = 0;
-
-    draw_manager.pixelswap_draw(IMG_BG_STARS2);
-    draw_manager.pixelswap_draw_text(Font::Large, "Please select.", Justify::Centre, RES_X/2, 135, {0xEE, 0xEE, 0xAA});
-    draw_manager.pixelswap_draw_text(id(NEWGAME_TXT), Font::Large, "Conquer the stars", Justify::Centre, RES_X/2, 205, {0xFF, 0xFF, 0xFF});
-    draw_manager.pixelswap_draw_text(id(LOADGAME_TXT), Font::Large, "Load a saved game", Justify::Centre, RES_X/2, 250, {0xFF, 0xFF, 0xFF});
-    draw_manager.pixelswap_start();
-    trans_state = Started;
+    trans_state = None;
 }
 
 SprID id_diff_0;
@@ -98,6 +91,40 @@ ExodusMode Menu::update(float delta) {
 
     switch(stage) {
         case Main:
+            if (trans_state == None) {
+                config.n_players = 1;
+                current_player = 0;
+
+                draw_manager.pixelswap_draw(IMG_BG_STARS2);
+
+                draw_manager.pixelswap_draw_text(
+                        Font::Large,
+                        "Please select.",
+                        Justify::Centre,
+                        RES_X/2, 135,
+                        {0xEE, 0xEE, 0xAA});
+
+                draw_manager.pixelswap_draw_text(
+                        id(NEWGAME_TXT),
+                        Font::Large,
+                        "Conquer the stars",
+                        Justify::Centre,
+                        RES_X/2, 205,
+                        {0xFF, 0xFF, 0xFF});
+
+                draw_manager.pixelswap_draw_text(
+                        id(LOADGAME_TXT),
+                        Font::Large,
+                        "Load a saved game",
+                        Justify::Centre,
+                        RES_X/2, 250,
+                        {0xFF, 0xFF, 0xFF});
+
+                draw_manager.pixelswap_start();
+                trans_state = Started;
+                return ExodusMode::MODE_None;
+            }
+
             if (trans_state == Started) {
                 trans_state = Done;
                 draw_manager.save_background();
@@ -601,10 +628,40 @@ ExodusMode Menu::update(float delta) {
                     Justify::Centre, RES_X/2, 300,
                     {0xEE, 0xEE, 0xAA});
 
+                for (unsigned int i = 0; i < config.n_players; ++i) {
+                    int sep = RES_X / (config.n_players + 1);
+                    draw_manager.draw(
+                        flags[config.info[i].flag_idx],
+                        {(int)((i+1)*sep), 400, .5, .5, 1, 1});
+                }
+
+                draw_manager.draw(
+                        id(PROCEED),
+                        IMG_BR7_E1,
+                        {200, 480, .5, .5, 1, 1});
+
+                draw_manager.draw(
+                        id(RESTART),
+                        IMG_BR7_E2,
+                        {RES_X-200, 480, .5, .5, 1, 1});
+
                 draw_manager.save_background();
                 trans_state = Done;
             }
+
+            if (draw_manager.query_click(id(RESTART)).id) {
+                draw_manager.fade_black(1.2f, 24);
+                set_stage(Main);
+            }
+
+            if (draw_manager.query_click(id(PROCEED)).id) {
+                draw_manager.fade_black(1.2f, 24);
+                set_stage(End);
+            }
+
             break;
+        case End:
+            return ExodusMode::MODE_Intro;
     }
 
     return ExodusMode::MODE_None;
