@@ -1,5 +1,7 @@
 #include "menu.h"
 
+#include "../state/exodus_state.h"
+
 #include "../assetpaths.h"
 
 #define OPT_0 {RES_X - 95, 147, 1.0, 0.5, 1, 1}
@@ -45,24 +47,6 @@ enum ID {
     OTHERS_MEDIUM,
     OTHERS_STRONG,
     END,
-};
-
-const char* flags[] = {
-    IMG_TS1_FLAG13,
-    IMG_TS1_FLAG14,
-    IMG_TS1_FLAG15,
-    IMG_TS1_FLAG10,
-    IMG_TS1_FLAG11,
-    IMG_TS1_FLAG12,
-    IMG_TS1_FLAG7,
-    IMG_TS1_FLAG8,
-    IMG_TS1_FLAG9,
-    IMG_TS1_FLAG4,
-    IMG_TS1_FLAG5,
-    IMG_TS1_FLAG6,
-    IMG_TS1_FLAG1,
-    IMG_TS1_FLAG2,
-    IMG_TS1_FLAG3,
 };
 
 const char *diff_none_0 = "None";
@@ -186,20 +170,16 @@ ExodusMode Menu::update(float delta) {
                 draw_manager.save_background();
                 draw_manager.show_cursor(true);
             } else {
-                bool progress = false;
                 if (draw_manager.query_click(id(GAL_SZ_SMALL)).id) {
                     config.size = GAL_Small;
-                    progress = true;
+                    set_stage(NPlayers);
                 } else if (draw_manager.query_click(id(GAL_SZ_MEDIUM)).id) {
                     config.size = GAL_Medium;
-                    progress = true;
+                    set_stage(NPlayers);
                 } else if (draw_manager.query_click(id(GAL_SZ_LARGE)).id) {
                     config.size = GAL_Large;
-                    progress = true;
-                }
-
-                if (progress)
                     set_stage(NPlayers);
+                }
             }
 
             break;
@@ -299,14 +279,19 @@ ExodusMode Menu::update(float delta) {
                 draw_manager.fill({260, 230, 240, 36}, {0, 0, 0});
             }
 
-            draw_manager.draw_text(
-                    input_manager.get_input_text(12),
-                    Justify::Left,
-                    265, 238,
-                    {0xFF, 0xFF, 0xFF});
+            {
+                const char* input_name = input_manager.get_input_text(MAX_PLAYER_NAME);
 
-            if (input_manager.consume(K_Enter)) {
-                set_stage(Title);
+                draw_manager.draw_text(
+                        input_name,
+                        Justify::Left,
+                        265, 238,
+                        {0xFF, 0xFF, 0xFF});
+
+                if (input_manager.consume(K_Enter)) {
+                    strncpy(config.info[current_player].name, input_name, MAX_PLAYER_NAME);
+                    set_stage(Title);
+                }
             }
 
             break;
@@ -314,6 +299,8 @@ ExodusMode Menu::update(float delta) {
             if (trans_state == None) {
                 draw_manager.save_background();
                 draw_manager.show_cursor(true);
+                strncpy(config.info[current_player].title, "<TITLE>", MAX_PLAYER_TITLE);
+                strncpy(config.info[current_player].ref, "<REFERENCE>", MAX_PLAYER_REFERENCE);
                 trans_state = Done;
             }
 
@@ -344,8 +331,13 @@ ExodusMode Menu::update(float delta) {
 
             for (int i = 0; i < 15; ++i) {
                 if (draw_manager.query_click(id(ID::FLAG_0 + i)).id) {
-                    L.debug("Chose flag: %d", i);
-                    set_stage(Aim);
+                    config.info[current_player].flag_idx = i;
+                    if (++current_player == config.n_players) {
+                        set_stage(Aim);
+                    } else {
+                        // Go back to name input for next player
+                        set_stage(Name);
+                    }
                 }
             }
 
@@ -407,10 +399,13 @@ ExodusMode Menu::update(float delta) {
             }
 
             if (draw_manager.query_click(id(AIM_MIGHT)).id) {
+                config.aim = AIM_Might;
                 set_stage(Difficulty);
             } else if (draw_manager.query_click(id(AIM_MONEY)).id) {
+                config.aim = AIM_Money;
                 set_stage(Difficulty);
             } else if (draw_manager.query_click(id(AIM_CIV)).id) {
+                config.aim = AIM_Civilization;
                 set_stage(Difficulty);
             }
 
@@ -425,22 +420,52 @@ ExodusMode Menu::update(float delta) {
                     Justify::Left,
                     20, 30, {0xEE, 0xEE, 0xAA});
 
-                // TODO: Multiplayer variants
-                id_diff_0 = id(OTHERS_WEAK);
-                id_diff_1 = id(OTHERS_MEDIUM);
-                id_diff_2 = id(OTHERS_STRONG);
-                const char* img_diff_0 = IMG_STARTGR_STR_WEAK;
-                const char* img_diff_1 = IMG_STARTGR_STR_MEDIUM;
-                const char* img_diff_2 = IMG_STARTGR_STR_STRONG;
-                const char* txt0_0 = diff_weak_0;
-                const char* txt0_1 = diff_weak_1;
-                const char* txt0_2 = diff_weak_2;
-                const char* txt1_0 = diff_medium_0;
-                const char* txt1_1 = diff_medium_1;
-                const char* txt1_2 = diff_medium_2;
-                const char* txt2_0 = diff_strong_0;
-                const char* txt2_1 = diff_strong_1;
-                const char* txt2_2 = diff_strong_2;
+                const char* img_diff_0;
+                const char* img_diff_1;
+                const char* img_diff_2;
+                const char* txt0_0;
+                const char* txt0_1;
+                const char* txt0_2;
+                const char* txt1_0;
+                const char* txt1_1;
+                const char* txt1_2;
+                const char* txt2_0;
+                const char* txt2_1;
+                const char* txt2_2;
+
+                if (config.n_players == 1) {
+                    id_diff_0 = id(OTHERS_WEAK);
+                    id_diff_1 = id(OTHERS_MEDIUM);
+                    id_diff_2 = id(OTHERS_STRONG);
+                    img_diff_0 = IMG_STARTGR_STR_WEAK;
+                    img_diff_1 = IMG_STARTGR_STR_MEDIUM;
+                    img_diff_2 = IMG_STARTGR_STR_STRONG;
+                    txt0_0 = diff_weak_0;
+                    txt0_1 = diff_weak_1;
+                    txt0_2 = diff_weak_2;
+                    txt1_0 = diff_medium_0;
+                    txt1_1 = diff_medium_1;
+                    txt1_2 = diff_medium_2;
+                    txt2_0 = diff_strong_0;
+                    txt2_1 = diff_strong_1;
+                    txt2_2 = diff_strong_2;
+                } else {
+                    id_diff_0 = id(OTHERS_NONE);
+                    id_diff_1 = id(OTHERS_WEAK);
+                    id_diff_2 = id(OTHERS_MEDIUM);
+                    img_diff_0 = IMG_STARTGR_MPSTR_NONE;
+                    img_diff_1 = IMG_STARTGR_MPSTR_WEAK;
+                    img_diff_2 = IMG_STARTGR_MPSTR_MEDIUM;
+                    txt0_0 = diff_none_0;
+                    txt0_1 = diff_none_1;
+                    txt0_2 = diff_none_2;
+                    txt1_0 = diff_weak_0;
+                    txt1_1 = diff_weak_1;
+                    txt1_2 = diff_weak_2;
+                    txt2_0 = diff_medium_0;
+                    txt2_1 = diff_medium_1;
+                    txt2_2 = diff_medium_2;
+                }
 
                 draw_manager.draw(
                         id_diff_0,
@@ -506,10 +531,13 @@ ExodusMode Menu::update(float delta) {
             }
 
             if (draw_manager.query_click(id_diff_0).id) {
+                config.enemy_start = (config.n_players == 1) ? ENEMY_Weak : ENEMY_None;
                 set_stage(Confirm);
             } else if (draw_manager.query_click(id_diff_1).id) {
+                config.enemy_start = (config.n_players == 1) ? ENEMY_Medium : ENEMY_Weak;
                 set_stage(Confirm);
             } else if (draw_manager.query_click(id_diff_2).id) {
+                config.enemy_start = (config.n_players == 1) ? ENEMY_Strong : ENEMY_Medium;
                 set_stage(Confirm);
             }
             break;

@@ -236,7 +236,7 @@ extern const char *IMG_STARTGR_STR_MEDIUM;
 extern const char *IMG_STARTGR_STR_STRONG;
 extern const char *IMG_STARTGR_MPSTR_NONE;
 extern const char *IMG_STARTGR_MPSTR_WEAK;
-extern const char *IMG_STARTGR_MPSTR_STRONG;
+extern const char *IMG_STARTGR_MPSTR_MEDIUM;
 
 extern const char *IMG_AL1_1_2;
 extern const char *IMG_AL1_13;

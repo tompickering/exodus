@@ -18,6 +18,8 @@
 #define MAX_PLAYER_TITLE     12
 #define MAX_PLAYER_REFERENCE 12
 
+extern const char* flags[];
+
 enum GalaxySize {
     GAL_Small,
     GAL_Medium,
@@ -28,6 +30,7 @@ typedef struct {
     char name[MAX_PLAYER_NAME + 1];
     char title[MAX_PLAYER_TITLE + 1];
     char ref[MAX_PLAYER_REFERENCE + 1];
+    int flag_idx;
     unsigned int mc;
 } PlayerInfo;
 

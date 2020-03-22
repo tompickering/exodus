@@ -238,7 +238,7 @@ const char *IMG_STARTGR_STR_MEDIUM    = D_SGR "gr5_piccy2";
 const char *IMG_STARTGR_STR_STRONG    = D_SGR "gr5_piccy3";
 const char *IMG_STARTGR_MPSTR_NONE    = D_SGR "gr7_piccy1";
 const char *IMG_STARTGR_MPSTR_WEAK    = D_SGR "gr7_piccy2";
-const char *IMG_STARTGR_MPSTR_STRONG  = D_SGR "gr7_piccy3";
+const char *IMG_STARTGR_MPSTR_MEDIUM  = D_SGR "gr7_piccy3";
 
 #define D_GRA "assets/img/graphic/"
 const char *IMG_AL1_1_2          = D_GRA "al1_1-2";
@@ -4243,7 +4243,7 @@ const char *ASSETS_IMG[] = {
     IMG_STARTGR_STR_STRONG,
     IMG_STARTGR_MPSTR_NONE,
     IMG_STARTGR_MPSTR_WEAK,
-    IMG_STARTGR_MPSTR_STRONG,
+    IMG_STARTGR_MPSTR_MEDIUM,
 
     IMG_AL1_1_2,
     IMG_AL1_13,
