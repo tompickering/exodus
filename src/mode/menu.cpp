@@ -360,6 +360,15 @@ ExodusMode Menu::update(float delta) {
                             {RES_X/4 + i*RES_X/4,
                              140 + j*RES_Y/7,
                              0.5, 0.5, 1, 1});
+                        for (int k = 0; k < current_player; ++k) {
+                            if (config.info[k].flag_idx == flag_idx) {
+                                draw_manager.draw(
+                                    IMG_TS1_FLAG0,
+                                    {RES_X/4 + i*RES_X/4,
+                                     140 + j*RES_Y/7,
+                                     0.5, 0.5, 1, 1});
+                            }
+                        }
                     }
                 }
                 draw_manager.save_background();
@@ -369,12 +378,22 @@ ExodusMode Menu::update(float delta) {
 
             for (int i = 0; i < 15; ++i) {
                 if (draw_manager.query_click(id(ID::FLAG_0 + i)).id) {
-                    config.info[current_player].flag_idx = i;
-                    if (++current_player == config.n_players) {
-                        set_stage(Aim);
-                    } else {
-                        // Go back to name input for next player
-                        set_stage(Name);
+                    bool taken = false;
+                    for (int j = 0; j < current_player; ++j) {
+                        if (config.info[j].flag_idx == i) {
+                            taken = true;
+                            break;
+                        }
+                    }
+
+                    if (!taken) {
+                        config.info[current_player].flag_idx = i;
+                        if (++current_player == config.n_players) {
+                            set_stage(Aim);
+                        } else {
+                            // Go back to name input for next player
+                            set_stage(Name);
+                        }
                     }
                 }
             }
