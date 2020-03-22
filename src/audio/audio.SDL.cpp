@@ -67,3 +67,9 @@ void AudioManagerSDL::play_sfx(const char* sfx) {
     L.debug("Playing SFX: %s", sfx);
     Mix_PlayChannel(-1, (Mix_Chunk*)sfx_data[sfx], 0);
 }
+
+void AudioManagerSDL::fade_out(int ms) {
+    if (!Mix_PlayingMusic())
+        return;
+    Mix_FadeOutMusic(ms);
+}

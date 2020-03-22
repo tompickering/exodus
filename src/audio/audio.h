@@ -13,6 +13,7 @@ class AudioManager {
         virtual void load_resources() = 0;
         virtual void play_sfx(const char*) = 0;
         virtual void target_music(const char*) = 0;
+        virtual void fade_out(int) = 0;
     protected:
         bool enabled;
         map<const char*, void*> sfx_data;
