@@ -203,10 +203,8 @@ ExodusMode Intro::update(float delta) {
         case None:
             next_stage(); return ExodusMode::MODE_None;
             break;
-        case Init:
-            next_stage(); return ExodusMode::MODE_None;
-            break;
         case Artex:
+            audio_manager.target_music(MUS_INTRO);
             next_stage(); return ExodusMode::MODE_None;
             break;
         case Earth:

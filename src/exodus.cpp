@@ -71,6 +71,7 @@ int Exodus::run(int argc, char** argv) {
 
     draw_manager.draw_init_image();
     draw_manager.load_resources();
+    audio_manager.load_resources();
 
     Intro mode_intro;
     Menu  mode_menu;
