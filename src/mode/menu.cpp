@@ -315,9 +315,20 @@ ExodusMode Menu::update(float delta) {
                         265, 238,
                         {0xFF, 0xFF, 0xFF});
 
-                if (input_manager.consume(K_Enter)) {
-                    strncpy(config.info[current_player].name, input_name, MAX_PLAYER_NAME);
-                    set_stage(Title);
+                if (input_manager.consume(K_Enter) && strnlen(input_name, 1)) {
+                    bool duplicate = false;
+                    for (int i = 0; i < current_player; ++i) {
+                        if (!strncmp(input_name, config.info[i].name, MAX_PLAYER_NAME)) {
+                            duplicate = true;
+                            break;
+                        }
+                    }
+                    if (!duplicate) {
+                        strncpy(config.info[current_player].name, input_name, MAX_PLAYER_NAME);
+                        set_stage(Title);
+                    } else {
+                        L.info("Not allowing duplicate name");
+                    }
                 }
             }
 
