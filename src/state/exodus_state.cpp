@@ -1,6 +1,9 @@
 #include "exodus_state.h"
 
+#include <cstring>
+
 #include "../assetpaths.h"
+#include "../shared.h"
 
 const char* flags[] = {
     IMG_TS1_FLAG13,
@@ -24,4 +27,20 @@ ExodusState::ExodusState() {
 }
 
 void ExodusState::init(GameConfig config) {
+    size = config.size;
+    n_players = config.n_players;
+    for (unsigned int i = 0; i < n_players; ++i) {
+        memcpy(&player_info[i], &config.info[i], sizeof(PlayerInfo));
+    }
+    aim = config.aim;
+    enemy_start = config.enemy_start;
+    L.debug("ExodusState init");
+    L.debug("      Size: %d", size);
+    L.debug("   Players: %d", n_players);
+    for (unsigned int i = 0; i < n_players; ++i) {
+        PlayerInfo *inf = &player_info[i];
+        L.debug("       %s %s : Flag %d", inf->title, inf->name, inf->flag_idx);
+    }
+    L.debug("       Aim: %d", aim);
+    L.debug("   Enemies: %d", enemy_start);
 }

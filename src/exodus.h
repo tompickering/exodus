@@ -9,6 +9,7 @@ enum ExodusMode {
     MODE_None,
     MODE_Intro,
     MODE_Menu,
+    MODE_GalaxyGen,
 };
 
 class ModeBase;

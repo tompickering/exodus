@@ -60,9 +60,11 @@ class ExodusState {
         ExodusState();
         void init(GameConfig);
     private:
+        GalaxySize size;
         unsigned int n_players;
         PlayerInfo player_info[MAX_PLAYERS];
         Aim aim;
+        EnemyStart enemy_start;
         Galaxy galaxy;
 };
 

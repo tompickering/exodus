@@ -686,12 +686,14 @@ ExodusMode Menu::update(float delta) {
 
             if (draw_manager.query_click(id(PROCEED)).id) {
                 draw_manager.fade_black(1.2f, 24);
+                audio_manager.fade_out(1000);
                 set_stage(End);
             }
 
             break;
         case End:
-            return ExodusMode::MODE_Intro;
+            exostate.init(config);
+            return ExodusMode::MODE_GalaxyGen;
     }
 
     return ExodusMode::MODE_None;
