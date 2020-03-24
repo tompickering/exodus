@@ -5,7 +5,7 @@
 
 class Guild : FlyTarget {
     public:
-        Guild() {};
+        Guild() : Guild(-1, -1) {};
         Guild(int, int);
 };
 

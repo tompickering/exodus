@@ -1,4 +1,7 @@
 #include "flytarget.h"
 
-FlyTarget::FlyTarget(int _x, int _y) : x(_x), y(_y) {
+#include <cstring>
+
+FlyTarget::FlyTarget(int _x, int _y, const char* _name) : x(_x), y(_y) {
+    strncpy(name, _name, FT_MAX_NAME);
 }
