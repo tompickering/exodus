@@ -51,6 +51,14 @@ void ExodusState::generate_galaxy() {
     if (galaxy_finalised) {
         L.error("Cannot regenerate galaxy after finalisation");
     }
+
+    unsigned int n_stars = 15;
+    if (size == GAL_Medium)
+        n_stars = 25;
+    if (size == GAL_Large)
+        n_stars = 40;
+
+    new(&galaxy) Galaxy(n_stars);
 }
 
 void ExodusState::finalise_galaxy() {
