@@ -111,8 +111,10 @@ void DrawManager::clear_sprite_ids() {
     drawn_spr_info.clear();
 }
 
-void DrawManager::clear() {
-    clear_sprite_ids();
+void DrawManager::clear(DrawTarget tgt) {
+    if (tgt == DrawTarget::TGT_Primary) {
+        clear_sprite_ids();
+    }
 }
 
 void DrawManager::show_cursor(bool show) {

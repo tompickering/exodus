@@ -105,7 +105,7 @@ void DrawManagerSDL::load_resources() {
     for (int j = 0; j < 3; ++j) {
         for (int i = 0; i < 4; ++i) {
             DrawArea area = {i*172, j*172, 172, 172};
-            draw(pattern, IMG_PT1_PATTERN, &area, nullptr);
+            draw(DrawTarget::TGT_Pattern, IMG_PT1_PATTERN, &area, nullptr);
         }
     }
 }
@@ -180,13 +180,10 @@ void DrawManagerSDL::pixelswap_update() {
 
 }
 
-void DrawManagerSDL::clear() {
-    DrawManager::clear();
-    SDL_FillRect(surf, nullptr, SDL_MapRGB(surf->format, 0x0, 0x0, 0x0));
-}
-
-void DrawManagerSDL::pixelswap_clear() {
-    SDL_FillRect(src_surf_0, nullptr, SDL_MapRGB(surf->format, 0x0, 0x0, 0x0));
+void DrawManagerSDL::clear(DrawTarget tgt) {
+    DrawManager::clear(tgt);
+    SDL_Surface *tgt_surf = get_target(tgt);
+    SDL_FillRect(tgt_surf, nullptr, SDL_MapRGB(surf->format, 0x0, 0x0, 0x0));
 }
 
 void DrawManagerSDL::save_background() {
@@ -208,43 +205,43 @@ void* DrawManagerSDL::get_sprite_data(const char* img_path) {
 }
 
 void DrawManagerSDL::draw(const char* spr_key) {
-    draw(surf, spr_key, nullptr, nullptr);
+    draw(DrawTarget::TGT_Primary, spr_key, nullptr, nullptr);
 }
 
 void DrawManagerSDL::draw(const char* spr_key, DrawArea area) {
-    draw(surf, spr_key, &area, nullptr);
+    draw(DrawTarget::TGT_Primary, spr_key, &area, nullptr);
 }
 
 void DrawManagerSDL::draw(const char* spr_key, DrawTransform t) {
-    draw(surf, spr_key, t, nullptr);
+    draw(DrawTarget::TGT_Primary, spr_key, t, nullptr);
 }
 
 void DrawManagerSDL::draw(SprID id, const char* spr_key) {
-    draw(surf, spr_key, nullptr, &id);
+    draw(DrawTarget::TGT_Primary, spr_key, nullptr, &id);
 }
 
 void DrawManagerSDL::draw(SprID id, const char* spr_key, DrawTransform t) {
-    draw(surf, spr_key, t, &id);
+    draw(DrawTarget::TGT_Primary, spr_key, t, &id);
 }
 
-void DrawManagerSDL::pixelswap_draw(const char* spr_key) {
-    draw(src_surf_0, spr_key, nullptr, nullptr);
+void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key) {
+    draw(tgt, spr_key, nullptr, nullptr);
 }
 
-void DrawManagerSDL::pixelswap_draw(const char* spr_key, DrawArea area) {
-    draw(src_surf_0, spr_key, &area, nullptr);
+void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key, DrawArea area) {
+    draw(tgt, spr_key, &area, nullptr);
 }
 
-void DrawManagerSDL::pixelswap_draw(const char* spr_key, DrawTransform t) {
-    draw(src_surf_0, spr_key, t, nullptr);
+void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key, DrawTransform t) {
+    draw(tgt, spr_key, t, nullptr);
 }
 
-void DrawManagerSDL::pixelswap_draw(SprID id, const char* spr_key) {
-    draw(src_surf_0, spr_key, nullptr, &id);
+void DrawManagerSDL::draw(DrawTarget tgt, SprID id, const char* spr_key) {
+    draw(tgt, spr_key, nullptr, &id);
 }
 
-void DrawManagerSDL::pixelswap_draw(SprID id, const char* spr_key, DrawTransform t) {
-    draw(src_surf_0, spr_key, t, &id);
+void DrawManagerSDL::draw(DrawTarget tgt, SprID id, const char* spr_key, DrawTransform t) {
+    draw(tgt, spr_key, t, &id);
 }
 
 void DrawManagerSDL::repair_dirty_area(SprID id, DrawArea area) {
@@ -267,8 +264,9 @@ void DrawManagerSDL::update_dirty_area(SprID id, DrawArea area) {
     }
 }
 
-void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawArea* area, SprID* id) {
+void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key, DrawArea* area, SprID* id) {
     DrawArea default_area = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+    SDL_Surface *tgt_surf = get_target(tgt);
 
     if (area) {
         area->x *= UPSCALE_X;
@@ -280,7 +278,7 @@ void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawArea* area,
     }
 
     if (id) {
-        if (tgt == surf) {
+        if (tgt_surf == surf) {
             repair_dirty_area(*id, *area);
         }
         update_dirty_area(*id, *area);
@@ -296,17 +294,17 @@ void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawArea* area,
     }
     if (area) {
         SDL_Rect dst_rect = {area->x, area->y, area->w, area->h};
-        if (SDL_BlitScaled(spr, nullptr, tgt, &dst_rect)) {
+        if (SDL_BlitScaled(spr, nullptr, tgt_surf, &dst_rect)) {
             L.debug("Blit unsuccessful: %s", spr_key);
         }
     } else {
-        if (SDL_BlitSurface(spr, nullptr, tgt, nullptr)) {
+        if (SDL_BlitSurface(spr, nullptr, tgt_surf, nullptr)) {
             L.debug("Blit unsuccessful: %s", spr_key);
         }
     }
 }
 
-void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawTransform t, SprID* id) {
+void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key, DrawTransform t, SprID* id) {
     SDL_Surface *spr = (SDL_Surface*)get_sprite_data(spr_key);
     if (!spr) {
         L.warn("Unknown sprite: %s", spr_key);
@@ -325,56 +323,53 @@ void DrawManagerSDL::draw(SDL_Surface* tgt, const char* spr_key, DrawTransform t
 }
 
 void DrawManagerSDL::draw_text(const char* text, Justify jst, int x, int y, RGB rgb) {
-    draw_text(surf, ID_NONE, Font::Default, text, jst, x, y, &rgb, nullptr);
+    draw_text(DrawTarget::TGT_Primary, ID_NONE, Font::Default, text, jst, x, y, &rgb, nullptr);
 }
 
 void DrawManagerSDL::draw_text(const char* text, Justify jst, int x, int y, RGB rgb, RGB bg_rgb) {
-    draw_text(surf, ID_NONE, Font::Default, text, jst, x, y, &rgb, &bg_rgb);
+    draw_text(DrawTarget::TGT_Primary, ID_NONE, Font::Default, text, jst, x, y, &rgb, &bg_rgb);
 }
 
 void DrawManagerSDL::draw_text(Font font, const char* text, Justify jst, int x, int y, RGB rgb) {
-    draw_text(surf, ID_NONE, font, text, jst, x, y, &rgb, nullptr);
+    draw_text(DrawTarget::TGT_Primary, ID_NONE, font, text, jst, x, y, &rgb, nullptr);
 }
 
 void DrawManagerSDL::draw_text(Font font, const char* text, Justify jst, int x, int y, RGB rgb, RGB bg_rgb) {
-    draw_text(surf, ID_NONE, font, text, jst, x, y, &rgb, &bg_rgb);
+    draw_text(DrawTarget::TGT_Primary, ID_NONE, font, text, jst, x, y, &rgb, &bg_rgb);
 }
 
 void DrawManagerSDL::draw_text(SprID id, const char* text, Justify jst, int x, int y, RGB rgb) {
-    draw_text(surf, id, Font::Default, text, jst, x, y, &rgb, nullptr);
+    draw_text(DrawTarget::TGT_Primary, id, Font::Default, text, jst, x, y, &rgb, nullptr);
 }
 
 void DrawManagerSDL::draw_text(SprID id, Font font, const char* text, Justify jst, int x, int y, RGB rgb) {
-    draw_text(surf, id, font, text, jst, x, y, &rgb, nullptr);
+    draw_text(DrawTarget::TGT_Primary, id, font, text, jst, x, y, &rgb, nullptr);
 }
 
-void DrawManagerSDL::pixelswap_draw_text(const char* text, Justify jst, int x, int y, RGB rgb) {
-    draw_text(src_surf_0, ID_NONE, Font::Default, text, jst, x, y, &rgb, nullptr);
+void DrawManagerSDL::draw_text(DrawTarget tgt, const char* text, Justify jst, int x, int y, RGB rgb) {
+    draw_text(tgt, ID_NONE, Font::Default, text, jst, x, y, &rgb, nullptr);
 }
 
-void DrawManagerSDL::pixelswap_draw_text(const char* text, Justify jst, int x, int y, RGB rgb, RGB bg_rgb) {
-    draw_text(src_surf_0, ID_NONE, Font::Default, text, jst, x, y, &rgb, &bg_rgb);
+void DrawManagerSDL::draw_text(DrawTarget tgt, const char* text, Justify jst, int x, int y, RGB rgb, RGB bg_rgb) {
+    draw_text(tgt, ID_NONE, Font::Default, text, jst, x, y, &rgb, &bg_rgb);
 }
 
-void DrawManagerSDL::pixelswap_draw_text(Font font, const char* text, Justify jst, int x, int y, RGB rgb) {
-    draw_text(src_surf_0, ID_NONE, font, text, jst, x, y, &rgb, nullptr);
+void DrawManagerSDL::draw_text(DrawTarget tgt, Font font, const char* text, Justify jst, int x, int y, RGB rgb) {
+    draw_text(tgt, ID_NONE, font, text, jst, x, y, &rgb, nullptr);
 }
 
-void DrawManagerSDL::pixelswap_draw_text(Font font, const char* text, Justify jst, int x, int y, RGB rgb, RGB bg_rgb) {
-    draw_text(src_surf_0, ID_NONE, font, text, jst, x, y, &rgb, &bg_rgb);
+void DrawManagerSDL::draw_text(DrawTarget tgt, Font font, const char* text, Justify jst, int x, int y, RGB rgb, RGB bg_rgb) {
+    draw_text(tgt, ID_NONE, font, text, jst, x, y, &rgb, &bg_rgb);
 }
 
-void DrawManagerSDL::pixelswap_draw_text(SprID id, Font font, const char* text, Justify jst, int x, int y, RGB rgb) {
-    draw_text(src_surf_0, id, font, text, jst, x, y, &rgb, nullptr);
+void DrawManagerSDL::draw_text(DrawTarget tgt, SprID id, Font font, const char* text, Justify jst, int x, int y, RGB rgb) {
+    draw_text(tgt, id, font, text, jst, x, y, &rgb, nullptr);
 }
 
-void DrawManagerSDL::pixelswap_draw_text(SprID id, Font font, const char* text, Justify jst, int x, int y, RGB rgb, RGB bg_rgb) {
-    draw_text(src_surf_0, id, font, text, jst, x, y, &rgb, &bg_rgb);
-}
-
-void DrawManagerSDL::draw_text(SDL_Surface *tgt, SprID id, Font font, const char* text, Justify jst, int x, int y, RGB* rgb, RGB* bg_rgb) {
+void DrawManagerSDL::draw_text(DrawTarget tgt, SprID id, Font font, const char* text, Justify jst, int x, int y, RGB* rgb, RGB* bg_rgb) {
     SDL_Color colour = {rgb->r, rgb->g, rgb->b};
     SDL_Surface *msg_surf;
+    SDL_Surface *tgt_surf = get_target(tgt);
 
     if (bg_rgb) {
         SDL_Color bg_colour = {bg_rgb->r, bg_rgb->g, bg_rgb->b};
@@ -400,13 +395,13 @@ void DrawManagerSDL::draw_text(SDL_Surface *tgt, SprID id, Font font, const char
         area.y = msg_rect.y;
         area.w = render_w;
         area.h = render_h;
-        if (tgt == surf) {
+        if (tgt_surf == surf) {
             repair_dirty_area(id, area);
         }
         update_dirty_area(id, area);
     }
 
-    SDL_BlitSurface(msg_surf, nullptr, tgt, &msg_rect);
+    SDL_BlitSurface(msg_surf, nullptr, tgt_surf, &msg_rect);
 }
 
 void DrawManagerSDL::pixelswap_start() {
@@ -468,6 +463,22 @@ void DrawManagerSDL::fade_white(float seconds, int stages) {
 
 bool DrawManagerSDL::fade_active() {
     return fade_stages > 0;
+}
+
+SDL_Surface* DrawManagerSDL::get_target(DrawTarget tgt) {
+    switch (tgt) {
+        case DrawTarget::TGT_Primary:
+            return surf;
+        case DrawTarget::TGT_Secondary:
+            return src_surf_0;
+        case DrawTarget::TGT_Pattern:
+            return pattern;
+        default:
+            break;
+    }
+
+    L.fatal("Invalid draw target: %d", tgt);
+    return nullptr;
 }
 
 #endif

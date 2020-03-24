@@ -80,6 +80,12 @@ typedef struct {
     unsigned char b;
 } RGB;
 
+enum DrawTarget {
+    TGT_Primary,
+    TGT_Secondary,
+    TGT_Pattern,
+};
+
 class DrawManager {
     public:
         DrawManager();
@@ -88,6 +94,7 @@ class DrawManager {
         virtual void update(MousePos, MousePos);
         virtual void save_background() = 0;
         virtual void clear();
+        virtual void clear(DrawTarget);
         virtual SprID new_sprite_id();
         virtual void release_sprite_id(SprID);
         virtual DrawArea* get_drawn_area(SprID);
@@ -97,12 +104,11 @@ class DrawManager {
         virtual void draw(const char*, DrawTransform) = 0;
         virtual void draw(SprID, const char*) = 0;
         virtual void draw(SprID, const char*, DrawTransform) = 0;
-        virtual void pixelswap_clear() = 0;
-        virtual void pixelswap_draw(const char*) = 0;
-        virtual void pixelswap_draw(const char*, DrawArea) = 0;
-        virtual void pixelswap_draw(const char*, DrawTransform) = 0;
-        virtual void pixelswap_draw(SprID, const char*) = 0;
-        virtual void pixelswap_draw(SprID, const char*, DrawTransform) = 0;
+        virtual void draw(DrawTarget, const char*) = 0;
+        virtual void draw(DrawTarget, const char*, DrawArea) = 0;
+        virtual void draw(DrawTarget, const char*, DrawTransform) = 0;
+        virtual void draw(DrawTarget, SprID, const char*) = 0;
+        virtual void draw(DrawTarget, SprID, const char*, DrawTransform) = 0;
         virtual void pixelswap_start() = 0;
         virtual void pixelswap_start(DrawArea*) = 0;
         virtual bool pixelswap_active() = 0;
@@ -115,12 +121,12 @@ class DrawManager {
         virtual void draw_text(Font, const char*, Justify, int, int, RGB, RGB) = 0;
         virtual void draw_text(SprID, const char*, Justify, int, int, RGB) = 0;
         virtual void draw_text(SprID, Font, const char*, Justify, int, int, RGB) = 0;
-        virtual void pixelswap_draw_text(const char*, Justify, int, int, RGB) = 0;
-        virtual void pixelswap_draw_text(const char*, Justify, int, int, RGB, RGB) = 0;
-        virtual void pixelswap_draw_text(Font, const char*, Justify, int, int, RGB) = 0;
-        virtual void pixelswap_draw_text(Font, const char*, Justify, int, int, RGB, RGB) = 0;
-        virtual void pixelswap_draw_text(SprID, Font, const char*, Justify, int, int, RGB) = 0;
-        virtual void pixelswap_draw_text(SprID, Font, const char*, Justify, int, int, RGB, RGB) = 0;
+        virtual void draw_text(DrawTarget, const char*, Justify, int, int, RGB) = 0;
+        virtual void draw_text(DrawTarget, const char*, Justify, int, int, RGB, RGB) = 0;
+        virtual void draw_text(DrawTarget, Font, const char*, Justify, int, int, RGB) = 0;
+        virtual void draw_text(DrawTarget, Font, const char*, Justify, int, int, RGB, RGB) = 0;
+        virtual void draw_text(DrawTarget, SprID, const char*, Justify, int, int, RGB) = 0;
+        virtual void draw_text(DrawTarget, SprID, Font, const char*, Justify, int, int, RGB) = 0;
         virtual void fade_start(float, int) = 0;
         virtual void fade_black(float, int) = 0;
         virtual void fade_white(float, int) = 0;
