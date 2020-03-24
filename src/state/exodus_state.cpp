@@ -64,3 +64,7 @@ void ExodusState::generate_galaxy() {
 void ExodusState::finalise_galaxy() {
     galaxy_finalised = true;
 }
+
+Galaxy* ExodusState::get_galaxy() {
+    return &galaxy;
+}

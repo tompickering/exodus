@@ -10,7 +10,7 @@
 
 extern ExodusState exostate;
 
-class GalaxyGen : ModeBase {
+class GalaxyGen : GalaxyDrawer {
     public:
         GalaxyGen();
         virtual void enter() override;

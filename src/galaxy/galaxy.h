@@ -15,9 +15,11 @@ class Galaxy {
     public:
         Galaxy() {};
         Galaxy(unsigned int);
+        Star* get_stars(unsigned int&);
     private:
         Guild guild;
         Star stars[GALAXY_MAX_STARS];
+        unsigned int n_stars;
 };
 
 #endif

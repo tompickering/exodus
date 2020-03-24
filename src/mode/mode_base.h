@@ -9,11 +9,15 @@
 #include "../audio/audio.h"
 #include "../input/input.h"
 
+#include "../state/exodus_state.h"
+
 #define MAX_STATIC_IDS 50
 
 extern DRAWMANAGER draw_manager;
 extern AUDIOMANAGER audio_manager;
 extern INPUTMANAGER input_manager;
+
+extern ExodusState exostate;
 
 class ModeBase {
     public:

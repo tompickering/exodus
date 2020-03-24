@@ -1,6 +1,6 @@
 #include "galaxygen.h"
 
-GalaxyGen::GalaxyGen() : ModeBase("GalaxyGen") {
+GalaxyGen::GalaxyGen() : GalaxyDrawer("GalaxyGen") {
 }
 
 void GalaxyGen::enter() {
@@ -10,6 +10,7 @@ void GalaxyGen::enter() {
 ExodusMode GalaxyGen::update(float delta) {
     if (gen_required) {
         exostate.generate_galaxy();
+        draw_galaxy(false);
         gen_required = false;
     }
 

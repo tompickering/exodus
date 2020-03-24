@@ -21,7 +21,9 @@ const char* STAR_NAMES[] = {
     "Bond", "Ring", "Lost", "Victoria", "Fenris",
 };
 
-Galaxy::Galaxy(unsigned int n_stars) {
+Galaxy::Galaxy(unsigned int _n_stars) {
+    n_stars = _n_stars;
+
     if (n_stars > GALAXY_MAX_STARS) {
         L.warn("Requested stars beyond max: %d", n_stars);
         n_stars = GALAXY_MAX_STARS;
@@ -45,4 +47,9 @@ Galaxy::Galaxy(unsigned int n_stars) {
 
         new(&stars[i]) Star(star_x, star_y, (STAR_NAMES[name_idx]));
     }
+}
+
+Star* Galaxy::get_stars(unsigned int &_n_stars) {
+    _n_stars = n_stars;
+    return stars;
 }

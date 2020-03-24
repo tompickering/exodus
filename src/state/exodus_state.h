@@ -61,6 +61,7 @@ class ExodusState {
         void init(GameConfig);
         void generate_galaxy();
         void finalise_galaxy();
+        Galaxy* get_galaxy();
     private:
         GalaxySize size;
         unsigned int n_players;

@@ -6,10 +6,6 @@
 #include "../platform.h"
 #include "../draw/draw.h"
 
-#include "../state/exodus_state.h"
-
-extern ExodusState exostate;
-
 class Menu : ModeBase {
     public:
         Menu();
