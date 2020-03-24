@@ -1,7 +1,7 @@
 #ifndef GUARD_GALAXYGEN_H
 #define GUARD_GALAXYGEN_H
 
-#include "mode_base.h"
+#include "galaxy_drawer.h"
 
 #include "../platform.h"
 #include "../draw/draw.h"

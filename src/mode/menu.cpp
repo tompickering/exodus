@@ -95,16 +95,16 @@ ExodusMode Menu::update(float delta) {
                 config.n_players = 1;
                 current_player = 0;
 
-                draw_manager.pixelswap_draw(IMG_BG_STARS2);
+                draw_manager.draw(TGT_Secondary, IMG_BG_STARS2);
 
-                draw_manager.pixelswap_draw_text(
+                draw_manager.draw_text(TGT_Secondary, 
                         Font::Large,
                         "Please select.",
                         Justify::Centre,
                         RES_X/2, 135,
                         {0xEE, 0xEE, 0xAA});
 
-                draw_manager.pixelswap_draw_text(
+                draw_manager.draw_text(TGT_Secondary, 
                         id(NEWGAME_TXT),
                         Font::Large,
                         "Conquer the stars",
@@ -112,7 +112,7 @@ ExodusMode Menu::update(float delta) {
                         RES_X/2, 205,
                         {0xFF, 0xFF, 0xFF});
 
-                draw_manager.pixelswap_draw_text(
+                draw_manager.draw_text(TGT_Secondary, 
                         id(LOADGAME_TXT),
                         Font::Large,
                         "Load a saved game",
@@ -144,49 +144,49 @@ ExodusMode Menu::update(float delta) {
             break;
         case Size:
             if (trans_state == None) {
-                draw_manager.pixelswap_draw(IMG_BG_MENU0);
-                draw_manager.pixelswap_draw_text(Font::Large, "Galaxy size", Justify::Left, 20, 30, {0xEE, 0xEE, 0xAA});
+                draw_manager.draw(TGT_Secondary, IMG_BG_MENU0);
+                draw_manager.draw_text(TGT_Secondary, Font::Large, "Galaxy size", Justify::Left, 20, 30, {0xEE, 0xEE, 0xAA});
 
-                draw_manager.pixelswap_draw(
+                draw_manager.draw(TGT_Secondary, 
                         id(GAL_SZ_SMALL),
                         IMG_STARTGR_GAL_S,
                         OPT_0);
-                draw_manager.pixelswap_draw(
+                draw_manager.draw(TGT_Secondary, 
                         id(GAL_SZ_MEDIUM),
                         IMG_STARTGR_GAL_M,
                         OPT_1);
-                draw_manager.pixelswap_draw(
+                draw_manager.draw(TGT_Secondary, 
                         id(GAL_SZ_LARGE),
                         IMG_STARTGR_GAL_L,
                         OPT_2);
 
-                draw_manager.pixelswap_draw_text(
+                draw_manager.draw_text(TGT_Secondary, 
                         "Small",
                         Justify::Left, TXT_0_X, TXT_0_Y, {0xFF, 0xFF, 0xFF});
-                draw_manager.pixelswap_draw_text(
+                draw_manager.draw_text(TGT_Secondary, 
                         "Desperate fights for the",
                         Justify::Left, TXT_0_X, TXT_0_Y + 20, {0xFF, 0xFF, 0xFF});
-                draw_manager.pixelswap_draw_text(
+                draw_manager.draw_text(TGT_Secondary, 
                         "few resources.",
                         Justify::Left, TXT_0_X, TXT_0_Y + 40, {0xFF, 0xFF, 0xFF});
 
-                draw_manager.pixelswap_draw_text(
+                draw_manager.draw_text(TGT_Secondary, 
                         "Medium",
                         Justify::Right, TXT_1_X, TXT_1_Y, {0xFF, 0xFF, 0xFF});
-                draw_manager.pixelswap_draw_text(
+                draw_manager.draw_text(TGT_Secondary, 
                         "Hardly enough stars to",
                         Justify::Right, TXT_1_X, TXT_1_Y + 20, {0xFF, 0xFF, 0xFF});
-                draw_manager.pixelswap_draw_text(
+                draw_manager.draw_text(TGT_Secondary, 
                         "live together in peace.",
                         Justify::Right, TXT_1_X, TXT_1_Y + 40, {0xFF, 0xFF, 0xFF});
 
-                draw_manager.pixelswap_draw_text(
+                draw_manager.draw_text(TGT_Secondary, 
                         "Large",
                         Justify::Left, TXT_2_X, TXT_2_Y, {0xFF, 0xFF, 0xFF});
-                draw_manager.pixelswap_draw_text(
+                draw_manager.draw_text(TGT_Secondary, 
                         "Free expansion",
                         Justify::Left, TXT_2_X, TXT_2_Y + 20, {0xFF, 0xFF, 0xFF});
-                draw_manager.pixelswap_draw_text(
+                draw_manager.draw_text(TGT_Secondary, 
                         "into space.",
                         Justify::Left, TXT_2_X, TXT_2_Y + 40, {0xFF, 0xFF, 0xFF});
 

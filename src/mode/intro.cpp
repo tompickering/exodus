@@ -231,8 +231,8 @@ ExodusMode Intro::update(float delta) {
         case Earth:
             if (!stage_started) {
                 draw_manager.clear();
-                draw_manager.pixelswap_clear();
-                draw_manager.pixelswap_draw(IMG_INTRO_EARTH);
+                draw_manager.clear(TGT_Secondary);
+                draw_manager.draw(TGT_Secondary, IMG_INTRO_EARTH);
                 draw_manager.pixelswap_start(nullptr);
                 break;
             }
@@ -262,8 +262,8 @@ ExodusMode Intro::update(float delta) {
             break;
         case City:
             if (!stage_started) {
-                draw_manager.pixelswap_clear();
-                draw_manager.pixelswap_draw(IMG_INTRO_CITY);
+                draw_manager.clear(TGT_Secondary);
+                draw_manager.draw(TGT_Secondary, IMG_INTRO_CITY);
                 draw_manager.pixelswap_start(nullptr);
                 break;
             }
@@ -724,8 +724,8 @@ ExodusMode Intro::update(float delta) {
             }
 
             if (!stage_started) {
-                draw_manager.pixelswap_draw(IMG_INTRO_SPACE, {RES_X/2, 0, 1, 0, 1, 1});
-                draw_manager.pixelswap_draw(IMG_INTRO_SPACE, {RES_X/2, 0, 0, 0, 1, 1});
+                draw_manager.draw(TGT_Secondary, IMG_INTRO_SPACE, {RES_X/2, 0, 1, 0, 1, 1});
+                draw_manager.draw(TGT_Secondary, IMG_INTRO_SPACE, {RES_X/2, 0, 0, 0, 1, 1});
                 draw_manager.fade_start(TTL_FADE_TIME, 12);
                 break;
             }

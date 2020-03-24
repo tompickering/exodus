@@ -180,6 +180,10 @@ void DrawManagerSDL::pixelswap_update() {
 
 }
 
+void DrawManagerSDL::clear() {
+    clear(DrawTarget::TGT_Primary);
+}
+
 void DrawManagerSDL::clear(DrawTarget tgt) {
     DrawManager::clear(tgt);
     SDL_Surface *tgt_surf = get_target(tgt);
@@ -360,6 +364,10 @@ void DrawManagerSDL::draw_text(DrawTarget tgt, Font font, const char* text, Just
 
 void DrawManagerSDL::draw_text(DrawTarget tgt, Font font, const char* text, Justify jst, int x, int y, RGB rgb, RGB bg_rgb) {
     draw_text(tgt, ID_NONE, font, text, jst, x, y, &rgb, &bg_rgb);
+}
+
+void DrawManagerSDL::draw_text(DrawTarget tgt, SprID id, const char* text, Justify jst, int x, int y, RGB rgb) {
+    draw_text(tgt, id, Font::Default, text, jst, x, y, &rgb, nullptr);
 }
 
 void DrawManagerSDL::draw_text(DrawTarget tgt, SprID id, Font font, const char* text, Justify jst, int x, int y, RGB rgb) {
