@@ -1,10 +1,14 @@
 #include "galaxy_drawer.h"
 
+#include "galaxy/galaxy.h"
 #include "galaxy/star.h"
 
 #include "draw/draw.h"
 
 #include "assetpaths.h"
+
+#define PAD_X 10
+#define PAD_Y 10
 
 static const char* STAR_SPRITES[] = {
     IMG_TS1_SUN1,
@@ -18,6 +22,13 @@ static const char* STAR_SPRITES[] = {
     IMG_TS1_SUN9,
 };
 
+static const char* GUILD_SPRITE = IMG_TS1_WORM;
+
+const int GDRAW_W = RES_X - PAD_X * 2;
+const int GDRAW_H = RES_Y - PAD_Y * 2;
+const int SEP_X = GDRAW_W / GALAXY_COLS;
+const int SEP_Y = GDRAW_H / GALAXY_ROWS;
+
 GalaxyDrawer::GalaxyDrawer() {
 }
 
@@ -29,6 +40,10 @@ void GalaxyDrawer::draw_galaxy(bool pixelswap) {
     Galaxy *gal = exostate.get_galaxy();
     const Star *stars = gal->get_stars(n_stars);
     for (unsigned int i = 0; i < n_stars; ++i) {
-        draw_manager.draw(tgt, IMG_TS1_SUN4);
+        const Star *s = &stars[i];
+        const char* spr = STAR_SPRITES[s->get_size()];
+        int x = PAD_X + SEP_X * s->x;
+        int y = PAD_Y + SEP_Y * s->y;
+        draw_manager.draw(tgt, spr, {x, y, 0.5, 0.5, 1, 1});
     }
 }

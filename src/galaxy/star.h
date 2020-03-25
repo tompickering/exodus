@@ -13,10 +13,11 @@ enum StarSize {
     STAR_Huge,
 };
 
-class Star : FlyTarget {
+class Star : public FlyTarget {
     public:
         Star() : Star(-1, -1, (char*)"NONAME") {};
         Star(int, int, const char*);
+        StarSize get_size() const;
     private:
         StarSize size;
         unsigned int n_planets;
