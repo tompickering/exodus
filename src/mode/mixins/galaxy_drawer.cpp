@@ -36,6 +36,30 @@ const int SEP_X = GDRAW_W / GALAXY_COLS;
 const int SEP_Y = GDRAW_H / GALAXY_ROWS;
 
 GalaxyDrawer::GalaxyDrawer() {
+    guild_id = ID_NONE;
+    for (int i = 0; i < GALAXY_MAX_STARS; ++i)
+        star_ids[i] = ID_NONE;
+}
+
+FlyTarget* GalaxyDrawer::get_clicked_flytarget() {
+    SpriteClick click;
+    Galaxy *gal = exostate.get_galaxy();
+
+    for (int i = 0; i < GALAXY_MAX_STARS; ++i) {
+        if (!star_ids[i])
+            break;
+        click = draw_manager.query_click(star_ids[i]);
+        if (click.id) {
+            return &(gal->get_stars()[i]);
+        }
+    }
+
+    click = draw_manager.query_click(guild_id);
+    if (click.id) {
+        return gal->get_guild();
+    }
+
+    return nullptr;
 }
 
 void GalaxyDrawer::draw_galaxy(bool pixelswap) {
@@ -53,14 +77,16 @@ void GalaxyDrawer::draw_galaxy(bool pixelswap) {
         spr = STAR_SPRITES[s->get_size()];
         x = PAD_X + SEP_X * s->x;
         y = PAD_Y + SEP_Y * s->y;
-        draw_manager.draw(tgt, spr, {x, y, 0.5, 0.5, 1, 1});
+        star_ids[i] = draw_manager.new_sprite_id();
+        draw_manager.draw(tgt, star_ids[i], spr, {x, y, 0.5, 0.5, 1, 1});
     }
 
     Guild *guild = gal->get_guild();
     spr = GUILD_SPRITE;
     x = PAD_X + SEP_X * guild->x;
     y = PAD_Y + SEP_Y * guild->y;
-    draw_manager.draw(tgt, spr, {x, y, 0.5, 0.5, 1, 1});
+    guild_id = draw_manager.new_sprite_id();
+    draw_manager.draw(tgt, guild_id, spr, {x, y, 0.5, 0.5, 1, 1});
 
     //draw_manager.fill({0, PAD_Y + DRAW_H, RES_X, RES_Y - PAD_Y - DRAW_H}, {0, 0, 0});
 }

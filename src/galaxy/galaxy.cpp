@@ -69,6 +69,11 @@ Galaxy::Galaxy(unsigned int _n_stars) {
     }
 }
 
+Star* Galaxy::get_stars() {
+    unsigned int i;
+    return get_stars(i);
+}
+
 Star* Galaxy::get_stars(unsigned int &_n_stars) {
     _n_stars = n_stars;
     return stars;
