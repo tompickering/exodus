@@ -3,7 +3,7 @@
 
 #define INPUT_MAX_TEXT 20
 
-#include "../shared.h"
+#include "shared.h"
 
 enum Input {
     K_Space,

@@ -1,6 +1,6 @@
 #include "mode_base.h"
 
-#include "../shared.h"
+#include "shared.h"
 
 ModeBase::ModeBase(const char *name) : name(name) {
 }

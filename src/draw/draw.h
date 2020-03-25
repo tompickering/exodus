@@ -4,8 +4,8 @@
 #include <map>
 #include <vector>
 
-#include "../timer/timer.h"
-#include "../shared.h"
+#include "timer/timer.h"
+#include "shared.h"
 
 #define SCREEN_WIDTH 960
 #define SCREEN_HEIGHT 768

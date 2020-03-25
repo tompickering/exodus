@@ -11,7 +11,7 @@
  * present in a save file, and should be shallow-serialisable.
  */
 
-#include "../galaxy/galaxy.h"
+#include "galaxy/galaxy.h"
 
 #define MAX_PLAYERS           5
 #define MAX_PLAYER_NAME      12

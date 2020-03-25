@@ -2,7 +2,7 @@
 
 #include <SDL2/SDL.h>
 
-#include "../shared.h"
+#include "shared.h"
 
 // Must have 1:1 correspondence with Input
 int sdl_input_key[] = {

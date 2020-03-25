@@ -2,7 +2,7 @@
 
 #include <cstdlib>
 
-#include "../shared.h"
+#include "shared.h"
 
 Star::Star(int _x, int _y, const char* _name) : FlyTarget(_x, _y, _name) {
     size = (StarSize)(rand() % (STAR_Huge + 1));

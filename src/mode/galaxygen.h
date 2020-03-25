@@ -4,10 +4,10 @@
 #include "mode_base.h"
 #include "mixins/galaxy_drawer.h"
 
-#include "../platform.h"
-#include "../draw/draw.h"
+#include "platform.h"
+#include "draw/draw.h"
 
-#include "../state/exodus_state.h"
+#include "state/exodus_state.h"
 
 extern ExodusState exostate;
 

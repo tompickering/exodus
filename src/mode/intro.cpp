@@ -2,11 +2,11 @@
 
 #include <cmath>
 
-#include "../anim.h"
+#include "anim.h"
 
-#include "../assetpaths.h"
+#include "assetpaths.h"
 
-#include "../util/value.h"
+#include "util/value.h"
 
 // Facility to execute a single statement or block once only.
 // Requires a unique name within the context - but this is checked at compile time.

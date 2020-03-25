@@ -1,15 +1,15 @@
 #ifndef GUARD_MODE_BASE_H
 #define GUARD_MODE_BASE_H
 
-#include "../exodus.h"
-#include "../platform.h"
-#include "../timer/timer.h"
+#include "exodus.h"
+#include "platform.h"
+#include "timer/timer.h"
 
-#include "../draw/draw.h"
-#include "../audio/audio.h"
-#include "../input/input.h"
+#include "draw/draw.h"
+#include "audio/audio.h"
+#include "input/input.h"
 
-#include "../state/exodus_state.h"
+#include "state/exodus_state.h"
 
 #define MAX_STATIC_IDS 50
 

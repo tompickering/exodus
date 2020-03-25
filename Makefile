@@ -11,13 +11,14 @@ OBJS := $(patsubst %.cpp,%.o,$(wildcard *.cpp */*.cpp */*/*.cpp */*/*/*.cpp))
 DEPS = $(OBJS:%.o=%.d)
 CLEAN = $(BIN) $(OBJS) $(DEPS)
 
+INCFLAGS=-Isrc
 LDLIBS=-lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
-CXXFLAGS=-g -Wall -pedantic -DSDL -DLINUX
+CXXFLAGS=-g -Wall -pedantic -DSDL -DLINUX $(INCFLAGS)
 
 PREFIX = /usr/local
 
 %.d: %.cpp
-	$(CXX) -MM -MF $@ -MT $@ -MT $*.o $<
+	$(CXX) $(INCFLAGS) -MM -MF $@ -MT $@ -MT $*.o $<
 
 all: $(BIN)
 	mv $(BIN) $(NAME)

@@ -5,7 +5,7 @@
 #include "guild.h"
 #include "star.h"
 
-#include "../shared.h"
+#include "shared.h"
 
 const int N_STAR_NAMES = 50;
 const char* STAR_NAMES[] = {

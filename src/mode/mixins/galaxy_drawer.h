@@ -1,9 +1,9 @@
 #ifndef GUARD_GALAXY_DRAWER_H
 #define GUARD_GALAXY_DRAWER_H
 
-#include "../../draw/draw.h"
+#include "draw/draw.h"
 
-#include "../../state/exodus_state.h"
+#include "state/exodus_state.h"
 
 extern DRAWMANAGER draw_manager;
 

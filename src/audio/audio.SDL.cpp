@@ -2,9 +2,9 @@
 
 #include <SDL2/SDL_mixer.h>
 
-#include "../assetpaths.h"
+#include "assetpaths.h"
 
-#include "../shared.h"
+#include "shared.h"
 
 bool AudioManagerSDL::init() {
     L.info("AudioManager init...");

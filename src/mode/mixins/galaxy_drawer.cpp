@@ -1,10 +1,10 @@
 #include "galaxy_drawer.h"
 
-#include "../../galaxy/star.h"
+#include "galaxy/star.h"
 
-#include "../../draw/draw.h"
+#include "draw/draw.h"
 
-#include "../../assetpaths.h"
+#include "assetpaths.h"
 
 static const char* STAR_SPRITES[] = {
     IMG_TS1_SUN1,

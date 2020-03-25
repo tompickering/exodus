@@ -1,8 +1,8 @@
 #include "menu.h"
 
-#include "../state/exodus_state.h"
+#include "state/exodus_state.h"
 
-#include "../assetpaths.h"
+#include "assetpaths.h"
 
 #define OPT_0 {RES_X - 95, 147, 1.0, 0.5, 1, 1}
 #define OPT_1 {95, 280, 0.0, 0.5, 1, 1}

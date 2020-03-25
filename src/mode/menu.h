@@ -3,8 +3,8 @@
 
 #include "mode_base.h"
 
-#include "../platform.h"
-#include "../draw/draw.h"
+#include "platform.h"
+#include "draw/draw.h"
 
 class Menu : ModeBase {
     public:

@@ -2,8 +2,8 @@
 
 #include <cstring>
 
-#include "../assetpaths.h"
-#include "../shared.h"
+#include "assetpaths.h"
+#include "shared.h"
 
 const char* flags[] = {
     IMG_TS1_FLAG13,

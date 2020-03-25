@@ -10,8 +10,8 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
-#include "../shared.h"
-#include "../assetpaths.h"
+#include "shared.h"
+#include "assetpaths.h"
 
 bool DrawManagerSDL::init() {
     L.info("DrawManager Init...");
