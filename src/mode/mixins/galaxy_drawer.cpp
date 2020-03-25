@@ -12,6 +12,8 @@
 #define DRAW_W RES_X
 #define DRAW_H 400
 
+const DrawArea galaxy_panel_area = {0, 430, RES_X, RES_Y - 430};
+
 static const char* BG_SPR = IMG_BG_STARS3;
 
 static const char* STAR_SPRITES[] = {

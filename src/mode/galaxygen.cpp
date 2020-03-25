@@ -41,7 +41,7 @@ ExodusMode GalaxyGen::update(float delta) {
             draw_galaxy(true);
             draw_manager.fill(
                 TGT_Secondary,
-                {0, 430, RES_X, RES_Y - 430},
+                galaxy_panel_area,
                 {0, 0, 0});
             draw_manager.pixelswap_start();
             stage = GGSTG_SwapIn;
@@ -79,7 +79,7 @@ ExodusMode GalaxyGen::update(float delta) {
                 {RES_X/2, 460, 0.5, 0.5, 1, 1});
             if (fade_interp == 0) {
                 draw_manager.fill(
-                    {0, 430, RES_X, RES_Y - 430},
+                    galaxy_panel_area,
                     {0, 0, 0});
                 if (accepted) {
                     stage = GGSTG_ToGame;
