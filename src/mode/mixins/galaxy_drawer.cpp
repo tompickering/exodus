@@ -68,6 +68,7 @@ void GalaxyDrawer::draw_galaxy(bool pixelswap) {
 
     DrawTarget tgt = pixelswap ? TGT_Secondary : TGT_Primary;
 
+    draw_manager.clear_sprite_ids();
     draw_manager.draw(tgt, BG_SPR);
     unsigned int n_stars;
     Galaxy *gal = exostate.get_galaxy();
