@@ -53,3 +53,7 @@ Star* Galaxy::get_stars(unsigned int &_n_stars) {
     _n_stars = n_stars;
     return stars;
 }
+
+Guild* Galaxy::get_guild() {
+    return &guild;
+}

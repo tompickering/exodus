@@ -8,14 +8,15 @@
 
 #define GALAXY_COLS 27
 #define GALAXY_ROWS 17
-#define GUILD_POS_X 13
-#define GUILD_POS_Y 8
+#define GUILD_POS_X 14
+#define GUILD_POS_Y 9
 
 class Galaxy {
     public:
         Galaxy() {};
         Galaxy(unsigned int);
         Star* get_stars(unsigned int&);
+        Guild* get_guild();
     private:
         Guild guild;
         Star stars[GALAXY_MAX_STARS];

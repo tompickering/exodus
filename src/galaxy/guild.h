@@ -3,7 +3,7 @@
 
 #include "flytarget.h"
 
-class Guild : FlyTarget {
+class Guild : public FlyTarget {
     public:
         Guild() : Guild(-1, -1) {};
         Guild(int, int);
