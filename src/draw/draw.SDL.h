@@ -47,6 +47,7 @@ class DrawManagerSDL : public DrawManager {
         virtual void fade_black(float, int) override;
         virtual void fade_white(float, int) override;
         virtual bool fade_active() override;
+        virtual void show_cursor(bool) override;
     protected:
         virtual void* get_sprite_data(const char*) override;
     private:
@@ -62,7 +63,7 @@ class DrawManagerSDL : public DrawManager {
         void draw(DrawTarget, const char*, DrawArea*, SprID*);
         void draw(DrawTarget, const char*, DrawTransform, SprID*);
         void draw_text(DrawTarget, SprID, Font, const char*, Justify, int, int, RGB*, RGB*);
-        void repair_dirty_area(SprID, DrawArea);
+        void repair_dirty_area(SprID);
         void update_dirty_area(SprID, DrawArea);
 };
 

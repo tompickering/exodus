@@ -249,7 +249,7 @@ void DrawManagerSDL::draw(DrawTarget tgt, SprID id, const char* spr_key, DrawTra
     draw(tgt, spr_key, t, &id);
 }
 
-void DrawManagerSDL::repair_dirty_area(SprID id, DrawArea area) {
+void DrawManagerSDL::repair_dirty_area(SprID id) {
     DrawArea *dirty_area = get_drawn_area(id);
     if (dirty_area) {
         // We know where this sprite was drawn previously.
@@ -284,7 +284,7 @@ void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key, DrawArea* area, S
 
     if (id) {
         if (tgt_surf == surf) {
-            repair_dirty_area(*id, *area);
+            repair_dirty_area(*id);
         }
         update_dirty_area(*id, *area);
     }
@@ -405,7 +405,7 @@ void DrawManagerSDL::draw_text(DrawTarget tgt, SprID id, Font font, const char* 
         area.w = render_w;
         area.h = render_h;
         if (tgt_surf == surf) {
-            repair_dirty_area(id, area);
+            repair_dirty_area(id);
         }
         update_dirty_area(id, area);
     }
@@ -497,6 +497,14 @@ SDL_Surface* DrawManagerSDL::get_target(DrawTarget tgt) {
 
     L.fatal("Invalid draw target: %d", tgt);
     return nullptr;
+}
+
+void DrawManagerSDL::show_cursor(bool show) {
+    if (draw_cursor && !show) {
+        repair_dirty_area(ID_CURSOR);
+    }
+
+    DrawManager::show_cursor(show);
 }
 
 #endif
