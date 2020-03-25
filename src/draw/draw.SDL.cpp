@@ -165,11 +165,12 @@ void DrawManagerSDL::pixelswap_update() {
 
         const int PX_W = (int)(.5f + 2.f * UPSCALE_X);
         const int PX_H = (int)(.5f + 2.f * UPSCALE_Y);
-        for (int y = 0; y < SCREEN_HEIGHT / PX_H; ++y) {
-            for (int x = 0; x < SCREEN_WIDTH / PX_W; ++x) {
+        for (int y = 0; y < pixelswap_region.h / PX_H; ++y) {
+            for (int x = 0; x < pixelswap_region.w / PX_W; ++x) {
                 bool swap = (random() % pixelswap_stage) == 0;
                 if (swap) {
-                    SDL_Rect r = {x * PX_W, y * PX_H, PX_W, PX_H};
+                    SDL_Rect r = {(pixelswap_region.x + x) * PX_W,
+                                  (pixelswap_region.y + y) * PX_H, PX_W, PX_H};
                     SDL_BlitSurface(src_surf_0, &r, surf, &r);
                 }
             }
@@ -187,7 +188,7 @@ void DrawManagerSDL::clear() {
 void DrawManagerSDL::clear(DrawTarget tgt) {
     DrawManager::clear(tgt);
     SDL_Surface *tgt_surf = get_target(tgt);
-    SDL_FillRect(tgt_surf, nullptr, SDL_MapRGB(surf->format, 0x0, 0x0, 0x0));
+    SDL_FillRect(tgt_surf, nullptr, SDL_MapRGB(tgt_surf->format, 0x0, 0x0, 0x0));
 }
 
 void DrawManagerSDL::save_background() {
@@ -420,8 +421,12 @@ void DrawManagerSDL::pixelswap_start(DrawArea* area) {
     pixelswap_stage = 20;
     if (area) {
         pixelswap_region = *area;
+        pixelswap_region.x *= UPSCALE_X;
+        pixelswap_region.y *= UPSCALE_Y;
+        pixelswap_region.w *= UPSCALE_X;
+        pixelswap_region.h *= UPSCALE_Y;
     } else {
-        pixelswap_region = {0, 0, 0, 0};
+        pixelswap_region = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
     }
     pixelswap_timer.start();
 }
@@ -431,12 +436,17 @@ bool DrawManagerSDL::pixelswap_active() {
 }
 
 void DrawManagerSDL::fill(DrawArea area, RGB col) {
+    fill(TGT_Primary, area, col);
+}
+
+void DrawManagerSDL::fill(DrawTarget tgt, DrawArea area, RGB col) {
     SDL_Rect r;
+    SDL_Surface *tgt_surf = get_target(tgt);
     r.x = area.x * UPSCALE_X;
     r.y = area.y * UPSCALE_Y;
     r.w = area.w * UPSCALE_X;
     r.h = area.h * UPSCALE_Y;
-    SDL_FillRect(surf, &r, SDL_MapRGB(surf->format, col.r, col.g, col.b));
+    SDL_FillRect(tgt_surf, &r, SDL_MapRGB(surf->format, col.r, col.g, col.b));
 }
 
 void DrawManagerSDL::pattern_fill(DrawArea area) {

@@ -17,7 +17,18 @@ class GalaxyGen : ModeBase, GalaxyDrawer {
         virtual void enter() override;
         virtual ExodusMode update(float) override;
     private:
-        bool gen_required;
+        enum Stage {
+            GGSTG_Gen,
+            GGSTG_SwapIn,
+            GGSTG_FadeIn,
+            GGSTG_Wait,
+            GGSTG_FadeOut,
+            GGSTG_ToGame,
+        };
+
+        Stage stage;
+        float fade_interp;
+        bool accepted;
 };
 
 #endif

@@ -60,5 +60,5 @@ void GalaxyDrawer::draw_galaxy(bool pixelswap) {
     y = PAD_Y + SEP_Y * guild->y;
     draw_manager.draw(tgt, spr, {x, y, 0.5, 0.5, 1, 1});
 
-    draw_manager.fill({0, PAD_Y + DRAW_H, RES_X, RES_Y - PAD_Y - DRAW_H}, {0, 0, 0});
+    //draw_manager.fill({0, PAD_Y + DRAW_H, RES_X, RES_Y - PAD_Y - DRAW_H}, {0, 0, 0});
 }
