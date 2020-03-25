@@ -1,6 +1,6 @@
 #include "galaxygen.h"
 
-GalaxyGen::GalaxyGen() : GalaxyDrawer("GalaxyGen") {
+GalaxyGen::GalaxyGen() : ModeBase("GalaxyGen"), GalaxyDrawer() {
 }
 
 void GalaxyGen::enter() {

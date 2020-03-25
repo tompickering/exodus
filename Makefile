@@ -7,7 +7,7 @@ BIN=src/exodus
 
 all:
 
-OBJS := $(patsubst %.cpp,%.o,$(wildcard *.cpp */*.cpp */*/*.cpp))
+OBJS := $(patsubst %.cpp,%.o,$(wildcard *.cpp */*.cpp */*/*.cpp */*/*/*.cpp))
 DEPS = $(OBJS:%.o=%.d)
 CLEAN = $(BIN) $(OBJS) $(DEPS)
 
