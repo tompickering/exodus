@@ -30,10 +30,30 @@ Galaxy::Galaxy(unsigned int _n_stars) {
     }
 
     new(&guild) Guild(GUILD_POS_X, GUILD_POS_Y);
+
+    int star_x, star_y;
     uint64_t names_taken = 0;
     for (unsigned int i = 0; i < n_stars; ++i) {
-        int star_x = rand() % GALAXY_COLS;
-        int star_y = rand() % GALAXY_ROWS;
+        while (true) {
+            bool ok = true;
+
+            star_x = rand() % GALAXY_COLS;
+            star_y = rand() % GALAXY_ROWS;
+
+            if (star_x == GUILD_POS_X && star_y == GUILD_POS_Y) {
+                ok = false;
+            }
+
+            for (unsigned int j = 0; j < i; ++j) {
+                if (star_x == stars[j].x  && star_y == stars[j].y) {
+                    ok = false;
+                    break;
+                }
+            }
+
+            if (ok) break;
+        }
+
         int name_idx;
         uint64_t name_flag;
         while (true) {
