@@ -88,6 +88,9 @@ ExodusMode GalaxyGen::update(float delta) {
                 }
             }
             break;
+        case GGSTG_ToGame:
+            return ExodusMode::MODE_GalaxyMap;
+            break;
         default:
             break;
     }

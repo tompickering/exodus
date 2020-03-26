@@ -14,6 +14,7 @@
 #include "mode/intro.h"
 #include "mode/menu.h"
 #include "mode/galaxygen.h"
+#include "mode/galaxy_map.h"
 
 #include <csignal>
 
@@ -77,9 +78,11 @@ int Exodus::run(int argc, char** argv) {
     Intro mode_intro;
     Menu  mode_menu;
     GalaxyGen  mode_galaxygen;
+    GalaxyMap  mode_galaxymap;
     mode_map[MODE_Intro] = (ModeBase*) &mode_intro;
     mode_map[MODE_Menu] = (ModeBase*) &mode_menu;
     mode_map[MODE_GalaxyGen] = (ModeBase*) &mode_galaxygen;
+    mode_map[MODE_GalaxyMap] = (ModeBase*) &mode_galaxymap;
 
     set_mode(MODE_Intro);
 
