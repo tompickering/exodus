@@ -16,6 +16,7 @@ class GalaxyDrawer {
     public:
         GalaxyDrawer();
         FlyTarget *get_clicked_flytarget();
+        void get_draw_position(const FlyTarget*, int&, int&);
     protected:
         void draw_galaxy(bool);
     private:

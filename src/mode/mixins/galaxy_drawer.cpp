@@ -62,6 +62,11 @@ FlyTarget* GalaxyDrawer::get_clicked_flytarget() {
     return nullptr;
 }
 
+void GalaxyDrawer::get_draw_position(const FlyTarget* ft, int& draw_x, int& draw_y) {
+    draw_x = PAD_X + SEP_X * ft->x;
+    draw_y = PAD_Y + SEP_Y * ft->y;
+}
+
 void GalaxyDrawer::draw_galaxy(bool pixelswap) {
     int x, y;
     const char *spr;
@@ -76,16 +81,14 @@ void GalaxyDrawer::draw_galaxy(bool pixelswap) {
     for (unsigned int i = 0; i < n_stars; ++i) {
         const Star *s = &stars[i];
         spr = STAR_SPRITES[s->get_size()];
-        x = PAD_X + SEP_X * s->x;
-        y = PAD_Y + SEP_Y * s->y;
+        get_draw_position(s, x, y);
         star_ids[i] = draw_manager.new_sprite_id();
         draw_manager.draw(tgt, star_ids[i], spr, {x, y, 0.5, 0.5, 1, 1});
     }
 
     Guild *guild = gal->get_guild();
     spr = GUILD_SPRITE;
-    x = PAD_X + SEP_X * guild->x;
-    y = PAD_Y + SEP_Y * guild->y;
+    get_draw_position(guild, x, y);
     guild_id = draw_manager.new_sprite_id();
     draw_manager.draw(tgt, guild_id, spr, {x, y, 0.5, 0.5, 1, 1});
 

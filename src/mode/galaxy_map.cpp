@@ -4,16 +4,23 @@
 
 #define PNL_BORDER 6
 
+#define BLINK_TIME 0.5
+
 enum ID {
     PANEL,
+    SELECTED,
     END,
 };
 
 GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer() {
     stage = GM_SwapIn;
+    selected_ft = nullptr;
+    selected_ft_blink = 0;
 }
 
 void GalaxyMap::enter() {
+    Galaxy *gal = exostate.get_galaxy();
+
     DrawArea area_playerinfo = {
         galaxy_panel_area.x + PNL_BORDER,
         galaxy_panel_area.y + PNL_BORDER,
@@ -69,17 +76,24 @@ void GalaxyMap::enter() {
             {0xFF, 0xFF, 0xFF});
     draw_manager.pixelswap_start();
     stage = GM_SwapIn;
+
+    selected_ft = gal->get_guild();
 }
 
 const float FADE_SPEED = 10.f;
 
 ExodusMode GalaxyMap::update(float delta) {
+    int draw_x, draw_y;
     FlyTarget *ft;
     SpriteClick click;
 
     if (draw_manager.pixelswap_active()) {
         return ExodusMode::MODE_None;
     }
+
+    selected_ft_blink += delta;
+    while (selected_ft_blink > 2*BLINK_TIME)
+        selected_ft_blink -= 2*BLINK_TIME;
 
     switch (stage) {
         case GM_SwapIn:
@@ -91,6 +105,19 @@ ExodusMode GalaxyMap::update(float delta) {
             ft = get_clicked_flytarget();
             if (ft) {
                 L.debug("Clicked %s", ft->name);
+                draw_manager.draw(id(ID::SELECTED), nullptr);
+                selected_ft = ft;
+                selected_ft_blink = BLINK_TIME;
+            }
+
+            if (selected_ft && selected_ft_blink >= BLINK_TIME) {
+                get_draw_position(selected_ft, draw_x, draw_y);
+                draw_manager.draw(
+                        id(ID::SELECTED),
+                        IMG_TS1_MK1,
+                        {draw_x, draw_y, 0.5, 0.5, 1, 1});
+            } else {
+                draw_manager.draw(id(ID::SELECTED), nullptr);
             }
 
             click = draw_manager.query_click(id(ID::PANEL));

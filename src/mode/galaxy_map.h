@@ -23,6 +23,8 @@ class GalaxyMap : ModeBase, GalaxyDrawer {
         };
 
         Stage stage;
+        FlyTarget *selected_ft;
+        float selected_ft_blink;
 };
 
 #endif
