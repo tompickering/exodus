@@ -94,6 +94,7 @@ void DrawManagerSDL::draw_init_image() {
 
 void DrawManagerSDL::load_resources() {
     font_data[Font::Default] = (void*)TTF_OpenFont(FONT_AUDIOWIDE, 16 * UPSCALE_X);
+    font_data[Font::Small] = (void*)TTF_OpenFont(FONT_AUDIOWIDE, 12 * UPSCALE_X);
     font_data[Font::Large] = (void*)TTF_OpenFont(FONT_AUDIOWIDE, 28 * UPSCALE_X);
 
     for (unsigned int i = 0;; ++i) {

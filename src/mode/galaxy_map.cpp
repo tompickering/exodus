@@ -34,6 +34,39 @@ void GalaxyMap::enter() {
             id(ID::PANEL),
             IMG_BR9_EXPORT,
             {RES_X, RES_Y, 1, 1, 1, 1});
+    int y_sep = 16;
+    draw_manager.draw_text(
+            TGT_Secondary,
+            Font::Small,
+            "Test Name",
+            Justify::Left,
+            area_playerinfo.x + 4,
+            area_playerinfo.y + 2,
+            {0xFF, 0xFF, 0xFF});
+    draw_manager.draw_text(
+            TGT_Secondary,
+            Font::Small,
+            "Month: ",
+            Justify::Left,
+            area_playerinfo.x + 4,
+            area_playerinfo.y + 2 + y_sep,
+            {0xFF, 0xFF, 0xFF});
+    draw_manager.draw_text(
+            TGT_Secondary,
+            Font::Small,
+            "MCredits: ",
+            Justify::Left,
+            area_playerinfo.x + 4,
+            area_playerinfo.y + 2 + 2*y_sep,
+            {0xFF, 0xFF, 0xFF});
+    draw_manager.draw_text(
+            TGT_Secondary,
+            Font::Small,
+            "Planets: ",
+            Justify::Left,
+            area_playerinfo.x + 4,
+            area_playerinfo.y + 2 + 3*y_sep,
+            {0xFF, 0xFF, 0xFF});
     draw_manager.pixelswap_start();
     stage = GM_SwapIn;
 }
