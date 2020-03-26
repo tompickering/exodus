@@ -11,6 +11,7 @@ enum ExodusMode {
     MODE_Menu,
     MODE_GalaxyGen,
     MODE_GalaxyMap,
+    MODE_GalaxyIntro,
 };
 
 class ModeBase;
