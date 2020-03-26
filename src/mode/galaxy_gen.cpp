@@ -1,4 +1,4 @@
-#include "galaxygen.h"
+#include "galaxy_gen.h"
 
 #include "anim.h"
 

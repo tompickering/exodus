@@ -13,7 +13,7 @@
 #include "mode/mode_base.h"
 #include "mode/intro.h"
 #include "mode/menu.h"
-#include "mode/galaxygen.h"
+#include "mode/galaxy_gen.h"
 #include "mode/galaxy_map.h"
 
 #include <csignal>

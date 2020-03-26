@@ -1,5 +1,5 @@
-#ifndef GUARD_GALAXYGEN_H
-#define GUARD_GALAXYGEN_H
+#ifndef GUARD_GALAXY_GEN_H
+#define GUARD_GALAXY_GEN_H
 
 #include "mode_base.h"
 #include "mixins/galaxy_drawer.h"
