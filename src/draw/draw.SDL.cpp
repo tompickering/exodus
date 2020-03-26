@@ -450,12 +450,17 @@ void DrawManagerSDL::fill(DrawTarget tgt, DrawArea area, RGB col) {
 }
 
 void DrawManagerSDL::pattern_fill(DrawArea area) {
+    pattern_fill(TGT_Primary, area);
+}
+
+void DrawManagerSDL::pattern_fill(DrawTarget tgt, DrawArea area) {
+    SDL_Surface *tgt_surf = get_target(tgt);
     SDL_Rect r;
     r.x = area.x * UPSCALE_X;
     r.y = area.y * UPSCALE_Y;
     r.w = area.w * UPSCALE_X;
     r.h = area.h * UPSCALE_Y;
-    SDL_BlitSurface(pattern, &r, surf, &r);
+    SDL_BlitSurface(pattern, &r, tgt_surf, &r);
 }
 
 void DrawManagerSDL::fade_start(float seconds, int stages) {
