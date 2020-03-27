@@ -7,6 +7,7 @@
 
 class DrawManagerSDL : public DrawManager {
     public:
+        DrawManagerSDL();
         virtual bool init() override;
         virtual void load_resources() override;
         virtual void update(MousePos, MousePos) override;
@@ -58,6 +59,8 @@ class DrawManagerSDL : public DrawManager {
         SDL_Surface *src_surf_0; // Used for pixelswap target, fade target
         SDL_Surface *src_surf_1; // Used for fade source
         SDL_Surface *pattern;
+        SDL_Surface *cursor_underlay;
+        SDL_Rect cursor_area;
         unsigned int pixelswap_stage;
         SDL_Surface *load_normalised_image(const char*);
         SDL_Surface *get_target(DrawTarget);

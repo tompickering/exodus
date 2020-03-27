@@ -13,6 +13,11 @@
 #include "shared.h"
 #include "assetpaths.h"
 
+DrawManagerSDL::DrawManagerSDL() {
+    cursor_area = {0, 0, 0, 0};
+    cursor_underlay = nullptr;
+}
+
 bool DrawManagerSDL::init() {
     L.info("DrawManager Init...");
     win = SDL_CreateWindow(PROG_NAME,
@@ -56,6 +61,16 @@ bool DrawManagerSDL::init() {
     pattern = SDL_CreateRGBSurface(0, surf->w, surf->h, 32, 0, 0, 0, 0);
     if (!pattern) {
         L.error("Could not create pattern surface");
+        return false;
+    }
+
+    SDL_Surface *cursor = load_normalised_image(CURSOR_IMG);
+    cursor_area.w = cursor->w * UPSCALE_X;
+    cursor_area.h = cursor->h * UPSCALE_Y;
+    sprite_data[CURSOR_IMG] = cursor;
+    cursor_underlay = SDL_CreateRGBSurface(0, cursor_area.w, cursor_area.h, 32, 0, 0, 0, 0);
+    if (!cursor_underlay) {
+        L.error("Could not create cursor underlay surface");
         return false;
     }
 
@@ -152,10 +167,29 @@ void DrawManagerSDL::update(MousePos mouse_pos, MousePos new_click_pos) {
     }
 
     if (draw_cursor) {
-        draw(ID_CURSOR, IMG_CURSOR, {mouse_pos.x, mouse_pos.y, 0.5, 0.5, 1, 1});
-    }
+        cursor_area.x = mouse_pos.x * UPSCALE_X - cursor_area.w / 2;
+        cursor_area.y = mouse_pos.y * UPSCALE_Y - cursor_area.h / 2;
+        SDL_Rect ca;
+        SDL_Rect ca0;
 
-    SDL_UpdateWindowSurface(win);
+        ca = cursor_area;
+        ca0 = cursor_area; ca0.x = 0; ca0.y = 0;
+        SDL_BlitSurface(surf, &ca, cursor_underlay, &ca0);
+
+        ca = cursor_area;
+        ca0 = cursor_area; ca0.x = 0; ca0.y = 0;
+        SDL_BlitScaled(
+            (SDL_Surface*)sprite_data[CURSOR_IMG],
+            nullptr, surf, &ca);
+
+        SDL_UpdateWindowSurface(win);
+
+        ca = cursor_area;
+        ca0 = cursor_area; ca0.x = 0; ca0.y = 0;
+        SDL_BlitSurface(cursor_underlay, &ca0, surf, &ca);
+    } else {
+        SDL_UpdateWindowSurface(win);
+    }
 }
 
 void DrawManagerSDL::pixelswap_update() {
@@ -506,9 +540,9 @@ SDL_Surface* DrawManagerSDL::get_target(DrawTarget tgt) {
 }
 
 void DrawManagerSDL::show_cursor(bool show) {
-    if (draw_cursor && !show) {
-        repair_dirty_area(ID_CURSOR);
-    }
+    //if (draw_cursor && !show) {
+        //repair_dirty_area(ID_CURSOR);
+    //}
 
     DrawManager::show_cursor(show);
 }

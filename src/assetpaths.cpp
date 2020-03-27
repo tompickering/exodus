@@ -4002,9 +4002,12 @@ const char *IMG_WD1_WELL         = D_GRA "wd1_well";
 
 #endif  // LINUX
 
-// Special case - we load and display this one first.
-// It doesn't need to be present in ASSETS_IMG.
+// Special cases
+// These don't need to be present in ASSETS_IMG.
+// We load and display this image whilst the rest are loading.
 const char *INIT_IMG = IMG_ST1_INITSPR;
+// This is given special handling by the draw manager
+const char *CURSOR_IMG = IMG_CURSOR;
 
 const char *ASSETS_SFX[] = {
     SFX_SHOT,
@@ -4052,8 +4055,6 @@ const char *ASSETS_MUS[] = {
 };
 
 const char *ASSETS_IMG[] = {
-    IMG_CURSOR,
-
     IMG_INTRO_EARTH,
     IMG_INTRO_CITY,
     IMG_INTRO_STARPORT,
