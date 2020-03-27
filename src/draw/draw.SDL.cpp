@@ -539,12 +539,4 @@ SDL_Surface* DrawManagerSDL::get_target(DrawTarget tgt) {
     return nullptr;
 }
 
-void DrawManagerSDL::show_cursor(bool show) {
-    //if (draw_cursor && !show) {
-        //repair_dirty_area(ID_CURSOR);
-    //}
-
-    DrawManager::show_cursor(show);
-}
-
 #endif

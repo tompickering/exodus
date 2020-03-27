@@ -49,7 +49,6 @@ class DrawManagerSDL : public DrawManager {
         virtual void fade_black(float, int) override;
         virtual void fade_white(float, int) override;
         virtual bool fade_active() override;
-        virtual void show_cursor(bool) override;
     protected:
         virtual void* get_sprite_data(const char*) override;
     private:

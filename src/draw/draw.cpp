@@ -4,10 +4,9 @@ const float UPSCALE_X = (float)SCREEN_WIDTH  / (float)RES_X;
 const float UPSCALE_Y = (float)SCREEN_HEIGHT / (float)RES_Y;
 
 const SprID ID_NONE = 0;
-const SprID ID_CURSOR = 1;
 
 DrawManager::DrawManager() {
-    next_id = ID_CURSOR + 1;
+    next_id = ID_NONE + 1;
     fade_timer.start();
     fade_seconds = 0;
     fade_stage = 0;
@@ -21,8 +20,6 @@ void DrawManager::update(MousePos mouse_pos, MousePos new_click_pos) {
     click_pos = new_click_pos;
     if (draw_cursor && click_pos.x >= 0 && click_pos.y >= 0) {
         for (std::vector<DrawnSprite>::size_type i = 0; i < drawn_spr_info.size(); ++i) {
-            if (drawn_spr_info[i].id == ID_CURSOR)
-                continue;
             area = &(drawn_spr_info[i].area);
             if (area->w == 0 || area->h == 0)
                 continue;
@@ -83,7 +80,7 @@ SprID DrawManager::new_sprite_id() {
         // Should we congratulate the player on their playtime?
         // Or me for us not having crashed by this point? ;)
         L.warn("Sprite ID wrapping");
-        next_id = ID_CURSOR + 1;
+        next_id = ID_NONE + 1;
     }
     L.debug("Allocating SprID %d", next_id);
     return next_id++;

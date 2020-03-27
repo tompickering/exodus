@@ -33,7 +33,6 @@ using std::vector;
 typedef unsigned int SprID;
 
 extern const SprID ID_NONE;
-extern const SprID ID_CURSOR;
 
 typedef struct {
     int x;
