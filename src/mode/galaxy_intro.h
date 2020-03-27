@@ -15,7 +15,7 @@ class GalaxyIntro : ModeBase {
         virtual void enter() override;
         virtual ExodusMode update(float) override;
     private:
-        float progress;
+        float time;
 };
 
 #endif
