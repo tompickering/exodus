@@ -167,6 +167,15 @@ void DrawManagerSDL::update(MousePos mouse_pos, MousePos new_click_pos) {
     }
 
     if (draw_cursor) {
+        // To ensure that cursor drawing plays nicely with anything
+        // else that might be animating on the main game screen,
+        // we draw it at the very last minute, saving whatever's
+        // underneath and restoring it immediately after displaying
+        // the surface on the screen.
+        //
+        // In this way, the cursor sprite is only ever present on
+        // the primary surface for the brief period in which we
+        // update the window.
         cursor_area.x = mouse_pos.x * UPSCALE_X - cursor_area.w / 2;
         cursor_area.y = mouse_pos.y * UPSCALE_Y - cursor_area.h / 2;
         SDL_Rect ca;
