@@ -11,6 +11,7 @@ enum ID {
     SELECTED,
     FLEET_MARKER,
     FLYTARGET_DESC,
+    FLYTARGET_QM,
     END,
 };
 
@@ -119,6 +120,19 @@ ExodusMode GalaxyMap::update(float delta) {
                 char ft_desc[41];
                 bool is_guild = ft == gal->get_guild();
                 snprintf(ft_desc, 40, "This is the %s%s.", is_guild ? "" : "star ", ft->name);
+
+                // Draw '?' or star details
+                if (player->location.has_visited(exostate.tgt2loc(ft))) {
+                    draw_manager.draw(
+                        id(ID::FLYTARGET_QM),
+                        nullptr);
+                } else {
+                    draw_manager.draw(
+                        id(ID::FLYTARGET_QM),
+                        IMG_TS1_QMARK,
+                        {RES_X - 12, area_starinfo.y + 6, 1, 0, 1, 1});
+                }
+
                 selected_ft = ft;
                 selected_ft_blink = BLINK_TIME;
                 L.debug("%s", ft_desc);

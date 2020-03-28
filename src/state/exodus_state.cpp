@@ -34,6 +34,8 @@ void ExodusState::init(GameConfig config) {
     month = 1;
     active_player = 0;
     unsigned int i;
+
+    // PLAYER INIT: Human
     for (i = 0; i < n_players; ++i) {
         memcpy(&player_info[i], &config.info[i], sizeof(PlayerInfo));
         player_info[i].human = true;
@@ -56,11 +58,17 @@ void ExodusState::init(GameConfig config) {
                 break;
         }
     }
+
+    // PLAYER INIT: CPU
     for (; i < N_PLAYERS; ++i) {
-        // TODO: Initialise CPU players
         player_info[i].human = false;
         player_info[i].fleet_marker = nullptr;
     }
+
+    // PLAYER INIT: Everyone
+    for (i = 0; i < N_PLAYERS; ++i) {
+    }
+
     aim = config.aim;
     enemy_start = config.enemy_start;
     L.debug("ExodusState init");
