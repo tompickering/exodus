@@ -461,7 +461,7 @@ void DrawManagerSDL::pixelswap_start() {
     pixelswap_start(nullptr);
 }
 
-void DrawManagerSDL::pixelswap_start(DrawArea* area) {
+void DrawManagerSDL::pixelswap_start(const DrawArea* area) {
     pixelswap_stage = 20;
     if (area) {
         pixelswap_region = *area;

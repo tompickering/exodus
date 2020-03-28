@@ -26,7 +26,7 @@ class DrawManagerSDL : public DrawManager {
         virtual void draw(DrawTarget, SprID, const char*) override;
         virtual void draw(DrawTarget, SprID, const char*, DrawTransform) override;
         virtual void pixelswap_start() override;
-        virtual void pixelswap_start(DrawArea*) override;
+        virtual void pixelswap_start(const DrawArea*) override;
         virtual bool pixelswap_active() override;
         virtual void pixelswap_update() override;
         virtual void fill(DrawArea, RGB) override;
