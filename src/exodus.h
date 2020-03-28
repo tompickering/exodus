@@ -12,6 +12,11 @@ enum ExodusMode {
     MODE_GalaxyGen,
     MODE_GalaxyMap,
     MODE_GalaxyIntro,
+    MODE_GuildExterior,
+    MODE_GuildBar,
+    MODE_GuildHQ,
+    MODE_SolarSystem,
+    MODE_PlanetMap,
 };
 
 class ModeBase;

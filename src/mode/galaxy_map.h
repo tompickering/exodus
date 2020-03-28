@@ -20,6 +20,8 @@ class GalaxyMap : ModeBase, GalaxyDrawer {
         enum Stage {
             GM_SwapIn,
             GM_Idle,
+            GM_Zoom2Guild,
+            GM_Zoom2Star,
         };
 
         Stage stage;

@@ -91,7 +91,7 @@ ExodusMode GalaxyMap::update(float delta) {
     FlyTarget *ft;
     SpriteClick click;
 
-    if (draw_manager.pixelswap_active()) {
+    if (draw_manager.pixelswap_active() || draw_manager.fade_active()) {
         return ExodusMode::MODE_None;
     }
 
@@ -172,15 +172,33 @@ ExodusMode GalaxyMap::update(float delta) {
             click = draw_manager.query_click(id(ID::PANEL));
             if (click.id) {
                 if (click.x < 0.25) {
+                    // Fly
                     L.debug("Panel 0");
                 } else if (click.x < 0.5) {
                     L.debug("Panel 1");
                 } else if (click.x < 0.75) {
                     L.debug("Panel 2");
                 } else {
-                    L.debug("Panel 3");
+                    // Zoom
+                    if (player->location.has_visited(exostate.tgt2loc(selected_ft))) {
+                        exostate.set_active_flytarget(selected_ft);
+                        draw_manager.show_cursor(false);
+                        draw_manager.fade_black(1.2f, 24);
+                        if (selected_ft == gal->get_guild()) {
+                            stage = GM_Zoom2Guild;
+                        } else {
+                            stage = GM_Zoom2Star;
+                        }
+                    } else {
+                        L.debug("Can't zoom - not visited");
+                    }
                 }
             }
+            break;
+        case GM_Zoom2Guild:
+            return ExodusMode::MODE_GuildExterior;
+            break;
+        case GM_Zoom2Star:
             break;
         default:
             break;

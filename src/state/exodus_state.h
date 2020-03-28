@@ -106,6 +106,7 @@ class ExodusState {
         Galaxy* get_galaxy();
         unsigned int get_month();
         PlayerInfo *get_active_player();
+        void set_active_flytarget(FlyTarget*);
         int tgt2loc(FlyTarget*); // Convert between PlayerLocation
         FlyTarget* loc2tgt(int); // indicies and FlyTarget objects.
     private:
@@ -118,6 +119,7 @@ class ExodusState {
         EnemyStart enemy_start;
         Galaxy galaxy;
         bool galaxy_finalised;
+        FlyTarget *active_flytarget;
 };
 
 #endif

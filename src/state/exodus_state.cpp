@@ -108,8 +108,13 @@ unsigned int ExodusState::get_month() {
     return month;
 }
 
-PlayerInfo *ExodusState::get_active_player() {
+PlayerInfo* ExodusState::get_active_player() {
     return &player_info[active_player];
+}
+
+void ExodusState::set_active_flytarget(FlyTarget* new_target) {
+    L.debug("Active target: %s", new_target->name);
+    active_flytarget = new_target;
 }
 
 int ExodusState::tgt2loc(FlyTarget* tgt) {
