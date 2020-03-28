@@ -31,8 +31,17 @@ void ExodusState::init(GameConfig config) {
     galaxy_finalised = false;
     size = config.size;
     n_players = config.n_players;
-    for (unsigned int i = 0; i < n_players; ++i) {
+    month = 1;
+    active_player = 0;
+    unsigned int i;
+    for (i = 0; i < n_players; ++i) {
         memcpy(&player_info[i], &config.info[i], sizeof(PlayerInfo));
+        player_info[i].human = true;
+        player_info[i].intro_seen = false;
+    }
+    for (; i < N_PLAYERS; ++i) {
+        // TODO: Initialise CPU players
+        player_info[i].human = false;
     }
     aim = config.aim;
     enemy_start = config.enemy_start;
@@ -67,4 +76,12 @@ void ExodusState::finalise_galaxy() {
 
 Galaxy* ExodusState::get_galaxy() {
     return &galaxy;
+}
+
+unsigned int ExodusState::get_month() {
+    return month;
+}
+
+PlayerInfo *ExodusState::get_active_player() {
+    return &player_info[active_player];
 }

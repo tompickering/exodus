@@ -13,10 +13,12 @@
 
 #include "galaxy/galaxy.h"
 
-#define MAX_PLAYERS           5
+#define MAX_HUMAN_PLAYERS    5
 #define MAX_PLAYER_NAME      12
 #define MAX_PLAYER_TITLE     12
 #define MAX_PLAYER_REFERENCE 12
+
+#define N_PLAYERS 15
 
 extern const char* flags[];
 
@@ -27,11 +29,13 @@ enum GalaxySize {
 };
 
 typedef struct {
+    bool human;
     char name[MAX_PLAYER_NAME + 1];
     char title[MAX_PLAYER_TITLE + 1];
     char ref[MAX_PLAYER_REFERENCE + 1];
     int flag_idx;
     unsigned int mc;
+    bool intro_seen;
 } PlayerInfo;
 
 enum Aim {
@@ -50,7 +54,7 @@ enum EnemyStart {
 typedef struct {
     GalaxySize size;
     unsigned int n_players;
-    PlayerInfo info[MAX_PLAYERS];
+    PlayerInfo info[MAX_HUMAN_PLAYERS];
     Aim aim;
     EnemyStart enemy_start;
 } GameConfig;
@@ -62,10 +66,14 @@ class ExodusState {
         void generate_galaxy();
         void finalise_galaxy();
         Galaxy* get_galaxy();
+        unsigned int get_month();
+        PlayerInfo *get_active_player();
     private:
         GalaxySize size;
         unsigned int n_players;
-        PlayerInfo player_info[MAX_PLAYERS];
+        unsigned int month;
+        unsigned int active_player;
+        PlayerInfo player_info[N_PLAYERS];
         Aim aim;
         EnemyStart enemy_start;
         Galaxy galaxy;

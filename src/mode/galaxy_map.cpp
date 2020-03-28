@@ -74,7 +74,7 @@ void GalaxyMap::enter() {
             area_playerinfo.x + 4,
             area_playerinfo.y + 2 + 3*y_sep,
             {0xFF, 0xFF, 0xFF});
-    draw_manager.pixelswap_start();
+    draw_manager.pixelswap_start(&galaxy_panel_area);
     stage = GM_SwapIn;
 
     selected_ft = gal->get_guild();
@@ -86,6 +86,8 @@ ExodusMode GalaxyMap::update(float delta) {
     int draw_x, draw_y;
     FlyTarget *ft;
     SpriteClick click;
+
+    PlayerInfo *player = exostate.get_active_player();
 
     if (draw_manager.pixelswap_active()) {
         return ExodusMode::MODE_None;
@@ -102,6 +104,10 @@ ExodusMode GalaxyMap::update(float delta) {
             stage = GM_Idle;
             break;
         case GM_Idle:
+            if (player->human && !player->intro_seen) {
+                return ExodusMode::MODE_GalaxyIntro;
+            }
+
             ft = get_clicked_flytarget();
             if (ft) {
                 L.debug("Clicked %s", ft->name);

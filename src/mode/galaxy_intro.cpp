@@ -57,6 +57,8 @@ ExodusMode GalaxyIntro::update(float delta) {
         return ExodusMode::MODE_None;
     }
 
+    PlayerInfo *player = exostate.get_active_player();
+
     time += delta;
 
     float progress = time / GALAXY_INTRO_TIME;
@@ -86,6 +88,7 @@ ExodusMode GalaxyIntro::update(float delta) {
     }
 
     if (time > 16) {
+        player->intro_seen = true;
         return ExodusMode::MODE_GalaxyMap;
     }
 
