@@ -330,7 +330,11 @@ void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key, DrawArea* area, S
         if (tgt_surf == surf) {
             repair_dirty_area(*id);
         }
-        update_dirty_area(*id, *area);
+        if (spr_key) {
+            update_dirty_area(*id, *area);
+        } else {
+            release_sprite_id(*id);
+        }
     }
 
     if (!spr_key)
