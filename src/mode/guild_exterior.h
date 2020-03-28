@@ -10,6 +10,8 @@ class GuildExterior : ModeBase {
         GuildExterior();
         virtual void enter() override;
         virtual ExodusMode update(float) override;
+    private:
+        float blink_cycle;
 };
 
 #endif
