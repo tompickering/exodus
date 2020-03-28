@@ -213,8 +213,8 @@ void DrawManagerSDL::pixelswap_update() {
             for (int x = 0; x < pixelswap_region.w / PX_W; ++x) {
                 bool swap = (random() % pixelswap_stage) == 0;
                 if (swap) {
-                    SDL_Rect r = {(pixelswap_region.x + x) * PX_W,
-                                  (pixelswap_region.y + y) * PX_H, PX_W, PX_H};
+                    SDL_Rect r = {pixelswap_region.x + (x * PX_W),
+                                  pixelswap_region.y + (y * PX_H), PX_W, PX_H};
                     SDL_BlitSurface(src_surf_0, &r, surf, &r);
                 }
             }
