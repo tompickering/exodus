@@ -58,6 +58,11 @@ ExodusMode GalaxyIntro::update(float delta) {
     }
 
     PlayerInfo *player = exostate.get_active_player();
+    player->intro_seen = true;
+
+    if (input_manager.consume(K_Space)) {
+        return ExodusMode::MODE_GalaxyMap;
+    }
 
     time += delta;
 
