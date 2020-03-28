@@ -10,8 +10,12 @@ enum ID {
     PANEL,
     SELECTED,
     FLEET_MARKER,
+    FLYTARGET_DESC,
     END,
 };
+
+DrawArea area_playerinfo;
+DrawArea area_starinfo;
 
 GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer() {
     stage = GM_SwapIn;
@@ -20,14 +24,12 @@ GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer() {
 }
 
 void GalaxyMap::enter() {
-    Galaxy *gal = exostate.get_galaxy();
-
-    DrawArea area_playerinfo = {
+    area_playerinfo = {
         galaxy_panel_area.x + PNL_BORDER,
         galaxy_panel_area.y + PNL_BORDER,
         190,
         galaxy_panel_area.h - PNL_BORDER * 2};
-    DrawArea area_starinfo = {
+    area_starinfo = {
         area_playerinfo.x + area_playerinfo.w + PNL_BORDER,
         galaxy_panel_area.y + PNL_BORDER,
         RES_X - (area_playerinfo.x + area_playerinfo.w + PNL_BORDER) - PNL_BORDER,
@@ -78,7 +80,7 @@ void GalaxyMap::enter() {
     draw_manager.pixelswap_start(&galaxy_panel_area);
     stage = GM_SwapIn;
 
-    selected_ft = gal->get_guild();
+    selected_ft = nullptr;
 }
 
 const float FADE_SPEED = 10.f;
@@ -88,11 +90,12 @@ ExodusMode GalaxyMap::update(float delta) {
     FlyTarget *ft;
     SpriteClick click;
 
-    PlayerInfo *player = exostate.get_active_player();
-
     if (draw_manager.pixelswap_active()) {
         return ExodusMode::MODE_None;
     }
+
+    Galaxy *gal = exostate.get_galaxy();
+    PlayerInfo *player = exostate.get_active_player();
 
     selected_ft_blink += delta;
     while (selected_ft_blink > 2*BLINK_TIME)
@@ -110,11 +113,22 @@ ExodusMode GalaxyMap::update(float delta) {
             }
 
             ft = get_clicked_flytarget();
-            if (ft) {
-                L.debug("Clicked %s", ft->name);
+            if (!selected_ft) ft = gal->get_guild();
+            if (ft && ft != selected_ft) {
                 draw_manager.draw(id(ID::SELECTED), nullptr);
+                char ft_desc[41];
+                bool is_guild = ft == gal->get_guild();
+                snprintf(ft_desc, 40, "This is the %s%s.", is_guild ? "" : "star ", ft->name);
                 selected_ft = ft;
                 selected_ft_blink = BLINK_TIME;
+                L.debug("%s", ft_desc);
+                draw_manager.draw_text(
+                    id(ID::FLYTARGET_DESC),
+                    (const char*) ft_desc,
+                    Justify::Left,
+                    area_starinfo.x + 4,
+                    area_starinfo.y + 2,
+                    {0xFF, 0xFF, 0xFF});
             }
 
             if (selected_ft && selected_ft_blink >= BLINK_TIME) {
