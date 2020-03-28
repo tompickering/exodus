@@ -28,6 +28,29 @@ enum GalaxySize {
     GAL_Large,
 };
 
+// Location of a player's fleet
+class PlayerLocation {
+    public:
+        PlayerLocation() {
+            months_to_arrive = 0;
+            target = -1;
+            just_arrived = false;
+        };
+        void advance() {
+            just_arrived = false;
+            if (months_to_arrive > 0) {
+                just_arrived = (--months_to_arrive == 0);
+            }
+        };
+        bool in_flight() { return months_to_arrive > 0; };
+        void set_target(int nt, int m) { target = nt; months_to_arrive = m; };
+        int get_target() { return target; };
+    private:
+        int target; // -1=guild, 0+=star index
+        int months_to_arrive; // 'In flight' if > 0
+        bool just_arrived;
+};
+
 typedef struct {
     bool human;
     char name[MAX_PLAYER_NAME + 1];
@@ -36,6 +59,8 @@ typedef struct {
     int flag_idx;
     unsigned int mc;
     bool intro_seen;
+    const char *fleet_marker;
+    PlayerLocation location;
 } PlayerInfo;
 
 enum Aim {
@@ -68,6 +93,8 @@ class ExodusState {
         Galaxy* get_galaxy();
         unsigned int get_month();
         PlayerInfo *get_active_player();
+        int tgt2loc(FlyTarget*); // Convert between PlayerLocation
+        FlyTarget* loc2tgt(int); // indicies and FlyTarget objects.
     private:
         GalaxySize size;
         unsigned int n_players;

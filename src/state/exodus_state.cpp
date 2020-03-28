@@ -38,10 +38,28 @@ void ExodusState::init(GameConfig config) {
         memcpy(&player_info[i], &config.info[i], sizeof(PlayerInfo));
         player_info[i].human = true;
         player_info[i].intro_seen = false;
+        switch(i) {
+            case 0:
+                player_info[i].fleet_marker = IMG_TS1_ICON1;
+                break;
+            case 1:
+                player_info[i].fleet_marker = IMG_TS1_ICON2;
+                break;
+            case 2:
+                player_info[i].fleet_marker = IMG_TS1_ICON3;
+                break;
+            case 3:
+                player_info[i].fleet_marker = IMG_TS1_ICON4;
+                break;
+            case 4:
+                player_info[i].fleet_marker = IMG_TS1_ICON5;
+                break;
+        }
     }
     for (; i < N_PLAYERS; ++i) {
         // TODO: Initialise CPU players
         player_info[i].human = false;
+        player_info[i].fleet_marker = nullptr;
     }
     aim = config.aim;
     enemy_start = config.enemy_start;
@@ -84,4 +102,20 @@ unsigned int ExodusState::get_month() {
 
 PlayerInfo *ExodusState::get_active_player() {
     return &player_info[active_player];
+}
+
+int ExodusState::tgt2loc(FlyTarget* tgt) {
+    if (tgt == get_galaxy()->get_guild())
+        return -1;
+    for (int i = 0; i < GALAXY_MAX_STARS; ++i)
+        if (&get_galaxy()->get_stars()[i] == tgt)
+            return i;
+    L.fatal("Invalid location");
+    return -1;
+}
+
+FlyTarget* ExodusState::loc2tgt(int loc) {
+    if (loc < 0)
+        return get_galaxy()->get_guild();
+    return &get_galaxy()->get_stars()[loc];
 }

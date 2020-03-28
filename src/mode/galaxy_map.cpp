@@ -9,6 +9,7 @@
 enum ID {
     PANEL,
     SELECTED,
+    FLEET_MARKER,
     END,
 };
 
@@ -124,6 +125,20 @@ ExodusMode GalaxyMap::update(float delta) {
                         {draw_x, draw_y, 0.5, 0.5, 1, 1});
             } else {
                 draw_manager.draw(id(ID::SELECTED), nullptr);
+            }
+
+            if (!player->location.in_flight()) {
+                FlyTarget *fleet_pos = exostate.loc2tgt(player->location.get_target());
+                get_draw_position(fleet_pos, draw_x, draw_y);
+                draw_manager.draw(
+                        id(ID::FLEET_MARKER),
+                        player->fleet_marker,
+                        {draw_x - 10, draw_y + 10, 0.5, 0.5, 1, 1});
+            } else {
+                draw_manager.draw(
+                        id(ID::FLEET_MARKER),
+                        nullptr,
+                        {draw_x - 10, draw_y - 10, 0.5, 0.5, 1, 1});
             }
 
             click = draw_manager.query_click(id(ID::PANEL));
