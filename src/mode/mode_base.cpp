@@ -16,7 +16,6 @@ void ModeBase::enter(unsigned int max_id) {
 void ModeBase::enter() {
     id_max = 0;
     L.debug("Entering mode: %s", name);
-    draw_manager.clear();
 }
 
 void ModeBase::exit() {
