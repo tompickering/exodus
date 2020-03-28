@@ -791,8 +791,7 @@ ExodusMode Intro::update(float delta) {
             return ExodusMode::MODE_None;
             break;
         case End:
-            next_stage(); return ExodusMode::MODE_Menu;
-            break;
+            return ExodusMode::MODE_Menu;
         case Fail:
             if (!stage_started) {
                 draw_manager.draw(IMG_INTRO_FAIL);

@@ -84,7 +84,7 @@ SprID id_diff_2;
  * Main > size > #humans > name/geneder/welcome > flag > aim > other races > confirm
  */
 ExodusMode Menu::update(float delta) {
-    if (draw_manager.pixelswap_active() || draw_manager.fade_active()) {
+    if (draw_manager.pixelswap_active() || (stage != Main && draw_manager.fade_active())) {
         draw_manager.show_cursor(false);
         return ExodusMode::MODE_None;
     }

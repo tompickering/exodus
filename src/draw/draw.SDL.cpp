@@ -462,6 +462,9 @@ void DrawManagerSDL::pixelswap_start() {
 }
 
 void DrawManagerSDL::pixelswap_start(const DrawArea* area) {
+    // Cancel fade, if there's on in progress
+    fade_stages = 0;
+
     pixelswap_stage = 20;
     if (area) {
         pixelswap_region = *area;
