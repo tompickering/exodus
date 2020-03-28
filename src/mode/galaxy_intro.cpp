@@ -41,8 +41,8 @@ void GalaxyIntro::enter() {
         {340, 50, 1, 0, 1, 1});
     draw_manager.draw(
         TGT_Secondary,
-        IMG_INTRO_SH3_CRUISER1,
-        {420, 50, 0, 0, -2.4, 2.4});
+        IMG_SHIP_FLIPPED,
+        {420, 50, 0, 0, 2.4, 2.4});
     DrawArea area = {0, 0, RES_X, 430};
     draw_manager.pixelswap_start(&area);
     time = 0;

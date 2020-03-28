@@ -44,6 +44,7 @@ const char *MUS_OVERWORLD_ANGRY = D_MUS "ST3_55";
 const char *MUS_ST3_58          = D_MUS "ST3_58";
 
 const char *IMG_CURSOR          = "assets/img/cursor";
+const char *IMG_SHIP_FLIPPED    = "assets/img/SH3_cruiser1_flipped";
 
 #define D_PIC "assets/img/pictures/"
 const char *IMG_INTRO_EARTH     = D_PIC "ea1";
@@ -4055,6 +4056,8 @@ const char *ASSETS_MUS[] = {
 };
 
 const char *ASSETS_IMG[] = {
+    IMG_SHIP_FLIPPED,
+
     IMG_INTRO_EARTH,
     IMG_INTRO_CITY,
     IMG_INTRO_STARPORT,
