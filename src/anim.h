@@ -1,7 +1,7 @@
 #ifndef GUARD_ANIM_H
 #define GUARD_ANIM_H
 
-#define MAX_ANIM_FRAMES 10
+#define MAX_ANIM_FRAMES 30
 
 class Anim {
     public:
