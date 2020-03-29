@@ -48,8 +48,6 @@ void GuildExterior::enter() {
 }
 
 ExodusMode GuildExterior::update(float delta) {
-    MousePos click_pos;
-
     if (draw_manager.fade_active()) {
         return ExodusMode::MODE_None;
     }
@@ -123,8 +121,7 @@ ExodusMode GuildExterior::update(float delta) {
         draw_manager.draw(id(ID::TRANSPORTER), nullptr);
     }
 
-    click_pos = input_manager.read_click();
-    bool click = click_pos.x > 0 && click_pos.y > 0;
+    bool click = draw_manager.clicked();
     if (mouse_over_hq()) {
         draw_manager.draw_text(
             id(ID::LOC_TEXT),
@@ -132,6 +129,8 @@ ExodusMode GuildExterior::update(float delta) {
             Justify::Left,
             10, RES_Y - 30,
             {0xFF, 0xFF, 0xFF});
+        if (click)
+            return ExodusMode::MODE_GuildHQ;
     } else if (mouse_over_bar()) {
         draw_manager.draw_text(
             id(ID::LOC_TEXT),
@@ -139,6 +138,8 @@ ExodusMode GuildExterior::update(float delta) {
             Justify::Left,
             10, RES_Y - 30,
             {0xFF, 0xFF, 0xFF});
+        if (click)
+            return ExodusMode::MODE_GuildBar;
     } else if (mouse_over_hangar()) {
         draw_manager.draw_text(
             id(ID::LOC_TEXT),
@@ -146,6 +147,8 @@ ExodusMode GuildExterior::update(float delta) {
             Justify::Left,
             10, RES_Y - 30,
             {0xFF, 0xFF, 0xFF});
+        if (click)
+            return ExodusMode::MODE_GalaxyMap;
     } else {
         draw_manager.draw(
             id(ID::LOC_TEXT),

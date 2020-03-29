@@ -17,6 +17,8 @@
 #include "mode/galaxy_map.h"
 #include "mode/galaxy_intro.h"
 #include "mode/guild_exterior.h"
+#include "mode/guild_hq.h"
+#include "mode/guild_bar.h"
 
 #include <csignal>
 
@@ -83,12 +85,16 @@ int Exodus::run(int argc, char** argv) {
     GalaxyMap  mode_galaxymap;
     GalaxyIntro  mode_galaxyintro;
     GuildExterior mode_guildexterior;
+    GuildHQ mode_guildhq;
+    GuildBar mode_guildbar;
     mode_map[MODE_Intro] = (ModeBase*) &mode_intro;
     mode_map[MODE_Menu] = (ModeBase*) &mode_menu;
     mode_map[MODE_GalaxyGen] = (ModeBase*) &mode_galaxygen;
     mode_map[MODE_GalaxyMap] = (ModeBase*) &mode_galaxymap;
     mode_map[MODE_GalaxyIntro] = (ModeBase*) &mode_galaxyintro;
     mode_map[MODE_GuildExterior] = (ModeBase*) &mode_guildexterior;
+    mode_map[MODE_GuildHQ] = (ModeBase*) &mode_guildhq;
+    mode_map[MODE_GuildBar] = (ModeBase*) &mode_guildbar;
 
     set_mode(MODE_Intro);
 

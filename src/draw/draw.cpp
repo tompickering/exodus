@@ -12,12 +12,14 @@ DrawManager::DrawManager() {
     fade_stage = 0;
     draw_cursor = false;
     sprite_click.id = ID_NONE;
+    clicked_this_frame = false;
 }
 
 void DrawManager::update(MousePos mouse_pos, MousePos new_click_pos) {
     DrawArea *area = nullptr;
     sprite_click.id = ID_NONE;
     click_pos = new_click_pos;
+    clicked_this_frame = (new_click_pos.x >= 0 && new_click_pos.y >= 0);
     if (draw_cursor && click_pos.x >= 0 && click_pos.y >= 0) {
         for (std::vector<DrawnSprite>::size_type i = 0; i < drawn_spr_info.size(); ++i) {
             area = &(drawn_spr_info[i].area);
@@ -116,4 +118,8 @@ void DrawManager::clear(DrawTarget tgt) {
 
 void DrawManager::show_cursor(bool show) {
     draw_cursor = show;
+}
+
+bool DrawManager::clicked() {
+    return clicked_this_frame;
 }
