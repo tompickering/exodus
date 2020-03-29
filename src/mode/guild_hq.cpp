@@ -4,10 +4,15 @@
 
 #include "assetpaths.h"
 
+static const DrawArea AREA_BOT  = {100, 200, 120, 120};
+static const DrawArea AREA_DOOR = {200, 200, 120, 120};
+static const DrawArea AREA_EXIT = {RES_X - 120, 0, 120, RES_Y};
+
 enum ID {
     BOT,
     EYES,
     EYES_REF,
+    TEXT,
     END,
 };
 
@@ -28,15 +33,6 @@ ExodusMode GuildHQ::update(float delta) {
     bool click = draw_manager.clicked();
 
     eyes_loop = fmod(eyes_loop + delta, 6);
-
-    if (click) {
-        MousePos pos = input_manager.get_mouse_pos();
-        if (pos.x > 100 && pos.x < 220 && pos.y > 200 && pos.y < 320) {
-            guildbot_active = true;
-        } else if (pos.x > RES_X - 120) {
-            return ExodusMode::MODE_GuildExterior;
-        }
-    }
 
     if (guildbot_active) {
         eyes_loop = 0;
@@ -68,6 +64,37 @@ ExodusMode GuildHQ::update(float delta) {
             draw_manager.draw(id(ID::EYES),     nullptr);
             draw_manager.draw(id(ID::EYES_REF), nullptr);
         }
+    }
+
+    if (draw_manager.mouse_in_area(AREA_BOT)) {
+        draw_manager.draw_text(
+            id(ID::TEXT),
+            "Infobot",
+            Justify::Left,
+            10, RES_Y - 30,
+            {0xEE, 0xEE, 0xAA});
+        if (click) {
+            guildbot_active = true;
+        }
+    } else if (draw_manager.mouse_in_area(AREA_DOOR)) {
+        draw_manager.draw_text(
+            id(ID::TEXT),
+            "Guildmaster Entrance",
+            Justify::Left,
+            10, RES_Y - 30,
+            {0xEE, 0xEE, 0xAA});
+    } else if (draw_manager.mouse_in_area(AREA_EXIT)) {
+        draw_manager.draw_text(
+            id(ID::TEXT),
+            "Exit",
+            Justify::Left,
+            10, RES_Y - 30,
+            {0xEE, 0xEE, 0xAA});
+        if (click) {
+            return ExodusMode::MODE_GuildExterior;
+        }
+    } else {
+        draw_manager.draw(id(ID::TEXT), nullptr);
     }
 
     return ExodusMode::MODE_None;

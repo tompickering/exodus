@@ -5,9 +5,15 @@
 #include "anim.h"
 #include "assetpaths.h"
 
+static const DrawArea AREA_BARKEEP  = {200, 230, 40, 50};
+static const DrawArea AREA_SHERIFF  = {400, 230, 60, 40};
+static const DrawArea AREA_PINBOARD = {590, 200, 50, 50};
+static const DrawArea AREA_EXIT     = {490, 220, 50, 60};
+
 enum ID {
     TALK,
     LIGHT,
+    TEXT,
     END,
 };
 
@@ -68,6 +74,41 @@ ExodusMode GuildBar::update(float delta) {
         draw_manager.draw(id(ID::LIGHT), IMG_SG3_LAMP0, {546, 166, 0.5, 0.5, 2, 2});
     } else {
         draw_manager.draw(id(ID::LIGHT), nullptr);
+    }
+
+    if (draw_manager.mouse_in_area(AREA_BARKEEP)) {
+        draw_manager.draw_text(
+            id(ID::TEXT),
+            "The Barkeeper",
+            Justify::Left,
+            10, RES_Y - 30,
+            {0xEE, 0xEE, 0xAA});
+    } else if (draw_manager.mouse_in_area(AREA_SHERIFF)) {
+        draw_manager.draw_text(
+            id(ID::TEXT),
+            "Video Game",
+            Justify::Left,
+            10, RES_Y - 30,
+            {0xEE, 0xEE, 0xAA});
+    } else if (draw_manager.mouse_in_area(AREA_PINBOARD)) {
+        draw_manager.draw_text(
+            id(ID::TEXT),
+            "Pinboard",
+            Justify::Left,
+            10, RES_Y - 30,
+            {0xEE, 0xEE, 0xAA});
+    } else if (draw_manager.mouse_in_area(AREA_EXIT)) {
+        draw_manager.draw_text(
+            id(ID::TEXT),
+            "Exit door",
+            Justify::Left,
+            10, RES_Y - 30,
+            {0xEE, 0xEE, 0xAA});
+        if (click) {
+            return ExodusMode::MODE_GuildExterior;
+        }
+    } else {
+        draw_manager.draw(id(ID::TEXT), nullptr);
     }
 
     return ExodusMode::MODE_None;

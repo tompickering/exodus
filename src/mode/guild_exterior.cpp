@@ -4,9 +4,9 @@
 
 #include "assetpaths.h"
 
-const DrawArea AREA_HQ     = {310,  30, 80, 80};
-const DrawArea AREA_BAR    = {300, 300, 80, 80};
-const DrawArea AREA_HANGAR = {160, 300, 80, 80};
+static const DrawArea AREA_HQ     = {310,  30, 80, 80};
+static const DrawArea AREA_BAR    = {300, 300, 80, 80};
+static const DrawArea AREA_HANGAR = {160, 300, 80, 80};
 
 enum ID {
     LIGHTCAP_TL,
@@ -105,7 +105,7 @@ ExodusMode GuildExterior::update(float delta) {
     }
 
     if (scale > 0) {
-        draw_manager.draw(id(ID::TRANSPORTER), trans_spr, {333, transp_y, 0.5, 0.5, scale, scale});
+        draw_manager.draw(id(ID::TRANSPORTER), trans_spr, {333, (int)transp_y, 0.5, 0.5, scale, scale});
     } else {
         draw_manager.draw(id(ID::TRANSPORTER), nullptr);
     }
@@ -117,7 +117,7 @@ ExodusMode GuildExterior::update(float delta) {
             "Guildmaster Headquarters",
             Justify::Left,
             10, RES_Y - 30,
-            {0xFF, 0xFF, 0xFF});
+            {0xEE, 0xEE, 0xAA});
         if (click)
             return ExodusMode::MODE_GuildHQ;
     } else if (draw_manager.mouse_in_area(AREA_BAR)) {
@@ -126,7 +126,7 @@ ExodusMode GuildExterior::update(float delta) {
             "The 'Stardust' Bar",
             Justify::Left,
             10, RES_Y - 30,
-            {0xFF, 0xFF, 0xFF});
+            {0xEE, 0xEE, 0xAA});
         if (click)
             return ExodusMode::MODE_GuildBar;
     } else if (draw_manager.mouse_in_area(AREA_HANGAR)) {
@@ -135,7 +135,7 @@ ExodusMode GuildExterior::update(float delta) {
             "Shuttle Hangar",
             Justify::Left,
             10, RES_Y - 30,
-            {0xFF, 0xFF, 0xFF});
+            {0xEE, 0xEE, 0xAA});
         if (click)
             return ExodusMode::MODE_GalaxyMap;
     } else {
