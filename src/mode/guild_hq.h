@@ -10,6 +10,9 @@ class GuildHQ : ModeBase {
         GuildHQ();
         virtual void enter() override;
         virtual ExodusMode update(float) override;
+    private:
+        bool guildbot_active;
+        float guildbot_interp;
 };
 
 #endif
