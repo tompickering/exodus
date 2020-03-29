@@ -136,6 +136,8 @@ class DrawManager {
         virtual void show_cursor(bool);
         virtual SpriteClick get_clicked_sprite();
         virtual SpriteClick query_click(SprID);
+        virtual bool mouse_over(SprID);
+        virtual bool mouse_in_area(DrawArea);
         virtual void clear_sprite_ids();
         virtual bool clicked();
     protected:
@@ -153,6 +155,7 @@ class DrawManager {
         bool draw_cursor;
         bool clicked_this_frame;
     private:
+        MousePos mouse_pos;
         MousePos click_pos;
         SpriteClick sprite_click;
 };

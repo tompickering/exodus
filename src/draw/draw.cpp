@@ -1,5 +1,7 @@
 #include "draw.h"
 
+#include "util/value.h"
+
 const float UPSCALE_X = (float)SCREEN_WIDTH  / (float)RES_X;
 const float UPSCALE_Y = (float)SCREEN_HEIGHT / (float)RES_Y;
 
@@ -15,9 +17,10 @@ DrawManager::DrawManager() {
     clicked_this_frame = false;
 }
 
-void DrawManager::update(MousePos mouse_pos, MousePos new_click_pos) {
+void DrawManager::update(MousePos new_mouse_pos, MousePos new_click_pos) {
     DrawArea *area = nullptr;
     sprite_click.id = ID_NONE;
+    mouse_pos = new_mouse_pos;
     click_pos = new_click_pos;
     clicked_this_frame = (click_pos.x >= 0 && click_pos.y >= 0);
     if (clicked_this_frame) {
@@ -78,6 +81,39 @@ SpriteClick DrawManager::query_click(SprID query) {
     }
 
     return res;
+}
+
+bool DrawManager::mouse_over(SprID query) {
+    DrawArea *area = nullptr;
+
+    if (!draw_cursor)
+        return false;
+
+    if (mouse_pos.x < 0 || mouse_pos.y < 0)
+        return false;
+
+    for (std::vector<DrawnSprite>::size_type i = 0; i < drawn_spr_info.size(); ++i) {
+        if (drawn_spr_info[i].id != query)
+            continue;
+        area = &(drawn_spr_info[i].area);
+        if (area->w == 0 || area->h == 0)
+            return false;
+        return in_area(
+                (int)((float)mouse_pos.x * UPSCALE_X), (int)((float)mouse_pos.y * UPSCALE_Y),
+                area->x, area->y,
+                area->w, area->h);
+    }
+
+    return false;
+}
+
+bool DrawManager::mouse_in_area(DrawArea area) {
+    if (!draw_cursor)
+        return false;
+
+    return in_area(
+            mouse_pos.x, mouse_pos.y,
+            area.x, area.y, area.w, area.h);
 }
 
 SprID DrawManager::new_sprite_id() {
