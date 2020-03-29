@@ -4,6 +4,21 @@
 
 #include "assetpaths.h"
 
+const int HQ_X = 310;
+const int HQ_Y = 30;
+const int HQ_W = 80;
+const int HQ_H = 80;
+
+const int BAR_X = 300;
+const int BAR_Y = 300;
+const int BAR_W = 80;
+const int BAR_H = 80;
+
+const int HANGAR_X = 160;
+const int HANGAR_Y = 300;
+const int HANGAR_W = 80;
+const int HANGAR_H = 80;
+
 enum ID {
     LIGHTCAP_TL,
     LIGHTCAP_TR,
@@ -12,6 +27,7 @@ enum ID {
     UFO0,
     UFO1,
     TRANSPORTER,
+    LOC_TEXT,
     END,
 };
 
@@ -32,7 +48,7 @@ void GuildExterior::enter() {
 }
 
 ExodusMode GuildExterior::update(float delta) {
-    SpriteClick click;
+    MousePos click_pos;
 
     if (draw_manager.fade_active()) {
         return ExodusMode::MODE_None;
@@ -107,5 +123,58 @@ ExodusMode GuildExterior::update(float delta) {
         draw_manager.draw(id(ID::TRANSPORTER), nullptr);
     }
 
+    click_pos = input_manager.read_click();
+    bool click = click_pos.x > 0 && click_pos.y > 0;
+    if (mouse_over_hq()) {
+        draw_manager.draw_text(
+            id(ID::LOC_TEXT),
+            "Guildmaster Headquarters",
+            Justify::Left,
+            10, RES_Y - 30,
+            {0xFF, 0xFF, 0xFF});
+    } else if (mouse_over_bar()) {
+        draw_manager.draw_text(
+            id(ID::LOC_TEXT),
+            "The Stardust Bar",
+            Justify::Left,
+            10, RES_Y - 30,
+            {0xFF, 0xFF, 0xFF});
+    } else if (mouse_over_hangar()) {
+        draw_manager.draw_text(
+            id(ID::LOC_TEXT),
+            "Shuttle Hangar",
+            Justify::Left,
+            10, RES_Y - 30,
+            {0xFF, 0xFF, 0xFF});
+    } else {
+        draw_manager.draw(
+            id(ID::LOC_TEXT),
+            nullptr);
+    }
+
     return ExodusMode::MODE_None;
+}
+
+bool GuildExterior::mouse_over_hq() {
+    MousePos m = input_manager.get_mouse_pos();
+    return m.x >= HQ_X
+        && m.x <= HQ_X + HQ_W
+        && m.y >= HQ_Y
+        && m.y <= HQ_Y + HQ_H;
+}
+
+bool GuildExterior::mouse_over_bar() {
+    MousePos m = input_manager.get_mouse_pos();
+    return m.x >= BAR_X
+        && m.x <= BAR_X + BAR_W
+        && m.y >= BAR_Y
+        && m.y <= BAR_Y + BAR_H;
+}
+
+bool GuildExterior::mouse_over_hangar() {
+    MousePos m = input_manager.get_mouse_pos();
+    return m.x >= HANGAR_X
+        && m.x <= HANGAR_X + HANGAR_W
+        && m.y >= HANGAR_Y
+        && m.y <= HANGAR_Y + HANGAR_H;
 }

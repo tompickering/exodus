@@ -17,6 +17,9 @@ class GuildExterior : ModeBase {
         float ufo1_x;
         float ufo1_y;
         float transport_time;
+        bool mouse_over_hq();
+        bool mouse_over_bar();
+        bool mouse_over_hangar();
 };
 
 #endif
