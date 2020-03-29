@@ -166,7 +166,7 @@ void DrawManagerSDL::update(MousePos mouse_pos, MousePos new_click_pos) {
         }
     }
 
-    if (draw_cursor) {
+    if (draw_cursor && mouse_pos.x > 0 && mouse_pos.y > 0) {
         // To ensure that cursor drawing plays nicely with anything
         // else that might be animating on the main game screen,
         // we draw it at the very last minute, saving whatever's
