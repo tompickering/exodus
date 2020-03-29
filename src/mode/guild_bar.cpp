@@ -17,6 +17,14 @@ void GuildBar::enter() {
 }
 
 ExodusMode GuildBar::update(float delta) {
-    MousePos click_pos;
+    bool click = draw_manager.clicked();
+
+    if (click) {
+        MousePos pos = input_manager.get_mouse_pos();
+        if (pos.x > 490 && pos.x < 540 && pos.y > 220 && pos.y < 280) {
+            return ExodusMode::MODE_GuildExterior;
+        }
+    }
+
     return ExodusMode::MODE_None;
 }

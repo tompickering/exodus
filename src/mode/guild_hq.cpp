@@ -17,6 +17,16 @@ void GuildHQ::enter() {
 }
 
 ExodusMode GuildHQ::update(float delta) {
-    MousePos click_pos;
+    bool click = draw_manager.clicked();
+
+    if (click) {
+        MousePos pos = input_manager.get_mouse_pos();
+        if (pos.x > 100 && pos.x < 220 && pos.y > 200 && pos.y < 320) {
+            L.debug("GuildBot clicked");
+        } else if (pos.x > RES_X - 120) {
+            return ExodusMode::MODE_GuildExterior;
+        }
+    }
+
     return ExodusMode::MODE_None;
 }

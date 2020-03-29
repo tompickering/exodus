@@ -41,7 +41,6 @@ bool InputManagerSDL::update() {
             }
         } else if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT) {
             SDL_GetMouseState(&click_pos.x, &click_pos.y);
-            L.debug("Click: %d,%d", click_pos.x, click_pos.y);
         } else if (e.type == SDL_TEXTINPUT) {
             if (!SDL_IsTextInputActive())
                 continue;

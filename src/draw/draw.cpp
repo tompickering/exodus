@@ -19,7 +19,10 @@ void DrawManager::update(MousePos mouse_pos, MousePos new_click_pos) {
     DrawArea *area = nullptr;
     sprite_click.id = ID_NONE;
     click_pos = new_click_pos;
-    clicked_this_frame = (new_click_pos.x >= 0 && new_click_pos.y >= 0);
+    clicked_this_frame = (click_pos.x >= 0 && click_pos.y >= 0);
+    if (clicked_this_frame) {
+        L.debug("Click: %d, %d", (int)((float)click_pos.x / UPSCALE_X), (int)((float)click_pos.y / UPSCALE_Y));
+    }
     if (draw_cursor && click_pos.x >= 0 && click_pos.y >= 0) {
         for (std::vector<DrawnSprite>::size_type i = 0; i < drawn_spr_info.size(); ++i) {
             area = &(drawn_spr_info[i].area);
