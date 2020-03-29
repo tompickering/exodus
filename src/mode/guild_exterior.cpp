@@ -9,6 +9,9 @@ enum ID {
     LIGHTCAP_TR,
     LIGHTCAP_BL,
     LIGHTCAP_BR,
+    UFO0,
+    UFO1,
+    TRANSPORTER,
     END,
 };
 
@@ -21,6 +24,11 @@ void GuildExterior::enter() {
     draw_manager.save_background();
     draw_manager.show_cursor(true);
     blink_cycle = 0;
+    ufo0_x = 180.f;
+    ufo0_y = 180.f;
+    ufo1_x = 90.f;
+    ufo1_y = 190.f;
+    transport_time = 0.f;
 }
 
 ExodusMode GuildExterior::update(float delta) {
@@ -31,21 +39,72 @@ ExodusMode GuildExterior::update(float delta) {
     }
 
     blink_cycle = fmod(blink_cycle + delta, 2.f);
+    transport_time += delta;
 
+    // Lights
     if (blink_cycle > 0.15) {
-        draw_manager.draw(LIGHTCAP_TL, IMG_SG1_LGHT1, { 18,  48, 0.5, 0.5, 1, 1});
-        draw_manager.draw(LIGHTCAP_TR, IMG_SG1_LGHT2, {572,  21, 0.5, 0.5, 1, 1});
+        draw_manager.draw(id(ID::LIGHTCAP_TL), IMG_SG1_LGHT1, { 18,  48, 0.5, 0.5, 1, 1});
+        draw_manager.draw(id(ID::LIGHTCAP_TR), IMG_SG1_LGHT2, {572,  21, 0.5, 0.5, 1, 1});
     } else {
-        draw_manager.draw(LIGHTCAP_TL, nullptr);
-        draw_manager.draw(LIGHTCAP_TR, nullptr);
+        draw_manager.draw(id(ID::LIGHTCAP_TL), nullptr);
+        draw_manager.draw(id(ID::LIGHTCAP_TR), nullptr);
     }
 
     if (blink_cycle < 0.65 || blink_cycle > 0.8) {
-        draw_manager.draw(LIGHTCAP_BL, IMG_SG1_LGHT3, {200, 263, 0.5, 0.5, 1, 1});
-        draw_manager.draw(LIGHTCAP_BR, IMG_SG1_LGHT4, {474, 360, 0.5, 0.5, 1, 1});
+        draw_manager.draw(id(ID::LIGHTCAP_BL), IMG_SG1_LGHT3, {200, 263, 0.5, 0.5, 1, 1});
+        draw_manager.draw(id(ID::LIGHTCAP_BR), IMG_SG1_LGHT4, {474, 360, 0.5, 0.5, 1, 1});
     } else {
-        draw_manager.draw(LIGHTCAP_BL, nullptr);
-        draw_manager.draw(LIGHTCAP_BR, nullptr);
+        draw_manager.draw(id(ID::LIGHTCAP_BL), nullptr);
+        draw_manager.draw(id(ID::LIGHTCAP_BR), nullptr);
+    }
+
+    // UFOs
+    ufo0_x += delta * 9;
+    ufo0_y += delta * 4;
+
+    ufo1_x += delta * 12;
+    ufo1_y += delta * 5;
+
+    if (ufo0_x > RES_X + 30) {
+        ufo0_x = -30.f;
+        ufo0_y = 90.f;
+    }
+
+    if (ufo1_x > RES_X + 30) {
+        ufo1_x = -70.f;
+        ufo1_y = 110.f;
+    }
+
+    draw_manager.draw(id(ID::UFO0), IMG_SG1_UFO1, {(int)ufo0_x, (int)ufo0_y, 0.5, 0.5, 2, 2});
+    draw_manager.draw(id(ID::UFO1), IMG_SG1_UFO2, {(int)ufo1_x, (int)ufo1_y, 0.5, 0.5, 2, 2});
+
+    // Transporter
+    const char *trans_spr = IMG_SG1_TRANS1;
+
+    if (transport_time > 1.8) {
+        if (fmod(transport_time, 0.9) > 0.6) {
+            trans_spr = IMG_SG1_TRANS3;
+        } else if (fmod(transport_time, 0.9) > 0.3) {
+            trans_spr = IMG_SG1_TRANS2;
+        }
+    }
+
+    float transp_y = 404;
+    if (transport_time > 3) {
+        float interp = (transport_time - 3);
+        interp = interp > 1 ? 1 : interp;
+        transp_y += interp * 4;
+    }
+
+    float scale = 1.f;
+    if (transport_time > 5) {
+        scale = 1.f - (transport_time - 5) * 0.2;
+    }
+
+    if (scale > 0) {
+        draw_manager.draw(id(ID::TRANSPORTER), trans_spr, {333, transp_y, 0.5, 0.5, scale, scale});
+    } else {
+        draw_manager.draw(id(ID::TRANSPORTER), nullptr);
     }
 
     return ExodusMode::MODE_None;

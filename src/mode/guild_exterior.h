@@ -12,6 +12,11 @@ class GuildExterior : ModeBase {
         virtual ExodusMode update(float) override;
     private:
         float blink_cycle;
+        float ufo0_x;
+        float ufo0_y;
+        float ufo1_x;
+        float ufo1_y;
+        float transport_time;
 };
 
 #endif
