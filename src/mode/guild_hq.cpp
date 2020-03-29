@@ -1,9 +1,13 @@
 #include "guild_hq.h"
 
+#include <cmath>
+
 #include "assetpaths.h"
 
 enum ID {
     BOT,
+    EYES,
+    EYES_REF,
     END,
 };
 
@@ -17,10 +21,13 @@ void GuildHQ::enter() {
     draw_manager.show_cursor(true);
     guildbot_active = false;
     guildbot_interp = 0.f;
+    eyes_loop = 0;
 }
 
 ExodusMode GuildHQ::update(float delta) {
     bool click = draw_manager.clicked();
+
+    eyes_loop = fmod(eyes_loop + delta, 6);
 
     if (click) {
         MousePos pos = input_manager.get_mouse_pos();
@@ -32,6 +39,7 @@ ExodusMode GuildHQ::update(float delta) {
     }
 
     if (guildbot_active) {
+        eyes_loop = 0;
         guildbot_interp += delta * 2;
         if (guildbot_interp > 1)
             guildbot_interp = 1;
@@ -53,6 +61,13 @@ ExodusMode GuildHQ::update(float delta) {
             {0, 192, 0, 0, 1, 1});
     } else {
         draw_manager.draw(id(ID::BOT), nullptr);
+        if (eyes_loop > 5.4) {
+            draw_manager.draw(id(ID::EYES),     IMG_SG2_EYES,  {185, 234, 0.5, 0.5, 1, 1});
+            draw_manager.draw(id(ID::EYES_REF), IMG_SG2_EYES2, {182, 448, 0.5, 0.5, 1, 1});
+        } else {
+            draw_manager.draw(id(ID::EYES),     nullptr);
+            draw_manager.draw(id(ID::EYES_REF), nullptr);
+        }
     }
 
     return ExodusMode::MODE_None;

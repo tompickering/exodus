@@ -13,6 +13,7 @@ class GuildHQ : ModeBase {
     private:
         bool guildbot_active;
         float guildbot_interp;
+        float eyes_loop;
 };
 
 #endif
