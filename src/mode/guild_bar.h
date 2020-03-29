@@ -12,6 +12,7 @@ class GuildBar : ModeBase {
         virtual ExodusMode update(float) override;
     private:
         float talk_loop;
+        float light_loop;
 };
 
 #endif
