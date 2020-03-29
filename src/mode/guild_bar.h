@@ -10,6 +10,8 @@ class GuildBar : ModeBase {
         GuildBar();
         virtual void enter() override;
         virtual ExodusMode update(float) override;
+    private:
+        float talk_loop;
 };
 
 #endif
