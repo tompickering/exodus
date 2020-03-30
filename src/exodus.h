@@ -26,6 +26,7 @@ class Exodus {
         Exodus();
         virtual ~Exodus();
         int run(int argc, char** argv);
+        ExodusMode get_prev_mode();
     protected:
         virtual bool init() = 0;
         virtual void cleanup() = 0;
@@ -33,6 +34,8 @@ class Exodus {
         ModeBase *mode;
         map<ExodusMode, ModeBase*> mode_map;
         void set_mode(ExodusMode);
+        ExodusMode current_mode;
+        ExodusMode prev_mode;
 };
 
 #ifdef SDL

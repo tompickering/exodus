@@ -40,6 +40,8 @@ void signal_handler(int signum) {
 
 Exodus::Exodus() {
     mode = nullptr;
+    current_mode = ExodusMode::MODE_None;
+    prev_mode    = ExodusMode::MODE_None;
 }
 
 Exodus::~Exodus() {
@@ -136,8 +138,14 @@ int Exodus::run(int argc, char** argv) {
 void Exodus::set_mode(ExodusMode new_mode) {
     const char* mode_name = mode ? mode->name : "<NONE>";
     if (mode) mode->exit();
+    prev_mode = current_mode;
+    current_mode = new_mode;
     mode = mode_map[new_mode];
     const char* new_mode_name = mode->name;
     L.debug("MODE: %s -> %s", mode_name, new_mode_name);
     mode->enter();
+}
+
+ExodusMode Exodus::get_prev_mode() {
+    return prev_mode;
 }
