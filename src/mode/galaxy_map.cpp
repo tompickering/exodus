@@ -37,17 +37,23 @@ void GalaxyMap::enter() {
         44};
     ModeBase::enter(ID::END);
     draw_galaxy(false);
-    draw_manager.fill(TGT_Secondary, galaxy_panel_area, {0xA0, 0xA0, 0xA0});
-    draw_manager.pattern_fill(TGT_Secondary, area_playerinfo);
-    draw_manager.pattern_fill(TGT_Secondary, area_starinfo);
+
+    DrawTarget tgt = TGT_Primary;
+    if (exodus.get_prev_mode() == ExodusMode::MODE_GalaxyGen) {
+        tgt = TGT_Secondary;
+    }
+
+    draw_manager.fill(tgt, galaxy_panel_area, {0xA0, 0xA0, 0xA0});
+    draw_manager.pattern_fill(tgt, area_playerinfo);
+    draw_manager.pattern_fill(tgt, area_starinfo);
     draw_manager.draw(
-            TGT_Secondary,
+            tgt,
             id(ID::PANEL),
             IMG_BR9_EXPORT,
             {RES_X, RES_Y, 1, 1, 1, 1});
     int y_sep = 16;
     draw_manager.draw_text(
-            TGT_Secondary,
+            tgt,
             Font::Small,
             "Test Name",
             Justify::Left,
@@ -55,7 +61,7 @@ void GalaxyMap::enter() {
             area_playerinfo.y + 2,
             {0xFF, 0xFF, 0xFF});
     draw_manager.draw_text(
-            TGT_Secondary,
+            tgt,
             Font::Small,
             "Month: ",
             Justify::Left,
@@ -63,7 +69,7 @@ void GalaxyMap::enter() {
             area_playerinfo.y + 2 + y_sep,
             {0xFF, 0xFF, 0xFF});
     draw_manager.draw_text(
-            TGT_Secondary,
+            tgt,
             Font::Small,
             "MCredits: ",
             Justify::Left,
@@ -71,14 +77,18 @@ void GalaxyMap::enter() {
             area_playerinfo.y + 2 + 2*y_sep,
             {0xFF, 0xFF, 0xFF});
     draw_manager.draw_text(
-            TGT_Secondary,
+            tgt,
             Font::Small,
             "Planets: ",
             Justify::Left,
             area_playerinfo.x + 4,
             area_playerinfo.y + 2 + 3*y_sep,
             {0xFF, 0xFF, 0xFF});
-    draw_manager.pixelswap_start(&galaxy_panel_area);
+
+    if (tgt != TGT_Primary) {
+        draw_manager.pixelswap_start(&galaxy_panel_area);
+    }
+
     stage = GM_SwapIn;
 
     selected_ft = nullptr;
