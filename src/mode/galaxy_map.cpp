@@ -76,7 +76,9 @@ void GalaxyMap::update_panel_info(DrawTarget tgt, PlayerInfo* player, FlyTarget*
     char month_string[5];
     char mc_string[7];
     char planets_string[3];
+    Galaxy *gal = exostate.get_galaxy();
 
+    /* Player info */
     snprintf(month_string, 5, "%d", exostate.get_month());
     if (player) {
         snprintf(mc_string, 7, "%d", player->mc);
@@ -146,6 +148,31 @@ void GalaxyMap::update_panel_info(DrawTarget tgt, PlayerInfo* player, FlyTarget*
             area_playerinfo.x + 68,
             area_playerinfo.y + 2 + 3*y_sep,
             COL_TEXT2);
+
+    /* FlyTarget info */
+    char ft_desc[41];
+    bool is_guild = ft == gal->get_guild();
+    snprintf(ft_desc, 40, "This is the %s%s.", is_guild ? "" : "star ", ft->name);
+
+    // Draw '?' or star details
+    if (player->location.has_visited(exostate.tgt2loc(ft))) {
+        draw_manager.draw(
+            id(ID::FLYTARGET_QM),
+            nullptr);
+    } else {
+        draw_manager.draw(
+            id(ID::FLYTARGET_QM),
+            IMG_TS1_QMARK,
+            {RES_X - 12, area_starinfo.y + 6, 1, 0, 1, 1});
+    }
+
+    draw_manager.draw_text(
+        id(ID::FLYTARGET_DESC),
+        (const char*) ft_desc,
+        Justify::Left,
+        area_starinfo.x + 4,
+        area_starinfo.y + 2,
+        COL_TEXT);
 }
 
 ExodusMode GalaxyMap::update(float delta) {
@@ -179,32 +206,8 @@ ExodusMode GalaxyMap::update(float delta) {
             if (!selected_ft) ft = gal->get_guild();
             if (ft && ft != selected_ft) {
                 draw_manager.draw(id(ID::SELECTED), nullptr);
-                char ft_desc[41];
-                bool is_guild = ft == gal->get_guild();
-                snprintf(ft_desc, 40, "This is the %s%s.", is_guild ? "" : "star ", ft->name);
-
-                // Draw '?' or star details
-                if (player->location.has_visited(exostate.tgt2loc(ft))) {
-                    draw_manager.draw(
-                        id(ID::FLYTARGET_QM),
-                        nullptr);
-                } else {
-                    draw_manager.draw(
-                        id(ID::FLYTARGET_QM),
-                        IMG_TS1_QMARK,
-                        {RES_X - 12, area_starinfo.y + 6, 1, 0, 1, 1});
-                }
-
                 selected_ft = ft;
                 selected_ft_blink = BLINK_TIME;
-                L.debug("%s", ft_desc);
-                draw_manager.draw_text(
-                    id(ID::FLYTARGET_DESC),
-                    (const char*) ft_desc,
-                    Justify::Left,
-                    area_starinfo.x + 4,
-                    area_starinfo.y + 2,
-                    COL_TEXT);
             }
 
             if (selected_ft && selected_ft_blink >= BLINK_TIME) {
