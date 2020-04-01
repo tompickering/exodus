@@ -204,7 +204,7 @@ ExodusMode GalaxyMap::update(float delta) {
                     Justify::Left,
                     area_starinfo.x + 4,
                     area_starinfo.y + 2,
-                    {0xFF, 0xFF, 0xFF});
+                    COL_TEXT);
             }
 
             if (selected_ft && selected_ft_blink >= BLINK_TIME) {

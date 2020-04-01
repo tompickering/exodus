@@ -776,7 +776,7 @@ ExodusMode Intro::update(float delta) {
                     nchars = 25;
                 char subttl[] = "THE COLONIZATION OF SPACE";
                 subttl[nchars] = '\0';
-                draw_manager.draw_text(subttl, Justify::Left, 180, 320, {0xFF, 0xFF, 0xFF});
+                draw_manager.draw_text(subttl, Justify::Left, 180, 320, COL_TEXT);
             }
 
             if (time > TTL_FADEOUT_START) {
