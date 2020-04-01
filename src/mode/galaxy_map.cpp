@@ -43,6 +43,20 @@ void GalaxyMap::enter() {
         tgt = TGT_Secondary;
     }
 
+    draw_panel_bg(tgt);
+
+    if (tgt != TGT_Primary) {
+        draw_manager.pixelswap_start(&galaxy_panel_area);
+    }
+
+    stage = GM_SwapIn;
+
+    selected_ft = nullptr;
+}
+
+const float FADE_SPEED = 10.f;
+
+void GalaxyMap::draw_panel_bg(DrawTarget tgt) {
     draw_manager.fill(tgt, galaxy_panel_area, {0xA0, 0xA0, 0xA0});
     draw_manager.pattern_fill(tgt, area_playerinfo);
     draw_manager.pattern_fill(tgt, area_starinfo);
@@ -51,11 +65,14 @@ void GalaxyMap::enter() {
             id(ID::PANEL),
             IMG_BR9_EXPORT,
             {RES_X, RES_Y, 1, 1, 1, 1});
+}
+
+void GalaxyMap::update_panel_info(DrawTarget tgt, PlayerInfo* player, FlyTarget* ft) {
     int y_sep = 16;
     draw_manager.draw_text(
             tgt,
             Font::Small,
-            "Test Name",
+            player ? player->full_name : "",
             Justify::Left,
             area_playerinfo.x + 4,
             area_playerinfo.y + 2,
@@ -84,17 +101,7 @@ void GalaxyMap::enter() {
             area_playerinfo.x + 4,
             area_playerinfo.y + 2 + 3*y_sep,
             {0xFF, 0xFF, 0xFF});
-
-    if (tgt != TGT_Primary) {
-        draw_manager.pixelswap_start(&galaxy_panel_area);
-    }
-
-    stage = GM_SwapIn;
-
-    selected_ft = nullptr;
 }
-
-const float FADE_SPEED = 10.f;
 
 ExodusMode GalaxyMap::update(float delta) {
     int draw_x, draw_y;
@@ -165,6 +172,8 @@ ExodusMode GalaxyMap::update(float delta) {
                 draw_manager.draw(id(ID::SELECTED), nullptr);
             }
 
+            update_panel_info(TGT_Primary, TGT_Primary, player, selected_ft);
+
             if (!player->location.in_flight()) {
                 FlyTarget *fleet_pos = exostate.loc2tgt(player->location.get_target());
                 get_draw_position(fleet_pos, draw_x, draw_y);
@@ -210,6 +219,8 @@ ExodusMode GalaxyMap::update(float delta) {
             break;
         case GM_Zoom2Star:
             break;
+        case GM_MonthPassing:
+            return ExodusMode::MODE_None;
         default:
             break;
     }

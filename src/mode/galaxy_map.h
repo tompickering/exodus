@@ -22,11 +22,14 @@ class GalaxyMap : ModeBase, GalaxyDrawer {
             GM_Idle,
             GM_Zoom2Guild,
             GM_Zoom2Star,
+            GM_MonthPassing,
         };
 
         Stage stage;
         FlyTarget *selected_ft;
         float selected_ft_blink;
+        void draw_panel_bg(DrawTarget);
+        void update_panel_info(DrawTarget, PlayerInfo*, FlyTarget*);
 };
 
 #endif

@@ -69,6 +69,7 @@ typedef struct {
     char name[MAX_PLAYER_NAME + 1];
     char title[MAX_PLAYER_TITLE + 1];
     char ref[MAX_PLAYER_REFERENCE + 1];
+    char full_name[MAX_PLAYER_TITLE + MAX_PLAYER_NAME + 2];
     int flag_idx;
     unsigned int mc;
     bool intro_seen;

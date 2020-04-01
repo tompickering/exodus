@@ -63,10 +63,18 @@ void ExodusState::init(GameConfig config) {
     for (; i < N_PLAYERS; ++i) {
         player_info[i].human = false;
         player_info[i].fleet_marker = nullptr;
+        sprintf(player_info[i].name, "%d", i);
+        strcpy(player_info[i].title, "CPU");
     }
 
     // PLAYER INIT: Everyone
     for (i = 0; i < N_PLAYERS; ++i) {
+        snprintf(
+            player_info[i].full_name,
+            MAX_PLAYER_TITLE + 1 + MAX_PLAYER_NAME + 1,
+            "%s %s",
+            player_info[i].title,
+            player_info[i].name);
     }
 
     aim = config.aim;
