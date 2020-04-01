@@ -8,6 +8,10 @@
 
 enum ID {
     PANEL,
+    PANEL_NAME,
+    PANEL_MONTH,
+    PANEL_MC,
+    PANEL_PLANETS,
     SELECTED,
     FLEET_MARKER,
     FLYTARGET_DESC,
@@ -69,8 +73,22 @@ void GalaxyMap::draw_panel_bg(DrawTarget tgt) {
 
 void GalaxyMap::update_panel_info(DrawTarget tgt, PlayerInfo* player, FlyTarget* ft) {
     int y_sep = 16;
+    char month_string[5];
+    char mc_string[7];
+    char planets_string[3];
+
+    snprintf(month_string, 5, "%d", exostate.get_month());
+    if (player) {
+        snprintf(mc_string, 7, "%d", player->mc);
+        snprintf(planets_string, 3, "??");
+    } else {
+        strcpy(mc_string, "");
+        strcpy(planets_string, "");
+    }
+
     draw_manager.draw_text(
             tgt,
+            id(ID::PANEL_NAME),
             Font::Small,
             player ? player->full_name : "",
             Justify::Left,
@@ -87,6 +105,15 @@ void GalaxyMap::update_panel_info(DrawTarget tgt, PlayerInfo* player, FlyTarget*
             {0xFF, 0xFF, 0xFF});
     draw_manager.draw_text(
             tgt,
+            id(ID::PANEL_MONTH),
+            Font::Small,
+            month_string,
+            Justify::Left,
+            area_playerinfo.x + 60,
+            area_playerinfo.y + 2 + y_sep,
+            {0xEE, 0xEE, 0xAA});
+    draw_manager.draw_text(
+            tgt,
             Font::Small,
             "MCredits: ",
             Justify::Left,
@@ -95,12 +122,30 @@ void GalaxyMap::update_panel_info(DrawTarget tgt, PlayerInfo* player, FlyTarget*
             {0xFF, 0xFF, 0xFF});
     draw_manager.draw_text(
             tgt,
+            id(ID::PANEL_MC),
+            Font::Small,
+            mc_string,
+            Justify::Left,
+            area_playerinfo.x + 76,
+            area_playerinfo.y + 2 + 2*y_sep,
+            {0xEE, 0xEE, 0xAA});
+    draw_manager.draw_text(
+            tgt,
             Font::Small,
             "Planets: ",
             Justify::Left,
             area_playerinfo.x + 4,
             area_playerinfo.y + 2 + 3*y_sep,
             {0xFF, 0xFF, 0xFF});
+    draw_manager.draw_text(
+            tgt,
+            id(ID::PANEL_PLANETS),
+            Font::Small,
+            planets_string,
+            Justify::Left,
+            area_playerinfo.x + 68,
+            area_playerinfo.y + 2 + 3*y_sep,
+            {0xEE, 0xEE, 0xAA});
 }
 
 ExodusMode GalaxyMap::update(float delta) {
@@ -172,7 +217,7 @@ ExodusMode GalaxyMap::update(float delta) {
                 draw_manager.draw(id(ID::SELECTED), nullptr);
             }
 
-            update_panel_info(TGT_Primary, TGT_Primary, player, selected_ft);
+            update_panel_info(TGT_Primary, player, selected_ft);
 
             if (!player->location.in_flight()) {
                 FlyTarget *fleet_pos = exostate.loc2tgt(player->location.get_target());
