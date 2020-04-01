@@ -94,7 +94,7 @@ void GalaxyMap::update_panel_info(DrawTarget tgt, PlayerInfo* player, FlyTarget*
             Justify::Left,
             area_playerinfo.x + 4,
             area_playerinfo.y + 2,
-            {0xFF, 0xFF, 0xFF});
+            COL_TEXT);
     draw_manager.draw_text(
             tgt,
             Font::Small,
@@ -102,7 +102,7 @@ void GalaxyMap::update_panel_info(DrawTarget tgt, PlayerInfo* player, FlyTarget*
             Justify::Left,
             area_playerinfo.x + 4,
             area_playerinfo.y + 2 + y_sep,
-            {0xFF, 0xFF, 0xFF});
+            COL_TEXT);
     draw_manager.draw_text(
             tgt,
             id(ID::PANEL_MONTH),
@@ -111,7 +111,7 @@ void GalaxyMap::update_panel_info(DrawTarget tgt, PlayerInfo* player, FlyTarget*
             Justify::Left,
             area_playerinfo.x + 60,
             area_playerinfo.y + 2 + y_sep,
-            {0xEE, 0xEE, 0xAA});
+            COL_TEXT2);
     draw_manager.draw_text(
             tgt,
             Font::Small,
@@ -119,7 +119,7 @@ void GalaxyMap::update_panel_info(DrawTarget tgt, PlayerInfo* player, FlyTarget*
             Justify::Left,
             area_playerinfo.x + 4,
             area_playerinfo.y + 2 + 2*y_sep,
-            {0xFF, 0xFF, 0xFF});
+            COL_TEXT);
     draw_manager.draw_text(
             tgt,
             id(ID::PANEL_MC),
@@ -128,7 +128,7 @@ void GalaxyMap::update_panel_info(DrawTarget tgt, PlayerInfo* player, FlyTarget*
             Justify::Left,
             area_playerinfo.x + 76,
             area_playerinfo.y + 2 + 2*y_sep,
-            {0xEE, 0xEE, 0xAA});
+            COL_TEXT2);
     draw_manager.draw_text(
             tgt,
             Font::Small,
@@ -136,7 +136,7 @@ void GalaxyMap::update_panel_info(DrawTarget tgt, PlayerInfo* player, FlyTarget*
             Justify::Left,
             area_playerinfo.x + 4,
             area_playerinfo.y + 2 + 3*y_sep,
-            {0xFF, 0xFF, 0xFF});
+            COL_TEXT);
     draw_manager.draw_text(
             tgt,
             id(ID::PANEL_PLANETS),
@@ -145,7 +145,7 @@ void GalaxyMap::update_panel_info(DrawTarget tgt, PlayerInfo* player, FlyTarget*
             Justify::Left,
             area_playerinfo.x + 68,
             area_playerinfo.y + 2 + 3*y_sep,
-            {0xEE, 0xEE, 0xAA});
+            COL_TEXT2);
 }
 
 ExodusMode GalaxyMap::update(float delta) {

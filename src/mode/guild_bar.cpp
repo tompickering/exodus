@@ -82,28 +82,28 @@ ExodusMode GuildBar::update(float delta) {
             "The Barkeeper",
             Justify::Left,
             10, RES_Y - 30,
-            {0xEE, 0xEE, 0xAA});
+            COL_TEXT2);
     } else if (draw_manager.mouse_in_area(AREA_SHERIFF)) {
         draw_manager.draw_text(
             id(ID::TEXT),
             "Video Game",
             Justify::Left,
             10, RES_Y - 30,
-            {0xEE, 0xEE, 0xAA});
+            COL_TEXT2);
     } else if (draw_manager.mouse_in_area(AREA_PINBOARD)) {
         draw_manager.draw_text(
             id(ID::TEXT),
             "Pinboard",
             Justify::Left,
             10, RES_Y - 30,
-            {0xEE, 0xEE, 0xAA});
+            COL_TEXT2);
     } else if (draw_manager.mouse_in_area(AREA_EXIT)) {
         draw_manager.draw_text(
             id(ID::TEXT),
             "Exit door",
             Justify::Left,
             10, RES_Y - 30,
-            {0xEE, 0xEE, 0xAA});
+            COL_TEXT2);
         if (click) {
             return ExodusMode::MODE_GuildExterior;
         }

@@ -102,7 +102,7 @@ ExodusMode Menu::update(float delta) {
                         "Please select.",
                         Justify::Centre,
                         RES_X/2, 135,
-                        {0xEE, 0xEE, 0xAA});
+                        COL_TEXT2);
 
                 draw_manager.draw_text(TGT_Secondary, 
                         id(NEWGAME_TXT),
@@ -145,7 +145,7 @@ ExodusMode Menu::update(float delta) {
         case Size:
             if (trans_state == None) {
                 draw_manager.draw(TGT_Secondary, IMG_BG_MENU0);
-                draw_manager.draw_text(TGT_Secondary, Font::Large, "Galaxy size", Justify::Left, 20, 30, {0xEE, 0xEE, 0xAA});
+                draw_manager.draw_text(TGT_Secondary, Font::Large, "Galaxy size", Justify::Left, 20, 30, COL_TEXT2);
 
                 draw_manager.draw(TGT_Secondary, 
                         id(GAL_SZ_SMALL),
@@ -215,7 +215,7 @@ ExodusMode Menu::update(float delta) {
                 draw_manager.draw(IMG_BG_MENU0);
                 draw_manager.draw_text(
                     "How many human players wish to play?",
-                    Justify::Centre, RES_X/2, 90, {0xEE, 0xEE, 0xAA});
+                    Justify::Centre, RES_X/2, 90, COL_TEXT2);
                 draw_manager.draw(
                     id(ID::NPLAYER_LR),
                     IMG_BR11_LR,
@@ -293,7 +293,7 @@ ExodusMode Menu::update(float delta) {
                         "Name:",
                         Justify::Right,
                         255, 238,
-                        {0xEE, 0xEE, 0xAA});
+                        COL_TEXT2);
 
                 draw_manager.save_background();
                 input_manager.start_text_input();
@@ -350,7 +350,7 @@ ExodusMode Menu::update(float delta) {
                 draw_manager.draw_text(
                     "Please choose one of the flags.",
                     Justify::Centre, RES_X/2, 60,
-                    {0xEE, 0xEE, 0xAA});
+                    COL_TEXT2);
                 for (int j = 0; j < 5; ++j) {
                     for (int i = 0; i < 3; ++i) {
                         int flag_idx = (j*3) + i;
@@ -406,7 +406,7 @@ ExodusMode Menu::update(float delta) {
                     Font::Large,
                     "The aim",
                     Justify::Left,
-                    20, 30, {0xEE, 0xEE, 0xAA});
+                    20, 30, COL_TEXT2);
 
                 draw_manager.draw(
                         id(AIM_MIGHT),
@@ -475,7 +475,7 @@ ExodusMode Menu::update(float delta) {
                     Font::Large,
                     "Other races",
                     Justify::Left,
-                    20, 30, {0xEE, 0xEE, 0xAA});
+                    20, 30, COL_TEXT2);
 
                 const char* img_diff_0;
                 const char* img_diff_1;
@@ -604,7 +604,7 @@ ExodusMode Menu::update(float delta) {
                 draw_manager.draw_text(
                     "Let me repeat.",
                     Justify::Centre, RES_X/2, 60,
-                    {0xEE, 0xEE, 0xAA});
+                    COL_TEXT2);
 
                 constexpr int line0_sz = 8 + MAX_PLAYER_TITLE + MAX_PLAYER_NAME;
                 char line0[line0_sz];
@@ -656,7 +656,7 @@ ExodusMode Menu::update(float delta) {
                 draw_manager.draw_text(
                     "Is this correct?",
                     Justify::Centre, RES_X/2, 300,
-                    {0xEE, 0xEE, 0xAA});
+                    COL_TEXT2);
 
                 for (unsigned int i = 0; i < config.n_players; ++i) {
                     int sep = RES_X / (config.n_players + 1);

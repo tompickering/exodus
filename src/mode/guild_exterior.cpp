@@ -117,7 +117,7 @@ ExodusMode GuildExterior::update(float delta) {
             "Guildmaster Headquarters",
             Justify::Left,
             10, RES_Y - 30,
-            {0xEE, 0xEE, 0xAA});
+            COL_TEXT2);
         if (click)
             return ExodusMode::MODE_GuildHQ;
     } else if (draw_manager.mouse_in_area(AREA_BAR)) {
@@ -126,7 +126,7 @@ ExodusMode GuildExterior::update(float delta) {
             "The 'Stardust' Bar",
             Justify::Left,
             10, RES_Y - 30,
-            {0xEE, 0xEE, 0xAA});
+            COL_TEXT2);
         if (click)
             return ExodusMode::MODE_GuildBar;
     } else if (draw_manager.mouse_in_area(AREA_HANGAR)) {
@@ -135,7 +135,7 @@ ExodusMode GuildExterior::update(float delta) {
             "Shuttle Hangar",
             Justify::Left,
             10, RES_Y - 30,
-            {0xEE, 0xEE, 0xAA});
+            COL_TEXT2);
         if (click)
             return ExodusMode::MODE_GalaxyMap;
     } else {

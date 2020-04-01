@@ -8,6 +8,9 @@
 
 #define PROG_NAME "Exodus"
 
+#define COL_TEXT {0xFF, 0xFF, 0xFF}
+#define COL_TEXT2 {0xEE, 0xEE, 0xAA}
+
 extern EXODUS exodus;
 
 extern const float UPSCALE_X;

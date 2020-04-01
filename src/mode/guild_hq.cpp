@@ -72,7 +72,7 @@ ExodusMode GuildHQ::update(float delta) {
             "Infobot",
             Justify::Left,
             10, RES_Y - 30,
-            {0xEE, 0xEE, 0xAA});
+            COL_TEXT2);
         if (click) {
             guildbot_active = true;
         }
@@ -82,14 +82,14 @@ ExodusMode GuildHQ::update(float delta) {
             "Guildmaster Entrance",
             Justify::Left,
             10, RES_Y - 30,
-            {0xEE, 0xEE, 0xAA});
+            COL_TEXT2);
     } else if (draw_manager.mouse_in_area(AREA_EXIT)) {
         draw_manager.draw_text(
             id(ID::TEXT),
             "Exit",
             Justify::Left,
             10, RES_Y - 30,
-            {0xEE, 0xEE, 0xAA});
+            COL_TEXT2);
         if (click) {
             return ExodusMode::MODE_GuildExterior;
         }
