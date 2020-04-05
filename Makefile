@@ -3,7 +3,7 @@
 NAME=exodus
 BIN=src/exodus
 
-.PHONY: clean all install
+.PHONY: clean all debug install
 
 all:
 
@@ -13,7 +13,8 @@ CLEAN = $(BIN) $(OBJS) $(DEPS)
 
 INCFLAGS=-Isrc
 LDLIBS=-lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
-CXXFLAGS=-g -DDBG -Wall -pedantic -DSDL -DLINUX $(INCFLAGS)
+CXXFLAGS=-Wall -pedantic -DSDL -DLINUX $(INCFLAGS)
+DBGFLAGS=-g -DDBG
 
 PREFIX = /usr/local
 
@@ -22,6 +23,9 @@ PREFIX = /usr/local
 
 all: $(BIN)
 	mv $(BIN) $(NAME)
+
+debug: CXXFLAGS += $(DBGFLAGS)
+debug: all
 
 $(BIN):
 	$(LINK.cpp) $^ $(LOADLIBES) $(LDLIBS) -o $@
