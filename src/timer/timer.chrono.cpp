@@ -27,7 +27,7 @@ float TimerChrono::get_delta() {
 void TimerChrono::sleep_until(const float min_delta) {
     float delta = get_delta();
     if (delta < min_delta) {
-        int sleep_ms = (int)(1000.f * min_delta - delta);
+        int sleep_ms = (int)(1000.f * (min_delta - delta));
         sleep_for(milliseconds(sleep_ms));
     }
 }
