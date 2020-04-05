@@ -5,4 +5,6 @@ intro
 pictures
 startgr
 
-Where any modifications were required, the modified versions were placed in the substitute 'sub' directory.
+Where any modifications were required - e.g. re-centring an image or combining several into one - the modified versions were placed in the substitute 'sub' directory.
+
+Where images in 'graphic' were superseded in 'sub', those images were removed to limit the number of files in that directory. The folder with its full original contents is preserved in graphic.tar.xz.
