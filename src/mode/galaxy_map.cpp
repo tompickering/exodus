@@ -104,9 +104,9 @@ void GalaxyMap::update_panel_info(DrawTarget tgt, PlayerInfo* player, FlyTarget*
     Galaxy *gal = exostate.get_galaxy();
 
     /* Player info */
-    snprintf(month_string, 5, "%d", exostate.get_month());
+    snprintf(month_string, 5, "%u", exostate.get_month());
     if (player) {
-        snprintf(mc_string, 7, "%d", player->mc);
+        snprintf(mc_string, 7, "%u", player->mc);
         snprintf(planets_string, 3, "??");
     } else {
         strcpy(mc_string, "");
