@@ -10,6 +10,8 @@ int sdl_input_key[] = {
     SDLK_ESCAPE,
     SDLK_RETURN,
     SDLK_BACKSPACE,
+    SDLK_LSHIFT,
+    SDLK_RSHIFT,
 };
 
 bool InputManagerSDL::update() {

@@ -132,6 +132,16 @@ int Exodus::run(int argc, char** argv) {
 
         game_timer.sleep_until(frame_start + MIN_FRAME_DELTA);
         delta_time = game_timer.get_delta() - frame_start;
+
+#ifdef DBG
+        if (input_manager.read(Input::K_LShift)) {
+            delta_time *= 10;
+        }
+
+        if (input_manager.read(Input::K_RShift)) {
+            delta_time *= 10;
+        }
+#endif
     }
 
     cleanup();

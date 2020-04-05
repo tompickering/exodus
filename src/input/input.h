@@ -10,6 +10,8 @@ enum Input {
     K_Escape,
     K_Enter,
     K_Backspace,
+    K_LShift,
+    K_RShift,
 
     K_END,
 };
