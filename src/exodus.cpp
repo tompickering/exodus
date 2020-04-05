@@ -67,7 +67,8 @@ int Exodus::run(int argc, char** argv) {
     }
 
     TIMER game_timer;
-    TIMER frame_timer;
+
+    float frame_start;
     float delta_time = 0.f;
 
     game_timer.start();
@@ -109,7 +110,7 @@ int Exodus::run(int argc, char** argv) {
     MousePos click_pos = {-1, -1};
 
     while (running) {
-        frame_timer.start();
+        frame_start = game_timer.get_delta();
 
         ExodusMode next = mode->update(delta_time);
         if (next != ExodusMode::MODE_None) {
@@ -129,8 +130,8 @@ int Exodus::run(int argc, char** argv) {
         mouse_pos = input_manager.get_mouse_pos();
         click_pos = input_manager.read_click();
 
-        frame_timer.sleep_until(MIN_FRAME_DELTA);
-        delta_time = frame_timer.get_delta();
+        game_timer.sleep_until(frame_start + MIN_FRAME_DELTA);
+        delta_time = game_timer.get_delta() - frame_start;
     }
 
     cleanup();
