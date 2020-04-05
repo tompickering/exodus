@@ -11,8 +11,8 @@ class Intro : ModeBase {
         virtual void enter() override;
         virtual ExodusMode update(float) override;
     private:
-        TIMER timer;
-        TIMER text_timer;
+        float time;
+        float text_time;
 
         enum Stage {
             None,

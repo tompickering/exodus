@@ -183,19 +183,20 @@ void Intro::enter() {
     stage = Stage::None;
     text_idx = 0;
     stage_started = false;
-    timer.start();
-    text_timer.start();
+    time = 0;
+    text_time = 0;
     for (int i = 0; i < 9; ++i)
         kp_num_held_seconds[i] = 0;
 }
 
 ExodusMode Intro::update(float delta) {
-    float time = timer.get_delta();
-    float text_time = text_timer.get_delta();
     static bool text_delay_complete = false;
     unsigned int released_keys;
     unsigned char brightness;
     float door_time;
+
+    time += delta;
+    text_time += delta;
 
     if (input_manager.consume(K_Space)) {
         stage = End;
@@ -245,14 +246,14 @@ ExodusMode Intro::update(float delta) {
                 return ExodusMode::MODE_None;
             } else if (!text_delay_complete) {
                 text_delay_complete = true;
-                text_timer.start();
+                text_time = 0;
             }
 
 
             if (text_time > MAX_TEXT_TIME) {
                 if (text_idx == 0) {
                     ++text_idx;
-                    text_timer.start();
+                    text_time = 0;
                 } else {
                     next_stage(); return ExodusMode::MODE_None;
                 }
@@ -274,7 +275,7 @@ ExodusMode Intro::update(float delta) {
 
             if (text_idx == 1) {
                 ++text_idx;
-                text_timer.start();
+                text_time = 0;
                 draw_manager.save_background();
             }
 
@@ -299,7 +300,7 @@ ExodusMode Intro::update(float delta) {
             if (text_idx >= 1 && text_time > MAX_TEXT_TIME) {
                 if (text_idx < 8) {
                     ++text_idx;
-                    text_timer.start();
+                    text_time = 0;
                 } else {
                     next_stage(); return ExodusMode::MODE_None;
                 }
@@ -318,7 +319,7 @@ ExodusMode Intro::update(float delta) {
             if (text_idx >= 8 && text_time > MAX_TEXT_TIME) {
                 if (text_idx < 13) {
                     ++text_idx;
-                    text_timer.start();
+                    text_time = 0;
                 } else {
                     next_stage(); return ExodusMode::MODE_None;
                 }
@@ -347,7 +348,7 @@ ExodusMode Intro::update(float delta) {
             if (text_idx >= 13 && text_time > MAX_TEXT_TIME) {
                 if (text_idx < 17) {
                     ++text_idx;
-                    text_timer.start();
+                    text_time = 0;
                 } else {
                     next_stage(); return ExodusMode::MODE_None;
                 }
@@ -458,8 +459,8 @@ ExodusMode Intro::update(float delta) {
                     draw_manager.save_background();
                 }
 
-                if (text_timer.get_delta() < MAX_TEXT_TIME / 2) {
-                    brightness = determine_text_brightness(0, text_timer.get_delta());
+                if (text_time < MAX_TEXT_TIME / 2) {
+                    brightness = determine_text_brightness(0, text_time);
                 } else {
                     brightness = 0xFF;
                 }
@@ -493,15 +494,15 @@ ExodusMode Intro::update(float delta) {
             ONCE(oid_code) L.debug("Entered code: %d", input_code);
             ONCE(oid_padddone) draw_manager.draw(IMG_INTRO_KEYPAD);
 
-            ONCE(oid_codedone_fadetext) text_timer.start();
+            ONCE(oid_codedone_fadetext) text_time = 0;
 
 
             // We only want to do the fade-out half, so pretend
             // we started half-max-time ago.
             if (!interactive_sequence_completed
-                && text_timer.get_delta() < MAX_TEXT_TIME / 2) {
+                && text_time < MAX_TEXT_TIME / 2) {
                 brightness = determine_text_brightness(
-                    -MAX_TEXT_TIME / 2 , text_timer.get_delta());
+                    -MAX_TEXT_TIME / 2 , text_time);
 
                 draw_manager.draw_text(
                         intro_text[text_idx],
@@ -521,7 +522,7 @@ ExodusMode Intro::update(float delta) {
                 } else {
                     text_idx = 19;
                 }
-                text_timer.start();
+                text_time = 0;
                 return ExodusMode::MODE_None;
             }
 
@@ -567,9 +568,9 @@ ExodusMode Intro::update(float delta) {
 
             if (time > 2.15) {
                 draw_manager.draw(IMG_INTRO_OD1_ON , {151, 97, 0.5, 0.5, 2.0, 2.0});
-                ONCE(oid_dooropen) text_timer.start();
+                ONCE(oid_dooropen) text_time = 0;
                 draw_text();
-                if (text_timer.get_delta() < MAX_TEXT_TIME) {
+                if (text_time < MAX_TEXT_TIME) {
                     return ExodusMode::MODE_None;
                 } else {
                     next_stage(); return ExodusMode::MODE_None;
@@ -588,7 +589,7 @@ ExodusMode Intro::update(float delta) {
             if (text_time > MAX_TEXT_TIME) {
                 if (text_idx < 23) {
                     ++text_idx;
-                    text_timer.start();
+                    text_time = 0;
                 } else {
                     next_stage(); return ExodusMode::MODE_None;
                 }
@@ -704,7 +705,7 @@ ExodusMode Intro::update(float delta) {
             if (text_time > MAX_TEXT_TIME) {
                 if (text_idx < 26) {
                     ++text_idx;
-                    text_timer.start();
+                    text_time = 0;
                 }
             }
 
@@ -810,12 +811,12 @@ void Intro::next_stage() {
         stage = (Stage)((int)stage + 1);
         stage_started = false;
     }
-    timer.start();
-    text_timer.start();
+    time = 0;
+    text_time = 0;
 }
 
 void Intro::draw_text() {
-    unsigned char brightness = determine_text_brightness(0, text_timer.get_delta());
+    unsigned char brightness = determine_text_brightness(0, text_time);
     draw_manager.draw_text(
             intro_text[text_idx],
             Justify::Centre,
