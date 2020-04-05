@@ -91,7 +91,7 @@ class DrawManager {
         DrawManager();
         virtual bool init() = 0;
         virtual void load_resources() = 0;
-        virtual void update(MousePos, MousePos);
+        virtual void update(float, MousePos, MousePos);
         virtual void save_background() = 0;
         virtual void clear() = 0;
         virtual void clear(DrawTarget) = 0;
@@ -147,8 +147,8 @@ class DrawManager {
         SprID next_id;
         vector<DrawnSprite> drawn_spr_info;
         DrawArea pixelswap_region;
-        TIMER pixelswap_timer;
-        TIMER fade_timer;
+        float pixelswap_time;
+        float fade_time;
         float fade_seconds;
         int fade_stage;
         int fade_stages;

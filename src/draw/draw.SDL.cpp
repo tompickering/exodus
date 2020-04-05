@@ -126,13 +126,13 @@ void DrawManagerSDL::load_resources() {
     }
 }
 
-void DrawManagerSDL::update(MousePos mouse_pos, MousePos new_click_pos) {
-    DrawManager::update(mouse_pos, new_click_pos);
+void DrawManagerSDL::update(float delta, MousePos mouse_pos, MousePos new_click_pos) {
+    DrawManager::update(delta, mouse_pos, new_click_pos);
     if (pixelswap_active()) {
         pixelswap_update();
     }
     if (fade_active()) {
-        float fade_progress = fade_timer.get_delta() / (float) fade_seconds;
+        float fade_progress = fade_time / (float) fade_seconds;
         if (fade_progress < 1) {
             int this_fade_stage = (int)(fade_progress * (float)fade_stages);
             if (this_fade_stage != fade_stage) {
@@ -202,7 +202,7 @@ void DrawManagerSDL::update(MousePos mouse_pos, MousePos new_click_pos) {
 }
 
 void DrawManagerSDL::pixelswap_update() {
-    if (pixelswap_timer.get_delta() > 0.01) {
+    if (pixelswap_time > 0.01) {
         if (!pixelswap_stage || !--pixelswap_stage) {
             return;
         }
@@ -220,7 +220,7 @@ void DrawManagerSDL::pixelswap_update() {
             }
         }
 
-        pixelswap_timer.start();
+        pixelswap_time = 0;
     }
 
 }
@@ -479,7 +479,7 @@ void DrawManagerSDL::pixelswap_start(const DrawArea* area) {
     } else {
         pixelswap_region = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
     }
-    pixelswap_timer.start();
+    pixelswap_time = 0;
 }
 
 bool DrawManagerSDL::pixelswap_active() {
@@ -520,7 +520,7 @@ void DrawManagerSDL::fade_start(float seconds, int stages) {
     fade_seconds = seconds;
     fade_stage = 0;
     fade_stages = stages;
-    fade_timer.start();
+    fade_time = 0;
 }
 
 void DrawManagerSDL::fade_black(float seconds, int stages) {

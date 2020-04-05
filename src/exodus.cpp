@@ -116,7 +116,7 @@ int Exodus::run(int argc, char** argv) {
             set_mode(next);
         }
 
-        draw_manager.update(mouse_pos, click_pos);
+        draw_manager.update(delta_time, mouse_pos, click_pos);
 
         if (!input_manager.update()) {
             running = false;

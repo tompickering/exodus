@@ -9,7 +9,8 @@ const SprID ID_NONE = 0;
 
 DrawManager::DrawManager() {
     next_id = ID_NONE + 1;
-    fade_timer.start();
+    pixelswap_time = 0;
+    fade_time = 0;
     fade_seconds = 0;
     fade_stage = 0;
     draw_cursor = false;
@@ -17,7 +18,15 @@ DrawManager::DrawManager() {
     clicked_this_frame = false;
 }
 
-void DrawManager::update(MousePos new_mouse_pos, MousePos new_click_pos) {
+void DrawManager::update(float delta, MousePos new_mouse_pos, MousePos new_click_pos) {
+    if (pixelswap_active()) {
+        pixelswap_time += delta;
+    }
+
+    if (fade_active()) {
+        fade_time += delta;
+    }
+
     DrawArea *area = nullptr;
     sprite_click.id = ID_NONE;
     mouse_pos = new_mouse_pos;
