@@ -3,6 +3,7 @@
 #include "assetpaths.h"
 
 #define PNL_BORDER 6
+#define PNL_Y_SEP 16
 
 #define BLINK_TIME 0.5
 
@@ -69,10 +70,34 @@ void GalaxyMap::draw_panel_bg(DrawTarget tgt) {
             id(ID::PANEL),
             IMG_BR9_EXPORT,
             {RES_X, RES_Y, 1, 1, 1, 1});
+
+    draw_manager.draw_text(
+            tgt,
+            Font::Small,
+            "Month: ",
+            Justify::Left,
+            area_playerinfo.x + 4,
+            area_playerinfo.y + 2 + PNL_Y_SEP,
+            COL_TEXT);
+    draw_manager.draw_text(
+            tgt,
+            Font::Small,
+            "MCredits: ",
+            Justify::Left,
+            area_playerinfo.x + 4,
+            area_playerinfo.y + 2 + 2*PNL_Y_SEP,
+            COL_TEXT);
+    draw_manager.draw_text(
+            tgt,
+            Font::Small,
+            "Planets: ",
+            Justify::Left,
+            area_playerinfo.x + 4,
+            area_playerinfo.y + 2 + 3*PNL_Y_SEP,
+            COL_TEXT);
 }
 
 void GalaxyMap::update_panel_info(DrawTarget tgt, PlayerInfo* player, FlyTarget* ft) {
-    int y_sep = 16;
     char month_string[5];
     char mc_string[7];
     char planets_string[3];
@@ -99,29 +124,13 @@ void GalaxyMap::update_panel_info(DrawTarget tgt, PlayerInfo* player, FlyTarget*
             COL_TEXT);
     draw_manager.draw_text(
             tgt,
-            Font::Small,
-            "Month: ",
-            Justify::Left,
-            area_playerinfo.x + 4,
-            area_playerinfo.y + 2 + y_sep,
-            COL_TEXT);
-    draw_manager.draw_text(
-            tgt,
             id(ID::PANEL_MONTH),
             Font::Small,
             month_string,
             Justify::Left,
             area_playerinfo.x + 60,
-            area_playerinfo.y + 2 + y_sep,
+            area_playerinfo.y + 2 + PNL_Y_SEP,
             COL_TEXT2);
-    draw_manager.draw_text(
-            tgt,
-            Font::Small,
-            "MCredits: ",
-            Justify::Left,
-            area_playerinfo.x + 4,
-            area_playerinfo.y + 2 + 2*y_sep,
-            COL_TEXT);
     draw_manager.draw_text(
             tgt,
             id(ID::PANEL_MC),
@@ -129,16 +138,8 @@ void GalaxyMap::update_panel_info(DrawTarget tgt, PlayerInfo* player, FlyTarget*
             mc_string,
             Justify::Left,
             area_playerinfo.x + 76,
-            area_playerinfo.y + 2 + 2*y_sep,
+            area_playerinfo.y + 2 + 2*PNL_Y_SEP,
             COL_TEXT2);
-    draw_manager.draw_text(
-            tgt,
-            Font::Small,
-            "Planets: ",
-            Justify::Left,
-            area_playerinfo.x + 4,
-            area_playerinfo.y + 2 + 3*y_sep,
-            COL_TEXT);
     draw_manager.draw_text(
             tgt,
             id(ID::PANEL_PLANETS),
@@ -146,7 +147,7 @@ void GalaxyMap::update_panel_info(DrawTarget tgt, PlayerInfo* player, FlyTarget*
             planets_string,
             Justify::Left,
             area_playerinfo.x + 68,
-            area_playerinfo.y + 2 + 3*y_sep,
+            area_playerinfo.y + 2 + 3*PNL_Y_SEP,
             COL_TEXT2);
 
     /* FlyTarget info */
