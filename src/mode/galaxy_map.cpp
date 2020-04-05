@@ -2,7 +2,7 @@
 
 #include "assetpaths.h"
 
-#define PNL_BORDER 6
+#define PNL_BORDER 4
 #define PNL_Y_SEP 16
 
 #define BLINK_TIME 0.5
@@ -33,7 +33,7 @@ void GalaxyMap::enter() {
     area_playerinfo = {
         galaxy_panel_area.x + PNL_BORDER,
         galaxy_panel_area.y + PNL_BORDER,
-        190,
+        194,
         galaxy_panel_area.h - PNL_BORDER * 2};
     area_starinfo = {
         area_playerinfo.x + area_playerinfo.w + PNL_BORDER,
@@ -69,7 +69,7 @@ void GalaxyMap::draw_panel_bg(DrawTarget tgt) {
             tgt,
             id(ID::PANEL),
             IMG_BR9_EXPORT,
-            {RES_X, RES_Y, 1, 1, 1, 1});
+            {RES_X - PNL_BORDER, RES_Y - PNL_BORDER, 1, 1, 1, 1});
 
     draw_manager.draw_text(
             tgt,
