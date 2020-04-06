@@ -135,6 +135,11 @@ ExodusMode Fly::update(float delta) {
             fly_progress = fly_progress < 1 ? fly_progress : 1;
         }
 
+        // Remove completed thrusters from the screen
+        for (int i = 0; i < current_thrust; ++i) {
+            draw_manager.draw(id(ID::THRUSTERS0 + i), nullptr);
+        }
+
         float fleet_scale = FLY_SCALE * (1.f - fly_progress);
 
         draw_manager.draw(
@@ -151,11 +156,9 @@ ExodusMode Fly::update(float delta) {
                 }
                 float thrust_progress = (time - (i+1)*THRUST_DELAY) / THRUST_TIME;
                 thrust_progress = thrust_progress < 1 ? thrust_progress : 1;
-                if (thrust_progress == 1) {
-                    draw_manager.draw(id(ID::THRUSTERS0 + i), nullptr);
-                    ++current_thrust;
-                    continue;
-                }
+
+                if (thrust_progress == 1)
+                    current_thrust++;
 
                 int x = thrust_pos[i*2];
                 int y = thrust_pos[i*2 + 1];
