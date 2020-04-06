@@ -161,7 +161,7 @@ ExodusMode Fly::update(float delta) {
                 int y = thrust_pos[i*2 + 1];
 
                 draw_manager.draw(
-                    id(ID::THRUSTERS0 + 1),
+                    id(ID::THRUSTERS0 + i),
                     thrust_anims[i].interp(thrust_progress),
                     {x, y, 0.5, 0.5, FLY_SCALE, FLY_SCALE});
             }
