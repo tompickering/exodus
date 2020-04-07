@@ -4,12 +4,12 @@
 #include "assetpaths.h"
 
 #define N_THRUSTERS 12
-#define FLY_SCALE 1.75f
+#define FLY_SCALE 1.76f
 
-#define THRUST_DELAY 0.2f
-#define THRUST_TIME 2.f
+#define THRUST_DELAY 0.1f
+#define THRUST_TIME 3.f //0.4f
 #define FLY_START (THRUST_DELAY*N_THRUSTERS + THRUST_TIME + 0.3f)
-#define FLY_TIME 2.6f
+#define FLY_TIME 1.8f
 
 enum ID {
     FLEET,
@@ -81,19 +81,19 @@ Anim thrust_anims[] = {ta1, ta2, ta3, ta4,
                        ta5, ta6, ta7, ta8,
                        ta9, ta10, ta11, ta12};
 
-const int thrust_pos[] = {
-    225,  98,
-     40, 100,
-     60, 100,
-     80, 100,
-    100, 100,
-    120, 100,
+const float thrust_pos[] = {
+    224,  99, // OK
+     77, 155, // OK
+    233, 168, // OK
+    143, 236, // OK
+    456, 171, // OKish
+    266, 358, // OKish
     140, 100,
     160, 100,
     180, 100,
     200, 100,
     220, 100,
-    240, 100,
+    569, 364, // OK
 };
 
 Fly::Fly() : ModeBase("Fly") {
@@ -166,7 +166,7 @@ ExodusMode Fly::update(float delta) {
                 draw_manager.draw(
                     id(ID::THRUSTERS0 + i),
                     thrust_anims[i].interp(thrust_progress),
-                    {x, y, 0.5, 0.5, FLY_SCALE, FLY_SCALE});
+                    {x, y, 0.5, 0.5, FLY_SCALE + 0.02, FLY_SCALE + 0.02});
             }
         }
 
