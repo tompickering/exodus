@@ -154,6 +154,7 @@ ExodusMode Fly::update(float delta) {
                 if (time < THRUST_DELAY * (i+1)) {
                     break;
                 }
+
                 float thrust_progress = (time - (i+1)*THRUST_DELAY) / THRUST_TIME;
                 thrust_progress = thrust_progress < 1 ? thrust_progress : 1;
 
@@ -168,6 +169,10 @@ ExodusMode Fly::update(float delta) {
                     thrust_anims[i].interp(thrust_progress),
                     {x, y, 0.5, 0.5, FLY_SCALE + 0.02, FLY_SCALE + 0.02});
             }
+        }
+
+        if (time > FLY_START + FLY_TIME + 2) {
+            return ExodusMode::MODE_GalaxyMap;
         }
 
     }
