@@ -233,8 +233,7 @@ ExodusMode GalaxyMap::update(float delta) {
             } else {
                 draw_manager.draw(
                         id(ID::FLEET_MARKER),
-                        nullptr,
-                        {draw_x - 10, draw_y - 10, 0.5, 0.5, 1, 1});
+                        nullptr);
             }
 
             click = draw_manager.query_click(id(ID::PANEL));
