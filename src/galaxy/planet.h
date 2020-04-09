@@ -8,13 +8,13 @@ enum PlanetSize {
 };
 
 enum PlanetClass {
-    PLANET_Forest,
-    PLANET_Desert,
-    PLANET_Rock,
-    PLANET_Volcano,
-    PLANET_Terra,
-    PLANET_Ice,
-    PLANET_Artificial,
+    Forest,      // 1  -
+    Desert,      // 2   |
+    Volcano,     // 3   |
+    Rock,        // 4    > Original codes for planet types
+    Ice,         // 5   |
+    Terra,       // 6   |
+    Artificial,  // 8  -
 };
 
 class Planet {

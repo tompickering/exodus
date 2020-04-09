@@ -4,6 +4,7 @@
 
 #include "guild.h"
 #include "star.h"
+#include "planet.h"
 
 #include "shared.h"
 
@@ -19,6 +20,42 @@ const char* STAR_NAMES[] = {
     "Miracle", "Europe", "Asia", "River", "Beast",
     "Caseopeia", "Ocean", "Gladiator", "Capricorn", "Curse",
     "Bond", "Ring", "Lost", "Victoria", "Fenris",
+};
+
+/*
+// Data from the original game's font/plandat, read into DIM plandat(15,6)
+const int PLANDAT[15][6] = {
+    {1, 2, 3, 4, 5, 6},
+    {1, 2, 3, 3, 4, 6},
+    {1, 4, 4, 5, 5, 6},
+    {2, 2, 3, 3, 4, 4},
+    {1, 2, 3, 4, 5, 6},
+    {1, 4, 4, 5, 5, 6},
+    {2, 2, 3, 3, 4, 4},
+    {1, 2, 3, 4, 5, 6},
+    {1, 2, 4, 4, 5, 6},
+    {4, 4, 4, 5, 5, 5},
+    {2, 2, 3, 3, 4, 4},
+    {1, 2, 2, 3, 4, 6},
+    {1, 2, 3, 4, 4, 6},
+    {1, 2, 4, 5, 5, 6},
+    {4, 4, 4, 5, 5, 5}
+};
+*/
+
+/*
+ * The data that we actually use from 'plandat' expressed with enum values.
+ * This determines the distribution of planet types within a system - so
+ * the first planet's type is selected randomly from the first row etc.
+ * Note that the planet types can change later. It is the case in the original
+ * also that planets are never assigned to be Ice-type during initial generation.
+ */
+const PlanetClass PLANET_DISTRIB[5][6] = {
+    {Forest, Desert, Volcano, Volcano, Rock, Terra},
+    {Forest, Desert, Volcano, Volcano, Rock, Terra},
+    {Desert, Desert, Volcano, Volcano, Rock, Rock},
+    {Desert, Desert, Volcano, Volcano, Rock, Rock},
+    {Desert, Desert, Volcano, Volcano, Rock, Rock},
 };
 
 Galaxy::Galaxy(unsigned int _n_stars) {
