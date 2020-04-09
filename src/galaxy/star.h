@@ -18,6 +18,7 @@ class Star : public FlyTarget {
         Star() : Star(-1, -1, (char*)"NONAME") {};
         Star(int, int, const char*);
         StarSize get_size() const;
+        Planet* next_planet_slot();
     private:
         StarSize size;
         unsigned int n_planets;

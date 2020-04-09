@@ -9,7 +9,7 @@ class FlyTarget {
         FlyTarget(int, int, const char*);
         const int x;
         const int y;
-        char name[FT_MAX_NAME];
+        char name[FT_MAX_NAME + 1];
 };
 
 #endif

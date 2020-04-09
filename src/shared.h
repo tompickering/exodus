@@ -11,6 +11,9 @@
 #define COL_TEXT {0xFF, 0xFF, 0xFF}
 #define COL_TEXT2 {0xEE, 0xEE, 0xAA}
 
+// Mimics BBC BASIC's RND()
+#define RND(X) (1 + (rand() % (X)))
+
 extern EXODUS exodus;
 
 extern const float UPSCALE_X;

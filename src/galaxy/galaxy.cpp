@@ -70,6 +70,7 @@ Galaxy::Galaxy(unsigned int _n_stars) {
 
     int star_x, star_y;
     uint64_t names_taken = 0;
+    Star *star;
     for (unsigned int i = 0; i < n_stars; ++i) {
         while (true) {
             bool ok = true;
@@ -102,7 +103,24 @@ Galaxy::Galaxy(unsigned int _n_stars) {
             }
         }
 
-        new(&stars[i]) Star(star_x, star_y, (STAR_NAMES[name_idx]));
+        // Generate the star with name and position
+        star = new(&stars[i]) Star(star_x, star_y, (STAR_NAMES[name_idx]));
+
+        // Generate the star's planets
+        int n_plans = RND(5);
+        L.info("Star %s: Generating %d planets...", star->name, n_plans);
+        for (int i = 0; i < n_plans; ++i) {
+            Planet *tgt = star->next_planet_slot();
+
+            if (!tgt) {
+                // We are generating up to 5 planets in a star that should
+                // have 5 slots and contain none already. There should be room!
+                L.fatal("No planet slots during initial generation!");
+            }
+
+            PlanetClass cls = PLANET_DISTRIB[i][rand() % 6];
+            new(tgt) Planet(cls);
+        }
     }
 }
 
