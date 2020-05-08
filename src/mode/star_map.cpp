@@ -6,7 +6,7 @@
 
 #include "assetpaths.h"
 
-const float PLANET_ROTATE_SPD = .2f;
+const float PLANET_ROTATE_SPD = .1f;
 
 enum ID {
     PLANET1,
@@ -59,6 +59,19 @@ void StarMap::draw_planets(float delta) {
                     planet_progress[p] += delta * PLANET_ROTATE_SPD;
                     planet_progress[p] = fmod(planet_progress[p], 1.f);
                 }
+
+                int x_off = 76 * (int)(90 * planet_progress[i]);
+                int y_off = 74 * (int)planet->get_class();
+                DrawArea a = {x_off, y_off, 76, 74};
+                draw_manager.set_source_region(id(ID::PLANET1), &a);
+
+                draw_manager.draw(
+                    id(ID::PLANET1 + i),
+                    IMG_PA_ROT,
+                    {120 + i*60,
+                     (RES_Y / 2) + ((i % 2) == 0 ? -30 : 30),
+                     .5f, .5f,
+                     1, 1});
             }
         }
     }
