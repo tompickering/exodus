@@ -12,12 +12,18 @@ extern ExodusState exostate;
 
 extern const DrawArea galaxy_panel_area;
 
+enum PanelType {
+    PNL_Galaxy,
+    PNL_Star,
+};
+
 class PanelDrawer {
     public:
-        PanelDrawer();
+        PanelDrawer(PanelType);
         void draw_panel_bg(DrawTarget);
         void update_panel_info(DrawTarget, PlayerInfo*, FlyTarget*);
     protected:
+        PanelType type;
         SprID id_panel;
         SprID id_name;
         SprID id_month;

@@ -13,7 +13,7 @@ const DrawArea galaxy_panel_area = {0, 430, RES_X, RES_Y - 430};
 DrawArea area_playerinfo;
 DrawArea area_starinfo;
 
-PanelDrawer::PanelDrawer() {
+PanelDrawer::PanelDrawer(PanelType _type) : type(_type) {
     id_panel   = draw_manager.new_sprite_id();
     id_name    = draw_manager.new_sprite_id();
     id_month   = draw_manager.new_sprite_id();
@@ -38,10 +38,13 @@ void PanelDrawer::draw_panel_bg(DrawTarget tgt) {
     draw_manager.fill(tgt, galaxy_panel_area, {0xA0, 0xA0, 0xA0});
     draw_manager.pattern_fill(tgt, area_playerinfo);
     draw_manager.pattern_fill(tgt, area_starinfo);
+
+    const char* pnl_spr = type == PNL_Galaxy ? IMG_BR9_EXPORT : IMG_BR10_EXPORT;
+
     draw_manager.draw(
             tgt,
             id_panel,
-            IMG_BR9_EXPORT,
+            pnl_spr,
             {RES_X - PNL_BORDER, RES_Y - PNL_BORDER, 1, 1, 1, 1});
 
     draw_manager.draw_text(

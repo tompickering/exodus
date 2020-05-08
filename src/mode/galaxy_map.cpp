@@ -10,7 +10,7 @@ enum ID {
     END,
 };
 
-GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer() {
+GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer(), PanelDrawer(PNL_Galaxy) {
     stage = GM_SwapIn;
     selected_ft = nullptr;
     selected_ft_blink = 0;
