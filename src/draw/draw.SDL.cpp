@@ -379,6 +379,16 @@ void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key, DrawTransform t, 
 
     int spr_w = spr->w;
     int spr_h = spr->h;
+
+    DrawArea *src_area = nullptr;
+    if (id) {
+        src_area = get_source_region(*id);
+        if (src_area) {
+            spr_w = src_area->w;
+            spr_h = src_area->h;
+        }
+    }
+
     DrawArea area;
     area.x = t.x - (t.anchor_x * spr_w * t.scale_x);
     area.y = t.y - (t.anchor_y * spr_h * t.scale_y);
