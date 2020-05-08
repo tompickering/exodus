@@ -114,6 +114,7 @@ ExodusMode GalaxyMap::update(float delta) {
                     // Zoom
                     if (player->location.has_visited(exostate.tgt2loc(selected_ft))) {
                         exostate.set_active_flytarget(selected_ft);
+                        exostate.set_active_planet(-1);
                         draw_manager.show_cursor(false);
                         draw_manager.fade_black(1.2f, 24);
                         if (selected_ft == gal->get_guild()) {
@@ -129,9 +130,8 @@ ExodusMode GalaxyMap::update(float delta) {
             break;
         case GM_Zoom2Guild:
             return ExodusMode::MODE_GuildExterior;
-            break;
         case GM_Zoom2Star:
-            break;
+            return ExodusMode::MODE_StarMap;
         case GM_MonthPassing:
             return ExodusMode::MODE_None;
         default:

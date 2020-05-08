@@ -22,3 +22,15 @@ Planet* Star::next_planet_slot() {
 
     return nullptr;
 }
+
+Planet* Star::get_planet(int idx) {
+    if (idx < 0 || idx >= STAR_MAX_PLANETS) {
+        L.fatal("Attempt to index invalid planet index %d at %s", idx, name);
+    }
+
+    if (planets[idx].exists()) {
+        return &planets[idx];
+    }
+
+    return nullptr;
+}

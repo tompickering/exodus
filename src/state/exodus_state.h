@@ -12,6 +12,8 @@
  */
 
 #include "galaxy/galaxy.h"
+#include "galaxy/star.h"
+#include "galaxy/planet.h"
 
 #include <cstdint>
 
@@ -108,7 +110,12 @@ class ExodusState {
         unsigned int get_month();
         PlayerInfo *get_active_player();
         unsigned int get_active_player_idx();
+        Star* get_active_star();
+        unsigned int get_active_star_idx();
+        Planet* get_active_planet();
+        int get_active_planet_idx();
         void set_active_flytarget(FlyTarget*);
+        void set_active_planet(int);
         int tgt2loc(FlyTarget*); // Convert between PlayerLocation
         FlyTarget* loc2tgt(int); // indicies and FlyTarget objects.
     private:
@@ -116,6 +123,8 @@ class ExodusState {
         unsigned int n_players;
         unsigned int month;
         unsigned int active_player;
+        unsigned int active_star;
+        int active_planet;
         PlayerInfo player_info[N_PLAYERS];
         Aim aim;
         EnemyStart enemy_start;

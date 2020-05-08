@@ -33,6 +33,8 @@ void ExodusState::init(GameConfig config) {
     n_players = config.n_players;
     month = 1;
     active_player = 0;
+    active_star = 0;
+    active_planet = -1;
     unsigned int i;
 
     // PLAYER INIT: Human
@@ -124,9 +126,45 @@ unsigned int ExodusState::get_active_player_idx() {
     return active_player;
 }
 
+Star* ExodusState::get_active_star() {
+    return &(get_galaxy()->get_stars()[active_star]);
+}
+
+unsigned int ExodusState::get_active_star_idx() {
+    return active_star;
+}
+
+Planet* ExodusState::get_active_planet() {
+    if (active_planet < 0) {
+        return nullptr;
+    }
+
+    return get_galaxy()->get_stars()[active_star].get_planet(active_planet);
+}
+
+int ExodusState::get_active_planet_idx() {
+    return active_planet;
+}
+
 void ExodusState::set_active_flytarget(FlyTarget* new_target) {
     L.debug("Active target: %s", new_target->name);
     active_flytarget = new_target;
+
+    if (new_target == get_galaxy()->get_guild()) {
+        return;
+    }
+
+    for (int i = 0; i < GALAXY_MAX_STARS; ++i) {
+        if (&get_galaxy()->get_stars()[i] == new_target) {
+            active_star = i;
+        }
+    }
+
+}
+
+void ExodusState::set_active_planet(int new_planet) {
+    L.debug("Active planet: %d", new_planet);
+    active_planet = new_planet;
 }
 
 int ExodusState::tgt2loc(FlyTarget* tgt) {

@@ -16,7 +16,7 @@ enum ExodusMode {
     MODE_GuildBar,
     MODE_GuildHQ,
     MODE_Fly,
-    MODE_SolarSystem,
+    MODE_StarMap,
     MODE_PlanetMap,
 };
 
