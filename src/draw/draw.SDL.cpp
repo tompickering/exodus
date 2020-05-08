@@ -345,13 +345,26 @@ void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key, DrawArea* area, S
         L.warn("Unknown sprite: %s", spr_key);
         return;
     }
+
+    DrawArea *src_area = nullptr;
+    if (id) {
+        src_area = get_source_region(*id);
+    }
+
+    SDL_Rect src_rect;
+    SDL_Rect *src_rect_ptr = nullptr;
+    if (src_area) {
+        src_rect = {src_area->x, src_area->y, src_area->w, src_area->h};
+        src_rect_ptr = &src_rect;
+    }
+
     if (area) {
         SDL_Rect dst_rect = {area->x, area->y, area->w, area->h};
-        if (SDL_BlitScaled(spr, nullptr, tgt_surf, &dst_rect)) {
+        if (SDL_BlitScaled(spr, src_rect_ptr, tgt_surf, &dst_rect)) {
             L.debug("Blit unsuccessful: %s", spr_key);
         }
     } else {
-        if (SDL_BlitSurface(spr, nullptr, tgt_surf, nullptr)) {
+        if (SDL_BlitSurface(spr, src_rect_ptr, tgt_surf, nullptr)) {
             L.debug("Blit unsuccessful: %s", spr_key);
         }
     }

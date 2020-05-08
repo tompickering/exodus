@@ -154,8 +154,27 @@ DrawArea* DrawManager::get_drawn_area(SprID id) {
     return nullptr;
 }
 
+void DrawManager::set_source_region(SprID id, DrawArea* area) {
+    if (!area) {
+        if (id_source_regions.count(id)) {
+            id_source_regions.erase(id);
+        }
+        return;
+    }
+
+    id_source_regions[id] = *area;
+}
+
+DrawArea* DrawManager::get_source_region(SprID id) {
+    if (id_source_regions.count(id)) {
+        return &id_source_regions[id];
+    }
+    return nullptr;
+}
+
 void DrawManager::clear_sprite_ids() {
     drawn_spr_info.clear();
+    id_source_regions.clear();
 }
 
 void DrawManager::clear(DrawTarget tgt) {
