@@ -6,6 +6,7 @@
 
 #include "draw/draw.h"
 
+#include "galaxy/star.h"
 #include "state/exodus_state.h"
 
 extern ExodusState exostate;
@@ -15,6 +16,10 @@ class StarMap : ModeBase, PanelDrawer {
         StarMap();
         virtual void enter() override;
         virtual ExodusMode update(float) override;
+    private:
+        Star *star;
+        void draw_planets(float);
+        float planet_progress[STAR_MAX_PLANETS];
 };
 
 #endif

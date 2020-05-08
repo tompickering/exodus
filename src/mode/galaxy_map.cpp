@@ -105,6 +105,7 @@ ExodusMode GalaxyMap::update(float delta) {
                     // Fly
                     // TODO: Vary number of months
                     player->location.set_target(exostate.tgt2loc(selected_ft), 1);
+                    player->location.advance();
                     return ExodusMode::MODE_Fly;
                 } else if (click.x < 0.5) {
                     L.debug("Panel 1");
