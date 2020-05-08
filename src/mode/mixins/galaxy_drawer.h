@@ -10,8 +10,6 @@ extern DRAWMANAGER draw_manager;
 
 extern ExodusState exostate;
 
-extern const DrawArea galaxy_panel_area;
-
 class GalaxyDrawer {
     public:
         GalaxyDrawer();

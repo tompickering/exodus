@@ -3,6 +3,7 @@
 
 #include "mode_base.h"
 #include "mixins/galaxy_drawer.h"
+#include "mixins/panel_drawer.h"
 
 #include "platform.h"
 #include "draw/draw.h"
@@ -11,7 +12,7 @@
 
 extern ExodusState exostate;
 
-class GalaxyMap : ModeBase, GalaxyDrawer {
+class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer {
     public:
         GalaxyMap();
         virtual void enter() override;
@@ -28,8 +29,6 @@ class GalaxyMap : ModeBase, GalaxyDrawer {
         Stage stage;
         FlyTarget *selected_ft;
         float selected_ft_blink;
-        void draw_panel_bg(DrawTarget);
-        void update_panel_info(DrawTarget, PlayerInfo*, FlyTarget*);
 };
 
 #endif
