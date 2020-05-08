@@ -120,6 +120,10 @@ PlayerInfo* ExodusState::get_active_player() {
     return &player_info[active_player];
 }
 
+unsigned int ExodusState::get_active_player_idx() {
+    return active_player;
+}
+
 void ExodusState::set_active_flytarget(FlyTarget* new_target) {
     L.debug("Active target: %s", new_target->name);
     active_flytarget = new_target;

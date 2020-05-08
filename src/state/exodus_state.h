@@ -107,6 +107,7 @@ class ExodusState {
         Galaxy* get_galaxy();
         unsigned int get_month();
         PlayerInfo *get_active_player();
+        unsigned int get_active_player_idx();
         void set_active_flytarget(FlyTarget*);
         int tgt2loc(FlyTarget*); // Convert between PlayerLocation
         FlyTarget* loc2tgt(int); // indicies and FlyTarget objects.
