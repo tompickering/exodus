@@ -25,9 +25,6 @@ void StarMap::enter() {
     star = exostate.get_active_star();
 
     DrawTarget tgt = TGT_Primary;
-    if (exodus.get_prev_mode() == ExodusMode::MODE_GalaxyMap) {
-        tgt = TGT_Secondary;
-    }
 
     for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
         planet_progress[i] = 0;
