@@ -28,6 +28,12 @@ using std::vector;
  *
  * Sprites with IDs should be removed from the screen by calling draw with that
  * ID and a null pointer as the sprite key.
+ *
+ * Sprite IDs can also be used to draw particular regions of a sprite. This is
+ * achieved by first attaining an ID and then calling set_source_region with
+ * that ID and a pointer to the source region to use when drawing with that ID.
+ * The region may be updated with subsequent calls to the function.
+ * Passing nullptr with the ID will terminate this behaviour.
  */
 
 typedef unsigned int SprID;
