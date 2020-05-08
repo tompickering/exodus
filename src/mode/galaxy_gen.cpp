@@ -23,7 +23,7 @@ void GalaxyGen::enter() {
     ModeBase::enter(ID::END);
     stage = GGSTG_Gen;
     accepted = false;
-    draw_manager.show_cursor(false);
+    draw_manager.show_cursor(true);
 }
 
 const float FADE_SPEED = 10.f;
@@ -58,7 +58,6 @@ ExodusMode GalaxyGen::update(float delta) {
                 {RES_X/2, 460, 0.5, 0.5, 1, 1});
             if (fade_interp == 1) {
                 draw_manager.save_background();
-                draw_manager.show_cursor(true);
                 stage = GGSTG_Wait;
             }
             break;
@@ -67,7 +66,6 @@ ExodusMode GalaxyGen::update(float delta) {
             if (click.id) {
                 accepted = click.x < 0.5;
                 stage = GGSTG_FadeOut;
-                draw_manager.show_cursor(false);
             }
             break;
         case GGSTG_FadeOut:

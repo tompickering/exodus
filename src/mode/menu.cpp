@@ -85,7 +85,6 @@ SprID id_diff_2;
  */
 ExodusMode Menu::update(float delta) {
     if (draw_manager.pixelswap_active() || (stage != Main && draw_manager.fade_active())) {
-        draw_manager.show_cursor(false);
         return ExodusMode::MODE_None;
     }
 

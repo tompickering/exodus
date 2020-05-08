@@ -195,13 +195,14 @@ ExodusMode GalaxyMap::update(float delta) {
     switch (stage) {
         case GM_SwapIn:
             draw_manager.save_background();
-            draw_manager.show_cursor(true);
             stage = GM_Idle;
             break;
         case GM_Idle:
             if (player->human && !player->intro_seen) {
                 return ExodusMode::MODE_GalaxyIntro;
             }
+
+            draw_manager.show_cursor(true);
 
             ft = get_clicked_flytarget();
             if (!selected_ft) ft = gal->get_guild();
