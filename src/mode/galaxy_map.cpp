@@ -67,7 +67,10 @@ ExodusMode GalaxyMap::update(float delta) {
             draw_manager.show_cursor(true);
 
             ft = get_clicked_flytarget();
-            if (!selected_ft) ft = gal->get_guild();
+            if (!selected_ft) {
+                ft = exostate.loc2tgt(player->location.get_target());
+            }
+
             if (ft && ft != selected_ft) {
                 draw_manager.draw(id(ID::SELECTED), nullptr);
                 selected_ft = ft;
