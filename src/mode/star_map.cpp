@@ -63,13 +63,13 @@ void StarMap::draw_planets(float delta) {
                 int x_off = 76 * (int)(90 * planet_progress[i]);
                 int y_off = 74 * (int)planet->get_class();
                 DrawArea a = {x_off, y_off, 76, 74};
-                draw_manager.set_source_region(id(ID::PLANET1), &a);
+                draw_manager.set_source_region(id(ID::PLANET1 + i), &a);
 
                 draw_manager.draw(
                     id(ID::PLANET1 + i),
                     IMG_PA_ROT,
-                    {120 + i*60,
-                     (RES_Y / 2) + ((i % 2) == 0 ? -30 : 30),
+                    {140 + i*95,
+                     (RES_Y / 2) - 30 + ((i % 2) == 0 ? -30 : 30),
                      .5f, .5f,
                      1, 1});
             }
