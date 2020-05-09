@@ -5,9 +5,10 @@
 #include "assetpaths.h"
 #include "shared.h"
 
-const int PNL_TOP    = 412;
-const int PNL_BORDER = 4;
-const int PNL_Y_SEP  = 16;
+const int PNL_TOP        = 412;
+const int PNL_BORDER     = 4;
+const int PNL_Y_SEP      = 20;
+const int PNL_PLAYER_PAD = 5;
 
 const DrawArea galaxy_panel_area = {0, PNL_TOP, RES_X, RES_Y - PNL_TOP};
 
@@ -41,6 +42,7 @@ void PanelDrawer::draw_panel_bg(DrawTarget tgt) {
     draw_manager.pattern_fill(tgt, area_starinfo);
 
     const char* pnl_spr = type == PNL_Galaxy ? IMG_BR9_EXPORT : IMG_BR10_EXPORT;
+    const int top = area_playerinfo.y + PNL_PLAYER_PAD;
 
     draw_manager.draw(
             tgt,
@@ -50,27 +52,24 @@ void PanelDrawer::draw_panel_bg(DrawTarget tgt) {
 
     draw_manager.draw_text(
             tgt,
-            Font::Small,
             "Month: ",
             Justify::Left,
             area_playerinfo.x + 4,
-            area_playerinfo.y + 2 + PNL_Y_SEP,
+            top + PNL_Y_SEP,
             COL_TEXT);
     draw_manager.draw_text(
             tgt,
-            Font::Small,
             "MCredits: ",
             Justify::Left,
             area_playerinfo.x + 4,
-            area_playerinfo.y + 2 + 2*PNL_Y_SEP,
+            top + 2*PNL_Y_SEP,
             COL_TEXT);
     draw_manager.draw_text(
             tgt,
-            Font::Small,
             "Planets: ",
             Justify::Left,
             area_playerinfo.x + 4,
-            area_playerinfo.y + 2 + 3*PNL_Y_SEP,
+            top + 3*PNL_Y_SEP,
             COL_TEXT);
 }
 
@@ -90,41 +89,39 @@ void PanelDrawer::update_panel_info(DrawTarget tgt, PlayerInfo* player, FlyTarge
         strcpy(planets_string, "");
     }
 
+    const int top = area_playerinfo.y + PNL_PLAYER_PAD;
+
     draw_manager.draw_text(
             tgt,
             id_name,
-            Font::Small,
             player ? player->full_name : "",
             Justify::Left,
             area_playerinfo.x + 4,
-            area_playerinfo.y + 2,
+            top,
             COL_TEXT);
     draw_manager.draw_text(
             tgt,
             id_month,
-            Font::Small,
             month_string,
             Justify::Left,
-            area_playerinfo.x + 60,
-            area_playerinfo.y + 2 + PNL_Y_SEP,
+            area_playerinfo.x + 72,
+            top + PNL_Y_SEP,
             COL_TEXT2);
     draw_manager.draw_text(
             tgt,
             id_mc,
-            Font::Small,
             mc_string,
             Justify::Left,
-            area_playerinfo.x + 76,
-            area_playerinfo.y + 2 + 2*PNL_Y_SEP,
+            area_playerinfo.x + 94,
+            top + 2*PNL_Y_SEP,
             COL_TEXT2);
     draw_manager.draw_text(
             tgt,
             id_planets,
-            Font::Small,
             planets_string,
             Justify::Left,
-            area_playerinfo.x + 68,
-            area_playerinfo.y + 2 + 3*PNL_Y_SEP,
+            area_playerinfo.x + 80,
+            top + 3*PNL_Y_SEP,
             COL_TEXT2);
 
     /* FlyTarget info */
