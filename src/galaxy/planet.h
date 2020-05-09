@@ -47,7 +47,7 @@ class Planet {
         char name[PLANET_MAX_NAME + 1];
         int day_hours;         // Orig: pspeed - except we multiply by 4 here.
         int sit;               // Orig: SIt. Trade-related?
-        int sid;               // Orig: SId. Size-related?
+        int diameter;          // Orig: SId.
         int minerals;          // Orig: SIrm.
         int income_adj;        // Adjustment to class value, instead of changing orig SIs
         int sim;               // Orig: SIm. Battle-related?

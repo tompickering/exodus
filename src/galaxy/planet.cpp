@@ -64,15 +64,15 @@ void Planet::init() {
         r = RND(5);
         sit = r > 3 ? 1 : r;
 
-        sid = RND(8)*1000 + 7*1000 + RND(9)*100;
+        diameter = RND(8)*1000 + 7*1000 + RND(9)*100;
 
-        minerals = RND(sid/40);
+        minerals = RND(diameter/40);
 
         if (get_class() == Volcano || get_class() == Ice) {
             minerals *= 2;
         }
 
-        r = sid / 1000;
+        r = diameter / 1000;
         unsigned int a = 2;
         unsigned int b = 15;
 
@@ -109,7 +109,7 @@ void Planet::init() {
         lunar_base = true;
         sit = 0;
         army_funding = 2;
-        sid = 12000;
+        diameter = 12000;
         airdef_guns = 10;
         minerals = 0;
         sim = 2;
