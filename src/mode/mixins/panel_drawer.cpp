@@ -5,10 +5,11 @@
 #include "assetpaths.h"
 #include "shared.h"
 
-#define PNL_BORDER 4
-#define PNL_Y_SEP 16
+const int PNL_TOP    = 412;
+const int PNL_BORDER = 4;
+const int PNL_Y_SEP  = 16;
 
-const DrawArea galaxy_panel_area = {0, 430, RES_X, RES_Y - 430};
+const DrawArea galaxy_panel_area = {0, PNL_TOP, RES_X, RES_Y - PNL_TOP};
 
 DrawArea area_playerinfo;
 DrawArea area_starinfo;
@@ -31,7 +32,7 @@ PanelDrawer::PanelDrawer(PanelType _type) : type(_type) {
         area_playerinfo.x + area_playerinfo.w + PNL_BORDER,
         galaxy_panel_area.y + PNL_BORDER,
         RES_X - (area_playerinfo.x + area_playerinfo.w + PNL_BORDER) - PNL_BORDER,
-        44};
+        474 - PNL_TOP};
 }
 
 void PanelDrawer::draw_panel_bg(DrawTarget tgt) {

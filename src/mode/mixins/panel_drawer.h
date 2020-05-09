@@ -6,6 +6,10 @@
 #include "state/exodus_state.h"
 #include "galaxy/flytarget.h"
 
+extern const int PNL_TOP;
+extern const int PNL_BORDER;
+extern const int PNL_Y_SEP;
+
 extern DRAWMANAGER draw_manager;
 
 extern ExodusState exostate;

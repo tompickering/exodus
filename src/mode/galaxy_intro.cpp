@@ -1,5 +1,7 @@
 #include "galaxy_intro.h"
 
+#include "mixins/panel_drawer.h"
+
 #include "assetpaths.h"
 
 #define GALAXY_INTRO_TIME 8
@@ -43,7 +45,7 @@ void GalaxyIntro::enter() {
         TGT_Secondary,
         IMG_SHIP_FLIPPED,
         {420, 50, 0, 0, 2.4, 2.4});
-    DrawArea area = {0, 0, RES_X, 430};
+    DrawArea area = {0, 0, RES_X, PNL_TOP};
     draw_manager.pixelswap_start(&area);
     time = 0;
 }
