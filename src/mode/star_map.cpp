@@ -18,6 +18,7 @@ enum ID {
 };
 
 StarMap::StarMap() : ModeBase("StarMap"), PanelDrawer(PNL_Star) {
+    stage = SM_Idle;
 }
 
 void StarMap::enter() {
@@ -39,16 +40,45 @@ void StarMap::enter() {
     if (tgt != TGT_Primary) {
         draw_manager.fade_start(1.f, 12);
     }
+
+    stage = SM_Idle;
 }
 
 ExodusMode StarMap::update(float delta) {
+    SpriteClick click;
+
+    if (draw_manager.fade_active()) {
+        return ExodusMode::MODE_None;
+    }
 
     draw_planets(delta);
 
-    for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
-        if (draw_manager.query_click(id(ID::PLANET1 + i)).id) {
-            exostate.set_active_planet(i);
-        }
+    switch(stage) {
+        case SM_Idle:
+            for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+                if (draw_manager.query_click(id(ID::PLANET1 + i)).id) {
+                    exostate.set_active_planet(i);
+                }
+            }
+
+            click = draw_manager.query_click(id_panel);
+            if (click.id) {
+                if (click.x < 0.25) {
+                    // Map
+                    L.debug("Panel 0");
+                } else if (click.x < 0.5) {
+                    L.debug("Panel 1");
+                } else if (click.x < 0.75) {
+                    L.debug("Panel 2");
+                } else {
+                    // Back
+                    draw_manager.fade_black(1.2f, 24);
+                    stage = SM_Back2Gal;
+                }
+            }
+            break;
+        case SM_Back2Gal:
+            return ExodusMode::MODE_GalaxyMap;
     }
 
     return ExodusMode::MODE_None;

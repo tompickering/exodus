@@ -17,6 +17,12 @@ class StarMap : ModeBase, PanelDrawer {
         virtual void enter() override;
         virtual ExodusMode update(float) override;
     private:
+        enum Stage {
+            SM_Idle,
+            SM_Back2Gal,
+        };
+
+        Stage stage;
         Star *star;
         void draw_planets(float);
         float planet_progress[STAR_MAX_PLANETS];
