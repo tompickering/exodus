@@ -45,6 +45,12 @@ ExodusMode StarMap::update(float delta) {
 
     draw_planets(delta);
 
+    for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+        if (draw_manager.query_click(id(ID::PLANET1 + i)).id) {
+            exostate.set_active_planet(i);
+        }
+    }
+
     return ExodusMode::MODE_None;
 }
 
