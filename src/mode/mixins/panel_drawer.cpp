@@ -208,9 +208,20 @@ void PanelDrawer::update_panel_info_planet(DrawTarget tgt, PlayerInfo *player, P
         return;
     }
 
-    // TODO: Populate this info correctly
     char planet_desc[41];
-    snprintf(planet_desc, 40, "This is the planet %s.", planet->get_name());
+    char planet_own[20 + MAX_PLAYER_FULLNAME];
+    if (planet->is_owned()) {
+        PlayerInfo *owner = exostate.get_player(planet->get_owner());
+        snprintf(planet_desc, 40, "This is the planet %s.", planet->get_name());
+        snprintf(planet_own, 20 + MAX_PLAYER_FULLNAME, "It belongs to %s.", owner->full_name);
+    } else {
+        snprintf(planet_desc, 40, "This is an unexplored planet.");
+        snprintf(planet_own, 20 + MAX_PLAYER_FULLNAME, "It belongs to no confederation.");
+    }
+
+    char planet_class[20];
+    snprintf(planet_class, 20, "Class: %s", planet->get_class_str());
+
     draw_manager.draw_text(
         id_desc,
         Font::Small,
@@ -223,7 +234,7 @@ void PanelDrawer::update_panel_info_planet(DrawTarget tgt, PlayerInfo *player, P
     draw_manager.draw_text(
         id_desc1,
         Font::Small,
-        "It belongs to",
+        (const char*) planet_own,
         Justify::Left,
         area_starinfo.x + 4,
         area_starinfo.y + 2 + PNL_Y_SEP,
@@ -232,7 +243,7 @@ void PanelDrawer::update_panel_info_planet(DrawTarget tgt, PlayerInfo *player, P
     draw_manager.draw_text(
         id_desc2,
         Font::Small,
-        "Class: ",
+        (const char*) planet_class,
         Justify::Left,
         area_starinfo.x + 4,
         area_starinfo.y + 2 + 2*PNL_Y_SEP,

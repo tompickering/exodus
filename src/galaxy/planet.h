@@ -30,6 +30,8 @@ class Planet {
         Planet(PlanetClass);
         bool exists();
         PlanetClass get_class();
+        const char* get_class_str();
+        const char* get_class_str_lower();
         int get_income();            // Orig: SIs
         int get_n_cities();          // Orig: SIc
         int get_n_agri();            // Orig: SIna

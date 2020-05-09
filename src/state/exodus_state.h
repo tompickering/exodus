@@ -21,6 +21,7 @@
 #define MAX_PLAYER_NAME      12
 #define MAX_PLAYER_TITLE     12
 #define MAX_PLAYER_REFERENCE 12
+#define MAX_PLAYER_FULLNAME MAX_PLAYER_TITLE + 1 + MAX_PLAYER_NAME
 
 #define N_PLAYERS 15
 
@@ -71,7 +72,7 @@ typedef struct {
     char name[MAX_PLAYER_NAME + 1];
     char title[MAX_PLAYER_TITLE + 1];
     char ref[MAX_PLAYER_REFERENCE + 1];
-    char full_name[MAX_PLAYER_TITLE + MAX_PLAYER_NAME + 2];
+    char full_name[MAX_PLAYER_FULLNAME + 1];
     bool dead;
     int flag_idx;
     unsigned int mc;

@@ -202,3 +202,47 @@ const PlanetSpriteSet* Planet::sprites() {
     if (!sprite_sets_initialised) init_sprite_sets();
     return &sprite_sets[get_class()];
 }
+
+const char* Planet::get_class_str() {
+    switch(get_class()) {
+        case Forest:
+            return "Forest";
+        case Desert:
+            return "Desert";
+        case Volcano:
+            return "Volcano";
+        case Rock:
+            return "Rock";
+        case Ice:
+            return "Ice";
+        case Terra:
+            return "Terra";
+        case Artificial:
+            return "Artificial";
+    }
+
+    L.fatal("No string for planet of class %d", get_class());
+    return "";
+}
+
+const char* Planet::get_class_str_lower() {
+    switch(get_class()) {
+        case Forest:
+            return "forest";
+        case Desert:
+            return "desert";
+        case Volcano:
+            return "volcano";
+        case Rock:
+            return "rock";
+        case Ice:
+            return "ice";
+        case Terra:
+            return "terra";
+        case Artificial:
+            return "artificial";
+    }
+
+    L.fatal("No lower-case string for planet of class %d", get_class());
+    return "";
+}
