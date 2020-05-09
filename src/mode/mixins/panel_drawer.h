@@ -25,7 +25,9 @@ class PanelDrawer {
     public:
         PanelDrawer(PanelType);
         void draw_panel_bg(DrawTarget);
-        void update_panel_info(DrawTarget, PlayerInfo*, FlyTarget*);
+        void update_panel_info_player(DrawTarget, PlayerInfo*);
+        void update_panel_info_ft(DrawTarget, PlayerInfo*, FlyTarget*);
+        void update_panel_info_planet(DrawTarget, PlayerInfo*, Planet*);
     protected:
         PanelType type;
         SprID id_panel;
@@ -35,6 +37,8 @@ class PanelDrawer {
         SprID id_planets;
         SprID id_qm;
         SprID id_desc;
+        SprID id_desc1;
+        SprID id_desc2;
 };
 
 #endif

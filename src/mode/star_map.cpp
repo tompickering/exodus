@@ -51,10 +51,15 @@ ExodusMode StarMap::update(float delta) {
         return ExodusMode::MODE_None;
     }
 
+    PlayerInfo *player = exostate.get_active_player();
+
     draw_planets(delta);
 
     switch(stage) {
         case SM_Idle:
+            update_panel_info_player(TGT_Primary, player);
+            update_panel_info_planet(TGT_Primary, player, exostate.get_active_planet());
+
             for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
                 if (draw_manager.query_click(id(ID::PLANET1 + i)).id) {
                     exostate.set_active_planet(i);

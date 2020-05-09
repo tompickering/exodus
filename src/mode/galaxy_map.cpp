@@ -87,7 +87,8 @@ ExodusMode GalaxyMap::update(float delta) {
                 draw_manager.draw(id(ID::SELECTED), nullptr);
             }
 
-            update_panel_info(TGT_Primary, player, selected_ft);
+            update_panel_info_player(TGT_Primary, player);
+            update_panel_info_ft(TGT_Primary, player, selected_ft);
 
             if (!player->location.in_flight()) {
                 FlyTarget *fleet_pos = exostate.loc2tgt(player->location.get_target());

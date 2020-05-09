@@ -23,6 +23,8 @@ PanelDrawer::PanelDrawer(PanelType _type) : type(_type) {
     id_planets = draw_manager.new_sprite_id();
     id_qm      = draw_manager.new_sprite_id();
     id_desc    = draw_manager.new_sprite_id();
+    id_desc1   = draw_manager.new_sprite_id();
+    id_desc2   = draw_manager.new_sprite_id();
 
     area_playerinfo = {
         galaxy_panel_area.x + PNL_BORDER,
@@ -73,13 +75,11 @@ void PanelDrawer::draw_panel_bg(DrawTarget tgt) {
             COL_TEXT);
 }
 
-void PanelDrawer::update_panel_info(DrawTarget tgt, PlayerInfo* player, FlyTarget* ft) {
+void PanelDrawer::update_panel_info_player(DrawTarget tgt, PlayerInfo* player) {
     char month_string[5];
     char mc_string[7];
     char planets_string[3];
-    Galaxy *gal = exostate.get_galaxy();
 
-    /* Player info */
     snprintf(month_string, 5, "%u", exostate.get_month());
     if (player) {
         snprintf(mc_string, 7, "%u", player->mc);
@@ -123,8 +123,11 @@ void PanelDrawer::update_panel_info(DrawTarget tgt, PlayerInfo* player, FlyTarge
             area_playerinfo.x + 80,
             top + 3*PNL_Y_SEP,
             COL_TEXT2);
+}
 
-    /* FlyTarget info */
+void PanelDrawer::update_panel_info_ft(DrawTarget tgt, PlayerInfo* player, FlyTarget* ft) {
+    Galaxy *gal = exostate.get_galaxy();
+
     char ft_desc[41];
     bool is_guild = ft == gal->get_guild();
     snprintf(ft_desc, 40, "This is the %s%s.", is_guild ? "" : "star ", ft->name);
@@ -147,5 +150,45 @@ void PanelDrawer::update_panel_info(DrawTarget tgt, PlayerInfo* player, FlyTarge
         Justify::Left,
         area_starinfo.x + 4,
         area_starinfo.y + 2,
+        COL_TEXT);
+}
+
+void PanelDrawer::update_panel_info_planet(DrawTarget tgt, PlayerInfo *player, Planet* planet) {
+    if (!planet) {
+        // Clear the info
+        draw_manager.draw(id_desc,  nullptr);
+        draw_manager.draw(id_desc1, nullptr);
+        draw_manager.draw(id_desc2, nullptr);
+        return;
+    }
+
+    // TODO: Populate this info correctly
+    char planet_desc[41];
+    snprintf(planet_desc, 40, "This is the planet %s.", planet->get_name());
+    draw_manager.draw_text(
+        id_desc,
+        Font::Small,
+        (const char*) planet_desc,
+        Justify::Left,
+        area_starinfo.x + 4,
+        area_starinfo.y + 2,
+        COL_TEXT);
+
+    draw_manager.draw_text(
+        id_desc1,
+        Font::Small,
+        "It belongs to",
+        Justify::Left,
+        area_starinfo.x + 4,
+        area_starinfo.y + 2 + PNL_Y_SEP,
+        COL_TEXT);
+
+    draw_manager.draw_text(
+        id_desc2,
+        Font::Small,
+        "Class: ",
+        Justify::Left,
+        area_starinfo.x + 4,
+        area_starinfo.y + 2 + 2*PNL_Y_SEP,
         COL_TEXT);
 }

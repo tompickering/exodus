@@ -6,6 +6,7 @@
 
 Planet::Planet() {
     _exists = false;
+    name[0] = '\0';
 }
 
 Planet::Planet(PlanetClass _cls) : cls(_cls) {
@@ -32,6 +33,7 @@ void Planet::init() {
     int r;
 
     _exists = true;
+    name[0] = '\0';
     owner = -1;
 
     income_adj = 0;
