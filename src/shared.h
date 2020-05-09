@@ -10,6 +10,7 @@
 
 #define COL_TEXT {0xFF, 0xFF, 0xFF}
 #define COL_TEXT2 {0xEE, 0xEE, 0xAA}
+#define COL_BORDERS {0xA0, 0xA0, 0xA0}
 
 // Mimics BBC BASIC's RND()
 #define RND(X) (1 + (rand() % (X)))
