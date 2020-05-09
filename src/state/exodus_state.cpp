@@ -147,6 +147,10 @@ int ExodusState::get_active_planet_idx() {
     return active_planet;
 }
 
+FlyTarget* ExodusState::get_active_flytarget() {
+    return active_flytarget;
+}
+
 void ExodusState::set_active_flytarget(FlyTarget* new_target) {
     L.debug("Active target: %s", new_target->name);
     active_flytarget = new_target;

@@ -61,14 +61,20 @@ ExodusMode GalaxyMap::update(float delta) {
             break;
         case GM_Idle:
             if (player->human && !player->intro_seen) {
+                exostate.set_active_flytarget(gal->get_guild());
                 return ExodusMode::MODE_GalaxyIntro;
             }
 
             draw_manager.show_cursor(true);
 
             ft = get_clicked_flytarget();
+
+            if (ft) {
+                exostate.set_active_flytarget(ft);
+            }
+
             if (!selected_ft) {
-                ft = exostate.loc2tgt(player->location.get_target());
+                ft = exostate.get_active_flytarget();
             }
 
             if (ft && ft != selected_ft) {

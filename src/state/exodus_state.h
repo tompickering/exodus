@@ -115,6 +115,7 @@ class ExodusState {
         unsigned int get_active_star_idx();
         Planet* get_active_planet();
         int get_active_planet_idx();
+        FlyTarget* get_active_flytarget();
         void set_active_flytarget(FlyTarget*);
         void set_active_planet(int);
         int tgt2loc(FlyTarget*); // Convert between PlayerLocation
