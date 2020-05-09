@@ -107,6 +107,13 @@ extern const char *IMG_MAKING11;
 extern const char *IMG_MAKING12;
 extern const char *IMG_MAKING13;
 extern const char *IMG_MAKING14;
+extern const char *IMG_LS_FOREST;
+extern const char *IMG_LS_DESERT;
+extern const char *IMG_LS_VOLCANO;
+extern const char *IMG_LS_ROCK;
+extern const char *IMG_LS_ICE;
+extern const char *IMG_LS_TERRA;
+extern const char *IMG_LS_ART;
 
 extern const char *IMG_INTRO_PH1_PUSH_5;
 extern const char *IMG_INTRO_OD1_BEHIND;

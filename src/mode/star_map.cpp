@@ -52,13 +52,14 @@ ExodusMode StarMap::update(float delta) {
     }
 
     PlayerInfo *player = exostate.get_active_player();
+    Planet *planet = exostate.get_active_planet();
 
     draw_planets(delta);
 
     switch(stage) {
         case SM_Idle:
             update_panel_info_player(TGT_Primary, player);
-            update_panel_info_planet(TGT_Primary, player, exostate.get_active_planet());
+            update_panel_info_planet(TGT_Primary, player, planet);
 
             for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
                 if (draw_manager.query_click(id(ID::PLANET1 + i)).id) {
@@ -72,7 +73,10 @@ ExodusMode StarMap::update(float delta) {
                     // Map
                     L.debug("Panel 0");
                 } else if (click.x < 0.5) {
-                    L.debug("Panel 1");
+                    // Info
+                    if (planet && planet->exists()) {
+                        return ExodusMode::MODE_PlanetStatus;
+                    }
                 } else if (click.x < 0.75) {
                     L.debug("Panel 2");
                 } else {

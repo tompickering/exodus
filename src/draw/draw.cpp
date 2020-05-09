@@ -132,7 +132,7 @@ SprID DrawManager::new_sprite_id() {
         L.warn("Sprite ID wrapping");
         next_id = ID_NONE + 1;
     }
-    L.debug("Allocating SprID %d", next_id);
+    //L.debug("Allocating SprID %d", next_id);
     return next_id++;
 }
 

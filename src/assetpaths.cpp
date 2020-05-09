@@ -106,6 +106,13 @@ const char *IMG_MAKING11        = D_PIC "mk12";
 const char *IMG_MAKING12        = D_PIC "mk13";
 const char *IMG_MAKING13        = D_PIC "mk14";
 const char *IMG_MAKING14        = D_PIC "mk15";
+const char *IMG_LS_FOREST       = D_PIC "ws1";
+const char *IMG_LS_DESERT       = D_PIC "ws2";
+const char *IMG_LS_VOLCANO      = D_PIC "ws3";
+const char *IMG_LS_ROCK         = D_PIC "ws4";
+const char *IMG_LS_ICE          = D_PIC "ws5";
+const char *IMG_LS_TERRA        = D_PIC "ws6";
+const char *IMG_LS_ART          = D_PIC "ws8";
 
 #define D_INTRO "assets/img/intro/"
 const char *IMG_INTRO_BT1_FALL1    = D_INTRO "BT1_fall1";
@@ -1136,6 +1143,13 @@ const char *ASSETS_IMG[] = {
     IMG_MAKING12,
     IMG_MAKING13,
     IMG_MAKING14,
+    IMG_LS_FOREST,
+    IMG_LS_DESERT,
+    IMG_LS_VOLCANO,
+    IMG_LS_ROCK,
+    IMG_LS_ICE,
+    IMG_LS_TERRA,
+    IMG_LS_ART,
 
     IMG_INTRO_BT1_FALL1,
     IMG_INTRO_BT1_FALL2,
