@@ -77,6 +77,7 @@ void ExodusState::init(GameConfig config) {
             "%s %s",
             player_info[i].title,
             player_info[i].name);
+        player_info[i].dead = false;
     }
 
     aim = config.aim;
@@ -181,4 +182,13 @@ FlyTarget* ExodusState::loc2tgt(int loc) {
     if (loc < 0)
         return get_galaxy()->get_guild();
     return &get_galaxy()->get_stars()[loc];
+}
+
+PlayerInfo* ExodusState::get_player(int idx) {
+    if (idx < 0 || idx >= N_PLAYERS) {
+        L.fatal("Request for invalid player %d", idx);
+        return nullptr;
+    }
+
+    return &player_info[idx];
 }

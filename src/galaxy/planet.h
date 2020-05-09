@@ -35,6 +35,8 @@ class Planet {
         const char* get_name();      // Orig: SIn
         void set_name(const char*);
         const PlanetSpriteSet* sprites();
+        bool is_owned();
+        int get_owner();
     private:
         void init();
 

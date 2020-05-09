@@ -2,8 +2,12 @@
 
 #include <cstring>
 
+#include "state/exodus_state.h"
+
 #include "assetpaths.h"
 #include "shared.h"
+
+extern ExodusState exostate;
 
 PlanetSpriteSet sprite_sets[7];
 bool sprite_sets_initialised = false;
@@ -158,6 +162,17 @@ int Planet::get_n_cities() {
 int Planet::get_n_agri() {
     // TODO - Orig SIna
     return 0;
+}
+
+int Planet::get_owner() {
+    return owner;
+}
+
+bool Planet::is_owned() {
+    if (owner <0) return false;
+
+    PlayerInfo *ownerinfo = exostate.get_player(owner);
+    return !ownerinfo->dead;
 }
 
 void init_sprite_sets() {

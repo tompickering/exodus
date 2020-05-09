@@ -72,6 +72,7 @@ typedef struct {
     char title[MAX_PLAYER_TITLE + 1];
     char ref[MAX_PLAYER_REFERENCE + 1];
     char full_name[MAX_PLAYER_TITLE + MAX_PLAYER_NAME + 2];
+    bool dead;
     int flag_idx;
     unsigned int mc;
     bool intro_seen;
@@ -118,6 +119,7 @@ class ExodusState {
         void set_active_planet(int);
         int tgt2loc(FlyTarget*); // Convert between PlayerLocation
         FlyTarget* loc2tgt(int); // indicies and FlyTarget objects.
+        PlayerInfo* get_player(int);
     private:
         GalaxySize size;
         unsigned int n_players;

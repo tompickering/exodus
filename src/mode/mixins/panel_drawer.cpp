@@ -164,9 +164,20 @@ void PanelDrawer::update_panel_info_ft(DrawTarget tgt, PlayerInfo* player, FlyTa
                     draw_manager.draw(
                         id_planet_icons[STAR_MAX_PLANETS - 1 - planets_drawn],
                         p->sprites()->panel_icon,
-                        {RES_X - 32 - 24*planets_drawn,
+                        {RES_X - 32 - 22*planets_drawn,
                          area_starinfo.y + 18,
                          0.5, 0.5, 1, 1});
+
+                    if (p->is_owned()) {
+                        PlayerInfo *owner = exostate.get_player(p->get_owner());
+                        bool enemy = owner != player;
+                        draw_manager.draw(
+                            id_marker_icons[STAR_MAX_PLANETS - 1 - planets_drawn],
+                            enemy ? IMG_TS1_ID2 : IMG_TS1_ID1,
+                            {RES_X - 32 - 22*planets_drawn + 1,
+                             area_starinfo.y + 36,
+                             0.5, 0.5, 1, 1});
+                    }
 
                     ++planets_drawn;
                 }
