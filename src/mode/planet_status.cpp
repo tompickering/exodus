@@ -1,10 +1,12 @@
 #include "planet_status.h"
 
 #include "galaxy/planet.h"
+#include "state/exodus_state.h"
 
 #include "assetpaths.h"
 
 enum ID {
+    FLAG,
     END,
 };
 
@@ -26,8 +28,17 @@ void PlanetStatus::enter() {
 
     char heading[12 + PLANET_MAX_NAME];
 
-    if (p->is_owned()) {
+    char x_pad = 30;
+    PlayerInfo *owner = p->is_owned() ? exostate.get_player(p->get_owner()) : nullptr;
+
+    if (owner) {
         snprintf(heading, 12 + PLANET_MAX_NAME, "The planet %s", p->get_name());
+        x_pad += 70;
+
+        draw_manager.draw(
+            id(ID::FLAG),
+            flags[owner->flag_idx],
+            {12, 100, 0, 0, 1, 1});
     } else {
         strncpy(heading, "Unexplored planet", 12 + PLANET_MAX_NAME);
     }

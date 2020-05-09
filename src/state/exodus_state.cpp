@@ -67,6 +67,23 @@ void ExodusState::init(GameConfig config) {
         player_info[i].fleet_marker = nullptr;
         sprintf(player_info[i].name, "%d", i);
         strcpy(player_info[i].title, "CPU");
+        bool flag_assigned = false;
+        L.debug("Assigning flag for player %d (CPU)", i);
+        while (!flag_assigned) {
+            int flag_try = rand() % 15;
+            bool flag_ok = true;
+            for (unsigned int j = 0; j < i; ++j) {
+                if (flag_try == player_info[j].flag_idx) {
+                    flag_ok = false;
+                    break;
+                }
+            }
+            if (flag_ok) {
+                player_info[i].flag_idx = flag_try;
+                flag_assigned = true;
+                L.debug("Assigned flag %d", flag_try);
+            }
+        }
     }
 
     // PLAYER INIT: Everyone
