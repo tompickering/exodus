@@ -5,6 +5,7 @@
 
 #include "state/exodus_state.h"
 #include "galaxy/flytarget.h"
+#include "galaxy/star.h"
 
 extern const int PNL_TOP;
 extern const int PNL_BORDER;
@@ -39,6 +40,8 @@ class PanelDrawer {
         SprID id_desc;
         SprID id_desc1;
         SprID id_desc2;
+        SprID id_planet_icons[STAR_MAX_PLANETS];
+        SprID id_marker_icons[STAR_MAX_PLANETS];
 };
 
 #endif

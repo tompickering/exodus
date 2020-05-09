@@ -5,11 +5,12 @@
 
 class FlyTarget {
     public:
-        FlyTarget() : FlyTarget(-1, -1, (char*)"NONAME") {};
-        FlyTarget(int, int, const char*);
+        FlyTarget() : FlyTarget(-1, -1, false, (char*)"NONAME") {};
+        FlyTarget(int, int, bool, const char*);
         const int x;
         const int y;
         char name[FT_MAX_NAME + 1];
+        const bool is_star;
 };
 
 #endif

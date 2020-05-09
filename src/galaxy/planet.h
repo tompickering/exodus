@@ -19,6 +19,10 @@ enum PlanetClass {
     Artificial,  // 8  -
 };
 
+typedef struct {
+    const char *panel_icon;
+} PlanetSpriteSet;
+
 class Planet {
     public:
         Planet();
@@ -30,6 +34,7 @@ class Planet {
         int get_n_agri();            // Orig: SIna
         const char* get_name();      // Orig: SIn
         void set_name(const char*);
+        const PlanetSpriteSet* sprites();
     private:
         void init();
 

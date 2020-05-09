@@ -2,6 +2,8 @@
 
 #include "draw/draw.h"
 
+#include "galaxy/star.h"
+
 #include "assetpaths.h"
 #include "shared.h"
 
@@ -25,6 +27,11 @@ PanelDrawer::PanelDrawer(PanelType _type) : type(_type) {
     id_desc    = draw_manager.new_sprite_id();
     id_desc1   = draw_manager.new_sprite_id();
     id_desc2   = draw_manager.new_sprite_id();
+
+    for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+        id_planet_icons[i] = draw_manager.new_sprite_id();
+        id_marker_icons[i] = draw_manager.new_sprite_id();
+    }
 
     area_playerinfo = {
         galaxy_panel_area.x + PNL_BORDER,
@@ -132,11 +139,39 @@ void PanelDrawer::update_panel_info_ft(DrawTarget tgt, PlayerInfo* player, FlyTa
     bool is_guild = ft == gal->get_guild();
     snprintf(ft_desc, 40, "This is the %s%s.", is_guild ? "" : "star ", ft->name);
 
+    for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+        draw_manager.draw(id_planet_icons[i], nullptr);
+        draw_manager.draw(id_marker_icons[i], nullptr);
+    }
+
     // Draw '?' or star details
     if (player->location.has_visited(exostate.tgt2loc(ft))) {
         draw_manager.draw(
             id_qm,
             nullptr);
+
+        if (ft->is_star) {
+            Star *star = (Star*)ft;
+            int planets_drawn = 0;
+            bool drawing = false;
+            for (int i = STAR_MAX_PLANETS - 1; i >= 0; --i) {
+                Planet *p = star->get_planet(i);
+                if (!drawing) {
+                    drawing = p && p->exists();
+                }
+
+                if (drawing) {
+                    draw_manager.draw(
+                        id_planet_icons[STAR_MAX_PLANETS - 1 - planets_drawn],
+                        p->sprites()->panel_icon,
+                        {RES_X - 32 - 24*planets_drawn,
+                         area_starinfo.y + 18,
+                         0.5, 0.5, 1, 1});
+
+                    ++planets_drawn;
+                }
+            }
+        }
     } else {
         draw_manager.draw(
             id_qm,

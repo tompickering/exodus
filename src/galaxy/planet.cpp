@@ -2,7 +2,11 @@
 
 #include <cstring>
 
+#include "assetpaths.h"
 #include "shared.h"
+
+PlanetSpriteSet sprite_sets[7];
+bool sprite_sets_initialised = false;
 
 Planet::Planet() {
     _exists = false;
@@ -154,4 +158,25 @@ int Planet::get_n_cities() {
 int Planet::get_n_agri() {
     // TODO - Orig SIna
     return 0;
+}
+
+void init_sprite_sets() {
+    sprite_sets[Forest].panel_icon     = IMG_TS1_ST1;
+
+    sprite_sets[Desert].panel_icon     = IMG_TS1_ST2;
+
+    sprite_sets[Volcano].panel_icon    = IMG_TS1_ST3;
+
+    sprite_sets[Rock].panel_icon       = IMG_TS1_ST4;
+
+    sprite_sets[Ice].panel_icon        = IMG_TS1_ST5;
+
+    sprite_sets[Terra].panel_icon      = IMG_TS1_ST6;
+
+    sprite_sets[Artificial].panel_icon = IMG_TS1_ST8;
+}
+
+const PlanetSpriteSet* Planet::sprites() {
+    if (!sprite_sets_initialised) init_sprite_sets();
+    return &sprite_sets[get_class()];
 }
