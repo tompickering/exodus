@@ -313,6 +313,34 @@ void DrawManagerSDL::update_dirty_area(SprID id, DrawArea area) {
     }
 }
 
+void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key, DrawTransform t, SprID* id) {
+    SDL_Surface *spr = (SDL_Surface*)get_sprite_data(spr_key);
+    if (!spr) {
+        L.warn("Unknown sprite: %s", spr_key);
+        return;
+    }
+
+    int spr_w = spr->w;
+    int spr_h = spr->h;
+
+    DrawArea *src_area = nullptr;
+    if (id) {
+        src_area = get_source_region(*id);
+        if (src_area) {
+            spr_w = src_area->w;
+            spr_h = src_area->h;
+        }
+    }
+
+    DrawArea area;
+    area.x = t.x - (t.anchor_x * spr_w * t.scale_x);
+    area.y = t.y - (t.anchor_y * spr_h * t.scale_y);
+    area.w = spr_w * t.scale_x;
+    area.h = spr_h * t.scale_y;
+
+    draw(tgt, spr_key, &area, id);
+}
+
 void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key, DrawArea* area, SprID* id) {
     DrawArea default_area = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
     SDL_Surface *tgt_surf = get_target(tgt);
@@ -368,34 +396,6 @@ void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key, DrawArea* area, S
             L.debug("Blit unsuccessful: %s", spr_key);
         }
     }
-}
-
-void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key, DrawTransform t, SprID* id) {
-    SDL_Surface *spr = (SDL_Surface*)get_sprite_data(spr_key);
-    if (!spr) {
-        L.warn("Unknown sprite: %s", spr_key);
-        return;
-    }
-
-    int spr_w = spr->w;
-    int spr_h = spr->h;
-
-    DrawArea *src_area = nullptr;
-    if (id) {
-        src_area = get_source_region(*id);
-        if (src_area) {
-            spr_w = src_area->w;
-            spr_h = src_area->h;
-        }
-    }
-
-    DrawArea area;
-    area.x = t.x - (t.anchor_x * spr_w * t.scale_x);
-    area.y = t.y - (t.anchor_y * spr_h * t.scale_y);
-    area.w = spr_w * t.scale_x;
-    area.h = spr_h * t.scale_y;
-
-    draw(tgt, spr_key, &area, id);
 }
 
 void DrawManagerSDL::draw_text(const char* text, Justify jst, int x, int y, RGB rgb) {
