@@ -52,6 +52,7 @@ void PanelDrawer::draw_panel_bg(DrawTarget tgt) {
     draw_manager.fill(tgt, galaxy_panel_area, COL_BORDERS);
     draw_manager.pattern_fill(tgt, area_playerinfo);
     draw_manager.pattern_fill(tgt, area_starinfo);
+    draw_manager.save_background();
 
     const char* pnl_spr = type == PNL_Galaxy ? IMG_BR9_EXPORT : IMG_BR10_EXPORT;
     const int top = area_playerinfo.y + PNL_PLAYER_PAD;
