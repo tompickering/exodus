@@ -294,7 +294,7 @@ void PlanetStatus::enter() {
 
 ExodusMode PlanetStatus::update(float delta) {
     if (draw_manager.clicked()) {
-        return exodus.get_prev_mode();
+        return ExodusMode::MODE_Pop;
     }
 
     return ExodusMode::MODE_None;

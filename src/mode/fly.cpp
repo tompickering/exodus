@@ -115,7 +115,7 @@ void Fly::enter() {
 
 ExodusMode Fly::update(float delta) {
     if (input_manager.consume(K_Space)) {
-        return ExodusMode::MODE_GalaxyMap;
+        return ExodusMode::MODE_Pop;
     }
 
     time += delta;
@@ -125,7 +125,7 @@ ExodusMode Fly::update(float delta) {
         if (progress > 1) progress = 1;
 
         if (time > FLY_TIME + 1) {
-            return ExodusMode::MODE_GalaxyMap;
+            return ExodusMode::MODE_Pop;
         }
     } else {
         float fly_progress = 0.f;
@@ -172,7 +172,7 @@ ExodusMode Fly::update(float delta) {
         }
 
         if (time > FLY_START + FLY_TIME + 2) {
-            return ExodusMode::MODE_GalaxyMap;
+            return ExodusMode::MODE_Pop;
         }
 
     }

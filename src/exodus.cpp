@@ -43,8 +43,7 @@ void signal_handler(int signum) {
 
 Exodus::Exodus() {
     mode = nullptr;
-    current_mode = ExodusMode::MODE_None;
-    prev_mode    = ExodusMode::MODE_None;
+    mode_stack_head = 0;
 }
 
 Exodus::~Exodus() {
@@ -108,7 +107,7 @@ int Exodus::run(int argc, char** argv) {
     mode_map[MODE_StarMap] = (ModeBase*) &mode_starmap;
     mode_map[MODE_PlanetStatus] = (ModeBase*) &mode_planetstatus;
 
-    set_mode(MODE_Intro);
+    push_mode(MODE_Intro);
 
     running = true;
 
@@ -120,7 +119,14 @@ int Exodus::run(int argc, char** argv) {
 
         ExodusMode next = mode->update(delta_time);
         if (next != ExodusMode::MODE_None) {
-            set_mode(next);
+            if (next == ExodusMode::MODE_Pop) {
+                pop_mode();
+            } else {
+                if (next == ExodusMode::MODE_GalaxyMap) {
+                    reset_mode_stack();
+                }
+                push_mode(next);
+            }
         }
 
         draw_manager.update(delta_time, mouse_pos, click_pos);
@@ -158,14 +164,32 @@ int Exodus::run(int argc, char** argv) {
 void Exodus::set_mode(ExodusMode new_mode) {
     const char* mode_name = mode ? mode->name : "<NONE>";
     if (mode) mode->exit();
-    prev_mode = current_mode;
-    current_mode = new_mode;
     mode = mode_map[new_mode];
     const char* new_mode_name = mode->name;
     L.debug("MODE: %s -> %s", mode_name, new_mode_name);
     mode->enter();
 }
 
+void Exodus::push_mode(ExodusMode new_mode) {
+    mode_stack[mode_stack_head++] = new_mode;
+    if (mode_stack_head >= MODE_STACK_SIZE)
+        L.fatal("Mode stack full!");
+    set_mode(new_mode);
+}
+
+void Exodus::pop_mode() {
+    if (mode_stack_head <= 1)
+        L.fatal("Attempt to pop from empty mode stack");
+    set_mode(mode_stack[--mode_stack_head - 1]);
+}
+
+void Exodus::reset_mode_stack() {
+    L.debug("Resetting mode stack");
+    mode_stack_head = 0;
+}
+
 ExodusMode Exodus::get_prev_mode() {
-    return prev_mode;
+    if (mode_stack_head > 0)
+        return mode_stack[mode_stack_head - 1];
+    return ExodusMode::MODE_None;
 }

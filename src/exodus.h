@@ -3,10 +3,14 @@
 
 #include <map>
 
+#define MODE_STACK_SIZE 256
+
 using std::map;
 
 enum ExodusMode {
     MODE_None,
+    MODE_Pop,
+
     MODE_Intro,
     MODE_Menu,
     MODE_GalaxyGen,
@@ -36,8 +40,11 @@ class Exodus {
         ModeBase *mode;
         map<ExodusMode, ModeBase*> mode_map;
         void set_mode(ExodusMode);
-        ExodusMode current_mode;
-        ExodusMode prev_mode;
+        unsigned int mode_stack_head;
+        ExodusMode mode_stack[MODE_STACK_SIZE];
+        void push_mode(ExodusMode);
+        void pop_mode();
+        void reset_mode_stack();
 };
 
 #ifdef SDL

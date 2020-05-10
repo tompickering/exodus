@@ -91,7 +91,7 @@ ExodusMode GuildHQ::update(float delta) {
             10, RES_Y - 30,
             COL_TEXT2);
         if (click) {
-            return ExodusMode::MODE_GuildExterior;
+            return ExodusMode::MODE_Pop;
         }
     } else {
         draw_manager.draw(id(ID::TEXT), nullptr);

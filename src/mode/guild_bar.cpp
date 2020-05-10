@@ -64,7 +64,7 @@ ExodusMode GuildBar::update(float delta) {
     if (click) {
         MousePos pos = input_manager.get_mouse_pos();
         if (pos.x > 490 && pos.x < 540 && pos.y > 220 && pos.y < 280) {
-            return ExodusMode::MODE_GuildExterior;
+            return ExodusMode::MODE_Pop;
         }
     }
 
@@ -105,7 +105,7 @@ ExodusMode GuildBar::update(float delta) {
             10, RES_Y - 30,
             COL_TEXT2);
         if (click) {
-            return ExodusMode::MODE_GuildExterior;
+            return ExodusMode::MODE_Pop;
         }
     } else {
         draw_manager.draw(id(ID::TEXT), nullptr);

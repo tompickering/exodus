@@ -87,7 +87,7 @@ ExodusMode StarMap::update(float delta) {
             }
             break;
         case SM_Back2Gal:
-            return ExodusMode::MODE_GalaxyMap;
+            return ExodusMode::MODE_Pop;
     }
 
     return ExodusMode::MODE_None;

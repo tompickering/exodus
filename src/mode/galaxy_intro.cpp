@@ -63,7 +63,7 @@ ExodusMode GalaxyIntro::update(float delta) {
     player->intro_seen = true;
 
     if (input_manager.consume(K_Space)) {
-        return ExodusMode::MODE_GalaxyMap;
+        return ExodusMode::MODE_Pop;
     }
 
     time += delta;
@@ -96,7 +96,7 @@ ExodusMode GalaxyIntro::update(float delta) {
 
     if (time > 16) {
         player->intro_seen = true;
-        return ExodusMode::MODE_GalaxyMap;
+        return ExodusMode::MODE_Pop;
     }
 
     return ExodusMode::MODE_None;
