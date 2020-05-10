@@ -138,6 +138,91 @@ void PlanetStatus::enter() {
         draw_manager.right(id(ID::CREDITS_TXT)), text_y,
         COL_TEXT2);
 
+    text_y += TEXT_Y_SEP;
+    text_y += TEXT_Y_SEP;
+
+    draw_manager.draw_text(
+        "Cities:",
+        Justify::Left,
+        text_x, text_y,
+        COL_TEXT);
+
+    text_y += TEXT_Y_SEP;
+
+    draw_manager.draw_text(
+        "Agriculture:",
+        Justify::Left,
+        text_x, text_y,
+        COL_TEXT);
+
+    text_y += TEXT_Y_SEP;
+
+    draw_manager.draw_text(
+        "Minerals:",
+        Justify::Left,
+        text_x, text_y,
+        COL_TEXT);
+
+    text_y += TEXT_Y_SEP;
+
+    draw_manager.draw_text(
+        "Lunar base:",
+        Justify::Left,
+        text_x, text_y,
+        COL_TEXT);
+
+    text_y += TEXT_Y_SEP;
+
+    draw_manager.draw_text(
+        "AirDef guns:",
+        Justify::Left,
+        text_x, text_y,
+        COL_TEXT);
+
+    text_y += TEXT_Y_SEP;
+
+    draw_manager.draw_text(
+        "Robots:",
+        Justify::Left,
+        text_x, text_y,
+        COL_TEXT);
+
+    text_y += TEXT_Y_SEP;
+    text_y += TEXT_Y_SEP;
+
+    draw_manager.draw_text(
+        "Other defence systems:",
+        Justify::Left,
+        text_x, text_y,
+        COL_TEXT);
+
+    text_y += TEXT_Y_SEP;
+    text_y += TEXT_Y_SEP;
+
+    draw_manager.draw_text(
+        "Infantry:",
+        Justify::Left,
+        text_x, text_y,
+        COL_TEXT);
+
+    text_y += TEXT_Y_SEP;
+
+    draw_manager.draw_text(
+        "Gliders:",
+        Justify::Left,
+        text_x, text_y,
+        COL_TEXT);
+
+    text_y += TEXT_Y_SEP;
+
+    draw_manager.draw_text(
+        "Artillery:",
+        Justify::Left,
+        text_x, text_y,
+        COL_TEXT);
+
+    // TODO: Min / Food / Plu gauges
+
     draw_manager.save_background();
     draw_manager.show_cursor(true);
 }
