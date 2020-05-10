@@ -148,6 +148,7 @@ class DrawManager {
         virtual bool mouse_in_area(DrawArea);
         virtual void clear_sprite_ids();
         virtual bool clicked();
+        virtual int right(SprID);
     protected:
         map<const char*, void*> sprite_data;
         virtual void* get_sprite_data(const char*) = 0;

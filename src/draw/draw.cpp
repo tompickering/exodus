@@ -190,3 +190,13 @@ void DrawManager::show_cursor(bool show) {
 bool DrawManager::clicked() {
     return clicked_this_frame;
 }
+
+int DrawManager::right(SprID id) {
+    DrawArea *area = get_drawn_area(id);
+    if (!area) {
+        L.warn("Attemmpt to get position to the right of an unknown sprite ID");
+        return 0;
+    }
+
+    return (area->x + area->w) / UPSCALE_X;
+}
