@@ -60,6 +60,19 @@ void PlanetMap::enter() {
         {surf_x, surf_y,
          0, 0, 1, 1});
 
+    for (int y = 0; y < blocks; ++y) {
+        for (int x = 0; x < blocks; ++x) {
+            Stone st = planet->get_stone(x, y);
+            if (st != STONE_Clear) {
+                draw_manager.draw(
+                    tgt,
+                    planet->sprites()->stones[st],
+                    {surf_x + x*STONE_SZ, surf_y + y*STONE_SZ,
+                     0, 0, 1, 1});
+            }
+        }
+    }
+
     draw_manager.save_background();
     draw_manager.show_cursor(true);
 

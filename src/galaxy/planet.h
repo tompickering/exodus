@@ -22,6 +22,7 @@ enum PlanetClass {
     Ice,         // 5   |
     Terra,       // 6   |
     Artificial,  // 8  -
+    PLANETCLASS_END,
 };
 
 enum Stone {
@@ -46,6 +47,7 @@ enum Stone {
     STONE_Park,
     STONE_Rubble,
     STONE_Radiation,
+    STONE_END,
 };
 
 typedef struct {
@@ -53,6 +55,7 @@ typedef struct {
     const char *landscape;
     const char *map_bg;
     const char *surf;
+    const char *stones[STONE_END];
 } PlanetSpriteSet;
 
 class Planet {
@@ -81,6 +84,7 @@ class Planet {
         const PlanetSpriteSet* sprites();
         bool is_owned();
         int get_owner();
+        Stone get_stone(int, int);
     private:
         void init();
 

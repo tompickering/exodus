@@ -50,6 +50,7 @@ Stone stone_orig2new(int code) {
     if (code == 22) return STONE_Village;
     if (code == 29) return STONE_NaturalAnim;
     L.fatal("Translation for stone code %d not implemented", code);
+    return STONE_Clear;
 }
 
 PlanetClass Planet::get_class() {
@@ -269,6 +270,10 @@ int Planet::get_owner() {
     return owner;
 }
 
+Stone Planet::get_stone(int x, int y) {
+    return surf[PLANET_BLOCKS_LG*y + x];
+}
+
 bool Planet::is_owned() {
     if (owner <0) return false;
 
@@ -277,6 +282,12 @@ bool Planet::is_owned() {
 }
 
 void init_sprite_sets() {
+    for (int i = 0; i < PLANETCLASS_END; ++i) {
+        for (int j = 0; j < STONE_END; ++j) {
+            sprite_sets[i].stones[j] = IMG_SU1_STONE7;
+        }
+    }
+
     sprite_sets[Forest].panel_icon     = IMG_TS1_ST1;
     sprite_sets[Forest].landscape      = IMG_LS_FOREST;
     sprite_sets[Forest].map_bg         = IMG_PLANET_FOREST;
