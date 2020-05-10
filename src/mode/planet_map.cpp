@@ -60,6 +60,8 @@ void PlanetMap::enter() {
         {surf_x, surf_y,
          0, 0, 1, 1});
 
+    draw_manager.save_background();
+
     for (int y = 0; y < blocks; ++y) {
         for (int x = 0; x < blocks; ++x) {
             Stone st = planet->get_stone(x, y);
@@ -73,7 +75,6 @@ void PlanetMap::enter() {
         }
     }
 
-    draw_manager.save_background();
     draw_manager.show_cursor(true);
 
     stage = PM_Idle;
