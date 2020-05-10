@@ -38,6 +38,7 @@ class Planet {
         int get_settlement_cost();
         int get_base_income();       // Orig: SIs
         int get_income();            // Orig: SIs + SIc*2
+        int get_net_income();        // Orig: SIs + SIc*2 - SIam
         int get_population();        // Orig: SIpo
         int get_day_hours();         // Orig: pspeed - except we multiply by 4 here.
         int get_n_cities();          // Orig: SIc

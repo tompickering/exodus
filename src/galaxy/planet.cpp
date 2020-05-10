@@ -184,6 +184,10 @@ int Planet::get_income() {
     return get_base_income() + get_n_cities() * CITY_INCOME;
 }
 
+int Planet::get_net_income() {
+    return get_income() - army_funding;
+}
+
 int Planet::get_population() {
     // TODO: This looks to be a combination of the number of cities
     // and particular natural surface features (orig: '2', 'alvil')

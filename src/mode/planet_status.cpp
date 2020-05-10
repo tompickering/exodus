@@ -7,6 +7,7 @@
 
 enum ID {
     FLAG,
+    CREDITS_TXT,
     END,
 };
 
@@ -16,6 +17,7 @@ PlanetStatus::PlanetStatus() : ModeBase("PlanetStatus") {
 void PlanetStatus::enter() {
     ModeBase::enter(ID::END);
     Planet *p = exostate.get_active_planet();
+    PlayerInfo *player = exostate.get_active_player();
 
     if (!p) {
         L.fatal("Entered PlanetStatus mode with no active planet!");
@@ -42,7 +44,7 @@ void PlanetStatus::enter() {
             flags[owner->flag_idx],
             {16, 100, 0, 0, 1, 1});
 
-        if (owner == exostate.get_active_player()) {
+        if (owner == player) {
             snprintf(ownership, PLANET_MAX_NAME + MAX_PLAYER_FULLNAME + 30,
                      "%s belongs to you, %s.", p->get_name(), owner->ref);
         } else {
@@ -73,6 +75,14 @@ void PlanetStatus::enter() {
 
     char day[51];
     snprintf(day, 50, "One day is %d standard hours long.", p->get_day_hours());
+
+    const char *cred0 = "Monthly MCredits: ";
+    char cred1[11];
+    if (owner && owner == player) {
+        snprintf(cred1, 10, "%d/%d", p->get_net_income(), p->get_income());
+    } else {
+        snprintf(cred1, 10, "?");
+    }
 
     draw_manager.draw_text(
         Font::Large,
@@ -116,6 +126,17 @@ void PlanetStatus::enter() {
 
     text_y += TEXT_Y_SEP;
 
+    draw_manager.draw_text(
+        id(ID::CREDITS_TXT),
+        cred0,
+        Justify::Left,
+        text_x, text_y,
+        COL_TEXT);
+    draw_manager.draw_text(
+        cred1,
+        Justify::Left,
+        draw_manager.right(id(ID::CREDITS_TXT)), text_y,
+        COL_TEXT2);
 
     draw_manager.save_background();
     draw_manager.show_cursor(true);
