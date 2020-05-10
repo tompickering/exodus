@@ -9,7 +9,7 @@
 
 const int PNL_TOP        = 412;
 const int PNL_BORDER     = 4;
-const int PNL_Y_SEP      = 20;
+const int PNL_Y_SEP      = TEXT_Y_SEP;
 const int PNL_PLAYER_PAD = 5;
 
 const DrawArea galaxy_panel_area = {0, PNL_TOP, RES_X, RES_Y - PNL_TOP};

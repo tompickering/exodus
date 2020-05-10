@@ -32,7 +32,12 @@ class Planet {
         PlanetClass get_class();
         const char* get_class_str();
         const char* get_class_str_lower();
+        int get_diameter();
+        PlanetSize get_size();
+        int get_settlement_cost();
         int get_income();            // Orig: SIs
+        int get_population();        // Orig: SIpo
+        int get_day_hours();         // Orig: pspeed - except we multiply by 4 here.
         int get_n_cities();          // Orig: SIc
         int get_n_agri();            // Orig: SIna
         const char* get_name();      // Orig: SIn
@@ -47,7 +52,7 @@ class Planet {
 
         PlanetClass cls;
         char name[PLANET_MAX_NAME + 1];
-        int day_hours;         // Orig: pspeed - except we multiply by 4 here.
+        int pspeed;            // Orig: pspeed
         int sit;               // Orig: SIt. Trade-related?
         int diameter;          // Orig: SId.
         int minerals;          // Orig: SIrm.
@@ -70,7 +75,7 @@ class Planet {
         int army_gli;          // Orig: SIk(2)
         int army_art;          // Orig: SIk(3)
 
-        // TODO: SIu, SIpo, SIl, SItb
+        // TODO: SIu, SIl, SItb
 };
 
 #endif

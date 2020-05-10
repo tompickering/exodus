@@ -45,7 +45,7 @@ void Planet::init() {
     owner = -1;
 
     income_adj = 0;
-    day_hours = 4 * (RND(5) + 5);
+    pspeed = (RND(5) + 5);
     lunar_base = false;
     unrest = 0;
     army_funding = 0;
@@ -113,7 +113,7 @@ void Planet::init() {
         airdef_guns = 10;
         minerals = 0;
         sim = 2;
-        day_hours = 40;
+        pspeed = 10;
 
         // TODO: PROCdowp sets SIc (city count) to 1
         // Not reflected here because we want to compute city count from surface data
@@ -123,6 +123,32 @@ void Planet::init() {
     }
 
     L.info("Generated type %d planet", (int)cls);
+}
+
+int Planet::get_diameter() {
+    return diameter;
+}
+
+PlanetSize Planet::get_size() {
+    if (get_diameter() < 10000)
+        return PLANET_Small;
+    if (get_diameter() > 12000)
+        return PLANET_Large;
+    return PLANET_Medium;
+}
+
+int Planet::get_settlement_cost() {
+    switch(get_size()) {
+        case PLANET_Small:
+            return 90;
+        case PLANET_Medium:
+            return 100;
+        case PLANET_Large:
+            return 110;
+    }
+
+    L.fatal("Planet size is invalid");
+    return 0;
 }
 
 int Planet::get_income() {
@@ -151,7 +177,22 @@ int Planet::get_income() {
             break;
     }
 
+    // TODO: This should incorporate city count, though trade should
+    // be separate...
     return base + income_adj;
+}
+
+int Planet::get_population() {
+    // TODO: This looks to be a combination of the number of cities
+    // and particular natural surface features (orig: '2', 'alvil')
+    int alvil = 0;
+    return get_n_cities() + alvil;
+}
+
+int Planet::get_day_hours() {
+    // Not certain why the original stored pspeed as 1/4 of the hours,
+    // but we'll follow suit and convert within this accessor.
+    return 4 * pspeed;
 }
 
 int Planet::get_n_cities() {

@@ -28,19 +28,19 @@ void PlanetStatus::enter() {
 
     char heading[12 + PLANET_MAX_NAME];
 
-    char pad_x = 30;
+    int text_x = 30;
     PlayerInfo *owner = p->is_owned() ? exostate.get_player(p->get_owner()) : nullptr;
 
     char ownership[PLANET_MAX_NAME + MAX_PLAYER_FULLNAME + 31];
 
     if (owner) {
         snprintf(heading, 12 + PLANET_MAX_NAME, "The planet %s", p->get_name());
-        pad_x += 86;
+        text_x += 100;
 
         draw_manager.draw(
             id(ID::FLAG),
             flags[owner->flag_idx],
-            {12, 100, 0, 0, 1, 1});
+            {16, 100, 0, 0, 1, 1});
 
         snprintf(ownership, PLANET_MAX_NAME + MAX_PLAYER_FULLNAME + 30,
                  "%s belongs to %s.", p->get_name(), owner->full_name);
@@ -50,6 +50,25 @@ void PlanetStatus::enter() {
                 PLANET_MAX_NAME + MAX_PLAYER_FULLNAME + 30);
     }
 
+    char summary[60];
+    const char* size_str = "Small";
+    if(p->get_size() == PLANET_Medium) size_str = "Medium";
+    if(p->get_size() == PLANET_Large) size_str = "Large";
+    char cost[16]; snprintf(cost, 16, ", cost %d MC", p->get_settlement_cost());
+
+    snprintf(summary, 60,
+        "O %d km (%s %s world%s))",
+        p->get_diameter(),
+        size_str,
+        p->get_class_str_lower(),
+        owner ? "" : cost);
+
+    char pop[31];
+    snprintf(pop, 30, "Population: %d million.", p->get_population());
+
+    char day[51];
+    snprintf(day, 50, "One day is %d standard hours long.", p->get_day_hours());
+
     draw_manager.draw_text(
         Font::Large,
         heading,
@@ -57,11 +76,40 @@ void PlanetStatus::enter() {
         RES_X/2, 16,
         COL_TEXT);
 
+    int text_y = 90;
+
     draw_manager.draw_text(
         ownership,
         Justify::Left,
-        pad_x, 90,
+        text_x, text_y,
         COL_TEXT2);
+
+    text_y += TEXT_Y_SEP;
+
+    draw_manager.draw_text(
+        summary,
+        Justify::Left,
+        text_x, text_y,
+        COL_TEXT2);
+
+    text_y += TEXT_Y_SEP;
+    text_y += TEXT_Y_SEP;
+
+    draw_manager.draw_text(
+        pop,
+        Justify::Left,
+        text_x, text_y,
+        COL_TEXT);
+
+    text_y += TEXT_Y_SEP;
+
+    draw_manager.draw_text(
+        day,
+        Justify::Left,
+        text_x, text_y,
+        COL_TEXT);
+
+    text_y += TEXT_Y_SEP;
 
 
     draw_manager.save_background();
