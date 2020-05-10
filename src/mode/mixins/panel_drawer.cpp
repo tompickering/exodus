@@ -18,15 +18,18 @@ DrawArea area_playerinfo;
 DrawArea area_starinfo;
 
 PanelDrawer::PanelDrawer(PanelType _type) : type(_type) {
-    id_panel   = draw_manager.new_sprite_id();
-    id_name    = draw_manager.new_sprite_id();
-    id_month   = draw_manager.new_sprite_id();
-    id_mc      = draw_manager.new_sprite_id();
-    id_planets = draw_manager.new_sprite_id();
-    id_qm      = draw_manager.new_sprite_id();
-    id_desc    = draw_manager.new_sprite_id();
-    id_desc1   = draw_manager.new_sprite_id();
-    id_desc2   = draw_manager.new_sprite_id();
+    id_panel       = draw_manager.new_sprite_id();
+    id_name        = draw_manager.new_sprite_id();
+    id_month_txt   = draw_manager.new_sprite_id();
+    id_month       = draw_manager.new_sprite_id();
+    id_mc_txt      = draw_manager.new_sprite_id();
+    id_mc          = draw_manager.new_sprite_id();
+    id_planets_txt = draw_manager.new_sprite_id();
+    id_planets     = draw_manager.new_sprite_id();
+    id_qm          = draw_manager.new_sprite_id();
+    id_desc        = draw_manager.new_sprite_id();
+    id_desc1       = draw_manager.new_sprite_id();
+    id_desc2       = draw_manager.new_sprite_id();
 
     for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
         id_planet_icons[i] = draw_manager.new_sprite_id();
@@ -61,6 +64,7 @@ void PanelDrawer::draw_panel_bg(DrawTarget tgt) {
 
     draw_manager.draw_text(
             tgt,
+            id_month_txt,
             "Month: ",
             Justify::Left,
             area_playerinfo.x + 4,
@@ -68,6 +72,7 @@ void PanelDrawer::draw_panel_bg(DrawTarget tgt) {
             COL_TEXT);
     draw_manager.draw_text(
             tgt,
+            id_mc_txt,
             "MCredits: ",
             Justify::Left,
             area_playerinfo.x + 4,
@@ -75,6 +80,7 @@ void PanelDrawer::draw_panel_bg(DrawTarget tgt) {
             COL_TEXT);
     draw_manager.draw_text(
             tgt,
+            id_planets_txt,
             "Planets: ",
             Justify::Left,
             area_playerinfo.x + 4,
@@ -111,7 +117,7 @@ void PanelDrawer::update_panel_info_player(DrawTarget tgt, PlayerInfo* player) {
             id_month,
             month_string,
             Justify::Left,
-            area_playerinfo.x + 72,
+            draw_manager.right(id_month_txt),
             top + PNL_Y_SEP,
             COL_TEXT2);
     draw_manager.draw_text(
@@ -119,7 +125,7 @@ void PanelDrawer::update_panel_info_player(DrawTarget tgt, PlayerInfo* player) {
             id_mc,
             mc_string,
             Justify::Left,
-            area_playerinfo.x + 94,
+            draw_manager.right(id_mc_txt),
             top + 2*PNL_Y_SEP,
             COL_TEXT2);
     draw_manager.draw_text(
@@ -127,7 +133,7 @@ void PanelDrawer::update_panel_info_player(DrawTarget tgt, PlayerInfo* player) {
             id_planets,
             planets_string,
             Justify::Left,
-            area_playerinfo.x + 80,
+            draw_manager.right(id_planets_txt),
             top + 3*PNL_Y_SEP,
             COL_TEXT2);
 }
