@@ -3,6 +3,7 @@
 
 #define PLANET_MAX_NAME 20
 #define CITY_INCOME 2
+#define CITY_FOOD_REQ 3
 
 enum PlanetSize {
     PLANET_Small,
@@ -43,6 +44,8 @@ class Planet {
         int get_day_hours();         // Orig: pspeed - except we multiply by 4 here.
         int get_n_cities();          // Orig: SIc
         int get_n_agri();            // Orig: SIna
+        bool agri_sufficient();
+        bool has_lunar_base();       // Orig: SIb
         const char* get_name();      // Orig: SIn
         void set_name(const char*);
         const PlanetSpriteSet* sprites();

@@ -211,6 +211,14 @@ int Planet::get_n_agri() {
     return 0;
 }
 
+bool Planet::agri_sufficient() {
+    return get_n_agri() >= (get_n_cities()*CITY_FOOD_REQ + 1);
+}
+
+bool Planet::has_lunar_base() {
+    return lunar_base;
+}
+
 int Planet::get_owner() {
     return owner;
 }

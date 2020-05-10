@@ -64,7 +64,7 @@ void PlanetStatus::enter() {
     char cost[16]; snprintf(cost, 16, ", cost %d MC", p->get_settlement_cost());
 
     snprintf(summary, 60,
-        "O %d km (%s %s world%s))",
+        "O %d km (%s %s world%s)",
         p->get_diameter(),
         size_str,
         p->get_class_str_lower(),
@@ -82,6 +82,26 @@ void PlanetStatus::enter() {
         snprintf(cred1, 10, "%d/%d", p->get_net_income(), p->get_income());
     } else {
         snprintf(cred1, 10, "?");
+    }
+
+    char cities[5];
+    int n_cities = p->get_n_cities();
+    if (n_cities == 0) {
+        strncpy(cities, "None", 5);
+    } else {
+        snprintf(cities, 5, "%d", n_cities);
+    }
+
+    char agri[20];
+    int n_agri = p->get_n_agri();
+    if (n_agri == 0) {
+        strncpy(agri, "None", 20);
+    } else {
+        if (p->agri_sufficient()) {
+            snprintf(agri, 20, "%s", "Well");
+        } else {
+            snprintf(agri, 20, "%s", "Not sufficient");
+        }
     }
 
     draw_manager.draw_text(
@@ -146,6 +166,11 @@ void PlanetStatus::enter() {
         Justify::Left,
         text_x, text_y,
         COL_TEXT);
+    draw_manager.draw_text(
+        cities,
+        Justify::Left,
+        text_x + 140, text_y,
+        COL_TEXT2);
 
     text_y += TEXT_Y_SEP;
 
@@ -154,6 +179,11 @@ void PlanetStatus::enter() {
         Justify::Left,
         text_x, text_y,
         COL_TEXT);
+    draw_manager.draw_text(
+        agri,
+        Justify::Left,
+        text_x + 140, text_y,
+        COL_TEXT2);
 
     text_y += TEXT_Y_SEP;
 
@@ -162,6 +192,11 @@ void PlanetStatus::enter() {
         Justify::Left,
         text_x, text_y,
         COL_TEXT);
+    draw_manager.draw_text(
+        "<TODO>",
+        Justify::Left,
+        text_x + 140, text_y,
+        COL_TEXT2);
 
     text_y += TEXT_Y_SEP;
 
@@ -170,6 +205,11 @@ void PlanetStatus::enter() {
         Justify::Left,
         text_x, text_y,
         COL_TEXT);
+    draw_manager.draw_text(
+        p->has_lunar_base() ? "Yes" : "No",
+        Justify::Left,
+        text_x + 140, text_y,
+        COL_TEXT2);
 
     text_y += TEXT_Y_SEP;
 
@@ -178,6 +218,11 @@ void PlanetStatus::enter() {
         Justify::Left,
         text_x, text_y,
         COL_TEXT);
+    draw_manager.draw_text(
+        "<TODO>",
+        Justify::Left,
+        text_x + 140, text_y,
+        COL_TEXT2);
 
     text_y += TEXT_Y_SEP;
 
@@ -186,6 +231,11 @@ void PlanetStatus::enter() {
         Justify::Left,
         text_x, text_y,
         COL_TEXT);
+    draw_manager.draw_text(
+        "<TODO>",
+        Justify::Left,
+        text_x + 140, text_y,
+        COL_TEXT2);
 
     text_y += TEXT_Y_SEP;
     text_y += TEXT_Y_SEP;
@@ -204,6 +254,11 @@ void PlanetStatus::enter() {
         Justify::Left,
         text_x, text_y,
         COL_TEXT);
+    draw_manager.draw_text(
+        "<TODO>",
+        Justify::Left,
+        text_x + 140, text_y,
+        COL_TEXT2);
 
     text_y += TEXT_Y_SEP;
 
@@ -212,6 +267,11 @@ void PlanetStatus::enter() {
         Justify::Left,
         text_x, text_y,
         COL_TEXT);
+    draw_manager.draw_text(
+        "<TODO>",
+        Justify::Left,
+        text_x + 140, text_y,
+        COL_TEXT2);
 
     text_y += TEXT_Y_SEP;
 
@@ -220,6 +280,11 @@ void PlanetStatus::enter() {
         Justify::Left,
         text_x, text_y,
         COL_TEXT);
+    draw_manager.draw_text(
+        "<TODO>",
+        Justify::Left,
+        text_x + 140, text_y,
+        COL_TEXT2);
 
     // TODO: Min / Food / Plu gauges
 
