@@ -42,8 +42,13 @@ void PlanetStatus::enter() {
             flags[owner->flag_idx],
             {16, 100, 0, 0, 1, 1});
 
-        snprintf(ownership, PLANET_MAX_NAME + MAX_PLAYER_FULLNAME + 30,
-                 "%s belongs to %s.", p->get_name(), owner->full_name);
+        if (owner == exostate.get_active_player()) {
+            snprintf(ownership, PLANET_MAX_NAME + MAX_PLAYER_FULLNAME + 30,
+                     "%s belongs to you, %s.", p->get_name(), owner->ref);
+        } else {
+            snprintf(ownership, PLANET_MAX_NAME + MAX_PLAYER_FULLNAME + 30,
+                     "%s belongs to %s.", p->get_name(), owner->full_name);
+        }
     } else {
         strncpy(heading, "Unexplored planet", 12 + PLANET_MAX_NAME);
         strncpy(ownership, "The planet belongs to no confederation.",
