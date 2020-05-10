@@ -25,6 +25,7 @@ typedef struct {
     const char *panel_icon;
     const char *landscape;
     const char *map_bg;
+    const char *surf;
 } PlanetSpriteSet;
 
 class Planet {

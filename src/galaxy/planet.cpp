@@ -234,30 +234,37 @@ void init_sprite_sets() {
     sprite_sets[Forest].panel_icon     = IMG_TS1_ST1;
     sprite_sets[Forest].landscape      = IMG_LS_FOREST;
     sprite_sets[Forest].map_bg         = IMG_PLANET_FOREST;
+    sprite_sets[Forest].surf           = IMG_SF1;
 
     sprite_sets[Desert].panel_icon     = IMG_TS1_ST2;
     sprite_sets[Desert].landscape      = IMG_LS_DESERT;
     sprite_sets[Desert].map_bg         = IMG_PLANET_DESERT;
+    sprite_sets[Desert].surf           = IMG_SF2;
 
     sprite_sets[Volcano].panel_icon    = IMG_TS1_ST3;
     sprite_sets[Volcano].landscape     = IMG_LS_VOLCANO;
     sprite_sets[Volcano].map_bg        = IMG_PLANET_VOLCANO;
+    sprite_sets[Volcano].surf          = IMG_SF3;
 
     sprite_sets[Rock].panel_icon       = IMG_TS1_ST4;
     sprite_sets[Rock].landscape        = IMG_LS_ROCK;
     sprite_sets[Rock].map_bg           = IMG_PLANET_ROCK;
+    sprite_sets[Rock].surf             = IMG_SF4;
 
     sprite_sets[Ice].panel_icon        = IMG_TS1_ST5;
     sprite_sets[Ice].landscape         = IMG_LS_ICE;
     sprite_sets[Ice].map_bg            = IMG_PLANET_ICE;
+    sprite_sets[Ice].surf              = IMG_SF5;
 
     sprite_sets[Terra].panel_icon      = IMG_TS1_ST6;
     sprite_sets[Terra].landscape       = IMG_LS_TERRA;
     sprite_sets[Terra].map_bg          = IMG_PLANET_TERRA;
+    sprite_sets[Terra].surf            = IMG_SF6;
 
     sprite_sets[Artificial].panel_icon = IMG_TS1_ST8;
     sprite_sets[Artificial].landscape  = IMG_LS_ART;
     sprite_sets[Artificial].map_bg     = IMG_PLANET_ART;
+    sprite_sets[Artificial].surf       = IMG_SF8;
 }
 
 const PlanetSpriteSet* Planet::sprites() {
