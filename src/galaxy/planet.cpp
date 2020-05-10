@@ -4,6 +4,8 @@
 
 #include "state/exodus_state.h"
 
+#include "loadplans_data.h"
+
 #include "assetpaths.h"
 #include "shared.h"
 
