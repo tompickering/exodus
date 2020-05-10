@@ -71,7 +71,9 @@ ExodusMode StarMap::update(float delta) {
             if (click.id) {
                 if (click.x < 0.25) {
                     // Map
-                    L.debug("Panel 0");
+                    if (exostate.get_active_planet()) {
+                        return ExodusMode::MODE_PlanetMap;
+                    }
                 } else if (click.x < 0.5) {
                     // Info
                     if (planet && planet->exists()) {

@@ -24,6 +24,7 @@ enum PlanetClass {
 typedef struct {
     const char *panel_icon;
     const char *landscape;
+    const char *map_bg;
 } PlanetSpriteSet;
 
 class Planet {

@@ -233,24 +233,31 @@ bool Planet::is_owned() {
 void init_sprite_sets() {
     sprite_sets[Forest].panel_icon     = IMG_TS1_ST1;
     sprite_sets[Forest].landscape      = IMG_LS_FOREST;
+    sprite_sets[Forest].map_bg         = IMG_PLANET_FOREST;
 
     sprite_sets[Desert].panel_icon     = IMG_TS1_ST2;
     sprite_sets[Desert].landscape      = IMG_LS_DESERT;
+    sprite_sets[Desert].map_bg         = IMG_PLANET_DESERT;
 
     sprite_sets[Volcano].panel_icon    = IMG_TS1_ST3;
     sprite_sets[Volcano].landscape     = IMG_LS_VOLCANO;
+    sprite_sets[Volcano].map_bg        = IMG_PLANET_VOLCANO;
 
     sprite_sets[Rock].panel_icon       = IMG_TS1_ST4;
     sprite_sets[Rock].landscape        = IMG_LS_ROCK;
+    sprite_sets[Rock].map_bg           = IMG_PLANET_ROCK;
 
     sprite_sets[Ice].panel_icon        = IMG_TS1_ST5;
     sprite_sets[Ice].landscape         = IMG_LS_ICE;
+    sprite_sets[Ice].map_bg            = IMG_PLANET_ICE;
 
     sprite_sets[Terra].panel_icon      = IMG_TS1_ST6;
     sprite_sets[Terra].landscape       = IMG_LS_TERRA;
+    sprite_sets[Terra].map_bg          = IMG_PLANET_TERRA;
 
     sprite_sets[Artificial].panel_icon = IMG_TS1_ST8;
     sprite_sets[Artificial].landscape  = IMG_LS_ART;
+    sprite_sets[Artificial].map_bg     = IMG_PLANET_ART;
 }
 
 const PlanetSpriteSet* Planet::sprites() {

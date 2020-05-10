@@ -21,6 +21,7 @@
 #include "mode/guild_bar.h"
 #include "mode/fly.h"
 #include "mode/star_map.h"
+#include "mode/planet_map.h"
 #include "mode/planet_status.h"
 
 #include <csignal>
@@ -94,6 +95,7 @@ int Exodus::run(int argc, char** argv) {
     GuildBar mode_guildbar;
     Fly mode_fly;
     StarMap mode_starmap;
+    PlanetMap mode_planetmap;
     PlanetStatus mode_planetstatus;
     mode_map[MODE_Intro] = (ModeBase*) &mode_intro;
     mode_map[MODE_Menu] = (ModeBase*) &mode_menu;
@@ -105,6 +107,7 @@ int Exodus::run(int argc, char** argv) {
     mode_map[MODE_GuildBar] = (ModeBase*) &mode_guildbar;
     mode_map[MODE_Fly] = (ModeBase*) &mode_fly;
     mode_map[MODE_StarMap] = (ModeBase*) &mode_starmap;
+    mode_map[MODE_PlanetMap] = (ModeBase*) &mode_planetmap;
     mode_map[MODE_PlanetStatus] = (ModeBase*) &mode_planetstatus;
 
     push_mode(MODE_Intro);
