@@ -2,6 +2,7 @@
 #define GUARD_PLANET_H
 
 #define PLANET_MAX_NAME 20
+#define CITY_INCOME 2
 
 enum PlanetSize {
     PLANET_Small,
@@ -35,7 +36,8 @@ class Planet {
         int get_diameter();
         PlanetSize get_size();
         int get_settlement_cost();
-        int get_income();            // Orig: SIs
+        int get_base_income();       // Orig: SIs
+        int get_income();            // Orig: SIs + SIc*2
         int get_population();        // Orig: SIpo
         int get_day_hours();         // Orig: pspeed - except we multiply by 4 here.
         int get_n_cities();          // Orig: SIc

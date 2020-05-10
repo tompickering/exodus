@@ -151,7 +151,7 @@ int Planet::get_settlement_cost() {
     return 0;
 }
 
-int Planet::get_income() {
+int Planet::get_base_income() {
     unsigned int base = 0;
     switch(cls) {
         case Forest:
@@ -177,9 +177,11 @@ int Planet::get_income() {
             break;
     }
 
-    // TODO: This should incorporate city count, though trade should
-    // be separate...
     return base + income_adj;
+}
+
+int Planet::get_income() {
+    return get_base_income() + get_n_cities() * CITY_INCOME;
 }
 
 int Planet::get_population() {
