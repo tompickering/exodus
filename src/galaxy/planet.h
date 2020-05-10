@@ -2,6 +2,9 @@
 #define GUARD_PLANET_H
 
 #define PLANET_MAX_NAME 20
+#define PLANET_BLOCKS_SM 12
+#define PLANET_BLOCKS_MD 14
+#define PLANET_BLOCKS_LG 16
 #define CITY_INCOME 2
 #define CITY_FOOD_REQ 3
 
@@ -38,6 +41,7 @@ class Planet {
         const char* get_class_str_lower();
         int get_diameter();
         PlanetSize get_size();
+        int get_size_blocks();
         int get_settlement_cost();
         int get_base_income();       // Orig: SIs
         int get_income();            // Orig: SIs + SIc*2

@@ -137,6 +137,15 @@ PlanetSize Planet::get_size() {
     return PLANET_Medium;
 }
 
+int Planet::get_size_blocks() {
+    PlanetSize size = get_size();
+    if (size == PLANET_Small)
+        return PLANET_BLOCKS_SM;
+    if (size == PLANET_Medium)
+        return PLANET_BLOCKS_MD;
+    return PLANET_BLOCKS_LG;
+}
+
 int Planet::get_settlement_cost() {
     switch(get_size()) {
         case PLANET_Small:

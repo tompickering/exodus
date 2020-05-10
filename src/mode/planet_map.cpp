@@ -11,6 +11,7 @@ const float ANIM_RATE = 0.8f;
 enum ID {
     MENU_BG,
     MENU,
+    SURF,
     END,
 };
 
@@ -44,6 +45,20 @@ void PlanetMap::enter() {
         IMG_SU1_MENU,
         {RES_X - 24, 36,
         1, 0, 1, 1});
+
+    int blocks = planet->get_size_blocks();
+    int sz = blocks * STONE_SZ;
+    area = {0, 0, sz, sz};
+    draw_manager.set_source_region(id(ID::SURF), &area);
+    surf_x = 24 + STONE_SZ * (16 - blocks) / 2;
+    surf_y = 36 + STONE_SZ * (16 - blocks) / 2;
+    draw_manager.fill({surf_x - 2, surf_y - 2, sz + 4, sz + 4}, {0, 0, 0});
+    draw_manager.draw(
+        tgt,
+        id(ID::SURF),
+        planet->sprites()->surf,
+        {surf_x, surf_y,
+         0, 0, 1, 1});
 
     draw_manager.save_background();
     draw_manager.show_cursor(true);

@@ -24,6 +24,8 @@ class PlanetMap : ModeBase {
         Stage stage;
         Planet *planet;
         float anim_cycle;
+        int surf_x;
+        int surf_y;
 };
 
 #endif
