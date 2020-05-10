@@ -27,6 +27,31 @@ bool Planet::exists() {
     return _exists;
 }
 
+const int* get_loadplans_data(int file, PlanetClass cls, int r) {
+    int offset = 0;
+    // File offset
+    offset += file * PLANET_BLOCKS_LG * PLANET_BLOCKS_LG * 6 * 5;
+    // Planet class offset
+    offset += PLANET_BLOCKS_LG * PLANET_BLOCKS_LG * (int)cls * 5;
+    // Random 0-4 offset 'R'
+    offset += PLANET_BLOCKS_LG * PLANET_BLOCKS_LG * r;
+    return &loadplans_data[offset];
+}
+
+Stone stone_orig2new(int code) {
+    /*
+     * Only as much as needed for loadplans data.
+     * Use new enums as much as possible!
+     */
+    if (code ==  0) return STONE_Clear;
+    if (code ==  2) return STONE_Agri;
+    if (code ==  8) return STONE_NaturalLarge;
+    if (code ==  9) return STONE_NaturalSmall;
+    if (code == 22) return STONE_Village;
+    if (code == 29) return STONE_NaturalAnim;
+    L.fatal("Translation for stone code %d not implemented", code);
+}
+
 PlanetClass Planet::get_class() {
     return cls;
 }
@@ -62,6 +87,10 @@ void Planet::init() {
     army_gli = 0;
     army_art = 0;
 
+    for (int i = 0; i < (PLANET_BLOCKS_LG * PLANET_BLOCKS_LG); ++i) {
+        surf[i] = STONE_Clear;
+    }
+
     if (cls != Artificial) {
         r = RND(5);
         sit = r > 3 ? 1 : r;
@@ -89,6 +118,10 @@ void Planet::init() {
         }
 
         // TODO: Initialise surface from the data read in from PROCloadplans
+        const int* initial_surf_data = get_loadplans_data(rand() % 3, cls, rand() % 5);
+        for (int i = 0; i < PLANET_BLOCKS_LG * PLANET_BLOCKS_LG; ++i) {
+            surf[i] = stone_orig2new(initial_surf_data[i]);
+        }
 
         sim = 0;
 
@@ -122,6 +155,8 @@ void Planet::init() {
         // Should this planet get a default city somehow?
         // I believe the line assigning surf%(8,8)=5 is the city placement...
         // Why does SIna (n agruculture zones) get set to 6?
+
+        // TODO: Surface init for Artificial worlds
     }
 
     L.info("Generated type %d planet", (int)cls);

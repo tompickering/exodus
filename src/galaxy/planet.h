@@ -24,6 +24,30 @@ enum PlanetClass {
     Artificial,  // 8  -
 };
 
+enum Stone {
+    STONE_Clear,         // 0
+    STONE_NaturalLarge,  // 8
+    STONE_NaturalSmall,  // 9
+    STONE_NaturalAnim,   // 29
+    STONE_Village,       // 22
+    STONE_Agri,          // 2
+    STONE_Base,
+    STONE_AgriDead,
+    STONE_Mine,
+    STONE_Plu,
+    STONE_City,
+    STONE_Inf,
+    STONE_Gli,
+    STONE_Art,
+    STONE_Port0,
+    STONE_Port1,
+    STONE_Port2,
+    STONE_Trade,
+    STONE_Park,
+    STONE_Rubble,
+    STONE_Radiation,
+};
+
 typedef struct {
     const char *panel_icon;
     const char *landscape;
@@ -64,6 +88,8 @@ class Planet {
 
         PlanetClass cls;
         char name[PLANET_MAX_NAME + 1];
+        Stone surf[PLANET_BLOCKS_LG * PLANET_BLOCKS_LG];
+
         int pspeed;            // Orig: pspeed
         int sit;               // Orig: SIt. Trade-related?
         int diameter;          // Orig: SId.
