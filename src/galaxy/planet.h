@@ -85,6 +85,7 @@ class Planet {
         bool is_owned();
         int get_owner();
         Stone get_stone(int, int);
+        void set_stone(int, int, Stone);
     private:
         void init();
 
@@ -118,6 +119,11 @@ class Planet {
         int army_art;          // Orig: SIk(3)
 
         // TODO: SIu, SIl, SItb
+
+        void cull_stones_to_size();
+        Stone _get_stone(int, int);
+        void _set_stone(int, int, Stone);
+        void _to_real(int, int, int&, int&);
 };
 
 #endif

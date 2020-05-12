@@ -128,6 +128,8 @@ void Planet::init() {
             surf[new_y*PLANET_BLOCKS_LG + orig_x] = stone_orig2new(initial_surf_data[i]);
         }
 
+        cull_stones_to_size();
+
         sim = 0;
 
         r = RND(4);
@@ -274,8 +276,20 @@ int Planet::get_owner() {
     return owner;
 }
 
+/*
+ * get_stone() and set_stone() index the surface according
+ * to the planet's size - i.e. bounded by get_size_blocks().
+ */
 Stone Planet::get_stone(int x, int y) {
-    return surf[PLANET_BLOCKS_LG*y + x];
+    int real_x; int real_y;
+    _to_real(x, y, real_x, real_y);
+    _get_stone(real_x, real_y);
+}
+
+void Planet::set_stone(int x, int y, Stone stone) {
+    int real_x; int real_y;
+    _to_real(x, y, real_x, real_y);
+    return _set_stone(real_x, real_y, stone);
 }
 
 bool Planet::is_owned() {
@@ -283,6 +297,38 @@ bool Planet::is_owned() {
 
     PlayerInfo *ownerinfo = exostate.get_player(owner);
     return !ownerinfo->dead;
+}
+
+/*
+ * This shouldn't really be necessary as we should never consider
+ * any surface indices outside of the planet boundary.
+ * However, things seem cleaner this way.
+ */
+void Planet::cull_stones_to_size() {
+    for (int i = 0; i < (PLANET_BLOCKS_LG - get_size_blocks()) / 2; ++i) {
+        for (int j = 0; j < PLANET_BLOCKS_LG; ++j) {
+            _set_stone(i, j, STONE_Clear);
+            _set_stone(PLANET_BLOCKS_LG - 1 - i, j, STONE_Clear);
+            _set_stone(j, i, STONE_Clear);
+            _set_stone(j, PLANET_BLOCKS_LG - 1 - i, STONE_Clear);
+        }
+    }
+}
+
+// As opposed to get_stone() and set_stone() - do not map surface
+// co-ords into a space constrained by the planet's size.
+Stone Planet::_get_stone(int x, int y) {
+    return surf[y*PLANET_BLOCKS_LG + x];
+}
+
+void Planet::_set_stone(int x, int y, Stone stone) {
+    surf[y*PLANET_BLOCKS_LG + x] = stone;
+}
+
+void Planet::_to_real(int x, int y, int& real_x, int& real_y) {
+    int offset = (PLANET_BLOCKS_LG - get_size_blocks()) / 2;
+    real_x = x + offset;
+    real_y = y + offset;
 }
 
 void init_sprite_sets() {
