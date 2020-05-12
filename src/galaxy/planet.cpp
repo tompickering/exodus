@@ -121,7 +121,11 @@ void Planet::init() {
         // TODO: Initialise surface from the data read in from PROCloadplans
         const int* initial_surf_data = get_loadplans_data(rand() % 3, cls, rand() % 5);
         for (int i = 0; i < PLANET_BLOCKS_LG * PLANET_BLOCKS_LG; ++i) {
-            surf[i] = stone_orig2new(initial_surf_data[i]);
+            // The original uses y=0 for the bottom of the screen. We use the inverse.
+            int orig_x = i % PLANET_BLOCKS_LG;
+            int orig_y = i / PLANET_BLOCKS_LG;
+            int new_y = PLANET_BLOCKS_LG - 1 - orig_y;
+            surf[new_y*PLANET_BLOCKS_LG + orig_x] = stone_orig2new(initial_surf_data[i]);
         }
 
         sim = 0;
