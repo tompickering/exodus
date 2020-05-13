@@ -31,7 +31,12 @@ const char* Anim::interp(float interp) {
         interp = 1;
     }
 
-    int idx = (int)(interp * ((float)nframes - 1));
+    // Ensure we can't overflow our index
+    if (interp == 1) {
+        interp = 0.999;
+    }
+
+    int idx = (int)(interp * ((float)nframes));
     if (idx < 0) {
         L.warn("Anim frame < 0: %d", idx);
         idx = 0;
