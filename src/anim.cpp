@@ -2,6 +2,9 @@
 
 #include "shared.h"
 
+Anim::Anim() : nframes(0) {
+}
+
 Anim::Anim(int _nframes, ...) : nframes(_nframes) {
     va_list args;
     va_start(args, _nframes);

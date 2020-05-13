@@ -5,6 +5,7 @@
 
 class Anim {
     public:
+        Anim();
         Anim(int, ...);
         const char* frame(int);
         const char* interp(float);
