@@ -347,6 +347,7 @@ void init_sprite_sets() {
     sprite_sets[Forest].stones[STONE_NaturalLarge]     = IMG_SF1_STONE8;
     sprite_sets[Forest].stones[STONE_NaturalAnim]      = IMG_SF1_STONE29;
     sprite_sets[Forest].stones[STONE_Village]          = IMG_SU1_STONE22;
+    sprite_sets[Forest].natural_anim_alt               = IMG_SF1_STONE29B;
 
     sprite_sets[Desert].panel_icon                     = IMG_TS1_ST2;
     sprite_sets[Desert].landscape                      = IMG_LS_DESERT;
@@ -357,6 +358,7 @@ void init_sprite_sets() {
     sprite_sets[Desert].stones[STONE_NaturalLarge]     = IMG_SF2_STONE8;
     sprite_sets[Desert].stones[STONE_NaturalAnim]      = IMG_SF2_STONE29;
     sprite_sets[Desert].stones[STONE_Village]          = IMG_SU1_STONE22;
+    sprite_sets[Desert].natural_anim_alt               = IMG_SF2_STONE29B;
 
     sprite_sets[Volcano].panel_icon                    = IMG_TS1_ST3;
     sprite_sets[Volcano].landscape                     = IMG_LS_VOLCANO;
@@ -367,6 +369,7 @@ void init_sprite_sets() {
     sprite_sets[Volcano].stones[STONE_NaturalLarge]    = IMG_SF3_STONE8;
     sprite_sets[Volcano].stones[STONE_NaturalAnim]     = IMG_SF3_STONE29;
     sprite_sets[Volcano].stones[STONE_Village]         = IMG_SU1_STONE22;
+    sprite_sets[Volcano].natural_anim_alt              = IMG_SF3_STONE29B;
 
     sprite_sets[Rock].panel_icon                       = IMG_TS1_ST4;
     sprite_sets[Rock].landscape                        = IMG_LS_ROCK;
@@ -377,6 +380,7 @@ void init_sprite_sets() {
     sprite_sets[Rock].stones[STONE_NaturalLarge]       = IMG_SF4_STONE8;
     sprite_sets[Rock].stones[STONE_NaturalAnim]        = IMG_SF4_STONE29;
     sprite_sets[Rock].stones[STONE_Village]            = IMG_SU1_STONE22;
+    sprite_sets[Rock].natural_anim_alt                 = IMG_SF4_STONE29B;
 
     sprite_sets[Ice].panel_icon                        = IMG_TS1_ST5;
     sprite_sets[Ice].landscape                         = IMG_LS_ICE;
@@ -387,6 +391,7 @@ void init_sprite_sets() {
     sprite_sets[Ice].stones[STONE_NaturalLarge]        = IMG_SF5_STONE8;
     sprite_sets[Ice].stones[STONE_NaturalAnim]         = IMG_SF5_STONE29;
     sprite_sets[Ice].stones[STONE_Village]             = IMG_SU1_STONE22;
+    sprite_sets[Ice].natural_anim_alt                  = IMG_SF5_STONE29B;
 
     sprite_sets[Terra].panel_icon                      = IMG_TS1_ST6;
     sprite_sets[Terra].landscape                       = IMG_LS_TERRA;
@@ -397,6 +402,7 @@ void init_sprite_sets() {
     sprite_sets[Terra].stones[STONE_NaturalLarge]      = IMG_SF6_STONE8;
     sprite_sets[Terra].stones[STONE_NaturalAnim]       = IMG_SF6_STONE29;
     sprite_sets[Terra].stones[STONE_Village]           = IMG_SU1_STONE22;
+    sprite_sets[Terra].natural_anim_alt                = IMG_SF6_STONE29B;
 
     sprite_sets[Artificial].panel_icon                 = IMG_TS1_ST8;
     sprite_sets[Artificial].landscape                  = IMG_LS_ART;
@@ -407,6 +413,7 @@ void init_sprite_sets() {
     sprite_sets[Artificial].stones[STONE_NaturalLarge] = IMG_SF8_STONE8;
     sprite_sets[Artificial].stones[STONE_NaturalAnim]  = IMG_SF8_STONE29;
     sprite_sets[Artificial].stones[STONE_Village]      = IMG_SU1_STONE22;
+    sprite_sets[Artificial].natural_anim_alt           = IMG_SF8_STONE29B;
 }
 
 const PlanetSpriteSet* Planet::sprites() {

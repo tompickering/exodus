@@ -8,6 +8,8 @@
 #include "galaxy/planet.h"
 #include "state/exodus_state.h"
 
+#include "anim.h"
+
 extern ExodusState exostate;
 
 class PlanetMap : ModeBase {
@@ -23,9 +25,12 @@ class PlanetMap : ModeBase {
 
         Stage stage;
         Planet *planet;
+        Anim natural_anim;
         float anim_cycle;
         int surf_x;
         int surf_y;
+        int blocks;
+        void draw_stones(bool);
 };
 
 #endif
