@@ -25,12 +25,12 @@ class PlanetMap : ModeBase {
 
         Stage stage;
         Planet *planet;
-        Anim natural_anim;
         float anim_cycle;
         int surf_x;
         int surf_y;
         int blocks;
         void draw_stones(bool);
+        Anim* get_stone_anim(Stone);
 };
 
 #endif

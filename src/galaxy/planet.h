@@ -55,8 +55,6 @@ typedef struct {
     const char *landscape;
     const char *map_bg;
     const char *surf;
-    const char *stones[STONE_END];
-    const char *natural_anim_alt;
 } PlanetSpriteSet;
 
 class Planet {
