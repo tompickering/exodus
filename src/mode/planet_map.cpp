@@ -28,6 +28,7 @@ PlanetMap::PlanetMap() : ModeBase("PlanetMap") {
     stage = PM_Idle;
     blocks = 0;
     anim_cycle = 0;
+    active_tool = TOOL_None;
 }
 
 void PlanetMap::enter() {
@@ -39,6 +40,7 @@ void PlanetMap::enter() {
     }
 
     anim_cycle = 0;
+    active_tool = TOOL_None;
 
     draw_manager.draw(planet->sprites()->map_bg);
 
@@ -54,6 +56,10 @@ void PlanetMap::enter() {
         IMG_SU1_MENU,
         {RES_X - 24, 36,
         1, 0, 1, 1});
+
+    for (Tool t = (Tool)0; t < TOOL_END; t = (Tool)((int)t + 1)) {
+        draw_tool_rect(t, COL_TOOL);
+    }
 
     blocks = planet->get_size_blocks();
     int sz = blocks * STONE_SZ;
@@ -87,7 +93,13 @@ ExodusMode PlanetMap::update(float delta) {
     switch(stage) {
         case PM_Idle:
             draw_stones(false);
-            if (draw_manager.clicked()) {
+            click = draw_manager.query_click(id(ID::MENU));
+            if (click.id) {
+                Tool t = get_tool_for_click(click.x, click.y);
+                if (t != TOOL_None) {
+                    set_tool(t);
+                }
+            } else if (draw_manager.clicked()) {
                 return ExodusMode::MODE_Pop;
             }
             break;
@@ -189,4 +201,102 @@ Anim* PlanetMap::get_stone_anim(Stone stone) {
 
     L.warn("Missing anim for %s stone %d", planet->get_class_str(), stone);
     return nullptr;
+}
+
+Tool PlanetMap::get_tool_for_click(float x, float y) {
+    int row = (int)(y * 4.999f);
+    int col = (int)(x * 2.999f);
+    if (col == 0) {
+        if (row == 0) return TOOL_HQ;
+        if (row == 1) return TOOL_Plu;
+        if (row == 2) return TOOL_Inf;
+        if (row == 3) return TOOL_Port0;
+        if (row == 4) return TOOL_Trade;
+    } else if (col == 1) {
+        if (row == 0) return TOOL_Cultivate;
+        if (row == 1) return TOOL_City;
+        if (row == 2) return TOOL_Gli;
+        if (row == 3) return TOOL_Port1;
+        if (row == 4) return TOOL_LunarBase;
+    } else {
+        if (row == 0) return TOOL_Mine;
+        if (row == 1) return TOOL_Clear;
+        if (row == 2) return TOOL_Art;
+        if (row == 3) return TOOL_Port2;
+        if (row == 4) return TOOL_Park;
+    }
+    return TOOL_None;
+}
+
+void PlanetMap::set_tool(Tool t) {
+    L.debug("Setting tool: %d", t);
+    draw_tool_rect(active_tool, COL_TOOL);
+    active_tool = t;
+    draw_tool_rect(active_tool, COL_TOOL_HL);
+}
+
+void PlanetMap::draw_tool_rect(Tool t, RGB col) {
+    int x = 0;
+    int y = 0;
+
+    if (t == TOOL_None)
+        return;
+
+    switch(t) {
+        case TOOL_HQ:
+        case TOOL_Plu:
+        case TOOL_Inf:
+        case TOOL_Port0:
+        case TOOL_Trade:
+            x = 499;
+            break;
+        case TOOL_Cultivate:
+        case TOOL_City:
+        case TOOL_Gli:
+        case TOOL_Port1:
+        case TOOL_LunarBase:
+            x = 539;
+            break;
+        case TOOL_Mine:
+        case TOOL_Clear:
+        case TOOL_Art:
+        case TOOL_Port2:
+        case TOOL_Park:
+            x = 579;
+            break;
+        default:
+            break;
+    }
+
+    switch(t) {
+        case TOOL_HQ:
+        case TOOL_Cultivate:
+        case TOOL_Mine:
+            y = 45;
+            break;
+        case TOOL_Plu:
+        case TOOL_City:
+        case TOOL_Clear:
+            y = 83;
+            break;
+        case TOOL_Inf:
+        case TOOL_Gli:
+        case TOOL_Art:
+            y = 121;
+            break;
+        case TOOL_Port0:
+        case TOOL_Port1:
+        case TOOL_Port2:
+            y = 159;
+            break;
+        case TOOL_Trade:
+        case TOOL_LunarBase:
+        case TOOL_Park:
+            y = 197;
+            break;
+        default:
+            break;
+    }
+
+    draw_manager.draw_rect({x, y, 30, 30}, 2, col);
 }

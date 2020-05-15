@@ -12,6 +12,26 @@
 
 extern ExodusState exostate;
 
+enum Tool {
+    TOOL_None,
+    TOOL_HQ,
+    TOOL_Cultivate,
+    TOOL_Mine,
+    TOOL_Plu,
+    TOOL_City,
+    TOOL_Clear,
+    TOOL_Inf,
+    TOOL_Gli,
+    TOOL_Art,
+    TOOL_Port0,
+    TOOL_Port1,
+    TOOL_Port2,
+    TOOL_Trade,
+    TOOL_LunarBase,
+    TOOL_Park,
+    TOOL_END,
+};
+
 class PlanetMap : ModeBase {
     public:
         PlanetMap();
@@ -25,12 +45,17 @@ class PlanetMap : ModeBase {
 
         Stage stage;
         Planet *planet;
+        Tool active_tool;
         float anim_cycle;
         int surf_x;
         int surf_y;
         int blocks;
         void draw_stones(bool);
         Anim* get_stone_anim(Stone);
+
+        Tool get_tool_for_click(float, float);
+        void set_tool(Tool);
+        void draw_tool_rect(Tool, RGB);
 };
 
 #endif
