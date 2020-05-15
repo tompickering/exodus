@@ -84,24 +84,24 @@ void PlanetMap::enter() {
     draw_manager.draw(
         id(ID::GAUGE_FOOD),
         IMG_SU1_CTA,
-        {menu_x + 27, menu_y + 200,
+        {menu_x + 28, menu_y + 200,
         0, 0, 1, 1});
 
     draw_manager.draw(
         id(ID::ICON_PLU),
         IMG_SU1_CTRL2,
-        {menu_x + 50, menu_y + 200,
+        {menu_x + 48, menu_y + 200,
         0, 0, 1, 1});
     draw_manager.draw(
         id(ID::GAUGE_PLU),
         IMG_SU1_CTB,
-        {menu_x + 71, menu_y + 200,
+        {menu_x + 70, menu_y + 200,
         0, 0, 1, 1});
 
     draw_manager.draw(
         id(ID::ICON_UNREST),
         IMG_SU1_CTRL3,
-        {menu_x + 91, menu_y + 200,
+        {menu_x + 90, menu_y + 200,
         0, 0, 1, 1});
     draw_manager.draw(
         id(ID::GAUGE_UNREST),
