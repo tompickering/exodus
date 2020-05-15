@@ -49,6 +49,8 @@ class PlanetMap : ModeBase {
         float anim_cycle;
         int surf_x;
         int surf_y;
+        int menu_x;
+        int menu_y;
         int blocks;
         void draw_stones(bool);
         Anim* get_stone_anim(Stone);

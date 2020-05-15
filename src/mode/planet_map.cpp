@@ -17,6 +17,15 @@ enum ID {
     MENU_BG,
     MENU,
     SURF,
+    ICON_FOOD,
+    ICON_PLU,
+    ICON_UNREST,
+    GAUGE_FOOD,
+    GAUGE_PLU,
+    GAUGE_UNREST,
+    TRIBUTTONS,
+    LAWBUILD,
+    EXIT,
     END,
 };
 
@@ -29,6 +38,8 @@ PlanetMap::PlanetMap() : ModeBase("PlanetMap") {
     blocks = 0;
     anim_cycle = 0;
     active_tool = TOOL_None;
+    menu_x = 0;
+    menu_y = 0;
 }
 
 void PlanetMap::enter() {
@@ -44,8 +55,11 @@ void PlanetMap::enter() {
 
     draw_manager.draw(planet->sprites()->map_bg);
 
+    menu_x = RES_X - 150;
+    menu_y = 36;
+
     draw_manager.fill(
-        {RES_X - 24 - 126, 36, 126, 447},
+        {menu_x, menu_y, 126, 447},
         COL_BORDERS);
 
     DrawArea area = {0, 0, 126, 196};
@@ -53,13 +67,69 @@ void PlanetMap::enter() {
     draw_manager.draw(
         id(ID::MENU_BG),
         planet->sprites()->surf,
-        {RES_X - 24, 36,
-        1, 0, 1, 1});
+        {menu_x, menu_y,
+        0, 0, 1, 1});
     draw_manager.draw(
         id(ID::MENU),
         IMG_SU1_MENU,
-        {RES_X - 24, 36,
-        1, 0, 1, 1});
+        {menu_x, menu_y,
+        0, 0, 1, 1});
+
+    draw_manager.pattern_fill({menu_x + 4, menu_y + 198, 118, 24});
+    draw_manager.draw(
+        id(ID::ICON_FOOD),
+        IMG_SU1_CTRL1,
+        {menu_x + 6, menu_y + 200,
+        0, 0, 1, 1});
+    draw_manager.draw(
+        id(ID::GAUGE_FOOD),
+        IMG_SU1_CTA,
+        {menu_x + 27, menu_y + 200,
+        0, 0, 1, 1});
+
+    draw_manager.draw(
+        id(ID::ICON_PLU),
+        IMG_SU1_CTRL2,
+        {menu_x + 50, menu_y + 200,
+        0, 0, 1, 1});
+    draw_manager.draw(
+        id(ID::GAUGE_PLU),
+        IMG_SU1_CTB,
+        {menu_x + 71, menu_y + 200,
+        0, 0, 1, 1});
+
+    draw_manager.draw(
+        id(ID::ICON_UNREST),
+        IMG_SU1_CTRL3,
+        {menu_x + 91, menu_y + 200,
+        0, 0, 1, 1});
+    draw_manager.draw(
+        id(ID::GAUGE_UNREST),
+        IMG_SU1_CTC,
+        {menu_x + 112, menu_y + 200,
+        0, 0, 1, 1});
+
+    draw_manager.pattern_fill({menu_x + 4, menu_y + 226, 118, 66});
+    draw_manager.pattern_fill({menu_x + 4, menu_y + 296, 118, 26});
+    draw_manager.pattern_fill({menu_x + 4, menu_y + 326, 118, 26});
+
+    draw_manager.draw(
+        id(ID::TRIBUTTONS),
+        IMG_SU1_TRI,
+        {menu_x + 4, menu_y + 383,
+        0, 1, 1, 1});
+
+    draw_manager.draw(
+        id(ID::LAWBUILD),
+        IMG_SU1_PEOPLE,
+        {menu_x + 4, menu_y + 413,
+        0, 1, 1, 1});
+
+    draw_manager.draw(
+        id(ID::EXIT),
+        IMG_SU1_EXPORT,
+        {menu_x + 4, menu_y + 443,
+        0, 1, 1, 1});
 
     for (Tool t = (Tool)0; t < TOOL_END; t = (Tool)((int)t + 1)) {
         draw_tool_rect(t, COL_TOOL);
