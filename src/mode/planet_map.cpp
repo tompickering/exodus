@@ -175,6 +175,15 @@ ExodusMode PlanetMap::update(float delta) {
                 }
             }
 
+            if (active_tool != TOOL_None && active_tool != TOOL_LunarBase) {
+                click = draw_manager.query_click(id(ID::SURF));
+                if (click.id) {
+                    int block_x = (int)(0.9999f * click.x * blocks);
+                    int block_y = (int)(0.9999f * click.y * blocks);
+                    planet->set_stone(block_x, block_y, tool2stone(active_tool));
+                }
+            }
+
             if (draw_manager.query_click(id(ID::EXIT)).id) {
                 return ExodusMode::MODE_Pop;
             }
@@ -215,49 +224,88 @@ void PlanetMap::draw_stones(bool all) {
 }
 
 void init_stone_anims() {
-    stone_anims_specific[Forest][STONE_Agri]             = Anim(1, IMG_SF1_STONE2);
-    stone_anims_specific[Forest][STONE_NaturalSmall]     = Anim(1, IMG_SF1_STONE9);
-    stone_anims_specific[Forest][STONE_NaturalLarge]     = Anim(1, IMG_SF1_STONE8);
-    stone_anims_specific[Forest][STONE_NaturalAnim]      = Anim(2, IMG_SF1_STONE29,
-                                                                   IMG_SF1_STONE29B);
+    stone_anims_specific[Forest][STONE_Agri]             = Anim(1,  IMG_SF1_STONE2);
+    stone_anims_specific[Forest][STONE_AgriDead]         = Anim(1,  IMG_SF1_STONE10);
+    stone_anims_specific[Forest][STONE_NaturalSmall]     = Anim(1,  IMG_SF1_STONE9);
+    stone_anims_specific[Forest][STONE_NaturalLarge]     = Anim(1,  IMG_SF1_STONE8);
+    stone_anims_specific[Forest][STONE_NaturalAnim]      = Anim(2,  IMG_SF1_STONE29,
+                                                                    IMG_SF1_STONE29B);
 
-    stone_anims_specific[Desert][STONE_Agri]             = Anim(1, IMG_SF2_STONE2);
-    stone_anims_specific[Desert][STONE_NaturalSmall]     = Anim(1, IMG_SF2_STONE9);
-    stone_anims_specific[Desert][STONE_NaturalLarge]     = Anim(1, IMG_SF2_STONE8);
-    stone_anims_specific[Desert][STONE_NaturalAnim]      = Anim(2, IMG_SF2_STONE29,
-                                                                   IMG_SF2_STONE29B);
+    stone_anims_specific[Desert][STONE_Agri]             = Anim(1,  IMG_SF2_STONE2);
+    stone_anims_specific[Desert][STONE_AgriDead]         = Anim(1,  IMG_SF2_STONE10);
+    stone_anims_specific[Desert][STONE_NaturalSmall]     = Anim(1,  IMG_SF2_STONE9);
+    stone_anims_specific[Desert][STONE_NaturalLarge]     = Anim(1,  IMG_SF2_STONE8);
+    stone_anims_specific[Desert][STONE_NaturalAnim]      = Anim(2,  IMG_SF2_STONE29,
+                                                                    IMG_SF2_STONE29B);
 
-    stone_anims_specific[Volcano][STONE_Agri]            = Anim(1, IMG_SF3_STONE2);
-    stone_anims_specific[Volcano][STONE_NaturalSmall]    = Anim(1, IMG_SF3_STONE9);
-    stone_anims_specific[Volcano][STONE_NaturalLarge]    = Anim(1, IMG_SF3_STONE8);
-    stone_anims_specific[Volcano][STONE_NaturalAnim]     = Anim(2, IMG_SF3_STONE29,
-                                                                   IMG_SF3_STONE29B);
+    stone_anims_specific[Volcano][STONE_Agri]            = Anim(1,  IMG_SF3_STONE2);
+    stone_anims_specific[Volcano][STONE_AgriDead]        = Anim(1,  IMG_SF3_STONE10);
+    stone_anims_specific[Volcano][STONE_NaturalSmall]    = Anim(1,  IMG_SF3_STONE9);
+    stone_anims_specific[Volcano][STONE_NaturalLarge]    = Anim(1,  IMG_SF3_STONE8);
+    stone_anims_specific[Volcano][STONE_NaturalAnim]     = Anim(2,  IMG_SF3_STONE29,
+                                                                    IMG_SF3_STONE29B);
 
-    stone_anims_specific[Rock][STONE_Agri]               = Anim(1, IMG_SF4_STONE2);
-    stone_anims_specific[Rock][STONE_NaturalSmall]       = Anim(1, IMG_SF4_STONE9);
-    stone_anims_specific[Rock][STONE_NaturalLarge]       = Anim(1, IMG_SF4_STONE8);
-    stone_anims_specific[Rock][STONE_NaturalAnim]        = Anim(2, IMG_SF4_STONE29,
-                                                                   IMG_SF4_STONE29B);
+    stone_anims_specific[Rock][STONE_Agri]               = Anim(1,  IMG_SF4_STONE2);
+    stone_anims_specific[Rock][STONE_AgriDead]           = Anim(1,  IMG_SF4_STONE10);
+    stone_anims_specific[Rock][STONE_NaturalSmall]       = Anim(1,  IMG_SF4_STONE9);
+    stone_anims_specific[Rock][STONE_NaturalLarge]       = Anim(1,  IMG_SF4_STONE8);
+    stone_anims_specific[Rock][STONE_NaturalAnim]        = Anim(2,  IMG_SF4_STONE29,
+                                                                    IMG_SF4_STONE29B);
 
-    stone_anims_specific[Ice][STONE_Agri]                = Anim(1, IMG_SF5_STONE2);
-    stone_anims_specific[Ice][STONE_NaturalSmall]        = Anim(1, IMG_SF5_STONE9);
-    stone_anims_specific[Ice][STONE_NaturalLarge]        = Anim(1, IMG_SF5_STONE8);
-    stone_anims_specific[Ice][STONE_NaturalAnim]         = Anim(2, IMG_SF5_STONE29,
-                                                                   IMG_SF5_STONE29B);
+    stone_anims_specific[Ice][STONE_Agri]                = Anim(1,  IMG_SF5_STONE2);
+    stone_anims_specific[Ice][STONE_AgriDead]            = Anim(1,  IMG_SF5_STONE10);
+    stone_anims_specific[Ice][STONE_NaturalSmall]        = Anim(1,  IMG_SF5_STONE9);
+    stone_anims_specific[Ice][STONE_NaturalLarge]        = Anim(1,  IMG_SF5_STONE8);
+    stone_anims_specific[Ice][STONE_NaturalAnim]         = Anim(2,  IMG_SF5_STONE29,
+                                                                    IMG_SF5_STONE29B);
 
-    stone_anims_specific[Terra][STONE_Agri]              = Anim(1, IMG_SF6_STONE2);
-    stone_anims_specific[Terra][STONE_NaturalSmall]      = Anim(1, IMG_SF6_STONE9);
-    stone_anims_specific[Terra][STONE_NaturalLarge]      = Anim(1, IMG_SF6_STONE8);
-    stone_anims_specific[Terra][STONE_NaturalAnim]       = Anim(2, IMG_SF6_STONE29,
-                                                                   IMG_SF6_STONE29B);
+    stone_anims_specific[Terra][STONE_Agri]              = Anim(1,  IMG_SF6_STONE2);
+    stone_anims_specific[Terra][STONE_AgriDead]          = Anim(1,  IMG_SF6_STONE10);
+    stone_anims_specific[Terra][STONE_NaturalSmall]      = Anim(1,  IMG_SF6_STONE9);
+    stone_anims_specific[Terra][STONE_NaturalLarge]      = Anim(1,  IMG_SF6_STONE8);
+    stone_anims_specific[Terra][STONE_NaturalAnim]       = Anim(2,  IMG_SF6_STONE29,
+                                                                    IMG_SF6_STONE29B);
 
-    stone_anims_specific[Artificial][STONE_Agri]         = Anim(1, IMG_SF8_STONE2);
-    stone_anims_specific[Artificial][STONE_NaturalSmall] = Anim(1, IMG_SF8_STONE9);
-    stone_anims_specific[Artificial][STONE_NaturalLarge] = Anim(1, IMG_SF8_STONE8);
-    stone_anims_specific[Artificial][STONE_NaturalAnim]  = Anim(2, IMG_SF8_STONE29,
-                                                                   IMG_SF8_STONE29B);
+    stone_anims_specific[Artificial][STONE_Agri]         = Anim(1,  IMG_SF8_STONE2);
+    stone_anims_specific[Artificial][STONE_AgriDead]     = Anim(1,  IMG_SF8_STONE10);
+    stone_anims_specific[Artificial][STONE_NaturalSmall] = Anim(1,  IMG_SF8_STONE9);
+    stone_anims_specific[Artificial][STONE_NaturalLarge] = Anim(1,  IMG_SF8_STONE8);
+    stone_anims_specific[Artificial][STONE_NaturalAnim]  = Anim(2,  IMG_SF8_STONE29,
+                                                                    IMG_SF8_STONE29B);
 
-    stone_anims_generic[STONE_Village]                   = Anim(1, IMG_SU1_STONE22);
+    stone_anims_generic[STONE_Village]                   = Anim(1,  IMG_SU1_STONE22);
+    stone_anims_generic[STONE_Base]                      = Anim(1,  IMG_SU1_STONE1);
+    stone_anims_generic[STONE_Mine]                      = Anim(1,  IMG_SU1_STONE3);
+    stone_anims_generic[STONE_Plu]                       = Anim(2,  IMG_SU1_STONE4,
+                                                                    IMG_SU1_STONE4B);
+    stone_anims_generic[STONE_City]                      = Anim(18, IMG_SU1_STONE5A1,
+                                                                    IMG_SU1_STONE5A2,
+                                                                    IMG_SU1_STONE5A3,
+                                                                    IMG_SU1_STONE5A4,
+                                                                    IMG_SU1_STONE5A5,
+                                                                    IMG_SU1_STONE5A6,
+                                                                    IMG_SU1_STONE5A7,
+                                                                    IMG_SU1_STONE5A8,
+                                                                    IMG_SU1_STONE5A9,
+                                                                    IMG_SU1_STONE5A10,
+                                                                    IMG_SU1_STONE5A11,
+                                                                    IMG_SU1_STONE5A12,
+                                                                    IMG_SU1_STONE5A13,
+                                                                    IMG_SU1_STONE5A14,
+                                                                    IMG_SU1_STONE5A15,
+                                                                    IMG_SU1_STONE5A16,
+                                                                    IMG_SU1_STONE5A17,
+                                                                    IMG_SU1_STONE5A18);
+    stone_anims_generic[STONE_Inf]                       = Anim(1,  IMG_SU1_STONE11);
+    stone_anims_generic[STONE_Gli]                       = Anim(1,  IMG_SU1_STONE12);
+    stone_anims_generic[STONE_Art]                       = Anim(1,  IMG_SU1_STONE13);
+    stone_anims_generic[STONE_Port0]                     = Anim(1,  IMG_SU1_STONE14);
+    stone_anims_generic[STONE_Port1]                     = Anim(1,  IMG_SU1_STONE15);
+    stone_anims_generic[STONE_Port2]                     = Anim(2,  IMG_SU1_STONE16,
+                                                                    IMG_SU1_STONE16B);
+    stone_anims_generic[STONE_Trade]                     = Anim(1,  IMG_SU1_STONE17);
+    stone_anims_generic[STONE_Park]                      = Anim(1,  IMG_SU1_STONE23);
+
 
     stone_anims_initialised = true;
 }
@@ -375,4 +423,42 @@ void PlanetMap::draw_tool_rect(Tool t, RGB col) {
     }
 
     draw_manager.draw_rect({x, y, 30, 30}, 2, col);
+}
+
+Stone PlanetMap::tool2stone(Tool t) {
+    switch(t) {
+        case TOOL_HQ:
+            return STONE_Base;
+        case TOOL_Cultivate:
+            return STONE_Agri;
+        case TOOL_Mine:
+            return STONE_Mine;
+        case TOOL_Plu:
+            return STONE_Plu;
+        case TOOL_City:
+            return STONE_City;
+        case TOOL_Clear:
+            return STONE_Clear;
+        case TOOL_Inf:
+            return STONE_Inf;
+        case TOOL_Gli:
+            return STONE_Gli;
+        case TOOL_Art:
+            return STONE_Art;
+        case TOOL_Port0:
+            return STONE_Port0;
+        case TOOL_Port1:
+            return STONE_Port1;
+        case TOOL_Port2:
+            return STONE_Port2;
+        case TOOL_Trade:
+            return STONE_Trade;
+        case TOOL_LunarBase:
+            break;
+        case TOOL_Park:
+            return STONE_Park;
+    }
+
+    L.fatal("Invalid stone request for tool %d", t);
+    return STONE_Clear;
 }

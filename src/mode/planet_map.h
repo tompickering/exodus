@@ -58,6 +58,7 @@ class PlanetMap : ModeBase {
         Tool get_tool_for_click(float, float);
         void set_tool(Tool);
         void draw_tool_rect(Tool, RGB);
+        Stone tool2stone(Tool);
 };
 
 #endif
