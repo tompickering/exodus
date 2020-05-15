@@ -253,6 +253,13 @@ void* DrawManagerSDL::get_sprite_data(const char* img_path) {
     return nullptr;
 }
 
+void DrawManagerSDL::draw_rect(DrawArea area, RGB rgb) {
+    fill(TGT_Primary, {area.x, area.y, UPSCALE_X, area.h}, rgb);
+    fill(TGT_Primary, {area.x + area.w, area.y, UPSCALE_X, area.h}, rgb);
+    fill(TGT_Primary, {area.x, area.y, area.w, UPSCALE_Y}, rgb);
+    fill(TGT_Primary, {area.x, area.y + area.h, area.w, UPSCALE_Y}, rgb);
+}
+
 void DrawManagerSDL::draw(const char* spr_key) {
     draw(DrawTarget::TGT_Primary, spr_key, nullptr, nullptr);
 }
