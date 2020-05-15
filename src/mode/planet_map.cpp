@@ -44,6 +44,10 @@ void PlanetMap::enter() {
 
     draw_manager.draw(planet->sprites()->map_bg);
 
+    draw_manager.fill(
+        {RES_X - 24 - 126, 36, 126, 447},
+        COL_BORDERS);
+
     DrawArea area = {0, 0, 126, 196};
     draw_manager.set_source_region(id(ID::MENU_BG), &area);
     draw_manager.draw(
