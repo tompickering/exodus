@@ -173,7 +173,9 @@ ExodusMode PlanetMap::update(float delta) {
                 if (t != TOOL_None) {
                     set_tool(t);
                 }
-            } else if (draw_manager.clicked()) {
+            }
+
+            if (draw_manager.query_click(id(ID::EXIT)).id) {
                 return ExodusMode::MODE_Pop;
             }
             break;
