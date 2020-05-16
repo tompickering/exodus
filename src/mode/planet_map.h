@@ -40,7 +40,7 @@ class PlanetMap : ModeBase {
     private:
         enum Stage {
             PM_Idle,
-            PM_Placement,
+            PM_Construct,
         };
 
         Stage stage;
@@ -54,7 +54,15 @@ class PlanetMap : ModeBase {
         int blocks;
         void draw_stones(bool);
         void clear_surf(int, int);
+
+        float construct_progress;
+        Anim* construct_anim;
+
+        int construct_x;
+        int construct_y;
+        Stone construct_stone;
         Anim* get_stone_anim(Stone);
+        Anim* get_construct_anim(Stone);
 
         Tool get_tool_for_click(float, float);
         void set_tool(Tool);
