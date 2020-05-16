@@ -270,6 +270,20 @@ void PlanetMap::draw_stones(bool all) {
             const char* sprite = IMG_SU1_STONE7;
             if (anim) sprite = anim->interp(anim_cycle);
 
+            /*
+             * Special case - there are 2 alternate sprites for Terran rocks.
+             * In the original, these are randomised every time you view the planet!
+             * Here, we keep them consistent by using the co-ordinates.
+             */
+            if (planet->get_class() == Terra && st == STONE_NaturalLarge) {
+                unsigned char r = (unsigned char)(0xF0 + pow(3, x) + pow(7, y)) % 3;
+                if (r == 1) {
+                    sprite = IMG_SF6_STONE24;
+                } else if (r == 2) {
+                    sprite = IMG_SF6_STONE25;
+                }
+            }
+
             draw_manager.draw(
                 sprite,
                 {surf_x + x*STONE_SZ, surf_y + y*STONE_SZ,
