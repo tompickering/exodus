@@ -10,7 +10,7 @@
 using std::map;
 
 #define STONE_SZ 28
-#define CONSTRUCT_RATE 1.f
+#define CONSTRUCT_RATE 6
 
 const float ANIM_RATE = 0.5f;
 
@@ -237,7 +237,7 @@ ExodusMode PlanetMap::update(float delta) {
                 return ExodusMode::MODE_None;
             }
 
-            construct_progress += delta * CONSTRUCT_RATE;
+            construct_progress += delta * CONSTRUCT_RATE / (float)construct_anim->get_n_frames();
             if (construct_progress >= 1) {
                 construct_progress = 1;
             }

@@ -51,3 +51,7 @@ const char* Anim::interp(float interp) {
 bool Anim::is_static() {
     return nframes <= 1;
 }
+
+int Anim::get_n_frames() {
+    return nframes;
+}
