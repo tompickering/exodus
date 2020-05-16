@@ -194,17 +194,20 @@ ExodusMode PlanetMap::update(float delta) {
                 if (click.id) {
                     int block_x = (int)(0.9999f * click.x * blocks);
                     int block_y = (int)(0.9999f * click.y * blocks);
-                    clear_surf(block_x, block_y);
-                    construct_stone = tool2stone(active_tool);
-                    construct_anim = get_construct_anim(construct_stone);
-                    if (construct_anim) {
-                        construct_progress = 0;
-                        construct_x = block_x;
-                        construct_y = block_y;
-                        stage = PM_Construct;
-                        return ExodusMode::MODE_None;
-                    } else {
-                        planet->set_stone(block_x, block_y, construct_stone);
+                    Stone existing = planet->get_stone(block_x, block_y);
+                    if (active_tool == TOOL_Clear || can_build_on(existing)) {
+                        clear_surf(block_x, block_y);
+                        construct_stone = tool2stone(active_tool);
+                        construct_anim = get_construct_anim(construct_stone);
+                        if (construct_anim) {
+                            construct_progress = 0;
+                            construct_x = block_x;
+                            construct_y = block_y;
+                            stage = PM_Construct;
+                            return ExodusMode::MODE_None;
+                        } else {
+                            planet->set_stone(block_x, block_y, construct_stone);
+                        }
                     }
                 }
             }
@@ -614,4 +617,8 @@ Stone PlanetMap::tool2stone(Tool t) {
 
     L.fatal("Invalid stone request for tool %d", t);
     return STONE_Clear;
+}
+
+bool PlanetMap::can_build_on(Stone st) {
+    return (st == STONE_Clear || st == STONE_NaturalSmall);
 }

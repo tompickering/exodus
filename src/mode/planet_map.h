@@ -68,6 +68,8 @@ class PlanetMap : ModeBase {
         void set_tool(Tool);
         void draw_tool_rect(Tool, RGB);
         Stone tool2stone(Tool);
+
+        bool can_build_on(Stone);
 };
 
 #endif
