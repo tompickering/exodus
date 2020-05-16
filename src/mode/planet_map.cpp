@@ -24,6 +24,11 @@ enum ID {
     GAUGE_FOOD,
     GAUGE_PLU,
     GAUGE_UNREST,
+    DESC0,
+    DESC1,
+    COST,
+    MC,
+    ARMY,
     TRIBUTTONS,
     LAWBUILD,
     EXIT,
@@ -513,6 +518,98 @@ void PlanetMap::set_tool(Tool t) {
     draw_tool_rect(active_tool, COL_TOOL);
     active_tool = t;
     draw_tool_rect(active_tool, COL_TOOL_HL);
+
+    const char *tool_desc0 = "";
+    const char *tool_desc1 = "";
+    char cost_str[12];
+
+    switch(t) {
+        case TOOL_HQ:
+            tool_desc0 = "Command";
+            tool_desc1 = "base";
+            break;
+        case TOOL_Cultivate:
+            tool_desc0 = "Cultivate";
+            break;
+        case TOOL_Mine:
+            tool_desc0 = "Mining";
+            break;
+        case TOOL_Plu:
+            tool_desc0 = "Plutonium";
+            tool_desc1 = "Production";
+            break;
+        case TOOL_City:
+            tool_desc0 = "City";
+            break;
+        case TOOL_Clear:
+            tool_desc0 = "Clear";
+            tool_desc1 = "ground";
+            break;
+        case TOOL_Inf:
+            tool_desc0 = "Infantry";
+            tool_desc1 = "production";
+            break;
+        case TOOL_Gli:
+            tool_desc0 = "Glider";
+            tool_desc1 = "production";
+            break;
+        case TOOL_Art:
+            tool_desc0 = "Artillery";
+            tool_desc1 = "production";
+            break;
+        case TOOL_Port0:
+            tool_desc0 = "Spaceport,";
+            tool_desc1 = "Control";
+            break;
+        case TOOL_Port1:
+            tool_desc0 = "Spaceport,";
+            tool_desc1 = "Landing";
+            break;
+        case TOOL_Port2:
+            tool_desc0 = "Power";
+            tool_desc1 = "plant";
+            break;
+        case TOOL_Trade:
+            tool_desc0 = "Trading";
+            tool_desc1 = "centre";
+            break;
+        case TOOL_LunarBase:
+            tool_desc0 = "Lunar";
+            tool_desc1 = "battle base";
+            break;
+        case TOOL_Park:
+            tool_desc0 = "Park";
+            break;
+    }
+
+    snprintf(cost_str, 11, "Cost: %d", tool2cost(t));
+
+    draw_manager.draw_text(
+        id(ID::DESC0),
+        tool_desc0,
+        Justify::Left,
+        menu_x + 8,
+        menu_y + 228,
+        COL_TEXT2
+    );
+
+    draw_manager.draw_text(
+        id(ID::DESC1),
+        tool_desc1,
+        Justify::Left,
+        menu_x + 8,
+        menu_y + 248,
+        COL_TEXT2
+    );
+
+    draw_manager.draw_text(
+        id(ID::COST),
+        cost_str,
+        Justify::Left,
+        menu_x + 8,
+        menu_y + 268,
+        COL_TEXT2
+    );
 }
 
 void PlanetMap::draw_tool_rect(Tool t, RGB col) {
@@ -617,6 +714,44 @@ Stone PlanetMap::tool2stone(Tool t) {
 
     L.fatal("Invalid stone request for tool %d", t);
     return STONE_Clear;
+}
+
+int PlanetMap::tool2cost(Tool t) {
+    switch(t) {
+        case TOOL_HQ:
+            return 20;
+        case TOOL_Cultivate:
+            return 3;
+        case TOOL_Mine:
+            return 15;
+        case TOOL_Plu:
+            return 25;
+        case TOOL_City:
+            return 30;
+        case TOOL_Clear:
+            return 5;
+        case TOOL_Inf:
+            return 10;
+        case TOOL_Gli:
+            return 20;
+        case TOOL_Art:
+            return 30;
+        case TOOL_Port0:
+            return 15;
+        case TOOL_Port1:
+            return 10;
+        case TOOL_Port2:
+            return 20;
+        case TOOL_Trade:
+            return 100;
+        case TOOL_LunarBase:
+            return 120;
+        case TOOL_Park:
+            return 10;
+    }
+
+    L.fatal("Invalid cost request for tool %d", t);
+    return 0;
 }
 
 bool PlanetMap::can_build_on(Stone st) {
