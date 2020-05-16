@@ -60,7 +60,7 @@ ExodusMode GalaxyMap::update(float delta) {
             stage = GM_Idle;
             break;
         case GM_Idle:
-            if (player->human && !player->intro_seen) {
+            if (player->race == RACE_Human && !player->intro_seen) {
                 exostate.set_active_flytarget(gal->get_guild());
                 return ExodusMode::MODE_GalaxyIntro;
             }

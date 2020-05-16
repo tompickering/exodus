@@ -37,10 +37,27 @@ void ExodusState::init(GameConfig config) {
     active_planet = -1;
     unsigned int i;
 
+    // PLAYER INIT: Everyone (overridable)
+    for (i = 0; i < N_PLAYERS; ++i) {
+        player_info[i].mc = 0;
+
+        player_info[i].fleet.scouts = 0;
+        player_info[i].fleet.transporters = 0;
+        player_info[i].fleet.warships = 0;
+        player_info[i].fleet.bombers = 0;
+        player_info[i].fleet.freight.minerals = 0;
+        player_info[i].fleet.freight.food = 0;
+        player_info[i].fleet.freight.plutonium = 0;
+        player_info[i].fleet.freight.robots = 0;
+        player_info[i].fleet.freight.infantry = 0;
+        player_info[i].fleet.freight.gliders = 0;
+        player_info[i].fleet.freight.artillery = 0;
+    }
+
     // PLAYER INIT: Human
     for (i = 0; i < n_players; ++i) {
         memcpy(&player_info[i], &config.info[i], sizeof(PlayerInfo));
-        player_info[i].human = true;
+        player_info[i].race = RACE_Human;
         player_info[i].intro_seen = false;
         switch(i) {
             case 0:
@@ -59,11 +76,35 @@ void ExodusState::init(GameConfig config) {
                 player_info[i].fleet_marker = IMG_TS1_ICON5;
                 break;
         }
+
+        if (config.enemy_start == ENEMY_None) {
+            player_info[i].mc = 1000;
+            player_info[i].fleet.transporters = 50;
+            player_info[i].fleet.warships = 5;
+        }
+
+        if (config.enemy_start == ENEMY_Weak) {
+            player_info[i].mc = 300;
+            player_info[i].fleet.transporters = 50;
+            player_info[i].fleet.warships = 5;
+        }
+
+        if (config.enemy_start == ENEMY_Medium) {
+            player_info[i].mc = 200;
+            player_info[i].fleet.transporters = 35;
+            player_info[i].fleet.warships = 5;
+        }
+
+        if (config.enemy_start == ENEMY_Strong) {
+            player_info[i].mc = 50;
+            player_info[i].fleet.transporters = 20;
+            player_info[i].fleet.freight.minerals = 20;
+        }
     }
 
     // PLAYER INIT: CPU
     for (; i < N_PLAYERS; ++i) {
-        player_info[i].human = false;
+        player_info[i].race = (Race)(RACE_Human + RND(4));
         player_info[i].fleet_marker = nullptr;
         sprintf(player_info[i].name, "%d", i);
         strcpy(player_info[i].title, "CPU");
@@ -84,9 +125,17 @@ void ExodusState::init(GameConfig config) {
                 L.debug("Assigned flag %d", flag_try);
             }
         }
+        unsigned int bonus_mult = 0;
+        if (config.enemy_start == ENEMY_Medium) bonus_mult = 1;
+        if (config.enemy_start == ENEMY_Strong) bonus_mult = 2;
+
+        player_info[i].mc = 300 + RND(5)*50 + bonus_mult*150;
+        L.debug("Assigned %d MC to CPU player %d", player_info[i].mc, i);
+
+        player_info[i].fleet.transporters += bonus_mult * 100;
     }
 
-    // PLAYER INIT: Everyone
+    // PLAYER INIT: Everyone (not overridable)
     for (i = 0; i < N_PLAYERS; ++i) {
         snprintf(
             player_info[i].full_name,

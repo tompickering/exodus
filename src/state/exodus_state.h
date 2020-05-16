@@ -67,8 +67,34 @@ class PlayerLocation {
         uint64_t visited;
 };
 
+enum Race {
+    RACE_Human,
+    RACE_Yokon,
+    RACE_Teri,
+    RACE_Urkash,
+    RACE_Gordoon,
+};
+
 typedef struct {
-    bool human;
+    unsigned int minerals;
+    unsigned int food;
+    unsigned int plutonium;
+    unsigned int robots;
+    unsigned int infantry;
+    unsigned int gliders;
+    unsigned int artillery;
+} Freight;
+
+typedef struct {
+    unsigned int scouts;
+    unsigned int transporters;
+    unsigned int warships;
+    unsigned int bombers;
+    Freight freight;
+} Fleet;
+
+typedef struct {
+    Race race;
     char name[MAX_PLAYER_NAME + 1];
     char title[MAX_PLAYER_TITLE + 1];
     char ref[MAX_PLAYER_REFERENCE + 1];
@@ -79,6 +105,7 @@ typedef struct {
     bool intro_seen;
     const char *fleet_marker;
     PlayerLocation location;
+    Fleet fleet;
 } PlayerInfo;
 
 enum Aim {
