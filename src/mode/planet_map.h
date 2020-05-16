@@ -45,6 +45,7 @@ class PlanetMap : ModeBase {
 
         Stage stage;
         Planet *planet;
+        PlayerInfo *player;
         Tool active_tool;
         float anim_cycle;
         int surf_x;
@@ -71,6 +72,7 @@ class PlanetMap : ModeBase {
         int tool2cost(Tool);
 
         bool can_build_on(Stone);
+        void draw_mc();
 };
 
 #endif

@@ -58,6 +58,7 @@ PlanetMap::PlanetMap() : ModeBase("PlanetMap") {
 void PlanetMap::enter() {
     ModeBase::enter(ID::END);
     planet = exostate.get_active_planet();
+    player = exostate.get_active_player();
 
     if (!planet) {
         L.fatal("Entered PlanetMap mode with no active planet");
@@ -178,13 +179,12 @@ void PlanetMap::enter() {
 ExodusMode PlanetMap::update(float delta) {
     SpriteClick click;
 
-    PlayerInfo *player = exostate.get_active_player();
-
     anim_cycle = fmod(anim_cycle + delta * ANIM_RATE, 1);
 
     switch(stage) {
         case PM_Idle:
             draw_stones(false);
+            draw_mc();
 
             click = draw_manager.query_click(id(ID::MENU));
             if (click.id) {
@@ -200,18 +200,20 @@ ExodusMode PlanetMap::update(float delta) {
                     int block_x = (int)(0.9999f * click.x * blocks);
                     int block_y = (int)(0.9999f * click.y * blocks);
                     Stone existing = planet->get_stone(block_x, block_y);
-                    if (active_tool == TOOL_Clear || can_build_on(existing)) {
-                        clear_surf(block_x, block_y);
-                        construct_stone = tool2stone(active_tool);
-                        construct_anim = get_construct_anim(construct_stone);
-                        if (construct_anim) {
-                            construct_progress = 0;
-                            construct_x = block_x;
-                            construct_y = block_y;
-                            stage = PM_Construct;
-                            return ExodusMode::MODE_None;
-                        } else {
-                            planet->set_stone(block_x, block_y, construct_stone);
+                    if (active_tool == TOOL_Clear || (can_build_on(existing))) {
+                        if (player->attempt_spend(tool2cost(active_tool))) {
+                            clear_surf(block_x, block_y);
+                            construct_stone = tool2stone(active_tool);
+                            construct_anim = get_construct_anim(construct_stone);
+                            if (construct_anim) {
+                                construct_progress = 0;
+                                construct_x = block_x;
+                                construct_y = block_y;
+                                stage = PM_Construct;
+                                return ExodusMode::MODE_None;
+                            } else {
+                                planet->set_stone(block_x, block_y, construct_stone);
+                            }
                         }
                     }
                 }
@@ -608,6 +610,19 @@ void PlanetMap::set_tool(Tool t) {
         Justify::Left,
         menu_x + 8,
         menu_y + 268,
+        COL_TEXT2
+    );
+}
+
+void PlanetMap::draw_mc() {
+    char mc_str[16];
+    snprintf(mc_str, 16, "MC: %d", player->mc);
+    draw_manager.draw_text(
+        id(ID::MC),
+        mc_str,
+        Justify::Left,
+        menu_x + 8,
+        menu_y + 298,
         COL_TEXT2
     );
 }

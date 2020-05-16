@@ -81,6 +81,13 @@ typedef struct {
     const char *fleet_marker;
     PlayerLocation location;
     Fleet fleet;
+    bool attempt_spend(int cost) {
+        if (mc >= cost) {
+            mc -= cost;
+            return true;
+        }
+        return false;
+    }
 } PlayerInfo;
 
 #endif
