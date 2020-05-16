@@ -53,6 +53,7 @@ class PlanetMap : ModeBase {
         int menu_y;
         int blocks;
         void draw_stones(bool);
+        void clear_surf(int, int);
         Anim* get_stone_anim(Stone);
 
         Tool get_tool_for_click(float, float);

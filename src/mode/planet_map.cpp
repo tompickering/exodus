@@ -180,6 +180,7 @@ ExodusMode PlanetMap::update(float delta) {
                 if (click.id) {
                     int block_x = (int)(0.9999f * click.x * blocks);
                     int block_y = (int)(0.9999f * click.y * blocks);
+                    clear_surf(block_x, block_y);
                     planet->set_stone(block_x, block_y, tool2stone(active_tool));
                 }
             }
@@ -221,6 +222,21 @@ void PlanetMap::draw_stones(bool all) {
                  0, 0, 1, 1});
         }
     }
+}
+
+void PlanetMap::clear_surf(int x, int y) {
+    int x_off = x * STONE_SZ;
+    int y_off = y * STONE_SZ;
+    SprID id_surfclear = draw_manager.new_sprite_id();
+    DrawArea area = {x_off, y_off, STONE_SZ, STONE_SZ};
+    draw_manager.set_source_region(id_surfclear, &area);
+    draw_manager.draw(
+        id_surfclear,
+        planet->sprites()->surf,
+        {surf_x + x_off, surf_y + y_off,
+         0, 0, 1, 1});
+    draw_manager.set_source_region(id_surfclear, nullptr);
+    draw_manager.release_sprite_id(id_surfclear);
 }
 
 void init_stone_anims() {
