@@ -25,6 +25,7 @@ class CommPanelDrawer {
         void comm_set_text(int, const char*);
         void comm_open();
         void comm_close();
+        void comm_ensure_closed();
         bool comm_is_open();
     private:
         bool _comm_is_open;
@@ -41,6 +42,8 @@ class CommPanelDrawer {
         Anim comm_anim;
 
         SprID id_comm_panel;
+        SprID id_comm_img;
+        SprID id_comm_buttons;
 };
 
 #endif
