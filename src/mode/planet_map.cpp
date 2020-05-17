@@ -69,6 +69,14 @@ void PlanetMap::enter() {
 
     draw_manager.draw(planet->sprites()->map_bg);
 
+    char title[15 + PLANET_MAX_NAME];
+    snprintf(title, 14 + PLANET_MAX_NAME, "The planet %s", planet->get_name());
+    draw_manager.draw_text(
+        title,
+        Justify::Left,
+        26, 8,
+        COL_TEXT);
+
     menu_x = RES_X - 150;
     menu_y = 36;
 
