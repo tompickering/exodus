@@ -20,6 +20,7 @@ class Fly : ModeBase, PanelDrawer {
         float time;
         bool arriving;
         int current_thrust;
+        int warp_stage;
 };
 
 #endif

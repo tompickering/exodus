@@ -1,5 +1,7 @@
 #include "fly.h"
 
+#include <cmath>
+
 #include "galaxy/flytarget.h"
 
 #include "anim.h"
@@ -12,6 +14,11 @@
 #define THRUST_TIME 0.4f
 #define FLY_START (THRUST_DELAY*N_THRUSTERS + THRUST_TIME + 0.3f)
 #define FLY_TIME 1.8f
+#define WARP_X RES_X / 2
+#define WARP_Y 200
+#define WARP_START (FLY_START + FLY_TIME + 0.7)
+#define WARP_TIME 1.8
+#define WARP_STAGES 10
 
 enum ID {
     FLEET,
@@ -83,6 +90,16 @@ Anim thrust_anims[] = {ta1, ta2, ta3, ta4,
                        ta5, ta6, ta7, ta8,
                        ta9, ta10, ta11, ta12};
 
+Anim anim_warp(
+    5,
+    IMG_HP1_HYP1,
+    IMG_HP1_HYP2,
+    IMG_HP1_HYP3,
+    IMG_HP1_HYP4,
+    IMG_HP1_HYP5
+
+);
+
 const float thrust_pos[] = {
     222,  59, // Small, top-left
      75, 115, // Medium, top-left
@@ -102,6 +119,7 @@ Fly::Fly() : ModeBase("Fly"), PanelDrawer(PNL_Galaxy) {
     time = 0;
     arriving = false;
     current_thrust = 0;
+    warp_stage = 0;
 }
 
 void Fly::enter() {
@@ -124,6 +142,7 @@ void Fly::enter() {
 
     draw_manager.save_background();
     current_thrust = 0;
+    warp_stage = 0;
 }
 
 ExodusMode Fly::update(float delta) {
@@ -179,7 +198,25 @@ ExodusMode Fly::update(float delta) {
             }
         }
 
-        if (time > FLY_START + FLY_TIME + 2) {
+        if (time >= WARP_START) {
+            float interp = (time - WARP_START) / WARP_TIME;
+            interp = interp > 1 ? 1 : interp;
+            float stage_interp = warp_stage / (float)WARP_STAGES;
+            if (interp > stage_interp) {
+                ++warp_stage;
+                stage_interp = warp_stage / (float)WARP_STAGES;
+                float scale_interp = stage_interp < 0.5 ? stage_interp : 1 - stage_interp;
+                float scale = 8 * pow(scale_interp, 2);
+                draw_manager.draw(
+                    id(ID::WARP),
+                    anim_warp.frame(warp_stage),
+                    {WARP_X, WARP_Y,
+                     0.5, 0.5, scale, scale});
+            }
+        }
+
+
+        if (time > WARP_START + WARP_TIME + 1.0) {
             return ExodusMode::MODE_Pop;
         }
 
