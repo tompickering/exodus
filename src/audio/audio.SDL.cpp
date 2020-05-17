@@ -23,6 +23,9 @@ bool AudioManagerSDL::init() {
 }
 
 void AudioManagerSDL::load_resources() {
+    if (!enabled)
+        return;
+
     char mus_path[ASSET_PATH_LEN_MAX];
 
     for (unsigned int i = 0;; ++i) {
@@ -69,6 +72,8 @@ void AudioManagerSDL::play_sfx(const char* sfx) {
 }
 
 void AudioManagerSDL::fade_out(int ms) {
+    if (!enabled)
+        return;
     if (!Mix_PlayingMusic())
         return;
     Mix_FadeOutMusic(ms);
