@@ -1,5 +1,7 @@
 #include "fly.h"
 
+#include "galaxy/flytarget.h"
+
 #include "anim.h"
 #include "assetpaths.h"
 
@@ -96,7 +98,7 @@ const float thrust_pos[] = {
     569, 364, // OK
 };
 
-Fly::Fly() : ModeBase("Fly") {
+Fly::Fly() : ModeBase("Fly"), PanelDrawer(PNL_Galaxy) {
     time = 0;
     arriving = false;
     current_thrust = 0;
@@ -105,10 +107,21 @@ Fly::Fly() : ModeBase("Fly") {
 void Fly::enter() {
     ModeBase::enter(ID::END);
     time = 0;
-    //PlayerInfo *player = exostate.get_active_player();
+    PlayerInfo *player = exostate.get_active_player();
+    FlyTarget *tgt = exostate.loc2tgt(player->location.get_target());
     //arriving = !(player->location.in_flight());
 
     draw_manager.draw(IMG_STARTGR_FL6_STARS);
+
+    draw_manager.fill({0, 0, RES_X, 6}, COL_BORDERS);
+    draw_manager.fill({0, 404, RES_X, 6}, COL_BORDERS);
+    draw_manager.fill({0, 0, 6, 404}, COL_BORDERS);
+    draw_manager.fill({RES_X - 6, 0, 6, 404}, COL_BORDERS);
+
+    draw_panel_bg(TGT_Primary);
+    update_panel_info_player(TGT_Primary, player);
+    update_panel_info_ft(TGT_Primary, player, tgt);
+
     draw_manager.save_background();
     current_thrust = 0;
 }
