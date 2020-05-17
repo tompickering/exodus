@@ -70,6 +70,7 @@ class ExodusState {
         int tgt2loc(FlyTarget*); // Convert between PlayerLocation
         FlyTarget* loc2tgt(int); // indicies and FlyTarget objects.
         PlayerInfo* get_player(int);
+        unsigned int get_n_planets(PlayerInfo*);
     private:
         GalaxySize size;
         unsigned int n_players;

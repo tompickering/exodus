@@ -92,12 +92,12 @@ void PanelDrawer::draw_panel_bg(DrawTarget tgt) {
 void PanelDrawer::update_panel_info_player(DrawTarget tgt, PlayerInfo* player) {
     char month_string[5];
     char mc_string[7];
-    char planets_string[3];
+    char planets_string[4];
 
     snprintf(month_string, 5, "%u", exostate.get_month());
     if (player) {
         snprintf(mc_string, 7, "%u", player->mc);
-        snprintf(planets_string, 3, "??");
+        snprintf(planets_string, 4, "%d", exostate.get_n_planets(player));
     } else {
         strcpy(mc_string, "");
         strcpy(planets_string, "");

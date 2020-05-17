@@ -262,3 +262,19 @@ PlayerInfo* ExodusState::get_player(int idx) {
 
     return &player_info[idx];
 }
+
+unsigned int ExodusState::get_n_planets(PlayerInfo* player) {
+    Galaxy *gal = get_galaxy();
+    unsigned int n_stars;
+    Star *stars = gal->get_stars(n_stars);
+    unsigned int count = 0;
+    for (unsigned int i = 0; i < n_stars; ++i) {
+        for (int j = 0; j < STAR_MAX_PLANETS; ++j) {
+            Planet *p = stars[i].get_planet(j);
+            if (p && p->exists() && p->is_owned() && get_player(p->get_owner()) == player) {
+                ++count;
+            }
+        }
+    }
+    return count;
+}
