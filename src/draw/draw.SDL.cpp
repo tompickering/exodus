@@ -522,6 +522,16 @@ void DrawManagerSDL::fill(DrawArea area, RGB col) {
     fill(TGT_Primary, area, col);
 }
 
+void DrawManagerSDL::fill(SprID id, DrawArea area, RGB col) {
+    DrawArea transformed_area = {
+        (int)((float)area.x * UPSCALE_X),
+        (int)((float)area.y * UPSCALE_Y),
+        (int)((float)area.w * UPSCALE_X),
+        (int)((float)area.h * UPSCALE_Y)};
+    update_dirty_area(id, transformed_area);
+    fill(TGT_Primary, area, col);
+}
+
 void DrawManagerSDL::fill(DrawTarget tgt, DrawArea area, RGB col) {
     SDL_Rect r;
     SDL_Surface *tgt_surf = get_target(tgt);

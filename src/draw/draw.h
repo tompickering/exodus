@@ -121,6 +121,7 @@ class DrawManager {
         virtual void pixelswap_update() = 0;
         virtual void draw_rect(DrawArea area, float, RGB) = 0;
         virtual void fill(DrawArea area, RGB) = 0;
+        virtual void fill(SprID, DrawArea area, RGB) = 0;
         virtual void fill(DrawTarget, DrawArea area, RGB) = 0;
         virtual void pattern_fill(DrawArea area) = 0;
         virtual void pattern_fill(DrawTarget, DrawArea area) = 0;
