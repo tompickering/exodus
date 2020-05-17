@@ -73,6 +73,7 @@ class PlanetMap : ModeBase {
 
         bool can_build_on(Stone);
         void draw_mc();
+        void draw_army_funding();
 };
 
 #endif

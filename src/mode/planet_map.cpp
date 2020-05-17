@@ -186,6 +186,9 @@ ExodusMode PlanetMap::update(float delta) {
             draw_stones(false);
             draw_mc();
 
+            // FIXME: Ideally not called every update as it involves a surface iteration
+            draw_army_funding();
+
             click = draw_manager.query_click(id(ID::MENU));
             if (click.id) {
                 Tool t = get_tool_for_click(click.x, click.y);
@@ -217,6 +220,23 @@ ExodusMode PlanetMap::update(float delta) {
                         }
                     }
                 }
+            }
+
+            click = draw_manager.query_click(id(ID::TRIBUTTONS));
+            if (click.id) {
+                if (click.x <= 0.33) {
+                    planet->adjust_army_funding(-1);
+                } else if (click.x <= 0.67) {
+                    planet->adjust_army_funding(1);
+                } else {
+                    // TODO: Query
+                    L.debug("Query clicked");
+                }
+            }
+
+            if (draw_manager.query_click(id(ID::LAWBUILD)).id) {
+                // TODO: Law / build
+                L.debug("Law / build clicked");
             }
 
             if (draw_manager.query_click(id(ID::EXIT)).id) {
@@ -623,7 +643,25 @@ void PlanetMap::draw_mc() {
         Justify::Left,
         menu_x + 8,
         menu_y + 298,
-        COL_TEXT2
+        COL_TEXT
+    );
+}
+
+void PlanetMap::draw_army_funding() {
+    draw_manager.pattern_fill({menu_x + 4, menu_y + 326, 118, 26});
+    char ar_str[21];
+    snprintf(ar_str, 20, "Ar: %d/%d", planet->get_army_funding(), planet->get_income());
+    RGB col = COL_TEXT;
+    if (!planet->army_funding_sufficient()) {
+        col = COL_TEXT_BAD;
+    }
+    draw_manager.draw_text(
+        id(ID::ARMY),
+        ar_str,
+        Justify::Left,
+        menu_x + 8,
+        menu_y + 328,
+        col
     );
 }
 
