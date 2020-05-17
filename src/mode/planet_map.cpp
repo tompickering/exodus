@@ -141,6 +141,14 @@ void PlanetMap::enter() {
         {menu_x + 4, menu_y + 443,
         0, 1, 1, 1});
 
+    draw_manager.draw(
+        get_stone_anim(STONE_Agri)->frame(0),
+        {541, 47,
+        0, 0, 1, 1});
+
+    if (planet->has_lunar_base())
+        hide_lunar_base_tool();
+
     for (Tool t = (Tool)0; t < TOOL_END; t = (Tool)((int)t + 1)) {
         draw_tool_rect(t, COL_TOOL);
     }
@@ -157,9 +165,6 @@ void PlanetMap::enter() {
         planet->sprites()->surf,
         {surf_x, surf_y,
          0, 0, 1, 1});
-
-    if (planet->has_lunar_base())
-        hide_lunar_base_tool();
 
     draw_manager.save_background();
 
