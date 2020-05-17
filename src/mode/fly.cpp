@@ -9,7 +9,7 @@
 #define FLY_SCALE 1.76f
 
 #define THRUST_DELAY 0.1f
-#define THRUST_TIME 3.f //0.4f
+#define THRUST_TIME 0.4f
 #define FLY_START (THRUST_DELAY*N_THRUSTERS + THRUST_TIME + 0.3f)
 #define FLY_TIME 1.8f
 
@@ -84,18 +84,18 @@ Anim thrust_anims[] = {ta1, ta2, ta3, ta4,
                        ta9, ta10, ta11, ta12};
 
 const float thrust_pos[] = {
-    224,  99, // OK
-     77, 155, // OK
-    233, 168, // OK
-    143, 236, // OK
-    456, 171, // OKish
-    266, 358, // OKish
-    140, 100,
-    160, 100,
-    180, 100,
-    200, 100,
-    220, 100,
-    569, 364, // OK
+    222,  59, // Small, top-left
+     75, 115, // Medium, top-left
+    233, 129, // Small, up-left of centre
+    143, 197, // Small, middle-left
+    456, 132, // Small, up-right of centre
+    266, 320, // Small, lower-left
+    566, 177, // Medium, right
+    519, 5,   // Large, top-right
+    393, 92,  // Medium, up-up-right of centre
+    507, 137, // Medium, right-up-right of centre
+    155, 268, // Medium, lower-left
+    569, 325, // Large, lower-right
 };
 
 Fly::Fly() : ModeBase("Fly"), PanelDrawer(PNL_Galaxy) {
@@ -144,13 +144,11 @@ ExodusMode Fly::update(float delta) {
         float fly_progress = 0.f;
 
         if (time > FLY_START) {
+            for (int i = 0; i < N_THRUSTERS ; ++i) {
+                draw_manager.draw(id(ID::THRUSTERS0 + i), nullptr);
+            }
             fly_progress = (time - FLY_START) / FLY_TIME;
             fly_progress = fly_progress < 1 ? fly_progress : 1;
-        }
-
-        // Remove completed thrusters from the screen
-        for (int i = 0; i < current_thrust; ++i) {
-            draw_manager.draw(id(ID::THRUSTERS0 + i), nullptr);
         }
 
         float fleet_scale = FLY_SCALE * (1.f - fly_progress);
@@ -158,17 +156,14 @@ ExodusMode Fly::update(float delta) {
         draw_manager.draw(
             id(ID::FLEET),
             IMG_STARTGR_FL5_FLEET,
-            {RES_X/2, 240,
+            {RES_X/2, 200,
             0.5, 0.5,
             fleet_scale, fleet_scale});
 
         if (time < FLY_START) {
             for (int i = current_thrust; i < N_THRUSTERS; ++i) {
-                if (time < THRUST_DELAY * (i+1)) {
-                    break;
-                }
-
                 float thrust_progress = (time - (i+1)*THRUST_DELAY) / THRUST_TIME;
+                thrust_progress = thrust_progress > 0 ? thrust_progress : 0;
                 thrust_progress = thrust_progress < 1 ? thrust_progress : 1;
 
                 if (thrust_progress == 1)
@@ -189,6 +184,11 @@ ExodusMode Fly::update(float delta) {
         }
 
     }
+
+    draw_manager.fill({0, 0, RES_X, 6}, COL_BORDERS);
+    draw_manager.fill({0, 404, RES_X, 6}, COL_BORDERS);
+    draw_manager.fill({0, 0, 6, 404}, COL_BORDERS);
+    draw_manager.fill({RES_X - 6, 0, 6, 404}, COL_BORDERS);
 
     return ExodusMode::MODE_None;
 }
