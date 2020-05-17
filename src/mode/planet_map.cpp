@@ -251,6 +251,7 @@ ExodusMode PlanetMap::update(float delta) {
                         if (player->attempt_spend(tool2cost(TOOL_LunarBase))) {
                             planet->build_lunar_base();
                             hide_lunar_base_tool();
+                            set_build_button(false);
                         }
                     }
                 } else {
@@ -561,7 +562,7 @@ void PlanetMap::set_tool(Tool t) {
     active_tool = t;
     draw_tool_rect(active_tool, COL_TOOL_HL);
 
-    set_build_button(t == TOOL_LunarBase);
+    set_build_button(t == TOOL_LunarBase && !planet->has_lunar_base());
 
     const char *tool_desc0 = "";
     const char *tool_desc1 = "";
