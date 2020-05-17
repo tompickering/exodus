@@ -158,6 +158,9 @@ void PlanetMap::enter() {
         {surf_x, surf_y,
          0, 0, 1, 1});
 
+    if (planet->has_lunar_base())
+        hide_lunar_base_tool();
+
     draw_manager.save_background();
 
     draw_stones(true);
@@ -235,6 +238,7 @@ ExodusMode PlanetMap::update(float delta) {
                     if (!planet->has_lunar_base()) {
                         if (player->attempt_spend(tool2cost(TOOL_LunarBase))) {
                             planet->build_lunar_base();
+                            hide_lunar_base_tool();
                         }
                     }
                 } else {
@@ -823,4 +827,11 @@ void PlanetMap::set_build_button(bool on) {
         on ? IMG_SU1_BUILD : IMG_SU1_PEOPLE,
         {menu_x + 4, menu_y + 413,
         0, 1, 1, 1});
+}
+
+void PlanetMap::hide_lunar_base_tool() {
+    draw_manager.draw(
+        IMG_SU1_STONEXX,
+        {541, 199,
+        0, 0, 1, 1});
 }

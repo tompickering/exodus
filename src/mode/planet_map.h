@@ -76,6 +76,7 @@ class PlanetMap : ModeBase {
         void draw_army_funding();
 
         void set_build_button(bool);
+        void hide_lunar_base_tool();
 };
 
 #endif
