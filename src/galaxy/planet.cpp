@@ -283,13 +283,42 @@ int Planet::get_owner() {
 Stone Planet::get_stone(int x, int y) {
     int real_x; int real_y;
     _to_real(x, y, real_x, real_y);
-    _get_stone(real_x, real_y);
+    return _get_stone(real_x, real_y);
 }
 
 void Planet::set_stone(int x, int y, Stone stone) {
     int real_x; int real_y;
     _to_real(x, y, real_x, real_y);
-    return _set_stone(real_x, real_y, stone);
+    _set_stone(real_x, real_y, stone);
+}
+
+int Planet::get_army_funding() {
+    return army_funding;
+}
+
+void Planet::adjust_army_funding(int adjustment) {
+    army_funding += adjustment;
+    if (army_funding < 0)
+        army_funding = 0;
+    if (army_funding > get_income())
+        army_funding = get_income();
+}
+
+int Planet::get_army_required_mc() {
+    int required = 0;
+    for (int j = 0; j < get_size_blocks(); ++j) {
+        for (int i = 0; i < get_size_blocks(); ++i) {
+            Stone st = get_stone(i, j);
+            if (st == STONE_Inf) required += 1;
+            if (st == STONE_Gli) required += 2;
+            if (st == STONE_Art) required += 3;
+        }
+    }
+    return required;
+}
+
+bool Planet::army_funding_sufficient() {
+    return army_funding >= get_army_required_mc();
 }
 
 bool Planet::is_owned() {
@@ -318,6 +347,8 @@ void Planet::cull_stones_to_size() {
 // As opposed to get_stone() and set_stone() - do not map surface
 // co-ords into a space constrained by the planet's size.
 Stone Planet::_get_stone(int x, int y) {
+    if (!_real_in_bounds(x, y))
+        return STONE_Clear;
     return surf[y*PLANET_BLOCKS_LG + x];
 }
 
@@ -329,6 +360,13 @@ void Planet::_to_real(int x, int y, int& real_x, int& real_y) {
     int offset = (PLANET_BLOCKS_LG - get_size_blocks()) / 2;
     real_x = x + offset;
     real_y = y + offset;
+}
+
+bool Planet::_real_in_bounds(int x, int y) {
+    int offset = (PLANET_BLOCKS_LG - get_size_blocks()) / 2;
+    if (x < offset || x >= offset + get_size_blocks()) return false;
+    if (y < offset || y >= offset + get_size_blocks()) return false;
+    return true;
 }
 
 void init_sprite_sets() {

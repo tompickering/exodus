@@ -85,6 +85,10 @@ class Planet {
         int get_owner();
         Stone get_stone(int, int);
         void set_stone(int, int, Stone);
+        int get_army_funding();
+        void adjust_army_funding(int);
+        int get_army_required_mc();
+        bool army_funding_sufficient();
     private:
         void init();
 
@@ -123,6 +127,7 @@ class Planet {
         Stone _get_stone(int, int);
         void _set_stone(int, int, Stone);
         void _to_real(int, int, int&, int&);
+        bool _real_in_bounds(int, int);
 };
 
 #endif
