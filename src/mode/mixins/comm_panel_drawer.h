@@ -16,6 +16,12 @@ extern DRAWMANAGER draw_manager;
 
 extern ExodusState exostate;
 
+enum CommAction {
+    CA_None,
+    CA_Proceed,
+    CA_Abort,
+};
+
 class CommPanelDrawer {
     public:
         CommPanelDrawer();
@@ -27,6 +33,7 @@ class CommPanelDrawer {
         void comm_close();
         void comm_ensure_closed();
         bool comm_is_open();
+        CommAction comm_check_action();
     private:
         bool _comm_is_open;
 
@@ -44,6 +51,8 @@ class CommPanelDrawer {
         SprID id_comm_panel;
         SprID id_comm_img;
         SprID id_comm_buttons;
+
+        CommAction comm_action;
 };
 
 #endif

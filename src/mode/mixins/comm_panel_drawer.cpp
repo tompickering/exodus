@@ -146,3 +146,12 @@ void CommPanelDrawer::comm_ensure_closed() {
 bool CommPanelDrawer::comm_is_open() {
     return _comm_is_open;
 }
+
+CommAction CommPanelDrawer::comm_check_action() {
+    SpriteClick click;
+    click = draw_manager.query_click(id_comm_buttons);
+    if (click.id) {
+        return click.x < 0.55 ? CA_Proceed : CA_Abort;
+    }
+    return CA_None;
+}
