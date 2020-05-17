@@ -552,7 +552,6 @@ ExodusMode Intro::update(float delta) {
                 draw_manager.draw(IMG_INTRO_OD1_BEHIND, {319, 218, 0.5, 0.5, 1.0, 1.0});
                 draw_manager.save_background();
                 text_idx = 21;
-                break;
             }
 
             door_time = time - 2.6f;
