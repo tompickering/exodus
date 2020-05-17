@@ -97,11 +97,11 @@ void CommPanelDrawer::comm_open() {
         COL_TEXT);
 
     draw_manager.draw_text(
-        Font::Small,
+        Font::Tiny,
         comm_img_caption,
         Justify::Left,
-        COMM_X + COMM_BORDER + 8,
-        COMM_Y + COMM_H - COMM_BORDER - 20,
+        COMM_X + COMM_BORDER + 6,
+        COMM_Y + COMM_H - COMM_BORDER - 16,
         COL_TEXT2);
 
     for (int i = 0; i < 6; ++i) {

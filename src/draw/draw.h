@@ -70,6 +70,7 @@ typedef struct {
 
 enum Font {
     Default,
+    Tiny,
     Small,
     Large,
 };
