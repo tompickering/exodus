@@ -78,6 +78,8 @@ class Planet {
         int get_n_agri();            // Orig: SIna
         bool agri_sufficient();
         bool has_lunar_base();       // Orig: SIb
+        void build_lunar_base();
+        void destroy_lunar_base();
         const char* get_name();      // Orig: SIn
         void set_name(const char*);
         const PlanetSpriteSet* sprites();

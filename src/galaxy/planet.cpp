@@ -272,6 +272,14 @@ bool Planet::has_lunar_base() {
     return lunar_base;
 }
 
+void Planet::build_lunar_base() {
+    lunar_base = true;
+}
+
+void Planet::destroy_lunar_base() {
+    lunar_base = false;
+}
+
 int Planet::get_owner() {
     return owner;
 }

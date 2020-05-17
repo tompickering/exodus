@@ -133,11 +133,7 @@ void PlanetMap::enter() {
         {menu_x + 4, menu_y + 383,
         0, 1, 1, 1});
 
-    draw_manager.draw(
-        id(ID::LAWBUILD),
-        IMG_SU1_PEOPLE,
-        {menu_x + 4, menu_y + 413,
-        0, 1, 1, 1});
+    set_build_button(false);
 
     draw_manager.draw(
         id(ID::EXIT),
@@ -235,8 +231,16 @@ ExodusMode PlanetMap::update(float delta) {
             }
 
             if (draw_manager.query_click(id(ID::LAWBUILD)).id) {
-                // TODO: Law / build
-                L.debug("Law / build clicked");
+                if (active_tool == TOOL_LunarBase) {
+                    if (!planet->has_lunar_base()) {
+                        if (player->attempt_spend(tool2cost(TOOL_LunarBase))) {
+                            planet->build_lunar_base();
+                        }
+                    }
+                } else {
+                    // TODO: Law
+                    L.debug("Law clicked");
+                }
             }
 
             if (draw_manager.query_click(id(ID::EXIT)).id) {
@@ -541,6 +545,8 @@ void PlanetMap::set_tool(Tool t) {
     active_tool = t;
     draw_tool_rect(active_tool, COL_TOOL_HL);
 
+    set_build_button(t == TOOL_LunarBase);
+
     const char *tool_desc0 = "";
     const char *tool_desc1 = "";
     char cost_str[12];
@@ -809,4 +815,12 @@ int PlanetMap::tool2cost(Tool t) {
 
 bool PlanetMap::can_build_on(Stone st) {
     return (st == STONE_Clear || st == STONE_NaturalSmall);
+}
+
+void PlanetMap::set_build_button(bool on) {
+    draw_manager.draw(
+        id(ID::LAWBUILD),
+        on ? IMG_SU1_BUILD : IMG_SU1_PEOPLE,
+        {menu_x + 4, menu_y + 413,
+        0, 1, 1, 1});
 }
