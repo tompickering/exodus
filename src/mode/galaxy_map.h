@@ -4,6 +4,7 @@
 #include "mode_base.h"
 #include "mixins/galaxy_drawer.h"
 #include "mixins/panel_drawer.h"
+#include "mixins/comm_panel_drawer.h"
 
 #include "platform.h"
 #include "draw/draw.h"
@@ -12,10 +13,11 @@
 
 extern ExodusState exostate;
 
-class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer {
+class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer {
     public:
         GalaxyMap();
         virtual void enter() override;
+        virtual void exit() override;
         virtual ExodusMode update(float) override;
     private:
         enum Stage {
@@ -24,6 +26,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer {
             GM_Zoom2Guild,
             GM_Zoom2Star,
             GM_MonthPassing,
+            GM_FlyConfirm,
         };
 
         Stage stage;
