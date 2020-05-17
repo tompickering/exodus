@@ -66,7 +66,6 @@ void PlanetMap::enter() {
     }
 
     anim_cycle = 0;
-    active_tool = DEFAULT_TOOL;
 
     draw_manager.draw(planet->sprites()->map_bg);
 
@@ -187,6 +186,7 @@ void PlanetMap::enter() {
     construct_y = 0;
     construct_stone = STONE_Clear;
     stage = PM_Idle;
+    set_tool(DEFAULT_TOOL);
 }
 
 ExodusMode PlanetMap::update(float delta) {
