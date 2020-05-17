@@ -13,7 +13,6 @@
 extern ExodusState exostate;
 
 enum Tool {
-    TOOL_None,
     TOOL_HQ,
     TOOL_Cultivate,
     TOOL_Mine,
@@ -69,7 +68,7 @@ class PlanetMap : ModeBase {
         void set_tool(Tool);
         void draw_tool_rect(Tool, RGB);
         Stone tool2stone(Tool);
-        int tool2cost(Tool);
+        unsigned int tool2cost(Tool);
 
         bool can_build_on(Stone);
         void draw_mc();

@@ -22,7 +22,6 @@ enum PlanetClass {
     Ice,         // 5   |
     Terra,       // 6   |
     Artificial,  // 8  -
-    PLANETCLASS_END,
 };
 
 enum Stone {

@@ -11,6 +11,7 @@ using std::map;
 
 #define STONE_SZ 28
 #define CONSTRUCT_RATE 6
+#define DEFAULT_TOOL TOOL_HQ
 
 const float ANIM_RATE = 0.5f;
 
@@ -45,7 +46,7 @@ PlanetMap::PlanetMap() : ModeBase("PlanetMap") {
     stage = PM_Idle;
     blocks = 0;
     anim_cycle = 0;
-    active_tool = TOOL_None;
+    active_tool = DEFAULT_TOOL;
     menu_x = 0;
     menu_y = 0;
     construct_progress = 0;
@@ -65,7 +66,7 @@ void PlanetMap::enter() {
     }
 
     anim_cycle = 0;
-    active_tool = TOOL_None;
+    active_tool = DEFAULT_TOOL;
 
     draw_manager.draw(planet->sprites()->map_bg);
 
@@ -204,12 +205,10 @@ ExodusMode PlanetMap::update(float delta) {
             click = draw_manager.query_click(id(ID::MENU));
             if (click.id) {
                 Tool t = get_tool_for_click(click.x, click.y);
-                if (t != TOOL_None) {
-                    set_tool(t);
-                }
+                set_tool(t);
             }
 
-            if (active_tool != TOOL_None && active_tool != TOOL_LunarBase) {
+            if (active_tool != TOOL_LunarBase) {
                 click = draw_manager.query_click(id(ID::SURF));
                 if (click.id) {
                     int block_x = (int)(0.9999f * click.x * blocks);
@@ -553,7 +552,7 @@ Tool PlanetMap::get_tool_for_click(float x, float y) {
         if (row == 3) return TOOL_Port2;
         if (row == 4) return TOOL_Park;
     }
-    return TOOL_None;
+    return DEFAULT_TOOL;
 }
 
 void PlanetMap::set_tool(Tool t) {
@@ -625,6 +624,8 @@ void PlanetMap::set_tool(Tool t) {
         case TOOL_Park:
             tool_desc0 = "Park";
             break;
+        case TOOL_END:
+            break;
     }
 
     snprintf(cost_str, 11, "Cost: %d", tool2cost(t));
@@ -691,9 +692,6 @@ void PlanetMap::draw_army_funding() {
 void PlanetMap::draw_tool_rect(Tool t, RGB col) {
     int x = 0;
     int y = 0;
-
-    if (t == TOOL_None)
-        return;
 
     switch(t) {
         case TOOL_HQ:
@@ -786,13 +784,15 @@ Stone PlanetMap::tool2stone(Tool t) {
             break;
         case TOOL_Park:
             return STONE_Park;
+        case TOOL_END:
+            break;
     }
 
     L.fatal("Invalid stone request for tool %d", t);
     return STONE_Clear;
 }
 
-int PlanetMap::tool2cost(Tool t) {
+unsigned int PlanetMap::tool2cost(Tool t) {
     switch(t) {
         case TOOL_HQ:
             return 20;
@@ -824,6 +824,8 @@ int PlanetMap::tool2cost(Tool t) {
             return 120;
         case TOOL_Park:
             return 10;
+        case TOOL_END:
+            break;
     }
 
     L.fatal("Invalid cost request for tool %d", t);
