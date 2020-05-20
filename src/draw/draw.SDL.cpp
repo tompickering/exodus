@@ -324,6 +324,12 @@ void DrawManagerSDL::update_dirty_area(SprID id, DrawArea area) {
 }
 
 void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key, DrawTransform t, SprID* id) {
+    if (!spr_key) {
+        // We want to remove a sprite from the screen, if drawn
+        draw(tgt, spr_key, nullptr, id);
+        return;
+    }
+
     SDL_Surface *spr = (SDL_Surface*)get_sprite_data(spr_key);
     if (!spr) {
         L.warn("Unknown sprite: %s", spr_key);
