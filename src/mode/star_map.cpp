@@ -14,6 +14,7 @@ enum ID {
     PLANET3,
     PLANET4,
     PLANET5,
+    FLEET_BUTTON,
     END,
 };
 
@@ -36,6 +37,11 @@ void StarMap::enter() {
     draw_planets(0.f);
     draw_manager.save_background();
     draw_manager.show_cursor(true);
+
+    for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+        if (select_planet(i))
+            break;
+    }
 
     if (tgt != TGT_Primary) {
         draw_manager.fade_start(1.f, 12);
@@ -63,7 +69,7 @@ ExodusMode StarMap::update(float delta) {
 
             for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
                 if (draw_manager.query_click(id(ID::PLANET1 + i)).id) {
-                    exostate.set_active_planet(i);
+                    select_planet(i);
                 }
             }
 
@@ -122,4 +128,26 @@ void StarMap::draw_planets(float delta) {
             }
         }
     }
+}
+
+bool StarMap::select_planet(int index) {
+    Planet *p = star->get_planet(index);
+    if (p && p->exists()) {
+        exostate.set_active_planet(index);
+        set_fleet_button(!(p->is_owned() && exostate.get_active_player_idx() == (unsigned int)p->get_owner()));
+        return true;
+    }
+    return false;
+}
+
+void StarMap::set_fleet_button(bool on) {
+    // FIXME: The panel doesn't look like the original game
+    // All 4 buttons look drawn independently in the original,
+    // but I can't see any alternative sprites for the other 3
+    // (which look more faded in this version).
+    draw_manager.draw(
+        id(ID::FLEET_BUTTON),
+        on ? IMG_TS2_M2_1 : IMG_TS2_M2_2,
+        {206, RES_Y - 6,
+         0, 1, 1, 1});
 }

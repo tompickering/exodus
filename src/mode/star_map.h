@@ -26,6 +26,9 @@ class StarMap : ModeBase, PanelDrawer {
         Star *star;
         void draw_planets(float);
         float planet_progress[STAR_MAX_PLANETS];
+
+        bool select_planet(int);
+        void set_fleet_button(bool);
 };
 
 #endif
