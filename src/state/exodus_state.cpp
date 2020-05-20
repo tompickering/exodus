@@ -236,7 +236,11 @@ void ExodusState::init_cpu_lords() {
 
         chosen_planet->set_name(chosen_planet->get_name_suggestion());
 
-        // TODO: Rest of PROCstart_the_lords
+        // TODO: PROCstart_the_lords sets 'firstplanet' here
+        // Check the meaning and a suitable representation
+
+        // TODO: PROCstart_the_lords sets TS and TP to 0 here
+        // What are the semantics of this?
     }
 }
 
