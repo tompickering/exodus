@@ -81,15 +81,21 @@ class Planet {
         void destroy_lunar_base();
         const char* get_name();      // Orig: SIn
         void set_name(const char*);
+        const char* get_name_suggestion();
         const PlanetSpriteSet* sprites();
         bool is_owned();
         int get_owner();
+        void set_owner(int);
+        void unset_owner();
         Stone get_stone(int, int);
         void set_stone(int, int, Stone);
+        bool has_stone(Stone);
+        int count_stones(Stone);
         int get_army_funding();
         void adjust_army_funding(int);
         int get_army_required_mc();
         bool army_funding_sufficient();
+        void prepare_for_cpu_lord(); // Orig: PROCgivestation
     private:
         void init();
 

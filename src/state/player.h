@@ -14,6 +14,7 @@ class PlayerLocation {
         PlayerLocation() {
             months_to_arrive = 0;
             target = -1;
+            planet_target = 0;
             just_arrived = false;
             visited = 0;
         };
@@ -27,8 +28,11 @@ class PlayerLocation {
             }
         };
         bool in_flight() { return months_to_arrive > 0; };
+        void set(int nt) { target = nt; months_to_arrive = 1; advance(); };
         void set_target(int nt, int m) { target = nt; months_to_arrive = m; };
         int get_target() { return target; };
+        void set_planet_target(int nt) { planet_target = nt; };
+        int get_planet_target() { return planet_target; };
         bool has_visited(int query_target) {
             // Guild (-1) is always true
             if (query_target < 0)
@@ -36,7 +40,8 @@ class PlayerLocation {
             return (bool)(visited & ((uint64_t)1 << query_target));
         }
     private:
-        int target; // -1=guild, 0+=star index
+        int target; // -1=guild, 0+=star index - Orig: TS
+        int planet_target; // I think only used for CPU lords - Orig: TP
         int months_to_arrive; // 'In flight' if > 0
         bool just_arrived;
         uint64_t visited;

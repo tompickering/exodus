@@ -4,6 +4,7 @@
 
 #include "state/exodus_state.h"
 
+#include "planet_names.h"
 #include "loadplans_data.h"
 
 #include "assetpaths.h"
@@ -13,6 +14,17 @@ extern ExodusState exostate;
 
 PlanetSpriteSet sprite_sets[7];
 bool sprite_sets_initialised = false;
+
+const char** get_names_for_class(PlanetClass cls) {
+    if (cls == Forest)     return PLANET_NAMES_FOREST;
+    if (cls == Desert)     return PLANET_NAMES_DESERT;
+    if (cls == Volcano)    return PLANET_NAMES_VOLCANO;
+    if (cls == Rock)       return PLANET_NAMES_ROCK;
+    if (cls == Ice)        return PLANET_NAMES_ICE;
+    if (cls == Terra)      return PLANET_NAMES_TERRA;
+    L.fatal("Can't get names for invalid class %d", (int)cls);
+    return nullptr;
+}
 
 Planet::Planet() {
     _exists = false;
@@ -63,6 +75,13 @@ const char* Planet::get_name() {
 
 void Planet::set_name(const char* _name) {
     strncpy(name, _name, PLANET_MAX_NAME);
+}
+
+const char* Planet::get_name_suggestion() {
+    PlanetClass cls = get_class();
+    if (cls == Artificial)
+        return "Genesis";
+    return get_names_for_class(cls)[rand() % N_PLANET_NAMES];
 }
 
 void Planet::init() {
@@ -284,6 +303,15 @@ int Planet::get_owner() {
     return owner;
 }
 
+void Planet::set_owner(int new_owner) {
+    L.info("Planet owner: %d -> %d", owner, new_owner);
+    owner = new_owner;
+}
+
+void Planet::unset_owner() {
+    set_owner(-1);
+}
+
 /*
  * get_stone() and set_stone() index the surface according
  * to the planet's size - i.e. bounded by get_size_blocks().
@@ -298,6 +326,29 @@ void Planet::set_stone(int x, int y, Stone stone) {
     int real_x; int real_y;
     _to_real(x, y, real_x, real_y);
     _set_stone(real_x, real_y, stone);
+}
+
+bool Planet::has_stone(Stone st) {
+    for (int j = 0; j < get_size_blocks(); ++j) {
+        for (int i = 0; i < get_size_blocks(); ++i) {
+            if (get_stone(i, j) == st)
+                return true;
+        }
+    }
+
+    return false;
+}
+
+int Planet::count_stones(Stone st) {
+    int count = 0;
+    for (int j = 0; j < get_size_blocks(); ++j) {
+        for (int i = 0; i < get_size_blocks(); ++i) {
+            if (get_stone(i, j) == st)
+                ++count;
+        }
+    }
+
+    return count;
 }
 
 int Planet::get_army_funding() {
@@ -461,4 +512,125 @@ const char* Planet::get_class_str_lower() {
 
     L.fatal("No lower-case string for planet of class %d", get_class());
     return "";
+}
+
+// Implements PROCgivestation - renamed because we do more than just that!
+void Planet::prepare_for_cpu_lord() {
+    bool no_station = !has_stone(STONE_Base);
+    int x, y;
+    Stone s = STONE_Clear;
+    int blocks = get_size_blocks();
+
+    if (no_station) {
+        // Place a HQ randomly
+        while (true) {
+            x = rand() % blocks;
+            y = rand() % blocks;
+            s = get_stone(x, y);
+            if (   s == STONE_Clear
+                || s == STONE_NaturalSmall
+                || s == STONE_Radiation
+                || s == STONE_AgriDead
+                || s == STONE_Rubble) {
+                set_stone(x, y, STONE_Base);
+                break;
+            }
+        }
+
+        // Place a city randomly
+        // (I presume this is to ensure we can fund the military installation)
+        while (true) {
+            x = rand() % blocks;
+            y = rand() % blocks;
+            s = get_stone(x, y);
+            if (   s == STONE_Clear
+                || s == STONE_NaturalSmall
+                || s == STONE_Radiation
+                || s == STONE_AgriDead
+                || s == STONE_Rubble) {
+                set_stone(x, y, STONE_City);
+                break;
+            }
+        }
+
+        // Place a military installation randomly
+        while (true) {
+            x = rand() % blocks;
+            y = rand() % blocks;
+            s = get_stone(x, y);
+            if (   s == STONE_Clear
+                || s == STONE_NaturalSmall
+                || s == STONE_Radiation
+                || s == STONE_AgriDead
+                || s == STONE_Rubble) {
+                int r = rand() % 3;
+                Stone military = STONE_Inf;
+                army_funding = 1;
+                if (r == 1) { military = STONE_Gli; army_funding = 2; }
+                if (r == 2) { military = STONE_Art; army_funding = 3; }
+                set_stone(x, y, military);
+                break;
+            }
+        }
+
+        // Place a plutonium plant randomly
+        while (true) {
+            x = rand() % blocks;
+            y = rand() % blocks;
+            s = get_stone(x, y);
+            if (   s == STONE_Clear
+                || s == STONE_NaturalSmall
+                || s == STONE_Radiation
+                || s == STONE_AgriDead
+                || s == STONE_Rubble) {
+                set_stone(x, y, STONE_Plu);
+                break;
+            }
+        }
+
+        // Place some agriculture
+        int iterations = (get_class() == Desert || get_class() == Volcano) ? 2 : 1;
+        for (int i = 0; i < iterations; ++i) {
+            int agri_placed = 0;
+            while (agri_placed <= 3) {
+                int r = rand() % 4;
+                if (r == 0) {x = 1; y = 1;}
+                if (r == 1) {x = blocks - 5; y = blocks - 5;}
+                if (r == 2) {x = 1; y = blocks - 5;}
+                if (r == 3) {x = blocks - 5; y = 1;}
+                for (int iy = y; iy < y + 3; ++iy) {
+                    for (int ix = x; ix < x + 3; ++ix) {
+                        s = get_stone(ix, iy);
+                        if (   s == STONE_Clear
+                            || s == STONE_NaturalSmall
+                            || s == STONE_Radiation
+                            || s == STONE_AgriDead
+                            || s == STONE_Rubble) {
+                            set_stone(ix, iy, STONE_Agri);
+                            ++agri_placed;
+                        }
+                    }
+                }
+            }
+        }
+    } else {
+        // Ensure that there's enough agri to sustain it
+        int agri_placed = 0;
+        while (agri_placed <= 3) {
+            x = rand() % blocks;
+            y = rand() % blocks;
+            s = get_stone(x, y);
+            if (   s == STONE_Clear
+                || s == STONE_NaturalSmall
+                || s == STONE_Radiation
+                || s == STONE_AgriDead
+                || s == STONE_Rubble) {
+                set_stone(x, y, STONE_Agri);
+                ++agri_placed;
+            }
+
+            if (rand() % 30 == 0)
+                break;
+        }
+    }
 }

@@ -159,6 +159,87 @@ void ExodusState::init(GameConfig config) {
     L.debug("   Enemies: %d", enemy_start);
 }
 
+void ExodusState::init_cpu_lords() {
+    Galaxy *gal = get_galaxy();
+    unsigned int n_stars;
+    Star *stars = gal->get_stars(n_stars);
+
+    for (int i = n_players; i < N_PLAYERS; ++i) {
+        // Assign initial planet to CPU lords. Orig: PROCstart_the_lords
+        // We follow the original's logic of iterating over stars in the
+        // same order for each lord, which affects the probability of
+        // neighbouring lords in the same system.
+        // N.B. Star indices are not correlated with their positions.
+        bool initial_planet_selected = false;
+        Star *chosen_star = nullptr;
+        int chosen_planet_idx = 0;
+        L.debug("Choosing initial planet for CPU lord %d", i);
+        while(!initial_planet_selected) {
+            int quality = 0;
+            for (unsigned int star_idx = 0; star_idx < n_stars; ++star_idx) {
+                L.debug("Considering star %d", star_idx);
+                Star *s = &stars[star_idx];
+                for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
+                    Planet *p = s->get_planet(planet_idx);
+                    if (p && p->exists() && !p->is_owned()) {
+                        L.debug("Considering planet %d", planet_idx);
+                        int planet_quality = 0;
+                        if (p->get_class() == Forest)  planet_quality = 4;
+                        if (p->get_class() == Desert)  planet_quality = 2;
+                        if (p->get_class() == Volcano) planet_quality = 1;
+                        if (p->get_class() == Rock)    planet_quality = 3;
+                        if (p->get_class() == Ice)     planet_quality = 2;
+                        if (p->get_class() == Terra)   planet_quality = 5;
+                        if (planet_quality > quality && RND(7) != 1) {
+                            L.debug("Checking existing ownership");
+                            // TODO: Can we just check planet->is_owned() at this point?
+                            bool ok = true;
+                            for (unsigned int other_idx = n_players; other_idx < i; other_idx++) {
+                                PlayerInfo *other = &player_info[other_idx];
+                                FlyTarget *other_ts = loc2tgt(other->location.get_target());
+                                int other_tp = other->location.get_planet_target();
+                                if (other_ts == s && other_tp == planet_idx) {
+                                    ok = false;
+                                    break;
+                                }
+                            }
+                            if (ok) {
+                                L.debug("Updated planet candidate!");
+                                quality = planet_quality;
+                                chosen_star = s;
+                                chosen_planet_idx = planet_idx;
+                                player_info[i].location.set(tgt2loc(chosen_star));
+                                player_info[i].location.set_planet_target(chosen_planet_idx);
+                                initial_planet_selected = true;
+                                // N.B. we don't break here - we continue iterating
+                                // over stars, and are liable to change our mind if
+                                // we find a better offer!
+                            } else {
+                                L.debug("Can't choose this planet");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // We've settled on a planet - now claim it!
+        Planet *chosen_planet = chosen_star->get_planet(chosen_planet_idx);
+        chosen_planet->set_owner(i);
+        chosen_planet->prepare_for_cpu_lord();
+
+        if (player_info[i].mc >= 190) {
+            player_info[i].mc -= 190;
+        } else {
+            player_info[i].mc = 0;
+        }
+
+        chosen_planet->set_name(chosen_planet->get_name_suggestion());
+
+        // TODO: Rest of PROCstart_the_lords
+    }
+}
+
 void ExodusState::generate_galaxy() {
     if (galaxy_finalised) {
         L.error("Cannot regenerate galaxy after finalisation");
@@ -175,6 +256,7 @@ void ExodusState::generate_galaxy() {
 
 void ExodusState::finalise_galaxy() {
     galaxy_finalised = true;
+    init_cpu_lords();
 }
 
 Galaxy* ExodusState::get_galaxy() {
@@ -261,6 +343,15 @@ PlayerInfo* ExodusState::get_player(int idx) {
     }
 
     return &player_info[idx];
+}
+
+int ExodusState::get_player_idx(PlayerInfo* player) {
+    for (int i = 0; i < N_PLAYERS; ++i)
+        if (&player_info[i] == player)
+            return i;
+
+    L.fatal("Index request for invalid player");
+    return 0;
 }
 
 unsigned int ExodusState::get_n_planets(PlayerInfo* player) {

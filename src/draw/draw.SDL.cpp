@@ -492,6 +492,8 @@ void DrawManagerSDL::draw_text(DrawTarget tgt, SprID id, Font font, const char* 
     }
 
     SDL_BlitSurface(msg_surf, nullptr, tgt_surf, &msg_rect);
+
+    SDL_FreeSurface(msg_surf);
 }
 
 void DrawManagerSDL::pixelswap_start() {

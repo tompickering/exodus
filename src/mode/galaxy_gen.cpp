@@ -81,6 +81,7 @@ ExodusMode GalaxyGen::update(float delta) {
                     galaxy_panel_area,
                     {0, 0, 0});
                 if (accepted) {
+                    exostate.finalise_galaxy();
                     stage = GGSTG_ToGame;
                 } else {
                     stage = GGSTG_Gen;

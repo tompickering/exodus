@@ -56,6 +56,7 @@ class ExodusState {
         void init(GameConfig);
         void generate_galaxy();
         void finalise_galaxy();
+        void init_cpu_lords();
         Galaxy* get_galaxy();
         unsigned int get_month();
         PlayerInfo *get_active_player();
@@ -70,6 +71,7 @@ class ExodusState {
         int tgt2loc(FlyTarget*); // Convert between PlayerLocation
         FlyTarget* loc2tgt(int); // indicies and FlyTarget objects.
         PlayerInfo* get_player(int);
+        int get_player_idx(PlayerInfo*);
         unsigned int get_n_planets(PlayerInfo*);
     private:
         GalaxySize size;
