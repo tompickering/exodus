@@ -11,7 +11,7 @@
  * present in a save file, and should be shallow-serialisable.
  */
 
-#include "player.h"
+#include "player/player.h"
 
 #include "galaxy/galaxy.h"
 #include "galaxy/star.h"
