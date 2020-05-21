@@ -73,6 +73,23 @@ typedef struct {
     Freight freight;
 } Fleet;
 
+enum Invention {
+    INV_MassProduction,
+    INV_UltraRangeScanner,
+    INV_FusionEngine,
+    INV_MicroMechanicElements,
+    INV_UniversalVaccine,
+    INV_OrbitalBombs,
+    INV_OrbitalMassConstruction,
+    INV_OrbitalMassThrust,
+    INV_WeatherInfluence,
+    INV_MultiFunctionalVaccine,
+    INV_Acid,
+    INV_IndustryGuard,
+    INV_DreamInfluence,
+    INV_RaderExtension,
+};
+
 typedef struct {
     Race race;
     char name[MAX_PLAYER_NAME + 1];
@@ -86,6 +103,7 @@ typedef struct {
     const char *fleet_marker;
     PlayerLocation location;
     Fleet fleet;
+    uint16_t inventions;
     bool attempt_spend(unsigned int cost) {
         if (mc >= cost) {
             mc -= cost;
