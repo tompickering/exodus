@@ -164,7 +164,7 @@ void ExodusState::init_cpu_lords() {
     unsigned int n_stars;
     Star *stars = gal->get_stars(n_stars);
 
-    for (int i = n_players; i < N_PLAYERS; ++i) {
+    for (unsigned int i = n_players; i < N_PLAYERS; ++i) {
         // Assign initial planet to CPU lords. Orig: PROCstart_the_lords
         // We follow the original's logic of iterating over stars in the
         // same order for each lord, which affects the probability of
