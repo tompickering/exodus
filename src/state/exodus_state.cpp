@@ -39,88 +39,88 @@ void ExodusState::init(GameConfig config) {
 
     // PLAYER INIT: Everyone (overridable)
     for (i = 0; i < N_PLAYERS; ++i) {
-        player_info[i].mc = 0;
+        players[i].mc = 0;
 
-        player_info[i].fleet.scouts = 0;
-        player_info[i].fleet.transporters = 0;
-        player_info[i].fleet.warships = 0;
-        player_info[i].fleet.bombers = 0;
-        player_info[i].fleet.freight.minerals = 0;
-        player_info[i].fleet.freight.food = 0;
-        player_info[i].fleet.freight.plutonium = 0;
-        player_info[i].fleet.freight.robots = 0;
-        player_info[i].fleet.freight.infantry = 0;
-        player_info[i].fleet.freight.gliders = 0;
-        player_info[i].fleet.freight.artillery = 0;
+        players[i].fleet.scouts = 0;
+        players[i].fleet.transporters = 0;
+        players[i].fleet.warships = 0;
+        players[i].fleet.bombers = 0;
+        players[i].fleet.freight.minerals = 0;
+        players[i].fleet.freight.food = 0;
+        players[i].fleet.freight.plutonium = 0;
+        players[i].fleet.freight.robots = 0;
+        players[i].fleet.freight.infantry = 0;
+        players[i].fleet.freight.gliders = 0;
+        players[i].fleet.freight.artillery = 0;
     }
 
     // PLAYER INIT: Human
     for (i = 0; i < n_players; ++i) {
-        memcpy(&player_info[i], &config.info[i], sizeof(PlayerInfo));
-        player_info[i].race = RACE_Human;
-        player_info[i].intro_seen = false;
+        memcpy(&players[i], &config.players[i], sizeof(Player));
+        players[i].race = RACE_Human;
+        players[i]._intro_seen = false;
         switch(i) {
             case 0:
-                player_info[i].fleet_marker = IMG_TS1_ICON1;
+                players[i].fleet_marker = IMG_TS1_ICON1;
                 break;
             case 1:
-                player_info[i].fleet_marker = IMG_TS1_ICON2;
+                players[i].fleet_marker = IMG_TS1_ICON2;
                 break;
             case 2:
-                player_info[i].fleet_marker = IMG_TS1_ICON3;
+                players[i].fleet_marker = IMG_TS1_ICON3;
                 break;
             case 3:
-                player_info[i].fleet_marker = IMG_TS1_ICON4;
+                players[i].fleet_marker = IMG_TS1_ICON4;
                 break;
             case 4:
-                player_info[i].fleet_marker = IMG_TS1_ICON5;
+                players[i].fleet_marker = IMG_TS1_ICON5;
                 break;
         }
 
         if (config.enemy_start == ENEMY_None) {
-            player_info[i].mc = 1000;
-            player_info[i].fleet.transporters = 50;
-            player_info[i].fleet.warships = 5;
+            players[i].mc = 1000;
+            players[i].fleet.transporters = 50;
+            players[i].fleet.warships = 5;
         }
 
         if (config.enemy_start == ENEMY_Weak) {
-            player_info[i].mc = 300;
-            player_info[i].fleet.transporters = 50;
-            player_info[i].fleet.warships = 5;
+            players[i].mc = 300;
+            players[i].fleet.transporters = 50;
+            players[i].fleet.warships = 5;
         }
 
         if (config.enemy_start == ENEMY_Medium) {
-            player_info[i].mc = 200;
-            player_info[i].fleet.transporters = 35;
-            player_info[i].fleet.warships = 5;
+            players[i].mc = 200;
+            players[i].fleet.transporters = 35;
+            players[i].fleet.warships = 5;
         }
 
         if (config.enemy_start == ENEMY_Strong) {
-            player_info[i].mc = 50;
-            player_info[i].fleet.transporters = 20;
-            player_info[i].fleet.freight.minerals = 20;
+            players[i].mc = 50;
+            players[i].fleet.transporters = 20;
+            players[i].fleet.freight.minerals = 20;
         }
     }
 
     // PLAYER INIT: CPU
     for (; i < N_PLAYERS; ++i) {
-        player_info[i].race = (Race)(RACE_Human + RND(4));
-        player_info[i].fleet_marker = nullptr;
-        sprintf(player_info[i].name, "%d", i);
-        strcpy(player_info[i].title, "CPU");
+        players[i].race = (Race)(RACE_Human + RND(4));
+        players[i].fleet_marker = nullptr;
+        sprintf(players[i].name, "%d", i);
+        strcpy(players[i].title, "CPU");
         bool flag_assigned = false;
         L.debug("Assigning flag for player %d (CPU)", i);
         while (!flag_assigned) {
             int flag_try = rand() % 15;
             bool flag_ok = true;
             for (unsigned int j = 0; j < i; ++j) {
-                if (flag_try == player_info[j].flag_idx) {
+                if (flag_try == players[j].flag_idx) {
                     flag_ok = false;
                     break;
                 }
             }
             if (flag_ok) {
-                player_info[i].flag_idx = flag_try;
+                players[i].flag_idx = flag_try;
                 flag_assigned = true;
                 L.debug("Assigned flag %d", flag_try);
             }
@@ -129,21 +129,21 @@ void ExodusState::init(GameConfig config) {
         if (config.enemy_start == ENEMY_Medium) bonus_mult = 1;
         if (config.enemy_start == ENEMY_Strong) bonus_mult = 2;
 
-        player_info[i].mc = 300 + RND(5)*50 + bonus_mult*150;
-        L.debug("Assigned %d MC to CPU player %d", player_info[i].mc, i);
+        players[i].mc = 300 + RND(5)*50 + bonus_mult*150;
+        L.debug("Assigned %d MC to CPU player %d", players[i].mc, i);
 
-        player_info[i].fleet.transporters += bonus_mult * 100;
+        players[i].fleet.transporters += bonus_mult * 100;
     }
 
     // PLAYER INIT: Everyone (not overridable)
     for (i = 0; i < N_PLAYERS; ++i) {
         snprintf(
-            player_info[i].full_name,
+            players[i].full_name,
             MAX_PLAYER_TITLE + 1 + MAX_PLAYER_NAME + 1,
             "%s %s",
-            player_info[i].title,
-            player_info[i].name);
-        player_info[i].dead = false;
+            players[i].title,
+            players[i].name);
+        players[i].dead = false;
     }
 
     aim = config.aim;
@@ -152,7 +152,7 @@ void ExodusState::init(GameConfig config) {
     L.debug("      Size: %d", size);
     L.debug("   Players: %d", n_players);
     for (unsigned int i = 0; i < n_players; ++i) {
-        PlayerInfo *inf = &player_info[i];
+        Player *inf = &players[i];
         L.debug("       %s %s : Flag %d", inf->title, inf->name, inf->flag_idx);
     }
     L.debug("       Aim: %d", aim);
@@ -195,9 +195,9 @@ void ExodusState::init_cpu_lords() {
                             // TODO: Can we just check planet->is_owned() at this point?
                             bool ok = true;
                             for (unsigned int other_idx = n_players; other_idx < i; other_idx++) {
-                                PlayerInfo *other = &player_info[other_idx];
-                                FlyTarget *other_ts = loc2tgt(other->location.get_target());
-                                int other_tp = other->location.get_planet_target();
+                                Player *other = &players[other_idx];
+                                FlyTarget *other_ts = loc2tgt(other->get_location().get_target());
+                                int other_tp = other->get_location().get_planet_target();
                                 if (other_ts == s && other_tp == planet_idx) {
                                     ok = false;
                                     break;
@@ -208,8 +208,8 @@ void ExodusState::init_cpu_lords() {
                                 quality = planet_quality;
                                 chosen_star = s;
                                 chosen_planet_idx = planet_idx;
-                                player_info[i].location.set(tgt2loc(chosen_star));
-                                player_info[i].location.set_planet_target(chosen_planet_idx);
+                                players[i].location.set(tgt2loc(chosen_star));
+                                players[i].location.set_planet_target(chosen_planet_idx);
                                 initial_planet_selected = true;
                                 // N.B. we don't break here - we continue iterating
                                 // over stars, and are liable to change our mind if
@@ -228,10 +228,10 @@ void ExodusState::init_cpu_lords() {
         chosen_planet->set_owner(i);
         chosen_planet->prepare_for_cpu_lord();
 
-        if (player_info[i].mc >= 190) {
-            player_info[i].mc -= 190;
+        if (players[i].mc >= 190) {
+            players[i].mc -= 190;
         } else {
-            player_info[i].mc = 0;
+            players[i].mc = 0;
         }
 
         chosen_planet->set_name(chosen_planet->get_name_suggestion());
@@ -271,8 +271,8 @@ unsigned int ExodusState::get_month() {
     return month;
 }
 
-PlayerInfo* ExodusState::get_active_player() {
-    return &player_info[active_player];
+Player* ExodusState::get_active_player() {
+    return &players[active_player];
 }
 
 unsigned int ExodusState::get_active_player_idx() {
@@ -340,25 +340,25 @@ FlyTarget* ExodusState::loc2tgt(int loc) {
     return &get_galaxy()->get_stars()[loc];
 }
 
-PlayerInfo* ExodusState::get_player(int idx) {
+Player* ExodusState::get_player(int idx) {
     if (idx < 0 || idx >= N_PLAYERS) {
         L.fatal("Request for invalid player %d", idx);
         return nullptr;
     }
 
-    return &player_info[idx];
+    return &players[idx];
 }
 
-int ExodusState::get_player_idx(PlayerInfo* player) {
+int ExodusState::get_player_idx(Player* player) {
     for (int i = 0; i < N_PLAYERS; ++i)
-        if (&player_info[i] == player)
+        if (&players[i] == player)
             return i;
 
     L.fatal("Index request for invalid player");
     return 0;
 }
 
-unsigned int ExodusState::get_n_planets(PlayerInfo* player) {
+unsigned int ExodusState::get_n_planets(Player* player) {
     Galaxy *gal = get_galaxy();
     unsigned int n_stars;
     Star *stars = gal->get_stars(n_stars);

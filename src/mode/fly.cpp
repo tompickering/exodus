@@ -125,9 +125,9 @@ Fly::Fly() : ModeBase("Fly"), PanelDrawer(PNL_Galaxy) {
 void Fly::enter() {
     ModeBase::enter(ID::END);
     time = 0;
-    PlayerInfo *player = exostate.get_active_player();
-    FlyTarget *tgt = exostate.loc2tgt(player->location.get_target());
-    //arriving = !(player->location.in_flight());
+    Player *player = exostate.get_active_player();
+    FlyTarget *tgt = exostate.loc2tgt(player->get_location().get_target());
+    //arriving = !(player->get_location().in_flight());
 
     draw_manager.draw(IMG_STARTGR_FL6_STARS);
 

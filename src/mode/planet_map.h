@@ -44,7 +44,7 @@ class PlanetMap : ModeBase {
 
         Stage stage;
         Planet *planet;
-        PlayerInfo *player;
+        Player *player;
         Tool active_tool;
         float anim_cycle;
         int surf_x;

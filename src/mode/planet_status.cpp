@@ -17,7 +17,7 @@ PlanetStatus::PlanetStatus() : ModeBase("PlanetStatus") {
 void PlanetStatus::enter() {
     ModeBase::enter(ID::END);
     Planet *p = exostate.get_active_planet();
-    PlayerInfo *player = exostate.get_active_player();
+    Player *player = exostate.get_active_player();
 
     if (!p) {
         L.fatal("Entered PlanetStatus mode with no active planet!");
@@ -31,7 +31,7 @@ void PlanetStatus::enter() {
     char heading[12 + PLANET_MAX_NAME];
 
     int text_x = 30;
-    PlayerInfo *owner = p->is_owned() ? exostate.get_player(p->get_owner()) : nullptr;
+    Player *owner = p->is_owned() ? exostate.get_player(p->get_owner()) : nullptr;
 
     char ownership[PLANET_MAX_NAME + MAX_PLAYER_FULLNAME + 31];
 
@@ -41,15 +41,15 @@ void PlanetStatus::enter() {
 
         draw_manager.draw(
             id(ID::FLAG),
-            flags[owner->flag_idx],
+            flags[owner->get_flag_idx()],
             {16, 100, 0, 0, 1, 1});
 
         if (owner == player) {
             snprintf(ownership, PLANET_MAX_NAME + MAX_PLAYER_FULLNAME + 30,
-                     "%s belongs to you, %s.", p->get_name(), owner->ref);
+                     "%s belongs to you, %s.", p->get_name(), owner->get_ref());
         } else {
             snprintf(ownership, PLANET_MAX_NAME + MAX_PLAYER_FULLNAME + 30,
-                     "%s belongs to %s.", p->get_name(), owner->full_name);
+                     "%s belongs to %s.", p->get_name(), owner->get_full_name());
         }
     } else {
         strncpy(heading, "Unexplored planet", 12 + PLANET_MAX_NAME);

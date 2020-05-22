@@ -89,14 +89,14 @@ void PanelDrawer::draw_panel_bg(DrawTarget tgt) {
             COL_TEXT);
 }
 
-void PanelDrawer::update_panel_info_player(DrawTarget tgt, PlayerInfo* player) {
+void PanelDrawer::update_panel_info_player(DrawTarget tgt, Player* player) {
     char month_string[5];
     char mc_string[7];
     char planets_string[4];
 
     snprintf(month_string, 5, "%u", exostate.get_month());
     if (player) {
-        snprintf(mc_string, 7, "%u", player->mc);
+        snprintf(mc_string, 7, "%u", player->get_mc());
         snprintf(planets_string, 4, "%d", exostate.get_n_planets(player));
     } else {
         strcpy(mc_string, "");
@@ -108,7 +108,7 @@ void PanelDrawer::update_panel_info_player(DrawTarget tgt, PlayerInfo* player) {
     draw_manager.draw_text(
             tgt,
             id_name,
-            player ? player->full_name : "",
+            player ? player->get_full_name() : "",
             Justify::Left,
             area_playerinfo.x + 4,
             top,
@@ -139,7 +139,7 @@ void PanelDrawer::update_panel_info_player(DrawTarget tgt, PlayerInfo* player) {
             COL_TEXT2);
 }
 
-void PanelDrawer::update_panel_info_ft(DrawTarget tgt, PlayerInfo* player, FlyTarget* ft) {
+void PanelDrawer::update_panel_info_ft(DrawTarget tgt, Player* player, FlyTarget* ft) {
     Galaxy *gal = exostate.get_galaxy();
 
     char ft_desc[41];
@@ -152,7 +152,7 @@ void PanelDrawer::update_panel_info_ft(DrawTarget tgt, PlayerInfo* player, FlyTa
     }
 
     // Draw '?' or star details
-    if (player->location.has_visited(exostate.tgt2loc(ft))) {
+    if (player->get_location().has_visited(exostate.tgt2loc(ft))) {
         draw_manager.draw(
             id_qm,
             nullptr);
@@ -176,7 +176,7 @@ void PanelDrawer::update_panel_info_ft(DrawTarget tgt, PlayerInfo* player, FlyTa
                          0.5, 0.5, 1, 1});
 
                     if (p->is_owned()) {
-                        PlayerInfo *owner = exostate.get_player(p->get_owner());
+                        Player *owner = exostate.get_player(p->get_owner());
                         bool enemy = owner != player;
                         draw_manager.draw(
                             id_marker_icons[STAR_MAX_PLANETS - 1 - planets_drawn],
@@ -206,7 +206,7 @@ void PanelDrawer::update_panel_info_ft(DrawTarget tgt, PlayerInfo* player, FlyTa
         COL_TEXT);
 }
 
-void PanelDrawer::update_panel_info_planet(DrawTarget tgt, PlayerInfo *player, Planet* planet) {
+void PanelDrawer::update_panel_info_planet(DrawTarget tgt, Player *player, Planet* planet) {
     if (!planet) {
         // Clear the info
         draw_manager.draw(id_desc,  nullptr);
@@ -218,9 +218,9 @@ void PanelDrawer::update_panel_info_planet(DrawTarget tgt, PlayerInfo *player, P
     char planet_desc[41];
     char planet_own[20 + MAX_PLAYER_FULLNAME];
     if (planet->is_owned()) {
-        PlayerInfo *owner = exostate.get_player(planet->get_owner());
+        Player *owner = exostate.get_player(planet->get_owner());
         snprintf(planet_desc, 40, "This is the planet %s.", planet->get_name());
-        snprintf(planet_own, 20 + MAX_PLAYER_FULLNAME, "It belongs to %s.", owner->full_name);
+        snprintf(planet_own, 20 + MAX_PLAYER_FULLNAME, "It belongs to %s.", owner->get_full_name());
     } else {
         snprintf(planet_desc, 40, "This is an unexplored planet.");
         snprintf(planet_own, 20 + MAX_PLAYER_FULLNAME, "It belongs to no confederation.");

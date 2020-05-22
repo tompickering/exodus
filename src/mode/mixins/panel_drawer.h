@@ -26,9 +26,9 @@ class PanelDrawer {
     public:
         PanelDrawer(PanelType);
         void draw_panel_bg(DrawTarget);
-        void update_panel_info_player(DrawTarget, PlayerInfo*);
-        void update_panel_info_ft(DrawTarget, PlayerInfo*, FlyTarget*);
-        void update_panel_info_planet(DrawTarget, PlayerInfo*, Planet*);
+        void update_panel_info_player(DrawTarget, Player*);
+        void update_panel_info_ft(DrawTarget, Player*, FlyTarget*);
+        void update_panel_info_planet(DrawTarget, Player*, Planet*);
     protected:
         PanelType type;
         SprID id_panel;

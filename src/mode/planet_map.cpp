@@ -661,7 +661,7 @@ void PlanetMap::set_tool(Tool t) {
 
 void PlanetMap::draw_mc() {
     char mc_str[16];
-    snprintf(mc_str, 16, "MC: %d", player->mc);
+    snprintf(mc_str, 16, "MC: %d", player->get_mc());
     draw_manager.draw_text(
         id(ID::MC),
         mc_str,

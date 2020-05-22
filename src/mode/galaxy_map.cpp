@@ -49,7 +49,7 @@ ExodusMode GalaxyMap::update(float delta) {
     }
 
     Galaxy *gal = exostate.get_galaxy();
-    PlayerInfo *player = exostate.get_active_player();
+    Player *player = exostate.get_active_player();
 
     selected_ft_blink += delta;
     while (selected_ft_blink > 2*BLINK_TIME)
@@ -61,7 +61,7 @@ ExodusMode GalaxyMap::update(float delta) {
             stage = GM_Idle;
             break;
         case GM_Idle:
-            if (player->race == RACE_Human && !player->intro_seen) {
+            if (player->get_race() == RACE_Human && !player->intro_seen()) {
                 exostate.set_active_flytarget(gal->get_guild());
                 return ExodusMode::MODE_GalaxyIntro;
             }
@@ -97,12 +97,12 @@ ExodusMode GalaxyMap::update(float delta) {
             update_panel_info_player(TGT_Primary, player);
             update_panel_info_ft(TGT_Primary, player, selected_ft);
 
-            if (!player->location.in_flight()) {
-                FlyTarget *fleet_pos = exostate.loc2tgt(player->location.get_target());
+            if (!player->get_location().in_flight()) {
+                FlyTarget *fleet_pos = exostate.loc2tgt(player->get_location().get_target());
                 get_draw_position(fleet_pos, draw_x, draw_y);
                 draw_manager.draw(
                         id(ID::FLEET_MARKER),
-                        player->fleet_marker,
+                        player->get_fleet_marker(),
                         {draw_x - 10, draw_y + 10, 0.5, 0.5, 1, 1});
             } else {
                 draw_manager.draw(
@@ -129,7 +129,7 @@ ExodusMode GalaxyMap::update(float delta) {
                     L.debug("Panel 2");
                 } else {
                     // Zoom
-                    if (player->location.has_visited(exostate.tgt2loc(selected_ft))) {
+                    if (player->get_location().has_visited(exostate.tgt2loc(selected_ft))) {
                         exostate.set_active_flytarget(selected_ft);
                         exostate.set_active_planet(-1);
                         draw_manager.show_cursor(false);
@@ -153,8 +153,8 @@ ExodusMode GalaxyMap::update(float delta) {
             action = comm_check_action();
             if (action == CA_Proceed) {
                 // TODO: Vary number of months
-                player->location.set_target(exostate.tgt2loc(selected_ft), 1);
-                player->location.advance();
+                player->get_location().set_target(exostate.tgt2loc(selected_ft), 1);
+                player->get_location().advance();
                 return ExodusMode::MODE_Fly;
             } else if (action == CA_Abort) {
                 comm_close();

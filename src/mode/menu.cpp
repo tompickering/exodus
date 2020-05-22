@@ -317,13 +317,13 @@ ExodusMode Menu::update(float delta) {
                 if (input_manager.consume(K_Enter) && strnlen(input_name, 1)) {
                     bool duplicate = false;
                     for (int i = 0; i < current_player; ++i) {
-                        if (!strncmp(input_name, config.info[i].name, MAX_PLAYER_NAME)) {
+                        if (!strncmp(input_name, config.players[i].get_name(), MAX_PLAYER_NAME)) {
                             duplicate = true;
                             break;
                         }
                     }
                     if (!duplicate) {
-                        strncpy(config.info[current_player].name, input_name, MAX_PLAYER_NAME);
+                        config.players[current_player].set_name(input_name);
                         set_stage(Title);
                     } else {
                         L.info("Not allowing duplicate name");
@@ -336,8 +336,8 @@ ExodusMode Menu::update(float delta) {
             if (trans_state == None) {
                 draw_manager.save_background();
                 draw_manager.show_cursor(true);
-                strncpy(config.info[current_player].title, "<TITLE>", MAX_PLAYER_TITLE);
-                strncpy(config.info[current_player].ref, "<REFERENCE>", MAX_PLAYER_REFERENCE);
+                config.players[current_player].set_title("<TITLE>");
+                config.players[current_player].set_ref("<REFERENCE>");
                 trans_state = Done;
             }
 
@@ -360,7 +360,7 @@ ExodusMode Menu::update(float delta) {
                              140 + j*RES_Y/7,
                              0.5, 0.5, 1, 1});
                         for (int k = 0; k < current_player; ++k) {
-                            if (config.info[k].flag_idx == flag_idx) {
+                            if (config.players[k].get_flag_idx() == flag_idx) {
                                 draw_manager.draw(
                                     IMG_TS1_FLAG0,
                                     {RES_X/4 + i*RES_X/4,
@@ -379,14 +379,14 @@ ExodusMode Menu::update(float delta) {
                 if (draw_manager.query_click(id(ID::FLAG_0 + i)).id) {
                     bool taken = false;
                     for (int j = 0; j < current_player; ++j) {
-                        if (config.info[j].flag_idx == i) {
+                        if (config.players[j].get_flag_idx() == i) {
                             taken = true;
                             break;
                         }
                     }
 
                     if (!taken) {
-                        config.info[current_player].flag_idx = i;
+                        config.players[current_player].set_flag_idx(i);
                         if (++current_player == config.n_players) {
                             set_stage(Aim);
                         } else {
@@ -607,8 +607,9 @@ ExodusMode Menu::update(float delta) {
 
                 constexpr int line0_sz = 8 + MAX_PLAYER_TITLE + MAX_PLAYER_NAME;
                 char line0[line0_sz];
-                PlayerInfo *info = &(config.info[0]);
-                snprintf(line0, line0_sz, "You, %s %s,", info->title, info->name);
+                Player *player = &(config.players[0]);
+                snprintf(line0, line0_sz, "You, %s %s,",
+                             player->get_title(), player->get_name());
 
 
                 char *line1 = (char*)"arrived at a small galaxy,";
@@ -660,7 +661,7 @@ ExodusMode Menu::update(float delta) {
                 for (unsigned int i = 0; i < config.n_players; ++i) {
                     int sep = RES_X / (config.n_players + 1);
                     draw_manager.draw(
-                        flags[config.info[i].flag_idx],
+                        flags[config.players[i].get_flag_idx()],
                         {(int)((i+1)*sep), 400, .5, .5, 1, 1});
                 }
 

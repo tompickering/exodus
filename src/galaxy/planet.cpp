@@ -383,8 +383,8 @@ bool Planet::army_funding_sufficient() {
 bool Planet::is_owned() {
     if (owner <0) return false;
 
-    PlayerInfo *ownerinfo = exostate.get_player(owner);
-    return !ownerinfo->dead;
+    Player *ownerplayer = exostate.get_player(owner);
+    return ownerplayer->is_alive();
 }
 
 /*

@@ -57,7 +57,7 @@ ExodusMode StarMap::update(float delta) {
         return ExodusMode::MODE_None;
     }
 
-    PlayerInfo *player = exostate.get_active_player();
+    Player *player = exostate.get_active_player();
     Planet *planet = exostate.get_active_planet();
 
     draw_planets(delta);
