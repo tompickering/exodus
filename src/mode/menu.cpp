@@ -324,6 +324,8 @@ ExodusMode Menu::update(float delta) {
                     }
                     if (!duplicate) {
                         config.players[current_player].set_name(input_name);
+                        // TODO: Set gender
+                        config.players[current_player].set_gender(GENDER_Other);
                         set_stage(Title);
                     } else {
                         L.info("Not allowing duplicate name");

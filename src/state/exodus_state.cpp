@@ -106,8 +106,7 @@ void ExodusState::init(GameConfig config) {
     for (; i < N_PLAYERS; ++i) {
         players[i].race = (Race)(RACE_Human + RND(4));
         players[i].fleet_marker = nullptr;
-        sprintf(players[i].name, "%d", i);
-        strcpy(players[i].title, "CPU");
+        players[i].init_alien_name(i); // Orig: Assigned in PROCclear_memory
         bool flag_assigned = false;
         L.debug("Assigning flag for player %d (CPU)", i);
         while (!flag_assigned) {

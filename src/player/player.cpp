@@ -2,11 +2,45 @@
 
 #include <cstring>
 
+#include "alien_names.h"
 #include "shared.h"
+
+static int alien_names_offset = -1;
+
+const char* get_alien_name(Race race, int idx) {
+    if (idx >= N_ALIEN_NAMES) {
+        L.fatal("Request name with invalid index %d", idx);
+    }
+
+    if (race == RACE_Yokon)   return ALIEN_NAMES_YOKON[idx];
+    if (race == RACE_Teri)    return ALIEN_NAMES_TERI[idx];
+    if (race == RACE_Urkash)  return ALIEN_NAMES_URKASH[idx];
+    if (race == RACE_Gordoon) return ALIEN_NAMES_GORDOON[idx];
+    L.fatal("Request alien name for invalid race %d", (int)race);
+}
 
 Player::Player() {
     dead = false;
     _intro_seen = false;
+}
+
+void Player::init_alien_name(int idx) {
+    if (alien_names_offset == -1) {
+        alien_names_offset = rand() % N_ALIEN_NAMES;
+    }
+    int name_idx = (idx + alien_names_offset) % N_ALIEN_NAMES;
+    set_name(get_alien_name(race, name_idx));
+    int gender_boundary = 5;
+    if (race == RACE_Yokon) gender_boundary = 6;
+    if (race == RACE_Urkash) gender_boundary = 6;
+    set_gender(name_idx <= gender_boundary ? GENDER_Female : GENDER_Male);
+    if (get_gender() == GENDER_Female) {
+        set_title("Lady");
+        set_ref("Milady");
+    } else {
+        set_title("Lord");
+        set_ref("Milord");
+    }
 }
 
 const char* Player::get_name() {
@@ -25,6 +59,10 @@ const char* Player::get_full_name() {
     return full_name;
 }
 
+Gender Player::get_gender() {
+    return gender;
+}
+
 void Player::set_name(const char *new_name) {
     strncpy(name, new_name, MAX_PLAYER_NAME);
     refresh_full_name();
@@ -37,6 +75,10 @@ void Player::set_title(const char *new_title) {
 
 void Player::set_ref(const char *new_ref) {
     strncpy(ref, new_ref, MAX_PLAYER_REFERENCE);
+}
+
+void Player::set_gender(Gender new_gender) {
+    gender = new_gender;
 }
 
 void Player::refresh_full_name() {

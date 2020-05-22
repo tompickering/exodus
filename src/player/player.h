@@ -53,16 +53,25 @@ enum Invention {
     INV_RaderExtension,
 };
 
+enum Gender {
+    GENDER_Female,
+    GENDER_Male,
+    GENDER_Other,
+};
+
 class Player {
     public:
         Player();
+        void init_alien_name(int);
         const char* get_name();
         const char* get_title();
         const char* get_ref();
         const char* get_full_name();
+        Gender get_gender();
         void set_name(const char*);
         void set_title(const char*);
         void set_ref(const char*);
+        void set_gender(Gender);
         Race get_race();
         bool is_human();
         bool is_alive();
@@ -77,6 +86,7 @@ class Player {
         PlayerLocation& get_location();
     private:
         Race race;
+        Gender gender;
         char name[MAX_PLAYER_NAME + 1];
         char title[MAX_PLAYER_TITLE + 1];
         char ref[MAX_PLAYER_REFERENCE + 1];
