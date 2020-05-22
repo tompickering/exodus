@@ -20,8 +20,9 @@ const char* ALIEN_NAMES_URKASH[] = {
     "Zerish", "Torakk", "Berakk", "Gartash", "Jentesh"
 };
 
+// 'Zoana' is 'Loana' in the original - modified to avoid ambiguity with duplicate YoKon name
 const char* ALIEN_NAMES_GORDOON[] = {
     "Kza Forn", "Kza Ters", "Kza Genn", "Toya", "Tan Namai",
-    "Loana", "Zok Tyron", "Zok Marr", "Zok Ten", "Noobas",
+    "Zoana", "Zok Tyron", "Zok Marr", "Zok Ten", "Noobas",
     "Groomar", "Yun Dan", "Eliif", "Caroon", "Daskyn"
 };
