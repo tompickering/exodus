@@ -14,6 +14,7 @@ class DrawManagerSDL : public DrawManager {
         virtual void clear() override;
         virtual void clear(DrawTarget) override;
         virtual void save_background() override;
+        virtual void save_background(DrawArea) override;
         virtual void draw_init_image() override;
         virtual void draw_rect(DrawArea, float, RGB) override;
         virtual void draw(const char*) override;

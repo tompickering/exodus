@@ -100,6 +100,7 @@ class DrawManager {
         virtual void load_resources() = 0;
         virtual void update(float, MousePos, MousePos);
         virtual void save_background() = 0;
+        virtual void save_background(DrawArea) = 0;
         virtual void clear() = 0;
         virtual void clear(DrawTarget) = 0;
         virtual SprID new_sprite_id();
