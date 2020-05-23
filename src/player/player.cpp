@@ -17,6 +17,7 @@ const char* get_alien_name(Race race, int idx) {
     if (race == RACE_Urkash)  return ALIEN_NAMES_URKASH[idx];
     if (race == RACE_Gordoon) return ALIEN_NAMES_GORDOON[idx];
     L.fatal("Request alien name for invalid race %d", (int)race);
+    return "";
 }
 
 Player::Player() {
