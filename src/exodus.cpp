@@ -45,6 +45,7 @@ void signal_handler(int signum) {
 Exodus::Exodus() {
     mode = nullptr;
     mode_stack_head = 0;
+    current_mode = MODE_None;
 }
 
 Exodus::~Exodus() {
@@ -124,6 +125,9 @@ int Exodus::run(int argc, char** argv) {
         if (next != ExodusMode::MODE_None) {
             if (next == ExodusMode::MODE_Pop) {
                 pop_mode();
+            } else if (next == ExodusMode::MODE_Reload) {
+                // No stack change - just reset the current mode
+                set_mode(current_mode);
             } else {
                 if (next == ExodusMode::MODE_GalaxyMap) {
                     reset_mode_stack();
@@ -170,6 +174,7 @@ void Exodus::set_mode(ExodusMode new_mode) {
     mode = mode_map[new_mode];
     const char* new_mode_name = mode->name;
     L.debug("MODE: %s -> %s", mode_name, new_mode_name);
+    current_mode = new_mode;
     mode->enter();
     // When we see a mode transition, allow the new one an update
     // before the draw manager kicks in.

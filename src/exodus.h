@@ -10,6 +10,7 @@ using std::map;
 enum ExodusMode {
     MODE_None,
     MODE_Pop,
+    MODE_Reload,
 
     MODE_Intro,
     MODE_Menu,
@@ -38,6 +39,7 @@ class Exodus {
         virtual void cleanup() = 0;
     private:
         ModeBase *mode;
+        ExodusMode current_mode;
         map<ExodusMode, ModeBase*> mode_map;
         void set_mode(ExodusMode);
         unsigned int mode_stack_head;
