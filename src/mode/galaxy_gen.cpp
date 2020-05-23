@@ -56,7 +56,7 @@ ExodusMode GalaxyGen::update(float delta) {
             draw_manager.draw(
                 id(ID::YESORNO),
                 anim_ynfade.frame(fade_interp),
-                {RES_X/2, 460, 0.5, 0.5, 1, 1});
+                {RES_X/2, 480, 0.5, 0.5, 1, 1});
             if (fade_interp == 1) {
                 draw_manager.save_background();
                 stage = GGSTG_Wait;
@@ -75,7 +75,7 @@ ExodusMode GalaxyGen::update(float delta) {
             draw_manager.draw(
                 id(ID::YESORNO),
                 anim_ynfade.frame(fade_interp),
-                {RES_X/2, 460, 0.5, 0.5, 1, 1});
+                {RES_X/2, 480, 0.5, 0.5, 1, 1});
             if (fade_interp == 0) {
                 draw_manager.fill(
                     galaxy_panel_area,
