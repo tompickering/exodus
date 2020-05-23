@@ -46,7 +46,9 @@ void CommPanelDrawer::comm_set_text(int idx, const char* in_text) {
     strncpy(comm_text[idx], in_text, MAX_TEXT - 1);
 }
 
-void CommPanelDrawer::comm_open() {
+void CommPanelDrawer::comm_open(int text_slots) {
+    comm_text_slots = text_slots;
+
     id_comm_panel = draw_manager.new_sprite_id();
     id_comm_img = draw_manager.new_sprite_id();
     id_comm_buttons = draw_manager.new_sprite_id();
@@ -120,7 +122,7 @@ void CommPanelDrawer::comm_open() {
             comm_text[i],
             Justify::Left,
             COMM_RCOL_X + 8,
-            COMM_Y + 36 + COMM_BORDER*2 + i*20,
+            comm_text_y(i),
             COL_TEXT);
     }
 
@@ -170,4 +172,8 @@ CommAction CommPanelDrawer::comm_check_action() {
         return click.x < 0.55 ? CA_Proceed : CA_Abort;
     }
     return CA_None;
+}
+
+int CommPanelDrawer::comm_text_y(int idx) {
+    return COMM_Y + 36 + COMM_BORDER*2 + idx*120/comm_text_slots;
 }

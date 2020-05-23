@@ -29,7 +29,7 @@ class CommPanelDrawer {
         void comm_set_anim(const Anim&);
         void comm_set_img_caption(const char*);
         void comm_set_text(int, const char*);
-        void comm_open();
+        void comm_open(int);
         void comm_close();
         void comm_ensure_closed();
         bool comm_is_open();
@@ -54,6 +54,9 @@ class CommPanelDrawer {
         SprID id_text[6];
 
         CommAction comm_action;
+
+        int comm_text_slots;
+        int comm_text_y(int);
 };
 
 #endif

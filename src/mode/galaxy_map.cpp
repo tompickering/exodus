@@ -120,7 +120,7 @@ ExodusMode GalaxyMap::update(float delta) {
                     comm_set_text(1, "????, we need X months.");
                     comm_set_text(2, "A pirate attack is unlikely.");
                     comm_set_text(4, "Do you wish to start?");
-                    comm_open();
+                    comm_open(6);
                     stage = GM_FlyConfirm;
                     return ExodusMode::MODE_None;
                 } else if (click.x < 0.5) {
