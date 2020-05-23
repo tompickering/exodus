@@ -114,15 +114,22 @@ ExodusMode GalaxyMap::update(float delta) {
             if (click.id) {
                 if (click.x < 0.25) {
                     // Fly
-                    comm_set_title("Message from counsellor");
-                    comm_set_img_caption("COUNSELLOR");
-                    comm_set_text(0, "For our flight to the star");
-                    comm_set_text(1, "????, we need X months.");
-                    comm_set_text(2, "A pirate attack is unlikely.");
-                    comm_set_text(4, "Do you wish to start?");
-                    comm_open(6);
-                    stage = GM_FlyConfirm;
-                    return ExodusMode::MODE_None;
+                    if (selected_ft != exostate.loc2tgt(player->get_location().get_target())) {
+                        comm_set_title("Message from counsellor");
+                        comm_set_img_caption("COUNSELLOR");
+                        if (selected_ft == gal->get_guild()) {
+                            comm_set_text(0, "For our flight to the space");
+                            comm_vset_text(1, "guild, we need X months.", selected_ft->name);
+                        } else {
+                            comm_set_text(0, "For our flight to the star");
+                            comm_vset_text(1, "%s, we need X months.", selected_ft->name);
+                        }
+                        comm_set_text(2, "A pirate attack is unlikely.");
+                        comm_set_text(4, "Do you wish to start?");
+                        comm_open(6);
+                        stage = GM_FlyConfirm;
+                        return ExodusMode::MODE_None;
+                    }
                 } else if (click.x < 0.5) {
                     L.debug("Panel 1");
                 } else if (click.x < 0.75) {
