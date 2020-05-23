@@ -226,6 +226,8 @@ void StarMap::draw_planets(float delta) {
         Planet *planet = star->get_planet(i);
         if (planet && planet->exists()) {
             bool active = planet == exostate.get_active_planet();
+            int draw_x = 140 + i*95;
+            int draw_y = (RES_Y / 2) - 30 + ((i % 2) == 0 ? -30 : 30);
             if (delta == 0 || active) {
                 if (active) {
                     int p = exostate.get_active_planet_idx();
@@ -241,11 +243,33 @@ void StarMap::draw_planets(float delta) {
                 draw_manager.draw(
                     id(ID::PLANET1 + i),
                     IMG_PA_ROT,
-                    {140 + i*95,
-                     (RES_Y / 2) - 30 + ((i % 2) == 0 ? -30 : 30),
+                    {draw_x,
+                     draw_y,
                      .5f, .5f,
                      1, 1});
             }
+
+            if (delta == 0) {
+                const char *name = planet->get_name();
+                if (strnlen(name, 1)) {
+                    bool enemy = planet->is_owned() &&
+                        planet->get_owner() != exostate.get_active_player_idx();
+                    RGB col = COL_TEXT2;
+                    if (enemy) {
+                        col = COL_TEXT_BAD;
+                    }
+                    draw_manager.draw_text(
+                        Font::Tiny,
+                        name,
+                        Justify::Centre,
+                        draw_x,
+                        draw_y + 50,
+                        col
+                    );
+                }
+            }
+
+            // TODO: Fleet markers
         }
     }
 }
