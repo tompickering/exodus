@@ -171,6 +171,9 @@ void Exodus::set_mode(ExodusMode new_mode) {
     const char* new_mode_name = mode->name;
     L.debug("MODE: %s -> %s", mode_name, new_mode_name);
     mode->enter();
+    // When we see a mode transition, allow the new one an update
+    // before the draw manager kicks in.
+    mode->update(0);
 }
 
 void Exodus::push_mode(ExodusMode new_mode) {
