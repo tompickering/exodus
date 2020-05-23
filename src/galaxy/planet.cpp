@@ -91,7 +91,6 @@ void Planet::init() {
     name[0] = '\0';
     owner = -1;
 
-    income_adj = 0;
     pspeed = (RND(5) + 5);
     lunar_base = false;
     unrest = 0;
@@ -121,20 +120,6 @@ void Planet::init() {
 
         if (get_class() == Volcano || get_class() == Ice) {
             minerals *= 2;
-        }
-
-        r = diameter / 1000;
-        unsigned int a = 2;
-        unsigned int b = 15;
-
-        if (r < 10) {
-            a = 3;
-            b = 14;
-            income_adj--;
-        } else if (r > 12) {
-            a = 1;
-            b = 16;
-            income_adj++;
         }
 
         // TODO: Initialise surface from the data read in from PROCloadplans
@@ -249,7 +234,10 @@ int Planet::get_base_income() {
             break;
     }
 
-    return base + income_adj;
+    int size_adjustment = 0;
+    if (get_size() == PLANET_Small) size_adjustment = -1;
+    if (get_size() == PLANET_Large) size_adjustment = 1;
+    return base + size_adjustment;
 }
 
 int Planet::get_income() {

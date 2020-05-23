@@ -109,7 +109,6 @@ class Planet {
         int sit;               // Orig: SIt. Trade-related?
         int diameter;          // Orig: SId.
         int minerals;          // Orig: SIrm.
-        int income_adj;        // Adjustment to class value, instead of changing orig SIs
         int sim;               // Orig: SIm. Battle-related?
 
         int owner;             // Orig: SIi
