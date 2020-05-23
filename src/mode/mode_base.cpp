@@ -48,3 +48,7 @@ void ModeBase::unregister_ids() {
 ExodusMode ModeBase::update(float delta) {
     return ExodusMode::MODE_None;
 }
+
+bool ModeBase::should_push_to_stack() {
+    return true;
+}

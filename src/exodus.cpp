@@ -182,9 +182,11 @@ void Exodus::set_mode(ExodusMode new_mode) {
 }
 
 void Exodus::push_mode(ExodusMode new_mode) {
-    mode_stack[mode_stack_head++] = new_mode;
-    if (mode_stack_head >= MODE_STACK_SIZE)
-        L.fatal("Mode stack full!");
+    if (mode_map[new_mode]->should_push_to_stack()) {
+        mode_stack[mode_stack_head++] = new_mode;
+        if (mode_stack_head >= MODE_STACK_SIZE)
+            L.fatal("Mode stack full!");
+    }
     set_mode(new_mode);
 }
 
