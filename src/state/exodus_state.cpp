@@ -305,6 +305,7 @@ FlyTarget* ExodusState::get_active_flytarget() {
 void ExodusState::set_active_flytarget(FlyTarget* new_target) {
     L.debug("Active target: %s", new_target->name);
     active_flytarget = new_target;
+    active_planet = -1;
 
     if (new_target == get_galaxy()->get_guild()) {
         return;

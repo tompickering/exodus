@@ -42,9 +42,12 @@ void StarMap::enter() {
     draw_manager.save_background();
     draw_manager.show_cursor(true);
 
-    for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
-        if (select_planet(i))
-            break;
+    Planet *active_planet = exostate.get_active_planet();
+    if (!active_planet || !active_planet->exists()) {
+        for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+            if (select_planet(i))
+                break;
+        }
     }
 
     if (tgt != TGT_Primary) {
