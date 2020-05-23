@@ -106,12 +106,22 @@ ExodusMode StarMap::update(float delta) {
                                 // TODO: Comms with enemy planet
                             }
                         } else {
-                            // TODO: Check if we can afford it
+                            comm_set_title("Message from counsellor");
+                            comm_set_img_caption("COUNSELLOR");
+
+                            if (!player->can_afford(planet->get_settlement_cost())) {
+                                comm_set_text(0, "We do not have the money for a");
+                                comm_set_text(1, "colonization.");
+                                comm_vset_text(3, "(Cost: %d MC)",
+                                    planet->get_settlement_cost());
+                                comm_open(6);
+                                stage = SM_CannotAffordSettle;
+                                return ExodusMode::MODE_None;
+                            }
+
                             size_str = str_size_sm;
                             if (planet->get_size() == PLANET_Medium) size_str = str_size_md;
                             if (planet->get_size() == PLANET_Large) size_str = str_size_lg;
-                            comm_set_title("Message from counsellor");
-                            comm_set_img_caption("COUNSELLOR");
                             if (!strnlen(planet->get_name(), 1)) {
                                 comm_vset_text(0, "Claim this %s planet?",
                                     planet->get_class_str_lower());
@@ -161,6 +171,15 @@ ExodusMode StarMap::update(float delta) {
                     draw_manager.fade_black(1.2f, 24);
                     stage = SM_Back2Gal;
                 }
+            }
+            break;
+        case SM_CannotAffordSettle:
+            action = comm_check_action();
+            // TODO: This is actually what the original does, but
+            // there should really just be the one button.
+            if (action == CA_Proceed || action == CA_Abort) {
+                comm_close();
+                return ExodusMode::MODE_Reload;
             }
             break;
         case SM_SettleConfirm:

@@ -122,8 +122,12 @@ void Player::set_intro_seen() {
     _intro_seen = true;
 }
 
+bool Player::can_afford(unsigned int cost) {
+    return mc >= (int)cost;
+}
+
 bool Player::attempt_spend(unsigned int cost) {
-    if (mc >= cost) {
+    if (can_afford(cost)) {
         mc -= cost;
         return true;
     }
