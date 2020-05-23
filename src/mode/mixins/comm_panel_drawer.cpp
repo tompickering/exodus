@@ -49,6 +49,10 @@ void CommPanelDrawer::comm_set_text(int idx, const char* in_text) {
 void CommPanelDrawer::comm_open(int text_slots) {
     comm_text_slots = text_slots;
 
+    if (comm_text_slots <= 0) {
+        comm_text_slots = 1;
+    }
+
     id_comm_panel = draw_manager.new_sprite_id();
     id_comm_img = draw_manager.new_sprite_id();
     id_comm_buttons = draw_manager.new_sprite_id();
