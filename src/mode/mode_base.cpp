@@ -3,6 +3,7 @@
 #include "shared.h"
 
 ModeBase::ModeBase(const char *name) : name(name) {
+    stackable = true;
 }
 
 ModeBase::~ModeBase() {
@@ -50,5 +51,5 @@ ExodusMode ModeBase::update(float delta) {
 }
 
 bool ModeBase::should_push_to_stack() {
-    return true;
+    return stackable;
 }

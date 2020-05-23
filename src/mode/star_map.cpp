@@ -211,7 +211,7 @@ ExodusMode StarMap::update(float delta) {
                     L.error("Cannot afford planet - but should have checked sooner!");
                 }
                 comm_close();
-                return ExodusMode::MODE_Reload;
+                return ExodusMode::MODE_PlanetColonise;
             }
             break;
         case SM_Back2Gal:

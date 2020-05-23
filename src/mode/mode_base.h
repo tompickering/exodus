@@ -31,9 +31,10 @@ class ModeBase {
         bool draw_cursor;
         const char* get_name();
         const char *name;
-        virtual bool should_push_to_stack();
+        bool should_push_to_stack();
     protected:
         SprID id(unsigned int);
+        bool stackable;
     private:
         unsigned int id_max;
         void register_ids(unsigned int);

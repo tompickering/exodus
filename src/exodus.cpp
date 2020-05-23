@@ -23,6 +23,7 @@
 #include "mode/star_map.h"
 #include "mode/planet_map.h"
 #include "mode/planet_status.h"
+#include "mode/planet_colonise.h"
 
 #include <csignal>
 
@@ -98,6 +99,7 @@ int Exodus::run(int argc, char** argv) {
     StarMap mode_starmap;
     PlanetMap mode_planetmap;
     PlanetStatus mode_planetstatus;
+    PlanetColonise mode_planetcolonise;
     mode_map[MODE_Intro] = (ModeBase*) &mode_intro;
     mode_map[MODE_Menu] = (ModeBase*) &mode_menu;
     mode_map[MODE_GalaxyGen] = (ModeBase*) &mode_galaxygen;
@@ -110,6 +112,7 @@ int Exodus::run(int argc, char** argv) {
     mode_map[MODE_StarMap] = (ModeBase*) &mode_starmap;
     mode_map[MODE_PlanetMap] = (ModeBase*) &mode_planetmap;
     mode_map[MODE_PlanetStatus] = (ModeBase*) &mode_planetstatus;
+    mode_map[MODE_PlanetColonise] = (ModeBase*) &mode_planetcolonise;
 
     push_mode(MODE_Intro);
 

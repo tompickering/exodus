@@ -24,6 +24,7 @@ enum ExodusMode {
     MODE_StarMap,
     MODE_PlanetMap,
     MODE_PlanetStatus,
+    MODE_PlanetColonise,
 };
 
 class ModeBase;
