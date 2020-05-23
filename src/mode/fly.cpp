@@ -16,9 +16,9 @@
 #define FLY_TIME 1.8f
 #define WARP_X RES_X / 2
 #define WARP_Y 200
-#define WARP_START (FLY_START + FLY_TIME + 0.7)
-#define WARP_TIME 1.8
-#define WARP_STAGES 10
+#define WARP_START (FLY_START + FLY_TIME + 0.4)
+#define WARP_TIME 1.4
+#define WARP_STAGES 12
 
 enum ID {
     FLEET,
@@ -111,7 +111,7 @@ const float thrust_pos[] = {
     519, 5,   // Large, top-right
     393, 92,  // Medium, up-up-right of centre
     507, 137, // Medium, right-up-right of centre
-    155, 268, // Medium, lower-left
+    155, 267, // Medium, lower-left
     569, 325, // Large, lower-right
 };
 
