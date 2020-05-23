@@ -43,7 +43,10 @@ void StarMap::enter() {
     draw_manager.show_cursor(true);
 
     Planet *active_planet = exostate.get_active_planet();
-    if (!active_planet || !active_planet->exists()) {
+    if (active_planet && active_planet->exists()) {
+        // Ensures fleet button is updated etc
+        select_planet(exostate.get_active_planet_idx());
+    } else {
         for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
             if (select_planet(i))
                 break;
