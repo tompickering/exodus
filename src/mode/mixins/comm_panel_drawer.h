@@ -51,6 +51,7 @@ class CommPanelDrawer {
         SprID id_comm_panel;
         SprID id_comm_img;
         SprID id_comm_buttons;
+        SprID id_text[6];
 
         CommAction comm_action;
 };

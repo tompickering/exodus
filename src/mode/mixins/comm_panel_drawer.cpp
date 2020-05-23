@@ -51,6 +51,10 @@ void CommPanelDrawer::comm_open() {
     id_comm_img = draw_manager.new_sprite_id();
     id_comm_buttons = draw_manager.new_sprite_id();
 
+    for (int i = 0; i < 6; ++i) {
+        id_text[i] = draw_manager.new_sprite_id();
+    }
+
     draw_manager.fill(
         id_comm_panel,
         {COMM_X, COMM_Y,
@@ -71,23 +75,29 @@ void CommPanelDrawer::comm_open() {
          COMM_Y + 28 + COMM_BORDER*2,
          COMM_X + COMM_W - COMM_RCOL_X - COMM_BORDER,
          172});
-    draw_manager.draw(
-        id_comm_img,
-        comm_anim.frame(0),
-        {COMM_X + COMM_BORDER + 1,
-         COMM_Y + COMM_BORDER + 1,
-         0, 0, 1, 1});
+
     draw_manager.draw(
         id_comm_buttons,
         IMG_BR1_EXPORT,
         {COMM_RCOL_X + 2,
          COMM_Y + COMM_H - COMM_BORDER - 2,
          0, 1, 1, 1});
+
     draw_manager.fill(
         {COMM_RCOL_X + 4 + 236,
          COMM_Y + COMM_H - COMM_BORDER - 28,
          118, 26},
          COL_BORDERS);
+
+    draw_manager.save_background({COMM_X, COMM_Y,
+                                  COMM_W, COMM_H});
+
+    draw_manager.draw(
+        id_comm_img,
+        comm_anim.frame(0),
+        {COMM_X + COMM_BORDER + 1,
+         COMM_Y + COMM_BORDER + 1,
+         0, 0, 1, 1});
 
     draw_manager.draw_text(
         comm_title,
@@ -106,6 +116,7 @@ void CommPanelDrawer::comm_open() {
 
     for (int i = 0; i < 6; ++i) {
         draw_manager.draw_text(
+            id_text[i],
             comm_text[i],
             Justify::Left,
             COMM_RCOL_X + 8,
@@ -120,6 +131,11 @@ void CommPanelDrawer::comm_close() {
     if (!_comm_is_open) {
         L.fatal("Attempt to close comm panel whilst not open");
     }
+
+    for (int i = 0; i < 6; ++i) {
+        draw_manager.release_sprite_id(id_text[i]);
+    }
+
     draw_manager.release_sprite_id(id_comm_img);
     draw_manager.release_sprite_id(id_comm_buttons);
 

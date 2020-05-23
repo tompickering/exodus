@@ -158,7 +158,7 @@ ExodusMode GalaxyMap::update(float delta) {
                 return ExodusMode::MODE_Fly;
             } else if (action == CA_Abort) {
                 comm_close();
-                stage = GM_Idle;
+                return ExodusMode::MODE_Reload;
             }
             break;
         case GM_MonthPassing:
