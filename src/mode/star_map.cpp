@@ -18,6 +18,10 @@ enum ID {
     END,
 };
 
+static const char *str_size_sm = "small";
+static const char *str_size_md = "medium";
+static const char *str_size_lg = "large";
+
 StarMap::StarMap() : ModeBase("StarMap"), PanelDrawer(PNL_Star), CommPanelDrawer() {
     stage = SM_Idle;
     for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
@@ -52,6 +56,8 @@ void StarMap::enter() {
 
 ExodusMode StarMap::update(float delta) {
     SpriteClick click;
+    CommAction action;
+    const char *size_str = nullptr;
 
     if (draw_manager.fade_active()) {
         return ExodusMode::MODE_None;
@@ -60,10 +66,10 @@ ExodusMode StarMap::update(float delta) {
     Player *player = exostate.get_active_player();
     Planet *planet = exostate.get_active_planet();
 
-    draw_planets(delta);
-
     switch(stage) {
         case SM_Idle:
+            draw_planets(delta);
+
             update_panel_info_player(TGT_Primary, player);
             update_panel_info_planet(TGT_Primary, player, planet);
 
@@ -96,8 +102,53 @@ ExodusMode StarMap::update(float delta) {
                             }
                         } else {
                             // TODO: Comms to claim planet
-                            //comm_set_title("Message from counsellor");
-                            //comm_set_img_caption("COUNSELLOR");
+                            size_str = str_size_sm;
+                            if (planet->get_size() == PLANET_Medium) size_str = str_size_md;
+                            if (planet->get_size() == PLANET_Large) size_str = str_size_lg;
+                            comm_set_title("Message from counsellor");
+                            comm_set_img_caption("COUNSELLOR");
+                            if (!strnlen(planet->get_name(), 1)) {
+                                comm_vset_text(0, "Claim this %s planet?",
+                                    planet->get_class_str_lower());
+                            } else {
+                                comm_vset_text(0, "Claim planet %s?",
+                                    planet->get_name());
+                            }
+                            comm_vset_text(1, "  Size: %s -> Cost: %d MC",
+                                size_str, planet->get_settlement_cost());
+                            comm_vset_text(2, "Advantages / Disadvantages:");
+                            switch (planet->get_class()) {
+                                case Forest:
+                                    comm_vset_text(3, "  Good basis for agriculture");
+                                    break;
+                                case Desert:
+                                    comm_vset_text(3, "  Possibly rich in minerals");
+                                    comm_vset_text(4, "  Bad basis for agriculture");
+                                    break;
+                                case Volcano:
+                                    comm_vset_text(3, "  Plutonium prod. is very effective");
+                                    comm_vset_text(4, "  Bad basis for agriculture");
+                                    break;
+                                case Rock:
+                                    comm_vset_text(3, "  Mining is very effective");
+                                    break;
+                                case Ice:
+                                    comm_vset_text(3, "  Possibly rich in minerals");
+                                    comm_vset_text(4, "  Bad basis for agriculture");
+                                    break;
+                                case Terra:
+                                    comm_vset_text(3, "  Good basis for agriculture");
+                                    break;
+                                case Artificial:
+                                    comm_vset_text(3, "  The planet may be moved");
+                                    comm_vset_text(4, "  No mining possible");
+                                    break;
+                                default:
+                                    break;
+                            }
+                            comm_open(6);
+                            stage = SM_SettleConfirm;
+                            return ExodusMode::MODE_None;
                         }
                     }
                 } else {
@@ -105,6 +156,15 @@ ExodusMode StarMap::update(float delta) {
                     draw_manager.fade_black(1.2f, 24);
                     stage = SM_Back2Gal;
                 }
+            }
+            break;
+        case SM_SettleConfirm:
+            action = comm_check_action();
+            if (action == CA_Proceed) {
+                // TODO: Name planet
+            } else if (action == CA_Abort) {
+                comm_close();
+                return ExodusMode::MODE_Reload;
             }
             break;
         case SM_Back2Gal:
