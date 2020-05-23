@@ -20,6 +20,10 @@ enum ID {
 
 StarMap::StarMap() : ModeBase("StarMap"), PanelDrawer(PNL_Star), CommPanelDrawer() {
     stage = SM_Idle;
+    for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+        planet_progress[i] = 0;
+    }
+
 }
 
 void StarMap::enter() {
@@ -27,10 +31,6 @@ void StarMap::enter() {
     star = exostate.get_active_star();
 
     DrawTarget tgt = TGT_Primary;
-
-    for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
-        planet_progress[i] = 0;
-    }
 
     draw_manager.draw(tgt, IMG_MAP_SOLAR);
     draw_panel_bg(tgt);
