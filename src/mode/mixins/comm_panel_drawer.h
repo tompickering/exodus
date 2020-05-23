@@ -20,6 +20,12 @@ enum CommAction {
     CA_None,
     CA_Proceed,
     CA_Abort,
+    CA_Text0,
+    CA_Text1,
+    CA_Text2,
+    CA_Text3,
+    CA_Text4,
+    CA_Text5,
 };
 
 class CommPanelDrawer {

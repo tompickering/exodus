@@ -171,6 +171,11 @@ CommAction CommPanelDrawer::comm_check_action() {
     if (click.id) {
         return click.x < 0.55 ? CA_Proceed : CA_Abort;
     }
+    for (int i = 0; i < 6; ++i) {
+        if (draw_manager.query_click(id_comm_buttons).id) {
+            return (CommAction)((int)CA_Text0 + i);
+        }
+    }
     return CA_None;
 }
 
