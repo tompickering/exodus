@@ -26,6 +26,18 @@ CommPanelDrawer::CommPanelDrawer() {
     _comm_is_open = false;
 }
 
+void CommPanelDrawer::comm_draw_text() {
+    for (int i = 0; i < 6; ++i) {
+        draw_manager.draw_text(
+            id_text[i],
+            comm_text[i],
+            Justify::Left,
+            COMM_RCOL_X + 8,
+            comm_text_y(i),
+            COL_TEXT);
+    }
+}
+
 void CommPanelDrawer::comm_set_title(const char* text) {
     strncpy(comm_title, text, MAX_TEXT - 1);
 }
@@ -127,15 +139,7 @@ void CommPanelDrawer::comm_open(int text_slots) {
         COMM_Y + COMM_H - COMM_BORDER - 16,
         COL_TEXT2);
 
-    for (int i = 0; i < 6; ++i) {
-        draw_manager.draw_text(
-            id_text[i],
-            comm_text[i],
-            Justify::Left,
-            COMM_RCOL_X + 8,
-            comm_text_y(i),
-            COL_TEXT);
-    }
+    comm_draw_text();
 
     _comm_is_open = true;
 }

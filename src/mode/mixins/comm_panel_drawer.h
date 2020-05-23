@@ -31,6 +31,7 @@ enum CommAction {
 class CommPanelDrawer {
     public:
         CommPanelDrawer();
+        void comm_draw_text();
         void comm_set_title(const char*);
         void comm_set_anim(const Anim&);
         void comm_set_img_caption(const char*);

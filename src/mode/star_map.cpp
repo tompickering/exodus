@@ -61,6 +61,7 @@ ExodusMode StarMap::update(float delta) {
     SpriteClick click;
     CommAction action;
     const char *size_str = nullptr;
+    const char* input_name;
 
     if (draw_manager.fade_active()) {
         return ExodusMode::MODE_None;
@@ -68,6 +69,7 @@ ExodusMode StarMap::update(float delta) {
 
     Player *player = exostate.get_active_player();
     Planet *planet = exostate.get_active_planet();
+    int player_idx = exostate.get_active_player_idx();
 
     switch(stage) {
         case SM_Idle:
@@ -98,13 +100,13 @@ ExodusMode StarMap::update(float delta) {
                     // Comm
                     if (planet && planet->exists()) {
                         if (planet->is_owned()) {
-                            if (planet->get_owner() == exostate.get_active_player_idx()) {
+                            if (planet->get_owner() == player_idx) {
                                 // TODO: Comms with own planet
                             } else {
                                 // TODO: Comms with enemy planet
                             }
                         } else {
-                            // TODO: Comms to claim planet
+                            // TODO: Check if we can afford it
                             size_str = str_size_sm;
                             if (planet->get_size() == PLANET_Medium) size_str = str_size_md;
                             if (planet->get_size() == PLANET_Large) size_str = str_size_lg;
@@ -164,8 +166,31 @@ ExodusMode StarMap::update(float delta) {
         case SM_SettleConfirm:
             action = comm_check_action();
             if (action == CA_Proceed) {
-                // TODO: Name planet
+                comm_close();
+                comm_set_title("Claim a planet");
+                comm_set_text(0, "Please name the new planet.");
+                input_manager.start_text_input();
+                comm_open(6);
+                stage = SM_NamePlanet;
             } else if (action == CA_Abort) {
+                comm_close();
+                return ExodusMode::MODE_Reload;
+            }
+            break;
+        case SM_NamePlanet:
+            if (input_manager.consume(K_Backspace)) {
+                input_manager.backspace();
+            }
+            input_name = input_manager.get_input_text(PLANET_MAX_NAME);
+            comm_set_text(2, input_name);
+            comm_draw_text();
+            if (input_manager.consume(K_Enter) && strnlen(input_name, 1)) {
+                if (player->attempt_spend(planet->get_settlement_cost())) {
+                    planet->set_name(input_name);
+                    planet->set_owner(player_idx);
+                } else {
+                    L.error("Cannot afford planet - but should have checked sooner!");
+                }
                 comm_close();
                 return ExodusMode::MODE_Reload;
             }
