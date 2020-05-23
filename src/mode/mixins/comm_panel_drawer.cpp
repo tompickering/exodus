@@ -39,11 +39,18 @@ void CommPanelDrawer::comm_set_img_caption(const char* text) {
 }
 
 void CommPanelDrawer::comm_set_text(int idx, const char* in_text) {
+    comm_vset_text(idx, in_text);
+}
+
+void CommPanelDrawer::comm_vset_text(int idx, const char* in_text, ...) {
     if (idx >= 6) {
         L.fatal("Tried to set invalid text index %d to %s", idx, in_text);
     }
 
-    strncpy(comm_text[idx], in_text, MAX_TEXT - 1);
+    va_list args;
+    va_start(args, in_text);
+    vsnprintf(comm_text[idx], MAX_TEXT - 1, in_text, args);
+    va_end(args);
 }
 
 void CommPanelDrawer::comm_open(int text_slots) {
