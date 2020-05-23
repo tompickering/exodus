@@ -18,7 +18,7 @@ enum ID {
     END,
 };
 
-StarMap::StarMap() : ModeBase("StarMap"), PanelDrawer(PNL_Star) {
+StarMap::StarMap() : ModeBase("StarMap"), PanelDrawer(PNL_Star), CommPanelDrawer() {
     stage = SM_Idle;
 }
 
@@ -86,7 +86,20 @@ ExodusMode StarMap::update(float delta) {
                         return ExodusMode::MODE_PlanetStatus;
                     }
                 } else if (click.x < 0.75) {
-                    L.debug("Panel 2");
+                    // Comm
+                    if (planet && planet->exists()) {
+                        if (planet->is_owned()) {
+                            if (planet->get_owner() == exostate.get_active_player_idx()) {
+                                // TODO: Comms with own planet
+                            } else {
+                                // TODO: Comms with enemy planet
+                            }
+                        } else {
+                            // TODO: Comms to claim planet
+                            //comm_set_title("Message from counsellor");
+                            //comm_set_img_caption("COUNSELLOR");
+                        }
+                    }
                 } else {
                     // Back
                     draw_manager.fade_black(1.2f, 24);
@@ -134,7 +147,7 @@ bool StarMap::select_planet(int index) {
     Planet *p = star->get_planet(index);
     if (p && p->exists()) {
         exostate.set_active_planet(index);
-        set_fleet_button(!(p->is_owned() && exostate.get_active_player_idx() == (unsigned int)p->get_owner()));
+        set_fleet_button(!(p->is_owned() && exostate.get_active_player_idx() == p->get_owner()));
         return true;
     }
     return false;

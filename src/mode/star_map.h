@@ -3,6 +3,7 @@
 
 #include "mode_base.h"
 #include "mixins/panel_drawer.h"
+#include "mixins/comm_panel_drawer.h"
 
 #include "draw/draw.h"
 
@@ -11,7 +12,7 @@
 
 extern ExodusState exostate;
 
-class StarMap : ModeBase, PanelDrawer {
+class StarMap : ModeBase, PanelDrawer, CommPanelDrawer {
     public:
         StarMap();
         virtual void enter() override;

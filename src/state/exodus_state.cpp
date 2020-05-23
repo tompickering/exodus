@@ -274,8 +274,8 @@ Player* ExodusState::get_active_player() {
     return &players[active_player];
 }
 
-unsigned int ExodusState::get_active_player_idx() {
-    return active_player;
+int ExodusState::get_active_player_idx() {
+    return (int)active_player;
 }
 
 Star* ExodusState::get_active_star() {
