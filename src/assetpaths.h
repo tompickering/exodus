@@ -47,6 +47,7 @@ extern const char *MUS_ST3_58;
 
 extern const char *IMG_CURSOR;
 extern const char *IMG_SHIP_FLIPPED;
+extern const char *IMG_BUTTON_OTHER;
 
 extern const char *IMG_INTRO_EARTH;
 extern const char *IMG_INTRO_CITY;
