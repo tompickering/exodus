@@ -59,6 +59,7 @@ class ExodusState {
         void init_cpu_lords();
         Galaxy* get_galaxy();
         unsigned int get_month();
+        void advance_month();
         Player *get_active_player();
         int get_active_player_idx();
         Star* get_active_star();

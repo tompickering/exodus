@@ -26,12 +26,19 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer {
             GM_Zoom2Guild,
             GM_Zoom2Star,
             GM_MonthPassing,
+            GM_Report,
             GM_FlyConfirm,
         };
 
         Stage stage;
         FlyTarget *selected_ft;
         float selected_ft_blink;
+
+        bool month_passing;
+
+        ExodusMode month_pass_update();
+        void month_pass_start();
+        void month_pass_end();
 };
 
 #endif

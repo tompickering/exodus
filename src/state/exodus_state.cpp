@@ -270,6 +270,10 @@ unsigned int ExodusState::get_month() {
     return month;
 }
 
+void ExodusState::advance_month() {
+    ++month;
+}
+
 Player* ExodusState::get_active_player() {
     return &players[active_player];
 }
