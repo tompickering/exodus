@@ -25,6 +25,7 @@ const char* flags[] = {
 
 ExodusState::ExodusState() {
     galaxy_finalised = false;
+    active_flytarget_is_guild = false;
 }
 
 void ExodusState::init(GameConfig config) {
@@ -303,17 +304,23 @@ int ExodusState::get_active_planet_idx() {
 }
 
 FlyTarget* ExodusState::get_active_flytarget() {
-    return active_flytarget;
+    if (active_flytarget_is_guild) {
+        return get_galaxy()->get_guild();
+    }
+
+    return get_active_star();
 }
 
 void ExodusState::set_active_flytarget(FlyTarget* new_target) {
     L.debug("Active target: %s", new_target->name);
-    active_flytarget = new_target;
     active_planet = -1;
 
     if (new_target == get_galaxy()->get_guild()) {
+        active_flytarget_is_guild = true;
         return;
     }
+
+    active_flytarget_is_guild = false;
 
     for (int i = 0; i < GALAXY_MAX_STARS; ++i) {
         if (&get_galaxy()->get_stars()[i] == new_target) {
