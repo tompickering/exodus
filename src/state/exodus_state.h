@@ -86,6 +86,7 @@ class ExodusState {
         EnemyStart enemy_start;
         Galaxy galaxy;
         bool galaxy_finalised;
+        // FIXME: The state should not contain a pointer...
         FlyTarget *active_flytarget;
 };
 
