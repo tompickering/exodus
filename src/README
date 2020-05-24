@@ -1,0 +1,57 @@
+# Code structure overview
+
+The code is structured so as to maintain a line of separation between pure C++ and anything specific to a particular library or platform. Wherever these things must be interfaced with, we provide an abstract interface with a specific implementation. For example, the DrawManager class provides a generic interface for all drawing - when compiled with SDL, the game will use the DrawManagerSDL class as the specific implementation, which encapsulates all SDL-specific draw calls. In this way, the game can theoretically be ported to other platforms with comparatively minimal effort.
+
+The main game loop runs within the Exodus singleton, but most of the 'frame to frame' game logic is encapsulated within 'modes'. There are modes for the intro sequence, the main menu, the galaxy map, the star map, the planet map, the animation that plays when you 'fly' to another star, and many others. The Exodus object contains one reference for each mode that the game can be in. Only one mode is active at any given time, and this defines what happens during frame updates at this time. Modes can return a value to the main loop to signal when a transition to a different mode should be made.
+
+This is an overview of the subdirectories:
+
+
+- audio
+
+Contains an abstract audio manager interface which is responsible for all music and SFX, along with specific implementations.
+
+
+- draw
+
+Contains an abstract draw manager interface which is responsible for all drawing and rendering, along with specific implementations. The draw manager is also responsible for allocating 'Sprite IDs' on request, which are tags which can be attached to many draw operations for a variety of purposes. These include removal of sprites from the screen (refreshing the area with an area of the 'background', which can be saved separately), detection of clicks on drawn elements, requesting that only a particular region of a given sprite be drawn, and efficient drawing of a moving entity through a 'dirty' update system.
+
+
+- galaxy
+
+Describes objects which exist in the galaxy, as logical entities. This includes the 'galaxy' itself, which contains the space guild and a collection of stars, stars which are orbited by several planets, and planets themselves, which have a surface map etc. Each of these provides related facilities for e.g. random generation. Note that you won't find anything here describing (e.g.) what these things 'look' like or how they behave from a user perspective - that is encapsulated within the relevant 'modes'.
+
+
+- input
+
+Contains an abstract input manager interface which is responsible for all input from both the keyboard and mouse, along with specific implementations. The mouse information is passed to the draw manager to allow it to render the cursor and determine clicked elements.
+
+
+- mode
+
+This defines the various game modes, which drive the logic of the game at any one time. If any mode can be said to be the 'main' one, then it is the galaxy map, which is the main driver for the execution of a full 'turn' in the game, and driving the sequence that the game goes through as one month is passing.
+
+
+- mode/mixins
+
+Where multiple modes benefit from sharing functionality, these can be defined in 'mixins', which are pulled into those classes via a limited and disciplined use of multiple inheritance. These is a mixin for drawing the info panel at the bottom of the screen, for example, as this is drawn and updated in both the galaxy map and star map modes. Another mixin describes the logic for drawing the comms panel, which appears throughout the game.
+
+
+- player
+
+This defines data structures encapsulating a single 'player' of the game, be that a human player or a CPU. It also contains the logic that drives the behaviour of the CPU players, in addition to other player activities such as managing the players' movement between stars.
+
+
+- state
+
+This ultimately encapsulates exactly the entire definition of the state of the game at any one time. It wraps everything including the galaxy, the player info, and game information such as whose turn it is or which system/planet is currently selected by the player. A reference to the state singleton is always available to everything else in the codebase.  Everything within this class and everything it contains directly or indirectly should be statically allocated, and contain no pointer members. As such, a save/load operation should consist of no more or less than serialising and de-serialising this single object.
+
+
+- timer
+
+Contains an abstract timer interface which is responsible for measuring time deltas. Only one of these is used by the game, and the delta-time information is passed down into the mode updates which can use to make their own time measurements.
+
+
+- util
+
+A handful of loose utility functions.
