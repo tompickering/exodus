@@ -255,11 +255,18 @@ void StarMap::draw_planets(float delta) {
             if (delta == 0) {
                 const char *name = planet->get_name();
                 if (strnlen(name, 1)) {
-                    bool enemy = planet->is_owned() &&
-                        planet->get_owner() != exostate.get_active_player_idx();
-                    RGB col = COL_TEXT2;
-                    if (enemy) {
-                        col = COL_TEXT_BAD;
+                    // The original doesn't show names of named planets if they have
+                    // no owner at the time - but the name is still visible in the
+                    // status screen etc - we show the name in grey for clarity.
+                    RGB col = COL_TEXT_GREYED;
+                    if (planet->is_owned()) {
+                        bool enemy = planet->is_owned() &&
+                            planet->get_owner() != exostate.get_active_player_idx();
+                        if (enemy) {
+                            col = COL_TEXT_BAD;
+                        } else {
+                            col = COL_TEXT;
+                        }
                     }
                     draw_manager.draw_text(
                         Font::Tiny,
