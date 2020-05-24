@@ -81,6 +81,7 @@ class Planet {
         void destroy_lunar_base();
         const char* get_name();      // Orig: SIn
         void set_name(const char*);
+        bool is_named();
         const char* get_name_suggestion();
         const PlanetSpriteSet* sprites();
         bool is_owned();

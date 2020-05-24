@@ -77,6 +77,10 @@ void Planet::set_name(const char* _name) {
     strncpy(name, _name, PLANET_MAX_NAME);
 }
 
+bool Planet::is_named() {
+    return strnlen(name, 1) > 0;
+}
+
 const char* Planet::get_name_suggestion() {
     PlanetClass cls = get_class();
     if (cls == Artificial)

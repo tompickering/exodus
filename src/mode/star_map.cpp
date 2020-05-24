@@ -65,6 +65,7 @@ ExodusMode StarMap::update(float delta) {
     CommAction action;
     const char *size_str = nullptr;
     const char* input_name;
+    int textidx = 0;
 
     if (draw_manager.fade_active()) {
         return ExodusMode::MODE_None;
@@ -135,35 +136,53 @@ ExodusMode StarMap::update(float delta) {
                             comm_vset_text(1, "  Size: %s -> Cost: %d MC",
                                 size_str, planet->get_settlement_cost());
                             comm_vset_text(2, "Advantages / Disadvantages:");
+                            textidx = 3;
                             switch (planet->get_class()) {
                                 case Forest:
-                                    comm_vset_text(3, "  Good basis for agriculture");
+                                    comm_vset_text(textidx++,
+                                        "  Good basis for agriculture");
                                     break;
                                 case Desert:
-                                    comm_vset_text(3, "  Possibly rich in minerals");
-                                    comm_vset_text(4, "  Bad basis for agriculture");
+                                    comm_vset_text(textidx++,
+                                        "  Possibly rich in minerals");
+                                    comm_vset_text(textidx++,
+                                        "  Bad basis for agriculture");
                                     break;
                                 case Volcano:
-                                    comm_vset_text(3, "  Plutonium prod. is very effective");
-                                    comm_vset_text(4, "  Bad basis for agriculture");
+                                    comm_vset_text(textidx++,
+                                        "  Plutonium prod. is very effective");
+                                    comm_vset_text(textidx++,
+                                        "  Bad basis for agriculture");
                                     break;
                                 case Rock:
-                                    comm_vset_text(3, "  Mining is very effective");
+                                    comm_vset_text(textidx++,
+                                        "  Mining is very effective");
                                     break;
                                 case Ice:
-                                    comm_vset_text(3, "  Possibly rich in minerals");
-                                    comm_vset_text(4, "  Bad basis for agriculture");
+                                    comm_vset_text(textidx++,
+                                        "  Possibly rich in minerals");
+                                    comm_vset_text(textidx++,
+                                        "  Bad basis for agriculture");
                                     break;
                                 case Terra:
-                                    comm_vset_text(3, "  Good basis for agriculture");
+                                    comm_vset_text(textidx++,
+                                        "  Good basis for agriculture");
                                     break;
                                 case Artificial:
-                                    comm_vset_text(3, "  The planet may be moved");
-                                    comm_vset_text(4, "  No mining possible");
+                                    comm_vset_text(textidx++,
+                                        "  The planet may be moved");
+                                    comm_vset_text(textidx++,
+                                        "  No mining possible");
                                     break;
                                 default:
                                     break;
                             }
+
+                            if (planet->is_named()) {
+                                comm_vset_text(textidx++,
+                                    "  Possibly already built-up");
+                            }
+
                             comm_open(6);
                             stage = SM_SettleConfirm;
                             return ExodusMode::MODE_None;
