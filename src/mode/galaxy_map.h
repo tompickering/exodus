@@ -35,6 +35,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer {
         float selected_ft_blink;
 
         bool month_passing;
+        float month_pass_time;
 
         ExodusMode month_pass_update();
         void month_pass_start();

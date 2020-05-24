@@ -16,6 +16,7 @@ GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer(), PanelDrawer(PNL_
     selected_ft = nullptr;
     selected_ft_blink = 0;
     month_passing = false;
+    month_pass_time = 0;
 }
 
 void GalaxyMap::enter() {
@@ -183,6 +184,7 @@ ExodusMode GalaxyMap::update(float delta) {
         case GM_MonthPassing:
             {
                 ExodusMode next_mode = month_pass_update();
+                month_pass_time += delta;
                 if (!month_passing) {
                     // The only place we emerge from month-pass-specific stages...
                     stage = GM_Report;
@@ -209,6 +211,7 @@ void GalaxyMap::exit() {
 void GalaxyMap::month_pass_start() {
     L.info("Month passing...");
     month_passing = true;
+    month_pass_time = 0;
 
     draw_manager.fill(
         id(ID::MONTH_PASSING),
@@ -250,7 +253,8 @@ ExodusMode GalaxyMap::month_pass_update() {
     // We *cannot* enter GM_Idle until all month pass logic is complete!
 
     // When we decide we're done with updates...
-    if (true) {
+    // Time constraint here so the "One month is passing" notification doesn't flicker.
+    if (true && month_pass_time > 1.f) {
         month_pass_end();
     }
 
