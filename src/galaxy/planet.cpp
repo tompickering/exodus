@@ -638,3 +638,38 @@ void Planet::adjust_unrest(int adjustment) {
     // Can't see any ref to a maximum in the original
     // Riots happen when >8, rebel attacks at >9
 }
+
+void Planet::surfchange() {
+    // Artifical planet climates don't change
+    if (cls == Artificial)
+        return;
+
+    PlanetClass new_cls = Forest;
+    if (onein(2)) {
+        if (cls == Forest)  new_cls = Desert;
+        if (cls == Desert)  new_cls = Terra;
+        if (cls == Volcano) new_cls = Ice;
+        if (cls == Rock)    new_cls = Desert;
+        if (cls == Ice)     new_cls = Rock;
+        if (cls == Terra)   new_cls = Forest;
+    } else {
+        if (cls == Forest)  new_cls = Desert;
+        if (cls == Desert)  new_cls = Volcano;
+        if (cls == Volcano) new_cls = Ice;
+        if (cls == Rock)    new_cls = Ice;
+        if (cls == Ice)     new_cls = Volcano;
+        if (cls == Terra)   new_cls = Rock;
+    }
+
+    change_class(new_cls);
+}
+
+void Planet::change_class(PlanetClass new_cls) {
+    if (cls == new_cls) {
+        L.warn("Attempt to set class to its current one");
+        return;
+    }
+
+    L.info("CLIMATE CHANGE: %d -> %d", (int)cls, (int)new_cls);
+    cls = new_cls;
+}

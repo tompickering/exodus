@@ -98,6 +98,7 @@ class Planet {
         bool army_funding_sufficient();
         void prepare_for_cpu_lord(); // Orig: PROCgivestation
         void adjust_unrest(int);
+        void surfchange();
     private:
         void init();
 
@@ -130,6 +131,8 @@ class Planet {
         int army_art;          // Orig: SIk(3)
 
         // TODO: SIu, SIl, SItb
+
+        void change_class(PlanetClass);
 
         void cull_stones_to_size();
         Stone _get_stone(int, int);
