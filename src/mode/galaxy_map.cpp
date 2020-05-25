@@ -299,6 +299,21 @@ ExodusMode GalaxyMap::month_pass_update() {
         next_mp_stage();
     }
 
+    if (mp_stage == MP_StarshipRepairs) {
+        for (; mp_player_idx < N_PLAYERS; ++mp_player_idx) {
+            Player *p = exostate.set_active_player(mp_player_idx);
+            Starship &ship = p->get_starship();
+            int crew = ship.crew;
+            ship.pct_damage_thrust -= (int)(crew / 5);
+            ship.pct_damage_comms  -= (int)(crew / 5);
+            ship.pct_damage_struct -= (int)(crew / 3);
+            if (ship.pct_damage_thrust < 0) ship.pct_damage_thrust = 0;
+            if (ship.pct_damage_comms  < 0) ship.pct_damage_comms  = 0;
+            if (ship.pct_damage_struct < 0) ship.pct_damage_struct = 0;
+        }
+        next_mp_stage();
+    }
+
     if (mp_stage == MP_PlanetMaintenance) {
         unsigned int n_stars;
         Galaxy *gal = exostate.get_galaxy();

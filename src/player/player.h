@@ -99,6 +99,7 @@ class Player {
         const char *get_fleet_marker();
         void set_fleet_marker(const char*);
         PlayerLocation& get_location();
+        Starship& get_starship();
     private:
         Race race;
         Gender gender;

@@ -154,3 +154,7 @@ void Player::set_fleet_marker(const char* new_fleet_marker) {
 PlayerLocation& Player::get_location() {
     return location;
 }
+
+Starship& Player::get_starship() {
+    return starship;
+}

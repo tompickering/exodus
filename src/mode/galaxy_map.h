@@ -35,6 +35,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer {
             MP_None,
             MP_TimeDelay,
             MP_CheckMissionFail,
+            MP_StarshipRepairs,
             MP_PlanetMaintenance,
             MP_UpdateFly,
             MP_End,
