@@ -38,6 +38,10 @@ void ExodusState::init(GameConfig config) {
     active_planet = -1;
     unsigned int i;
 
+    for (i = 0; i < n_players; ++i) {
+        memcpy(&players[i], &config.players[i], sizeof(Player));
+    }
+
     // PLAYER INIT: Everyone (overridable)
     for (i = 0; i < N_PLAYERS; ++i) {
         players[i].mc = 0;
@@ -57,7 +61,6 @@ void ExodusState::init(GameConfig config) {
 
     // PLAYER INIT: Human
     for (i = 0; i < n_players; ++i) {
-        memcpy(&players[i], &config.players[i], sizeof(Player));
         players[i].race = RACE_Human;
         players[i]._intro_seen = false;
         switch(i) {
