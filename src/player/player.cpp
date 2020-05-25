@@ -24,6 +24,7 @@ Player::Player() {
     dead = false;
     participating_in_game = false;
     _intro_seen = false;
+    reputation = 3;
 }
 
 void Player::init_alien_name(int idx) {
@@ -157,4 +158,13 @@ PlayerLocation& Player::get_location() {
 
 Starship& Player::get_starship() {
     return starship;
+}
+
+int Player::get_reputation() {
+    return reputation;
+}
+
+void Player::adjust_reputation(int adjustment) {
+    reputation += adjustment;
+    L.debug("%s: +%d REP (%d)", get_full_name(), adjustment, reputation);
 }

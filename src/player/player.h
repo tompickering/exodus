@@ -100,6 +100,8 @@ class Player {
         void set_fleet_marker(const char*);
         PlayerLocation& get_location();
         Starship& get_starship();
+        int get_reputation();
+        void adjust_reputation(int);
     private:
         Race race;
         Gender gender;
@@ -117,6 +119,7 @@ class Player {
         Starship starship;
         Fleet fleet;
         uint16_t inventions;
+        int reputation;
         void refresh_full_name();
 
     // The ExodusState sets up the player data during game init.

@@ -314,6 +314,16 @@ ExodusMode GalaxyMap::month_pass_update() {
         next_mp_stage();
     }
 
+    if (mp_stage == MP_UpdateReputation) {
+        for (; mp_player_idx < N_PLAYERS; ++mp_player_idx) {
+            Player *p = exostate.set_active_player(mp_player_idx);
+            if (p->get_reputation() < 3 && onein(20)) {
+                p->adjust_reputation(1);
+            }
+        }
+        next_mp_stage();
+    }
+
     if (mp_stage == MP_PlanetMaintenance) {
         unsigned int n_stars;
         Galaxy *gal = exostate.get_galaxy();
