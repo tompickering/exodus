@@ -146,6 +146,30 @@ void Fly::enter() {
     update_panel_info_player(TGT_Primary, player);
     update_panel_info_ft(TGT_Primary, player, tgt);
 
+    if (arriving) {
+        char text[MAX_PLAYER_NAME + FT_MAX_NAME + 40];
+        if (tgt == exostate.get_galaxy()->get_guild()) {
+            snprintf(
+                text,
+                MAX_PLAYER_NAME + FT_MAX_NAME + 40,
+                "%s has arrived at the Space Guild.",
+                player->get_name());
+        } else {
+            snprintf(
+                text,
+                MAX_PLAYER_NAME + FT_MAX_NAME + 40,
+                "%s has arrived at %s.",
+                player->get_name(),
+                tgt->name);
+        }
+
+        draw_manager.draw_text(
+            text,
+            Justify::Left,
+            10, 10,
+            COL_TEXT);
+    }
+
     draw_manager.save_background();
     current_thrust = 0;
     warp_stage = 0;
