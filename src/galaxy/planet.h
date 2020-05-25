@@ -20,8 +20,8 @@ enum PlanetClass {
     Volcano,     // 3   |
     Rock,        // 4    > Original codes for planet types
     Ice,         // 5   |
-    Terra,       // 6   |
-    Artificial,  // 8  -
+    Terra,       // 6   |     (Trivia: It looks like '7' was originally intended
+    Artificial,  // 8  -       to represent uninhabitable gas giants).
 };
 
 enum Stone {
