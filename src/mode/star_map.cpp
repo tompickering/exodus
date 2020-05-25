@@ -123,6 +123,8 @@ ExodusMode StarMap::update(float delta) {
                                 return ExodusMode::MODE_None;
                             }
 
+                            // TODO: Check for villages, show data from Co14
+
                             size_str = str_size_sm;
                             if (planet->get_size() == PLANET_Medium) size_str = str_size_md;
                             if (planet->get_size() == PLANET_Large) size_str = str_size_lg;
