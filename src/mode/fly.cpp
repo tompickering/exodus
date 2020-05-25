@@ -18,7 +18,7 @@
 #define WARP_Y 200
 #define WARP_START (FLY_START + FLY_TIME + 0.4)
 #define WARP_TIME 1.4
-#define WARP_STAGES 12
+#define WARP_STAGES 10
 
 enum ID {
     FLEET,
