@@ -15,7 +15,7 @@ GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer(), PanelDrawer(PNL_
     stage = GM_SwapIn;
     selected_ft = nullptr;
     selected_ft_blink = 0;
-    month_passing = false;
+    mp_stage = MP_None;
     month_pass_time = 0;
 }
 
@@ -34,7 +34,7 @@ void GalaxyMap::enter() {
         draw_manager.pixelswap_start(&galaxy_panel_area);
     }
 
-    if (!month_passing) {
+    if (mp_stage == MP_None) {
         stage = GM_SwapIn;
     } else {
         stage = GM_MonthPassing;
@@ -185,7 +185,7 @@ ExodusMode GalaxyMap::update(float delta) {
             {
                 ExodusMode next_mode = month_pass_update();
                 month_pass_time += delta;
-                if (!month_passing) {
+                if (mp_stage == MP_None) {
                     // The only place we emerge from month-pass-specific stages...
                     stage = GM_Report;
                 }
@@ -208,10 +208,20 @@ void GalaxyMap::exit() {
     ModeBase::exit();
 }
 
+void GalaxyMap::next_mp_stage() {
+    mp_stage = (MonthPassStage)((int)mp_stage + 1);
+    L.debug("MP stage %d", mp_stage);
+    // Reset all mp-stage state tracking
+    mp_player_idx = 0;
+}
+
 void GalaxyMap::month_pass_start() {
     L.info("Month passing...");
-    month_passing = true;
     month_pass_time = 0;
+
+    if (mp_stage != MP_None) {
+        L.fatal("We started a month-pass whilst one was still in progress");
+    }
 
     draw_manager.fill(
         id(ID::MONTH_PASSING),
@@ -231,31 +241,46 @@ void GalaxyMap::month_pass_start() {
 
 void GalaxyMap::month_pass_end() {
     draw_manager.draw(id(ID::MONTH_PASSING), nullptr);
+    mp_stage = MP_None;
 
-    month_passing = false;
     L.info("Month passed");
 }
 
 ExodusMode GalaxyMap::month_pass_update() {
-    if (!month_passing) {
+    // Perform month updates here - but we can request a change of mode.
+    // We don't need to do everything at once - so battles etc can happen
+    // However, we should also be able to execute other GalaxyMap stages,
+    // for example, to support enemy comms with us for trade dialogs etc.
+    // We can set this directly and return from this update - but we must
+    // *promise* to only enter a subset of month-pass-specific stages.
+    // We *cannot* enter GM_Idle until all month pass logic is complete!
+
+
+    if (mp_stage == MP_None) {
         month_pass_start();
+        next_mp_stage();
         // Allow an update to display the 'waiting' dialogue...
         return ExodusMode::MODE_None;
     }
 
-    // TODO: Check if we've run out of time for our mission
+    if (mp_stage == MP_CheckMissionFail) {
+        // TODO: Check if we've run out of time for our mission
+        next_mp_stage();
+    }
+    if (mp_stage == MP_UpdateFly) {
+        for (; mp_player_idx < N_PLAYERS; ++mp_player_idx) {
+            // TODO: Update fly
+        }
+        next_mp_stage();
+    }
 
-    // Perform month updates here - but we can request a change of state
-    // We don't need to do everything at once - so battles etc can happen
-    // However, we should also be able to execute other GalaxyMap stages.
-    // We can set this directly and return from the update - but we must
-    // *promise* to only enter a subset of month-pass-specific stages.
-    // We *cannot* enter GM_Idle until all month pass logic is complete!
-
-    // When we decide we're done with updates...
-    // Time constraint here so the "One month is passing" notification doesn't flicker.
-    if (true && month_pass_time > 1.f) {
-        month_pass_end();
+    if (mp_stage == MP_End) {
+        // When we decide we're done with updates...
+        // Time constraint here so the "Month passing" notification doesn't flicker.
+        if (month_pass_time > 1.f) {
+            month_pass_end();
+            return ExodusMode::MODE_None;
+        }
     }
 
     return ExodusMode::MODE_None;

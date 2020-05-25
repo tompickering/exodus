@@ -30,16 +30,26 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer {
             GM_FlyConfirm,
         };
 
+        // Enum order determines order of processing
+        enum MonthPassStage {
+            MP_None,
+            MP_CheckMissionFail,
+            MP_UpdateFly,
+            MP_End,
+        };
+
         Stage stage;
         FlyTarget *selected_ft;
         float selected_ft_blink;
 
-        bool month_passing;
+        MonthPassStage mp_stage;
         float month_pass_time;
+        int mp_player_idx;
 
         ExodusMode month_pass_update();
         void month_pass_start();
         void month_pass_end();
+        void next_mp_stage();
 };
 
 #endif
