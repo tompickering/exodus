@@ -253,10 +253,15 @@ int Planet::get_net_income() {
 }
 
 int Planet::get_population() {
-    // TODO: This looks to be a combination of the number of cities
-    // and particular natural surface features (orig: '2', 'alvil')
-    int alvil = 0;
-    return get_n_cities() + alvil;
+    // In the original, there seems to be a bug in PROCstatus
+    // whereby we count agri instead of villages!
+    int mul = 1;
+    unsigned int month = exostate.get_month();
+    if (month > 3) mul = 5;
+    if (month > 10) mul = 10;
+    if (month > 25) mul = 15;
+    if (month > 40) mul = 20;
+    return mul * get_n_cities() + count_stones(STONE_Village);
 }
 
 int Planet::get_day_hours() {
@@ -266,13 +271,13 @@ int Planet::get_day_hours() {
 }
 
 int Planet::get_n_cities() {
-    // TODO - Orig SIc
-    return 0;
+    // Orig SIc
+    return count_stones(STONE_City);
 }
 
 int Planet::get_n_agri() {
-    // TODO - Orig SIna
-    return 0;
+    // Orig SIna
+    return count_stones(STONE_Agri);
 }
 
 bool Planet::agri_sufficient() {
