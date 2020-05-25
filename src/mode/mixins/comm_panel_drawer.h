@@ -37,6 +37,7 @@ class CommPanelDrawer {
         void comm_set_img_caption(const char*);
         void comm_set_text(int, const char*);
         void comm_vset_text(int, const char*, ...);
+        void comm_set_buttons(bool);
         void comm_open(int);
         void comm_close();
         void comm_ensure_closed();
@@ -65,6 +66,8 @@ class CommPanelDrawer {
 
         int comm_text_slots;
         int comm_text_y(int);
+
+        bool show_buttons;
 };
 
 #endif

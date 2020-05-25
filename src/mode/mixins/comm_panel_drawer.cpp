@@ -23,6 +23,7 @@ CommPanelDrawer::CommPanelDrawer() {
 
     new (&comm_anim) Anim(1, IMG_LD0_LD0);
 
+    show_buttons = true;
     _comm_is_open = false;
 }
 
@@ -52,6 +53,10 @@ void CommPanelDrawer::comm_set_img_caption(const char* text) {
 
 void CommPanelDrawer::comm_set_text(int idx, const char* in_text) {
     comm_vset_text(idx, in_text);
+}
+
+void CommPanelDrawer::comm_set_buttons(bool buttons_on) {
+    show_buttons = buttons_on;
 }
 
 void CommPanelDrawer::comm_vset_text(int idx, const char* in_text, ...) {
@@ -101,18 +106,20 @@ void CommPanelDrawer::comm_open(int text_slots) {
          COMM_X + COMM_W - COMM_RCOL_X - COMM_BORDER,
          172});
 
-    draw_manager.draw(
-        id_comm_buttons,
-        IMG_BR1_EXPORT,
-        {COMM_RCOL_X + 2,
-         COMM_Y + COMM_H - COMM_BORDER - 2,
-         0, 1, 1, 1});
+    if (show_buttons) {
+        draw_manager.draw(
+            id_comm_buttons,
+            IMG_BR1_EXPORT,
+            {COMM_RCOL_X + 2,
+             COMM_Y + COMM_H - COMM_BORDER - 2,
+             0, 1, 1, 1});
 
-    draw_manager.fill(
-        {COMM_RCOL_X + 4 + 236,
-         COMM_Y + COMM_H - COMM_BORDER - 28,
-         118, 26},
-         COL_BORDERS);
+        draw_manager.fill(
+            {COMM_RCOL_X + 4 + 236,
+             COMM_Y + COMM_H - COMM_BORDER - 28,
+             118, 26},
+             COL_BORDERS);
+    }
 
     draw_manager.save_background({COMM_X, COMM_Y,
                                   COMM_W, COMM_H});
@@ -158,6 +165,7 @@ void CommPanelDrawer::comm_close() {
 
     draw_manager.draw(id_comm_panel, nullptr);
     draw_manager.release_sprite_id(id_comm_panel);
+    show_buttons = true;
     _comm_is_open = false;
 
     // Wipe all info
