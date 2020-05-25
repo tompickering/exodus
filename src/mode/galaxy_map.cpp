@@ -244,10 +244,12 @@ void GalaxyMap::month_pass_end() {
 
     L.info("Month passed");
 
+    Player *p;
+
     // Reset to the first active player
     bool reset;
     for (int i = 0; i < N_PLAYERS; ++i) {
-        Player *p = exostate.set_active_player(i);
+        p = exostate.set_active_player(i);
         if (p && p->is_active() && p->is_human()) {
             reset = true;
             break;
@@ -257,6 +259,8 @@ void GalaxyMap::month_pass_end() {
     if (!reset) {
         L.fatal("No viable human player to resume play!");
     }
+
+    exostate.set_active_flytarget(exostate.loc2tgt(p->get_location().get_target()));
 }
 
 ExodusMode GalaxyMap::month_pass_update() {
