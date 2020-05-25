@@ -50,20 +50,28 @@ typedef struct {
 } Fleet;
 
 enum Invention {
-    INV_MassProduction,
-    INV_UltraRangeScanner,
-    INV_FusionEngine,
-    INV_MicroMechanicElements,
-    INV_UniversalVaccine,
-    INV_OrbitalBombs,
-    INV_OrbitalMassConstruction,
-    INV_OrbitalMassThrust,
-    INV_WeatherInfluence,
-    INV_MultiFunctionalVaccine,
-    INV_Acid,
-    INV_IndustryGuard,
-    INV_DreamInfluence,
-    INV_RaderExtension,
+    INV_MassProduction,           // 1   -
+    INV_UltraRangeScanner,        // 2    |
+    INV_FusionEngine,             // 3    |
+    INV_MicroMechanicElements,    // 4    |
+    INV_UniversalVaccine,         // 5    |
+    INV_OrbitalBombs,             // 6    |
+    INV_OrbitalMassConstruction,  // 7     \ Original codes
+    INV_OrbitalMassThrust,        // 8     / for inventions
+    INV_WeatherInfluence,         // 9    |
+    INV_MultiFunctionalVaccine,   // 10   |
+    INV_Acid,                     // 11   |
+    INV_IndustryGuard,            // 12   |
+    INV_DreamInfluence,           // 13   |
+    INV_RaderExtension,           // 14  -
+};
+
+enum InventionType {
+    IT_Physical,
+    IT_Mechanical,
+    IT_Electronical,
+    IT_Medical,
+    IT_Weapon,
 };
 
 enum Gender {
@@ -102,6 +110,10 @@ class Player {
         Starship& get_starship();
         int get_reputation();
         void adjust_reputation(int);
+        bool can_research(Invention);
+        bool research_invention(Invention);
+        bool has_invention(Invention);
+        InventionType get_invention_type(Invention);
     private:
         Race race;
         Gender gender;

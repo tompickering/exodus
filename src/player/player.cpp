@@ -25,6 +25,7 @@ Player::Player() {
     participating_in_game = false;
     _intro_seen = false;
     reputation = 3;
+    inventions = 0;
 }
 
 void Player::init_alien_name(int idx) {
@@ -167,4 +168,74 @@ int Player::get_reputation() {
 void Player::adjust_reputation(int adjustment) {
     reputation += adjustment;
     L.debug("%s: +%d REP (%d)", get_full_name(), adjustment, reputation);
+}
+
+bool Player::can_research(Invention inv) {
+    if (has_invention(inv))
+        return false;
+
+    // Invention prerequisites
+    // TODO: We do need some way to display this...
+    switch (inv) {
+        case INV_OrbitalMassConstruction:
+            return has_invention(INV_MassProduction)
+                && has_invention(INV_FusionEngine)
+                && has_invention(INV_MicroMechanicElements);
+        case INV_OrbitalMassThrust:
+            return has_invention(INV_MassProduction)
+                && has_invention(INV_FusionEngine)
+                && has_invention(INV_MicroMechanicElements);
+        case INV_WeatherInfluence:
+            return has_invention(INV_UltraRangeScanner);
+        case INV_MultiFunctionalVaccine:
+            return has_invention(INV_UniversalVaccine);
+        case INV_Acid:
+            return has_invention(INV_UltraRangeScanner);
+        case INV_IndustryGuard:
+            return has_invention(INV_MassProduction)
+                && has_invention(INV_MicroMechanicElements);
+        case INV_DreamInfluence:
+            return has_invention(INV_UniversalVaccine);
+        case INV_RaderExtension:
+            return has_invention(INV_UltraRangeScanner)
+                && has_invention(INV_MicroMechanicElements);
+        default:
+            break;
+    }
+
+    return true;
+}
+
+bool Player::research_invention(Invention inv) {
+    if (!can_research(inv)) {
+        return false;
+    }
+
+    inventions |= (1 << (int)inv);
+
+    return true;
+}
+
+bool Player::has_invention(Invention inv) {
+    return (bool)(inventions & (1 << (int)inv));
+}
+
+InventionType Player::get_invention_type(Invention inv) {
+    if (inv == INV_MassProduction)          return IT_Physical;
+    if (inv == INV_UltraRangeScanner)       return IT_Electronical;
+    if (inv == INV_FusionEngine)            return IT_Physical;
+    if (inv == INV_MicroMechanicElements)   return IT_Mechanical;
+    if (inv == INV_UniversalVaccine)        return IT_Medical;
+    if (inv == INV_OrbitalBombs)            return IT_Weapon;
+    if (inv == INV_OrbitalMassConstruction) return IT_Physical;
+    if (inv == INV_OrbitalMassThrust)       return IT_Physical;
+    if (inv == INV_WeatherInfluence)        return IT_Electronical;
+    if (inv == INV_MultiFunctionalVaccine)  return IT_Medical;
+    if (inv == INV_Acid)                    return IT_Electronical;
+    if (inv == INV_IndustryGuard)           return IT_Electronical;
+    if (inv == INV_DreamInfluence)          return IT_Medical;
+    if (inv == INV_RaderExtension)          return IT_Mechanical;
+
+    L.fatal("Requested type for invalid invention %d", inv);
+    return IT_Mechanical;
 }
