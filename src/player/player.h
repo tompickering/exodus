@@ -19,16 +19,16 @@ enum Race {
 };
 
 typedef struct {
-    int shield_generators;
-    int laser_guns;
-    int missile_launchers;
-    int crew;
-    int bionic_probes;
-    bool escape_capsule;
-    bool repair_hangar;
-    int pct_damage_thrust;
-    int pct_damage_comms;
-    int pct_damage_struct;
+    int shield_generators;   // 1  -
+    int laser_guns;          // 2   |
+    int missile_launchers;   // 3   |
+    int crew;                // 4   |
+    int bionic_probes;       // 5    \  Original codes for
+    bool escape_capsule;     // 6    /  spaceship equipment
+    bool repair_hangar;      // 7   |
+    int pct_damage_thrust;   // 8   |
+    int pct_damage_comms;    // 9   |
+    int pct_damage_struct;   // 10 -
 } Starship;
 
 typedef struct {
