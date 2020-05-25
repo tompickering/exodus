@@ -324,6 +324,36 @@ ExodusMode GalaxyMap::month_pass_update() {
         next_mp_stage();
     }
 
+    if (mp_stage == MP_SunExpansion) {
+        // TODO - PROCsunexpand
+        next_mp_stage();
+    }
+
+    if (mp_stage == MP_MoveArtificialPlanets) {
+        // TODO - PROCarrivewp
+        next_mp_stage();
+    }
+
+    if (mp_stage == MP_EnemyTactics) {
+        // TODO - PROCenemythinks
+        next_mp_stage();
+    }
+
+    if (mp_stage == MP_ArtificialWorldNews) {
+        // TODO - PROCwpc
+        next_mp_stage();
+    }
+
+    if (mp_stage == MP_EnemyActions) {
+        // TODO - PROCenemytactics / run PROCeta functions
+        next_mp_stage();
+    }
+
+    if (mp_stage == MP_UpdatePirateProbabilities) {
+        // TODO SunP
+        next_mp_stage();
+    }
+
     if (mp_stage == MP_PlanetMaintenance) {
         unsigned int n_stars;
         Galaxy *gal = exostate.get_galaxy();
@@ -346,11 +376,35 @@ ExodusMode GalaxyMap::month_pass_update() {
         next_mp_stage();
     }
 
-    if (mp_stage == MP_UpdateFly) {
+    if (mp_stage == MP_UpdateAlienFly) {
+        // TODO
+        next_mp_stage();
+    }
+
+    if (mp_stage == MP_AlienMissions) {
+        // TODO - PROCdomission etc
+        next_mp_stage();
+    }
+
+    if (mp_stage == MP_PayOfficers) {
+        // TODO - PROCpayoff etc
+        next_mp_stage();
+    }
+
+    if (mp_stage == MP_GuildCommendations) {
+        // TODO - PROCnewtitle
+        next_mp_stage();
+    }
+
+    if (mp_stage == MP_AlienExile) {
+        // TODO - PROCcheckalive
+        next_mp_stage();
+    }
+
+    if (mp_stage == MP_UpdateHumanFly) {
         for (; mp_player_idx < N_PLAYERS; ++mp_player_idx) {
-            // TODO: Update fly
             Player *p = exostate.set_active_player(mp_player_idx);
-            if (p && p->is_active()) {
+            if (p && p->is_active() && p->is_human()) {
                 if (p->get_location().advance()) {
                     // Show arrival animation for human players
                     if (p->is_human()) {
