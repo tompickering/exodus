@@ -48,7 +48,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer {
         MonthPassStage mp_stage;
         float month_pass_time;
         int mp_player_idx;
-        int mp_star_idx;
+        unsigned int mp_star_idx;
         int mp_planet_idx;
 
         ExodusMode month_pass_update();
