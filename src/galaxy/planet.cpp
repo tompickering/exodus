@@ -626,3 +626,10 @@ void Planet::prepare_for_cpu_lord() {
         }
     }
 }
+
+void Planet::adjust_unrest(int adjustment) {
+    unrest += adjustment;
+    if (unrest < 0) unrest = 0;
+    // Can't see any ref to a maximum in the original
+    // Riots happen when >8, rebel attacks at >9
+}

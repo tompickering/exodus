@@ -97,6 +97,7 @@ class Planet {
         int get_army_required_mc();
         bool army_funding_sufficient();
         void prepare_for_cpu_lord(); // Orig: PROCgivestation
+        void adjust_unrest(int);
     private:
         void init();
 
