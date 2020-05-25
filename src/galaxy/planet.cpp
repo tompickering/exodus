@@ -376,7 +376,7 @@ bool Planet::is_owned() {
     if (owner <0) return false;
 
     Player *ownerplayer = exostate.get_player(owner);
-    return ownerplayer->is_alive();
+    return ownerplayer->is_active();
 }
 
 /*

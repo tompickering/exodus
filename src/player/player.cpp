@@ -22,6 +22,7 @@ const char* get_alien_name(Race race, int idx) {
 
 Player::Player() {
     dead = false;
+    participating_in_game = false;
     _intro_seen = false;
 }
 
@@ -101,6 +102,12 @@ bool Player::is_human() {
 
 bool Player::is_alive() {
     return !dead;
+}
+
+bool Player::is_active() {
+    // Indicate whether this player should be 'taking part' in the game
+    // TODO: Check for has-left-the-galaxy etc
+    return participating_in_game && is_alive();
 }
 
 int Player::get_flag_idx() {

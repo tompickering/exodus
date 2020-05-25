@@ -75,6 +75,7 @@ class Player {
         Race get_race();
         bool is_human();
         bool is_alive();
+        bool is_active();
         int get_mc();
         int get_flag_idx();
         void set_flag_idx(int);
@@ -93,6 +94,7 @@ class Player {
         char ref[MAX_PLAYER_REFERENCE + 1];
         char full_name[MAX_PLAYER_FULLNAME + 1];
         bool dead;
+        bool participating_in_game;
         int flag_idx;
         int mc;
         bool _intro_seen;

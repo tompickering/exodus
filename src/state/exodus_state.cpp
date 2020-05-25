@@ -57,6 +57,10 @@ void ExodusState::init(GameConfig config) {
         players[i].fleet.freight.infantry = 0;
         players[i].fleet.freight.gliders = 0;
         players[i].fleet.freight.artillery = 0;
+
+        // TODO: Set to false for CPU players in a
+        // multiplayer game with no other races.
+        players[i].participating_in_game = true;
     }
 
     // PLAYER INIT: Human
@@ -279,11 +283,20 @@ void ExodusState::advance_month() {
 }
 
 Player* ExodusState::get_active_player() {
-    return &players[active_player];
+    return get_player((int)active_player);
 }
 
 int ExodusState::get_active_player_idx() {
     return (int)active_player;
+}
+
+Player* ExodusState::set_active_player(unsigned int idx) {
+    if (idx >= N_PLAYERS) {
+        L.fatal("Attempt to set invalid player active %d", idx);
+    }
+
+    active_player = idx;
+    return get_active_player();
 }
 
 Star* ExodusState::get_active_star() {

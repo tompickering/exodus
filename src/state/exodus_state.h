@@ -60,8 +60,9 @@ class ExodusState {
         Galaxy* get_galaxy();
         unsigned int get_month();
         void advance_month();
-        Player *get_active_player();
+        Player* get_active_player();
         int get_active_player_idx();
+        Player* set_active_player(unsigned int);
         Star* get_active_star();
         unsigned int get_active_star_idx();
         Planet* get_active_planet();
