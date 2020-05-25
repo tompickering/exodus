@@ -19,6 +19,19 @@ enum Race {
 };
 
 typedef struct {
+    int shield_generators;
+    int laser_guns;
+    int missile_launchers;
+    int crew;
+    int bionic_probes;
+    bool escape_capsule;
+    bool repair_hangar;
+    int pct_damage_thrust;
+    int pct_damage_comms;
+    int pct_damage_struct;
+} Starship;
+
+typedef struct {
     unsigned int minerals;
     unsigned int food;
     unsigned int plutonium;
@@ -100,6 +113,7 @@ class Player {
         bool _intro_seen;
         const char *fleet_marker;
         PlayerLocation location;
+        Starship starship;
         Fleet fleet;
         uint16_t inventions;
         void refresh_full_name();

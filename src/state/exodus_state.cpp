@@ -46,6 +46,18 @@ void ExodusState::init(GameConfig config) {
     for (i = 0; i < N_PLAYERS; ++i) {
         players[i].mc = 0;
 
+        players[i].starship.shield_generators = 0;
+        players[i].starship.laser_guns = 1;
+        players[i].starship.missile_launchers = 0;
+        players[i].starship.crew = 5;
+        // Perhaps we could start players with one probe?
+        players[i].starship.bionic_probes = 0;
+        players[i].starship.escape_capsule = false;
+        players[i].starship.repair_hangar = false;
+        players[i].starship.pct_damage_thrust = 0;
+        players[i].starship.pct_damage_comms = 0;
+        players[i].starship.pct_damage_struct = 0;
+
         players[i].fleet.scouts = 0;
         players[i].fleet.transporters = 0;
         players[i].fleet.warships = 0;
