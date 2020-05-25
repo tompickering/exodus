@@ -121,7 +121,7 @@ ExodusMode GalaxyMap::update(float delta) {
             if (click.id) {
                 if (click.x < 0.25) {
                     // Fly
-                    if (selected_ft != exostate.loc2tgt(player->get_location().get_target())) {
+                    if (!player->get_location().in_flight() && selected_ft != exostate.loc2tgt(player->get_location().get_target())) {
                         comm_set_title("Message from counsellor");
                         comm_set_img_caption("COUNSELLOR");
                         if (selected_ft == gal->get_guild()) {
