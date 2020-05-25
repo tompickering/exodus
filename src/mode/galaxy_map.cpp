@@ -280,6 +280,15 @@ ExodusMode GalaxyMap::month_pass_update() {
         return ExodusMode::MODE_None;
     }
 
+    if (mp_stage == MP_TimeDelay) {
+        // Time delay here so the "Month passing" notification doesn't flicker.
+        if (month_pass_time > 1.f) {
+            next_mp_stage();
+        } else {
+            return ExodusMode::MODE_None;
+        }
+    }
+
     if (mp_stage == MP_CheckMissionFail) {
         // TODO: Check if we've run out of time for our mission
         next_mp_stage();
@@ -303,11 +312,8 @@ ExodusMode GalaxyMap::month_pass_update() {
 
     if (mp_stage == MP_End) {
         // When we decide we're done with updates...
-        // Time constraint here so the "Month passing" notification doesn't flicker.
-        if (month_pass_time > 1.f) {
-            month_pass_end();
-            return ExodusMode::MODE_None;
-        }
+        month_pass_end();
+        return ExodusMode::MODE_None;
     }
 
     return ExodusMode::MODE_None;

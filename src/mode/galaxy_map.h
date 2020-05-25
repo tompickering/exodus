@@ -33,6 +33,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer {
         // Enum order determines order of processing
         enum MonthPassStage {
             MP_None,
+            MP_TimeDelay,
             MP_CheckMissionFail,
             MP_UpdateFly,
             MP_End,
