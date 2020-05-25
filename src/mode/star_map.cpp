@@ -213,6 +213,7 @@ ExodusMode StarMap::update(float delta) {
                 comm_set_title("Claim a planet");
                 comm_set_text(0, "Please name the new planet.");
                 input_manager.start_text_input();
+                input_manager.set_input_text(planet->get_name_suggestion());
                 comm_open(6);
                 stage = SM_NamePlanet;
             } else if (action == CA_Abort) {

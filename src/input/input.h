@@ -28,6 +28,7 @@ class InputManager {
         virtual bool is_num_held(unsigned char) = 0;
         virtual void start_text_input() = 0;
         virtual void stop_text_input() = 0;
+        void set_input_text(const char*);
         void backspace();
     protected:
         bool space;

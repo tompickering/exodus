@@ -1,5 +1,7 @@
 #include "input.h"
 
+#include <cstring>
+
 InputManager::InputManager() {
     mouse_pos.x = -1;
     mouse_pos.y = -1;
@@ -61,6 +63,11 @@ const char* InputManager::get_input_text(int max_len) {
     if (max_len > 0 && max_len <= INPUT_MAX_TEXT)
         text[max_len] = '\0';
     return (const char*) text;
+}
+
+void InputManager::set_input_text(const char* text_to_set) {
+    text[INPUT_MAX_TEXT] = '\0';
+    strncpy(text, text_to_set, INPUT_MAX_TEXT);
 }
 
 void InputManager::backspace() {
