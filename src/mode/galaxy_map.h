@@ -35,6 +35,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer {
             MP_None,
             MP_TimeDelay,
             MP_CheckMissionFail,
+            MP_PlanetMaintenance,
             MP_UpdateFly,
             MP_End,
         };
@@ -46,6 +47,8 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer {
         MonthPassStage mp_stage;
         float month_pass_time;
         int mp_player_idx;
+        int mp_star_idx;
+        int mp_planet_idx;
 
         ExodusMode month_pass_update();
         void month_pass_start();

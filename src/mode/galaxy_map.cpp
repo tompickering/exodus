@@ -216,6 +216,8 @@ void GalaxyMap::next_mp_stage() {
     L.debug("MP stage %d", mp_stage);
     // Reset all mp-stage state tracking
     mp_player_idx = 0;
+    mp_star_idx = 0;
+    mp_planet_idx = 0;
 }
 
 void GalaxyMap::month_pass_start() {
@@ -276,7 +278,6 @@ ExodusMode GalaxyMap::month_pass_update() {
     // *promise* to only enter a subset of month-pass-specific stages.
     // We *cannot* enter GM_Idle until all month pass logic is complete!
 
-
     if (mp_stage == MP_None) {
         month_pass_start();
         next_mp_stage();
@@ -295,6 +296,28 @@ ExodusMode GalaxyMap::month_pass_update() {
 
     if (mp_stage == MP_CheckMissionFail) {
         // TODO: Check if we've run out of time for our mission
+        next_mp_stage();
+    }
+
+    if (mp_stage == MP_PlanetMaintenance) {
+        unsigned int n_stars;
+        Galaxy *gal = exostate.get_galaxy();
+        Star *stars = gal->get_stars(n_stars);
+        for (; mp_star_idx < n_stars; ++mp_star_idx) {
+            for (; mp_planet_idx < STAR_MAX_PLANETS; ++mp_planet_idx) {
+                Planet *p = stars[mp_star_idx].get_planet(mp_planet_idx);
+                if (!(p && p->exists()))
+                    continue;
+
+                // TODO: SIt and SIu updates
+
+                if (onein(7)) p->adjust_unrest(-1);
+                if (onein(250)) p->surfchange();
+
+                // TODO: Owned planet maintenance
+            }
+            mp_planet_idx = 0;
+        }
         next_mp_stage();
     }
 
