@@ -174,7 +174,6 @@ ExodusMode GalaxyMap::update(float delta) {
             if (action == CA_Proceed) {
                 // TODO: Vary number of months
                 player->get_location().set_target(exostate.tgt2loc(selected_ft), 1);
-                player->get_location().advance();
                 return ExodusMode::MODE_Fly;
             } else if (action == CA_Abort) {
                 comm_close();
@@ -244,6 +243,20 @@ void GalaxyMap::month_pass_end() {
     mp_stage = MP_None;
 
     L.info("Month passed");
+
+    // Reset to the first active player
+    bool reset;
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        Player *p = exostate.set_active_player(i);
+        if (p && p->is_active() && p->is_human()) {
+            reset = true;
+            break;
+        }
+    }
+
+    if (!reset) {
+        L.fatal("No viable human player to resume play!");
+    }
 }
 
 ExodusMode GalaxyMap::month_pass_update() {
@@ -267,9 +280,14 @@ ExodusMode GalaxyMap::month_pass_update() {
         // TODO: Check if we've run out of time for our mission
         next_mp_stage();
     }
+
     if (mp_stage == MP_UpdateFly) {
         for (; mp_player_idx < N_PLAYERS; ++mp_player_idx) {
             // TODO: Update fly
+            Player *p = exostate.set_active_player(mp_player_idx);
+            if (p && p->is_active()) {
+                p->get_location().advance();
+            }
         }
         next_mp_stage();
     }

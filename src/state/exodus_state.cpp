@@ -295,6 +295,7 @@ Player* ExodusState::set_active_player(unsigned int idx) {
         L.fatal("Attempt to set invalid player active %d", idx);
     }
 
+    L.debug("ACTIVE PLAYER: %d -> %d", active_player, idx);
     active_player = idx;
     return get_active_player();
 }
