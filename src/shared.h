@@ -21,6 +21,8 @@
 // Mimics BBC BASIC's RND()
 #define RND(X) (1 + (rand() % (X)))
 
+#define onein(X) ((rand() % (X)) == 0)
+
 extern EXODUS exodus;
 
 extern const float UPSCALE_X;
