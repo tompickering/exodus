@@ -286,7 +286,12 @@ ExodusMode GalaxyMap::month_pass_update() {
             // TODO: Update fly
             Player *p = exostate.set_active_player(mp_player_idx);
             if (p && p->is_active()) {
-                p->get_location().advance();
+                if (p->get_location().advance()) {
+                    // Show arrival animation for human players
+                    if (p->is_human()) {
+                        return ExodusMode::MODE_Fly;
+                    }
+                }
             }
         }
         next_mp_stage();

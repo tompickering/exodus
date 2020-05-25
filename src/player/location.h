@@ -7,7 +7,7 @@
 class PlayerLocation {
     public:
         PlayerLocation();
-        void advance();
+        bool advance();
         bool in_flight();
         void set(int);
         void set_target(int, int);

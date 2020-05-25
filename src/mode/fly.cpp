@@ -12,13 +12,19 @@
 
 #define THRUST_DELAY 0.1f
 #define THRUST_TIME 0.4f
+#define WARP_DELAY 0.6f
 #define FLY_START (THRUST_DELAY*N_THRUSTERS + THRUST_TIME + 0.3f)
 #define FLY_TIME 1.8f
 #define WARP_X RES_X / 2
 #define WARP_Y 200
-#define WARP_START (FLY_START + FLY_TIME + 0.4)
+#define WARP_START (FLY_START + FLY_TIME + WARP_DELAY)
 #define WARP_TIME 1.4
 #define WARP_STAGES 10
+
+#define ARR_WARP_START 0.4
+#define ARR_FLY_START (ARR_WARP_START + WARP_TIME + WARP_DELAY)
+
+#define END_DELAY 1.0
 
 enum ID {
     FLEET,
@@ -127,7 +133,7 @@ void Fly::enter() {
     time = 0;
     Player *player = exostate.get_active_player();
     FlyTarget *tgt = exostate.loc2tgt(player->get_location().get_target());
-    //arriving = !(player->get_location().in_flight());
+    arriving = !(player->get_location().in_flight());
 
     draw_manager.draw(IMG_STARTGR_FL6_STARS);
 
@@ -153,11 +159,43 @@ ExodusMode Fly::update(float delta) {
     time += delta;
 
     if (arriving) {
-        float progress = time / FLY_TIME;
-        if (progress > 1) progress = 1;
+        if (time >= ARR_WARP_START) {
+            float interp = (time - ARR_WARP_START) / WARP_TIME;
+            interp = interp > 1 ? 1 : interp;
+            float stage_interp = warp_stage / (float)WARP_STAGES;
+            if (interp > stage_interp) {
+                ++warp_stage;
+                stage_interp = warp_stage / (float)WARP_STAGES;
+                float scale_interp = stage_interp < 0.5 ? stage_interp : 1 - stage_interp;
+                float scale = 8 * pow(scale_interp, 2);
+                draw_manager.draw(
+                    id(ID::WARP),
+                    anim_warp.frame(warp_stage),
+                    {WARP_X, WARP_Y,
+                     0.5, 0.5, scale, scale});
+            }
+        }
 
-        if (time > FLY_TIME + 1) {
-            return ExodusMode::MODE_Pop;
+        if (time >= ARR_WARP_START + WARP_TIME) {
+            draw_manager.draw(id(ID::WARP), nullptr);
+        }
+
+        if (time >= ARR_FLY_START) {
+            float fly_progress = (time - ARR_FLY_START) / FLY_TIME;
+            fly_progress = fly_progress < 1 ? fly_progress : 1;
+
+            float fleet_scale = FLY_SCALE * fly_progress;
+
+            draw_manager.draw(
+                id(ID::FLEET),
+                IMG_STARTGR_FL4_FLEET,
+                {RES_X/2, 200,
+                0.5, 0.5,
+                fleet_scale, fleet_scale});
+
+            if (time > ARR_FLY_START + FLY_TIME + END_DELAY) {
+                return ExodusMode::MODE_Pop;
+            }
         }
     } else {
         float fly_progress = 0.f;
@@ -216,7 +254,7 @@ ExodusMode Fly::update(float delta) {
         }
 
 
-        if (time > WARP_START + WARP_TIME + 1.0) {
+        if (time > WARP_START + WARP_TIME + END_DELAY) {
             return ExodusMode::MODE_Pop;
         }
 

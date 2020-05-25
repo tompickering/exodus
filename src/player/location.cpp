@@ -8,7 +8,7 @@ PlayerLocation::PlayerLocation() {
     visited = 0;
 }
 
-void PlayerLocation::advance() {
+bool PlayerLocation::advance() {
     just_arrived = false;
     if (months_to_arrive > 0) {
         just_arrived = (--months_to_arrive == 0);
@@ -16,6 +16,7 @@ void PlayerLocation::advance() {
     if (just_arrived && target >= 0) {
         visited |= (uint64_t)1 << target;
     }
+    return just_arrived;
 }
 
 bool PlayerLocation::in_flight() {
