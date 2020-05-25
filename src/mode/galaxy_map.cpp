@@ -104,17 +104,21 @@ ExodusMode GalaxyMap::update(float delta) {
             update_panel_info_player(TGT_Primary, player);
             update_panel_info_ft(TGT_Primary, player, selected_ft);
 
-            if (!player->get_location().in_flight()) {
+            {
                 FlyTarget *fleet_pos = exostate.loc2tgt(player->get_location().get_target());
+                const char* marker_icon;
                 get_draw_position(fleet_pos, draw_x, draw_y);
+
+                if (!player->get_location().in_flight()) {
+                    marker_icon = player->get_fleet_marker();
+                } else {
+                    marker_icon = IMG_TS1_DEST;
+                }
+
                 draw_manager.draw(
-                        id(ID::FLEET_MARKER),
-                        player->get_fleet_marker(),
-                        {draw_x - 10, draw_y + 10, 0.5, 0.5, 1, 1});
-            } else {
-                draw_manager.draw(
-                        id(ID::FLEET_MARKER),
-                        nullptr);
+                    id(ID::FLEET_MARKER),
+                    marker_icon,
+                    {draw_x - 10, draw_y + 10, 0.5, 0.5, 1, 1});
             }
 
             click = draw_manager.query_click(id_panel);
