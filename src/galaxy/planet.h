@@ -58,6 +58,18 @@ enum TradeQuality {
     TRADE_Good,
 };
 
+enum Law {
+    LAW_TradeMinerals,
+    LAW_TradeFood,
+    LAW_TradePlutonium,
+    LAW_FreeSpeech,
+    LAW_PrivateIndustry,
+    LAW_DrugLegalisation,
+    LAW_AllowSystemEnemies,
+    LAW_DifferentReligions,
+    LAW_CivilianWeapons,
+};
+
 typedef struct {
     const char *panel_icon;
     const char *landscape;
@@ -117,6 +129,8 @@ class Planet {
         int get_tax_amount();
         bool may_be_attacked_by(int);
         void this_month_prevent_attacks_by(int);
+        void set_law(Law, bool);
+        bool has_law(Law);
     private:
         void init();
 
@@ -140,6 +154,8 @@ class Planet {
         uint16_t paid_to_leave; // Orig: SIu & 1 - but made per-player, like SIt/traded.
         bool taxes_collected;   // Orig: SIu & 2
 
+        uint16_t laws;         // Orig: SIl
+
         int owner;             // Orig: SIi
 
         bool lunar_base;       // Orig: SIb
@@ -156,7 +172,7 @@ class Planet {
         int army_gli;          // Orig: SIk(2)
         int army_art;          // Orig: SIk(3)
 
-        // TODO: SIl, SItb
+        // TODO: SItb
 
         void change_class(PlanetClass);
 

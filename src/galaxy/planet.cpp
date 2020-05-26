@@ -30,6 +30,7 @@ Planet::Planet() {
     _exists = false;
     name[0] = '\0';
     traded = 0;
+    laws = 0;
 }
 
 Planet::Planet(PlanetClass _cls) : cls(_cls) {
@@ -113,6 +114,12 @@ void Planet::init() {
     army_inf = 0;
     army_gli = 0;
     army_art = 0;
+
+    laws = 0;
+    set_law(LAW_TradeMinerals,      true);
+    set_law(LAW_TradeFood,          true);
+    set_law(LAW_PrivateIndustry,    true);
+    set_law(LAW_DifferentReligions, true);
 
     for (int i = 0; i < (PLANET_BLOCKS_LG * PLANET_BLOCKS_LG); ++i) {
         surf[i] = STONE_Clear;
@@ -734,4 +741,12 @@ bool Planet::may_be_attacked_by(int player_idx) {
 void Planet::this_month_prevent_attacks_by(int player_idx) {
     // TODO: This should be called when we are paid to cease an attack
     paid_to_leave |= (1 << player_idx);
+}
+
+void Planet::set_law(Law law, bool legal) {
+    laws |= (1 << (int)law);
+}
+
+bool Planet::has_law(Law law) {
+    return (bool)(laws & (1 << (int)law));
 }
