@@ -364,7 +364,9 @@ ExodusMode GalaxyMap::month_pass_update() {
                 if (!(p && p->exists()))
                     continue;
 
-                // TODO: SIt and SIu updates
+                p->reset_trade_records();
+
+                // TODO: SIu update
 
                 if (onein(7)) p->adjust_unrest(-1);
                 if (onein(250)) p->surfchange();

@@ -1,6 +1,8 @@
 #ifndef GUARD_PLANET_H
 #define GUARD_PLANET_H
 
+#include <cstdint>
+
 #define PLANET_MAX_NAME 12
 #define PLANET_BLOCKS_SM 12
 #define PLANET_BLOCKS_MD 14
@@ -47,6 +49,13 @@ enum Stone {
     STONE_Rubble,
     STONE_Radiation,
     STONE_END,
+};
+
+enum TradeQuality {
+    TRADE_None,
+    TRADE_Bad,
+    TRADE_Fair,
+    TRADE_Good,
 };
 
 typedef struct {
@@ -99,6 +108,10 @@ class Planet {
         void prepare_for_cpu_lord(); // Orig: PROCgivestation
         void adjust_unrest(int);
         void surfchange();
+        bool trade_possible(int player_idx);
+        TradeQuality initiate_trade(int player_idx);
+        void reset_trade_records();
+        void randomise_trade_quality();
     private:
         void init();
 
@@ -109,10 +122,11 @@ class Planet {
         Stone surf[PLANET_BLOCKS_LG * PLANET_BLOCKS_LG];
 
         int pspeed;            // Orig: pspeed
-        int sit;               // Orig: SIt. Trade-related?
         int diameter;          // Orig: SId.
         int minerals;          // Orig: SIrm.
         int sim;               // Orig: SIm. Battle-related?
+        TradeQuality trade;    // Orig: SIt. Original adds 10 to disable trade for the month.
+        uint16_t traded;       // Our alternative for SIt's +10 trade mask.
 
         int owner;             // Orig: SIi
 

@@ -29,6 +29,7 @@ const char** get_names_for_class(PlanetClass cls) {
 Planet::Planet() {
     _exists = false;
     name[0] = '\0';
+    traded = 0;
 }
 
 Planet::Planet(PlanetClass _cls) : cls(_cls) {
@@ -94,6 +95,7 @@ void Planet::init() {
     _exists = true;
     name[0] = '\0';
     owner = -1;
+    traded = 0;
 
     pspeed = (RND(5) + 5);
     lunar_base = false;
@@ -114,10 +116,9 @@ void Planet::init() {
         surf[i] = STONE_Clear;
     }
 
-    if (cls != Artificial) {
-        r = RND(5);
-        sit = r > 3 ? 1 : r;
+    randomise_trade_quality();
 
+    if (cls != Artificial) {
         diameter = RND(8)*1000 + 7*1000 + RND(9)*100;
 
         minerals = RND(diameter/40);
@@ -157,7 +158,6 @@ void Planet::init() {
         // Default for enemy lords; players may override
         set_name("Genesis");
         lunar_base = true;
-        sit = 0;
         army_funding = 2;
         diameter = 12000;
         airdef_guns = 10;
@@ -672,4 +672,29 @@ void Planet::change_class(PlanetClass new_cls) {
 
     L.info("CLIMATE CHANGE: %d -> %d", (int)cls, (int)new_cls);
     cls = new_cls;
+}
+
+bool Planet::trade_possible(int player_idx) {
+    return (bool)(!(traded & (1 << player_idx)));
+}
+
+TradeQuality Planet::initiate_trade(int player_idx) {
+    if (!trade_possible(player_idx)) {
+        return TRADE_None;
+    }
+
+    traded |= (1 << player_idx);
+    return trade;
+}
+
+void Planet::reset_trade_records() {
+    traded = 0;
+}
+
+void Planet::randomise_trade_quality() {
+    int r = RND(5);
+    trade = TRADE_Bad;
+    if (r == 1) trade = TRADE_Fair;
+    if (r == 2) trade = TRADE_Good;
+    L.debug("%s: Trade is now %d", name, (int)trade);
 }
