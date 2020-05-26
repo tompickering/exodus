@@ -110,8 +110,13 @@ class Planet {
         void surfchange();
         bool trade_possible(int player_idx);
         TradeQuality initiate_trade(int player_idx);
-        void reset_trade_records();
+        void month_reset();
         void randomise_trade_quality();
+        bool can_collect_taxes();
+        void collect_taxes();
+        int get_tax_amount();
+        bool may_be_attacked_by(int);
+        void this_month_prevent_attacks_by(int);
     private:
         void init();
 
@@ -127,6 +132,13 @@ class Planet {
         int sim;               // Orig: SIm. Battle-related?
         TradeQuality trade;    // Orig: SIt. Original adds 10 to disable trade for the month.
         uint16_t traded;       // Our alternative for SIt's +10 trade mask.
+
+        // Orig: SIu - This tracks 2 bits of unrelated data!
+        // SIu & 1: Tracks whether a player has been paid to cease an attack.
+        // SIu & 2: Tracks whether a planet has been charged additional taxes this month.
+        // I believe the former should be per-player, but the second should be per-month.
+        uint16_t paid_to_leave; // Orig: SIu & 1 - but made per-player, like SIt/traded.
+        bool taxes_collected;   // Orig: SIu & 2
 
         int owner;             // Orig: SIi
 
@@ -144,7 +156,7 @@ class Planet {
         int army_gli;          // Orig: SIk(2)
         int army_art;          // Orig: SIk(3)
 
-        // TODO: SIu, SIl, SItb
+        // TODO: SIl, SItb
 
         void change_class(PlanetClass);
 

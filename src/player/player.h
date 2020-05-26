@@ -102,6 +102,7 @@ class Player {
         void set_flag_idx(int);
         bool intro_seen();
         void set_intro_seen();
+        void give_mc(int);
         bool can_afford(unsigned int);
         bool attempt_spend(unsigned int);
         const char *get_fleet_marker();

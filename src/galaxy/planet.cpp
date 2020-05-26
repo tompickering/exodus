@@ -96,6 +96,8 @@ void Planet::init() {
     name[0] = '\0';
     owner = -1;
     traded = 0;
+    taxes_collected = false;
+    paid_to_leave = 0;
 
     pspeed = (RND(5) + 5);
     lunar_base = false;
@@ -173,6 +175,9 @@ void Planet::init() {
 
         // TODO: Surface init for Artificial worlds
     }
+
+    // Shouldn't be necessary but makes sense
+    month_reset();
 
     L.info("Generated type %d planet", (int)cls);
 }
@@ -687,8 +692,11 @@ TradeQuality Planet::initiate_trade(int player_idx) {
     return trade;
 }
 
-void Planet::reset_trade_records() {
+void Planet::month_reset() {
+    // Reset trade records and tax collection status
     traded = 0;
+    taxes_collected = false;
+    paid_to_leave = 0;
 }
 
 void Planet::randomise_trade_quality() {
@@ -697,4 +705,33 @@ void Planet::randomise_trade_quality() {
     if (r == 1) trade = TRADE_Fair;
     if (r == 2) trade = TRADE_Good;
     L.debug("%s: Trade is now %d", name, (int)trade);
+}
+
+bool Planet::can_collect_taxes() {
+    return is_owned() && !taxes_collected;
+}
+
+void Planet::collect_taxes() {
+    if (!can_collect_taxes()) {
+        L.warn("Attempt to collect taxes when we can't at %s", name);
+        return;
+    }
+
+    Player *p = exostate.get_player(get_owner());
+    unrest += 4;
+    p->give_mc(get_tax_amount());
+    taxes_collected = true;
+}
+
+int Planet::get_tax_amount() {
+    return get_income() / 2;
+}
+
+bool Planet::may_be_attacked_by(int player_idx) {
+    return !((bool)(paid_to_leave & (1 << player_idx)));
+}
+
+void Planet::this_month_prevent_attacks_by(int player_idx) {
+    // TODO: This should be called when we are paid to cease an attack
+    paid_to_leave |= (1 << player_idx);
 }

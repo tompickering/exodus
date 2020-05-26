@@ -364,7 +364,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                 if (!(p && p->exists()))
                     continue;
 
-                p->reset_trade_records();
+                p->month_reset();
 
                 // TODO: SIu update
 

@@ -132,6 +132,14 @@ void Player::set_intro_seen() {
     _intro_seen = true;
 }
 
+void Player::give_mc(int extra_mc) {
+    if (extra_mc < 0) {
+        L.fatal("Attempt to grant invalid MC amount %d", extra_mc);
+    }
+
+    mc += extra_mc;
+}
+
 bool Player::can_afford(unsigned int cost) {
     return mc >= (int)cost;
 }
