@@ -369,7 +369,10 @@ ExodusMode GalaxyMap::month_pass_update() {
                 // TODO: SIu update
 
                 if (onein(7)) p->adjust_unrest(-1);
-                if (onein(250)) p->surfchange();
+
+                if (p->is_owned()) {
+                    if (onein(250)) p->surfchange();
+                }
 
                 // TODO: Owned planet maintenance
             }
