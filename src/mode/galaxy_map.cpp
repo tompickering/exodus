@@ -366,8 +366,6 @@ ExodusMode GalaxyMap::month_pass_update() {
 
                 p->month_reset();
 
-                // TODO: SIu update
-
                 if (onein(7)) p->adjust_unrest(-1);
 
                 if (p->is_owned()) {
