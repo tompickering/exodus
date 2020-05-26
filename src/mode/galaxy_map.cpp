@@ -278,6 +278,10 @@ ExodusMode GalaxyMap::month_pass_update() {
     // *promise* to only enter a subset of month-pass-specific stages.
     // We *cannot* enter GM_Idle until all month pass logic is complete!
 
+    unsigned int n_stars;
+    Galaxy *gal = exostate.get_galaxy();
+    Star *stars = gal->get_stars(n_stars);
+
     if (mp_stage == MP_None) {
         month_pass_start();
         next_mp_stage();
@@ -354,10 +358,7 @@ ExodusMode GalaxyMap::month_pass_update() {
         next_mp_stage();
     }
 
-    if (mp_stage == MP_PlanetMaintenance) {
-        unsigned int n_stars;
-        Galaxy *gal = exostate.get_galaxy();
-        Star *stars = gal->get_stars(n_stars);
+    if (mp_stage == MP_PlanetBackgroundUpdate) {
         for (; mp_star_idx < n_stars; ++mp_star_idx) {
             for (; mp_planet_idx < STAR_MAX_PLANETS; ++mp_planet_idx) {
                 Planet *p = stars[mp_star_idx].get_planet(mp_planet_idx);

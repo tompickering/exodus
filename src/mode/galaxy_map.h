@@ -43,7 +43,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer {
             MP_ArtificialWorldNews,
             MP_EnemyActions,
             MP_UpdatePirateProbabilities,
-            MP_PlanetMaintenance,
+            MP_PlanetBackgroundUpdate,
             MP_UpdateAlienFly,
             MP_AlienMissions,
             MP_PayOfficers,
