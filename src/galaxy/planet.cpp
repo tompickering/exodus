@@ -804,3 +804,39 @@ void Planet::produce_plutonium() {
     int mul = (cls == Volcano) ? 2 : 1;
     reserves_plu += count_stones(STONE_Plu) * mul;
 }
+
+void Planet::mine() {
+    int madd = 0;
+
+    if (minerals <= 0) {
+        return;
+    }
+
+    if (cls == Rock) {
+        int size = get_size_blocks();
+        for (int j = 0; j < size; ++j) {
+            for (int i = 0; i < size; ++i) {
+                if (get_stone(i, j) == STONE_Mine && next_to(i, j, STONE_NaturalAnim)) {
+                    madd++;
+                }
+            }
+        }
+    }
+
+    int units_to_mine = count_stones(STONE_Mine);
+    // We can only mine as much as we have plutonium for
+    if (reserves_plu < units_to_mine) units_to_mine = reserves_plu;
+    units_to_mine += madd;
+    // We can only mine as much as exists!
+    if (units_to_mine > minerals) units_to_mine = minerals;
+    reserves_min += units_to_mine;
+    // Any more than we can hold are discarded!
+    if (reserves_min > get_mineral_reserves_cap())
+        reserves_min = get_mineral_reserves_cap();
+    reserves_plu -= (units_to_mine - madd);
+    minerals -= units_to_mine;
+}
+
+int Planet::get_mineral_reserves_cap() {
+    return (diameter / 200);
+}

@@ -635,7 +635,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_Mining) {
-        // TODO
+        p->mine();
         next_mpp_stage();
     }
 
