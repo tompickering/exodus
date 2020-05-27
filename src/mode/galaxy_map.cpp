@@ -417,6 +417,8 @@ ExodusMode GalaxyMap::month_pass_update() {
             for (; mp_planet_idx < STAR_MAX_PLANETS; ++mp_planet_idx) {
                 Planet *p = stars[mp_star_idx].get_planet(mp_planet_idx);
                 // This only applies to owned planets
+                // FIXME: Ensure that if we exit into another state, the planet *still
+                // passes* this check next time around to finish the PROCcal_plan process!
                 if (!(p && p->exists() && p->is_owned()))
                     continue;
 
