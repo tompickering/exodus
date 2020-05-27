@@ -135,6 +135,7 @@ class Planet {
         bool has_law(Law);
         bool laws_cause_unrest();
         void clear_radiation();
+        void produce_plutonium();
     private:
         void init();
 

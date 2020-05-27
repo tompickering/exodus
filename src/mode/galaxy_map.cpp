@@ -625,7 +625,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_ProducePlutonium) {
-        // TODO
+        p->produce_plutonium();
         next_mpp_stage();
     }
 

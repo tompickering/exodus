@@ -784,3 +784,8 @@ void Planet::clear_radiation() {
         }
     }
 }
+
+void Planet::produce_plutonium() {
+    int mul = (cls == Volcano) ? 2 : 1;
+    reserves_plu += count_stones(STONE_Plu) * mul;
+}
