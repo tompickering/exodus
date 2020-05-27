@@ -660,7 +660,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_FoodProduction) {
-        // TODO
+        p->produce_food();
         next_mpp_stage();
     }
 

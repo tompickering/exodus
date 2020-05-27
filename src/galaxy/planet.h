@@ -137,6 +137,7 @@ class Planet {
         bool has_law(Law);
         bool laws_cause_unrest();
         void clear_radiation();
+        void produce_food();
         void produce_plutonium();
         void mine();
         void perish_food();
