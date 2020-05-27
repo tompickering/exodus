@@ -770,3 +770,17 @@ bool Planet::laws_cause_unrest() {
     if (has_law(LAW_CivilianWeapons)) ok = false;
     return !ok;
 }
+
+void Planet::clear_radiation() {
+    int size = get_size_blocks();
+    for (int j = 0; j < size; ++j) {
+        for (int i = 0; i < size; ++i) {
+            if (get_stone(i, j) == STONE_Radiation) {
+                if (onein(10)) {
+                    // This looks a bit weird on Volcano / Ice planets
+                    set_stone(i, j, STONE_AgriDead);
+                }
+            }
+        }
+    }
+}

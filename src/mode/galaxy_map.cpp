@@ -571,7 +571,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_ClearRadiation) {
-        // TODO
+        p->clear_radiation();
         next_mpp_stage();
     }
 
