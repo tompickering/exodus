@@ -113,6 +113,8 @@ void PlanetStatus::enter() {
 
     int text_y = 90;
 
+    char mins[10]; snprintf(mins, 10, "%d", p->get_minerals());
+
     draw_manager.draw_text(
         ownership,
         Justify::Left,
@@ -193,7 +195,7 @@ void PlanetStatus::enter() {
         text_x, text_y,
         COL_TEXT);
     draw_manager.draw_text(
-        "<TODO>",
+        mins,
         Justify::Left,
         text_x + 140, text_y,
         COL_TEXT2);

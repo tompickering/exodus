@@ -413,6 +413,10 @@ bool Planet::army_funding_sufficient() {
     return army_funding >= get_army_required_mc();
 }
 
+int Planet::get_minerals() {
+    return minerals;
+}
+
 bool Planet::is_owned() {
     if (owner <0) return false;
 
