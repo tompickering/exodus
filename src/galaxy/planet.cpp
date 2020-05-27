@@ -340,6 +340,13 @@ void Planet::set_stone(int x, int y, Stone stone) {
     _set_stone(real_x, real_y, stone);
 }
 
+Stone Planet::get_stone_wrap(int x, int y) {
+    int size = get_size_blocks();
+    while (x < 0) x += size;
+    while (y < 0) y += size;
+    return get_stone(x % size, y % size);
+}
+
 bool Planet::has_stone(Stone st) {
     for (int j = 0; j < get_size_blocks(); ++j) {
         for (int i = 0; i < get_size_blocks(); ++i) {
@@ -348,6 +355,14 @@ bool Planet::has_stone(Stone st) {
         }
     }
 
+    return false;
+}
+
+bool Planet::next_to(int x, int y, Stone st) {
+    if (get_stone_wrap(x - 1, y) == st) return true;
+    if (get_stone_wrap(x + 1, y) == st) return true;
+    if (get_stone_wrap(x, y + 1) == st) return true;
+    if (get_stone_wrap(x, y - 1) == st) return true;
     return false;
 }
 

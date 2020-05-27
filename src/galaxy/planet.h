@@ -111,7 +111,9 @@ class Planet {
         void unset_owner();
         Stone get_stone(int, int);
         void set_stone(int, int, Stone);
+        Stone get_stone_wrap(int, int);
         bool has_stone(Stone);
+        bool next_to(int, int, Stone);
         int count_stones(Stone);
         int get_army_funding();
         void adjust_army_funding(int);
