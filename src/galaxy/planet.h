@@ -139,6 +139,7 @@ class Planet {
         void clear_radiation();
         void produce_plutonium();
         void mine();
+        void perish_food();
         int get_mineral_reserves_cap();
     private:
         void init();

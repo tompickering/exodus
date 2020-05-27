@@ -837,6 +837,10 @@ void Planet::mine() {
     minerals -= units_to_mine;
 }
 
+void Planet::perish_food() {
+    reserves_food -= (reserves_food / 6);
+}
+
 int Planet::get_mineral_reserves_cap() {
     return (diameter / 200);
 }

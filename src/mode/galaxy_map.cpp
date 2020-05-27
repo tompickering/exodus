@@ -655,7 +655,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_FoodPerishes) {
-        // TODO
+        p->perish_food();
         next_mpp_stage();
     }
 
