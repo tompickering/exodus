@@ -487,7 +487,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     Planet *p = exostate.get_active_planet();
 
     if (mpp_stage == MPP_ShuffleTrade) {
-        // TODO
+        if (onein(7)) p->randomise_trade_quality();
         next_mpp_stage();
     }
 
