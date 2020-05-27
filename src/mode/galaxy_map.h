@@ -44,6 +44,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer {
             MP_EnemyActions,
             MP_UpdatePirateProbabilities,
             MP_PlanetBackgroundUpdate,
+            MP_PlanetMainUpdate, // PROCcal_plan - comprised of MonthPassPlanetStages
             MP_UpdateAlienFly,
             MP_AlienMissions,
             MP_PayOfficers,
@@ -53,20 +54,62 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer {
             MP_End,
         };
 
+        enum MonthPassPlanetStage {
+            MPP_ShuffleTrade,
+            MPP_FirstCity,
+            MPP_FirstSpaceport,
+            MPP_Research1,
+            MPP_Meteors,
+            MPP_KillArmies,
+            MPP_ClimateChange,
+            MPP_Epidemic,
+            MPP_AlienAttack,
+            MPP_Research2,
+            MPP_DiscoverSpecies,
+            MPP_CityEpidemic,
+            MPP_RebelAttack,
+            MPP_LawsIncreaseUnrest,
+            MPP_ParksReduceUnrest,
+            MPP_ClearRadiation,
+            MPP_ReactorPollution,
+            MPP_ClimateChangeDueToCultivation,
+            MPP_ClimateChangeDueToDeforestation,
+            MPP_LosePlanetControl,
+            MPP_Income,
+            MPP_ProducePlutonium,
+            MPP_ProduceMilitary,
+            MPP_Mining,
+            MPP_MilitaryFacilityShutdown,
+            MPP_Trade,
+            MPP_VillageGifts,
+            MPP_FoodPerishes,
+            MPP_FoodProduction,
+            MPP_AgriCollapse,
+            MPP_CityExpansion,
+            MPP_VillageExpansion,
+            MPP_ConsumeFood,
+            MPP_AdvanceUnrest,
+            MPP_AmendMilitaryFunding,
+            MPP_End,
+        };
+
         Stage stage;
         FlyTarget *selected_ft;
         float selected_ft_blink;
 
         MonthPassStage mp_stage;
+        MonthPassPlanetStage mpp_stage;
         float month_pass_time;
         int mp_player_idx;
         unsigned int mp_star_idx;
         int mp_planet_idx;
 
         ExodusMode month_pass_update();
+        ExodusMode month_pass_planet_update();
         void month_pass_start();
         void month_pass_end();
         void next_mp_stage();
+        void next_mpp_stage();
 };
 
 #endif

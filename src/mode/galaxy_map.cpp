@@ -16,6 +16,7 @@ GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer(), PanelDrawer(PNL_
     selected_ft = nullptr;
     selected_ft_blink = 0;
     mp_stage = MP_None;
+    mpp_stage = (MonthPassPlanetStage)0;
     month_pass_time = 0;
 }
 
@@ -220,9 +221,18 @@ void GalaxyMap::next_mp_stage() {
     mp_planet_idx = 0;
 }
 
+void GalaxyMap::next_mpp_stage() {
+    mpp_stage = (MonthPassPlanetStage)((int)mpp_stage + 1);
+    Star *s = exostate.get_active_star();
+    Planet *p = exostate.get_active_planet();
+    L.debug("[%s/%s] MPP stage %d", s->name, p->get_name(), mpp_stage);
+
+}
+
 void GalaxyMap::month_pass_start() {
     L.info("Month passing...");
     month_pass_time = 0;
+    mpp_stage = (MonthPassPlanetStage)0;
 
     if (mp_stage != MP_None) {
         L.fatal("We started a month-pass whilst one was still in progress");
@@ -247,6 +257,7 @@ void GalaxyMap::month_pass_start() {
 void GalaxyMap::month_pass_end() {
     draw_manager.draw(id(ID::MONTH_PASSING), nullptr);
     mp_stage = MP_None;
+    mpp_stage = (MonthPassPlanetStage)0;
 
     L.info("Month passed");
 
@@ -380,6 +391,49 @@ ExodusMode GalaxyMap::month_pass_update() {
         next_mp_stage();
     }
 
+    /*
+     * These are the updates that were originally performed by PROCcal_plan.
+     * This is a little awkward - ideally each of these 'MPP' stages would be a
+     * separate 'MP' stage here, as all planets are independent - however that
+     * doesn't really work, because a report containing info across multiple stages
+     * is generated for each planet - so we'd have to record things to report on later
+     * on a per-planet basis. This wouldn't be a problem, except that certain events
+     * in the planet update require user interaction (rebel attacks, paying to avoid
+     * military facility shutdown etc) - and need to be resolved to inform later stages
+     * (units lost in rebel battle free up garrison space which affects later unit
+     * production etc). Essentially, we *can't* complete any planet report without
+     * the ability to exit from this update and return to it after an interactive
+     * resolution. Furthermore, when we perform interactions, we don't want the player
+     * to see e.g. interactive stage for Planet A, interactive stage for Planet B,
+     * report for Planet A then report for Planet B - we want to deal with each planet
+     * in its entirety one at a time.
+     * As a resolution, we have a separate 'MPP' stage-set which is tracked independently
+     * of the 'MP' stages which will always complete one planet at a time, which still
+     * allows us to temporarily exit into other modes or mode stages at any time.
+     */
+    if (mp_stage == MP_PlanetMainUpdate) {
+        for (; mp_star_idx < n_stars; ++mp_star_idx) {
+            exostate.set_active_flytarget(&stars[mp_star_idx]);
+            for (; mp_planet_idx < STAR_MAX_PLANETS; ++mp_planet_idx) {
+                Planet *p = stars[mp_star_idx].get_planet(mp_planet_idx);
+                // This only applies to owned planets
+                if (!(p && p->exists() && p->is_owned()))
+                    continue;
+
+                exostate.set_active_planet(mp_planet_idx);
+                ExodusMode next_mode = month_pass_planet_update();
+
+                if (mpp_stage != MPP_End) {
+                    return next_mode;
+                }
+
+                mpp_stage = (MonthPassPlanetStage)0;
+            }
+            mp_planet_idx = 0;
+        }
+        next_mp_stage();
+    }
+
     if (mp_stage == MP_UpdateAlienFly) {
         // TODO
         next_mp_stage();
@@ -424,6 +478,187 @@ ExodusMode GalaxyMap::month_pass_update() {
         // When we decide we're done with updates...
         month_pass_end();
         return ExodusMode::MODE_None;
+    }
+
+    return ExodusMode::MODE_None;
+}
+
+ExodusMode GalaxyMap::month_pass_planet_update() {
+    Planet *p = exostate.get_active_planet();
+
+    if (mpp_stage == MPP_ShuffleTrade) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_FirstCity) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_FirstSpaceport) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_Research1) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_Meteors) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_KillArmies) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_ClimateChange) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_Epidemic) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_AlienAttack) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_Research2) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_DiscoverSpecies) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_CityEpidemic) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_RebelAttack) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_LawsIncreaseUnrest) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_ParksReduceUnrest) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_ClearRadiation) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_ReactorPollution) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_ClimateChangeDueToCultivation) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_ClimateChangeDueToDeforestation) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_LosePlanetControl) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_Income) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_ProducePlutonium) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_ProduceMilitary) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_Mining) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_MilitaryFacilityShutdown) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_Trade) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_VillageGifts) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_FoodPerishes) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_FoodProduction) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_AgriCollapse) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_CityExpansion) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_VillageExpansion) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_ConsumeFood) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_AdvanceUnrest) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_AmendMilitaryFunding) {
+        // TODO
+        next_mpp_stage();
     }
 
     return ExodusMode::MODE_None;
