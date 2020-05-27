@@ -759,3 +759,14 @@ void Planet::set_law(Law law, bool legal) {
 bool Planet::has_law(Law law) {
     return (bool)(laws & (1 << (int)law));
 }
+
+bool Planet::laws_cause_unrest() {
+    // This can probably be simpler and I really shouldn't be using the bit values...
+    // ...but I've just copied PROCcal_plan here.
+    uint16_t _laws = laws & 0xFFF8;
+    bool ok = (_laws == 0xC8 || _laws == 0xD8 || _laws == 0x80 || _laws == 0x90
+            || _laws == 0xA0 || _laws == 0xB0 || _laws == 0x32 || _laws == 0x30);
+    if (has_law(LAW_FreeSpeech) ^ has_law(LAW_AllowSystemEnemies)) ok = false;
+    if (has_law(LAW_CivilianWeapons)) ok = false;
+    return !ok;
+}

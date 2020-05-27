@@ -557,7 +557,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_LawsIncreaseUnrest) {
-        // TODO
+        if (p->laws_cause_unrest()) p->adjust_unrest(1);
         next_mpp_stage();
     }
 
