@@ -581,12 +581,32 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_ClimateChangeDueToCultivation) {
-        // TODO
+        if (p->get_class() == Desert || p->get_class() == Rock) {
+            if (!p->surfchange_happened_this_month()) {
+                int threshold = 86;
+                if (p->get_size() == PLANET_Medium) threshold = 117;
+                if (p->get_size() == PLANET_Large)  threshold = 153;
+                if (p->count_stones(STONE_Agri) >= threshold) {
+                    p->change_class(Terra);
+                    // TODO: Bulletin
+                }
+            }
+        }
         next_mpp_stage();
     }
 
     if (mpp_stage == MPP_ClimateChangeDueToDeforestation) {
-        // TODO
+        if (p->get_class() == Forest) {
+            if (!p->surfchange_happened_this_month()) {
+                int threshold = 30;
+                if (p->get_size() == PLANET_Medium) threshold = 40;
+                if (p->get_size() == PLANET_Large)  threshold = 51;
+                if (p->count_stones(STONE_NaturalLarge) < threshold) {
+                    p->change_class(Rock);
+                    // TODO: Bulletin
+                }
+            }
+        }
         next_mpp_stage();
     }
 
