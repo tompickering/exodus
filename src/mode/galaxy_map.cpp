@@ -517,7 +517,12 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_ClimateChange) {
-        // TODO
+        if (onein(250)) {
+            PlanetClass before = p->get_class();
+            p->surfchange();
+            PlanetClass after = p->get_class();
+            // TODO: Report based on before / after
+        }
         next_mpp_stage();
     }
 

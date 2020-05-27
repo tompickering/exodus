@@ -120,6 +120,8 @@ class Planet {
         void prepare_for_cpu_lord(); // Orig: PROCgivestation
         void adjust_unrest(int);
         void surfchange();
+        void change_class(PlanetClass);
+        bool surfchange_happened_this_month();
         bool trade_possible(int player_idx);
         TradeQuality initiate_trade(int player_idx);
         void month_reset();
@@ -174,7 +176,7 @@ class Planet {
 
         // TODO: SItb
 
-        void change_class(PlanetClass);
+        bool surfchange_this_month;
 
         void cull_stones_to_size();
         Stone _get_stone(int, int);

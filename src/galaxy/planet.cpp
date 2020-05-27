@@ -31,6 +31,7 @@ Planet::Planet() {
     name[0] = '\0';
     traded = 0;
     laws = 0;
+    surfchange_this_month = false;
 }
 
 Planet::Planet(PlanetClass _cls) : cls(_cls) {
@@ -120,6 +121,8 @@ void Planet::init() {
     set_law(LAW_TradeFood,          true);
     set_law(LAW_PrivateIndustry,    true);
     set_law(LAW_DifferentReligions, true);
+
+    surfchange_this_month = false;
 
     for (int i = 0; i < (PLANET_BLOCKS_LG * PLANET_BLOCKS_LG); ++i) {
         surf[i] = STONE_Clear;
@@ -674,6 +677,11 @@ void Planet::surfchange() {
     }
 
     change_class(new_cls);
+    surfchange_this_month = true;
+}
+
+bool Planet::surfchange_happened_this_month() {
+    return surfchange_this_month;
 }
 
 void Planet::change_class(PlanetClass new_cls) {
@@ -704,6 +712,7 @@ void Planet::month_reset() {
     traded = 0;
     taxes_collected = false;
     paid_to_leave = 0;
+    surfchange_this_month = false;
 }
 
 void Planet::randomise_trade_quality() {
