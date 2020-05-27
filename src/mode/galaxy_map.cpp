@@ -562,7 +562,11 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_ParksReduceUnrest) {
-        // TODO
+        if (onein(2)) {
+            int parks = p->count_stones(STONE_Park);
+            int cities = p->count_stones(STONE_City);
+            if (parks > cities/3) p->adjust_unrest(-1);
+        }
         next_mpp_stage();
     }
 
