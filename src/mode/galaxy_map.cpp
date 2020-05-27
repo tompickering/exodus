@@ -690,7 +690,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_AmendMilitaryFunding) {
-        // TODO
+        p->validate_army_funding();
         next_mpp_stage();
     }
 

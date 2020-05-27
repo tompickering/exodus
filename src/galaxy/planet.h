@@ -117,6 +117,7 @@ class Planet {
         int count_stones(Stone);
         int get_army_funding();
         void adjust_army_funding(int);
+        void validate_army_funding();
         int get_army_required_mc();
         bool army_funding_sufficient();
         void prepare_for_cpu_lord(); // Orig: PROCgivestation

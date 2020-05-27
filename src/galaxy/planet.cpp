@@ -390,6 +390,12 @@ void Planet::adjust_army_funding(int adjustment) {
         army_funding = get_income();
 }
 
+void Planet::validate_army_funding() {
+    if (army_funding > get_income()) {
+        army_funding = get_income();
+    }
+}
+
 int Planet::get_army_required_mc() {
     int required = 0;
     for (int j = 0; j < get_size_blocks(); ++j) {
