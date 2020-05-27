@@ -484,7 +484,8 @@ ExodusMode GalaxyMap::month_pass_update() {
 }
 
 ExodusMode GalaxyMap::month_pass_planet_update() {
-    Planet *p = exostate.get_active_planet();
+    Planet *p  = exostate.get_active_planet();
+    Player *owner = exostate.get_player(p->get_owner());
 
     if (mpp_stage == MPP_ShuffleTrade) {
         if (onein(7)) p->randomise_trade_quality();
@@ -616,7 +617,8 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_Income) {
-        // TODO
+        // TODO - Check the weird case in PROCcal_plan based on the t% DIM
+        owner->give_mc(p->get_net_income());
         next_mpp_stage();
     }
 
