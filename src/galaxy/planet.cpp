@@ -103,7 +103,11 @@ void Planet::init() {
 
     pspeed = (RND(5) + 5);
     lunar_base = false;
-    unrest = 0;
+
+    for (int i = 0; i < N_UNREST; ++i) {
+        unrest[i] = 0;
+    }
+
     army_funding = 0;
     airdef_guns = 0;
     robots = 0;
@@ -673,8 +677,8 @@ void Planet::prepare_for_cpu_lord() {
 }
 
 void Planet::adjust_unrest(int adjustment) {
-    unrest += adjustment;
-    if (unrest < 0) unrest = 0;
+    unrest[0] += adjustment;
+    if (unrest[0] < 0) unrest[0] = 0;
     // Can't see any ref to a maximum in the original
     // Riots happen when >8, rebel attacks at >9
 }
@@ -759,7 +763,7 @@ void Planet::collect_taxes() {
     }
 
     Player *p = exostate.get_player(get_owner());
-    unrest += 4;
+    adjust_unrest(4);
     p->give_mc(get_tax_amount());
     taxes_collected = true;
 }
@@ -857,4 +861,10 @@ void Planet::perish_food() {
 
 int Planet::get_mineral_reserves_cap() {
     return (diameter / 200);
+}
+
+void Planet::update_unrest_history() {
+    for (int i = N_UNREST - 1; i > 0; --i) {
+        unrest[i] = unrest[i - 1];
+    }
 }

@@ -9,6 +9,7 @@
 #define PLANET_BLOCKS_LG 16
 #define CITY_INCOME 2
 #define CITY_FOOD_REQ 3
+#define N_UNREST 8
 
 enum PlanetSize {
     PLANET_Small,
@@ -144,6 +145,7 @@ class Planet {
         void mine();
         void perish_food();
         int get_mineral_reserves_cap();
+        void update_unrest_history();
     private:
         void init();
 
@@ -172,7 +174,7 @@ class Planet {
         int owner;             // Orig: SIi
 
         bool lunar_base;       // Orig: SIb
-        int unrest;            // Orig: SIr
+        int unrest[N_UNREST];  // Orig: SIr (current) / SItb (historical)
         int army_funding;      // Orig: SIam
         int airdef_guns;       // Orig: SIv
         int robots;            // Orig: SIgr

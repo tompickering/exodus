@@ -685,7 +685,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_AdvanceUnrest) {
-        // TODO
+        p->update_unrest_history();
         next_mpp_stage();
     }
 
