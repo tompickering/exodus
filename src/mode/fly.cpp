@@ -117,7 +117,7 @@ const float thrust_pos[] = {
     519, 5,   // Large, top-right
     393, 92,  // Medium, up-up-right of centre
     507, 137, // Medium, right-up-right of centre
-    155, 267, // Medium, lower-left
+    155, 266, // Medium, lower-left
     569, 325, // Large, lower-right
 };
 
