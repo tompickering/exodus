@@ -56,7 +56,8 @@ class DrawManagerSDL : public DrawManager {
         virtual void* get_sprite_data(const char*) override;
     private:
         SDL_Window *win;
-        SDL_Surface *surf;
+        SDL_Surface *win_surf; // Upscaled
+        SDL_Surface *surf;     // Not upscaled
         SDL_Surface *background;
         SDL_Surface *src_surf_0; // Used for pixelswap target, fade target
         SDL_Surface *src_surf_1; // Used for fade source

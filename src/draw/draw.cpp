@@ -2,8 +2,13 @@
 
 #include "util/value.h"
 
+#ifdef CONTINUOUS_UPSCALING
 const float UPSCALE_X = (float)SCREEN_WIDTH  / (float)RES_X;
 const float UPSCALE_Y = (float)SCREEN_HEIGHT / (float)RES_Y;
+#else
+const float UPSCALE_X = 1;
+const float UPSCALE_Y = 1;
+#endif
 
 const SprID ID_NONE = 0;
 

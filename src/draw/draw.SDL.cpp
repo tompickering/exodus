@@ -31,12 +31,31 @@ bool DrawManagerSDL::init() {
         return false;
     }
 
+    // Draw operations are to 'surf'.
+    // If we're upscaling each operation, 'surf' *is* the window surface.
+    // If we're upscaling at the end, 'surf' is a RES_X x RES_Y intermediary.
+#ifdef CONTINUOUS_UPSCALING
     surf = SDL_GetWindowSurface(win);
 
     if (!surf) {
-        L.error("Could not create SDL surface");
+        L.error("Could not create SDL window surface");
         return false;
     }
+#else
+    win_surf = SDL_GetWindowSurface(win);
+
+    if (!win_surf) {
+        L.error("Could not create SDL window surface");
+        return false;
+    }
+
+    surf = SDL_CreateRGBSurface(0, RES_X, RES_Y, 32, 0, 0, 0, 0);
+
+    if (!surf) {
+        L.error("Could not create SDL render surface");
+        return false;
+    }
+#endif
 
     SDL_FillRect(surf, nullptr, SDL_MapRGB(surf->format, 0x0, 0x0, 0x0));
 
@@ -104,6 +123,9 @@ void DrawManagerSDL::draw_init_image() {
     sprite_data[INIT_IMG] = load_normalised_image(INIT_IMG);
     clear();
     draw(INIT_IMG, {RES_X/2, RES_Y/2, 0.5, 0.5, 1, 1});
+#ifndef CONTINUOUS_UPSCALING
+    SDL_BlitScaled(surf, nullptr, win_surf, nullptr);
+#endif
     SDL_UpdateWindowSurface(win);
 }
 
@@ -128,6 +150,9 @@ void DrawManagerSDL::load_resources() {
 }
 
 void DrawManagerSDL::update(float delta, MousePos mouse_pos, MousePos new_click_pos) {
+    SDL_Rect ca;
+    SDL_Rect ca0;
+
     DrawManager::update(delta, mouse_pos, new_click_pos);
     if (pixelswap_active()) {
         pixelswap_update();
@@ -167,7 +192,9 @@ void DrawManagerSDL::update(float delta, MousePos mouse_pos, MousePos new_click_
         }
     }
 
-    if (draw_cursor && mouse_pos.x > 0 && mouse_pos.y > 0) {
+    bool render_cursor = draw_cursor && mouse_pos.x > 0 && mouse_pos.y > 0;
+
+    if (render_cursor) {
         // To ensure that cursor drawing plays nicely with anything
         // else that might be animating on the main game screen,
         // we draw it at the very last minute, saving whatever's
@@ -179,8 +206,6 @@ void DrawManagerSDL::update(float delta, MousePos mouse_pos, MousePos new_click_
         // update the window.
         cursor_area.x = mouse_pos.x * UPSCALE_X - cursor_area.w / 2;
         cursor_area.y = mouse_pos.y * UPSCALE_Y - cursor_area.h / 2;
-        SDL_Rect ca;
-        SDL_Rect ca0;
 
         ca = cursor_area;
         ca0 = cursor_area; ca0.x = 0; ca0.y = 0;
@@ -191,14 +216,21 @@ void DrawManagerSDL::update(float delta, MousePos mouse_pos, MousePos new_click_
         SDL_BlitScaled(
             (SDL_Surface*)sprite_data[CURSOR_IMG],
             nullptr, surf, &ca);
+    }
 
-        SDL_UpdateWindowSurface(win);
+    // If we're not upscaling continuously, we upscale here, at the
+    // very end of the draw pipeline.
+#ifndef CONTINUOUS_UPSCALING
+    SDL_BlitScaled(surf, nullptr, win_surf, nullptr);
+#endif
 
+    SDL_UpdateWindowSurface(win);
+
+    if (render_cursor) {
+        // Repair the surface where we rendered the cursor.
         ca = cursor_area;
         ca0 = cursor_area; ca0.x = 0; ca0.y = 0;
         SDL_BlitSurface(cursor_underlay, &ca0, surf, &ca);
-    } else {
-        SDL_UpdateWindowSurface(win);
     }
 }
 
@@ -373,7 +405,12 @@ void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key, DrawTransform t, 
 }
 
 void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key, DrawArea* area, SprID* id) {
+#ifdef CONTINUOUS_UPSCALING
     DrawArea default_area = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+#else
+    DrawArea default_area = {0, 0, RES_X, RES_Y};
+#endif
+
     SDL_Surface *tgt_surf = get_target(tgt);
 
     if (area) {
@@ -417,15 +454,9 @@ void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key, DrawArea* area, S
         src_rect_ptr = &src_rect;
     }
 
-    if (area) {
-        SDL_Rect dst_rect = {area->x, area->y, area->w, area->h};
-        if (SDL_BlitScaled(spr, src_rect_ptr, tgt_surf, &dst_rect)) {
-            L.debug("Blit unsuccessful: %s", spr_key);
-        }
-    } else {
-        if (SDL_BlitSurface(spr, src_rect_ptr, tgt_surf, nullptr)) {
-            L.debug("Blit unsuccessful: %s", spr_key);
-        }
+    SDL_Rect dst_rect = {area->x, area->y, area->w, area->h};
+    if (SDL_BlitScaled(spr, src_rect_ptr, tgt_surf, &dst_rect)) {
+        L.debug("Blit unsuccessful: %s", spr_key);
     }
 }
 

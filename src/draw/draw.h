@@ -13,6 +13,15 @@
 #define RES_X 640
 #define RES_Y 512
 
+
+// If defined, all blit operations are direct to the window, individually upscaled.
+// Otherwise, blit operations are to a non-upscaled surface which is upscaled each frame.
+// Pros: Less blitting, more efficient.
+// Cons: Individual upscales can cause clipping of individual sprites.
+//       Text looks terrible unless we make it an upscaling-aware exception.
+#define CONTINUOUS_UPSCALING
+
+
 using std::map;
 using std::vector;
 
