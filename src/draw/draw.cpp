@@ -2,14 +2,6 @@
 
 #include "util/value.h"
 
-#ifdef CONTINUOUS_UPSCALING
-const float UPSCALE_X = (float)SCREEN_WIDTH  / (float)RES_X;
-const float UPSCALE_Y = (float)SCREEN_HEIGHT / (float)RES_Y;
-#else
-const float UPSCALE_X = 1;
-const float UPSCALE_Y = 1;
-#endif
-
 const SprID ID_NONE = 0;
 
 DrawManager::DrawManager() {
@@ -38,7 +30,9 @@ void DrawManager::update(float delta, MousePos new_mouse_pos, MousePos new_click
     click_pos = new_click_pos;
     clicked_this_frame = (click_pos.x >= 0 && click_pos.y >= 0);
     if (clicked_this_frame) {
-        L.debug("Click: %d, %d", (int)((float)click_pos.x / UPSCALE_X), (int)((float)click_pos.y / UPSCALE_Y));
+        float up_x, up_y;
+        get_upscale(up_x, up_y);
+        L.debug("Click: %d, %d", (int)((float)click_pos.x / up_x), (int)((float)click_pos.y / up_y));
     }
     if (draw_cursor && click_pos.x >= 0 && click_pos.y >= 0) {
         for (std::vector<DrawnSprite>::size_type i = 0; i < drawn_spr_info.size(); ++i) {
@@ -112,8 +106,10 @@ bool DrawManager::mouse_over(SprID query) {
         area = &(drawn_spr_info[i].area);
         if (area->w == 0 || area->h == 0)
             return false;
+        float up_x, up_y;
+        get_upscale(up_x, up_y);
         return in_area(
-                (int)((float)mouse_pos.x * UPSCALE_X), (int)((float)mouse_pos.y * UPSCALE_Y),
+                (int)((float)mouse_pos.x * up_x), (int)((float)mouse_pos.y * up_y),
                 area->x, area->y,
                 area->w, area->h);
     }
@@ -203,5 +199,11 @@ int DrawManager::right(SprID id) {
         return 0;
     }
 
-    return (area->x + area->w) / UPSCALE_X;
+    float up_x, up_y;
+    get_upscale(up_x, up_y);
+    return (area->x + area->w) / up_x;
+}
+
+void DrawManager::get_upscale(float& up_x, float& up_y) {
+    up_x = 1; up_y = 1;
 }

@@ -61,13 +61,6 @@ ExodusMode GuildBar::update(float delta) {
     talk_loop = fmod(talk_loop + delta * 0.2, 1);
     light_loop = fmod(light_loop + delta, 6);
 
-    if (click) {
-        MousePos pos = input_manager.get_mouse_pos();
-        if (pos.x > 490 && pos.x < 540 && pos.y > 220 && pos.y < 280) {
-            return ExodusMode::MODE_Pop;
-        }
-    }
-
     draw_manager.draw(id(ID::TALK), talk_anim.interp(talk_loop), {225, 246, 0.5, 0.5, 2, 2});
 
     if (light_loop > 5.7) {

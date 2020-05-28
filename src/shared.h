@@ -25,9 +25,6 @@
 
 extern EXODUS exodus;
 
-extern const float UPSCALE_X;
-extern const float UPSCALE_Y;
-
 extern Log::Logger L;
 
 typedef struct {

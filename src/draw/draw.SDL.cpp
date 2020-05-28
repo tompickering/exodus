@@ -13,6 +13,14 @@
 #include "shared.h"
 #include "assetpaths.h"
 
+#ifdef CONTINUOUS_UPSCALING
+const float UPSCALE_X = (float)SCREEN_WIDTH  / (float)RES_X;
+const float UPSCALE_Y = (float)SCREEN_HEIGHT / (float)RES_Y;
+#else
+const float UPSCALE_X = 1;
+const float UPSCALE_Y = 1;
+#endif
+
 DrawManagerSDL::DrawManagerSDL() {
     cursor_area = {0, 0, 0, 0};
     cursor_underlay = nullptr;
@@ -650,6 +658,10 @@ SDL_Surface* DrawManagerSDL::get_target(DrawTarget tgt) {
 
     L.fatal("Invalid draw target: %d", tgt);
     return nullptr;
+}
+
+void DrawManagerSDL::get_upscale(float& up_x, float& up_y) {
+    up_x = UPSCALE_X; up_y = UPSCALE_Y;
 }
 
 #endif

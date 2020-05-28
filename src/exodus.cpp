@@ -150,6 +150,10 @@ int Exodus::run(int argc, char** argv) {
         }
 
         mouse_pos = input_manager.get_mouse_pos();
+        float up_x, up_y;
+        draw_manager.get_upscale(up_x, up_y);
+        mouse_pos.x = (int)((float)mouse_pos.x / up_x);
+        mouse_pos.y = (int)((float)mouse_pos.y / up_y);
         click_pos = input_manager.read_click();
 
         game_timer.sleep_until(frame_start + MIN_FRAME_DELTA);

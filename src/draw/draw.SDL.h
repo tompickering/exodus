@@ -5,6 +5,13 @@
 
 #include <SDL2/SDL.h>
 
+// If defined, all blit operations are direct to the window, individually upscaled.
+// Otherwise, blit operations are to a non-upscaled surface which is upscaled each frame.
+// Pros: Less blitting, more efficient.
+// Cons: Individual upscales can cause clipping of individual sprites.
+//       Text looks terrible.
+//#define CONTINUOUS_UPSCALING
+
 class DrawManagerSDL : public DrawManager {
     public:
         DrawManagerSDL();
@@ -52,6 +59,7 @@ class DrawManagerSDL : public DrawManager {
         virtual void fade_black(float, int) override;
         virtual void fade_white(float, int) override;
         virtual bool fade_active() override;
+        virtual void get_upscale(float&, float&) override;
     protected:
         virtual void* get_sprite_data(const char*) override;
     private:

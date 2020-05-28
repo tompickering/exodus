@@ -40,8 +40,7 @@ bool InputManager::_read(Input key, bool reset) {
 }
 
 MousePos InputManager::get_mouse_pos() {
-    return {(int)((float)mouse_pos.x / UPSCALE_X),
-            (int)((float)mouse_pos.y / UPSCALE_Y)};
+    return mouse_pos;
 }
 
 /*
@@ -54,7 +53,7 @@ MousePos InputManager::get_mouse_pos() {
 MousePos InputManager::read_click() {
     MousePos result;
     result = click_pos;
-    click_pos.x = -1;
+    click_pos.x = 0;
     click_pos.y = -1;
     return result;
 }
