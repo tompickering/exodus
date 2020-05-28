@@ -24,6 +24,9 @@ void DrawManager::update(float delta, MousePos new_mouse_pos, MousePos new_click
         fade_time += delta;
     }
 
+    // N.B. mouse_pos and click_pos are both in screen
+    // co-ordinates, not resolution co-ordinates.
+
     DrawArea *area = nullptr;
     sprite_click.id = ID_NONE;
     mouse_pos = new_mouse_pos;
@@ -109,7 +112,7 @@ bool DrawManager::mouse_over(SprID query) {
         float up_x, up_y;
         get_upscale(up_x, up_y);
         return in_area(
-                (int)((float)mouse_pos.x * up_x), (int)((float)mouse_pos.y * up_y),
+                (int)((float)mouse_pos.x), (int)((float)mouse_pos.y),
                 area->x, area->y,
                 area->w, area->h);
     }
@@ -121,8 +124,11 @@ bool DrawManager::mouse_in_area(DrawArea area) {
     if (!draw_cursor)
         return false;
 
+    float up_x, up_y;
+    get_upscale(up_x, up_y);
+
     return in_area(
-            mouse_pos.x, mouse_pos.y,
+            mouse_pos.x / up_x, mouse_pos.y / up_y,
             area.x, area.y, area.w, area.h);
 }
 

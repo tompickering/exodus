@@ -53,7 +53,7 @@ MousePos InputManager::get_mouse_pos() {
 MousePos InputManager::read_click() {
     MousePos result;
     result = click_pos;
-    click_pos.x = 0;
+    click_pos.x = -1;
     click_pos.y = -1;
     return result;
 }

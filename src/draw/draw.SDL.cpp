@@ -212,8 +212,8 @@ void DrawManagerSDL::update(float delta, MousePos mouse_pos, MousePos new_click_
         // In this way, the cursor sprite is only ever present on
         // the primary surface for the brief period in which we
         // update the window.
-        cursor_area.x = mouse_pos.x * UPSCALE_X - cursor_area.w / 2;
-        cursor_area.y = mouse_pos.y * UPSCALE_Y - cursor_area.h / 2;
+        cursor_area.x = mouse_pos.x - cursor_area.w / 2;
+        cursor_area.y = mouse_pos.y - cursor_area.h / 2;
 
         ca = cursor_area;
         ca0 = cursor_area; ca0.x = 0; ca0.y = 0;
