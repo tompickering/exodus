@@ -76,6 +76,7 @@ typedef struct {
     const char *landscape;
     const char *map_bg;
     const char *surf;
+    const char *bulletin_bg;
 } PlanetSpriteSet;
 
 class Planet {
