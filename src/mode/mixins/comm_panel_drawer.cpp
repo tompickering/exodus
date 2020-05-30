@@ -70,7 +70,7 @@ void CommPanelDrawer::comm_draw_text() {
 }
 
 void CommPanelDrawer::comm_set_title(const char* text) {
-    strncpy(comm_title, text, MAX_TEXT - 1);
+    strncpy(comm_title, text, COMM_MAX_TEXT - 1);
 }
 
 void CommPanelDrawer::comm_set_anim(const Anim& a) {
@@ -78,7 +78,7 @@ void CommPanelDrawer::comm_set_anim(const Anim& a) {
 }
 
 void CommPanelDrawer::comm_set_img_caption(const char* text) {
-    strncpy(comm_img_caption, text, MAX_TEXT - 1);
+    strncpy(comm_img_caption, text, COMM_MAX_TEXT - 1);
 }
 
 void CommPanelDrawer::comm_set_text(int idx, const char* in_text) {
@@ -96,7 +96,7 @@ void CommPanelDrawer::comm_vset_text(int idx, const char* in_text, ...) {
 
     va_list args;
     va_start(args, in_text);
-    vsnprintf(comm_text[idx], MAX_TEXT - 1, in_text, args);
+    vsnprintf(comm_text[idx], COMM_MAX_TEXT - 1, in_text, args);
     va_end(args);
 }
 

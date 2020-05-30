@@ -6,7 +6,7 @@
 #include "anim.h"
 #include "state/exodus_state.h"
 
-#define MAX_TEXT 256
+#define COMM_MAX_TEXT 256
 
 extern const int COMM_W;
 extern const int COMM_H;
@@ -48,14 +48,14 @@ class CommPanelDrawer {
     private:
         bool _comm_is_open;
 
-        char comm_title[MAX_TEXT];
-        char comm_img_caption[MAX_TEXT];
-        char comm_text0[MAX_TEXT];
-        char comm_text1[MAX_TEXT];
-        char comm_text2[MAX_TEXT];
-        char comm_text3[MAX_TEXT];
-        char comm_text4[MAX_TEXT];
-        char comm_text5[MAX_TEXT];
+        char comm_title[COMM_MAX_TEXT];
+        char comm_img_caption[COMM_MAX_TEXT];
+        char comm_text0[COMM_MAX_TEXT];
+        char comm_text1[COMM_MAX_TEXT];
+        char comm_text2[COMM_MAX_TEXT];
+        char comm_text3[COMM_MAX_TEXT];
+        char comm_text4[COMM_MAX_TEXT];
+        char comm_text5[COMM_MAX_TEXT];
         char *comm_text[6];
         float comm_time_since_text_mouseover;
         unsigned char comm_text_interactive_mask;
