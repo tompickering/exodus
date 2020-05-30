@@ -505,6 +505,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 // TODO - Bulletin image, music...
                 exostate.first_city_done = true;
                 bulletin_start_new();
+                bulletin_set_flag(IMG_TS1_FLAG16);
                 bulletin_set_text_col(COL_TEXT3);
                 bulletin_vset_next_text("%s HAS BUILT THE FIRST CITY", owner->get_name());
                 bulletin_vset_next_text("");
