@@ -187,19 +187,23 @@ ExodusMode GalaxyMap::update(float delta) {
             break;
         case GM_MonthPassing:
             {
+                if (bulletin_is_open()) {
+                    bulletin_update(delta);
+                    if (!bulletin_acknowledged()) {
+                        break;
+                    }
+                }
                 ExodusMode next_mode = month_pass_update();
                 month_pass_time += delta;
                 if (mp_stage == MP_None) {
+                    if (bulletin_is_open()) {
+                        bulletin_close();
+                    }
                     // The only place we emerge from month-pass-specific stages...
-                    stage = GM_Report;
+                    stage = GM_Idle;
                 }
                 return next_mode;
             }
-        case GM_Report:
-            // TODO: Planet / status reports etc
-            L.debug("End of month report...");
-            stage = GM_Idle;
-            return ExodusMode::MODE_None;
         default:
             break;
     }

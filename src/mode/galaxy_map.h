@@ -26,9 +26,8 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
             GM_Idle,
             GM_Zoom2Guild,
             GM_Zoom2Star,
-            GM_MonthPassing,
-            GM_Report,
             GM_FlyConfirm,
+            GM_MonthPassing,
         };
 
         // Enum order determines order of processing

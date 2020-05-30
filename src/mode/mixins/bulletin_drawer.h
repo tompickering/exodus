@@ -16,14 +16,19 @@ extern ExodusState exostate;
 class BulletinDrawer {
     public:
         BulletinDrawer();
+        void bulletin_start_new();
         void bulletin_update(float);
-        void bulletin_set_text(int, const char*);
-        void bulletin_vset_text(int, const char*, ...);
-        void bulletin_set_text_col(int, RGB);
+        void bulletin_set_next_text(const char*);
+        void bulletin_vset_next_text(const char*, ...);
+        void bulletin_set_text_col(RGB);
         void bulletin_reset_text_cols();
         void bulletin_open();
         void bulletin_close();
         bool bulletin_is_open();
+        bool bulletin_acknowledged();
+        void bulletin_set_flag(const char*);
+        void bulletin_set_player_flag(Player*);
+        void bulletin_set_active_player_flag();
     private:
         bool _bulletin_is_open;
 
@@ -40,6 +45,9 @@ class BulletinDrawer {
 
         void bulletin_draw_text();
         int bulletin_text_y(int);
+
+        int bulletin_text_idx;
+        bool bulletin_has_been_acknowledged;
 };
 
 #endif

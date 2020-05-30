@@ -19,9 +19,24 @@ BulletinDrawer::BulletinDrawer() {
         strncpy(bulletin_text[i], "", 1);
     }
     bulletin_reset_text_cols();
+    bulletin_has_been_acknowledged = false;
+    bulletin_text_idx = 0;
+    _bulletin_is_open = false;
+}
+
+void BulletinDrawer::bulletin_start_new() {
+    if (_bulletin_is_open)
+        bulletin_open();
+
+    bulletin_has_been_acknowledged = false;
+    bulletin_text_idx = 0;
+    bulletin_reset_text_cols();
 }
 
 void BulletinDrawer::bulletin_update(float dt) {
+    if (draw_manager.clicked()) {
+        bulletin_has_been_acknowledged = true;
+    }
 }
 
 void BulletinDrawer::bulletin_draw_text() {
@@ -36,28 +51,27 @@ void BulletinDrawer::bulletin_draw_text() {
     }
 }
 
-void BulletinDrawer::bulletin_set_text(int idx, const char* in_text) {
-    bulletin_vset_text(idx, in_text);
+void BulletinDrawer::bulletin_set_next_text(const char* in_text) {
+    bulletin_vset_next_text(in_text);
 }
 
-void BulletinDrawer::bulletin_vset_text(int idx, const char* in_text, ...) {
-    if (idx >= BULLETIN_LINES) {
-        L.fatal("Tried to set invalid bulletin text index %d to %s", idx, in_text);
+void BulletinDrawer::bulletin_vset_next_text(const char* in_text, ...) {
+    if (bulletin_text_idx >= BULLETIN_LINES) {
+        L.error("Tried to set invalid bulletin text index %d to %s", bulletin_text_idx, in_text);
+        return;
     }
 
     va_list args;
     va_start(args, in_text);
-    vsnprintf(bulletin_text[idx], BULLETIN_MAX_TEXT - 1, in_text, args);
+    vsnprintf(bulletin_text[bulletin_text_idx++], BULLETIN_MAX_TEXT - 1, in_text, args);
     va_end(args);
 }
 
-void BulletinDrawer::bulletin_set_text_col(int idx, RGB col) {
-    bulletin_text_col[idx] = col;
+void BulletinDrawer::bulletin_set_text_col(RGB col) {
+    bulletin_text_col[bulletin_text_idx] = col;
 }
 
 void BulletinDrawer::bulletin_open() {
-    Player *player = exostate.get_active_player();
-
     id_bulletin_header_flag = draw_manager.new_sprite_id();
     id_bulletin_header_l = draw_manager.new_sprite_id();
     id_bulletin_header_r = draw_manager.new_sprite_id();
@@ -84,17 +98,13 @@ void BulletinDrawer::bulletin_open() {
                                   BULLETIN_W, BULLETIN_H});
 
     // Draw header flag and background
-    // TODO: This is not always the player flag!
     draw_manager.fill(
         id_bulletin_header_flag,
         {BULLETIN_FLAG_BG_X, BULLETIN_FLAG_BG_Y,
          BULLETIN_FLAG_BG_W, BULLETIN_FLAG_BG_H},
          COL_BORDERS);
-    draw_manager.draw(
-        flags[player->get_flag_idx()],
-        {BULLETIN_FLAG_BG_X + BULLETIN_BORDER,
-         BULLETIN_FLAG_BG_Y + BULLETIN_BORDER,
-         0, 0, 1, 1});
+
+    bulletin_set_active_player_flag();
 
     draw_manager.draw(
         id_bulletin_header_l,
@@ -113,6 +123,8 @@ void BulletinDrawer::bulletin_open() {
     bulletin_draw_text();
 
     _bulletin_is_open = true;
+
+    bulletin_start_new();
 }
 
 void BulletinDrawer::bulletin_close() {
@@ -138,6 +150,8 @@ void BulletinDrawer::bulletin_close() {
 
 
     _bulletin_is_open = false;
+    bulletin_has_been_acknowledged = false;
+    bulletin_text_idx = 0;
 
     // Wipe all info
     for (int i = 0; i < BULLETIN_LINES; ++i) {
@@ -159,4 +173,24 @@ void BulletinDrawer::bulletin_reset_text_cols() {
     for (int i = 0; i < BULLETIN_LINES; ++i) {
         bulletin_text_col[i] = COL_TEXT;
     }
+}
+
+bool BulletinDrawer::bulletin_acknowledged() {
+    return bulletin_has_been_acknowledged;
+}
+
+void BulletinDrawer::bulletin_set_flag(const char* img) {
+    draw_manager.draw(
+        img,
+        {BULLETIN_FLAG_BG_X + BULLETIN_BORDER,
+         BULLETIN_FLAG_BG_Y + BULLETIN_BORDER,
+         0, 0, 1, 1});
+}
+
+void BulletinDrawer::bulletin_set_player_flag(Player* player) {
+    bulletin_set_flag(flags[player->get_flag_idx()]);
+}
+
+void BulletinDrawer::bulletin_set_active_player_flag() {
+    bulletin_set_player_flag(exostate.get_active_player());
 }
