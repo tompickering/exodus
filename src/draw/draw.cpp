@@ -1,8 +1,13 @@
 #include "draw.h"
 
+#include <cmath>
+
 #include "util/value.h"
 
 const SprID ID_NONE = 0;
+
+const RGB col_pulse_0 {0xFF, 0xFF, 0xFF};
+const RGB col_pulse_1 {0x70, 0x70, 0xFF}; // TODO: Check this
 
 DrawManager::DrawManager() {
     next_id = ID_NONE + 1;
@@ -212,4 +217,20 @@ int DrawManager::right(SprID id) {
 
 void DrawManager::get_upscale(float& up_x, float& up_y) {
     up_x = 1; up_y = 1;
+}
+
+RGB DrawManager::text_pulse_col(float t) {
+    t *= COL_PULSE_RATE;
+    t = fmod(t, 1);
+    t = sin(t * 3.141592);
+    unsigned char r0 = col_pulse_0.r;
+    unsigned char g0 = col_pulse_0.g;
+    unsigned char b0 = col_pulse_0.b;
+    unsigned char r1 = col_pulse_1.r;
+    unsigned char g1 = col_pulse_1.g;
+    unsigned char b1 = col_pulse_1.b;
+    unsigned char r = (unsigned char)((int16_t)r0 + (int16_t)(t * ((float)r1 - (float)r0)));
+    unsigned char g = (unsigned char)((int16_t)g0 + (int16_t)(t * ((float)g1 - (float)g0)));
+    unsigned char b = (unsigned char)((int16_t)b0 + (int16_t)(t * ((float)b1 - (float)b0)));
+    return {r, g, b};
 }

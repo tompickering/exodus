@@ -15,6 +15,7 @@
 #define COL_BORDERS {0xA0, 0xA0, 0xA0}
 #define COL_TOOL {0x00, 0x00, 0x00}
 #define COL_TOOL_HL {0x00, 0x00, 0xFF}
+#define COL_PULSE_RATE 0.8
 
 #define TEXT_Y_SEP 20
 

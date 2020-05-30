@@ -154,6 +154,7 @@ class DrawManager {
         virtual bool clicked();
         virtual int right(SprID);
         virtual void get_upscale(float&, float&);
+        virtual RGB text_pulse_col(float);
     protected:
         map<const char*, void*> sprite_data;
         virtual void* get_sprite_data(const char*) = 0;
