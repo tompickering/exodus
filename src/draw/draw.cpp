@@ -4,10 +4,12 @@
 
 #include "util/value.h"
 
+#define COL_PULSE_RATE 1.2
+
 const SprID ID_NONE = 0;
 
-const RGB col_pulse_0 {0xFF, 0xFF, 0xFF};
-const RGB col_pulse_1 {0x70, 0x70, 0xFF}; // TODO: Check this
+const RGB col_pulse_0 {0x90, 0x90, 0xFF}; // TODO: Check this
+const RGB col_pulse_1 {0xFF, 0xFF, 0xFF};
 
 DrawManager::DrawManager() {
     next_id = ID_NONE + 1;
