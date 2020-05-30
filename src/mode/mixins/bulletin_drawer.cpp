@@ -8,7 +8,7 @@ const int BULLETIN_W = 436 + (BULLETIN_BORDER) * 2;
 const int BULLETIN_H = 306 + (BULLETIN_BORDER) * 2;
 const int BULLETIN_X = (RES_X / 2) - (BULLETIN_W / 2);
 const int BULLETIN_Y = (RES_Y / 2) - (BULLETIN_H / 2) - 12;
-const int BULLETIN_TEXT_X = BULLETIN_X + BULLETIN_BORDER * 2 + 8;
+const int BULLETIN_TEXT_X = BULLETIN_X + BULLETIN_BORDER * 2 + 4;
 const int BULLETIN_FLAG_BG_X = (RES_X / 2) - 48 - BULLETIN_BORDER;
 const int BULLETIN_FLAG_BG_Y = BULLETIN_Y - 2 - 56 - BULLETIN_BORDER*2;
 const int BULLETIN_FLAG_BG_W = 96 + BULLETIN_BORDER*2;
@@ -172,7 +172,7 @@ bool BulletinDrawer::bulletin_is_open() {
 }
 
 int BulletinDrawer::bulletin_text_y(int idx) {
-    return BULLETIN_Y + BULLETIN_BORDER + 8 + idx * 30;
+    return BULLETIN_Y + BULLETIN_BORDER + 4 + idx * 18;
 }
 
 void BulletinDrawer::bulletin_reset_text_cols() {

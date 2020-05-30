@@ -500,11 +500,29 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_FirstCity) {
-        // TODO - Only for players, proper check / test, image, music...
-        bulletin_start_new();
-        bulletin_vset_next_text("%s HAS BUILT THE FIRST CITY", owner->get_full_name());
+        if (!exostate.first_city_done) {
+            if (owner->is_human() && p->count_stones(STONE_City) > 0) {
+                // TODO - Bulletin image, music...
+                exostate.first_city_done = true;
+                bulletin_start_new();
+                bulletin_set_text_col(COL_TEXT3);
+                bulletin_vset_next_text("%s HAS BUILT THE FIRST CITY", owner->get_name());
+                bulletin_vset_next_text("");
+                bulletin_vset_next_text("Words cannot describe what has been");
+                bulletin_vset_next_text("achieved by building the first city for the");
+                bulletin_vset_next_text("homeless colonists.");
+                bulletin_vset_next_text("");
+                bulletin_vset_next_text("This might be the beginning of a new era.");
+                bulletin_vset_next_text("");
+                bulletin_vset_next_text("But beware. A city can also be a center");
+                bulletin_vset_next_text("for system enemies.");
+                bulletin_vset_next_text("");
+                bulletin_vset_next_text("A picture of the new city follows.");
+                next_mpp_stage();
+                return ExodusMode::MODE_None;
+            }
+        }
         next_mpp_stage();
-        return ExodusMode::MODE_None;
     }
 
     if (mpp_stage == MPP_FirstSpaceport) {

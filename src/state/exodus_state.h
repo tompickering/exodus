@@ -75,6 +75,7 @@ class ExodusState {
         Player* get_player(int);
         int get_player_idx(Player*);
         unsigned int get_n_planets(Player*);
+        bool first_city_done;
     private:
         GalaxySize size;
         unsigned int n_players;
