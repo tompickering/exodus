@@ -32,6 +32,7 @@ void BulletinDrawer::bulletin_start_new() {
     bulletin_text_idx = 0;
     bulletin_reset_text_cols();
 
+    bulletin_set_bg(nullptr);
     bulletin_set_active_player_flag();
 }
 
@@ -94,14 +95,8 @@ void BulletinDrawer::bulletin_open() {
         {BULLETIN_X, BULLETIN_Y,
          BULLETIN_W, BULLETIN_H},
          COL_BORDERS);
-    draw_manager.fill(
-        {BULLETIN_X + BULLETIN_BORDER,
-         BULLETIN_Y + BULLETIN_BORDER,
-         436, 306},
-         {0, 0, 0});
 
-    draw_manager.save_background({BULLETIN_X, BULLETIN_Y,
-                                  BULLETIN_W, BULLETIN_H});
+    bulletin_set_bg(nullptr);
 
     // Draw header flag and background
     draw_manager.fill(
@@ -183,6 +178,26 @@ void BulletinDrawer::bulletin_reset_text_cols() {
 
 bool BulletinDrawer::bulletin_acknowledged() {
     return bulletin_has_been_acknowledged;
+}
+
+void BulletinDrawer::bulletin_set_bg(const char* img) {
+    if (img) {
+        draw_manager.draw(
+            img,
+            {BULLETIN_X + BULLETIN_BORDER,
+             BULLETIN_Y + BULLETIN_BORDER,
+             0, 0, 1, 1});
+    } else {
+        // nullptr -> black background
+        draw_manager.fill(
+            {BULLETIN_X + BULLETIN_BORDER,
+             BULLETIN_Y + BULLETIN_BORDER,
+             436, 306},
+             {0, 0, 0});
+    }
+
+    draw_manager.save_background({BULLETIN_X, BULLETIN_Y,
+                                  BULLETIN_W, BULLETIN_H});
 }
 
 void BulletinDrawer::bulletin_set_flag(const char* img) {

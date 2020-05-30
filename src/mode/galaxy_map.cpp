@@ -554,6 +554,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             const char* after = p->get_class_str_lower();
             // TODO: Report based on before / after
             bulletin_start_new();
+            bulletin_set_bg(p->sprites()->bulletin_bg);
             bulletin_set_active_player_flag();
             if (owner->is_human()) {
                 bulletin_set_text_col(COL_TEXT2);

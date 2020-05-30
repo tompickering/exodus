@@ -27,6 +27,7 @@ class BulletinDrawer {
         void bulletin_ensure_closed();
         bool bulletin_is_open();
         bool bulletin_acknowledged();
+        void bulletin_set_bg(const char*);
         void bulletin_set_flag(const char*);
         void bulletin_set_player_flag(Player*);
         void bulletin_set_active_player_flag();
