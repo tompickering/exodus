@@ -490,6 +490,7 @@ ExodusMode GalaxyMap::month_pass_update() {
 }
 
 ExodusMode GalaxyMap::month_pass_planet_update() {
+    Star *s = (Star*)exostate.get_active_flytarget();
     Planet *p  = exostate.get_active_planet();
     exostate.set_active_player(p->get_owner());
     Player *owner = exostate.get_player(p->get_owner());
@@ -548,10 +549,32 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     if (mpp_stage == MPP_ClimateChange) {
         if (onein(250)) {
-            PlanetClass before = p->get_class();
+            const char* before = p->get_class_str_lower();
             p->surfchange();
-            PlanetClass after = p->get_class();
+            const char* after = p->get_class_str_lower();
             // TODO: Report based on before / after
+            bulletin_start_new();
+            bulletin_set_active_player_flag();
+            if (owner->is_human()) {
+                bulletin_set_text_col(COL_TEXT2);
+                bulletin_vset_next_text("Planet %s, System %s", p->get_name(), s->name);
+                bulletin_set_text_col(COL_TEXT2);
+                bulletin_vset_next_text("%s", owner->get_full_name());
+            } else {
+                bulletin_set_text_col(COL_TEXT_BAD);
+                bulletin_vset_next_text("Planet %s, System %s", p->get_name(), s->name);
+                bulletin_set_text_col(COL_TEXT_BAD);
+                bulletin_vset_next_text("%s", owner->get_full_name());
+            }
+            bulletin_vset_next_text("");
+            // TODO: Capitalise planet name, music
+            bulletin_vset_next_text("GEOLOGICAL CHANGE AT %s", p->get_name());
+            bulletin_vset_next_text("");
+            bulletin_vset_next_text("Due to a global climate effect,");
+            bulletin_vset_next_text("the planet's surface has changed from");
+            bulletin_vset_next_text("%s into %s.", before, after);
+            next_mpp_stage();
+            return ExodusMode::MODE_None;
         }
         next_mpp_stage();
     }
