@@ -25,17 +25,23 @@ BulletinDrawer::BulletinDrawer() {
 }
 
 void BulletinDrawer::bulletin_start_new() {
-    if (_bulletin_is_open)
+    if (!bulletin_is_open())
         bulletin_open();
 
     bulletin_has_been_acknowledged = false;
     bulletin_text_idx = 0;
     bulletin_reset_text_cols();
+
+    bulletin_set_active_player_flag();
 }
 
 void BulletinDrawer::bulletin_update(float dt) {
     if (draw_manager.clicked()) {
         bulletin_has_been_acknowledged = true;
+    }
+
+    if (!bulletin_has_been_acknowledged) {
+        bulletin_draw_text();
     }
 }
 
@@ -104,8 +110,6 @@ void BulletinDrawer::bulletin_open() {
          BULLETIN_FLAG_BG_W, BULLETIN_FLAG_BG_H},
          COL_BORDERS);
 
-    bulletin_set_active_player_flag();
-
     draw_manager.draw(
         id_bulletin_header_l,
         IMG_TS1_HEADER,
@@ -120,15 +124,12 @@ void BulletinDrawer::bulletin_open() {
          BULLETIN_Y - 2,
          0, 1, 1, 1});
 
-    bulletin_draw_text();
-
     _bulletin_is_open = true;
-
     bulletin_start_new();
 }
 
 void BulletinDrawer::bulletin_close() {
-    if (!_bulletin_is_open) {
+    if (!bulletin_is_open()) {
         L.fatal("Attempt to close bulletin whilst not open");
     }
 
@@ -149,7 +150,6 @@ void BulletinDrawer::bulletin_close() {
     draw_manager.release_sprite_id(id_bulletin_new_bg);
 
 
-    _bulletin_is_open = false;
     bulletin_has_been_acknowledged = false;
     bulletin_text_idx = 0;
 
@@ -159,6 +159,12 @@ void BulletinDrawer::bulletin_close() {
     }
 
     bulletin_reset_text_cols();
+
+    _bulletin_is_open = false;
+}
+
+void BulletinDrawer::bulletin_ensure_closed() {
+    if (bulletin_is_open()) bulletin_close();
 }
 
 bool BulletinDrawer::bulletin_is_open() {

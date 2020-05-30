@@ -196,11 +196,11 @@ ExodusMode GalaxyMap::update(float delta) {
                 ExodusMode next_mode = month_pass_update();
                 month_pass_time += delta;
                 if (mp_stage == MP_None) {
-                    if (bulletin_is_open()) {
-                        bulletin_close();
-                    }
+                    bulletin_ensure_closed();
                     // The only place we emerge from month-pass-specific stages...
                     stage = GM_Idle;
+                    // This ensures that the screen is redrawn after the bulletin closes
+                    return ExodusMode::MODE_Reload;
                 }
                 return next_mode;
             }
@@ -491,6 +491,7 @@ ExodusMode GalaxyMap::month_pass_update() {
 
 ExodusMode GalaxyMap::month_pass_planet_update() {
     Planet *p  = exostate.get_active_planet();
+    exostate.set_active_player(p->get_owner());
     Player *owner = exostate.get_player(p->get_owner());
 
     if (mpp_stage == MPP_ShuffleTrade) {
@@ -499,8 +500,11 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_FirstCity) {
-        // TODO
+        // TODO - Only for players, proper check / test, image, music...
+        bulletin_start_new();
+        bulletin_vset_next_text("%s HAS BUILT THE FIRST CITY", owner->get_full_name());
         next_mpp_stage();
+        return ExodusMode::MODE_None;
     }
 
     if (mpp_stage == MPP_FirstSpaceport) {

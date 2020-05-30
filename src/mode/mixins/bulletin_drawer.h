@@ -24,6 +24,7 @@ class BulletinDrawer {
         void bulletin_reset_text_cols();
         void bulletin_open();
         void bulletin_close();
+        void bulletin_ensure_closed();
         bool bulletin_is_open();
         bool bulletin_acknowledged();
         void bulletin_set_flag(const char*);
