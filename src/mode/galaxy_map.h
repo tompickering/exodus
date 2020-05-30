@@ -5,6 +5,7 @@
 #include "mixins/galaxy_drawer.h"
 #include "mixins/panel_drawer.h"
 #include "mixins/comm_panel_drawer.h"
+#include "mixins/bulletin_drawer.h"
 
 #include "platform.h"
 #include "draw/draw.h"
@@ -13,7 +14,7 @@
 
 extern ExodusState exostate;
 
-class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer {
+class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, BulletinDrawer {
     public:
         GalaxyMap();
         virtual void enter() override;

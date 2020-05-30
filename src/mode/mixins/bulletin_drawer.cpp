@@ -9,6 +9,10 @@ const int BULLETIN_H = 306 + (BULLETIN_BORDER) * 2;
 const int BULLETIN_X = (RES_X / 2) - (BULLETIN_W / 2);
 const int BULLETIN_Y = (RES_Y / 2) - (BULLETIN_H / 2) - 12;
 const int BULLETIN_TEXT_X = BULLETIN_X + BULLETIN_BORDER * 2 + 8;
+const int BULLETIN_FLAG_BG_X = (RES_X / 2) - 48 - BULLETIN_BORDER;
+const int BULLETIN_FLAG_BG_Y = BULLETIN_Y - 2 - 56 - BULLETIN_BORDER*2;
+const int BULLETIN_FLAG_BG_W = 96 + BULLETIN_BORDER*2;
+const int BULLETIN_FLAG_BG_H = 56 + BULLETIN_BORDER*2;
 
 BulletinDrawer::BulletinDrawer() {
     for (int i = 0; i < BULLETIN_LINES; ++i) {
@@ -47,6 +51,8 @@ void BulletinDrawer::bulletin_vset_text(int idx, const char* in_text, ...) {
 }
 
 void BulletinDrawer::bulletin_open() {
+    Player *player = exostate.get_active_player();
+
     id_bulletin_header_flag = draw_manager.new_sprite_id();
     id_bulletin_header_l = draw_manager.new_sprite_id();
     id_bulletin_header_r = draw_manager.new_sprite_id();
@@ -71,6 +77,33 @@ void BulletinDrawer::bulletin_open() {
 
     draw_manager.save_background({BULLETIN_X, BULLETIN_Y,
                                   BULLETIN_W, BULLETIN_H});
+
+    // Draw header flag and background
+    // TODO: This is not always the player flag!
+    draw_manager.fill(
+        id_bulletin_header_flag,
+        {BULLETIN_FLAG_BG_X, BULLETIN_FLAG_BG_Y,
+         BULLETIN_FLAG_BG_W, BULLETIN_FLAG_BG_H},
+         COL_BORDERS);
+    draw_manager.draw(
+        flags[player->get_flag_idx()],
+        {BULLETIN_FLAG_BG_X + BULLETIN_BORDER,
+         BULLETIN_FLAG_BG_Y + BULLETIN_BORDER,
+         0, 0, 1, 1});
+
+    draw_manager.draw(
+        id_bulletin_header_l,
+        IMG_TS1_HEADER,
+        {BULLETIN_FLAG_BG_X - 2,
+         BULLETIN_Y - 2,
+         1, 1, 1, 1});
+
+    draw_manager.draw(
+        id_bulletin_header_r,
+        IMG_TS1_HEADER,
+        {BULLETIN_FLAG_BG_X + BULLETIN_FLAG_BG_W + 2,
+         BULLETIN_Y - 2,
+         0, 1, 1, 1});
 
     bulletin_draw_text();
 
