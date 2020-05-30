@@ -31,6 +31,7 @@ enum CommAction {
 class CommPanelDrawer {
     public:
         CommPanelDrawer();
+        void comm_update(float);
         void comm_draw_text();
         void comm_set_title(const char*);
         void comm_set_anim(const Anim&);
@@ -43,6 +44,7 @@ class CommPanelDrawer {
         void comm_ensure_closed();
         bool comm_is_open();
         CommAction comm_check_action();
+        void comm_set_text_interactive_mask(unsigned char);
     private:
         bool _comm_is_open;
 
@@ -55,6 +57,9 @@ class CommPanelDrawer {
         char comm_text4[MAX_TEXT];
         char comm_text5[MAX_TEXT];
         char *comm_text[6];
+        float comm_time_since_text_mouseover;
+        unsigned char comm_text_interactive_mask;
+        int comm_mouseover_text;
         Anim comm_anim;
 
         SprID id_comm_panel;

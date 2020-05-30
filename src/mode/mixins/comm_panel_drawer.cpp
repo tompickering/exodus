@@ -24,18 +24,45 @@ CommPanelDrawer::CommPanelDrawer() {
     new (&comm_anim) Anim(1, IMG_LD0_LD0);
 
     show_buttons = true;
+    comm_mouseover_text = -1;
+    comm_time_since_text_mouseover = 0;
+    comm_text_interactive_mask = 0;
     _comm_is_open = false;
 }
 
+void CommPanelDrawer::comm_update(float dt) {
+    comm_time_since_text_mouseover += dt;
+    comm_draw_text();
+}
+
 void CommPanelDrawer::comm_draw_text() {
+    bool mouseover_any = false;
     for (int i = 0; i < 6; ++i) {
+        RGB col = COL_TEXT;
+
+        if (comm_text_interactive_mask & (1 << i)) {
+            if (draw_manager.mouse_over(id_text[i])) {
+                mouseover_any = true;
+                if (i != comm_mouseover_text) {
+                    comm_mouseover_text = i;
+                    comm_time_since_text_mouseover = 0;
+                }
+                col = draw_manager.text_pulse_col(comm_time_since_text_mouseover);
+                L.debug("%d", col.r);
+            }
+        }
+
         draw_manager.draw_text(
             id_text[i],
             comm_text[i],
             Justify::Left,
             COMM_RCOL_X + 8,
             comm_text_y(i),
-            COL_TEXT);
+            col);
+    }
+
+    if (!mouseover_any) {
+        comm_mouseover_text = -1;
     }
 }
 
@@ -70,8 +97,15 @@ void CommPanelDrawer::comm_vset_text(int idx, const char* in_text, ...) {
     va_end(args);
 }
 
+void CommPanelDrawer::comm_set_text_interactive_mask(unsigned char mask) {
+    comm_text_interactive_mask = mask;
+}
+
 void CommPanelDrawer::comm_open(int text_slots) {
     comm_text_slots = text_slots;
+
+    comm_mouseover_text = -1;
+    comm_time_since_text_mouseover = 0;
 
     if (comm_text_slots <= 0) {
         comm_text_slots = 1;
@@ -172,6 +206,10 @@ void CommPanelDrawer::comm_close() {
     for (int i = 0; i < 6; ++i) {
         strncpy(comm_text[i], "", 1);
     }
+
+    comm_mouseover_text = -1;
+    comm_time_since_text_mouseover = 0;
+    comm_text_interactive_mask = 0;
 
     strncpy(comm_title, "", 1);
     strncpy(comm_img_caption, "", 1);
