@@ -37,6 +37,9 @@ void CommPanelDrawer::comm_update(float dt) {
 
 void CommPanelDrawer::comm_draw_text() {
     bool mouseover_any = false;
+    // FIXME: We can optimise redraws by only drawing text that has just stopped
+    // or having or currently has the mouse over it - but we'll also need to know whether
+    // this is a redraw vs an initial draw...
     for (int i = 0; i < 6; ++i) {
         RGB col = COL_TEXT;
 
