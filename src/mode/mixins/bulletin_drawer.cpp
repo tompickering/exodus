@@ -18,6 +18,7 @@ BulletinDrawer::BulletinDrawer() {
     for (int i = 0; i < BULLETIN_LINES; ++i) {
         strncpy(bulletin_text[i], "", 1);
     }
+    bulletin_reset_text_cols();
 }
 
 void BulletinDrawer::bulletin_update(float dt) {
@@ -31,7 +32,7 @@ void BulletinDrawer::bulletin_draw_text() {
             Justify::Left,
             BULLETIN_TEXT_X,
             bulletin_text_y(i),
-            COL_TEXT);
+            bulletin_text_col[i]);
     }
 }
 
@@ -48,6 +49,10 @@ void BulletinDrawer::bulletin_vset_text(int idx, const char* in_text, ...) {
     va_start(args, in_text);
     vsnprintf(bulletin_text[idx], BULLETIN_MAX_TEXT - 1, in_text, args);
     va_end(args);
+}
+
+void BulletinDrawer::bulletin_set_text_col(int idx, RGB col) {
+    bulletin_text_col[idx] = col;
 }
 
 void BulletinDrawer::bulletin_open() {
@@ -138,6 +143,8 @@ void BulletinDrawer::bulletin_close() {
     for (int i = 0; i < BULLETIN_LINES; ++i) {
         strncpy(bulletin_text[i], "", 1);
     }
+
+    bulletin_reset_text_cols();
 }
 
 bool BulletinDrawer::bulletin_is_open() {
@@ -146,4 +153,10 @@ bool BulletinDrawer::bulletin_is_open() {
 
 int BulletinDrawer::bulletin_text_y(int idx) {
     return BULLETIN_Y + BULLETIN_BORDER + 8 + idx * 30;
+}
+
+void BulletinDrawer::bulletin_reset_text_cols() {
+    for (int i = 0; i < BULLETIN_LINES; ++i) {
+        bulletin_text_col[i] = COL_TEXT;
+    }
 }
