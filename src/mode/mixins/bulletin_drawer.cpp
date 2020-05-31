@@ -21,6 +21,7 @@ BulletinDrawer::BulletinDrawer() {
     bulletin_reset_text_cols();
     bulletin_has_been_acknowledged = false;
     bulletin_text_idx = 0;
+    bulletin_enable_transitions(false);
     _bulletin_is_open = false;
 }
 
@@ -154,6 +155,7 @@ void BulletinDrawer::bulletin_close() {
     }
 
     bulletin_reset_text_cols();
+    bulletin_enable_transitions(false);
 
     _bulletin_is_open = false;
 }
@@ -214,4 +216,8 @@ void BulletinDrawer::bulletin_set_player_flag(Player* player) {
 
 void BulletinDrawer::bulletin_set_active_player_flag() {
     bulletin_set_player_flag(exostate.get_active_player());
+}
+
+void BulletinDrawer::bulletin_enable_transitions(bool on) {
+    bulletin_transitions = on;
 }

@@ -31,6 +31,7 @@ class BulletinDrawer {
         void bulletin_set_flag(const char*);
         void bulletin_set_player_flag(Player*);
         void bulletin_set_active_player_flag();
+        void bulletin_enable_transitions(bool);
     private:
         bool _bulletin_is_open;
 
@@ -50,6 +51,7 @@ class BulletinDrawer {
 
         int bulletin_text_idx;
         bool bulletin_has_been_acknowledged;
+        bool bulletin_transitions;
 };
 
 #endif
