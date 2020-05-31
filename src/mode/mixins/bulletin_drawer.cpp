@@ -3,6 +3,8 @@
 #include "assetpaths.h"
 #include "shared.h"
 
+#define BULLETIN_TRANSITION_RATE 1.4f
+
 const int BULLETIN_BORDER = 6;
 const int BULLETIN_W = 436 + (BULLETIN_BORDER) * 2;
 const int BULLETIN_H = 306 + (BULLETIN_BORDER) * 2;
@@ -13,6 +15,8 @@ const int BULLETIN_FLAG_BG_X = (RES_X / 2) - 48 - BULLETIN_BORDER;
 const int BULLETIN_FLAG_BG_Y = BULLETIN_Y - 2 - 56 - BULLETIN_BORDER*2;
 const int BULLETIN_FLAG_BG_W = 96 + BULLETIN_BORDER*2;
 const int BULLETIN_FLAG_BG_H = 56 + BULLETIN_BORDER*2;
+const int BULLETIN_BG_X = BULLETIN_X + BULLETIN_BORDER;
+const int BULLETIN_BG_Y = BULLETIN_Y + BULLETIN_BORDER;
 
 BulletinDrawer::BulletinDrawer() {
     for (int i = 0; i < BULLETIN_LINES; ++i) {
@@ -21,41 +25,60 @@ BulletinDrawer::BulletinDrawer() {
     bulletin_reset_text_cols();
     bulletin_has_been_acknowledged = false;
     bulletin_text_idx = 0;
-    bulletin_enable_transitions(false);
+    bulletin_transition = 0;
+    bulletin_redraws_needed = true;
     _bulletin_is_open = false;
 }
 
-void BulletinDrawer::bulletin_start_new() {
+void BulletinDrawer::bulletin_start_new(bool transition) {
     if (!bulletin_is_open())
         bulletin_open();
 
     bulletin_has_been_acknowledged = false;
     bulletin_text_idx = 0;
     bulletin_reset_text_cols();
+    bulletin_transition = transition ? 0 : 1;
+    bulletin_redraws_needed = true;
 
     bulletin_set_bg(nullptr);
     bulletin_set_active_player_flag();
 }
 
 void BulletinDrawer::bulletin_update(float dt) {
-    if (draw_manager.clicked()) {
-        bulletin_has_been_acknowledged = true;
+    bulletin_transition += dt * BULLETIN_TRANSITION_RATE;
+    if (bulletin_transition > 1) bulletin_transition = 1;
+
+    if (bulletin_redraws_needed && !bulletin_has_been_acknowledged) {
+        bulletin_update_bg();
+        bulletin_draw_text();
     }
 
-    if (!bulletin_has_been_acknowledged) {
-        bulletin_draw_text();
+    bulletin_redraws_needed = bulletin_transition < 1;
+
+    if (draw_manager.clicked()) {
+        if (bulletin_transition < 1) {
+            bulletin_transition = 1;
+        } else {
+            bulletin_has_been_acknowledged = true;
+        }
     }
 }
 
 void BulletinDrawer::bulletin_draw_text() {
     for (int i = 0; i < BULLETIN_LINES; ++i) {
-        draw_manager.draw_text(
-            id_bulletin_text[i],
-            bulletin_text[i],
-            Justify::Left,
-            BULLETIN_TEXT_X,
-            bulletin_text_y(i),
-            bulletin_text_col[i]);
+        if (bulletin_transition < 1) {
+            draw_manager.draw(
+                id_bulletin_text[i],
+                nullptr);
+        } else {
+            draw_manager.draw_text(
+                id_bulletin_text[i],
+                bulletin_text[i],
+                Justify::Left,
+                BULLETIN_TEXT_X,
+                bulletin_text_y(i),
+                bulletin_text_col[i]);
+        }
     }
 }
 
@@ -99,6 +122,12 @@ void BulletinDrawer::bulletin_open() {
 
     bulletin_set_bg(nullptr);
 
+    draw_manager.fill(
+        {BULLETIN_X + BULLETIN_BORDER,
+         BULLETIN_Y + BULLETIN_BORDER,
+         436, 306},
+         {0, 0, 0});
+
     // Draw header flag and background
     draw_manager.fill(
         id_bulletin_header_flag,
@@ -121,7 +150,6 @@ void BulletinDrawer::bulletin_open() {
          0, 1, 1, 1});
 
     _bulletin_is_open = true;
-    bulletin_start_new();
 }
 
 void BulletinDrawer::bulletin_close() {
@@ -155,7 +183,8 @@ void BulletinDrawer::bulletin_close() {
     }
 
     bulletin_reset_text_cols();
-    bulletin_enable_transitions(false);
+    bulletin_transition = 0;
+    bulletin_redraws_needed = true;
 
     _bulletin_is_open = false;
 }
@@ -183,23 +212,37 @@ bool BulletinDrawer::bulletin_acknowledged() {
 }
 
 void BulletinDrawer::bulletin_set_bg(const char* img) {
-    if (img) {
+    // N.B. Can set nullptr for black
+    bulletin_bg = img;
+}
+
+void BulletinDrawer::bulletin_update_bg() {
+    int h = 306;
+    if (bulletin_transition < 1) h = (int)(306.f * bulletin_transition);
+    if (bulletin_bg) {
+        DrawArea a = {0, 0, 436, h};
+        draw_manager.set_source_region(
+            id_bulletin_bg,
+            &a);
         draw_manager.draw(
-            img,
-            {BULLETIN_X + BULLETIN_BORDER,
-             BULLETIN_Y + BULLETIN_BORDER,
+            id_bulletin_bg,
+            bulletin_bg,
+            {BULLETIN_BG_X,
+             BULLETIN_BG_Y,
              0, 0, 1, 1});
     } else {
         // nullptr -> black background
         draw_manager.fill(
-            {BULLETIN_X + BULLETIN_BORDER,
-             BULLETIN_Y + BULLETIN_BORDER,
-             436, 306},
+            {BULLETIN_BG_X,
+             BULLETIN_BG_Y,
+             436, h},
              {0, 0, 0});
     }
 
-    draw_manager.save_background({BULLETIN_X, BULLETIN_Y,
-                                  BULLETIN_W, BULLETIN_H});
+    if (bulletin_transition == 1) {
+        draw_manager.save_background({BULLETIN_X, BULLETIN_Y,
+                                      BULLETIN_W, BULLETIN_H});
+    }
 }
 
 void BulletinDrawer::bulletin_set_flag(const char* img) {
@@ -216,8 +259,4 @@ void BulletinDrawer::bulletin_set_player_flag(Player* player) {
 
 void BulletinDrawer::bulletin_set_active_player_flag() {
     bulletin_set_player_flag(exostate.get_active_player());
-}
-
-void BulletinDrawer::bulletin_enable_transitions(bool on) {
-    bulletin_transitions = on;
 }

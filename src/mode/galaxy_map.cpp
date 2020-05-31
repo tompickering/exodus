@@ -505,7 +505,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             if (owner->is_human() && p->count_stones(STONE_City) > 0) {
                 // TODO - Bulletin image, music...
                 exostate.first_city_done = true;
-                bulletin_start_new();
+                bulletin_start_new(false);
                 bulletin_set_flag(IMG_TS1_FLAG16);
                 bulletin_set_text_col(COL_TEXT3);
                 bulletin_vset_next_text("%s HAS BUILT THE FIRST CITY", owner->get_name());
@@ -553,7 +553,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             p->surfchange();
             const char* after = p->get_class_str_lower();
             // TODO: Report based on before / after
-            bulletin_start_new();
+            bulletin_start_new(false);
             bulletin_set_bg(p->sprites()->bulletin_bg);
             bulletin_set_active_player_flag();
             if (owner->is_human()) {
