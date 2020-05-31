@@ -553,7 +553,32 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_KillArmies) {
-        // TODO
+        // We kill at least 1 of each thing, so if has_army() returns
+        // true, we know that *something* is going to die. >:D
+        if (onein(90)) {
+            if (p->has_army()) {
+                int kill_inf = RND(10);
+                int kill_gli = RND(10);
+                int kill_art = RND(10);
+                p->adjust_army(-1*kill_inf, -1*kill_gli, -1*kill_art);
+                bulletin_start_new(true);
+                bulletin_set_bg(p->sprites()->bulletin_bg);
+                bulletin_set_active_player_flag();
+                // TODO: I think the panel is populated with star / planet / owner
+                // names automatically, in PROCcombuild, which we need an analogue
+                // for. It should print this info and then advance the text head
+                // some rows. bulletin_write_planet_info(p) or something.
+                bulletin_set_next_text("PRIORITY ALPHA MESSAGE");
+                bulletin_set_next_text("");
+                bulletin_vset_next_text("Defects at %s have caused", p->get_name());
+                bulletin_set_next_text("");
+                bulletin_set_next_text("some battle machines to be destructed.");
+                // TODO: Should we tell the player how many have been destroyed?
+                // TODO: News item (PROCdonotice)
+                next_mpp_stage();
+                return ExodusMode::MODE_None;
+            }
+        }
         next_mpp_stage();
     }
 

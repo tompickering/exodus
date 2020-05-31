@@ -154,6 +154,9 @@ class Planet {
         int get_mineral_reserves_cap();
         void update_unrest_history();
         const char* get_moon_bg();
+        bool has_army();
+        void get_army(int&, int&, int&);
+        void adjust_army(int, int, int);
     private:
         void init();
 

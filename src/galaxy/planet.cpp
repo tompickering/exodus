@@ -883,3 +883,23 @@ const char* Planet::get_moon_bg() {
     if (moon_cls == MOON_Ice) return IMG_GF2;
     return IMG_GF3;
 }
+
+bool Planet::has_army() {
+    return (army_inf > 0) || (army_gli > 0) || (army_art > 0);
+}
+
+void Planet::get_army(int& inf, int& gli, int& art) {
+    inf = army_inf;
+    gli = army_gli;
+    art = army_art;
+}
+
+void Planet::adjust_army(int inf, int gli, int art) {
+    army_inf += inf;
+    army_gli += gli;
+    army_art += art;
+    if (army_inf < 0) army_inf = 0;
+    if (army_gli < 0) army_gli = 0;
+    if (army_art < 0) army_art = 0;
+    // TODO: Maxima
+}
