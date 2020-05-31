@@ -204,7 +204,7 @@ bool Player::can_research(Invention inv) {
                 && has_invention(INV_MicroMechanicElements);
         case INV_DreamInfluence:
             return has_invention(INV_UniversalVaccine);
-        case INV_RaderExtension:
+        case INV_RadarExtension:
             return has_invention(INV_UltraRangeScanner)
                 && has_invention(INV_MicroMechanicElements);
         default:
@@ -242,7 +242,7 @@ InventionType Player::get_invention_type(Invention inv) {
     if (inv == INV_Acid)                    return IT_Electronical;
     if (inv == INV_IndustryGuard)           return IT_Electronical;
     if (inv == INV_DreamInfluence)          return IT_Medical;
-    if (inv == INV_RaderExtension)          return IT_Mechanical;
+    if (inv == INV_RadarExtension)          return IT_Mechanical;
 
     L.fatal("Requested type for invalid invention %d", inv);
     return IT_Mechanical;

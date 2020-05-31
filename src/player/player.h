@@ -63,7 +63,7 @@ enum Invention {
     INV_Acid,                     // 11   |
     INV_IndustryGuard,            // 12   |
     INV_DreamInfluence,           // 13   |
-    INV_RaderExtension,           // 14  -
+    INV_RadarExtension,           // 14  -
 };
 
 enum InventionType {

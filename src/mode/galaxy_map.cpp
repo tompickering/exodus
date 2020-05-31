@@ -548,7 +548,32 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_Meteors) {
-        // TODO
+        if (onein(200)) {
+            // TODO PROCdonotice
+            bulletin_start_new(false);
+            bulletin_set_bg(IMG_ME5_MENU);
+            bulletin_set_active_player_flag();
+            bulletin_write_planet_info(s, p);
+            bulletin_vset_next_text("METEOR STRIKES %s", tmp_caps(p->get_name()));
+            bulletin_set_next_text("");
+            if (owner->has_invention(INV_RadarExtension)) {
+                bulletin_set_next_text("The Radar Extension System made");
+                bulletin_set_next_text("an early destroying of the dangerous");
+                bulletin_set_next_text("fragments possible.");
+            } else {
+                bulletin_vset_next_text("A meteor has reached tha planet %s", p->get_name());
+                bulletin_set_next_text("and several fragments of it have it");
+                bulletin_set_next_text("the world's surface.");
+                if (owner->is_human()) {
+                    bulletin_set_next_text("");
+                    bulletin_set_next_text("Visual replay follows.");
+                    // TODO: Destruction (PROCbombing)
+                    // TODO: Visualisation of meteor strike
+                }
+            }
+            next_mpp_stage();
+            return ExodusMode::MODE_None;
+        }
         next_mpp_stage();
     }
 
