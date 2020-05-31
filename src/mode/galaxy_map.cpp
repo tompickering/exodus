@@ -564,14 +564,10 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 bulletin_start_new(true);
                 bulletin_set_bg(p->sprites()->bulletin_bg);
                 bulletin_set_active_player_flag();
-                // TODO: I think the panel is populated with star / planet / owner
-                // names automatically, in PROCcombuild, which we need an analogue
-                // for. It should print this info and then advance the text head
-                // some rows. bulletin_write_planet_info(p) or something.
+                bulletin_write_planet_info(s, p);
                 bulletin_set_next_text("PRIORITY ALPHA MESSAGE");
                 bulletin_set_next_text("");
                 bulletin_vset_next_text("Defects at %s have caused", p->get_name());
-                bulletin_set_next_text("");
                 bulletin_set_next_text("some battle machines to be destructed.");
                 // TODO: Should we tell the player how many have been destroyed?
                 // TODO: News item (PROCdonotice)
@@ -590,18 +586,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             bulletin_start_new(true);
             bulletin_set_bg(p->sprites()->bulletin_bg);
             bulletin_set_active_player_flag();
-            if (owner->is_human()) {
-                bulletin_set_text_col(COL_TEXT2);
-                bulletin_vset_next_text("Planet %s, System %s", p->get_name(), s->name);
-                bulletin_set_text_col(COL_TEXT2);
-                bulletin_vset_next_text("%s", owner->get_full_name());
-            } else {
-                bulletin_set_text_col(COL_TEXT_BAD);
-                bulletin_vset_next_text("Planet %s, System %s", p->get_name(), s->name);
-                bulletin_set_text_col(COL_TEXT_BAD);
-                bulletin_vset_next_text("%s", owner->get_full_name());
-            }
-            bulletin_vset_next_text("");
+            bulletin_write_planet_info(s, p);
             // TODO: Music
             bulletin_vset_next_text("GEOLOGICAL CHANGE AT %s", tmp_caps(p->get_name()));
             bulletin_vset_next_text("");

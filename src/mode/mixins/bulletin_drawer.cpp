@@ -102,6 +102,26 @@ void BulletinDrawer::bulletin_set_text_col(RGB col) {
     bulletin_text_col[bulletin_text_idx] = col;
 }
 
+void BulletinDrawer::bulletin_write_planet_info(Star* s, Planet* p) {
+    if (!s || !p) {
+        L.fatal("Attempt to write data for null star / planet");
+    }
+
+    Player *owner = nullptr;
+    if (p->is_owned()) owner = exostate.get_player(p->get_owner());
+
+    RGB col = COL_TEXT_BAD;
+    if (owner && owner->is_human())
+        col = COL_TEXT2;
+
+    bulletin_set_text_col(col);
+    bulletin_vset_next_text("Planet %s, System %s", p->get_name(), s->name);
+    bulletin_set_next_text("");
+    bulletin_set_text_col(col);
+    bulletin_vset_next_text("%s", owner ? owner->get_full_name() : "");
+    bulletin_set_next_text("");
+}
+
 void BulletinDrawer::bulletin_open() {
     id_bulletin_header_flag = draw_manager.new_sprite_id();
     id_bulletin_header_l = draw_manager.new_sprite_id();

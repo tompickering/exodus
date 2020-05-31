@@ -4,6 +4,8 @@
 #include "draw/draw.h"
 
 #include "anim.h"
+#include "galaxy/star.h"
+#include "galaxy/planet.h"
 #include "state/exodus_state.h"
 
 #define BULLETIN_LINES     20
@@ -21,6 +23,7 @@ class BulletinDrawer {
         void bulletin_set_next_text(const char*);
         void bulletin_vset_next_text(const char*, ...);
         void bulletin_set_text_col(RGB);
+        void bulletin_write_planet_info(Star*, Planet*);
         void bulletin_reset_text_cols();
         void bulletin_ensure_closed();
         bool bulletin_is_open();
