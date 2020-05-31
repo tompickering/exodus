@@ -71,6 +71,12 @@ enum Law {
     LAW_CivilianWeapons,
 };
 
+enum MoonClass {
+    MOON_Dirt,
+    MOON_Ice,
+    MOON_Grass,
+};
+
 typedef struct {
     const char *panel_icon;
     const char *landscape;
@@ -147,12 +153,14 @@ class Planet {
         void perish_food();
         int get_mineral_reserves_cap();
         void update_unrest_history();
+        const char* get_moon_bg();
     private:
         void init();
 
         bool _exists;
 
         PlanetClass cls;
+        MoonClass moon_cls;    // Determines battle background. Orig was random each time.
         char name[PLANET_MAX_NAME + 1];
         Stone surf[PLANET_BLOCKS_LG * PLANET_BLOCKS_LG];
 

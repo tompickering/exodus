@@ -32,6 +32,7 @@ Planet::Planet() {
     traded = 0;
     laws = 0;
     surfchange_this_month = false;
+    moon_cls = MOON_Dirt;
 }
 
 Planet::Planet(PlanetClass _cls) : cls(_cls) {
@@ -96,6 +97,7 @@ void Planet::init() {
 
     _exists = true;
     name[0] = '\0';
+    moon_cls = (MoonClass)(rand() % 3);
     owner = -1;
     traded = 0;
     taxes_collected = false;
@@ -874,4 +876,10 @@ void Planet::update_unrest_history() {
     for (int i = N_UNREST - 1; i > 0; --i) {
         unrest[i] = unrest[i - 1];
     }
+}
+
+const char* Planet::get_moon_bg() {
+    if (moon_cls == MOON_Dirt) return IMG_GF1;
+    if (moon_cls == MOON_Ice) return IMG_GF2;
+    return IMG_GF3;
 }
