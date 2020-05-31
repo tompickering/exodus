@@ -518,7 +518,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 bulletin_vset_next_text("");
                 bulletin_vset_next_text("This might be the beginning of a new era.");
                 bulletin_vset_next_text("");
-                bulletin_vset_next_text("But beware. A city can also be a center");
+                bulletin_vset_next_text("But beware. A city can also be a centre");
                 bulletin_vset_next_text("for system enemies.");
                 bulletin_vset_next_text("");
                 bulletin_vset_next_text("A picture of the new city follows.");
