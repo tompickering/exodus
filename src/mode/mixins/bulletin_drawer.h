@@ -44,7 +44,6 @@ class BulletinDrawer {
         SprID id_bulletin_header_r;
         SprID id_bulletin_panel;
         SprID id_bulletin_bg;
-        SprID id_bulletin_new_bg;
         SprID id_bulletin_text[BULLETIN_LINES];
 
         void bulletin_draw_text();

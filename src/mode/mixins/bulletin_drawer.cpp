@@ -108,7 +108,6 @@ void BulletinDrawer::bulletin_open() {
     id_bulletin_header_r = draw_manager.new_sprite_id();
     id_bulletin_panel = draw_manager.new_sprite_id();
     id_bulletin_bg = draw_manager.new_sprite_id();
-    id_bulletin_new_bg = draw_manager.new_sprite_id();
 
     for (int i = 0; i < BULLETIN_LINES; ++i) {
         id_bulletin_text[i] = draw_manager.new_sprite_id();
@@ -171,7 +170,6 @@ void BulletinDrawer::bulletin_close() {
     draw_manager.release_sprite_id(id_bulletin_header_r);
     draw_manager.release_sprite_id(id_bulletin_panel);
     draw_manager.release_sprite_id(id_bulletin_bg);
-    draw_manager.release_sprite_id(id_bulletin_new_bg);
 
 
     bulletin_has_been_acknowledged = false;
