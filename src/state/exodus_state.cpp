@@ -27,6 +27,7 @@ ExodusState::ExodusState() {
     galaxy_finalised = false;
     active_flytarget_is_guild = false;
     first_city_done = false;
+    first_spaceport_done = false;
 }
 
 void ExodusState::init(GameConfig config) {
@@ -38,6 +39,7 @@ void ExodusState::init(GameConfig config) {
     active_star = 0;
     active_planet = -1;
     first_city_done = false;
+    first_spaceport_done = false;
     unsigned int i;
 
     for (i = 0; i < n_players; ++i) {

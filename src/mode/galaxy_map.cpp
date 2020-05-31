@@ -530,7 +530,15 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_FirstSpaceport) {
-        // TODO
+        if (!exostate.first_spaceport_done) {
+            if (owner->is_human()
+                && p->count_stones(STONE_Port0) > 0
+                && p->count_stones(STONE_Port1) > 0
+                && p->count_stones(STONE_Port2) > 0) {
+                exostate.first_spaceport_done = true;
+                // TODO
+            }
+        }
         next_mpp_stage();
     }
 
