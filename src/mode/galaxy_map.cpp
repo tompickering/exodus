@@ -2,6 +2,8 @@
 
 #include "assetpaths.h"
 
+#include "util/str.h"
+
 #define BLINK_TIME 0.5
 
 enum ID {
@@ -508,7 +510,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 bulletin_start_new(false);
                 bulletin_set_flag(IMG_TS1_FLAG16);
                 bulletin_set_text_col(COL_TEXT3);
-                bulletin_vset_next_text("%s HAS BUILT THE FIRST CITY", owner->get_name());
+                bulletin_vset_next_text("%s HAS BUILT THE FIRST CITY", tmp_caps(owner->get_name()));
                 bulletin_vset_next_text("");
                 bulletin_vset_next_text("Words cannot describe what has been");
                 bulletin_vset_next_text("achieved by building the first city for the");
@@ -568,8 +570,8 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 bulletin_vset_next_text("%s", owner->get_full_name());
             }
             bulletin_vset_next_text("");
-            // TODO: Capitalise planet name, music
-            bulletin_vset_next_text("GEOLOGICAL CHANGE AT %s", p->get_name());
+            // TODO: Music
+            bulletin_vset_next_text("GEOLOGICAL CHANGE AT %s", tmp_caps(p->get_name()));
             bulletin_vset_next_text("");
             bulletin_vset_next_text("Due to a global climate effect,");
             bulletin_vset_next_text("the planet's surface has changed from");
