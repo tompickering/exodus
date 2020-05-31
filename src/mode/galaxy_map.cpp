@@ -600,7 +600,36 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_Epidemic) {
-        // TODO
+        // PROCepidemic(1) case
+        if (onein(150)) {
+            if (exostate.get_month() >= 10 && !owner->has_invention(INV_Acid)) {
+                int to_die = RND(15);
+                if (p->count_stones(STONE_Agri) < 15) to_die = RND(5);
+                int sz = p->get_size_blocks();
+                for (int j = 0; j < sz; ++j) {
+                    for (int i = 0; i < sz; ++i) {
+                        if (p->get_stone(i, j) == STONE_Agri) {
+                            p->set_stone(i, j, STONE_AgriDead);
+                            --to_die;
+                            if (to_die <= 0) break;
+                        }
+                    }
+                    if (to_die <= 0) break;
+                }
+                p->adjust_unrest(2);
+                // TODO: Music, PROCdonotice
+                bulletin_start_new(true);
+                bulletin_set_bg(p->sprites()->bulletin_bg);
+                bulletin_set_active_player_flag();
+                bulletin_write_planet_info(s, p);
+                bulletin_vset_next_text("PLAGUE AT %s", tmp_caps(p->get_name()));
+                bulletin_set_next_text("");
+                bulletin_set_next_text("Large parts of cultivated area");
+                bulletin_set_next_text("have collapsed.");
+                next_mpp_stage();
+                return ExodusMode::MODE_None;
+            }
+        }
         next_mpp_stage();
     }
 
