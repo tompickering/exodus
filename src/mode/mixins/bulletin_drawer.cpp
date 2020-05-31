@@ -108,6 +108,7 @@ void BulletinDrawer::bulletin_open() {
     id_bulletin_header_r = draw_manager.new_sprite_id();
     id_bulletin_panel = draw_manager.new_sprite_id();
     id_bulletin_bg = draw_manager.new_sprite_id();
+    id_bulletin_bg_scan = draw_manager.new_sprite_id();
 
     for (int i = 0; i < BULLETIN_LINES; ++i) {
         id_bulletin_text[i] = draw_manager.new_sprite_id();
@@ -170,6 +171,7 @@ void BulletinDrawer::bulletin_close() {
     draw_manager.release_sprite_id(id_bulletin_header_r);
     draw_manager.release_sprite_id(id_bulletin_panel);
     draw_manager.release_sprite_id(id_bulletin_bg);
+    draw_manager.release_sprite_id(id_bulletin_bg_scan);
 
 
     bulletin_has_been_acknowledged = false;
@@ -238,8 +240,14 @@ void BulletinDrawer::bulletin_update_bg() {
     }
 
     if (bulletin_transition == 1) {
+        // The above will have drawn over the last scan bar
         draw_manager.save_background({BULLETIN_X, BULLETIN_Y,
                                       BULLETIN_W, BULLETIN_H});
+    } else if (h < 434) { // Ensures we don't draw lower then the bg area
+        draw_manager.fill(
+            id_bulletin_bg_scan,
+            {BULLETIN_BG_X, BULLETIN_BG_Y + h, 436, 2},
+             {0, 0, 0xFF});
     }
 }
 
