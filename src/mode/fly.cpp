@@ -115,10 +115,10 @@ const float thrust_pos[] = {
     266, 320, // Small, lower-left
     566, 177, // Medium, right
     519, 5,   // Large, top-right
-    393, 92,  // Medium, up-up-right of centre
+    393, 91,  // Medium, up-up-right of centre
     507, 137, // Medium, right-up-right of centre
     155, 266, // Medium, lower-left
-    569, 325, // Large, lower-right
+    569, 324, // Large, lower-right
 };
 
 Fly::Fly() : ModeBase("Fly"), PanelDrawer(PNL_Galaxy) {
