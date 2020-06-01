@@ -955,6 +955,10 @@ int Planet::get_mineral_reserves_cap() {
     return (diameter / 200);
 }
 
+int Planet::get_army_cap() {
+    return (diameter / 200);
+}
+
 void Planet::update_unrest_history() {
     for (int i = N_UNREST - 1; i > 0; --i) {
         unrest[i] = unrest[i - 1];
@@ -984,7 +988,10 @@ void Planet::adjust_army(int inf, int gli, int art) {
     if (army_inf < 0) army_inf = 0;
     if (army_gli < 0) army_gli = 0;
     if (army_art < 0) army_art = 0;
-    // TODO: Maxima
+    int max = get_army_cap();
+    if (army_inf > max) army_inf = max;
+    if (army_gli > max) army_gli = max;
+    if (army_art > max) army_art = max;
 }
 
 void Planet::disown() {
