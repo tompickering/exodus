@@ -35,8 +35,13 @@ void PlanetStatus::enter() {
 
     char ownership[PLANET_MAX_NAME + MAX_PLAYER_FULLNAME + 31];
 
-    if (owner) {
+    if (strnlen(p->get_name(), 1) > 0) {
         snprintf(heading, 12 + PLANET_MAX_NAME, "The planet %s", p->get_name());
+    } else {
+        strncpy(heading, "Unexplored planet", 12 + PLANET_MAX_NAME);
+    }
+
+    if (owner) {
         text_x += 100;
 
         draw_manager.draw(
@@ -52,7 +57,6 @@ void PlanetStatus::enter() {
                      "%s belongs to %s.", p->get_name(), owner->get_full_name());
         }
     } else {
-        strncpy(heading, "Unexplored planet", 12 + PLANET_MAX_NAME);
         strncpy(ownership, "The planet belongs to no confederation.",
                 PLANET_MAX_NAME + MAX_PLAYER_FULLNAME + 30);
     }
