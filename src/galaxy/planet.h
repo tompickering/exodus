@@ -85,6 +85,16 @@ typedef struct {
     const char *bulletin_bg;
 } PlanetSpriteSet;
 
+typedef struct {
+    bool no_money;
+    bool no_space;
+    bool no_plu;
+    int inf;
+    int gli;
+    int art;
+    int not_produced;
+} ProductionReport;
+
 class Planet {
     public:
         Planet();
@@ -160,6 +170,7 @@ class Planet {
         void clear_radiation();
         void produce_food();
         void produce_plutonium();
+        ProductionReport produce_military();
         void mine();
         void perish_food();
         int get_mineral_reserves_cap();

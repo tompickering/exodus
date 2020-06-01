@@ -779,7 +779,26 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_ProduceMilitary) {
-        // TODO
+        ProductionReport rpt = p->produce_military();
+        if (rpt.inf + rpt.gli + rpt.art > 0) {
+            report.add_line("Produced battle units: %d / %d / %d",
+                            rpt.inf, rpt.gli, rpt.art);
+        }
+        if (rpt.not_produced > 0) {
+            const char *sep = " / ";
+            const char *empty = "";
+            const char *s0 = (rpt.no_money && (rpt.no_space || rpt.no_plu)) ? sep : empty;
+            const char *s1 = (rpt.no_space && rpt.no_plu) ? sep : empty;
+            if (rpt.not_produced == 1) {
+                report.add_line("1 battle unit has not been produced.");
+            } else {
+                report.add_line("%d battle units have not been produced.",
+                                rpt.not_produced);
+            }
+            report.add_line("%s%s%s%s%s", rpt.no_money ? "No money" : "", s0,
+                                          rpt.no_space ? "No space" : "", s1,
+                                          rpt.no_plu ? "No plutonium" : "");
+        }
         next_mpp_stage();
     }
 
