@@ -357,7 +357,7 @@ void Planet::set_stone_wrap(int x, int y, Stone stone) {
     int size = get_size_blocks();
     while (x < 0) x += size;
     while (y < 0) y += size;
-    return aet_stone(x % size, y % size, stone);
+    return set_stone(x % size, y % size, stone);
 }
 
 bool Planet::has_stone(Stone st) {
@@ -399,6 +399,18 @@ bool Planet::next_to(int x, int y, Stone st) {
     if (get_stone_wrap(x + 1, y) == st) return true;
     if (get_stone_wrap(x, y + 1) == st) return true;
     if (get_stone_wrap(x, y - 1) == st) return true;
+    return false;
+}
+
+bool Planet::next_to_8(int x, int y, Stone st) {
+    for (int j = -1; j <= 1; ++j) {
+        for (int i = -1; i <= 1; ++i) {
+            if (i == 0 && j == 0)
+                continue;
+            if (get_stone_wrap(x+i, y+j) == st)
+                return true;
+        }
+    }
     return false;
 }
 
@@ -1042,4 +1054,63 @@ bool Planet::expand_city() {
 
     L.fatal("Could not find suitable expanstion after verifying it must be possible");
     return false;
+}
+
+bool Planet::agri_collapse() {
+    // Lakes and oases on Forest, Terra and Rock protect agri
+    bool natural_protection = false;
+    int r = 0;
+    switch (cls) {
+        case Forest:
+            r = 1; natural_protection = true;
+            break;
+        case Desert:
+            r = 4; natural_protection = true;
+            break;
+        case Volcano:
+            r = 5;
+            break;
+        case Rock:
+            r = 3;
+            break;
+        case Ice:
+            r = 5;
+            break;
+        case Terra:
+            r = 2; natural_protection = true;
+            break;
+        case Artificial:
+            r = -5;
+            break;
+    }
+
+    if (!onein(10 - r)) {
+        return false;
+    }
+
+    if (is_owned() && exostate.get_player(get_owner())->has_invention(INV_Acid)) {
+        return false;
+    }
+
+    int collapsed = 0;
+    int to_kill = RND(r*2);
+    int sz = get_size_blocks();
+    L.info("%s: Up to %d agri collapsing", get_name(), to_kill);
+    for (int y = (rand() % sz); y < sz; ++y) {
+        for (int x = (rand() % sz); x < sz; ++x) {
+            if (to_kill > 0 && get_stone(x, y) == STONE_Agri) {
+                if (natural_protection) {
+                    if (next_to_8(x, y, STONE_NaturalAnim)) {
+                        continue;
+                    }
+                }
+                set_stone(x, y, STONE_AgriDead);
+                ++collapsed;
+                --to_kill;
+            }
+        }
+    }
+
+    L.info("%s: %d agri collapsed", get_name(), collapsed);
+    return collapsed > 0;
 }

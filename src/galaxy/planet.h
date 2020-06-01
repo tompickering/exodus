@@ -120,10 +120,11 @@ class Planet {
         Stone get_stone(int, int);
         void set_stone(int, int, Stone);
         Stone get_stone_wrap(int, int);
-        void set_stone_wrap(int, int);
+        void set_stone_wrap(int, int, Stone);
         bool has_stone(Stone);
         bool find_random_stone(Stone, int&, int&);
         bool next_to(int, int, Stone);
+        bool next_to_8(int, int, Stone);
         int count_stones(Stone);
         int get_food_production();
         int get_food_consumption();
@@ -169,6 +170,7 @@ class Planet {
         void adjust_army(int, int, int);
         void disown();
         bool expand_city();
+        bool agri_collapse();
     private:
         void init();
 

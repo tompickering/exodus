@@ -814,7 +814,9 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_AgriCollapse) {
-        // TODO
+        if (p->agri_collapse()) {
+            report.add_line("Some cultivated area has collapsed.");
+        }
         next_mpp_stage();
     }
 
