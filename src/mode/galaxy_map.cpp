@@ -425,6 +425,8 @@ ExodusMode GalaxyMap::month_pass_update() {
                 // This only applies to owned planets
                 // FIXME: Ensure that if we exit into another state, the planet *still
                 // passes* this check next time around to finish the PROCcal_plan process!
+                // ...But is that what we want? What happens when the comm station is destroyed?
+                // Some subsequent things make sense (food perishing), others don't (income).
                 if (!(p && p->exists() && p->is_owned()))
                     continue;
 
@@ -738,7 +740,28 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_LosePlanetControl) {
-        // TODO
+        if (p->count_stones(STONE_Base) == 0) {
+            // TODO: music
+            // No PROCdonotice here?
+            bulletin_start_new(true);
+            bulletin_set_bg(p->sprites()->bulletin_bg);
+            bulletin_set_active_player_flag();
+            bulletin_write_planet_info(s, p);
+            bulletin_set_next_text("COMM. STATION HAS BEEN DESTROYED.");
+            bulletin_set_next_text("");
+            if (owner->is_human()) {
+                bulletin_set_next_text("You have lost all access to the planet.");
+            } else {
+                bulletin_vset_next_text("%s has lost this planet.", owner->get_full_name());
+            }
+            p->disown();
+            next_mpp_stage();
+            // FIXME: At the moment, we will stop processing this planet here, because
+            // when we come back to the loop, the ownership check will fail. Is that
+            // what we want? If not, how do we make sense of the rest of the update?
+            // (Income? Food perishing?).
+            return ExodusMode::MODE_None;
+        }
         next_mpp_stage();
     }
 

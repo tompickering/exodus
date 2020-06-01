@@ -157,6 +157,7 @@ class Planet {
         bool has_army();
         void get_army(int&, int&, int&);
         void adjust_army(int, int, int);
+        void disown();
     private:
         void init();
 

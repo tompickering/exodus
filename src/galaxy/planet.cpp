@@ -903,3 +903,12 @@ void Planet::adjust_army(int inf, int gli, int art) {
     if (army_art < 0) army_art = 0;
     // TODO: Maxima
 }
+
+void Planet::disown() {
+    unset_owner();
+    army_inf = 0;
+    army_gli = 0;
+    army_art = 0;
+    unrest[0] = 0;
+    army_funding = 0;
+}
