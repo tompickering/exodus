@@ -63,7 +63,7 @@ void BulletinDrawer::bulletin_update(float dt) {
 }
 
 void BulletinDrawer::bulletin_draw_text() {
-    for (int i = 0; i < BULLETIN_LINES; ++i) {
+    for (int i = 0; i < bulletin_text_idx; ++i) {
         if (bulletin_transition < 1) {
             draw_manager.draw(
                 id_bulletin_text[i],
