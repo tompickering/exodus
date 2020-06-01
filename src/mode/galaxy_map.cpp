@@ -257,6 +257,7 @@ void GalaxyMap::month_pass_start() {
         COL_TEXT2
     );
 
+    reset_planet_report();
     exostate.advance_month();
 }
 
@@ -438,6 +439,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                 }
 
                 mpp_stage = (MonthPassPlanetStage)0;
+                reset_planet_report();
             }
             mp_planet_idx = 0;
         }
@@ -841,5 +843,34 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
+    if (mpp_stage == MPP_DisplayPlanetReport) {
+        if (owner && owner->is_human()) {
+            // TODO: Should we skip any which don't have content?
+            bulletin_start_new(true);
+            bulletin_set_bg(p->sprites()->bulletin_bg);
+            bulletin_set_active_player_flag();
+            bulletin_write_planet_info(s, p);
+            for (int i = 0; i < report.items; ++i) {
+                bulletin_set_next_text(report.content[i]);
+            }
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Report ends.");
+            next_mpp_stage();
+            return ExodusMode::MODE_None;
+        }
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_EnsureComplete) {
+        // Bit of a hack, but ensures that when we return to display
+        // the final planet report, we don't try to exit the planet
+        // pass mode until acknowledgement, which seems cleaner.
+        next_mpp_stage();
+    }
+
     return ExodusMode::MODE_None;
+}
+
+void GalaxyMap::reset_planet_report() {
+    report.items = 0;
 }

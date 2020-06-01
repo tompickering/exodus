@@ -14,6 +14,21 @@
 
 extern ExodusState exostate;
 
+#define REPORT_LINES 20
+#define REPORT_LINE_MAX 256
+
+typedef struct {
+    int items;
+    char content[REPORT_LINES][REPORT_LINE_MAX];
+    void add_line(const char* msg) {
+        if (items >= REPORT_LINES)
+            return;
+        content[items][REPORT_LINE_MAX - 1] = '\0';
+        strncpy(content[items], msg, REPORT_LINE_MAX - 2);
+        items++;
+    }
+} PlanetReport;
+
 class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, BulletinDrawer {
     public:
         GalaxyMap();
@@ -90,6 +105,8 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
             MPP_ConsumeFood,
             MPP_AdvanceUnrest,
             MPP_AmendMilitaryFunding,
+            MPP_DisplayPlanetReport,
+            MPP_EnsureComplete,
             MPP_End,
         };
 
@@ -110,6 +127,9 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
         void month_pass_end();
         void next_mp_stage();
         void next_mpp_stage();
+
+        PlanetReport report;
+        void reset_planet_report();
 };
 
 #endif
