@@ -407,6 +407,36 @@ int Planet::count_stones(Stone st) {
     return count;
 }
 
+int Planet::get_food_production() {
+    return count_stones(STONE_Agri);
+}
+
+int Planet::get_food_consumption() {
+    // One food unit is implicitly needed
+    // This is enough to support ALL command stations
+    return count_stones(STONE_City)*3 + 1;
+}
+
+bool Planet::food_prod_sufficient() {
+    return get_food_consumption() <= get_food_production();
+}
+
+int Planet::get_plu_production() {
+    int mul = (cls == Volcano) ? 2 : 1;
+    return count_stones(STONE_Plu) * mul;
+}
+
+int Planet::get_plu_consumption() {
+    return count_stones(STONE_Mine)
+         + count_stones(STONE_Inf)
+         + count_stones(STONE_Gli)
+         + count_stones(STONE_Art);
+}
+
+bool Planet::plu_prod_sufficient() {
+    return get_plu_consumption() <= get_plu_production();
+}
+
 int Planet::get_army_funding() {
     return army_funding;
 }
@@ -847,12 +877,11 @@ void Planet::clear_radiation() {
 }
 
 void Planet::produce_food() {
-    reserves_food += count_stones(STONE_Agri);
+    reserves_food += get_food_production();
 }
 
 void Planet::produce_plutonium() {
-    int mul = (cls == Volcano) ? 2 : 1;
-    reserves_plu += count_stones(STONE_Plu) * mul;
+    reserves_plu += get_plu_production();
 }
 
 void Planet::mine() {

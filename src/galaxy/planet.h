@@ -124,6 +124,12 @@ class Planet {
         bool find_random_stone(Stone, int&, int&);
         bool next_to(int, int, Stone);
         int count_stones(Stone);
+        int get_food_production();
+        int get_food_consumption();
+        bool food_prod_sufficient();
+        int get_plu_production();
+        int get_plu_consumption();
+        bool plu_prod_sufficient();
         int get_army_funding();
         void adjust_army_funding(int);
         void validate_army_funding();
