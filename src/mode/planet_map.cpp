@@ -103,21 +103,11 @@ void PlanetMap::enter() {
         IMG_SU1_CTRL1,
         {menu_x + 6, menu_y + 200,
         0, 0, 1, 1});
-    draw_manager.draw(
-        id(ID::GAUGE_FOOD),
-        planet->food_prod_sufficient() ? IMG_SU1_CTB : IMG_SU1_CTA,
-        {menu_x + 28, menu_y + 200,
-        0, 0, 1, 1});
 
     draw_manager.draw(
         id(ID::ICON_PLU),
         IMG_SU1_CTRL2,
         {menu_x + 48, menu_y + 200,
-        0, 0, 1, 1});
-    draw_manager.draw(
-        id(ID::GAUGE_PLU),
-        planet->plu_prod_sufficient() ? IMG_SU1_CTB : IMG_SU1_CTA,
-        {menu_x + 70, menu_y + 200,
         0, 0, 1, 1});
 
     draw_manager.draw(
@@ -125,11 +115,8 @@ void PlanetMap::enter() {
         IMG_SU1_CTRL3,
         {menu_x + 90, menu_y + 200,
         0, 0, 1, 1});
-    draw_manager.draw(
-        id(ID::GAUGE_UNREST),
-        IMG_SU1_CTC, // TODO
-        {menu_x + 112, menu_y + 200,
-        0, 0, 1, 1});
+
+    update_gauges();
 
     draw_manager.pattern_fill({menu_x + 4, menu_y + 226, 118, 66});
     draw_manager.pattern_fill({menu_x + 4, menu_y + 296, 118, 26});
@@ -355,7 +342,16 @@ void PlanetMap::update_gauges() {
         planet->plu_prod_sufficient() ? IMG_SU1_CTB : IMG_SU1_CTA,
         {menu_x + 70, menu_y + 200,
         0, 0, 1, 1});
-    // TODO: Unrest
+
+    const char* unrest_gauge = IMG_SU1_CTB;
+    if (planet->get_unrest() >= 4) unrest_gauge = IMG_SU1_CTC;
+    if (planet->get_unrest() >= 8) unrest_gauge = IMG_SU1_CTA;
+
+    draw_manager.draw(
+        id(ID::GAUGE_UNREST),
+        unrest_gauge,
+        {menu_x + 112, menu_y + 200,
+        0, 0, 1, 1});
 }
 
 void PlanetMap::clear_surf(int x, int y) {
