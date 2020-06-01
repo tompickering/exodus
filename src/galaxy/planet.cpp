@@ -540,6 +540,9 @@ Stone Planet::_get_stone(int x, int y) {
 
 void Planet::_set_stone(int x, int y, Stone stone) {
     surf[y*PLANET_BLOCKS_LG + x] = stone;
+    // Ensure that changes to number of cities etc are
+    // accompanied by an army funding cap as appropriate.
+    validate_army_funding();
 }
 
 void Planet::_to_real(int x, int y, int& real_x, int& real_y) {
@@ -814,6 +817,10 @@ void Planet::change_class(PlanetClass new_cls) {
 
     L.info("CLIMATE CHANGE: %d -> %d", (int)cls, (int)new_cls);
     cls = new_cls;
+
+    // Ensure that changes to income due to class are
+    // accompanied by an army funding cap as appropriate.
+    validate_army_funding();
 }
 
 bool Planet::trade_possible(int player_idx) {
