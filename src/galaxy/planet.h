@@ -121,6 +121,7 @@ class Planet {
         void set_stone(int, int, Stone);
         Stone get_stone_wrap(int, int);
         bool has_stone(Stone);
+        bool find_random_stone(Stone, int&, int&);
         bool next_to(int, int, Stone);
         int count_stones(Stone);
         int get_army_funding();

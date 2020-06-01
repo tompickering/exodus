@@ -364,6 +364,29 @@ bool Planet::has_stone(Stone st) {
     return false;
 }
 
+bool Planet::find_random_stone(Stone st, int& x, int& y) {
+    int count = count_stones(st);
+    if (!count)
+        return false;
+    int idx = (rand() % count);
+    int sz = get_size_blocks();
+    for (int j = 0; j < sz; ++j) {
+        for (int i = 0; i < sz; ++i) {
+            if (get_stone(i, j) == st) {
+                if (idx == 0) {
+                    x = i; y = j;
+                    return true;
+                } else {
+                    --idx;
+                }
+            }
+        }
+    }
+
+    L.fatal("Could not find nth stone when we verified at least n exist");
+    return false;
+}
+
 bool Planet::next_to(int x, int y, Stone st) {
     if (get_stone_wrap(x - 1, y) == st) return true;
     if (get_stone_wrap(x + 1, y) == st) return true;
