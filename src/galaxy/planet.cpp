@@ -394,7 +394,7 @@ bool Planet::find_random_stone(Stone st, int& x, int& y) {
     return false;
 }
 
-bool Planet::next_to(int x, int y, Stone st) {
+bool Planet::next_to_4(int x, int y, Stone st) {
     if (get_stone_wrap(x - 1, y) == st) return true;
     if (get_stone_wrap(x + 1, y) == st) return true;
     if (get_stone_wrap(x, y + 1) == st) return true;
@@ -926,7 +926,7 @@ void Planet::mine() {
         int size = get_size_blocks();
         for (int j = 0; j < size; ++j) {
             for (int i = 0; i < size; ++i) {
-                if (get_stone(i, j) == STONE_Mine && next_to(i, j, STONE_NaturalAnim)) {
+                if (get_stone(i, j) == STONE_Mine && next_to_4(i, j, STONE_NaturalAnim)) {
                     madd++;
                 }
             }
@@ -1005,7 +1005,7 @@ bool Planet::expand_city() {
     for (int j = 0; j < sz; ++j) {
         for (int i = 0; i < sz; ++i) {
             if (get_stone(i, j) == STONE_City) {
-                if (next_to(i, j, STONE_Clear) || next_to(i, j, STONE_NaturalSmall)) {
+                if (next_to_4(i, j, STONE_Clear) || next_to_4(i, j, STONE_NaturalSmall)) {
                     ++count;
                 }
             }
@@ -1022,7 +1022,7 @@ bool Planet::expand_city() {
     for (int j = 0; j < sz; ++j) {
         for (int i = 0; i < sz; ++i) {
             if (get_stone(i, j) == STONE_City) {
-                if (next_to(i, j, STONE_Clear) || next_to(i, j, STONE_NaturalSmall)) {
+                if (next_to_4(i, j, STONE_Clear) || next_to_4(i, j, STONE_NaturalSmall)) {
                     if (idx == 0) {
                         // Expand this city
                         uint8_t dirs_tried = 0;
