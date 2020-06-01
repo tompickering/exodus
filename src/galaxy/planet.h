@@ -120,6 +120,7 @@ class Planet {
         Stone get_stone(int, int);
         void set_stone(int, int, Stone);
         Stone get_stone_wrap(int, int);
+        void set_stone_wrap(int, int);
         bool has_stone(Stone);
         bool find_random_stone(Stone, int&, int&);
         bool next_to(int, int, Stone);

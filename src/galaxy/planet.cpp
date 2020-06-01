@@ -353,6 +353,13 @@ Stone Planet::get_stone_wrap(int x, int y) {
     return get_stone(x % size, y % size);
 }
 
+void Planet::set_stone_wrap(int x, int y, Stone stone) {
+    int size = get_size_blocks();
+    while (x < 0) x += size;
+    while (y < 0) y += size;
+    return aet_stone(x % size, y % size, stone);
+}
+
 bool Planet::has_stone(Stone st) {
     for (int j = 0; j < get_size_blocks(); ++j) {
         for (int i = 0; i < get_size_blocks(); ++i) {
@@ -1018,9 +1025,9 @@ bool Planet::expand_city() {
                             if (dir == 1) i_off--;
                             if (dir == 2) j_off++;
                             if (dir == 3) j_off--;
-                            Stone tgt = get_stone(i + i_off, j + j_off);
+                            Stone tgt = get_stone_wrap(i + i_off, j + j_off);
                             if (tgt == STONE_Clear || tgt == STONE_NaturalSmall) {
-                                set_stone(i + i_off, j + j_off, STONE_City);
+                                set_stone_wrap(i + i_off, j + j_off, STONE_City);
                                 L.info("City expansion %d,%d", i, j);
                                 return true;
                             }
