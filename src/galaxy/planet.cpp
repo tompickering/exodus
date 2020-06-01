@@ -476,6 +476,18 @@ int Planet::get_minerals() {
     return minerals;
 }
 
+int Planet::get_unrest() {
+    return get_unrest(0);
+}
+
+int Planet::get_unrest(int months_ago) {
+    if (months_ago >= N_UNREST) {
+        L.error("Request for unrest data earlier than we have");
+        return -1;
+    }
+    return unrest[months_ago];
+}
+
 bool Planet::is_owned() {
     if (owner <0) return false;
 

@@ -136,6 +136,8 @@ class Planet {
         int get_army_required_mc();
         bool army_funding_sufficient();
         int get_minerals();
+        int get_unrest();
+        int get_unrest(int);
         void prepare_for_cpu_lord(); // Orig: PROCgivestation
         void adjust_unrest(int);
         void surfchange();
