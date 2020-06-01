@@ -80,6 +80,15 @@ void PlanetStatus::enter() {
     char day[51];
     snprintf(day, 50, "One day is %d standard hours long.", p->get_day_hours());
 
+    int inf, gli, art;
+    p->get_army(inf, gli, art);
+    char inf_str[8]; inf_str[7] = '\0';
+    char gli_str[8]; gli_str[7] = '\0';
+    char art_str[8]; art_str[7] = '\0';
+    snprintf(inf_str, 8, "%d", inf);
+    snprintf(gli_str, 8, "%d", gli);
+    snprintf(art_str, 8, "%d", art);
+
     const char *cred0 = "Monthly MCredits: ";
     char cred1[11];
     if (owner && owner == player) {
@@ -261,7 +270,7 @@ void PlanetStatus::enter() {
         text_x, text_y,
         COL_TEXT);
     draw_manager.draw_text(
-        "<TODO>",
+        inf_str,
         Justify::Left,
         text_x + 140, text_y,
         COL_TEXT2);
@@ -274,7 +283,7 @@ void PlanetStatus::enter() {
         text_x, text_y,
         COL_TEXT);
     draw_manager.draw_text(
-        "<TODO>",
+        gli_str,
         Justify::Left,
         text_x + 140, text_y,
         COL_TEXT2);
@@ -287,7 +296,7 @@ void PlanetStatus::enter() {
         text_x, text_y,
         COL_TEXT);
     draw_manager.draw_text(
-        "<TODO>",
+        art_str,
         Justify::Left,
         text_x + 140, text_y,
         COL_TEXT2);
