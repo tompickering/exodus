@@ -845,18 +845,20 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     if (mpp_stage == MPP_DisplayPlanetReport) {
         if (owner && owner->is_human()) {
-            // TODO: Should we skip any which don't have content?
-            bulletin_start_new(true);
-            bulletin_set_bg(p->sprites()->bulletin_bg);
-            bulletin_set_active_player_flag();
-            bulletin_write_planet_info(s, p);
-            for (int i = 0; i < report.items; ++i) {
-                bulletin_set_next_text(report.content[i]);
+            // Skip any reports which don't have content
+            if (report.items > 0) {
+                bulletin_start_new(true);
+                bulletin_set_bg(p->sprites()->bulletin_bg);
+                bulletin_set_active_player_flag();
+                bulletin_write_planet_info(s, p);
+                for (int i = 0; i < report.items; ++i) {
+                    bulletin_set_next_text(report.content[i]);
+                }
+                bulletin_set_next_text("");
+                bulletin_set_next_text("Report ends.");
+                next_mpp_stage();
+                return ExodusMode::MODE_None;
             }
-            bulletin_set_next_text("");
-            bulletin_set_next_text("Report ends.");
-            next_mpp_stage();
-            return ExodusMode::MODE_None;
         }
         next_mpp_stage();
     }
