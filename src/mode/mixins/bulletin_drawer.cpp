@@ -34,11 +34,9 @@ void BulletinDrawer::bulletin_start_new(bool transition) {
     if (!bulletin_is_open())
         bulletin_open();
 
-    bulletin_has_been_acknowledged = false;
-    bulletin_text_idx = 0;
-    bulletin_reset_text_cols();
+    bulletin_reset();
+
     bulletin_transition = transition ? 0 : 1;
-    bulletin_redraws_needed = true;
 
     bulletin_set_bg(nullptr);
     bulletin_set_active_player_flag();
@@ -194,10 +192,13 @@ void BulletinDrawer::bulletin_close() {
     draw_manager.release_sprite_id(id_bulletin_bg_scan);
 
 
-    bulletin_has_been_acknowledged = false;
-    bulletin_text_idx = 0;
-
     // Wipe all info
+    bulletin_reset();
+
+    _bulletin_is_open = false;
+}
+
+void BulletinDrawer::bulletin_reset() {
     for (int i = 0; i < BULLETIN_LINES; ++i) {
         strncpy(bulletin_text[i], "", 1);
     }
@@ -205,8 +206,8 @@ void BulletinDrawer::bulletin_close() {
     bulletin_reset_text_cols();
     bulletin_transition = 0;
     bulletin_redraws_needed = true;
-
-    _bulletin_is_open = false;
+    bulletin_has_been_acknowledged = false;
+    bulletin_text_idx = 0;
 }
 
 void BulletinDrawer::bulletin_ensure_closed() {

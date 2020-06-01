@@ -35,6 +35,7 @@ class BulletinDrawer {
     private:
         void bulletin_open();    // Open using bulletin_start_new()
         void bulletin_close();   // Close using bulletin_ensure_closed()
+        void bulletin_reset();
         bool _bulletin_is_open;
         void bulletin_update_bg();
 
