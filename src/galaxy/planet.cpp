@@ -935,3 +935,63 @@ void Planet::disown() {
     unrest[0] = 0;
     army_funding = 0;
 }
+
+bool Planet::expand_city() {
+    L.info("City expanding on %s", get_name());
+
+    // Find expansion candidates
+    int count = 0;
+    int sz = get_size_blocks();
+    for (int j = 0; j < sz; ++j) {
+        for (int i = 0; i < sz; ++i) {
+            if (get_stone(i, j) == STONE_City) {
+                if (next_to(i, j, STONE_Clear) || next_to(i, j, STONE_NaturalSmall)) {
+                    ++count;
+                }
+            }
+        }
+    }
+
+    if (count == 0) {
+        // Can't find an expansion candidate
+        return false;
+    }
+
+    int idx = rand() % count;
+
+    for (int j = 0; j < sz; ++j) {
+        for (int i = 0; i < sz; ++i) {
+            if (get_stone(i, j) == STONE_City) {
+                if (next_to(i, j, STONE_Clear) || next_to(i, j, STONE_NaturalSmall)) {
+                    if (idx == 0) {
+                        // Expand this city
+                        uint8_t dirs_tried = 0;
+                        while (dirs_tried < 0xF) {
+                            int dir = rand() % 4;
+                            if (dirs_tried & (1 << dir))
+                                continue;
+                            dirs_tried |= (1 << dir);
+                            int i_off = 0;
+                            int j_off = 0;
+                            if (dir == 0) i_off++;
+                            if (dir == 1) i_off--;
+                            if (dir == 2) j_off++;
+                            if (dir == 3) j_off--;
+                            Stone tgt = get_stone(i + i_off, j + j_off);
+                            if (tgt == STONE_Clear || tgt == STONE_NaturalSmall) {
+                                set_stone(i + i_off, j + j_off, STONE_City);
+                                L.info("City expansion %d,%d", i, j);
+                                return true;
+                            }
+                        }
+                    } else {
+                        --idx;
+                    }
+                }
+            }
+        }
+    }
+
+    L.fatal("Could not find suitable expanstion after verifying it must be possible");
+    return false;
+}

@@ -819,7 +819,14 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_CityExpansion) {
-        // TODO
+        for (int i = 0; i < p->count_stones(STONE_City); ++i) {
+            if (onein(20)) {
+                if (p->expand_city()) {
+                    report.add_line("A city has expanded.");
+                }
+                break;
+            }
+        }
         next_mpp_stage();
     }
 
