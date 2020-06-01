@@ -53,6 +53,7 @@ class PlanetMap : ModeBase {
         int menu_y;
         int blocks;
         void draw_stones(bool);
+        void update_gauges();
         void clear_surf(int, int);
 
         float construct_progress;

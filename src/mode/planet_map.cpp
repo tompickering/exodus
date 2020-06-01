@@ -105,7 +105,7 @@ void PlanetMap::enter() {
         0, 0, 1, 1});
     draw_manager.draw(
         id(ID::GAUGE_FOOD),
-        IMG_SU1_CTA,
+        planet->food_prod_sufficient() ? IMG_SU1_CTB : IMG_SU1_CTA,
         {menu_x + 28, menu_y + 200,
         0, 0, 1, 1});
 
@@ -116,7 +116,7 @@ void PlanetMap::enter() {
         0, 0, 1, 1});
     draw_manager.draw(
         id(ID::GAUGE_PLU),
-        IMG_SU1_CTB,
+        planet->plu_prod_sufficient() ? IMG_SU1_CTB : IMG_SU1_CTA,
         {menu_x + 70, menu_y + 200,
         0, 0, 1, 1});
 
@@ -127,7 +127,7 @@ void PlanetMap::enter() {
         0, 0, 1, 1});
     draw_manager.draw(
         id(ID::GAUGE_UNREST),
-        IMG_SU1_CTC,
+        IMG_SU1_CTC, // TODO
         {menu_x + 112, menu_y + 200,
         0, 0, 1, 1});
 
@@ -197,6 +197,7 @@ ExodusMode PlanetMap::update(float delta) {
     switch(stage) {
         case PM_Idle:
             draw_stones(false);
+            update_gauges();
             draw_mc();
 
             // FIXME: Ideally not called every update as it involves a surface iteration
@@ -341,6 +342,20 @@ void PlanetMap::draw_stones(bool all) {
                  0, 0, 1, 1});
         }
     }
+}
+
+void PlanetMap::update_gauges() {
+    draw_manager.draw(
+        id(ID::GAUGE_FOOD),
+        planet->food_prod_sufficient() ? IMG_SU1_CTB : IMG_SU1_CTA,
+        {menu_x + 28, menu_y + 200,
+        0, 0, 1, 1});
+    draw_manager.draw(
+        id(ID::GAUGE_PLU),
+        planet->plu_prod_sufficient() ? IMG_SU1_CTB : IMG_SU1_CTA,
+        {menu_x + 70, menu_y + 200,
+        0, 0, 1, 1});
+    // TODO: Unrest
 }
 
 void PlanetMap::clear_surf(int x, int y) {
