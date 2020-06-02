@@ -7,11 +7,12 @@
 
 #include "state/exodus_state.h"
 
+#include "mixins/frame_drawer.h"
 #include "mixins/panel_drawer.h"
 
 extern ExodusState exostate;
 
-class Fly : ModeBase, PanelDrawer {
+class Fly : ModeBase, PanelDrawer, FrameDrawer {
     public:
         Fly();
         virtual void enter() override;
