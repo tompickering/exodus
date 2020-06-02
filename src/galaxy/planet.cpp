@@ -944,6 +944,18 @@ ProductionReport Planet::produce_military() {
     int max_gli = count_stones(STONE_Gli);
     int max_art = count_stones(STONE_Art);
 
+    /*
+     * SUGGEST:
+     *
+     * It would be kinder to the player to perform these in reverse order:
+     * Artillery -> Gliders -> Infantry
+     * This would help to ensure maximum funding utility, as the player isn't
+     * receiving this money whatever the case.
+     * E.g. when funding is 3 and we have 1 inf and 1 artillery, we can't afford
+     * both, and we end up with just 1 inf with 2MC wasted. In the alternate case,
+     * we have one artillery and 0 MC wasted.
+     */
+
     int prod_inf = max_inf;
     int prod_gli = max_gli;
     int prod_art = max_art;
