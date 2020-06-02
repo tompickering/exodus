@@ -98,6 +98,8 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
             MPP_ProducePlutonium,
             MPP_ProduceMilitary,
             MPP_Mining,
+            // Can use excess plu in production / mining, but not trade
+            MPP_ResourceCap1,
             MPP_MilitaryFacilityShutdown,
             MPP_Trade,
             MPP_VillageGifts,
@@ -107,6 +109,8 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
             MPP_CityExpansion,
             MPP_VillageExpansion,
             MPP_ConsumeFood,
+            // Can consume excess food before we apply cap
+            MPP_ResourceCap2,
             MPP_AdvanceUnrest,
             MPP_AmendMilitaryFunding,
             MPP_DisplayPlanetReport,

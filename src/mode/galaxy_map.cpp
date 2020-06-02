@@ -826,6 +826,11 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
+    if (mpp_stage == MPP_ResourceCap1) {
+        p->discard_excess_resources();
+        next_mpp_stage();
+    }
+
     if (mpp_stage == MPP_MilitaryFacilityShutdown) {
         // TODO
         next_mpp_stage();
@@ -878,6 +883,11 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     if (mpp_stage == MPP_ConsumeFood) {
         // TODO
+        next_mpp_stage();
+    }
+
+    if (mpp_stage == MPP_ResourceCap2) {
+        p->discard_excess_resources();
         next_mpp_stage();
     }
 
