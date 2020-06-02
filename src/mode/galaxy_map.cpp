@@ -10,16 +10,18 @@ enum ID {
     SELECTED,
     FLEET_MARKER,
     MONTH_PASSING,
+    FRAMED_IMG,
     END,
 };
 
-GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer(), PanelDrawer(PNL_Galaxy), CommPanelDrawer(), BulletinDrawer() {
+GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer(), PanelDrawer(PNL_Galaxy), CommPanelDrawer(), BulletinDrawer(), FrameDrawer() {
     stage = GM_SwapIn;
     selected_ft = nullptr;
     selected_ft_blink = 0;
     mp_stage = MP_None;
     mpp_stage = (MonthPassPlanetStage)0;
     month_pass_time = 0;
+    do_first_city = false;
 }
 
 void GalaxyMap::enter() {
@@ -193,6 +195,16 @@ ExodusMode GalaxyMap::update(float delta) {
                     bulletin_update(delta);
                     if (!bulletin_acknowledged()) {
                         break;
+                    } else if (do_first_city){
+                        do_first_city = false;
+                        bulletin_ensure_closed();
+                        draw_manager.draw(
+                            id(ID::FRAMED_IMG),
+                            IMG_CT1_EXPORT,
+                            {5, 7, 0, 0, 1, 1});
+                        frame_draw();
+                        stage = GM_MP_FirstCity;
+                        return ExodusMode::MODE_None;
                     }
                 }
                 ExodusMode next_mode = month_pass_update();
@@ -206,6 +218,15 @@ ExodusMode GalaxyMap::update(float delta) {
                 }
                 return next_mode;
             }
+        case GM_MP_FirstCity:
+            if (draw_manager.clicked()) {
+                draw_manager.draw(
+                    id(ID::FRAMED_IMG),
+                    nullptr);
+                frame_remove();
+                stage = GM_MonthPassing;
+            }
+            break;
         default:
             break;
     }
@@ -525,7 +546,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     if (mpp_stage == MPP_FirstCity) {
         if (owner && !exostate.first_city_done) {
             if (owner->is_human() && p->count_stones(STONE_City) > 0) {
-                // TODO - Bulletin image, music...
+                // TODO - Music...
                 exostate.first_city_done = true;
                 bulletin_start_new(false);
                 bulletin_set_flag(IMG_TS1_FLAG16);
@@ -542,6 +563,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 bulletin_vset_next_text("for system enemies.");
                 bulletin_vset_next_text("");
                 bulletin_vset_next_text("A picture of the new city follows.");
+                do_first_city = true;
                 next_mpp_stage();
                 return ExodusMode::MODE_None;
             }

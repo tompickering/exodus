@@ -6,6 +6,7 @@
 #include "mixins/panel_drawer.h"
 #include "mixins/comm_panel_drawer.h"
 #include "mixins/bulletin_drawer.h"
+#include "mixins/frame_drawer.h"
 
 #include "platform.h"
 #include "draw/draw.h"
@@ -33,7 +34,7 @@ typedef struct {
     }
 } PlanetReport;
 
-class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, BulletinDrawer {
+class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, BulletinDrawer, FrameDrawer {
     public:
         GalaxyMap();
         virtual void enter() override;
@@ -47,6 +48,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
             GM_Zoom2Star,
             GM_FlyConfirm,
             GM_MonthPassing,
+            GM_MP_FirstCity,
         };
 
         // Enum order determines order of processing
@@ -138,6 +140,8 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
 
         PlanetReport report;
         void reset_planet_report();
+
+        bool do_first_city;
 };
 
 #endif
