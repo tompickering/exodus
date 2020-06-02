@@ -707,7 +707,26 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_ReactorPollution) {
-        // TODO
+        if (onein(200)) {
+            int meltdown_x;
+            int meltdown_y;
+            if (p->find_random_stone(STONE_Plu, meltdown_x, meltdown_y)) {
+                // TODO: Music
+                bulletin_start_new(false);
+                bulletin_set_bg(p->sprites()->bulletin_bg);
+                bulletin_set_active_player_flag();
+                bulletin_write_planet_info(s, p);
+                bulletin_vset_next_text("NUCLEAR MELTDOWN AT %s", tmp_caps(p->get_name()));
+                bulletin_set_next_text("");
+                bulletin_set_next_text("");
+                bulletin_set_next_text("A badly protected plutonium reactor");
+                bulletin_vset_next_text("has contaminated %s.", p->get_name());
+                // TODO: Destruction (PROCbombing)
+                // TODO: Visualisation of bombing - similar to meteor
+                next_mpp_stage();
+                return ExodusMode::MODE_None;
+            }
+        }
         next_mpp_stage();
     }
 
