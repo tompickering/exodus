@@ -270,7 +270,7 @@ int Planet::get_income() {
 }
 
 int Planet::get_net_income() {
-    return get_income() - army_funding;
+    return get_income() - get_army_funding();
 }
 
 int Planet::get_population() {
@@ -457,18 +457,18 @@ bool Planet::plu_prod_sufficient() {
 }
 
 int Planet::get_army_funding() {
+    validate_army_funding();
     return army_funding;
 }
 
 void Planet::adjust_army_funding(int adjustment) {
     army_funding += adjustment;
-    if (army_funding < 0)
-        army_funding = 0;
-    if (army_funding > get_income())
-        army_funding = get_income();
+    validate_army_funding();
 }
 
 void Planet::validate_army_funding() {
+    if (army_funding < 0)
+        army_funding = 0;
     if (army_funding > get_income()) {
         army_funding = get_income();
     }
@@ -488,7 +488,7 @@ int Planet::get_army_required_mc() {
 }
 
 bool Planet::army_funding_sufficient() {
-    return army_funding >= get_army_required_mc();
+    return get_army_funding() >= get_army_required_mc();
 }
 
 int Planet::get_minerals() {
