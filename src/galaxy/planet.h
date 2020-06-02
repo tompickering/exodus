@@ -145,6 +145,7 @@ class Planet {
         int get_army_funding();
         void adjust_army_funding(int);
         void validate_army_funding();
+        void discard_excess_resources();
         int get_army_required_mc();
         bool army_funding_sufficient();
         int get_minerals();

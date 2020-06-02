@@ -474,6 +474,51 @@ void Planet::validate_army_funding() {
     }
 }
 
+void Planet::discard_excess_resources() {
+    int lim = get_resource_cap();
+    int d[8]; for (int i = 0; i < 8; ++i) d[i] = 0;
+
+    if (reserves_food > lim) {
+        d[0] = reserves_food - lim;
+        reserves_food = lim;
+    }
+    if (reserves_min > lim) {
+        d[1] = reserves_min - lim;
+        reserves_min = lim;
+    }
+    if (reserves_plu > lim) {
+        d[2] = reserves_plu - lim;
+        reserves_plu = lim;
+    }
+    if (army_inf > lim) {
+        d[3] = army_inf - lim;
+        army_inf = lim;
+    }
+    if (army_gli > lim) {
+        d[4] = army_gli - lim;
+        army_gli = lim;
+    }
+    if (army_art > lim) {
+        d[5] = army_art - lim;
+        army_art = lim;
+    }
+    if (airdef_guns > lim) {
+        d[6] = airdef_guns - lim;
+        airdef_guns = lim;
+    }
+    if (robots > lim) {
+        d[7] = robots - lim;
+        robots = lim;
+    }
+
+    int total = 0;
+    for (int i = 0; i < 8; ++i) total += d[i];
+    if (total > 0) {
+        L.info("%s: DISCARDED %d/%d/%d/%d/%d/%d/%d/%d",
+               d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7]);
+    }
+}
+
 int Planet::get_army_required_mc() {
     int required = 0;
     for (int j = 0; j < get_size_blocks(); ++j) {
