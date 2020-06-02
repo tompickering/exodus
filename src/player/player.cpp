@@ -247,3 +247,7 @@ InventionType Player::get_invention_type(Invention inv) {
     L.fatal("Requested type for invalid invention %d", inv);
     return IT_Mechanical;
 }
+
+const Fleet& Player::get_fleet() {
+    return fleet;
+}

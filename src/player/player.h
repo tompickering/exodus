@@ -115,6 +115,7 @@ class Player {
         bool research_invention(Invention);
         bool has_invention(Invention);
         InventionType get_invention_type(Invention);
+        const Fleet& get_fleet();
     private:
         Race race;
         Gender gender;

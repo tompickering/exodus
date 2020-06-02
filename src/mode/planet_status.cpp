@@ -130,7 +130,14 @@ void PlanetStatus::enter() {
 
     int text_y = 90;
 
-    char mins[10]; snprintf(mins, 10, "%d", p->get_minerals());
+    char mins[10];
+    snprintf(mins, 10, "?");
+
+    if (p->is_owned() && player == exostate.get_player(p->get_owner())) {
+        snprintf(mins, 10, "%d", p->get_minerals());
+    } else if (exostate.active_player_local() && player->get_fleet().scouts >= 20) {
+        snprintf(mins, 10, "%d", p->get_minerals());
+    }
 
     draw_manager.draw_text(
         ownership,

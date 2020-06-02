@@ -75,6 +75,7 @@ class ExodusState {
         Player* get_player(int);
         int get_player_idx(Player*);
         unsigned int get_n_planets(Player*);
+        bool active_player_local(); // Is the active player at the active flytarget?
         bool first_city_done;
         bool first_spaceport_done;
     private:

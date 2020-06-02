@@ -418,3 +418,11 @@ unsigned int ExodusState::get_n_planets(Player* player) {
     }
     return count;
 }
+
+bool ExodusState::active_player_local() {
+    Player *player = get_active_player();
+    if (player->get_location().in_flight())
+        return false;
+    FlyTarget *orbit = loc2tgt(player->get_location().get_target());
+    return orbit == get_active_flytarget();
+}
