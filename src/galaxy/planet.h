@@ -185,6 +185,8 @@ class Planet {
         void disown();
         bool expand_city();
         bool agri_collapse();
+        void monthly_processing_start();
+        bool monthly_processing_in_progress();
     private:
         void init();
 
@@ -230,6 +232,7 @@ class Planet {
         // TODO: SItb
 
         bool surfchange_this_month;
+        bool processing_in_progress;
 
         void cull_stones_to_size();
         Stone _get_stone(int, int);

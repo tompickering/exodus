@@ -32,6 +32,7 @@ Planet::Planet() {
     traded = 0;
     laws = 0;
     surfchange_this_month = false;
+    processing_in_progress = false;
     moon_cls = MOON_Dirt;
 }
 
@@ -129,6 +130,7 @@ void Planet::init() {
     set_law(LAW_DifferentReligions, true);
 
     surfchange_this_month = false;
+    processing_in_progress = false;
 
     for (int i = 0; i < (PLANET_BLOCKS_LG * PLANET_BLOCKS_LG); ++i) {
         surf[i] = STONE_Clear;
@@ -895,6 +897,7 @@ void Planet::month_reset() {
     taxes_collected = false;
     paid_to_leave = 0;
     surfchange_this_month = false;
+    processing_in_progress = false;
 }
 
 void Planet::randomise_trade_quality() {
@@ -1272,4 +1275,12 @@ bool Planet::agri_collapse() {
 
     L.info("%s: %d agri collapsed", get_name(), collapsed);
     return collapsed > 0;
+}
+
+void Planet::monthly_processing_start() {
+    processing_in_progress = true;
+}
+
+bool Planet::monthly_processing_in_progress() {
+    return processing_in_progress;
 }

@@ -423,13 +423,20 @@ ExodusMode GalaxyMap::month_pass_update() {
             exostate.set_active_flytarget(&stars[mp_star_idx]);
             for (; mp_planet_idx < STAR_MAX_PLANETS; ++mp_planet_idx) {
                 Planet *p = stars[mp_star_idx].get_planet(mp_planet_idx);
-                // This only applies to owned planets
-                // FIXME: Ensure that if we exit into another state, the planet *still
-                // passes* this check next time around to finish the PROCcal_plan process!
-                // ...But is that what we want? What happens when the comm station is destroyed?
-                // Some subsequent things make sense (food perishing), others don't (income).
-                if (!(p && p->exists() && p->is_owned()))
+                if (!(p && p->exists())) {
                     continue;
+                }
+
+                // This only applies to owned planets...
+                if (!p->is_owned()) {
+                    // ...Unless we've already started processing this planet,
+                    // in which case we should proceed.
+                    if (!p->monthly_processing_in_progress()) {
+                        continue;
+                    }
+                }
+
+                p->monthly_processing_start();
 
                 exostate.set_active_planet(mp_planet_idx);
                 ExodusMode next_mode = month_pass_planet_update();
@@ -498,8 +505,17 @@ ExodusMode GalaxyMap::month_pass_update() {
 ExodusMode GalaxyMap::month_pass_planet_update() {
     Star *s = (Star*)exostate.get_active_flytarget();
     Planet *p  = exostate.get_active_planet();
-    exostate.set_active_player(p->get_owner());
-    Player *owner = exostate.get_player(p->get_owner());
+    Player *owner = nullptr;
+
+    // At the start of processing, planets will always be owned.
+    // However, if they become disowned during processing, we
+    // still return to proceed to subsequent stages.
+    // This can only happen after the comm station collapses -
+    // although the owner can change after a rebellion.
+    if (p->is_owned()) {
+        exostate.set_active_player(p->get_owner());
+        owner = exostate.get_player(p->get_owner());
+    }
 
     if (mpp_stage == MPP_ShuffleTrade) {
         if (onein(7)) p->randomise_trade_quality();
@@ -507,7 +523,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_FirstCity) {
-        if (!exostate.first_city_done) {
+        if (owner && !exostate.first_city_done) {
             if (owner->is_human() && p->count_stones(STONE_City) > 0) {
                 // TODO - Bulletin image, music...
                 exostate.first_city_done = true;
@@ -662,6 +678,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
+    // Doesn't cause planet loss - only damage
     if (mpp_stage == MPP_AlienAttack) {
         // TODO
         next_mpp_stage();
@@ -682,6 +699,8 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
+    // Can cause the owner to change - we should return to ensure
+    // that the 'owner' variable is updated when we resume processing.
     if (mpp_stage == MPP_RebelAttack) {
         // TODO
         next_mpp_stage();
@@ -777,18 +796,18 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             }
             p->disown();
             next_mpp_stage();
-            // FIXME: At the moment, we will stop processing this planet here, because
-            // when we come back to the loop, the ownership check will fail. Is that
-            // what we want? If not, how do we make sense of the rest of the update?
-            // (Income? Food perishing?).
             return ExodusMode::MODE_None;
         }
         next_mpp_stage();
     }
 
+    // 'owner' can be null after this point
+
     if (mpp_stage == MPP_Income) {
         // TODO - Check the weird case in PROCcal_plan based on the t% DIM
-        owner->give_mc(p->get_net_income());
+        if (owner) {
+            owner->give_mc(p->get_net_income());
+        }
         next_mpp_stage();
     }
 
