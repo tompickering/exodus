@@ -175,8 +175,7 @@ class Planet {
         ProductionReport produce_military();
         void mine();
         void perish_food();
-        int get_mineral_reserves_cap();
-        int get_army_cap();
+        int get_resource_cap();
         void update_unrest_history();
         const char* get_moon_bg();
         bool has_army();

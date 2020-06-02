@@ -84,7 +84,7 @@ void PlanetStatus::enter() {
 
     char army_heading[46];
     army_heading[45] = '\0';
-    snprintf(army_heading, 45, "Other defence systems: (Max each: %d)", p->get_army_cap());
+    snprintf(army_heading, 45, "Other defence systems: (Max each: %d)", p->get_resource_cap());
 
     int inf, gli, art;
     p->get_army(inf, gli, art);

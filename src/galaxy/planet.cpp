@@ -945,7 +945,7 @@ ProductionReport Planet::produce_military() {
         return rpt;
     }
 
-    int cap = get_army_cap();
+    int cap = get_resource_cap();
     int funds = get_army_funding();
 
     int max_inf = count_stones(STONE_Inf);
@@ -1052,8 +1052,8 @@ void Planet::mine() {
     if (units_to_mine > minerals) units_to_mine = minerals;
     reserves_min += units_to_mine;
     // Any more than we can hold are discarded!
-    if (reserves_min > get_mineral_reserves_cap())
-        reserves_min = get_mineral_reserves_cap();
+    if (reserves_min > get_resource_cap())
+        reserves_min = get_resource_cap();
     reserves_plu -= (units_to_mine - madd);
     minerals -= units_to_mine;
 }
@@ -1062,11 +1062,7 @@ void Planet::perish_food() {
     reserves_food -= (reserves_food / 6);
 }
 
-int Planet::get_mineral_reserves_cap() {
-    return (diameter / 200);
-}
-
-int Planet::get_army_cap() {
+int Planet::get_resource_cap() {
     return (diameter / 200);
 }
 
@@ -1099,7 +1095,7 @@ void Planet::adjust_army(int inf, int gli, int art) {
     if (army_inf < 0) army_inf = 0;
     if (army_gli < 0) army_gli = 0;
     if (army_art < 0) army_art = 0;
-    int max = get_army_cap();
+    int max = get_resource_cap();
     if (army_inf > max) army_inf = max;
     if (army_gli > max) army_gli = max;
     if (army_art > max) army_art = max;
