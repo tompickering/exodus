@@ -19,6 +19,8 @@ void PlanetStatus::enter() {
     Planet *p = exostate.get_active_planet();
     Player *player = exostate.get_active_player();
 
+    bool local = exostate.active_player_local();
+
     if (!p) {
         L.fatal("Entered PlanetStatus mode with no active planet!");
     }
@@ -137,19 +139,41 @@ void PlanetStatus::enter() {
         see_minerals = true;
     }
 
-    if (exostate.active_player_local() && player->get_fleet().scouts >= 20) {
+    if (local && player->get_fleet().scouts >= 20) {
         see_minerals = true;
     }
 
     if (see_minerals) {
         int m = p->get_minerals();
         if (m > 0) {
-            snprintf(mins, 10, "%d", p->get_minerals());
+            snprintf(mins, 10, "%d", m);
         } else {
             snprintf(mins, 10, "None");
         }
     } else {
         snprintf(mins, 10, "?");
+    }
+
+    char airdef[10];
+    char robots[10];
+    bool see_airdef_and_robots = false;
+
+    if (p->is_owned() && player == exostate.get_player(p->get_owner())) {
+        see_airdef_and_robots = true;
+    }
+
+    // Unlike minerals, we never see these values on an unowned planet.
+    // Is this an oversight in the original?
+    if ((!p->is_owned()) && local && player->get_fleet().scouts >= 10) {
+        see_airdef_and_robots = true;
+    }
+
+    if (see_airdef_and_robots) {
+        snprintf(airdef, 10, "%d", p->get_airdef_guns());
+        snprintf(robots, 10, "%d", p->get_robots());
+    } else {
+        snprintf(airdef, 10, "?");
+        snprintf(robots, 10, "?");
     }
 
     draw_manager.draw_text(
@@ -258,7 +282,7 @@ void PlanetStatus::enter() {
         text_x, text_y,
         COL_TEXT);
     draw_manager.draw_text(
-        "<TODO>",
+        airdef,
         Justify::Left,
         text_x + 140, text_y,
         COL_TEXT2);
@@ -271,7 +295,7 @@ void PlanetStatus::enter() {
         text_x, text_y,
         COL_TEXT);
     draw_manager.draw_text(
-        "<TODO>",
+        robots,
         Justify::Left,
         text_x + 140, text_y,
         COL_TEXT2);

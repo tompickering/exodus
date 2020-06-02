@@ -507,6 +507,14 @@ int Planet::get_unrest(int months_ago) {
     return unrest[months_ago];
 }
 
+int Planet::get_airdef_guns() {
+    return airdef_guns;
+}
+
+int Planet::get_robots() {
+    return robots;
+}
+
 bool Planet::is_owned() {
     if (owner <0) return false;
 

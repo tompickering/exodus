@@ -150,6 +150,8 @@ class Planet {
         int get_minerals();
         int get_unrest();
         int get_unrest(int);
+        int get_airdef_guns();
+        int get_robots();
         void prepare_for_cpu_lord(); // Orig: PROCgivestation
         void adjust_unrest(int);
         void surfchange();
