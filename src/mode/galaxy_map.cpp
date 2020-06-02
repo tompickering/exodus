@@ -802,6 +802,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     // 'owner' can be null after this point
+    // TODO: Check whether each subsequent stage should happen with no owner
 
     if (mpp_stage == MPP_Income) {
         // TODO - Check the weird case in PROCcal_plan based on the t% DIM
