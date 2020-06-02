@@ -80,6 +80,10 @@ void PlanetStatus::enter() {
     char day[51];
     snprintf(day, 50, "One day is %d standard hours long.", p->get_day_hours());
 
+    char army_heading[46];
+    army_heading[45] = '\0';
+    snprintf(army_heading, 45, "Other defence systems: (Max each: %d)", p->get_army_cap());
+
     int inf, gli, art;
     p->get_army(inf, gli, art);
     char inf_str[8]; inf_str[7] = '\0';
@@ -256,7 +260,7 @@ void PlanetStatus::enter() {
     text_y += TEXT_Y_SEP;
 
     draw_manager.draw_text(
-        "Other defence systems:",
+        army_heading,
         Justify::Left,
         text_x, text_y,
         COL_TEXT);
