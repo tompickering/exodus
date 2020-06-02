@@ -883,7 +883,6 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 for (int i = 0; i < report.items; ++i) {
                     bulletin_set_next_text(report.content[i]);
                 }
-                bulletin_set_next_text("");
                 bulletin_set_next_text("Report ends.");
                 next_mpp_stage();
                 return ExodusMode::MODE_None;
