@@ -266,13 +266,19 @@ void StarMap::draw_planets(float delta) {
                 DrawArea a = {x_off, y_off, 76, 74};
                 draw_manager.set_source_region(id(ID::PLANET1 + i), &a);
 
+                float planet_scale = 1.f;
+
+                // The original renders all planets at the same scale...
+                if (planet->get_size() == PLANET_Small) planet_scale = 0.6;
+                if (planet->get_size() == PLANET_Medium) planet_scale = 0.8;
+
                 draw_manager.draw(
                     id(ID::PLANET1 + i),
                     IMG_PA_ROT,
                     {draw_x,
                      draw_y,
                      .5f, .5f,
-                     1, 1});
+                     planet_scale, planet_scale});
             }
 
             if (delta == 0) {
