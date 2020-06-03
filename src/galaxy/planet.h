@@ -27,7 +27,7 @@ enum PlanetClass {
     Artificial,  // 8  -       to represent uninhabitable gas giants).
 };
 
-enum Stone {
+enum Stone : uint8_t {
     STONE_Clear,         // 0
     STONE_NaturalLarge,  // 8
     STONE_NaturalSmall,  // 9
