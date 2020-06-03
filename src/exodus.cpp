@@ -9,6 +9,7 @@
 #include "input/input.h"
 
 #include "state/exodus_state.h"
+#include "state/ephemeral_state.h"
 
 #include "mode/mode_base.h"
 #include "mode/intro.h"
@@ -36,6 +37,7 @@ DRAWMANAGER draw_manager;
 INPUTMANAGER input_manager;
 
 ExodusState exostate;
+EphemeralState ephstate;
 
 volatile bool running;
 
