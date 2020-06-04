@@ -26,6 +26,7 @@ typedef struct {
     bool enable_explosions;
     bool draw;
     bool irradiated;
+    bool show_target;
 } PlanetDestruction;
 
 enum EphState {

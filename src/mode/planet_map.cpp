@@ -13,6 +13,8 @@ using std::map;
 #define CONSTRUCT_RATE 6
 #define DEFAULT_TOOL TOOL_HQ
 #define DESTRUCT_DELAY 0.4
+#define EXPLOSION_RATE 1.0
+#define TARGETING_RATE 1.0
 
 const float ANIM_RATE = 0.5f;
 
@@ -34,6 +36,7 @@ enum ID {
     TRIBUTTONS,
     LAWBUILD,
     EXIT,
+    TARGET,
     EXPLOSION,
     END,
 };
@@ -43,6 +46,16 @@ map<Stone, Anim> stone_anims_generic;
 map<PlanetClass, map<Stone, Anim>> construct_anims_specific;
 map<Stone, Anim> construct_anims_generic;
 bool stone_anims_initialised = false;
+
+Anim anim_target {
+    6,
+    IMG_SU1_MARK,
+    nullptr,
+    IMG_SU1_MARK,
+    nullptr,
+    IMG_SU1_MARK,
+    nullptr
+};
 
 Anim anim_explode(
     10,
@@ -86,6 +99,7 @@ PlanetMap::PlanetMap() : ModeBase("PlanetMap") {
     construct_y = 0;
     construct_stone = STONE_Clear;
     destruction_time = 0;
+    targeting_interp = 0;
     explosion_interp = 0;
     destruction_done = false;
     exploding_stone = STONE_Clear;
@@ -119,6 +133,7 @@ void PlanetMap::enter() {
     construct_stone = STONE_Clear;
 
     destruction_time = 0;
+    targeting_interp = 0;
     explosion_interp = 0;
     destruction_done = false;
     exploding_stone = STONE_Clear;
@@ -391,12 +406,23 @@ void PlanetMap::draw_stones(bool all) {
     }
 
     if (exploding == EXP_Drawing) {
-        draw_manager.draw(
-            id(ID::EXPLOSION),
-            anim_explode.interp(explosion_interp),
-            {surf_x + explode_x*STONE_SZ, surf_y + explode_y*STONE_SZ,
-             0, 0, 1, 1});
+        if (targeting_interp < 1) {
+            draw_manager.draw(
+                id(ID::TARGET),
+                anim_target.interp(targeting_interp),
+                {surf_x + explode_x*STONE_SZ, surf_y + explode_y*STONE_SZ,
+                 0, 0, 1, 1});
+        } else {
+            draw_manager.draw(
+                id(ID::EXPLOSION),
+                anim_explode.interp(explosion_interp),
+                {surf_x + explode_x*STONE_SZ, surf_y + explode_y*STONE_SZ,
+                 0, 0, 1, 1});
+        }
     } else {
+        draw_manager.draw(
+            id(ID::TARGET),
+            nullptr);
         draw_manager.draw(
             id(ID::EXPLOSION),
             nullptr);
@@ -950,9 +976,16 @@ ExodusMode PlanetMap::update_destruction(float delta) {
             explosion_interp = 0;
         }
         if (exploding == EXP_Drawing) {
-            explosion_interp += delta;
-            if (explosion_interp >= 1) {
-                explosion_interp = 1;
+            if (targeting_interp < 1) {
+                targeting_interp += delta * TARGETING_RATE;
+                if (targeting_interp >= 1) {
+                    targeting_interp = 1;
+                }
+            } else {
+                explosion_interp += delta * EXPLOSION_RATE;
+                if (explosion_interp >= 1) {
+                    explosion_interp = 1;
+                }
             }
         }
         if (destruction_time < DESTRUCT_DELAY || exploding == EXP_Drawing) {
@@ -970,6 +1003,7 @@ ExodusMode PlanetMap::update_destruction(float delta) {
                     explode_x = c.x;
                     explode_y = c.y;
                     if (do_draw) {
+                        targeting_interp = 1;
                         exploding = EXP_Drawing;
                         break;
                     } else {
@@ -989,6 +1023,7 @@ ExodusMode PlanetMap::update_destruction(float delta) {
                     --d.n_strikes;
 
                     if (do_draw) {
+                        targeting_interp = d.show_target ? 0 : 1;
                         exploding = EXP_Drawing;
                         break;
                     } else {

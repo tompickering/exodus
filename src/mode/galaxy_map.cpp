@@ -216,6 +216,7 @@ ExodusMode GalaxyMap::update(float delta) {
                         ephstate.destruction.n_strikes = RND(7) + 1; // 2-8 hits
                         ephstate.destruction.enable_explosions = true;
                         ephstate.destruction.irradiated = false;
+                        ephstate.destruction.show_target = false;
                         ephstate.destruction.draw = exostate.get_active_player()->is_human();
                         L.debug("METEOR: %d impacts", ephstate.destruction.n_strikes);
                         // TODO: PlanetMap should show number of strikes, no sidebar
