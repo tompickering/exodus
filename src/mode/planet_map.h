@@ -92,6 +92,7 @@ class PlanetMap : ModeBase {
         float destruction_time;
         float explosion_interp;
         ExplodeState exploding;
+        Stone exploding_stone;
         int explode_x;
         int explode_y;
 };

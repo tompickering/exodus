@@ -58,6 +58,21 @@ Anim anim_explode(
     IMG_SU1_DEAD10
 );
 
+Stone get_destroyed_stone(Stone st) {
+    if (   st == STONE_Agri
+        || st == STONE_AgriDead
+        || st == STONE_Clear
+        || st == STONE_NaturalSmall
+        || st == STONE_NaturalLarge
+        || st == STONE_NaturalAnim) {
+        return STONE_AgriDead;
+    }
+    if (st == STONE_Plu || st == STONE_Port2) {
+        return STONE_Radiation;
+    }
+    return STONE_Rubble;
+}
+
 PlanetMap::PlanetMap() : ModeBase("PlanetMap") {
     stage = PM_Idle;
     blocks = 0;
@@ -73,6 +88,7 @@ PlanetMap::PlanetMap() : ModeBase("PlanetMap") {
     destruction_time = 0;
     explosion_interp = 0;
     destruction_done = false;
+    exploding_stone = STONE_Clear;
 }
 
 void PlanetMap::enter() {
@@ -103,6 +119,7 @@ void PlanetMap::enter() {
     destruction_time = 0;
     explosion_interp = 0;
     destruction_done = false;
+    exploding_stone = STONE_Clear;
 
     if (ephstate.get_ephemeral_state() == EPH_Destruction) {
         if (ephstate.destruction.draw) {
@@ -944,8 +961,9 @@ ExodusMode PlanetMap::update_destruction(float delta) {
     if (d.type == DESTROY_NRandom) {
         while (d.n_strikes > 0) {
             if (exploding == EXP_Done) {
-                // TODO: Should only be rad for plu / port2
-                planet->set_stone(explode_x, explode_y, STONE_Radiation);
+                planet->set_stone(
+                    explode_x, explode_y,
+                    d.irradiated ? STONE_Radiation : get_destroyed_stone(exploding_stone));
                 exploding = EXP_None;
             }
 
@@ -956,7 +974,7 @@ ExodusMode PlanetMap::update_destruction(float delta) {
                 break;
             }
 
-            Stone s = planet->get_random_point(explode_x, explode_y);
+            exploding_stone = planet->get_random_point(explode_x, explode_y);
             // TODO: Explode out if plu or port2
             if (do_draw) {
                 exploding = EXP_Drawing;
