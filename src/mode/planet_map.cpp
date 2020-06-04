@@ -58,7 +58,7 @@ Anim anim_target {
 };
 
 Anim anim_explode(
-    10,
+    11,
     IMG_SU1_DEAD1,
     IMG_SU1_DEAD2,
     IMG_SU1_DEAD3,
@@ -68,7 +68,8 @@ Anim anim_explode(
     IMG_SU1_DEAD7,
     IMG_SU1_DEAD8,
     IMG_SU1_DEAD9,
-    IMG_SU1_DEAD10
+    IMG_SU1_DEAD10,
+    nullptr
 );
 
 Stone get_destroyed_stone(Stone st) {
@@ -421,13 +422,6 @@ void PlanetMap::draw_stones(bool all) {
                 {surf_x + explode_x*STONE_SZ, surf_y + explode_y*STONE_SZ,
                  0, 0, 1, 1});
         }
-    } else {
-        draw_manager.draw(
-            id(ID::TARGET),
-            nullptr);
-        draw_manager.draw(
-            id(ID::EXPLOSION),
-            nullptr);
     }
 }
 
