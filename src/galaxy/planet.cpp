@@ -373,6 +373,13 @@ bool Planet::has_stone(Stone st) {
     return false;
 }
 
+Stone Planet::get_random_point(int& x, int& y) {
+    int sz = get_size_blocks();
+    x = rand() % sz;
+    y = rand() % sz;
+    return get_stone(x, y);
+}
+
 bool Planet::find_random_stone(Stone st, int& x, int& y) {
     int count = count_stones(st);
     if (!count)
