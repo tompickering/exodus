@@ -624,6 +624,8 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 if (owner->is_human()) {
                     bulletin_set_next_text("");
                     bulletin_set_next_text("Visual replay follows.");
+                } else {
+                    // TODO: Should include "The planet has taken N hits."
                 }
                 do_meteor = true;
             }
