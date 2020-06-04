@@ -959,29 +959,33 @@ ExodusMode PlanetMap::update_destruction(float delta) {
     }
 
     if (d.type == DESTROY_NRandom) {
-        while (d.n_strikes > 0) {
+        while (d.n_strikes >= 0) {
+            if (d.n_strikes > 0 ) {
+                if (exploding == EXP_None) {
+                    exploding_stone = planet->get_random_point(explode_x, explode_y);
+                    --d.n_strikes;
+                    // TODO: Explode out if plu or port2
+                    if (do_draw) {
+                        exploding = EXP_Drawing;
+                        break;
+                    } else {
+                        exploding = EXP_Done;
+                    }
+                }
+            }
+
             if (exploding == EXP_Done) {
                 planet->set_stone(
                     explode_x, explode_y,
                     d.irradiated ? STONE_Radiation : get_destroyed_stone(exploding_stone));
                 exploding = EXP_None;
-            }
-
-            --d.n_strikes;
-
-            if (d.n_strikes <= 0) {
-                destruction_done = true;
-                break;
-            }
-
-            exploding_stone = planet->get_random_point(explode_x, explode_y);
-            // TODO: Explode out if plu or port2
-            if (do_draw) {
-                exploding = EXP_Drawing;
-                break;
             } else {
-                exploding = EXP_Done;
+                break;
             }
+        }
+
+        if (d.n_strikes <= 0) {
+            destruction_done = true;
         }
     }
 

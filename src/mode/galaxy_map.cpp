@@ -217,6 +217,7 @@ ExodusMode GalaxyMap::update(float delta) {
                         ephstate.destruction.enable_explosions = true;
                         ephstate.destruction.irradiated = false;
                         ephstate.destruction.draw = exostate.get_active_player()->is_human();
+                        L.debug("METEOR: %d impacts", ephstate.destruction.n_strikes);
                         return ephstate.get_appropriate_mode();
                     }
                 }
