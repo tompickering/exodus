@@ -31,6 +31,8 @@ Contains an abstract input manager interface which is responsible for all input 
 
 This defines the various game modes, which drive the logic of the game at any one time. If any mode can be said to be the 'main' one, then it is the galaxy map, which is the main driver for the execution of a full 'turn' in the game, and driving the sequence that the game goes through as one month is passing.
 
+Information can be passed between modes via the 'ephemeral state' object - see 'state' for further information.
+
 
 - mode/mixins
 
@@ -44,7 +46,11 @@ This defines data structures encapsulating a single 'player' of the game, be tha
 
 - state
 
-This ultimately encapsulates exactly the entire definition of the state of the game at any one time. It wraps everything including the galaxy, the player info, and game information such as whose turn it is or which system/planet is currently selected by the player. A reference to the state singleton is always available to everything else in the codebase.  Everything within this class and everything it contains directly or indirectly should be statically allocated, and contain no pointer members. As such, a save/load operation should consist of no more or less than serialising and de-serialising this single object.
+The ExodusState singleton ultimately encapsulates exactly the entire definition of the state of the game at any one time. It wraps everything including the galaxy, the player info, and game information such as whose turn it is or which system/planet is currently selected by the player. A reference to the state singleton is always available to everything else in the codebase.  Everything within this class and everything it contains directly or indirectly should be statically allocated, and contain no pointer members. As such, a save/load operation should consist of no more or less than serialising and de-serialising this single object.
+
+We also have a second singleton in addition to ExodusState, named EphemeralState. Sometimes, we need to store state data that doesn't belong in a 'save file' (and therefore the ExodusState) nor to any single mode - in particular, when we're moving between modes to follow an 'atomic' chain of events within the game. At these times, modes need to share information about what's currently happening in the game. For example, the PlanetMap mode is responsible for the visualisation of planet destruction - but when we open it, it needs some way to know that that is indeed the purpose of opening it on this occasion, and various parameters surrounding the nature of the destruction, rather than proceeding with the usual 'planet editor' behaviour. In these cases, the information should be passed via properties within the EphemeralState.
+
+It is important to ensure that the game flow stays sane in that we always enter the correct mode to handle the current ephemeral state. We attempt to keep this tight by providing an interface within the EphemeralState to inform us of the appropriate mode for a particular configuration, such that we may at least limit our need to worry about this matter to a single point in the codebase.
 
 
 - timer
