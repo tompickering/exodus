@@ -12,6 +12,7 @@ using std::map;
 #define STONE_SZ 28
 #define CONSTRUCT_RATE 6
 #define DEFAULT_TOOL TOOL_HQ
+#define DESTRUCT_DELAY 0.4
 
 const float ANIM_RATE = 0.5f;
 
@@ -33,6 +34,7 @@ enum ID {
     TRIBUTTONS,
     LAWBUILD,
     EXIT,
+    EXPLOSION,
     END,
 };
 
@@ -41,6 +43,20 @@ map<Stone, Anim> stone_anims_generic;
 map<PlanetClass, map<Stone, Anim>> construct_anims_specific;
 map<Stone, Anim> construct_anims_generic;
 bool stone_anims_initialised = false;
+
+Anim anim_explode(
+    10,
+    IMG_SU1_DEAD1,
+    IMG_SU1_DEAD2,
+    IMG_SU1_DEAD3,
+    IMG_SU1_DEAD4,
+    IMG_SU1_DEAD5,
+    IMG_SU1_DEAD6,
+    IMG_SU1_DEAD7,
+    IMG_SU1_DEAD8,
+    IMG_SU1_DEAD9,
+    IMG_SU1_DEAD10
+);
 
 PlanetMap::PlanetMap() : ModeBase("PlanetMap") {
     stage = PM_Idle;
@@ -54,6 +70,9 @@ PlanetMap::PlanetMap() : ModeBase("PlanetMap") {
     construct_x = 0;
     construct_y = 0;
     construct_stone = STONE_Clear;
+    destruction_time = 0;
+    explosion_interp = 0;
+    destruction_done = false;
 }
 
 void PlanetMap::enter() {
@@ -80,6 +99,10 @@ void PlanetMap::enter() {
     construct_x = 0;
     construct_y = 0;
     construct_stone = STONE_Clear;
+
+    destruction_time = 0;
+    explosion_interp = 0;
+    destruction_done = false;
 
     if (ephstate.get_ephemeral_state() == EPH_Destruction) {
         if (ephstate.destruction.draw) {
@@ -347,6 +370,18 @@ void PlanetMap::draw_stones(bool all) {
                  0, 0, 1, 1});
         }
     }
+
+    if (exploding == EXP_Drawing) {
+        draw_manager.draw(
+            id(ID::EXPLOSION),
+            anim_explode.interp(explosion_interp),
+            {surf_x + explode_x*STONE_SZ, surf_y + explode_y*STONE_SZ,
+             0, 0, 1, 1});
+    } else {
+        draw_manager.draw(
+            id(ID::EXPLOSION),
+            nullptr);
+    }
 }
 
 void PlanetMap::update_gauges() {
@@ -469,6 +504,8 @@ void init_stone_anims() {
                                                                     IMG_SU1_STONE16B);
     stone_anims_generic[STONE_Trade]                     = Anim(1,  IMG_SU1_STONE17);
     stone_anims_generic[STONE_Park]                      = Anim(1,  IMG_SU1_STONE23);
+    stone_anims_generic[STONE_Radiation]                 = Anim(1,  IMG_SU1_STONE6);
+    stone_anims_generic[STONE_Rubble]                    = Anim(1,  IMG_SU1_STONE20);
 
     construct_anims_specific[Forest][STONE_Agri]         = Anim(1,  IMG_SF1_STONE2_0);
     construct_anims_specific[Desert][STONE_Agri]         = Anim(1,  IMG_SF2_STONE2_0);
@@ -885,26 +922,52 @@ ExodusMode PlanetMap::update_destruction(float delta) {
     PlanetDestruction &d = ephstate.destruction;
     bool do_draw = d.draw;
 
+    destruction_time += delta;
+
     if (do_draw) {
         draw_stones(false);
+        if (explosion_interp >= 1) {
+            exploding = EXP_Done;
+            explosion_interp = 0;
+        }
+        if (exploding == EXP_Drawing) {
+            explosion_interp += delta;
+            if (explosion_interp >= 1) {
+                explosion_interp = 1;
+            }
+        }
+        if (destruction_time < DESTRUCT_DELAY || exploding == EXP_Drawing) {
+            return ExodusMode::MODE_None;
+        }
     }
 
-    switch (d.type) {
-        case DESTROY_Specific:
-            L.debug("Destroying specific target");
-            // TODO
-            break;
-        case DESTROY_NStones:
-            L.debug("Destroying %d stones %d", d.n_strikes, d.tgt_stone);
-            // TODO
-            break;
-        case DESTROY_NRandom:
-            L.debug("Destroying %d random", d.n_strikes);
-            // TODO
-            break;
+    if (d.type == DESTROY_NRandom) {
+        while (d.n_strikes > 0) {
+            if (exploding == EXP_Done) {
+                // TODO: Should only be rad for plu / port2
+                planet->set_stone(explode_x, explode_y, STONE_Radiation);
+                exploding = EXP_None;
+            }
+
+            --d.n_strikes;
+
+            if (d.n_strikes <= 0) {
+                destruction_done = true;
+                break;
+            }
+
+            Stone s = planet->get_random_point(explode_x, explode_y);
+            // TODO: Explode out if plu or port2
+            if (do_draw) {
+                exploding = EXP_Drawing;
+                break;
+            } else {
+                exploding = EXP_Done;
+            }
+        }
     }
 
-    if (true) {
+    if (destruction_done && (!do_draw || draw_manager.clicked())) {
         L.debug("Destruction complete");
         ephstate.clear_ephemeral_state();
         return ExodusMode::MODE_Pop;

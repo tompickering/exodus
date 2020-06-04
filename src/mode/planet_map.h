@@ -31,6 +31,12 @@ enum Tool {
     TOOL_END,
 };
 
+enum ExplodeState {
+    EXP_None,
+    EXP_Drawing,
+    EXP_Done,
+};
+
 class PlanetMap : ModeBase {
     public:
         PlanetMap();
@@ -82,6 +88,12 @@ class PlanetMap : ModeBase {
         void hide_lunar_base_tool();
 
         ExodusMode update_destruction(float);
+        bool destruction_done;
+        float destruction_time;
+        float explosion_interp;
+        ExplodeState exploding;
+        int explode_x;
+        int explode_y;
 };
 
 #endif
