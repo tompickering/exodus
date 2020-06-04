@@ -89,6 +89,8 @@ PlanetMap::PlanetMap() : ModeBase("PlanetMap") {
     explosion_interp = 0;
     destruction_done = false;
     exploding_stone = STONE_Clear;
+    chained_explosion_idx = 0;
+    chained_explosion_head = 0;
 }
 
 void PlanetMap::enter() {
@@ -960,11 +962,32 @@ ExodusMode PlanetMap::update_destruction(float delta) {
 
     if (d.type == DESTROY_NRandom) {
         while (d.n_strikes >= 0) {
-            if (d.n_strikes > 0 ) {
+            // If we have chained explosions to apply, do these first!
+            if (chained_explosion_idx < chained_explosion_head) {
                 if (exploding == EXP_None) {
+                    ChainedExplosion &c = chained_explosions[chained_explosion_idx++];
+                    exploding_stone = c.radiation ? STONE_Plu : STONE_Port2;
+                    explode_x = c.x;
+                    explode_y = c.y;
+                    if (do_draw) {
+                        exploding = EXP_Drawing;
+                        break;
+                    } else {
+                        exploding = EXP_Done;
+                    }
+                }
+            } else if (d.n_strikes > 0 ) {
+                if (exploding == EXP_None) {
+                    // DEBUG - prioritise plutonium
+                    //if (planet->find_random_stone(STONE_Plu, explode_x, explode_y)) {
+                        //exploding_stone = STONE_Plu;
+                    //} else {
+                        //exploding_stone = planet->get_random_point(explode_x, explode_y);
+                    //}
+
                     exploding_stone = planet->get_random_point(explode_x, explode_y);
                     --d.n_strikes;
-                    // TODO: Explode out if plu or port2
+
                     if (do_draw) {
                         exploding = EXP_Drawing;
                         break;
@@ -975,9 +998,38 @@ ExodusMode PlanetMap::update_destruction(float delta) {
             }
 
             if (exploding == EXP_Done) {
-                planet->set_stone(
+                planet->set_stone_wrap(
                     explode_x, explode_y,
                     d.irradiated ? STONE_Radiation : get_destroyed_stone(exploding_stone));
+
+                if (exploding_stone == STONE_Plu || exploding_stone == STONE_Port2) {
+                    for (int j = -1; j <= 1; ++j) {
+                        for (int i = -1; i <= 1; ++i) {
+                            if (i == 0 && j == 0) {
+                                continue;
+                            }
+                            int cx = explode_x + i;
+                            int cy = explode_y + j;
+                            Stone s = planet->get_stone_wrap(cx, cy);
+                            if (s == STONE_Plu || s == STONE_Port2) {
+                                // TODO: Ensure we don't overflow
+                                // (We won't at 256 - but that's not the point and
+                                // should possibly have a lower cap!)
+                                ChainedExplosion &c =
+                                    chained_explosions[chained_explosion_head++];
+                                c.x = cx;
+                                c.y = cy;
+                                c.radiation = s == STONE_Plu;
+                            }
+
+                            Stone to_stone = STONE_Radiation;
+                            if (exploding_stone == STONE_Port2)
+                                to_stone = get_destroyed_stone(s);
+                            planet->set_stone_wrap(cx, cy, to_stone);
+                        }
+                    }
+                }
+
                 exploding = EXP_None;
             } else {
                 break;

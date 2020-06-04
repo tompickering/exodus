@@ -10,6 +10,8 @@
 
 #include "anim.h"
 
+#define MAX_CHAINED_EXPLOSIONS 256
+
 extern ExodusState exostate;
 
 enum Tool {
@@ -36,6 +38,12 @@ enum ExplodeState {
     EXP_Drawing,
     EXP_Done,
 };
+
+typedef struct {
+    int x;
+    int y;
+    bool radiation;
+} ChainedExplosion;
 
 class PlanetMap : ModeBase {
     public:
@@ -95,6 +103,9 @@ class PlanetMap : ModeBase {
         Stone exploding_stone;
         int explode_x;
         int explode_y;
+        int chained_explosion_idx;
+        int chained_explosion_head;
+        ChainedExplosion chained_explosions[MAX_CHAINED_EXPLOSIONS];
 };
 
 #endif
