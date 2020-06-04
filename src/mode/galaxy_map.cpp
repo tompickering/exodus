@@ -215,10 +215,7 @@ ExodusMode GalaxyMap::update(float delta) {
                         ephstate.destruction.type = DESTROY_NRandom;
                         ephstate.destruction.n_strikes = RND(7) + 1; // 2-8 hits
                         ephstate.destruction.enable_explosions = true;
-                        // TODO: Should be base on owner->is_human()
-                        ephstate.destruction.draw = false;
-                        if (ephstate.destruction.draw) {
-                        }
+                        ephstate.destruction.draw = exostate.get_active_player()->is_human();
                         return ephstate.get_appropriate_mode();
                     }
                 }
