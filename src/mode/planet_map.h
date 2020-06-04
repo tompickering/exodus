@@ -37,9 +37,12 @@ class PlanetMap : ModeBase {
         virtual void enter() override;
         virtual ExodusMode update(float) override;
     private:
+        void draw();
+
         enum Stage {
             PM_Idle,
             PM_Construct,
+            PM_Destruction,
         };
 
         Stage stage;
@@ -77,6 +80,8 @@ class PlanetMap : ModeBase {
 
         void set_build_button(bool);
         void hide_lunar_base_tool();
+
+        ExodusMode update_destruction(float);
 };
 
 #endif

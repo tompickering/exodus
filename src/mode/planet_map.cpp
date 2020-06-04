@@ -67,6 +67,32 @@ void PlanetMap::enter() {
 
     anim_cycle = 0;
 
+    menu_x = RES_X - 150;
+    menu_y = 36;
+
+    blocks = planet->get_size_blocks();
+
+    surf_x = 24 + STONE_SZ * (16 - blocks) / 2;
+    surf_y = 36 + STONE_SZ * (16 - blocks) / 2;
+
+    construct_progress = 0;
+    construct_anim = nullptr;
+    construct_x = 0;
+    construct_y = 0;
+    construct_stone = STONE_Clear;
+
+    if (ephstate.get_ephemeral_state() == EPH_Destruction) {
+        if (ephstate.destruction.draw) {
+            draw();
+        }
+        stage = PM_Destruction;
+    } else {
+        draw();
+        stage = PM_Idle;
+    }
+}
+
+void PlanetMap::draw() {
     draw_manager.draw(planet->sprites()->map_bg);
 
     char title[15 + PLANET_MAX_NAME];
@@ -76,9 +102,6 @@ void PlanetMap::enter() {
         Justify::Left,
         26, 8,
         COL_TEXT);
-
-    menu_x = RES_X - 150;
-    menu_y = 36;
 
     draw_manager.fill(
         {menu_x, menu_y, 126, 447},
@@ -148,12 +171,10 @@ void PlanetMap::enter() {
         draw_tool_rect(t, COL_TOOL);
     }
 
-    blocks = planet->get_size_blocks();
     int sz = blocks * STONE_SZ;
     area = {0, 0, sz, sz};
     draw_manager.set_source_region(id(ID::SURF), &area);
-    surf_x = 24 + STONE_SZ * (16 - blocks) / 2;
-    surf_y = 36 + STONE_SZ * (16 - blocks) / 2;
+
     draw_manager.fill({surf_x - 2, surf_y - 2, sz + 4, sz + 4}, {0, 0, 0});
     draw_manager.draw(
         id(ID::SURF),
@@ -167,14 +188,9 @@ void PlanetMap::enter() {
 
     draw_manager.show_cursor(true);
 
-    construct_progress = 0;
-    construct_anim = nullptr;
-    construct_x = 0;
-    construct_y = 0;
-    construct_stone = STONE_Clear;
-    stage = PM_Idle;
     set_tool(DEFAULT_TOOL);
 }
+
 
 ExodusMode PlanetMap::update(float delta) {
     SpriteClick click;
@@ -282,6 +298,8 @@ ExodusMode PlanetMap::update(float delta) {
             }
 
             break;
+        case PM_Destruction:
+            return update_destruction(delta);
     }
 
     return ExodusMode::MODE_None;
@@ -861,4 +879,36 @@ void PlanetMap::hide_lunar_base_tool() {
         IMG_SU1_STONEXX,
         {541, 199,
         0, 0, 1, 1});
+}
+
+ExodusMode PlanetMap::update_destruction(float delta) {
+    PlanetDestruction &d = ephstate.destruction;
+    bool do_draw = d.draw;
+
+    if (do_draw) {
+        draw_stones(false);
+    }
+
+    switch (d.type) {
+        case DESTROY_Specific:
+            L.debug("Destroying specific target");
+            // TODO
+            break;
+        case DESTROY_NStones:
+            L.debug("Destroying %d stones %d", d.n_strikes, d.tgt_stone);
+            // TODO
+            break;
+        case DESTROY_NRandom:
+            L.debug("Destroying %d random", d.n_strikes);
+            // TODO
+            break;
+    }
+
+    if (true) {
+        L.debug("Destruction complete");
+        ephstate.clear_ephemeral_state();
+        return ExodusMode::MODE_Pop;
+    }
+
+    return ExodusMode::MODE_None;
 }

@@ -22,6 +22,7 @@ GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer(), PanelDrawer(PNL_
     mpp_stage = (MonthPassPlanetStage)0;
     month_pass_time = 0;
     do_first_city = false;
+    do_meteor = false;
 }
 
 void GalaxyMap::enter() {
@@ -191,6 +192,8 @@ ExodusMode GalaxyMap::update(float delta) {
             break;
         case GM_MonthPassing:
             {
+                update_panel_info_player(TGT_Primary, exostate.get_player(0));
+
                 if (bulletin_is_open()) {
                     bulletin_update(delta);
                     if (!bulletin_acknowledged()) {
@@ -205,6 +208,18 @@ ExodusMode GalaxyMap::update(float delta) {
                         frame_draw();
                         stage = GM_MP_FirstCity;
                         return ExodusMode::MODE_None;
+                    } else if (do_meteor) {
+                        do_meteor = false;
+                        bulletin_ensure_closed();
+                        ephstate.set_ephemeral_state(EPH_Destruction);
+                        ephstate.destruction.type = DESTROY_NRandom;
+                        ephstate.destruction.n_strikes = RND(7) + 1; // 2-8 hits
+                        ephstate.destruction.enable_explosions = true;
+                        // TODO: Should be base on owner->is_human()
+                        ephstate.destruction.draw = false;
+                        if (ephstate.destruction.draw) {
+                        }
+                        return ephstate.get_appropriate_mode();
                     }
                 }
                 ExodusMode next_mode = month_pass_update();
@@ -603,15 +618,14 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 bulletin_set_next_text("an early destroying of the dangerous");
                 bulletin_set_next_text("fragments possible.");
             } else {
-                bulletin_vset_next_text("A meteor has reached tha planet %s", p->get_name());
+                bulletin_vset_next_text("A meteor has reached the planet %s", p->get_name());
                 bulletin_set_next_text("and several fragments of it have it");
                 bulletin_set_next_text("the world's surface.");
                 if (owner->is_human()) {
                     bulletin_set_next_text("");
                     bulletin_set_next_text("Visual replay follows.");
-                    // TODO: Destruction (PROCbombing)
-                    // TODO: Visualisation of meteor strike
                 }
+                do_meteor = true;
             }
             next_mpp_stage();
             return ExodusMode::MODE_None;

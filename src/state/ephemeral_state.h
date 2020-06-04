@@ -9,8 +9,27 @@
 
 #include "exodus.h"
 
+#include "galaxy/planet.h"
+
+enum DestructionType {
+    DESTROY_Specific,
+    DESTROY_NStones,
+    DESTROY_NRandom,
+};
+
+typedef struct {
+    DestructionType type;
+    int tgt_x;
+    int tgt_y;
+    Stone tgt_stone;
+    int n_strikes;
+    bool enable_explosions;
+    bool draw;
+} PlanetDestruction;
+
 enum EphState {
     EPH_None,
+    EPH_Destruction,
 };
 
 class EphemeralState {
@@ -20,6 +39,8 @@ class EphemeralState {
         void set_ephemeral_state(EphState);
         void clear_ephemeral_state();
         ExodusMode get_appropriate_mode();
+
+        PlanetDestruction destruction;
     private:
         EphState eph_state;
 };

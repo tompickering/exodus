@@ -10,6 +10,7 @@
 #include "input/input.h"
 
 #include "state/exodus_state.h"
+#include "state/ephemeral_state.h"
 
 #define MAX_STATIC_IDS 50
 
@@ -18,6 +19,7 @@ extern AUDIOMANAGER audio_manager;
 extern INPUTMANAGER input_manager;
 
 extern ExodusState exostate;
+extern EphemeralState ephstate;
 
 class ModeBase {
     public:
