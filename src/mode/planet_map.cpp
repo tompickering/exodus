@@ -14,7 +14,7 @@ using std::map;
 #define DEFAULT_TOOL TOOL_HQ
 #define DESTRUCT_DELAY 0.4
 #define EXPLOSION_RATE 1.0
-#define TARGETING_RATE 1.0
+#define TARGETING_RATE 0.6
 
 const float ANIM_RATE = 0.5f;
 
