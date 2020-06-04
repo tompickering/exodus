@@ -1037,30 +1037,32 @@ ExodusMode PlanetMap::update_destruction(float delta) {
                     explode_x, explode_y,
                     d.irradiated ? STONE_Radiation : get_destroyed_stone(exploding_stone));
 
-                if (exploding_stone == STONE_Plu || exploding_stone == STONE_Port2) {
-                    for (int j = -1; j <= 1; ++j) {
-                        for (int i = -1; i <= 1; ++i) {
-                            if (i == 0 && j == 0) {
-                                continue;
-                            }
-                            int cx = explode_x + i;
-                            int cy = explode_y + j;
-                            Stone s = planet->get_stone_wrap(cx, cy);
-                            if (s == STONE_Plu || s == STONE_Port2) {
-                                // TODO: Ensure we don't overflow
-                                // (We won't at 256 - but that's not the point and
-                                // should possibly have a lower cap!)
-                                ChainedExplosion &c =
-                                    chained_explosions[chained_explosion_head++];
-                                c.x = cx;
-                                c.y = cy;
-                                c.radiation = s == STONE_Plu;
-                            }
+                if (d.enable_explosions) {
+                    if (exploding_stone == STONE_Plu || exploding_stone == STONE_Port2) {
+                        for (int j = -1; j <= 1; ++j) {
+                            for (int i = -1; i <= 1; ++i) {
+                                if (i == 0 && j == 0) {
+                                    continue;
+                                }
+                                int cx = explode_x + i;
+                                int cy = explode_y + j;
+                                Stone s = planet->get_stone_wrap(cx, cy);
+                                if (s == STONE_Plu || s == STONE_Port2) {
+                                    // TODO: Ensure we don't overflow
+                                    // (We won't at 256 - but that's not the point and
+                                    // should possibly have a lower cap!)
+                                    ChainedExplosion &c =
+                                        chained_explosions[chained_explosion_head++];
+                                    c.x = cx;
+                                    c.y = cy;
+                                    c.radiation = s == STONE_Plu;
+                                }
 
-                            Stone to_stone = STONE_Radiation;
-                            if (exploding_stone == STONE_Port2)
-                                to_stone = get_destroyed_stone(s);
-                            planet->set_stone_wrap(cx, cy, to_stone);
+                                Stone to_stone = STONE_Radiation;
+                                if (exploding_stone == STONE_Port2)
+                                    to_stone = get_destroyed_stone(s);
+                                planet->set_stone_wrap(cx, cy, to_stone);
+                            }
                         }
                     }
                 }
