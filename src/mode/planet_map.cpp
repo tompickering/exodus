@@ -80,7 +80,9 @@ Stone get_destroyed_stone(Stone st) {
         || st == STONE_NaturalAnim) {
         return STONE_AgriDead;
     }
-    if (st == STONE_Plu || st == STONE_Port2) {
+    if (   st == STONE_Plu
+        || st == STONE_Port2
+        || st == STONE_Radiation) {
         return STONE_Radiation;
     }
     return STONE_Rubble;
