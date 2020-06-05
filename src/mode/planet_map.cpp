@@ -426,8 +426,9 @@ void PlanetMap::draw_stones(bool all) {
             draw_manager.draw(
                 id(ID::EXPLOSION),
                 anim_explode.interp(explosion_interp),
-                {surf_x + explode_x*STONE_SZ, surf_y + explode_y*STONE_SZ,
-                 0, 0, 1, 1});
+                {surf_x + explode_x*STONE_SZ + STONE_SZ/2,
+                 surf_y + explode_y*STONE_SZ + STONE_SZ/2,
+                 0.5, 0.5, 1, 1});
         }
     }
 }
