@@ -211,14 +211,6 @@ ExodusMode GalaxyMap::update(float delta) {
                     } else if (do_meteor) {
                         do_meteor = false;
                         bulletin_ensure_closed();
-                        ephstate.set_ephemeral_state(EPH_Destruction);
-                        ephstate.destruction.type = DESTROY_NRandom;
-                        ephstate.destruction.n_strikes = do_meteor_strikes;
-                        ephstate.destruction.enable_explosions = true;
-                        ephstate.destruction.irradiated = false;
-                        ephstate.destruction.show_target = false;
-                        ephstate.destruction.draw = exostate.get_active_player()->is_human();
-                        L.debug("METEOR: %d impacts", ephstate.destruction.n_strikes);
                         // TODO: PlanetMap should show number of strikes
                         return ephstate.get_appropriate_mode();
                     }
@@ -623,12 +615,22 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 bulletin_set_next_text("and several fragments of it have it");
                 bulletin_set_next_text("the world's surface.");
                 bulletin_set_next_text("");
+
+                ephstate.set_ephemeral_state(EPH_Destruction);
+                ephstate.destruction.type = DESTROY_NRandom;
+                ephstate.destruction.n_strikes = RND(7) + 1; // 2-8 hits
+                ephstate.destruction.enable_explosions = true;
+                ephstate.destruction.irradiated = false;
+                ephstate.destruction.show_target = false;
+                ephstate.destruction.draw = exostate.get_active_player()->is_human();
                 do_meteor = true;
-                do_meteor_strikes = RND(7) + 1; // 2-8 hits
+
+                L.debug("METEOR: %d impacts", ephstate.destruction.n_strikes);
                 if (owner->is_human()) {
                     bulletin_set_next_text("Visual replay follows.");
                 } else {
-                    bulletin_set_next_text("The planet has taken %d hits.", do_meteor_strikes);
+                    bulletin_set_next_text("The planet has taken %d hits.",
+                                           ephstate.destruction.n_strikes);
                 }
             }
             next_mpp_stage();
