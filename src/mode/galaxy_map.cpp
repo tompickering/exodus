@@ -919,7 +919,16 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_VillageGifts) {
-        // TODO
+        // This is incredibly uncommon - but possible
+        int n_villages = p->count_stones(STONE_Village);
+        if (owner && n_villages > 2) {
+            int mc = RND(n_villages);
+            // FIXME: Should we delay the giving of MC until the bulletin?
+            owner->give_mc(mc);
+            report.add_line("The native village inhabitants offer");
+            report.add_line("presents that are worth %d MC.", mc);
+            // TODO: PROCdonotice
+        }
         next_mpp_stage();
     }
 
