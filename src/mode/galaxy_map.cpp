@@ -23,6 +23,7 @@ GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer(), PanelDrawer(PNL_
     month_pass_time = 0;
     do_first_city = false;
     do_meteor = false;
+    do_meltdown = false;
 }
 
 void GalaxyMap::enter() {
@@ -212,6 +213,10 @@ ExodusMode GalaxyMap::update(float delta) {
                         do_meteor = false;
                         bulletin_ensure_closed();
                         // TODO: PlanetMap should show number of strikes
+                        return ephstate.get_appropriate_mode();
+                    } else if (do_meltdown) {
+                        do_meltdown = false;
+                        bulletin_ensure_closed();
                         return ephstate.get_appropriate_mode();
                     }
                 }
@@ -767,11 +772,9 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_ReactorPollution) {
+    if (mpp_stage == MPP_ReactorMeltdown) {
         if (onein(200)) {
-            int meltdown_x;
-            int meltdown_y;
-            if (p->find_random_stone(STONE_Plu, meltdown_x, meltdown_y)) {
+            if (p->has_stone(STONE_Plu)) {
                 // TODO: Music
                 bulletin_start_new(false);
                 bulletin_set_bg(p->sprites()->bulletin_bg);
@@ -782,8 +785,15 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 bulletin_set_next_text("");
                 bulletin_set_next_text("A badly protected plutonium reactor");
                 bulletin_set_next_text("has contaminated %s.", p->get_name());
-                // TODO: Destruction (PROCbombing)
-                // TODO: Visualisation of bombing - similar to meteor
+                ephstate.set_ephemeral_state(EPH_Destruction);
+                ephstate.destruction.type = DESTROY_NStones;
+                ephstate.destruction.tgt_stone = STONE_Plu;
+                ephstate.destruction.n_strikes = 1;
+                ephstate.destruction.enable_explosions = true;
+                ephstate.destruction.irradiated = true;
+                ephstate.destruction.show_target = true;
+                ephstate.destruction.draw = exostate.get_active_player()->is_human();
+                do_meltdown = true;
                 next_mpp_stage();
                 return ExodusMode::MODE_None;
             }

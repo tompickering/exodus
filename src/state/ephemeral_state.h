@@ -12,15 +12,12 @@
 #include "galaxy/planet.h"
 
 enum DestructionType {
-    DESTROY_Specific,
     DESTROY_NStones,
     DESTROY_NRandom,
 };
 
 typedef struct {
     DestructionType type;
-    int tgt_x;
-    int tgt_y;
     Stone tgt_stone;
     int n_strikes;
     bool enable_explosions;

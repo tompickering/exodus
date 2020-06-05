@@ -92,7 +92,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
             MPP_LawsIncreaseUnrest,
             MPP_ParksReduceUnrest,
             MPP_ClearRadiation,
-            MPP_ReactorPollution,
+            MPP_ReactorMeltdown,
             MPP_ClimateChangeDueToCultivation,
             MPP_ClimateChangeDueToDeforestation,
             MPP_LosePlanetControl,
@@ -143,6 +143,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
 
         bool do_first_city;
         bool do_meteor;
+        bool do_meltdown;
 };
 
 #endif
