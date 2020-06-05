@@ -20,6 +20,8 @@ ExodusMode EphemeralState::get_appropriate_mode() {
     switch (eph_state) {
         case EPH_None:
             return ExodusMode::MODE_None;
+        case EPH_LunarBattle:
+            return ExodusMode::MODE_LunarBattle;
         case EPH_Destruction:
             return ExodusMode::MODE_PlanetMap;
     }

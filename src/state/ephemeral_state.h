@@ -11,6 +11,17 @@
 
 #include "galaxy/planet.h"
 
+enum AggressorType {
+    AGG_Lord,
+    AGG_Rebels,
+    AGG_Aliens,
+};
+
+typedef struct {
+    AggressorType aggressor_type;
+    int aggressor_lord_idx;
+} LunarBattleParams;
+
 enum DestructionType {
     DESTROY_NStones,
     DESTROY_NRandom,
@@ -28,6 +39,7 @@ typedef struct {
 
 enum EphState {
     EPH_None,
+    EPH_LunarBattle,
     EPH_Destruction,
 };
 
@@ -39,6 +51,7 @@ class EphemeralState {
         void clear_ephemeral_state();
         ExodusMode get_appropriate_mode();
 
+        LunarBattleParams lunar_battle;
         PlanetDestruction destruction;
     private:
         EphState eph_state;

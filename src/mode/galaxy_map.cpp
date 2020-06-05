@@ -24,6 +24,7 @@ GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer(), PanelDrawer(PNL_
     do_first_city = false;
     do_meteor = false;
     do_meltdown = false;
+    do_lunar_battle = false;
 }
 
 void GalaxyMap::enter() {
@@ -216,6 +217,10 @@ ExodusMode GalaxyMap::update(float delta) {
                         return ephstate.get_appropriate_mode();
                     } else if (do_meltdown) {
                         do_meltdown = false;
+                        bulletin_ensure_closed();
+                        return ephstate.get_appropriate_mode();
+                    } else if (do_lunar_battle) {
+                        do_lunar_battle = false;
                         bulletin_ensure_closed();
                         return ephstate.get_appropriate_mode();
                     }
@@ -737,7 +742,11 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             bulletin_set_next_text("");
             bulletin_set_next_text("Alien space pirates are about to");
             bulletin_set_next_text("storm %s's moon and the planet.", p->get_name());
-            // TODO: Battle
+
+            ephstate.set_ephemeral_state(EPH_LunarBattle);
+            ephstate.lunar_battle.aggressor_type = AGG_Aliens;
+            do_lunar_battle = true;
+
             next_mpp_stage();
             return ExodusMode::MODE_None;
         }
