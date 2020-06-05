@@ -933,6 +933,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_FoodPerishes) {
+        // SUGGEST: Should we include perished food in the report?
         p->perish_food();
         next_mpp_stage();
     }
