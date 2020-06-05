@@ -80,11 +80,7 @@ void BulletinDrawer::bulletin_draw_text() {
     }
 }
 
-void BulletinDrawer::bulletin_set_next_text(const char* in_text) {
-    bulletin_vset_next_text(in_text);
-}
-
-void BulletinDrawer::bulletin_vset_next_text(const char* in_text, ...) {
+void BulletinDrawer::bulletin_set_next_text(const char* in_text, ...) {
     if (bulletin_text_idx >= BULLETIN_LINES) {
         L.error("Tried to set invalid bulletin text index %d to %s", bulletin_text_idx, in_text);
         return;
@@ -113,10 +109,10 @@ void BulletinDrawer::bulletin_write_planet_info(Star* s, Planet* p) {
         col = COL_TEXT2;
 
     bulletin_set_text_col(col);
-    bulletin_vset_next_text("Planet %s, System %s", p->get_name(), s->name);
+    bulletin_set_next_text("Planet %s, System %s", p->get_name(), s->name);
     bulletin_set_next_text("");
     bulletin_set_text_col(col);
-    bulletin_vset_next_text("%s", owner ? owner->get_full_name() : "");
+    bulletin_set_next_text("%s", owner ? owner->get_full_name() : "");
     bulletin_set_next_text("");
 }
 

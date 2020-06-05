@@ -20,8 +20,7 @@ class BulletinDrawer {
         BulletinDrawer();
         void bulletin_start_new(bool);
         void bulletin_update(float);
-        void bulletin_set_next_text(const char*);
-        void bulletin_vset_next_text(const char*, ...);
+        void bulletin_set_next_text(const char*, ...);
         void bulletin_set_text_col(RGB);
         void bulletin_write_planet_info(Star*, Planet*);
         void bulletin_reset_text_cols();

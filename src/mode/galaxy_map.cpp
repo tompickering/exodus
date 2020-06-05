@@ -567,18 +567,18 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 bulletin_start_new(false);
                 bulletin_set_flag(IMG_TS1_FLAG16);
                 bulletin_set_text_col(COL_TEXT3);
-                bulletin_vset_next_text("%s HAS BUILT THE FIRST CITY", tmp_caps(owner->get_name()));
-                bulletin_vset_next_text("");
-                bulletin_vset_next_text("Words cannot describe what has been");
-                bulletin_vset_next_text("achieved by building the first city for the");
-                bulletin_vset_next_text("homeless colonists.");
-                bulletin_vset_next_text("");
-                bulletin_vset_next_text("This might be the beginning of a new era.");
-                bulletin_vset_next_text("");
-                bulletin_vset_next_text("But beware. A city can also be a centre");
-                bulletin_vset_next_text("for system enemies.");
-                bulletin_vset_next_text("");
-                bulletin_vset_next_text("A picture of the new city follows.");
+                bulletin_set_next_text("%s HAS BUILT THE FIRST CITY", tmp_caps(owner->get_name()));
+                bulletin_set_next_text("");
+                bulletin_set_next_text("Words cannot describe what has been");
+                bulletin_set_next_text("achieved by building the first city for the");
+                bulletin_set_next_text("homeless colonists.");
+                bulletin_set_next_text("");
+                bulletin_set_next_text("This might be the beginning of a new era.");
+                bulletin_set_next_text("");
+                bulletin_set_next_text("But beware. A city can also be a centre");
+                bulletin_set_next_text("for system enemies.");
+                bulletin_set_next_text("");
+                bulletin_set_next_text("A picture of the new city follows.");
                 do_first_city = true;
                 next_mpp_stage();
                 return ExodusMode::MODE_None;
@@ -612,14 +612,14 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             bulletin_set_bg(IMG_ME5_MENU);
             bulletin_set_active_player_flag();
             bulletin_write_planet_info(s, p);
-            bulletin_vset_next_text("METEOR STRIKES %s", tmp_caps(p->get_name()));
+            bulletin_set_next_text("METEOR STRIKES %s", tmp_caps(p->get_name()));
             bulletin_set_next_text("");
             if (owner->has_invention(INV_RadarExtension)) {
                 bulletin_set_next_text("The Radar Extension System made");
                 bulletin_set_next_text("an early destroying of the dangerous");
                 bulletin_set_next_text("fragments possible.");
             } else {
-                bulletin_vset_next_text("A meteor has reached the planet %s", p->get_name());
+                bulletin_set_next_text("A meteor has reached the planet %s", p->get_name());
                 bulletin_set_next_text("and several fragments of it have it");
                 bulletin_set_next_text("the world's surface.");
                 bulletin_set_next_text("");
@@ -628,7 +628,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 if (owner->is_human()) {
                     bulletin_set_next_text("Visual replay follows.");
                 } else {
-                    bulletin_vset_next_text("The planet has taken %d hits.", do_meteor_strikes);
+                    bulletin_set_next_text("The planet has taken %d hits.", do_meteor_strikes);
                 }
             }
             next_mpp_stage();
@@ -652,7 +652,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 bulletin_write_planet_info(s, p);
                 bulletin_set_next_text("PRIORITY ALPHA MESSAGE");
                 bulletin_set_next_text("");
-                bulletin_vset_next_text("Defects at %s have caused", p->get_name());
+                bulletin_set_next_text("Defects at %s have caused", p->get_name());
                 bulletin_set_next_text("some battle machines to be destructed.");
                 // TODO: Should we tell the player how many have been destroyed?
                 // TODO: News item (PROCdonotice)
@@ -673,11 +673,11 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             bulletin_set_active_player_flag();
             bulletin_write_planet_info(s, p);
             // TODO: Music
-            bulletin_vset_next_text("GEOLOGICAL CHANGE AT %s", tmp_caps(p->get_name()));
-            bulletin_vset_next_text("");
-            bulletin_vset_next_text("Due to a global climate effect,");
-            bulletin_vset_next_text("the planet's surface has changed from");
-            bulletin_vset_next_text("%s into %s.", before, after);
+            bulletin_set_next_text("GEOLOGICAL CHANGE AT %s", tmp_caps(p->get_name()));
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Due to a global climate effect,");
+            bulletin_set_next_text("the planet's surface has changed from");
+            bulletin_set_next_text("%s into %s.", before, after);
             next_mpp_stage();
             return ExodusMode::MODE_None;
         }
@@ -707,7 +707,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 bulletin_set_bg(p->sprites()->bulletin_bg);
                 bulletin_set_active_player_flag();
                 bulletin_write_planet_info(s, p);
-                bulletin_vset_next_text("PLAGUE AT %s", tmp_caps(p->get_name()));
+                bulletin_set_next_text("PLAGUE AT %s", tmp_caps(p->get_name()));
                 bulletin_set_next_text("");
                 bulletin_set_next_text("Large parts of cultivated area");
                 bulletin_set_next_text("have collapsed.");
@@ -775,11 +775,11 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 bulletin_set_bg(p->sprites()->bulletin_bg);
                 bulletin_set_active_player_flag();
                 bulletin_write_planet_info(s, p);
-                bulletin_vset_next_text("NUCLEAR MELTDOWN AT %s", tmp_caps(p->get_name()));
+                bulletin_set_next_text("NUCLEAR MELTDOWN AT %s", tmp_caps(p->get_name()));
                 bulletin_set_next_text("");
                 bulletin_set_next_text("");
                 bulletin_set_next_text("A badly protected plutonium reactor");
-                bulletin_vset_next_text("has contaminated %s.", p->get_name());
+                bulletin_set_next_text("has contaminated %s.", p->get_name());
                 // TODO: Destruction (PROCbombing)
                 // TODO: Visualisation of bombing - similar to meteor
                 next_mpp_stage();
@@ -832,7 +832,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             if (owner->is_human()) {
                 bulletin_set_next_text("You have lost all access to the planet.");
             } else {
-                bulletin_vset_next_text("%s has lost this planet.", owner->get_full_name());
+                bulletin_set_next_text("%s has lost this planet.", owner->get_full_name());
             }
             p->disown();
             next_mpp_stage();
