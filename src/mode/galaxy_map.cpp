@@ -213,7 +213,7 @@ ExodusMode GalaxyMap::update(float delta) {
                         bulletin_ensure_closed();
                         ephstate.set_ephemeral_state(EPH_Destruction);
                         ephstate.destruction.type = DESTROY_NRandom;
-                        ephstate.destruction.n_strikes = RND(7) + 1; // 2-8 hits
+                        ephstate.destruction.n_strikes = do_meteor_strikes;
                         ephstate.destruction.enable_explosions = true;
                         ephstate.destruction.irradiated = false;
                         ephstate.destruction.show_target = false;
@@ -622,13 +622,14 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 bulletin_vset_next_text("A meteor has reached the planet %s", p->get_name());
                 bulletin_set_next_text("and several fragments of it have it");
                 bulletin_set_next_text("the world's surface.");
+                bulletin_set_next_text("");
+                do_meteor = true;
+                do_meteor_strikes = RND(7) + 1; // 2-8 hits
                 if (owner->is_human()) {
-                    bulletin_set_next_text("");
                     bulletin_set_next_text("Visual replay follows.");
                 } else {
-                    // TODO: Should include "The planet has taken N hits."
+                    bulletin_vset_next_text("The planet has taken %d hits.", do_meteor_strikes);
                 }
-                do_meteor = true;
             }
             next_mpp_stage();
             return ExodusMode::MODE_None;

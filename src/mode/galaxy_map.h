@@ -143,6 +143,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
 
         bool do_first_city;
         bool do_meteor;
+        int do_meteor_strikes;
 };
 
 #endif
