@@ -81,15 +81,11 @@ void CommPanelDrawer::comm_set_img_caption(const char* text) {
     strncpy(comm_img_caption, text, COMM_MAX_TEXT - 1);
 }
 
-void CommPanelDrawer::comm_set_text(int idx, const char* in_text) {
-    comm_vset_text(idx, in_text);
-}
-
 void CommPanelDrawer::comm_set_buttons(bool buttons_on) {
     show_buttons = buttons_on;
 }
 
-void CommPanelDrawer::comm_vset_text(int idx, const char* in_text, ...) {
+void CommPanelDrawer::comm_set_text(int idx, const char* in_text, ...) {
     if (idx >= 6) {
         L.fatal("Tried to set invalid text index %d to %s", idx, in_text);
     }

@@ -136,10 +136,10 @@ ExodusMode GalaxyMap::update(float delta) {
                         comm_set_img_caption("COUNSELLOR");
                         if (selected_ft == gal->get_guild()) {
                             comm_set_text(0, "For our flight to the space");
-                            comm_vset_text(1, "guild, we need X months.", selected_ft->name);
+                            comm_set_text(1, "guild, we need X months.", selected_ft->name);
                         } else {
                             comm_set_text(0, "For our flight to the star");
-                            comm_vset_text(1, "%s, we need X months.", selected_ft->name);
+                            comm_set_text(1, "%s, we need X months.", selected_ft->name);
                         }
                         comm_set_text(2, "A pirate attack is unlikely.");
                         comm_set_text(4, "Do you wish to start?");

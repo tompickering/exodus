@@ -116,7 +116,7 @@ ExodusMode StarMap::update(float delta) {
                             if (!player->can_afford(planet->get_settlement_cost())) {
                                 comm_set_text(0, "We do not have the money for a");
                                 comm_set_text(1, "colonization.");
-                                comm_vset_text(3, "(Cost: %d MC)",
+                                comm_set_text(3, "(Cost: %d MC)",
                                     planet->get_settlement_cost());
                                 comm_open(6);
                                 stage = SM_CannotAffordSettle;
@@ -129,51 +129,51 @@ ExodusMode StarMap::update(float delta) {
                             if (planet->get_size() == PLANET_Medium) size_str = str_size_md;
                             if (planet->get_size() == PLANET_Large) size_str = str_size_lg;
                             if (!strnlen(planet->get_name(), 1)) {
-                                comm_vset_text(0, "Claim this %s planet?",
+                                comm_set_text(0, "Claim this %s planet?",
                                     planet->get_class_str_lower());
                             } else {
-                                comm_vset_text(0, "Claim planet %s?",
+                                comm_set_text(0, "Claim planet %s?",
                                     planet->get_name());
                             }
-                            comm_vset_text(1, "  Size: %s -> Cost: %d MC",
+                            comm_set_text(1, "  Size: %s -> Cost: %d MC",
                                 size_str, planet->get_settlement_cost());
-                            comm_vset_text(2, "Advantages / Disadvantages:");
+                            comm_set_text(2, "Advantages / Disadvantages:");
                             textidx = 3;
                             switch (planet->get_class()) {
                                 case Forest:
-                                    comm_vset_text(textidx++,
+                                    comm_set_text(textidx++,
                                         "  Good basis for agriculture");
                                     break;
                                 case Desert:
-                                    comm_vset_text(textidx++,
+                                    comm_set_text(textidx++,
                                         "  Possibly rich in minerals");
-                                    comm_vset_text(textidx++,
+                                    comm_set_text(textidx++,
                                         "  Bad basis for agriculture");
                                     break;
                                 case Volcano:
-                                    comm_vset_text(textidx++,
+                                    comm_set_text(textidx++,
                                         "  Plutonium prod. is very effective");
-                                    comm_vset_text(textidx++,
+                                    comm_set_text(textidx++,
                                         "  Bad basis for agriculture");
                                     break;
                                 case Rock:
-                                    comm_vset_text(textidx++,
+                                    comm_set_text(textidx++,
                                         "  Mining is very effective");
                                     break;
                                 case Ice:
-                                    comm_vset_text(textidx++,
+                                    comm_set_text(textidx++,
                                         "  Possibly rich in minerals");
-                                    comm_vset_text(textidx++,
+                                    comm_set_text(textidx++,
                                         "  Bad basis for agriculture");
                                     break;
                                 case Terra:
-                                    comm_vset_text(textidx++,
+                                    comm_set_text(textidx++,
                                         "  Good basis for agriculture");
                                     break;
                                 case Artificial:
-                                    comm_vset_text(textidx++,
+                                    comm_set_text(textidx++,
                                         "  The planet may be moved");
-                                    comm_vset_text(textidx++,
+                                    comm_set_text(textidx++,
                                         "  No mining possible");
                                     break;
                                 default:
@@ -181,7 +181,7 @@ ExodusMode StarMap::update(float delta) {
                             }
 
                             if (planet->is_named()) {
-                                comm_vset_text(textidx++,
+                                comm_set_text(textidx++,
                                     "  Possibly already built-up");
                             }
 

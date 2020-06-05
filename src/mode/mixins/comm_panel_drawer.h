@@ -36,8 +36,7 @@ class CommPanelDrawer {
         void comm_set_title(const char*);
         void comm_set_anim(const Anim&);
         void comm_set_img_caption(const char*);
-        void comm_set_text(int, const char*);
-        void comm_vset_text(int, const char*, ...);
+        void comm_set_text(int, const char*, ...);
         void comm_set_buttons(bool);
         void comm_open(int);
         void comm_close();
