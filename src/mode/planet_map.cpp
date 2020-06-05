@@ -92,6 +92,7 @@ Stone get_destroyed_stone(Stone st) {
 PlanetMap::PlanetMap() : ModeBase("PlanetMap") {
     stage = PM_Idle;
     draw_menu = true;
+    do_animations = true;
     blocks = 0;
     anim_cycle = 0;
     active_tool = DEFAULT_TOOL;
@@ -144,12 +145,16 @@ void PlanetMap::enter() {
 
     if (ephstate.get_ephemeral_state() == EPH_Destruction) {
         draw_menu = false;
+        do_animations = false;
         if (ephstate.destruction.draw) {
             draw();
+            draw_stones();
+            draw_manager.save_background();
         }
         stage = PM_Destruction;
     } else {
         draw_menu = true;
+        do_animations = true;
         draw();
         stage = PM_Idle;
     }
@@ -252,7 +257,7 @@ void PlanetMap::draw() {
 
     draw_manager.save_background();
 
-    draw_stones(true);
+    draw_stones();
 
     draw_manager.show_cursor(true);
 
@@ -265,11 +270,13 @@ void PlanetMap::draw() {
 ExodusMode PlanetMap::update(float delta) {
     SpriteClick click;
 
-    anim_cycle = fmod(anim_cycle + delta * ANIM_RATE, 1);
+    if (do_animations) {
+        anim_cycle = fmod(anim_cycle + delta * ANIM_RATE, 1);
+    }
 
     switch(stage) {
         case PM_Idle:
-            draw_stones(false);
+            draw_stones();
             update_gauges();
             draw_mc();
 
@@ -339,7 +346,7 @@ ExodusMode PlanetMap::update(float delta) {
             }
             break;
         case PM_Construct:
-            draw_stones(false);
+            draw_stones();
 
             if (!construct_anim) {
                 // Should not happen
@@ -379,7 +386,7 @@ ExodusMode PlanetMap::update(float delta) {
  * N.B. we use the term 'stone' from the original to mean 'any object
  * which can exist on the planet surface'.
  */
-void PlanetMap::draw_stones(bool all) {
+void PlanetMap::draw_stones() {
     for (int y = 0; y < blocks; ++y) {
         for (int x = 0; x < blocks; ++x) {
             Stone st = planet->get_stone(x, y);
@@ -388,11 +395,6 @@ void PlanetMap::draw_stones(bool all) {
                 continue;
 
             Anim *anim = get_stone_anim(st);
-
-            // If 'all' is set, don't draw stones that don't animate
-            if (anim && all && anim->is_static()) {
-                continue;
-            }
 
             const char* sprite = IMG_SU1_STONE7;
             if (anim) sprite = anim->interp(anim_cycle);
@@ -460,6 +462,9 @@ void PlanetMap::update_gauges() {
 }
 
 void PlanetMap::clear_surf(int x, int y) {
+    int sz = planet->get_size_blocks();
+    x = (x + sz) % sz;
+    y = (y + sz) % sz;
     int x_off = x * STONE_SZ;
     int y_off = y * STONE_SZ;
     SprID id_surfclear = draw_manager.new_sprite_id();
@@ -977,7 +982,7 @@ ExodusMode PlanetMap::update_destruction(float delta) {
     destruction_time += delta;
 
     if (do_draw) {
-        draw_stones(false);
+        draw_stones();
         if (explosion_interp >= 1) {
             exploding = EXP_Done;
             explosion_interp = 0;
@@ -1047,6 +1052,7 @@ ExodusMode PlanetMap::update_destruction(float delta) {
         }
 
         if (exploding == EXP_Done) {
+            clear_surf(explode_x, explode_y);
             planet->set_stone_wrap(
                 explode_x, explode_y,
                 d.irradiated ? STONE_Radiation : get_destroyed_stone(exploding_stone));
@@ -1075,6 +1081,7 @@ ExodusMode PlanetMap::update_destruction(float delta) {
                             Stone to_stone = STONE_Radiation;
                             if (exploding_stone == STONE_Port2)
                                 to_stone = get_destroyed_stone(s);
+                            clear_surf(cx, cy);
                             planet->set_stone_wrap(cx, cy, to_stone);
                         }
                     }

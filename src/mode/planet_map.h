@@ -69,11 +69,12 @@ class PlanetMap : ModeBase {
         int menu_x;
         int menu_y;
         int blocks;
-        void draw_stones(bool);
+        void draw_stones();
         void update_gauges();
         void clear_surf(int, int);
 
         bool draw_menu;
+        bool do_animations;
 
         float construct_progress;
         Anim* construct_anim;
