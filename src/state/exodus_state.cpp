@@ -295,6 +295,17 @@ unsigned int ExodusState::get_month() {
     return month;
 }
 
+unsigned int ExodusState::get_orig_month() {
+    /*
+     * For some reason, the original tracks months at 1 greater than what is
+     * displayed in the UI. The 'months' variable is set to 2 during some of
+     * the game init, in PROCstart_the_lords.
+     * It's easier to equate the original and new code when we can see that
+     * it's using the same month measure, so provide an interface.
+     */
+    return get_month() - 1;
+}
+
 void ExodusState::advance_month() {
     ++month;
 }

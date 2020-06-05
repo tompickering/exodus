@@ -694,7 +694,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     if (mpp_stage == MPP_Epidemic) {
         // PROCepidemic(1) case
         if (onein(150)) {
-            if (exostate.get_month() >= 10 && !owner->has_invention(INV_Acid)) {
+            if (exostate.get_orig_month() >= 10 && !owner->has_invention(INV_Acid)) {
                 int to_die = RND(15);
                 if (p->count_stones(STONE_Agri) < 15) to_die = RND(5);
                 int sz = p->get_size_blocks();
