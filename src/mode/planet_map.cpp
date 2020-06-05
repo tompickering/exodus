@@ -237,7 +237,6 @@ void PlanetMap::draw() {
             draw_tool_rect(t, COL_TOOL);
         }
 
-        set_tool(DEFAULT_TOOL);
     }
 
     int sz = blocks * STONE_SZ;
@@ -256,6 +255,10 @@ void PlanetMap::draw() {
     draw_stones(true);
 
     draw_manager.show_cursor(true);
+
+    if (draw_menu) {
+        set_tool(DEFAULT_TOOL);
+    }
 }
 
 
