@@ -909,7 +909,12 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_Trade) {
-        // TODO
+        if (p->count_stones(STONE_Trade)) {
+            TradeReport rpt = p->monthly_trade();
+            report.add_line("Trading Centre sold:");
+            report.add_line("Mi: %d / Fd: %d / Pl: %d => %dMC",
+                             rpt.mi,  rpt.fd,  rpt.pl, rpt.mc);
+        }
         next_mpp_stage();
     }
 

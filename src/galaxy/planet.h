@@ -95,6 +95,13 @@ typedef struct {
     int not_produced;
 } ProductionReport;
 
+typedef struct {
+    int mi;
+    int fd;
+    int pl;
+    int mc;
+} TradeReport;
+
 class Planet {
     public:
         Planet();
@@ -175,6 +182,7 @@ class Planet {
         void produce_food();
         void produce_plutonium();
         ProductionReport produce_military();
+        TradeReport monthly_trade();
         void mine();
         void perish_food();
         int get_resource_cap();

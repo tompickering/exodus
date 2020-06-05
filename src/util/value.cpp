@@ -17,3 +17,15 @@ bool in_radius(float x, float y, float ax, float ay, float r) {
     float dy = y - ay;
     return dx*dx + dy*dy <= r*r;
 }
+
+int min(int a, int b) {
+    if (a < b)
+        return a;
+    return b;
+}
+
+int max(int a, int b) {
+    if (a > b)
+        return a;
+    return b;
+}

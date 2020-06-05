@@ -10,6 +10,8 @@
 #include "assetpaths.h"
 #include "shared.h"
 
+#include "util/value.h"
+
 extern ExodusState exostate;
 
 PlanetSpriteSet sprite_sets[7];
@@ -1077,6 +1079,60 @@ ProductionReport Planet::produce_military() {
 
     rpt.not_produced = (max_inf + max_gli + max_art)
                      - (prod_inf + prod_gli + prod_art);
+
+    return rpt;
+}
+
+TradeReport Planet::monthly_trade() {
+    TradeReport rpt;
+    int n = count_stones(STONE_Trade);
+
+    if (n == 0) {
+        L.error("Trade requested on planet with no trade centre");
+    }
+
+    if (!is_owned()) {
+        L.fatal("Trade requested on unowned planet");
+    }
+
+    Player *o = exostate.get_player(get_owner());
+
+
+    rpt.mi = 0;
+    rpt.fd = 0;
+    rpt.pl = 0;
+    rpt.mc = 0;
+
+    int max_trade_mi = min(reserves_min,   50*n);
+    int max_trade_fd = min(reserves_food, 100*n);
+    int max_trade_pl = min(reserves_plu,   50*n);
+
+    if (has_law(LAW_TradeMinerals) && max_trade_mi > 1) {
+        rpt.mi = RND(max_trade_mi);
+    }
+
+    if (has_law(LAW_TradeFood) && max_trade_fd > 5) {
+        rpt.fd = RND(max_trade_fd - 4);
+    }
+
+    if (has_law(LAW_TradePlutonium) && max_trade_pl > 1) {
+        rpt.pl = RND(max_trade_pl);
+    }
+
+    rpt.mc += rpt.mi * 2;
+    reserves_min -= rpt.mi;
+
+    rpt.mc += max(rpt.fd / 2, rpt.fd > 0 ? 1 : 0);
+    reserves_food -= rpt.fd;
+
+    rpt.mc += rpt.pl * 2;
+    reserves_plu -= rpt.pl;
+
+    if (rpt.pl > 0) {
+        // TODO: Criminal record for plutonium trade!
+    }
+
+    o->give_mc(rpt.mc);
 
     return rpt;
 }
