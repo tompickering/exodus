@@ -919,7 +919,6 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_VillageGifts) {
-        // This is incredibly uncommon - but possible
         int n_villages = p->count_stones(STONE_Village);
         if (owner && n_villages > 2) {
             int mc = RND(n_villages);
