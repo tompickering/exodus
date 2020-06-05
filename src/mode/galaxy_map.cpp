@@ -727,7 +727,20 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     // Doesn't cause planet loss - only damage
     if (mpp_stage == MPP_AlienAttack) {
-        // TODO
+        if (onein(200) && exostate.get_orig_month() >= 10) {
+            // TODO: PROCdonotice, music
+            bulletin_start_new(false);
+            bulletin_set_bg(p->sprites()->bulletin_bg);
+            bulletin_set_active_player_flag();
+            bulletin_write_planet_info(s, p);
+            bulletin_set_next_text("ALIEN PIRATES AT %s", tmp_caps(p->get_name()));
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Alien space pirates are about to");
+            bulletin_set_next_text("storm %s's moon and the planet.", p->get_name());
+            // TODO: Battle
+            next_mpp_stage();
+            return ExodusMode::MODE_None;
+        }
         next_mpp_stage();
     }
 
