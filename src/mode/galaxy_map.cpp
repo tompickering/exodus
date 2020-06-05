@@ -219,7 +219,7 @@ ExodusMode GalaxyMap::update(float delta) {
                         ephstate.destruction.show_target = false;
                         ephstate.destruction.draw = exostate.get_active_player()->is_human();
                         L.debug("METEOR: %d impacts", ephstate.destruction.n_strikes);
-                        // TODO: PlanetMap should show number of strikes, no sidebar
+                        // TODO: PlanetMap should show number of strikes
                         return ephstate.get_appropriate_mode();
                     }
                 }

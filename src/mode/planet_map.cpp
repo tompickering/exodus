@@ -91,6 +91,7 @@ Stone get_destroyed_stone(Stone st) {
 
 PlanetMap::PlanetMap() : ModeBase("PlanetMap") {
     stage = PM_Idle;
+    draw_menu = true;
     blocks = 0;
     anim_cycle = 0;
     active_tool = DEFAULT_TOOL;
@@ -142,11 +143,13 @@ void PlanetMap::enter() {
     exploding_stone = STONE_Clear;
 
     if (ephstate.get_ephemeral_state() == EPH_Destruction) {
+        draw_menu = false;
         if (ephstate.destruction.draw) {
             draw();
         }
         stage = PM_Destruction;
     } else {
+        draw_menu = true;
         draw();
         stage = PM_Idle;
     }
@@ -163,72 +166,78 @@ void PlanetMap::draw() {
         26, 8,
         COL_TEXT);
 
-    draw_manager.fill(
-        {menu_x, menu_y, 126, 447},
-        COL_BORDERS);
+    DrawArea area;
 
-    DrawArea area = {0, 0, 126, 196};
-    draw_manager.set_source_region(id(ID::MENU_BG), &area);
-    draw_manager.draw(
-        id(ID::MENU_BG),
-        planet->sprites()->surf,
-        {menu_x, menu_y,
-        0, 0, 1, 1});
-    draw_manager.draw(
-        id(ID::MENU),
-        IMG_SU1_MENU,
-        {menu_x, menu_y,
-        0, 0, 1, 1});
+    if (draw_menu) {
+        draw_manager.fill(
+            {menu_x, menu_y, 126, 447},
+            COL_BORDERS);
 
-    draw_manager.pattern_fill({menu_x + 4, menu_y + 198, 118, 24});
-    draw_manager.draw(
-        id(ID::ICON_FOOD),
-        IMG_SU1_CTRL1,
-        {menu_x + 6, menu_y + 200,
-        0, 0, 1, 1});
+        area = {0, 0, 126, 196};
+        draw_manager.set_source_region(id(ID::MENU_BG), &area);
+        draw_manager.draw(
+            id(ID::MENU_BG),
+            planet->sprites()->surf,
+            {menu_x, menu_y,
+            0, 0, 1, 1});
+        draw_manager.draw(
+            id(ID::MENU),
+            IMG_SU1_MENU,
+            {menu_x, menu_y,
+            0, 0, 1, 1});
 
-    draw_manager.draw(
-        id(ID::ICON_PLU),
-        IMG_SU1_CTRL2,
-        {menu_x + 48, menu_y + 200,
-        0, 0, 1, 1});
+        draw_manager.pattern_fill({menu_x + 4, menu_y + 198, 118, 24});
+        draw_manager.draw(
+            id(ID::ICON_FOOD),
+            IMG_SU1_CTRL1,
+            {menu_x + 6, menu_y + 200,
+            0, 0, 1, 1});
 
-    draw_manager.draw(
-        id(ID::ICON_UNREST),
-        IMG_SU1_CTRL3,
-        {menu_x + 90, menu_y + 200,
-        0, 0, 1, 1});
+        draw_manager.draw(
+            id(ID::ICON_PLU),
+            IMG_SU1_CTRL2,
+            {menu_x + 48, menu_y + 200,
+            0, 0, 1, 1});
 
-    update_gauges();
+        draw_manager.draw(
+            id(ID::ICON_UNREST),
+            IMG_SU1_CTRL3,
+            {menu_x + 90, menu_y + 200,
+            0, 0, 1, 1});
 
-    draw_manager.pattern_fill({menu_x + 4, menu_y + 226, 118, 66});
-    draw_manager.pattern_fill({menu_x + 4, menu_y + 296, 118, 26});
-    draw_manager.pattern_fill({menu_x + 4, menu_y + 326, 118, 26});
+        update_gauges();
 
-    draw_manager.draw(
-        id(ID::TRIBUTTONS),
-        IMG_SU1_TRI,
-        {menu_x + 4, menu_y + 383,
-        0, 1, 1, 1});
+        draw_manager.pattern_fill({menu_x + 4, menu_y + 226, 118, 66});
+        draw_manager.pattern_fill({menu_x + 4, menu_y + 296, 118, 26});
+        draw_manager.pattern_fill({menu_x + 4, menu_y + 326, 118, 26});
 
-    set_build_button(false);
+        draw_manager.draw(
+            id(ID::TRIBUTTONS),
+            IMG_SU1_TRI,
+            {menu_x + 4, menu_y + 383,
+            0, 1, 1, 1});
 
-    draw_manager.draw(
-        id(ID::EXIT),
-        IMG_SU1_EXPORT,
-        {menu_x + 4, menu_y + 443,
-        0, 1, 1, 1});
+        set_build_button(false);
 
-    draw_manager.draw(
-        get_stone_anim(STONE_Agri)->frame(0),
-        {541, 47,
-        0, 0, 1, 1});
+        draw_manager.draw(
+            id(ID::EXIT),
+            IMG_SU1_EXPORT,
+            {menu_x + 4, menu_y + 443,
+            0, 1, 1, 1});
 
-    if (planet->has_lunar_base())
-        hide_lunar_base_tool();
+        draw_manager.draw(
+            get_stone_anim(STONE_Agri)->frame(0),
+            {541, 47,
+            0, 0, 1, 1});
 
-    for (Tool t = (Tool)0; t < TOOL_END; t = (Tool)((int)t + 1)) {
-        draw_tool_rect(t, COL_TOOL);
+        if (planet->has_lunar_base())
+            hide_lunar_base_tool();
+
+        for (Tool t = (Tool)0; t < TOOL_END; t = (Tool)((int)t + 1)) {
+            draw_tool_rect(t, COL_TOOL);
+        }
+
+        set_tool(DEFAULT_TOOL);
     }
 
     int sz = blocks * STONE_SZ;
@@ -247,8 +256,6 @@ void PlanetMap::draw() {
     draw_stones(true);
 
     draw_manager.show_cursor(true);
-
-    set_tool(DEFAULT_TOOL);
 }
 
 

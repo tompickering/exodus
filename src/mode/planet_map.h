@@ -73,6 +73,8 @@ class PlanetMap : ModeBase {
         void update_gauges();
         void clear_surf(int, int);
 
+        bool draw_menu;
+
         float construct_progress;
         Anim* construct_anim;
 
