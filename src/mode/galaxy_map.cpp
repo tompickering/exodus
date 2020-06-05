@@ -964,7 +964,14 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mpp_stage == MPP_VillageExpansion) {
-        // TODO
+        for (int i = 0; i < p->count_stones(STONE_Village); ++i) {
+            if (onein(18)) {
+                // N.B. Orig doesn't report in bulletin or news item.
+                // Perhaps this reflects the independence of the village.
+                p->expand_village();
+                break;
+            }
+        }
         next_mpp_stage();
     }
 

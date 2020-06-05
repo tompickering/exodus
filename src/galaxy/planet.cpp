@@ -1222,15 +1222,29 @@ void Planet::disown() {
 }
 
 bool Planet::expand_city() {
-    L.info("City expanding on %s", get_name());
+    return expand(STONE_City);
+}
+
+bool Planet::expand_village() {
+    return expand(STONE_Village);
+}
+
+bool Planet::expand(Stone st) {
+    L.info("Expanding %d on %s", st, get_name());
 
     // Find expansion candidates
     int count = 0;
     int sz = get_size_blocks();
     for (int j = 0; j < sz; ++j) {
         for (int i = 0; i < sz; ++i) {
-            if (get_stone(i, j) == STONE_City) {
-                if (next_to_4(i, j, STONE_Clear) || next_to_4(i, j, STONE_NaturalSmall)) {
+            if (get_stone(i, j) == st) {
+                bool valid = false;
+                if (next_to_4(i, j, STONE_Clear)) valid = true;
+                if (next_to_4(i, j, STONE_NaturalSmall)) valid = true;
+                // Villages can expand onto cities!  This is explicit in PROCcs_alexpand.
+                if (st == STONE_Village && next_to_4(i, j, STONE_City)) valid = true;
+
+                if (valid) {
                     ++count;
                 }
             }
@@ -1246,10 +1260,16 @@ bool Planet::expand_city() {
 
     for (int j = 0; j < sz; ++j) {
         for (int i = 0; i < sz; ++i) {
-            if (get_stone(i, j) == STONE_City) {
-                if (next_to_4(i, j, STONE_Clear) || next_to_4(i, j, STONE_NaturalSmall)) {
+            if (get_stone(i, j) == st) {
+                bool valid = false;
+                if (next_to_4(i, j, STONE_Clear)) valid = true;
+                if (next_to_4(i, j, STONE_NaturalSmall)) valid = true;
+                // Villages can expand onto cities!  This is explicit in PROCcs_alexpand.
+                if (st == STONE_Village && next_to_4(i, j, STONE_City)) valid = true;
+
+                if (valid) {
                     if (idx == 0) {
-                        // Expand this city
+                        // Expand this stone
                         uint8_t dirs_tried = 0;
                         while (dirs_tried < 0xF) {
                             int dir = rand() % 4;
@@ -1264,8 +1284,8 @@ bool Planet::expand_city() {
                             if (dir == 3) j_off--;
                             Stone tgt = get_stone_wrap(i + i_off, j + j_off);
                             if (tgt == STONE_Clear || tgt == STONE_NaturalSmall) {
-                                set_stone_wrap(i + i_off, j + j_off, STONE_City);
-                                L.info("City expansion %d,%d", i, j);
+                                set_stone_wrap(i + i_off, j + j_off, st);
+                                L.info("Expansion %d,%d", i, j);
                                 return true;
                             }
                         }

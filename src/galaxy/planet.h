@@ -193,6 +193,7 @@ class Planet {
         void adjust_army(int, int, int);
         void disown();
         bool expand_city();
+        bool expand_village();
         bool agri_collapse();
         void monthly_processing_start();
         bool monthly_processing_in_progress();
@@ -200,6 +201,8 @@ class Planet {
         void init();
 
         bool _exists;
+
+        bool expand(Stone);
 
         PlanetClass cls;
         MoonClass moon_cls;    // Determines battle background. Orig was random each time.
