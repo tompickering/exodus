@@ -197,6 +197,7 @@ class Planet {
         bool agri_collapse();
         void monthly_processing_start();
         bool monthly_processing_in_progress();
+        void plunder();
     private:
         void init();
 

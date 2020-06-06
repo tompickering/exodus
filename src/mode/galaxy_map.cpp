@@ -765,7 +765,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 bulletin_set_next_text("The pirates have succeeded.");
                 bulletin_set_next_text("Nobody can prevent them now");
                 bulletin_set_next_text("from plundering the planet.");
-                // TODO: Plundering
+                p->plunder();
             } else {
                 // TODO: This should use full name with SG title
                 bulletin_set_next_text("%s could keep the planet.", owner->get_full_name());

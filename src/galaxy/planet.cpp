@@ -1367,3 +1367,19 @@ void Planet::monthly_processing_start() {
 bool Planet::monthly_processing_in_progress() {
     return processing_in_progress;
 }
+
+void Planet::plunder() {
+    // Orig sets to 2 - so if we have none then pirates give us food!
+    reserves_food = min(reserves_food, 2);
+    int sz = get_size_blocks();
+    for (int j = 0; j < sz; ++j) {
+        for (int i = 0; i < sz; ++i) {
+            if (onein(2)) {
+                Stone st = get_stone(i, j);
+                if (st == STONE_Agri) set_stone(i, j, STONE_AgriDead);
+                if (st == STONE_City) set_stone(i, j, STONE_Rubble);
+            }
+        }
+    }
+
+}
