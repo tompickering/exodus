@@ -753,6 +753,16 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
+    if (mpp_stage == MPP_AlienAttackResult) {
+        if (ephstate.get_ephemeral_state() == EPH_LunarBattleReport) {
+            // TODO: Respond to battle aftermath.
+            LunarBattleReport &rpt = ephstate.lunar_battle_report;
+            L.debug("<ALIENS %s>", rpt.aggressor_won ? "WON" : "LOST");
+            ephstate.clear_ephemeral_state();
+        }
+        next_mpp_stage();
+    }
+
     if (mpp_stage == MPP_Research2) {
         // TODO
         next_mpp_stage();

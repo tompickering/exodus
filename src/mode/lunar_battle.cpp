@@ -16,12 +16,17 @@ void LunarBattle::enter() {
 }
 
 ExodusMode LunarBattle::update(float delta) {
+    LunarBattleParams &b = ephstate.lunar_battle;
+    LunarBattleReport &rpt = ephstate.lunar_battle_report;
+
     L.debug("<<< LUNAR BATTLE PLACEHOLDER >>>>");
 
-    if (draw_manager.clicked()) {
-        ephstate.clear_ephemeral_state();
-        return ExodusMode::MODE_Pop;
-    }
+    // TODO: Battle - in the meantime just fake result!
+    rpt.aggressor_units_lost = 11;
+    rpt.defender_units_lost = 7;
+    rpt.aggressor_won = (bool)(rand() % 2);
+    ephstate.set_ephemeral_state(EPH_LunarBattleReport);
+    return ephstate.get_appropriate_mode();
 
     return ExodusMode::MODE_None;
 }

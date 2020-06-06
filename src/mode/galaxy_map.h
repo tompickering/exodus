@@ -85,6 +85,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
             MPP_ClimateChange,
             MPP_Epidemic,
             MPP_AlienAttack,
+            MPP_AlienAttackResult,
             MPP_Research2,
             MPP_DiscoverSpecies,
             MPP_CityEpidemic,

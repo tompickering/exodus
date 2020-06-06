@@ -12,15 +12,25 @@
 #include "galaxy/planet.h"
 
 enum AggressorType {
-    AGG_Lord,
+    AGG_Player,
     AGG_Rebels,
     AGG_Aliens,
 };
 
 typedef struct {
     AggressorType aggressor_type;
-    int aggressor_lord_idx;
+    int aggressor_idx;
+    bool human_battle;
+    bool human_attacking;  // Separate to support
+    bool human_defending;  // multiplayer PvP.
+    bool auto_battle;
 } LunarBattleParams;
+
+typedef struct {
+    int aggressor_units_lost;
+    int defender_units_lost;
+    bool aggressor_won;
+} LunarBattleReport;
 
 enum DestructionType {
     DESTROY_NStones,
@@ -41,6 +51,7 @@ enum EphState {
     EPH_None,
     EPH_LunarBattlePrep,
     EPH_LunarBattle,
+    EPH_LunarBattleReport,
     EPH_Destruction,
 };
 
@@ -53,6 +64,7 @@ class EphemeralState {
         ExodusMode get_appropriate_mode();
 
         LunarBattleParams lunar_battle;
+        LunarBattleReport lunar_battle_report;
         PlanetDestruction destruction;
     private:
         EphState eph_state;

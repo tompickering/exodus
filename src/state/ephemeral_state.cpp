@@ -24,6 +24,11 @@ ExodusMode EphemeralState::get_appropriate_mode() {
             return ExodusMode::MODE_LunarBattlePrep;
         case EPH_LunarBattle:
             return ExodusMode::MODE_LunarBattle;
+        case EPH_LunarBattleReport:
+            // This is a little hacky - but battles should always return
+            // to the previous mode, which should expect and respond to
+            // EPH_LunarBattleReport.
+            return ExodusMode::MODE_Pop;
         case EPH_Destruction:
             return ExodusMode::MODE_PlanetMap;
     }
