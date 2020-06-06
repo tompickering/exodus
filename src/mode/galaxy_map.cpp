@@ -49,6 +49,7 @@ void GalaxyMap::enter() {
     }
 
     selected_ft = nullptr;
+    draw_manager.show_cursor(true);
 }
 
 const float FADE_SPEED = 10.f;
