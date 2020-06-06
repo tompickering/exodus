@@ -17,6 +17,11 @@ void LunarBattle::enter() {
 
 ExodusMode LunarBattle::update(float delta) {
     L.debug("<<< LUNAR BATTLE PLACEHOLDER >>>>");
-    ephstate.clear_ephemeral_state();
-    return ExodusMode::MODE_Pop;
+
+    if (draw_manager.clicked()) {
+        ephstate.clear_ephemeral_state();
+        return ExodusMode::MODE_Pop;
+    }
+
+    return ExodusMode::MODE_None;
 }

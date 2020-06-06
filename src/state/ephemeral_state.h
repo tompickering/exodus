@@ -39,6 +39,7 @@ typedef struct {
 
 enum EphState {
     EPH_None,
+    EPH_LunarBattlePrep,
     EPH_LunarBattle,
     EPH_Destruction,
 };

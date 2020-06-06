@@ -743,7 +743,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             bulletin_set_next_text("Alien space pirates are about to");
             bulletin_set_next_text("storm %s's moon and the planet.", p->get_name());
 
-            ephstate.set_ephemeral_state(EPH_LunarBattle);
+            ephstate.set_ephemeral_state(EPH_LunarBattlePrep);
             ephstate.lunar_battle.aggressor_type = AGG_Aliens;
             do_lunar_battle = true;
 
