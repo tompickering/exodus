@@ -36,6 +36,7 @@ class LunarBattle : ModeBase, CommPanelDrawer {
     public:
         LunarBattle();
         virtual void enter() override;
+        virtual void exit() override;
         virtual ExodusMode update(float) override;
     private:
         enum Stage {
@@ -46,46 +47,52 @@ class LunarBattle : ModeBase, CommPanelDrawer {
 
         int n_units;
         BattleUnit units[BATTLE_UNITS_MAX];
+        SprID unit_ids[BATTLE_UNITS_MAX];
 
         bool use_alt_aliens;
+
+        void place_units();
+        void place_unit(BattleUnit);
+
+        void draw_units();
 };
 
-class Inf : BattleUnit {
+class Inf : public BattleUnit {
     public:
         Inf(int, int, int, bool);
 };
 
-class Gli : BattleUnit {
+class Gli : public BattleUnit {
     public:
         Gli(int, int, int, bool);
 };
 
-class Art : BattleUnit {
+class Art : public BattleUnit {
     public:
         Art(int, int, int, bool);
 };
 
-class LBGun : BattleUnit {
+class LBGun : public BattleUnit {
     public:
         LBGun(int, int);
 };
 
-class LBCtl : BattleUnit {
+class LBCtl : public BattleUnit {
     public:
         LBCtl(int, int);
 };
 
-class Rebel : BattleUnit {
+class Rebel : public BattleUnit {
     public:
         Rebel(int, int, int);
 };
 
-class AInf : BattleUnit {
+class AInf : public BattleUnit {
     public:
         AInf(int, int, int, bool);
 };
 
-class AArt : BattleUnit {
+class AArt : public BattleUnit {
     public:
         AArt(int, int, int, bool);
 };

@@ -31,9 +31,27 @@ void LunarBattle::enter() {
             p->moon_sprites()->bg,
             {SURF_X, SURF_Y, 0, 0, 1, 1});
         draw_manager.save_background();
+
+        for (int i = 0; i < BATTLE_UNITS_MAX; ++i) {
+            unit_ids[i] = draw_manager.new_sprite_id();
+        }
+
+        place_units();
     }
 
     draw_manager.show_cursor(!b.auto_battle);
+}
+
+void LunarBattle::exit() {
+    LunarBattleParams &b = ephstate.lunar_battle;
+
+    if (!b.auto_battle) {
+        for (int i = 0; i < BATTLE_UNITS_MAX; ++i) {
+            draw_manager.release_sprite_id(unit_ids[i]);
+        }
+    }
+
+    ModeBase::exit();
 }
 
 ExodusMode LunarBattle::update(float delta) {
@@ -51,7 +69,36 @@ ExodusMode LunarBattle::update(float delta) {
         return ephstate.get_appropriate_mode();
     }
 
+    draw_units();
+
     return ExodusMode::MODE_None;
+}
+
+void LunarBattle::place_units() {
+    Planet *p = exostate.get_active_planet();
+
+    if (p->has_lunar_base()) {
+        place_unit(LBCtl(14, 5));
+        place_unit(LBGun(13, 5));
+        place_unit(LBGun(13, 4));
+        place_unit(LBGun(13, 6));
+        place_unit(LBGun(12, 5));
+    }
+}
+
+void LunarBattle::place_unit(BattleUnit unit) {
+    units[n_units++] = unit;
+}
+
+void LunarBattle::draw_units() {
+    for (int i = 0; i < n_units; ++i) {
+        draw_manager.draw(
+            unit_ids[i],
+            units[i].idle,
+            {SURF_X + units[i].x * BLK_SZ,
+             SURF_Y + units[i].y * BLK_SZ,
+             0, 0, 1, 1});
+    }
 }
 
 BattleUnit::BattleUnit(int _x, int _y, int _hp, bool _def)
