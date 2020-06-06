@@ -755,10 +755,24 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     if (mpp_stage == MPP_AlienAttackResult) {
         if (ephstate.get_ephemeral_state() == EPH_LunarBattleReport) {
-            // TODO: Respond to battle aftermath.
             LunarBattleReport &rpt = ephstate.lunar_battle_report;
-            L.debug("<ALIENS %s>", rpt.aggressor_won ? "WON" : "LOST");
             ephstate.clear_ephemeral_state();
+            bulletin_start_new(true);
+            bulletin_set_bg(p->sprites()->bulletin_bg);
+            bulletin_set_active_player_flag();
+            bulletin_write_planet_info(s, p);
+            if (rpt.aggressor_won) {
+                bulletin_set_next_text("The pirates have succeeded.");
+                bulletin_set_next_text("Nobody can prevent them now");
+                bulletin_set_next_text("from plundering the planet.");
+                // TODO: Plundering
+            } else {
+                // TODO: This should use full name with SG title
+                bulletin_set_next_text("%s could keep the planet.", owner->get_full_name());
+                bulletin_set_next_text("The pirates did not succeed.");
+            }
+            next_mpp_stage();
+            return ExodusMode::MODE_None;
         }
         next_mpp_stage();
     }
