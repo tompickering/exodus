@@ -86,6 +86,12 @@ typedef struct {
 } PlanetSpriteSet;
 
 typedef struct {
+    const char *bg;
+    const char *cover0;
+    const char *cover1;
+} MoonSpriteSet;
+
+typedef struct {
     bool no_money;
     bool no_space;
     bool no_plu;
@@ -110,6 +116,7 @@ class Planet {
         PlanetClass get_class();
         const char* get_class_str();
         const char* get_class_str_lower();
+        MoonClass get_moon_class();
         int get_diameter();
         PlanetSize get_size();
         int get_size_blocks();
@@ -130,6 +137,7 @@ class Planet {
         bool is_named();
         const char* get_name_suggestion();
         const PlanetSpriteSet* sprites();
+        const MoonSpriteSet* moon_sprites();
         bool is_owned();
         int get_owner();
         void set_owner(int);

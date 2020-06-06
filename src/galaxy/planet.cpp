@@ -15,7 +15,9 @@
 extern ExodusState exostate;
 
 PlanetSpriteSet sprite_sets[7];
+MoonSpriteSet moon_sprite_sets[3];
 bool sprite_sets_initialised = false;
+
 
 const char** get_names_for_class(PlanetClass cls) {
     if (cls == Forest)     return PLANET_NAMES_FOREST;
@@ -78,6 +80,10 @@ PlanetClass Planet::get_class() {
 
 const char* Planet::get_name() {
     return name;
+}
+
+MoonClass Planet::get_moon_class() {
+    return moon_cls;
 }
 
 void Planet::set_name(const char* _name) {
@@ -664,11 +670,30 @@ void init_sprite_sets() {
     sprite_sets[Artificial].map_bg                     = IMG_PLANET_ART;
     sprite_sets[Artificial].surf                       = IMG_SF8;
     sprite_sets[Artificial].bulletin_bg                = IMG_PL8_PLANET8;
+
+    moon_sprite_sets[MOON_Dirt].bg                     = IMG_GF1;
+    moon_sprite_sets[MOON_Dirt].cover0                 = IMG_GF1_30;
+    moon_sprite_sets[MOON_Dirt].cover1                 = IMG_GF1_31;
+
+    moon_sprite_sets[MOON_Ice].bg                      = IMG_GF2;
+    moon_sprite_sets[MOON_Ice].cover0                  = IMG_GF2_30;
+    moon_sprite_sets[MOON_Ice].cover1                  = IMG_GF2_31;
+
+    moon_sprite_sets[MOON_Grass].bg                    = IMG_GF3;
+    moon_sprite_sets[MOON_Grass].cover0                = IMG_GF3_30;
+    moon_sprite_sets[MOON_Grass].cover1                = IMG_GF3_31;
+
+    sprite_sets_initialised = true;
 }
 
 const PlanetSpriteSet* Planet::sprites() {
     if (!sprite_sets_initialised) init_sprite_sets();
     return &sprite_sets[get_class()];
+}
+
+const MoonSpriteSet* Planet::moon_sprites() {
+    if (!sprite_sets_initialised) init_sprite_sets();
+    return &moon_sprite_sets[get_moon_class()];
 }
 
 const char* Planet::get_class_str() {

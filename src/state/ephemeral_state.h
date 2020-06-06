@@ -24,6 +24,9 @@ typedef struct {
     bool human_attacking;  // Separate to support
     bool human_defending;  // multiplayer PvP.
     bool auto_battle;
+    bool aggressor_manual_placement;
+    bool defender_manual_placement;
+    int group_size;
 } LunarBattleParams;
 
 typedef struct {

@@ -31,6 +31,8 @@ void LunarBattlePrep::enter() {
     Player *aggressor = nullptr;
 
     b.human_attacking = false;
+    b.aggressor_manual_placement = false;
+    b.defender_manual_placement = false;
 
     if (b.aggressor_type == AGG_Player) {
         aggressor = exostate.get_player(b.aggressor_idx);
@@ -69,7 +71,10 @@ ExodusMode LunarBattlePrep::update(float delta) {
 
     if (draw_manager.clicked()) {
         // TODO: Set this based on 'wait for the report' selection
-        b.auto_battle = true;
+        b.auto_battle = false;
+        // TODO: Set this based on preferences
+        b.aggressor_manual_placement = false;
+        b.defender_manual_placement = false;
         ephstate.set_ephemeral_state(EPH_LunarBattle);
         return ephstate.get_appropriate_mode();
     }
