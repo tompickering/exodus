@@ -56,6 +56,8 @@ void LunarBattlePrep::enter() {
         draw_manager.draw(IMG_BATTLE_PREP);
         draw_manager.save_background();
     }
+
+    draw_manager.show_cursor(b.human_battle);
 }
 
 ExodusMode LunarBattlePrep::update(float delta) {
