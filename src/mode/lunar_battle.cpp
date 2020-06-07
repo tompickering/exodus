@@ -86,8 +86,6 @@ ExodusMode LunarBattle::update(float delta) {
     LunarBattleParams &b = ephstate.lunar_battle;
     LunarBattleReport &rpt = ephstate.lunar_battle_report;
 
-    L.debug("<<< LUNAR BATTLE PLACEHOLDER >>>>");
-
     // TODO: Battle - in the meantime just fake result!
     if (b.auto_battle || (draw_manager.clicked() && unit_moving)) {
         rpt.aggressor_units_lost = 11;
@@ -133,8 +131,10 @@ void LunarBattle::place_cover() {
 }
 
 void LunarBattle::place_units() {
+    LunarBattleParams &b = ephstate.lunar_battle;
     Planet *p = exostate.get_active_planet();
 
+    // From PROCb_ground
     if (p->has_lunar_base()) {
         place_unit(BattleUnit(UNIT_LBCtl).init(14, 5));
         place_unit(BattleUnit(UNIT_LBGun).init(13, 5));
@@ -142,10 +142,95 @@ void LunarBattle::place_units() {
         place_unit(BattleUnit(UNIT_LBGun).init(13, 6));
         place_unit(BattleUnit(UNIT_LBGun).init(12, 5));
     }
+
+    // TODO: Manual unit positioning
+    place_side_units(true);
+    place_side_units(false);
 }
 
-void LunarBattle::place_unit(BattleUnit unit) {
-    units[n_units++] = unit;
+// PROCb_esetup
+void LunarBattle::place_side_units(bool def) {
+    LunarBattleParams &b = ephstate.lunar_battle;
+    int inf = b.aggressor_inf;
+    int gli = b.aggressor_gli;
+    int art = b.aggressor_art;
+    int stack = b.aggressor_group_size;
+
+    if (def) {
+       inf = b.defender_inf;
+       gli = b.defender_gli;
+       art = b.defender_art;
+       stack = b.defender_group_size;
+    }
+
+    if (stack < 2) {
+        L.fatal("Stack size < 2: %d", stack);
+    }
+
+    stack = max(stack, 2);
+
+    int stacks_inf = inf / stack;
+    if (inf % stack) stacks_inf++;
+    int stacks_gli = gli / stack;
+    if (gli % stack) stacks_gli++;
+    int stacks_art = art / stack;
+    if (art % stack) stacks_art++;
+
+    // Artillery placement
+    if (stacks_art > 0) {
+        BattleUnit u = (!def && b.aggressor_type == AGG_Aliens) ? UNIT_AArt : UNIT_Art;
+        if (stacks_art >= 4) {
+            place_unit(BattleUnit(u).init(def ?  8 : 6,  0, stack, def));
+            place_unit(BattleUnit(u).init(def ?  8 : 6, 10, stack, def));
+            place_unit(BattleUnit(u).init(def ? 15 : 0,  4, stack, def));
+            art -= 3 * stack;
+            while (art > 0) {
+                int x = rand() % 7;
+                int y = rand() % 11;
+                if (def) {
+                    x = (rand() % 8) + 8;
+                }
+                if (unit_at(x, y)) {
+                    continue;
+                }
+                place_unit(BattleUnit(u).init(x, y, min(stack, art), def));
+                art -= min(stack, art);
+            }
+        } else {
+            place_unit(BattleUnit(u).init(def ? 15 : 0, 4, stack, def));
+            art -= min(stack, art);
+
+            if (art > 0) {
+                place_unit(BattleUnit(u).init(def ? 8 : 6, 1, min(stack, art), def));
+                art -= min(stack, art);
+            }
+
+            if (art > 0) {
+                place_unit(BattleUnit(u).init(def ? 8 : 6, 9, min(stack, art), def));
+                art -= min(stack, art);
+            }
+
+            // Should not happen - we calculated 3 stacks would satisfy demand
+            if (art > 0) {
+                L.fatal("Error calculating artillery stacks");
+            }
+        }
+    }
+}
+
+void LunarBattle::place_unit(BattleUnit u) {
+    L.debug("<UNIT> %s %d AT (%d, %d)", u.defending ? "D" : "A", u.type, u.x, u.y);
+    units[n_units++] = u;
+}
+
+BattleUnit* LunarBattle::unit_at(int x, int y) {
+    for (int i = 0; i < n_units; ++i) {
+        if (units[i].x == x && units[i].y == y) {
+            return &units[i];
+        }
+    }
+
+    return nullptr;
 }
 
 void LunarBattle::draw_units() {
