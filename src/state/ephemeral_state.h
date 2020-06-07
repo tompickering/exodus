@@ -26,7 +26,15 @@ typedef struct {
     bool auto_battle;
     bool aggressor_manual_placement;
     bool defender_manual_placement;
-    int group_size;
+    int aggressor_group_size;
+    int defender_group_size;
+    int aggressor_inf;
+    int aggressor_gli;
+    int aggressor_art;
+    int defender_inf;
+    int defender_gli;
+    int defender_art;
+    int defender_mines;
 } LunarBattleParams;
 
 typedef struct {

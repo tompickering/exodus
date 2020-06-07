@@ -52,6 +52,52 @@ void LunarBattlePrep::enter() {
         b.auto_battle = true;
     }
 
+    b.aggressor_inf = 0;
+    b.aggressor_gli = 0;
+    b.aggressor_art = 0;
+    b.defender_inf = 0;
+    b.defender_gli = 0;
+    b.defender_art = 0;
+
+    // Get numbers of defending units
+    p->get_army(b.defender_inf, b.defender_gli, b.defender_art);
+
+    // TODO: Populate this during setup
+    b.defender_mines = 0;
+
+    // TODO - Supplements from war allies - ensure we don't subtrace these from
+    // garrison at the end of combat!
+
+    int m = exostate.get_orig_month();
+    switch (b.aggressor_type) {
+        case AGG_Player:
+            b.aggressor_inf = aggressor->get_fleet().freight.infantry;
+            b.aggressor_gli = aggressor->get_fleet().freight.gliders;
+            b.aggressor_art = aggressor->get_fleet().freight.artillery;
+            break;
+        case AGG_Rebels:
+            // TODO
+            break;
+        case AGG_Aliens:
+            b.aggressor_inf = RND(m/2);
+            b.aggressor_art = RND(m);
+            break;
+    }
+
+    int agg_total = b.aggressor_inf + b.aggressor_gli + b.aggressor_art;
+    int def_total = b.defender_inf  + b.defender_gli  + b.defender_art;
+
+    // Default group sizes - humans can override.
+    b.aggressor_group_size = 12;
+    if (agg_total <= 200) b.aggressor_group_size = 8;
+    if (agg_total <=  90) b.aggressor_group_size = 5;
+    if (agg_total <=  30) b.aggressor_group_size = 3;
+
+    b.defender_group_size = 12;
+    if (def_total <= 200) b.defender_group_size = 8;
+    if (def_total <=  90) b.defender_group_size = 5;
+    if (def_total <=  30) b.defender_group_size = 3;
+
     if (b.human_battle) {
         draw_manager.draw(IMG_BATTLE_PREP);
         draw_manager.save_background();
