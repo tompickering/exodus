@@ -12,12 +12,22 @@
 
 extern ExodusState exostate;
 
+enum Direction {
+    DIR_Up,
+    DIR_Down,
+    DIR_Left,
+    DIR_Right,
+};
+
 class BattleUnit {
     public:
         BattleUnit() {};
         BattleUnit(int, int, int, bool);
+        void do_move(Direction);
         int x;
         int y;
+        int tgt_x;
+        int tgt_y;
         int hp;
         int move;
         int fire_range;
@@ -55,6 +65,8 @@ class LunarBattle : ModeBase, CommPanelDrawer {
         void place_unit(BattleUnit);
 
         void draw_units();
+        bool unit_moving;
+        float move_interp;
 };
 
 class Inf : public BattleUnit {

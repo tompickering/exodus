@@ -1,10 +1,13 @@
 #include "lunar_battle.h"
 
+#include <cmath>
+
 #include "assetpaths.h"
 
 static const int SURF_X =  0;
 static const int SURF_Y = 72;
 static const int BLK_SZ = 40;
+static const float MOVE_RATE = 1.5f;
 
 enum ID {
     END,
@@ -12,6 +15,8 @@ enum ID {
 
 LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer() {
     stage = LB_Idle;
+    unit_moving = false;
+    move_interp = 0;
 }
 
 void LunarBattle::enter() {
@@ -23,6 +28,8 @@ void LunarBattle::enter() {
     Planet *p = exostate.get_active_planet();
 
     n_units = 0;
+    unit_moving = false;
+    move_interp = 0;
 
     use_alt_aliens = (bool)(rand() % 2);
 
@@ -61,7 +68,7 @@ ExodusMode LunarBattle::update(float delta) {
     L.debug("<<< LUNAR BATTLE PLACEHOLDER >>>>");
 
     // TODO: Battle - in the meantime just fake result!
-    if (b.auto_battle || draw_manager.clicked()) {
+    if (b.auto_battle || (draw_manager.clicked() && unit_moving)) {
         rpt.aggressor_units_lost = 11;
         rpt.defender_units_lost = 7;
         rpt.aggressor_won = (bool)(rand() % 2);
@@ -69,7 +76,29 @@ ExodusMode LunarBattle::update(float delta) {
         return ephstate.get_appropriate_mode();
     }
 
+    if (unit_moving) {
+        move_interp += delta * MOVE_RATE;
+        if (move_interp > 1) move_interp = 1;
+    }
+
+    if (draw_manager.clicked()) {
+        units[0].do_move(DIR_Left);
+        unit_moving = true;
+        move_interp = 0;
+        // TODO: move SFX
+    }
+
     draw_units();
+
+    if (move_interp >= 1) {
+        unit_moving = false;
+        move_interp = 0;
+
+        for (int i = 0; i < n_units; ++i) {
+            units[i].x = units[i].tgt_x;
+            units[i].y = units[i].tgt_y;
+        }
+    }
 
     return ExodusMode::MODE_None;
 }
@@ -92,17 +121,36 @@ void LunarBattle::place_unit(BattleUnit unit) {
 
 void LunarBattle::draw_units() {
     for (int i = 0; i < n_units; ++i) {
+        int x = units[i].x;
+        int y = units[i].y;
+        int tx = units[i].tgt_x;
+        int ty = units[i].tgt_y;
+
+        const char *spr = units[i].idle;
+        int draw_x = SURF_X + x * BLK_SZ;
+        int draw_y = SURF_Y + y * BLK_SZ;
+
+        // Unit is moving - interpolate draw position
+        if (x != tx || y !=ty) {
+            int tdraw_x = SURF_X + tx * BLK_SZ;
+            int tdraw_y = SURF_Y + ty * BLK_SZ;
+            draw_x += (int)((float)(tdraw_x - draw_x) * move_interp);
+            draw_y += (int)((float)(tdraw_y - draw_y) * move_interp);
+            if (fmod(move_interp, 0.4) < 0.2) spr = units[i].walk;
+        }
+
         draw_manager.draw(
             unit_ids[i],
-            units[i].idle,
-            {SURF_X + units[i].x * BLK_SZ,
-             SURF_Y + units[i].y * BLK_SZ,
+            spr,
+            {draw_x, draw_y,
              0, 0, 1, 1});
     }
 }
 
 BattleUnit::BattleUnit(int _x, int _y, int _hp, bool _def)
     : x(_x), y(_y), hp(_hp), defending(_def) {
+    tgt_x = x;
+    tgt_y = y;
     can_act = true;
     idle = nullptr;
     walk = nullptr;
@@ -111,6 +159,14 @@ BattleUnit::BattleUnit(int _x, int _y, int _hp, bool _def)
     move_sfx = nullptr;
     shoot_sfx = nullptr;
     can_shoot_behind = true;
+}
+
+// No validation here - LunarBattle is responsible for correct puppeteering
+void BattleUnit::do_move(Direction d) {
+    if (d == DIR_Up)    tgt_y--;
+    if (d == DIR_Down)  tgt_y++;
+    if (d == DIR_Left)  tgt_x--;
+    if (d == DIR_Right) tgt_x++;
 }
 
 Inf::Inf(int _x, int _y, int _hp, bool _def) : BattleUnit(_x, _y, _hp, _def) {
