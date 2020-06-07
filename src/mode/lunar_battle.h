@@ -50,6 +50,7 @@ class BattleUnit {
         bool defending;
         bool can_shoot_behind;
         bool can_act;
+        bool turn_taken;
         const char* idle;
         const char* walk;
         const char* fire;
@@ -75,7 +76,10 @@ class LunarBattle : ModeBase, CommPanelDrawer {
         virtual ExodusMode update(float) override;
     private:
         enum Stage {
-            LB_Idle,
+            LB_Auto,
+            LB_SelectUnit,
+            LB_Move,
+            LB_Fire,
         };
 
         Stage stage;
@@ -86,6 +90,10 @@ class LunarBattle : ModeBase, CommPanelDrawer {
         int n_units;
         BattleUnit units[BATTLE_UNITS_MAX];
         SprID unit_ids[BATTLE_UNITS_MAX];
+
+        bool select_unit();
+        void reset_round();
+        BattleUnit* active_unit;
 
         BattleUnit* unit_at(int, int);
 
@@ -101,6 +109,10 @@ class LunarBattle : ModeBase, CommPanelDrawer {
 
         void draw_units();
         void update_cursor();
+        void update_arrows();
+
+        bool defender_turn;
+
         bool unit_moving;
         float move_interp;
 };

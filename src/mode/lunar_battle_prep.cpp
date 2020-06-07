@@ -87,6 +87,12 @@ void LunarBattlePrep::enter() {
     int agg_total = b.aggressor_inf + b.aggressor_gli + b.aggressor_art;
     int def_total = b.defender_inf  + b.defender_gli  + b.defender_art;
 
+    // TODO: I think this only happens for humans
+    if (def_total == 0) {
+        b.defender_inf = 1;
+        def_total = 1;
+    }
+
     // Default group sizes - humans can override.
     b.aggressor_group_size = 12;
     if (agg_total <= 200) b.aggressor_group_size = 8;

@@ -16,22 +16,30 @@ static const int BG_HEIGHT = 11;
 enum ID {
     BG,
     CURSOR,
+    ARROW_UP,
+    ARROW_DOWN,
+    ARROW_LEFT,
+    ARROW_RIGHT,
     END,
 };
 
 LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer() {
-    stage = LB_Idle;
+    stage = LB_Move;
     unit_moving = false;
     move_interp = 0;
+    defender_turn = true;
 }
 
 void LunarBattle::enter() {
     ModeBase::enter(ID::END);
-    stage = LB_Idle;
+    stage = LB_Move;
 
     LunarBattleParams &b = ephstate.lunar_battle;
 
     Planet *p = exostate.get_active_planet();
+
+    Player *owner = nullptr;
+    if (p->is_owned()) owner = exostate.get_player(p->get_owner());
 
     n_units = 0;
     unit_moving = false;
@@ -40,7 +48,9 @@ void LunarBattle::enter() {
 
     use_alt_aliens = (bool)(rand() % 2);
 
-    if (!b.auto_battle) {
+    if (b.auto_battle) {
+        stage = LB_Auto;
+    } else {
         draw_manager.draw(
             id(ID::BG),
             p->moon_sprites()->bg,
@@ -65,6 +75,10 @@ void LunarBattle::enter() {
         }
 
         place_units();
+
+        defender_turn = (bool)(owner && owner->is_human());
+        reset_round();
+        stage = LB_SelectUnit;
     }
 
     draw_manager.show_cursor(!b.auto_battle);
@@ -86,29 +100,47 @@ ExodusMode LunarBattle::update(float delta) {
     LunarBattleParams &b = ephstate.lunar_battle;
     LunarBattleReport &rpt = ephstate.lunar_battle_report;
 
-    // TODO: Battle - in the meantime just fake result!
-    if (b.auto_battle || (draw_manager.clicked() && unit_moving)) {
-        rpt.aggressor_units_lost = 11;
-        rpt.defender_units_lost = 7;
-        rpt.aggressor_won = (bool)(rand() % 2);
-        ephstate.set_ephemeral_state(EPH_LunarBattleReport);
-        return ephstate.get_appropriate_mode();
-    }
-
-    if (unit_moving) {
-        move_interp += delta * MOVE_RATE;
-        if (move_interp > 1) move_interp = 1;
-    }
-
-    if (draw_manager.clicked()) {
-        units[0].do_move(DIR_Left);
-        unit_moving = true;
-        move_interp = 0;
-        // TODO: move SFX
+    switch (stage) {
+        case LB_Auto:
+            // TODO: Auto - in the meantime just fake result!
+            // We should return with a result immediately
+            rpt.aggressor_units_lost = 11;
+            rpt.defender_units_lost = 7;
+            rpt.aggressor_won = (bool)(rand() % 2);
+            ephstate.set_ephemeral_state(EPH_LunarBattleReport);
+            return ephstate.get_appropriate_mode();
+        case LB_SelectUnit:
+            if (!select_unit()) {
+                // Neither side has a unit which can move.
+                // Clear turn markers and try again.
+                L.info("No units can move - resetting round");
+                reset_round();
+                if (!select_unit()) {
+                    L.fatal("No units can move - someone should have won!");
+                }
+            }
+            L.info("Next unit selected");
+            stage = LB_Move;
+            break;
+        case LB_Move:
+            if (unit_moving) {
+                move_interp += delta * MOVE_RATE;
+                if (move_interp > 1) move_interp = 1;
+            } else {
+                // TODO: move unit
+                active_unit->do_move(defender_turn ? DIR_Left : DIR_Right);
+                unit_moving = true;
+                move_interp = 0;
+                // TODO: move SFX
+            }
+            break;
+        case LB_Fire:
+            break;
     }
 
     draw_units();
     update_cursor();
+    update_arrows();
 
     if (move_interp >= 1) {
         unit_moving = false;
@@ -118,6 +150,8 @@ ExodusMode LunarBattle::update(float delta) {
             units[i].x = units[i].tgt_x;
             units[i].y = units[i].tgt_y;
         }
+
+        stage = LB_SelectUnit;
     }
 
     return ExodusMode::MODE_None;
@@ -267,7 +301,8 @@ void LunarBattle::place_side_units(bool def) {
 }
 
 void LunarBattle::place_unit(BattleUnit u) {
-    L.debug("<UNIT> %s %d AT (%d, %d)", u.defending ? "D" : "A", u.type, u.x, u.y);
+    L.debug("POSITION UNIT %d %s %d AT (%d, %d)",
+        n_units, u.defending ? "D" : "A", u.type, u.x, u.y);
     units[n_units++] = u;
 }
 
@@ -333,6 +368,69 @@ void LunarBattle::update_cursor() {
     }
 }
 
+void LunarBattle::update_arrows() {
+}
+
+bool viable(BattleUnit u, bool def) {
+    return u.defending == def
+        && u.can_act
+        && !u.turn_taken
+        && u.hp > 0;
+}
+
+bool LunarBattle::select_unit() {
+    // Switch whose turn it is
+    defender_turn = !defender_turn;
+
+    int n_viable;
+
+    // Are there any units for the current player?
+    n_viable = 0;
+    for (int i = 0; i < n_units; ++i) {
+        L.debug("Checking unit for viability: %d", i);
+        if (viable(units[i], defender_turn)) {
+            n_viable++;
+        }
+    }
+
+    if (n_viable == 0) {
+        L.debug("No units: %s", defender_turn ? "DEF" : "AGG");
+        defender_turn = !defender_turn;
+
+        n_viable = 0;
+        for (int i = 0; i < n_units; ++i) {
+            L.debug("Checking unit for viability: %d", i);
+            if (viable(units[i], defender_turn)) {
+                n_viable++;
+            }
+        }
+
+        if (n_viable == 0) {
+            L.debug("Neither side has viable units");
+            return false;
+        }
+    }
+
+    int viable_idx = rand() % n_viable;
+    for (int i = 0; i < n_units; ++i) {
+        if (viable(units[i], defender_turn)) {
+            if (viable_idx == 0) {
+                active_unit = &units[i];
+                break;
+            }
+            --viable_idx;
+        }
+    }
+
+    return true;
+}
+
+void LunarBattle::reset_round() {
+    for (int i = 0; i < n_units; ++i) {
+        units[i].turn_taken = false;
+    }
+}
+
 BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     x = 0;
     y = 0;
@@ -346,6 +444,7 @@ BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     move_sfx = nullptr;
     shoot_sfx = nullptr;
     can_shoot_behind = true;
+    turn_taken = false;
 }
 
 BattleUnit& BattleUnit::init(int _x, int _y) {
@@ -354,6 +453,8 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
 
     tgt_x = x;
     tgt_y = y;
+
+    turn_taken = false;
 
     switch (type) {
         case UNIT_Inf:
