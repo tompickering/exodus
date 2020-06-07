@@ -122,7 +122,7 @@ ExodusMode LunarBattle::update(float delta) {
 void LunarBattle::place_cover() {
     n_cover = RND(COVER_MAX); // 1 - 10 cover obstacles
     for (int i = 0; i < n_cover; ++i) {
-        cover[i] = Cover(rand() % BG_WIDTH, rand() % BG_HEIGHT, (bool)(rand() % 1));
+        cover[i] = Cover(rand() % BG_WIDTH, rand() % BG_HEIGHT, (bool)(rand() % 2));
     }
 }
 
