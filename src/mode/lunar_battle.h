@@ -87,6 +87,9 @@ class LunarBattle : ModeBase, CommPanelDrawer {
         BattleUnit units[BATTLE_UNITS_MAX];
         SprID unit_ids[BATTLE_UNITS_MAX];
 
+        int cursor_x;
+        int cursor_y;
+
         bool use_alt_aliens;
 
         void place_cover();
@@ -94,6 +97,7 @@ class LunarBattle : ModeBase, CommPanelDrawer {
         void place_unit(BattleUnit);
 
         void draw_units();
+        void update_cursor();
         bool unit_moving;
         float move_interp;
 };

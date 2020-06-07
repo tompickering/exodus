@@ -4,6 +4,8 @@
 
 #include "assetpaths.h"
 
+#include "util/value.h"
+
 static const int SURF_X =  0;
 static const int SURF_Y = 72;
 static const int BLK_SZ = 40;
@@ -12,6 +14,8 @@ static const int BG_WIDTH = 16;
 static const int BG_HEIGHT = 11;
 
 enum ID {
+    BG,
+    CURSOR,
     END,
 };
 
@@ -38,6 +42,7 @@ void LunarBattle::enter() {
 
     if (!b.auto_battle) {
         draw_manager.draw(
+            id(ID::BG),
             p->moon_sprites()->bg,
             {SURF_X, SURF_Y, 0, 0, 1, 1});
 
@@ -105,6 +110,7 @@ ExodusMode LunarBattle::update(float delta) {
     }
 
     draw_units();
+    update_cursor();
 
     if (move_interp >= 1) {
         unit_moving = false;
@@ -167,6 +173,30 @@ void LunarBattle::draw_units() {
             spr,
             {draw_x, draw_y,
              0, 0, 1, 1});
+    }
+}
+
+void LunarBattle::update_cursor() {
+    SpriteClick mouseover = draw_manager.query_mouseover(id(ID::BG));
+    if (mouseover.id) {
+        cursor_x = min((int)(mouseover.x * BG_WIDTH), BG_WIDTH - 1);
+        cursor_y = min((int)(mouseover.y * BG_HEIGHT), BG_HEIGHT - 1);;
+    } else {
+        cursor_x = -1;
+        cursor_y = -1;
+    }
+
+    draw_manager.draw(
+        id(ID::CURSOR),
+        nullptr);
+
+    if (cursor_x >= 0 && cursor_y >= 0) {
+        draw_manager.fill(
+            id(ID::CURSOR),
+            {SURF_X + BLK_SZ * cursor_x,
+             SURF_Y + BLK_SZ * cursor_y,
+             BLK_SZ, BLK_SZ},
+            {0, 0, 0});
     }
 }
 
