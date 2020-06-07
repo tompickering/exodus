@@ -182,6 +182,7 @@ void LunarBattle::place_side_units(bool def) {
         if (stacks_art >= 4) {
             place_unit(BattleUnit(u).init(def ?  8 : 6,  0, stack, def));
             place_unit(BattleUnit(u).init(def ?  8 : 6, 10, stack, def));
+            // SUGGEST: These don't move - should we be placing them at the map edges...?
             place_unit(BattleUnit(u).init(def ? 15 : 0,  4, stack, def));
             art -= 3 * stack;
             while (art > 0) {
