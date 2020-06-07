@@ -194,6 +194,8 @@ void LunarBattle::place_side_units(bool def) {
                 if (unit_at(x, y)) {
                     continue;
                 }
+                // TODO: Orig also checks gr%() (cover, mines, teleporters) here,
+                // but not in the previous placements.
                 place_unit(BattleUnit(u).init(x, y, min(stack, art), def));
                 art -= min(stack, art);
             }
@@ -217,6 +219,51 @@ void LunarBattle::place_side_units(bool def) {
             }
         }
     }
+
+    if (false) {
+        // TODO: We use a particular placement strategy 2/3 of the time...
+    } else {
+        BattleUnit u_inf = UNIT_Inf;
+        if (!def) {
+            if (b.aggressor_type == AGG_Aliens) u_inf = UNIT_AInf;
+            if (b.aggressor_type == AGG_Rebels) u_inf = UNIT_Rebel;
+        }
+
+        BattleUnit u_gli = UNIT_Gli;
+
+        while (inf > 0) {
+            int x = rand() % 7;
+            int y = rand() % 11;
+            if (def) {
+                x = (rand() % 8) + 8;
+            }
+            if (unit_at(x, y)) {
+                continue;
+            }
+            // TODO: Orig also checks gr%() (cover, mines, teleporters) here,
+            // but not in the previous placements.
+            place_unit(BattleUnit(u_inf).init(x, y, min(stack, inf), def));
+            inf -= min(stack, inf);
+        }
+
+        while (gli > 0) {
+            int x = rand() % 7;
+            int y = rand() % 11;
+            if (def) {
+                x = (rand() % 8) + 8;
+            }
+            if (unit_at(x, y)) {
+                continue;
+            }
+            // TODO: Orig also checks gr%() (cover, mines, teleporters) here,
+            // but not in the previous placements.
+            place_unit(BattleUnit(u_gli).init(x, y, min(stack, gli), def));
+            gli -= min(stack, gli);
+        }
+    }
+
+    // TODO: Mine placement (orig seems to be defenders only)
+    // TODO: Clear up ground (cover etc) with a unit on it
 }
 
 void LunarBattle::place_unit(BattleUnit u) {
