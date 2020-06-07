@@ -101,6 +101,36 @@ SpriteClick DrawManager::query_click(SprID query) {
     return res;
 }
 
+SpriteClick DrawManager::query_mouseover(SprID query) {
+    DrawArea *area = nullptr;
+    SpriteClick res;
+    res.id = ID_NONE;
+
+    if (!draw_cursor)
+        return res;
+    if (mouse_pos.x < 0 || mouse_pos.y < 0)
+        return res;
+
+    for (std::vector<DrawnSprite>::size_type i = 0; i < drawn_spr_info.size(); ++i) {
+        if (drawn_spr_info[i].id != query)
+            continue;
+        area = &(drawn_spr_info[i].area);
+        if (area->w == 0 || area->h == 0)
+            continue;
+        float spr_x = (float)(mouse_pos.x - area->x) / (float)area->w;
+        float spr_y = (float)(mouse_pos.y - area->y) / (float)area->h;
+        if (   spr_x >= 0 && spr_x <= 1
+            && spr_y >= 0 && spr_y <= 1) {
+            res.id = drawn_spr_info[i].id;
+            res.x = spr_x;
+            res.y = spr_y;
+            break;
+        }
+    }
+
+    return res;
+}
+
 bool DrawManager::mouse_over(SprID query) {
     DrawArea *area = nullptr;
 
