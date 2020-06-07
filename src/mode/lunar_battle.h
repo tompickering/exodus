@@ -20,10 +20,25 @@ enum Direction {
     DIR_Right,
 };
 
+enum BattleUnitType {
+    UNIT_Inf,
+    UNIT_Gli,
+    UNIT_Art,
+    UNIT_LBGun,
+    UNIT_LBCtl,
+    UNIT_Rebel,
+    UNIT_AInf,
+    UNIT_AArt,
+};
+
 class BattleUnit {
     public:
         BattleUnit() {};
-        BattleUnit(int, int, int, bool);
+        BattleUnit(BattleUnitType);
+        BattleUnit& init(int, int);
+        BattleUnit& init(int, int, int);
+        BattleUnit& init(int, int, int, bool);
+        BattleUnitType type;
         void do_move(Direction);
         int x;
         int y;
@@ -81,46 +96,6 @@ class LunarBattle : ModeBase, CommPanelDrawer {
         void draw_units();
         bool unit_moving;
         float move_interp;
-};
-
-class Inf : public BattleUnit {
-    public:
-        Inf(int, int, int, bool);
-};
-
-class Gli : public BattleUnit {
-    public:
-        Gli(int, int, int, bool);
-};
-
-class Art : public BattleUnit {
-    public:
-        Art(int, int, int, bool);
-};
-
-class LBGun : public BattleUnit {
-    public:
-        LBGun(int, int);
-};
-
-class LBCtl : public BattleUnit {
-    public:
-        LBCtl(int, int);
-};
-
-class Rebel : public BattleUnit {
-    public:
-        Rebel(int, int, int);
-};
-
-class AInf : public BattleUnit {
-    public:
-        AInf(int, int, int, bool);
-};
-
-class AArt : public BattleUnit {
-    public:
-        AArt(int, int, int, bool);
 };
 
 #endif

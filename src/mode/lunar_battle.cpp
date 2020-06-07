@@ -130,11 +130,11 @@ void LunarBattle::place_units() {
     Planet *p = exostate.get_active_planet();
 
     if (p->has_lunar_base()) {
-        place_unit(LBCtl(14, 5));
-        place_unit(LBGun(13, 5));
-        place_unit(LBGun(13, 4));
-        place_unit(LBGun(13, 6));
-        place_unit(LBGun(12, 5));
+        place_unit(BattleUnit(UNIT_LBCtl).init(14, 5));
+        place_unit(BattleUnit(UNIT_LBGun).init(13, 5));
+        place_unit(BattleUnit(UNIT_LBGun).init(13, 4));
+        place_unit(BattleUnit(UNIT_LBGun).init(13, 6));
+        place_unit(BattleUnit(UNIT_LBGun).init(12, 5));
     }
 }
 
@@ -170,10 +170,11 @@ void LunarBattle::draw_units() {
     }
 }
 
-BattleUnit::BattleUnit(int _x, int _y, int _hp, bool _def)
-    : x(_x), y(_y), hp(_hp), defending(_def) {
-    tgt_x = x;
-    tgt_y = y;
+BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
+    x = 0;
+    y = 0;
+    tgt_x = 0;
+    tgt_y = 0;
     can_act = true;
     idle = nullptr;
     walk = nullptr;
@@ -184,126 +185,150 @@ BattleUnit::BattleUnit(int _x, int _y, int _hp, bool _def)
     can_shoot_behind = true;
 }
 
+BattleUnit& BattleUnit::init(int _x, int _y) {
+    x = _x;
+    y = _y;
+
+    tgt_x = x;
+    tgt_y = y;
+
+    switch (type) {
+        case UNIT_Inf:
+            move = 3;
+            fire_range = 3;
+            // TODO: SFX
+            if (defending) {
+                idle = IMG_GF4_4;
+                walk = IMG_GF4_4_2;
+                fire = IMG_GF4_16;
+                dead = IMG_GF4_7;
+            } else {
+                idle = IMG_GF4_1;
+                walk = IMG_GF4_1_2;
+                fire = IMG_GF4_13;
+                dead = IMG_GF4_10;
+            }
+            break;
+        case UNIT_Gli:
+            move = 4;
+            fire_range = 4;
+            // TODO: SFX
+            // TODO: Glider crashing sprite
+            if (defending) {
+                // Blue
+                idle = IMG_GF4_5;
+                walk = IMG_GF4_5;
+                fire = IMG_GF4_17;
+                dead = IMG_GF4_11;
+            } else {
+                // Green
+                idle = IMG_GF4_2;
+                walk = IMG_GF4_2;
+                fire = IMG_GF4_14;
+                dead = IMG_GF4_8;
+            }
+            break;
+        case UNIT_Art:
+            move = 0;
+            fire_range = 7;
+            can_shoot_behind = false;
+            if (defending) {
+                idle = IMG_GF4_6;
+                walk = IMG_GF4_6;
+                fire = IMG_GF4_18;
+                dead = IMG_GF4_12;
+            } else {
+                idle = IMG_GF4_3;
+                walk = IMG_GF4_3;
+                fire = IMG_GF4_15;
+                dead = IMG_GF4_9;
+            }
+            break;
+        case UNIT_LBGun:
+            move = 0;
+            fire_range = 100;
+            hp = 6;
+            defending = true;
+            idle = IMG_GF4_21;
+            walk = IMG_GF4_21;
+            fire = IMG_GF4_24;
+            dead = IMG_GF4_23;
+            break;
+        case UNIT_LBCtl:
+            move = 0;
+            fire_range = 0;
+            hp = 10;
+            defending = true;
+            can_act = false;
+            idle = IMG_GF4_20;
+            walk = IMG_GF4_20;
+            fire = IMG_GF4_20;
+            dead = IMG_GF4_22;
+            break;
+        case UNIT_Rebel:
+            // TODO: Check these
+            move = 3;
+            fire_range = 3;
+            defending = false;
+            idle = IMG_RF1_1;
+            walk = IMG_RF1_1_2;
+            fire = IMG_RF1_13;
+            dead = IMG_RF1_7;
+            break;
+        case UNIT_AInf:
+            move = 3;
+            fire_range = 3;
+            defending = false;
+            // TODO: Alt aliens
+            if (true) {
+                idle = IMG_AL1_1;
+                walk = IMG_AL1_1_2;
+                fire = IMG_AL1_13;
+                dead = IMG_AL1_7;
+            } else {
+                idle = IMG_AL2_1;
+                walk = IMG_AL2_1_2;
+                fire = IMG_AL2_13;
+                dead = IMG_AL2_7;
+            }
+            break;
+        case UNIT_AArt:
+            move = 0;
+            fire_range = 7;
+            can_shoot_behind = false;
+            defending = false;
+            // TODO: Alt aliens
+            if (true) {
+                idle = IMG_AL1_3;
+                walk = IMG_AL1_3;
+                fire = IMG_AL1_15;
+                dead = IMG_AL1_9;
+            } else {
+                idle = IMG_AL2_3;
+                walk = IMG_AL2_3;
+                fire = IMG_AL2_15;
+                dead = IMG_AL2_9;
+            }
+            break;
+    }
+
+    return *this;
+}
+
+BattleUnit& BattleUnit::init(int _x, int _y, int _hp) {
+    hp = _hp;
+    return init(_x, _y);
+}
+
+BattleUnit& BattleUnit::init(int _x, int _y, int _hp, bool _def) {
+    defending = _def;
+    return init(_x, _y, _hp);
+}
+
 // No validation here - LunarBattle is responsible for correct puppeteering
 void BattleUnit::do_move(Direction d) {
     if (d == DIR_Up)    tgt_y--;
     if (d == DIR_Down)  tgt_y++;
     if (d == DIR_Left)  tgt_x--;
     if (d == DIR_Right) tgt_x++;
-}
-
-Inf::Inf(int _x, int _y, int _hp, bool _def) : BattleUnit(_x, _y, _hp, _def) {
-    move = 3;
-    fire_range = 3;
-    // TODO: SFX
-    if (_def) {
-        idle = IMG_GF4_4;
-        walk = IMG_GF4_4_2;
-        fire = IMG_GF4_16;
-        dead = IMG_GF4_7;
-    } else {
-        idle = IMG_GF4_1;
-        walk = IMG_GF4_1_2;
-        fire = IMG_GF4_13;
-        dead = IMG_GF4_10;
-    }
-}
-
-Gli::Gli(int _x, int _y, int _hp, bool _def) : BattleUnit(_x, _y, _hp, _def) {
-    move = 4;
-    fire_range = 4;
-    // TODO: SFX
-    // TODO: Glider crashing sprite
-    if (_def) {
-        // Blue
-        idle = IMG_GF4_5;
-        walk = IMG_GF4_5;
-        fire = IMG_GF4_17;
-        dead = IMG_GF4_11;
-    } else {
-        // Green
-        idle = IMG_GF4_2;
-        walk = IMG_GF4_2;
-        fire = IMG_GF4_14;
-        dead = IMG_GF4_8;
-    }
-}
-
-Art::Art(int _x, int _y, int _hp, bool _def) : BattleUnit(_x, _y, _hp, _def) {
-    move = 0;
-    fire_range = 7;
-    can_shoot_behind = false;
-    if (_def) {
-        idle = IMG_GF4_6;
-        walk = IMG_GF4_6;
-        fire = IMG_GF4_18;
-        dead = IMG_GF4_12;
-    } else {
-        idle = IMG_GF4_3;
-        walk = IMG_GF4_3;
-        fire = IMG_GF4_15;
-        dead = IMG_GF4_9;
-    }
-}
-
-LBGun::LBGun(int _x, int _y) : BattleUnit(_x, _y, 6, true) {
-    move = 0;
-    fire_range = 100;
-    idle = IMG_GF4_21;
-    walk = IMG_GF4_21;
-    fire = IMG_GF4_24;
-    dead = IMG_GF4_23;
-}
-
-LBCtl::LBCtl(int _x, int _y) : BattleUnit(_x, _y, 10, true) {
-    move = 0;
-    fire_range = 0;
-    can_act = false;
-    idle = IMG_GF4_20;
-    walk = IMG_GF4_20;
-    fire = IMG_GF4_20;
-    dead = IMG_GF4_22;
-}
-
-Rebel::Rebel(int _x, int _y, int _hp) : BattleUnit(_x, _y, _hp, false) {
-    // TODO: Check these
-    move = 3;
-    fire_range = 3;
-    idle = IMG_RF1_1;
-    walk = IMG_RF1_1_2;
-    fire = IMG_RF1_13;
-    dead = IMG_RF1_7;
-}
-
-AInf::AInf(int _x, int _y, int _hp, bool alt) : BattleUnit(_x, _y, _hp, false) {
-    move = 3;
-    fire_range = 3;
-    if (!alt) {
-        idle = IMG_AL1_1;
-        walk = IMG_AL1_1_2;
-        fire = IMG_AL1_13;
-        dead = IMG_AL1_7;
-    } else {
-        idle = IMG_AL2_1;
-        walk = IMG_AL2_1_2;
-        fire = IMG_AL2_13;
-        dead = IMG_AL2_7;
-    }
-}
-
-AArt::AArt(int _x, int _y, int _hp, bool alt) : BattleUnit(_x, _y, _hp, false) {
-    move = 0;
-    fire_range = 7;
-    can_shoot_behind = false;
-    if (!alt) {
-        idle = IMG_AL1_3;
-        walk = IMG_AL1_3;
-        fire = IMG_AL1_15;
-        dead = IMG_AL1_9;
-    } else {
-        idle = IMG_AL2_3;
-        walk = IMG_AL2_3;
-        fire = IMG_AL2_15;
-        dead = IMG_AL2_9;
-    }
 }
