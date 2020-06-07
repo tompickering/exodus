@@ -8,6 +8,7 @@
 
 #include "state/exodus_state.h"
 
+#define COVER_MAX 10
 #define BATTLE_UNITS_MAX 176    // Battlefield is 16x11
 
 extern ExodusState exostate;
@@ -42,6 +43,15 @@ class BattleUnit {
         const char* shoot_sfx;
 };
 
+class Cover {
+    public:
+        Cover() {};
+        Cover(int _x, int _y, bool _alt) : x(_x), y(_y), alt(_alt) {};
+        int x;
+        int y;
+        bool alt;
+};
+
 class LunarBattle : ModeBase, CommPanelDrawer {
     public:
         LunarBattle();
@@ -55,12 +65,16 @@ class LunarBattle : ModeBase, CommPanelDrawer {
 
         Stage stage;
 
+        int n_cover;
+        Cover cover[COVER_MAX];
+
         int n_units;
         BattleUnit units[BATTLE_UNITS_MAX];
         SprID unit_ids[BATTLE_UNITS_MAX];
 
         bool use_alt_aliens;
 
+        void place_cover();
         void place_units();
         void place_unit(BattleUnit);
 

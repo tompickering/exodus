@@ -8,6 +8,8 @@ static const int SURF_X =  0;
 static const int SURF_Y = 72;
 static const int BLK_SZ = 40;
 static const float MOVE_RATE = 1.5f;
+static const int BG_WIDTH = 16;
+static const int BG_HEIGHT = 11;
 
 enum ID {
     END,
@@ -30,6 +32,7 @@ void LunarBattle::enter() {
     n_units = 0;
     unit_moving = false;
     move_interp = 0;
+    n_cover = 0;
 
     use_alt_aliens = (bool)(rand() % 2);
 
@@ -37,6 +40,19 @@ void LunarBattle::enter() {
         draw_manager.draw(
             p->moon_sprites()->bg,
             {SURF_X, SURF_Y, 0, 0, 1, 1});
+
+        place_cover();
+
+        for (int i = 0; i < n_cover; ++i) {
+            const char *spr = p->moon_sprites()->cover0;
+            if (cover[i].alt) spr = p->moon_sprites()->cover1;
+            draw_manager.draw(
+                spr,
+                {SURF_X + cover[i].x * BLK_SZ,
+                 SURF_Y + cover[i].y * BLK_SZ,
+                 0, 0, 1, 1});
+        }
+
         draw_manager.save_background();
 
         for (int i = 0; i < BATTLE_UNITS_MAX; ++i) {
@@ -101,6 +117,13 @@ ExodusMode LunarBattle::update(float delta) {
     }
 
     return ExodusMode::MODE_None;
+}
+
+void LunarBattle::place_cover() {
+    n_cover = RND(COVER_MAX); // 1 - 10 cover obstacles
+    for (int i = 0; i < n_cover; ++i) {
+        cover[i] = Cover(rand() % BG_WIDTH, rand() % BG_HEIGHT, (bool)(rand() % 1));
+    }
 }
 
 void LunarBattle::place_units() {
