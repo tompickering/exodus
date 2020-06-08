@@ -165,7 +165,6 @@ ExodusMode LunarBattle::update(float delta) {
                 Direction move_dir = DIR_None;
 
                 if (human_turn) {
-                    // TODO: Get movement dir based on click
                     if (draw_manager.query_click(id(ID::ARROW_UP)).id)
                         move_dir = DIR_Up;
                     if (draw_manager.query_click(id(ID::ARROW_DOWN)).id)
