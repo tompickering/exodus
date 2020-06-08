@@ -442,13 +442,14 @@ void LunarBattle::update_cursor() {
         id(ID::CURSOR),
         nullptr);
 
+    // TODO: Highlight in red if invalid
     if (cursor_x >= 0 && cursor_y >= 0) {
-        draw_manager.fill(
+        draw_manager.draw(
             id(ID::CURSOR),
+            IMG_CURSOR_BATTLE0,
             {SURF_X + BLK_SZ * cursor_x,
              SURF_Y + BLK_SZ * cursor_y,
-             BLK_SZ, BLK_SZ},
-            {0, 0, 0});
+             0, 0, 1, 1});
     }
 }
 
