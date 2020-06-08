@@ -100,6 +100,22 @@ ExodusMode LunarBattle::update(float delta) {
     LunarBattleParams &b = ephstate.lunar_battle;
     LunarBattleReport &rpt = ephstate.lunar_battle_report;
 
+    Planet *p = exostate.get_active_planet();
+    Player *defender = exostate.get_player(p->get_owner());
+    Player *aggressor_player = nullptr;
+
+    if (b.aggressor_type == AGG_Player) {
+        aggressor_player = exostate.get_player(b.aggressor_idx);
+    }
+
+    bool human_turn = false;
+
+    if (defender_turn) {
+        human_turn = defender->is_human();
+    } else {
+        human_turn = aggressor_player && aggressor_player->is_human();
+    }
+
     switch (stage) {
         case LB_Auto:
             // TODO: Auto - in the meantime just fake result!
@@ -123,6 +139,20 @@ ExodusMode LunarBattle::update(float delta) {
             stage = LB_Move;
             break;
         case LB_Move:
+            if (move_interp >= 1) {
+                unit_moving = false;
+                move_interp = 0;
+
+                for (int i = 0; i < n_units; ++i) {
+                    units[i].x = units[i].tgt_x;
+                    units[i].y = units[i].tgt_y;
+                }
+
+                // TODO: Only do this if ALL moves have been taken!
+                stage = LB_Fire;
+                break;
+            }
+
             if (unit_moving) {
                 move_interp += delta * MOVE_RATE;
                 if (move_interp > 1) move_interp = 1;
@@ -135,24 +165,13 @@ ExodusMode LunarBattle::update(float delta) {
             }
             break;
         case LB_Fire:
+            stage = LB_SelectUnit;
             break;
     }
 
     draw_units();
     update_cursor();
     update_arrows();
-
-    if (move_interp >= 1) {
-        unit_moving = false;
-        move_interp = 0;
-
-        for (int i = 0; i < n_units; ++i) {
-            units[i].x = units[i].tgt_x;
-            units[i].y = units[i].tgt_y;
-        }
-
-        stage = LB_SelectUnit;
-    }
 
     return ExodusMode::MODE_None;
 }
@@ -165,7 +184,6 @@ void LunarBattle::place_cover() {
 }
 
 void LunarBattle::place_units() {
-    LunarBattleParams &b = ephstate.lunar_battle;
     Planet *p = exostate.get_active_planet();
 
     // From PROCb_ground
