@@ -44,6 +44,10 @@ const char *MUS_OVERWORLD_ANGRY = D_MUS "ST3_55";
 const char *MUS_ST3_58          = D_MUS "ST3_58";
 
 const char *IMG_CURSOR          = "assets/img/cursor";
+const char *IMG_CURSOR_BATTLE0  = "assets/img/cursor_battle0";
+const char *IMG_CURSOR_BATTLE1  = "assets/img/cursor_battle1";
+const char *IMG_CURSOR_XHAIR    = "assets/img/cursor_crosshair";
+const char *IMG_CURSOR_HG       = "assets/img/cursor_hourglass";
 const char *IMG_SHIP_FLIPPED    = "assets/img/SH3_cruiser1_flipped";
 const char *IMG_BUTTON_OTHER    = "assets/img/button_other";
 
@@ -1083,6 +1087,10 @@ const char *ASSETS_MUS[] = {
 };
 
 const char *ASSETS_IMG[] = {
+    IMG_CURSOR_BATTLE0,
+    IMG_CURSOR_BATTLE1,
+    IMG_CURSOR_XHAIR,
+    IMG_CURSOR_HG,
     IMG_SHIP_FLIPPED,
     IMG_BUTTON_OTHER,
 

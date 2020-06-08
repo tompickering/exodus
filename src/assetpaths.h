@@ -46,6 +46,10 @@ extern const char *MUS_OVERWORLD_ANGRY;
 extern const char *MUS_ST3_58;
 
 extern const char *IMG_CURSOR;
+extern const char *IMG_CURSOR_BATTLE0;
+extern const char *IMG_CURSOR_BATTLE1;
+extern const char *IMG_CURSOR_XHAIR;
+extern const char *IMG_CURSOR_HG;
 extern const char *IMG_SHIP_FLIPPED;
 extern const char *IMG_BUTTON_OTHER;
 
