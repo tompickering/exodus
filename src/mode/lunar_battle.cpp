@@ -139,17 +139,18 @@ ExodusMode LunarBattle::update(float delta) {
             stage = LB_Move;
             break;
         case LB_Move:
+            if (active_unit->moves_remaining <= 0) {
+                stage = LB_Fire;
+                break;
+            }
+
             if (move_interp >= 1) {
                 unit_moving = false;
                 move_interp = 0;
-
-                for (int i = 0; i < n_units; ++i) {
-                    units[i].x = units[i].tgt_x;
-                    units[i].y = units[i].tgt_y;
-                }
-
-                // TODO: Only do this if ALL moves have been taken!
-                stage = LB_Fire;
+                active_unit->x = active_unit->tgt_x;
+                active_unit->y = active_unit->tgt_y;
+                active_unit->moves_remaining--;
+                // TODO: Check if we've stepped on a mine.
                 break;
             }
 
@@ -165,6 +166,7 @@ ExodusMode LunarBattle::update(float delta) {
             }
             break;
         case LB_Fire:
+            active_unit->turn_taken = true;
             stage = LB_SelectUnit;
             break;
     }
@@ -405,7 +407,6 @@ bool LunarBattle::select_unit() {
     // Are there any units for the current player?
     n_viable = 0;
     for (int i = 0; i < n_units; ++i) {
-        L.debug("Checking unit for viability: %d", i);
         if (viable(units[i], defender_turn)) {
             n_viable++;
         }
@@ -417,7 +418,6 @@ bool LunarBattle::select_unit() {
 
         n_viable = 0;
         for (int i = 0; i < n_units; ++i) {
-            L.debug("Checking unit for viability: %d", i);
             if (viable(units[i], defender_turn)) {
                 n_viable++;
             }
@@ -440,10 +440,13 @@ bool LunarBattle::select_unit() {
         }
     }
 
+    active_unit->moves_remaining = active_unit->move;
+
     return true;
 }
 
 void LunarBattle::reset_round() {
+    L.debug("< RESETTING ROUND >");
     for (int i = 0; i < n_units; ++i) {
         units[i].turn_taken = false;
     }

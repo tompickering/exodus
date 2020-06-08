@@ -50,6 +50,7 @@ class BattleUnit {
         bool defending;
         bool can_shoot_behind;
         bool can_act;
+        int moves_remaining;
         bool turn_taken;
         const char* idle;
         const char* walk;
