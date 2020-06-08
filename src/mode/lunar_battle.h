@@ -81,6 +81,8 @@ class LunarBattle : ModeBase, CommPanelDrawer {
             LB_SelectUnit,
             LB_Move,
             LB_Fire,
+            LB_CheckWon,
+            LB_Won,
         };
 
         Stage stage;

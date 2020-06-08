@@ -150,7 +150,7 @@ ExodusMode LunarBattle::update(float delta) {
                 active_unit->x = active_unit->tgt_x;
                 active_unit->y = active_unit->tgt_y;
                 active_unit->moves_remaining--;
-                // TODO: Check if we've stepped on a mine.
+                // TODO: Check if we've stepped on a mine. If so, LB_CheckWon.
                 break;
             }
 
@@ -167,8 +167,36 @@ ExodusMode LunarBattle::update(float delta) {
             break;
         case LB_Fire:
             active_unit->turn_taken = true;
-            stage = LB_SelectUnit;
+            stage = LB_CheckWon;
             break;
+        case LB_CheckWon:
+            {
+                int def_units = 0;
+                int agg_units = 0;
+                for (int i = 0; i < n_units; ++i) {
+                    if (units[i].hp > 0) {
+                        if (units[i].defending) {
+                            def_units++;
+                        } else {
+                            agg_units++;
+                        }
+                    }
+                }
+
+                if (agg_units == 0 && def_units == 0) {
+                    rpt.aggressor_won = def_units == 0;
+                    // TODO: Populate rest of report
+                    stage = LB_Won;
+                } else {
+                    stage = LB_SelectUnit;
+                }
+            }
+            break;
+        case LB_Won:
+            L.debug("BATTLE WINNER: %s", rpt.aggressor_won ? "AGG" : "DEF");
+            // TODO: Display result, music etc until click
+            ephstate.set_ephemeral_state(EPH_LunarBattleReport);
+            return ephstate.get_appropriate_mode();
     }
 
     draw_units();
