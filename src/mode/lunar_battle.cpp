@@ -180,6 +180,11 @@ ExodusMode LunarBattle::update(float delta) {
                         move_dir = DIR_Left;
                     if (draw_manager.query_click(id(ID::ARROW_RIGHT)).id)
                         move_dir = DIR_Right;
+                    if (draw_manager.query_click(active_unit->spr_id).id) {
+                        // We wish to end our movement phase early
+                        move_dir = DIR_None;
+                        active_unit->moves_remaining = 0;
+                    }
                 } else {
                     // TODO: AI movement - for now just stick with the random choice
                 }
