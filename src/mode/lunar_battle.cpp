@@ -163,7 +163,13 @@ ExodusMode LunarBattle::update(float delta) {
                 move_interp += delta * MOVE_RATE;
                 if (move_interp > 1) move_interp = 1;
             } else {
-                Direction move_dir = DIR_None;
+                Direction move_dir = get_random_move_direction();
+
+                if (move_dir == DIR_None) {
+                    // Movement is impossible - skip this stage
+                    active_unit->moves_remaining = 0;
+                    break;
+                }
 
                 if (human_turn) {
                     if (draw_manager.query_click(id(ID::ARROW_UP)).id)
@@ -175,13 +181,7 @@ ExodusMode LunarBattle::update(float delta) {
                     if (draw_manager.query_click(id(ID::ARROW_RIGHT)).id)
                         move_dir = DIR_Right;
                 } else {
-                    // TODO: AI movement
-                    move_dir = get_random_move_direction();
-                    if (move_dir == DIR_None) {
-                        // Move is impossible
-                        active_unit->moves_remaining = 0;
-                        break;
-                    }
+                    // TODO: AI movement - for now just stick with the random choice
                 }
 
                 if (move_dir != DIR_None) {
