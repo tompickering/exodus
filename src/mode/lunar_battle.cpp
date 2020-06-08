@@ -418,6 +418,8 @@ void LunarBattle::draw_units() {
             if (fmod(move_interp, 0.4) < 0.2) spr = units[i].walk;
         }
 
+        if (units[i].hp <= 0) spr = units[i].dead;
+
         draw_manager.draw(
             units[i].spr_id,
             spr,
