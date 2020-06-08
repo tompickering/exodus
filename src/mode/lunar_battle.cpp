@@ -175,7 +175,12 @@ ExodusMode LunarBattle::update(float delta) {
                         move_dir = DIR_Right;
                 } else {
                     // TODO: AI movement
-                    move_dir = (Direction)(1 + rand() % 4);
+                    move_dir = get_random_move_direction();
+                    if (move_dir == DIR_None) {
+                        // Move is impossible
+                        active_unit->moves_remaining = 0;
+                        break;
+                    }
                 }
 
                 if (move_dir != DIR_None) {
@@ -438,9 +443,43 @@ void LunarBattle::update_cursor() {
 }
 
 // 4 bits - UDLR
-char get_valid_move_directions() {
-    // TODO
-    return 0xF;
+char LunarBattle::get_valid_move_directions() {
+    char dirs = 0xF;
+    BattleUnit *u = active_unit;
+    if (unit_at(u->x, u->y - 1)) dirs &= ~0x8;
+    if (unit_at(u->x, u->y + 1)) dirs &= ~0x4;
+    if (unit_at(u->x - 1, u->y)) dirs &= ~0x2;
+    if (unit_at(u->x + 1, u->y)) dirs &= ~0x1;
+    if (u->y <= 0)               dirs &= ~0x8;
+    if (u->y + 1 >= BG_HEIGHT)   dirs &= ~0x4;
+    if (u->x <= 0)               dirs &= ~0x2;
+    if (u->x + 1 >= BG_WIDTH)    dirs &= ~0x1;
+    return dirs;
+}
+
+Direction LunarBattle::get_random_move_direction() {
+    int v = get_valid_move_directions();
+
+    int n_valid = (v & 1) + ((v >> 1) & 1) + ((v >> 2) & 1) + ((v >> 3) & 1);
+    if (n_valid == 0) {
+        return DIR_None;
+    }
+
+    Direction d = DIR_Up;
+    int idx = rand() % n_valid;
+    while (v) {
+        if (v & 1) {
+            if (idx == 0) {
+                return d;
+            }  else {
+                --idx;
+                d = (Direction)((int)d + 1);
+            }
+        }
+        v >>= 1;
+    }
+
+    return DIR_None;
 }
 
 void LunarBattle::update_arrows() {
