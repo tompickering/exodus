@@ -59,6 +59,7 @@ class BattleUnit {
         const char* dead;
         const char* move_sfx;
         const char* shoot_sfx;
+        SprID spr_id;
 };
 
 class Cover {
@@ -93,7 +94,6 @@ class LunarBattle : ModeBase, CommPanelDrawer {
 
         int n_units;
         BattleUnit units[BATTLE_UNITS_MAX];
-        SprID unit_ids[BATTLE_UNITS_MAX];
 
         bool select_unit();
         void reset_round();

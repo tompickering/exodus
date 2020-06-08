@@ -73,7 +73,7 @@ void LunarBattle::enter() {
         draw_manager.save_background();
 
         for (int i = 0; i < BATTLE_UNITS_MAX; ++i) {
-            unit_ids[i] = draw_manager.new_sprite_id();
+            units[i].spr_id = draw_manager.new_sprite_id();
         }
 
         place_units();
@@ -95,7 +95,7 @@ void LunarBattle::exit() {
 
     if (!b.auto_battle) {
         for (int i = 0; i < BATTLE_UNITS_MAX; ++i) {
-            draw_manager.release_sprite_id(unit_ids[i]);
+            draw_manager.release_sprite_id(units[i].spr_id);
         }
     }
 
@@ -412,7 +412,7 @@ void LunarBattle::draw_units() {
         }
 
         draw_manager.draw(
-            unit_ids[i],
+            units[i].spr_id,
             spr,
             {draw_x, draw_y,
              0, 0, 1, 1});
