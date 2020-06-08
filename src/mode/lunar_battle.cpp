@@ -48,6 +48,8 @@ void LunarBattle::enter() {
 
     use_alt_aliens = (bool)(rand() % 2);
 
+    human_turn = true;
+
     if (b.auto_battle) {
         stage = LB_Auto;
     } else {
@@ -82,6 +84,10 @@ void LunarBattle::enter() {
     }
 
     draw_manager.show_cursor(!b.auto_battle);
+
+    // Modified at the start of combat, but best always pointing to something valid
+    active_unit = &units[0];
+
 }
 
 void LunarBattle::exit() {
@@ -107,8 +113,6 @@ ExodusMode LunarBattle::update(float delta) {
     if (b.aggressor_type == AGG_Player) {
         aggressor_player = exostate.get_player(b.aggressor_idx);
     }
-
-    bool human_turn = false;
 
     if (defender_turn) {
         human_turn = defender->is_human();
@@ -162,7 +166,14 @@ ExodusMode LunarBattle::update(float delta) {
 
                 if (human_turn) {
                     // TODO: Get movement dir based on click
-                    move_dir = (Direction)(1 + rand() % 4);
+                    if (draw_manager.query_click(id(ID::ARROW_UP)).id)
+                        move_dir = DIR_Up;
+                    if (draw_manager.query_click(id(ID::ARROW_DOWN)).id)
+                        move_dir = DIR_Down;
+                    if (draw_manager.query_click(id(ID::ARROW_LEFT)).id)
+                        move_dir = DIR_Left;
+                    if (draw_manager.query_click(id(ID::ARROW_RIGHT)).id)
+                        move_dir = DIR_Right;
                 } else {
                     // TODO: AI movement
                     move_dir = (Direction)(1 + rand() % 4);
@@ -427,7 +438,63 @@ void LunarBattle::update_cursor() {
     }
 }
 
+// 4 bits - UDLR
+char get_valid_move_directions() {
+    // TODO
+    return 0xF;
+}
+
 void LunarBattle::update_arrows() {
+    bool should_draw = true;
+    if (!human_turn) should_draw = false;
+    if (stage != LB_Move) should_draw = false;
+    if (unit_moving) should_draw = false;
+    if (active_unit->move == 0) should_draw = false;
+    if (active_unit->moves_remaining == 0) should_draw = false;
+
+    if (should_draw) {
+        int base_x = SURF_X + BLK_SZ * active_unit->x + BLK_SZ/2;
+        int base_y = SURF_Y + BLK_SZ * active_unit->y + BLK_SZ/2;
+
+        char valid_dirs = get_valid_move_directions();
+
+        // Up
+        if (valid_dirs & 0x8) {
+            draw_manager.draw(
+                id(ID::ARROW_UP),
+                IMG_GF4_MA1,
+                {base_x, base_y - BLK_SZ, 0.5, 0.5, 1, 1});
+        }
+
+        // Down
+        if (valid_dirs & 0x4) {
+            draw_manager.draw(
+                id(ID::ARROW_DOWN),
+                IMG_GF4_MA2,
+                {base_x, base_y + BLK_SZ, 0.5, 0.5, 1, 1});
+        }
+
+        // Left
+        if (valid_dirs & 0x2) {
+            draw_manager.draw(
+                id(ID::ARROW_LEFT),
+                IMG_GF4_MA3,
+                {base_x - BLK_SZ, base_y, 0.5, 0.5, 1, 1});
+        }
+
+        // Right
+        if (valid_dirs & 0x1) {
+            draw_manager.draw(
+                id(ID::ARROW_RIGHT),
+                IMG_GF4_MA4,
+                {base_x + BLK_SZ, base_y, 0.5, 0.5, 1, 1});
+        }
+    } else {
+        draw_manager.draw(id(ID::ARROW_UP), nullptr);
+        draw_manager.draw(id(ID::ARROW_DOWN), nullptr);
+        draw_manager.draw(id(ID::ARROW_LEFT), nullptr);
+        draw_manager.draw(id(ID::ARROW_RIGHT), nullptr);
+    }
 }
 
 bool viable(BattleUnit u, bool def) {
@@ -496,6 +563,9 @@ BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     y = 0;
     tgt_x = 0;
     tgt_y = 0;
+    move = 0;
+    fire_range = 0;
+    moves_remaining = 0;
     can_act = true;
     idle = nullptr;
     walk = nullptr;
