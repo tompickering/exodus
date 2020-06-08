@@ -158,11 +158,22 @@ ExodusMode LunarBattle::update(float delta) {
                 move_interp += delta * MOVE_RATE;
                 if (move_interp > 1) move_interp = 1;
             } else {
-                // TODO: move unit
-                active_unit->do_move(defender_turn ? DIR_Left : DIR_Right);
-                unit_moving = true;
-                move_interp = 0;
-                // TODO: move SFX
+                Direction move_dir = DIR_None;
+
+                if (human_turn) {
+                    // TODO: Get movement dir based on click
+                    move_dir = (Direction)(1 + rand() % 4);
+                } else {
+                    // TODO: AI movement
+                    move_dir = (Direction)(1 + rand() % 4);
+                }
+
+                if (move_dir != DIR_None) {
+                    active_unit->do_move(move_dir);
+                    unit_moving = true;
+                    move_interp = 0;
+                    // TODO: move SFX
+                }
             }
             break;
         case LB_Fire:

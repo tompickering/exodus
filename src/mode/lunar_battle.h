@@ -14,6 +14,7 @@
 extern ExodusState exostate;
 
 enum Direction {
+    DIR_None,
     DIR_Up,
     DIR_Down,
     DIR_Left,
