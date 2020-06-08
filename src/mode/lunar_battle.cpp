@@ -72,11 +72,12 @@ void LunarBattle::enter() {
 
         draw_manager.save_background();
 
+        place_units();
+
+        // Ensure this happens *after* place_units()!
         for (int i = 0; i < BATTLE_UNITS_MAX; ++i) {
             units[i].spr_id = draw_manager.new_sprite_id();
         }
-
-        place_units();
 
         defender_turn = (bool)(owner && owner->is_human());
         reset_round();
@@ -163,9 +164,9 @@ ExodusMode LunarBattle::update(float delta) {
                 move_interp += delta * MOVE_RATE;
                 if (move_interp > 1) move_interp = 1;
             } else {
-                Direction move_dir = get_random_move_direction();
+                Direction move_dir = DIR_None;
 
-                if (move_dir == DIR_None) {
+                if (get_valid_move_directions() == 0) {
                     // Movement is impossible - skip this stage
                     active_unit->moves_remaining = 0;
                     break;
@@ -187,6 +188,7 @@ ExodusMode LunarBattle::update(float delta) {
                     }
                 } else {
                     // TODO: AI movement - for now just stick with the random choice
+                    move_dir = get_random_move_direction();
                 }
 
                 if (move_dir != DIR_None) {
