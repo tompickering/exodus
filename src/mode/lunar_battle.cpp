@@ -117,7 +117,7 @@ ExodusMode LunarBattle::update(float delta) {
     if (defender_turn) {
         human_turn = defender->is_human();
     } else {
-        human_turn = aggressor_player && aggressor_player->is_human();
+        human_turn = (bool)(aggressor_player && aggressor_player->is_human());
     }
 
     switch (stage) {
@@ -141,7 +141,8 @@ ExodusMode LunarBattle::update(float delta) {
             }
             L.info("Next unit selected");
             stage = LB_Move;
-            break;
+            // Give chance to update human_player
+            return ExodusMode::MODE_None;
         case LB_Move:
             if (active_unit->moves_remaining <= 0) {
                 stage = LB_Fire;
@@ -465,18 +466,18 @@ Direction LunarBattle::get_random_move_direction() {
         return DIR_None;
     }
 
-    Direction d = DIR_Up;
+    Direction d = DIR_Right;
     int idx = rand() % n_valid;
     while (v) {
         if (v & 1) {
             if (idx == 0) {
                 return d;
-            }  else {
+            } else {
                 --idx;
-                d = (Direction)((int)d + 1);
             }
         }
         v >>= 1;
+        d = (Direction)((int)d - 1);
     }
 
     return DIR_None;
