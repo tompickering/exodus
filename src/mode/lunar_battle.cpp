@@ -473,11 +473,19 @@ void LunarBattle::draw_units() {
                 }
             }
 
-            draw_manager.draw(
-                units[i].spr_id,
-                spr,
-                {draw_x, draw_y,
-                 0, 0, 1, 1});
+            if (units[i].defending) {
+                draw_manager.draw(
+                    units[i].spr_id,
+                    spr,
+                    {draw_x + BLK_SZ, draw_y,
+                     1, 0, 1, 1});
+            } else {
+                draw_manager.draw(
+                    units[i].spr_id,
+                    spr,
+                    {draw_x, draw_y,
+                     0, 0, 1, 1});
+            }
         }
     }
 }
