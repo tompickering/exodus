@@ -256,7 +256,7 @@ ExodusMode LunarBattle::update(float delta) {
                     }
                 }
 
-                if (agg_units == 0 && def_units == 0) {
+                if (agg_units == 0 || def_units == 0) {
                     rpt.aggressor_won = def_units == 0;
                     // TODO: Populate rest of report
                     stage = LB_Won;
