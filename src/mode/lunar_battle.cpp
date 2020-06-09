@@ -388,9 +388,10 @@ void LunarBattle::place_unit(BattleUnit u) {
     units[n_units++] = u;
 }
 
+// Doesn't consider dead units as 'existing'
 BattleUnit* LunarBattle::unit_at(int x, int y) {
     for (int i = 0; i < n_units; ++i) {
-        if (units[i].x == x && units[i].y == y) {
+        if (units[i].x == x && units[i].y == y && units[i].hp > 0) {
             return &units[i];
         }
     }
