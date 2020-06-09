@@ -52,6 +52,7 @@ class BattleUnit {
         bool can_shoot_behind;
         bool can_act;
         int moves_remaining;
+        int shots_remaining;
         bool turn_taken;
         const char* idle;
         const char* walk;
@@ -123,6 +124,7 @@ class LunarBattle : ModeBase, CommPanelDrawer {
 
         bool unit_moving;
         float move_interp;
+        float shot_interp;
 };
 
 #endif

@@ -10,6 +10,7 @@ static const int SURF_X =  0;
 static const int SURF_Y = 72;
 static const int BLK_SZ = 40;
 static const float MOVE_RATE = 1.5f;
+static const float SHOT_RATE = 2.f;
 static const int BG_WIDTH = 16;
 static const int BG_HEIGHT = 11;
 
@@ -27,6 +28,7 @@ LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer() {
     stage = LB_Move;
     unit_moving = false;
     move_interp = 0;
+    shot_interp = 0;
     defender_turn = true;
 }
 
@@ -44,6 +46,7 @@ void LunarBattle::enter() {
     n_units = 0;
     unit_moving = false;
     move_interp = 0;
+    shot_interp = 0;
     n_cover = 0;
 
     use_alt_aliens = (bool)(rand() % 2);
@@ -200,8 +203,26 @@ ExodusMode LunarBattle::update(float delta) {
             }
             break;
         case LB_Fire:
-            active_unit->turn_taken = true;
-            stage = LB_CheckWon;
+            if (shot_interp > 0) {
+                shot_interp -= delta * SHOT_RATE;
+                if (shot_interp < 0) {
+                    shot_interp = 0;
+                }
+            } else {
+                if (active_unit->shots_remaining > 0) {
+                    // TODO: Pick a valid target
+                    active_unit->hp--;
+                    active_unit->shots_remaining--;
+                    shot_interp = 1;
+                    // TODO: SFX
+                }
+
+                if (active_unit->shots_remaining <= 0) {
+                    active_unit->turn_taken = true;
+                    shot_interp = 0;
+                    stage = LB_CheckWon;
+                }
+            }
             break;
         case LB_CheckWon:
             {
@@ -428,6 +449,12 @@ void LunarBattle::draw_units() {
 
             if (units[i].hp <= 0) spr = units[i].dead;
 
+            if (&units[i] == active_unit) {
+                if (shot_interp > 0.5f) {
+                    spr = units[i].fire;
+                }
+            }
+
             draw_manager.draw(
                 units[i].spr_id,
                 spr,
@@ -605,6 +632,7 @@ bool LunarBattle::select_unit() {
     }
 
     active_unit->moves_remaining = active_unit->move;
+    active_unit->shots_remaining = active_unit->hp;
 
     return true;
 }
@@ -624,6 +652,7 @@ BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     move = 0;
     fire_range = 0;
     moves_remaining = 0;
+    shots_remaining = 0;
     can_act = true;
     idle = nullptr;
     walk = nullptr;
