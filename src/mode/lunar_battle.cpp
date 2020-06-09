@@ -606,18 +606,18 @@ bool LunarBattle::set_target_unit() {
     int rng_step    = 0;
 
     if (active_unit->defending) {
+        rng_start_x = active_unit->x + active_unit->fire_range;
+        rng_end_x   = active_unit->x - active_unit->fire_range - 1;
+        rng_start_y = active_unit->y + active_unit->fire_range;
+        rng_end_y   = active_unit->y - active_unit->fire_range - 1;
+        rng_step = -1;
+    } else {
         rng_start_x = active_unit->x - active_unit->fire_range;
         rng_end_x   = active_unit->x + active_unit->fire_range + 1;
         rng_start_y = active_unit->y - active_unit->fire_range;
         rng_end_y   = active_unit->y + active_unit->fire_range + 1;
          // TODO: Is y inverted in orig? If so, we to invert y (and need rng_y_step)
         rng_step = 1;
-    } else {
-        rng_start_x = active_unit->x + active_unit->fire_range;
-        rng_end_x   = active_unit->x - active_unit->fire_range - 1;
-        rng_start_y = active_unit->y + active_unit->fire_range;
-        rng_end_y   = active_unit->y - active_unit->fire_range - 1;
-        rng_step = -1;
     }
 
     // 2. If we're the aggressor, target LBGuns if possible
