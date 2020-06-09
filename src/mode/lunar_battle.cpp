@@ -30,6 +30,8 @@ LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer() {
     move_interp = 0;
     shot_interp = 0;
     defender_turn = true;
+    target_unit = nullptr;
+    enable_infinite_range = false;
 }
 
 void LunarBattle::enter() {
@@ -91,7 +93,9 @@ void LunarBattle::enter() {
 
     // Modified at the start of combat, but best always pointing to something valid
     active_unit = &units[0];
+    target_unit = nullptr;
 
+    enable_infinite_range = false;
 }
 
 void LunarBattle::exit() {
@@ -144,6 +148,7 @@ ExodusMode LunarBattle::update(float delta) {
                 }
             }
             L.info("Next unit selected");
+            target_unit = nullptr;
             stage = LB_Move;
             // Give chance to update human_player
             return ExodusMode::MODE_None;
@@ -210,11 +215,24 @@ ExodusMode LunarBattle::update(float delta) {
                 }
             } else {
                 if (active_unit->shots_remaining > 0) {
-                    // TODO: Pick a valid target
-                    active_unit->hp--;
-                    active_unit->shots_remaining--;
-                    shot_interp = 1;
-                    // TODO: SFX
+                    if (!target_unit) {
+                        set_target_unit();
+                    }
+
+                    // TODO: Only for CPU
+                    if (target_unit) {
+                        target_unit->hp--;
+                        active_unit->shots_remaining--;
+                        shot_interp = 1;
+                        // TODO: SFX
+                        // If we've killed 'em, I suppose we should stop
+                        if (target_unit->hp <= 0) {
+                            active_unit->shots_remaining = 0;
+                        }
+                    } else {
+                        // No valid targets - give up
+                        active_unit->shots_remaining = 0;
+                    }
                 }
 
                 if (active_unit->shots_remaining <= 0) {
@@ -527,6 +545,123 @@ Direction LunarBattle::get_random_move_direction() {
     }
 
     return DIR_None;
+}
+
+bool LunarBattle::set_target_unit() {
+    target_unit = nullptr;
+
+    bool killbase = false;
+    BattleUnit *lbctl = nullptr;
+
+    if (!defender_turn) {
+        int aat = 0;
+        int adf = 0;
+        int inc = 0;
+        for (int i = 0; i < n_units; ++i) {
+            if (units[i].hp > 0) {
+                BattleUnitType t = units[i].type;
+
+                if (t == UNIT_LBCtl) {
+                    lbctl = &units[i];
+                }
+
+                inc = 0;
+                if (t == UNIT_Inf || t == UNIT_Rebel || t == UNIT_AInf) {
+                    inc = units[i].hp;
+                }
+                if (t == UNIT_Gli) {
+                    inc = units[i].hp * 2;
+                }
+                if (t == UNIT_Art || t == UNIT_AArt) {
+                    inc = units[i].hp * 3;
+                }
+                if (t == UNIT_LBGun) {
+                    inc = units[i].hp * 4;
+                }
+
+                if (units[i].defending) {
+                    adf += inc;
+                } else {
+                    aat += inc;
+                }
+            }
+        }
+
+        if (lbctl) {
+            killbase = ((float)aat * 1.7f < (float)adf);
+            L.debug("WILL%s kill base if possible", killbase ? "" : " NOT");
+        }
+    }
+
+    // 1. If we're the aggressor, consider targetting the lunar control
+    if (killbase && lbctl && in_range(lbctl->x, lbctl->y)) {
+        target_unit = lbctl;
+        return true;
+    }
+
+    int rng_start_x = 0;
+    int rng_end_x   = 0;
+    int rng_start_y = 0;
+    int rng_end_y   = 0;
+    int rng_step    = 0;
+
+    if (active_unit->defending) {
+        rng_start_x = active_unit->x - active_unit->fire_range;
+        rng_end_x   = active_unit->x + active_unit->fire_range + 1;
+        rng_start_y = active_unit->y - active_unit->fire_range;
+        rng_end_y   = active_unit->y + active_unit->fire_range + 1;
+         // TODO: Is y inverted in orig? If so, we to invert y (and need rng_y_step)
+        rng_step = 1;
+    } else {
+        rng_start_x = active_unit->x + active_unit->fire_range;
+        rng_end_x   = active_unit->x - active_unit->fire_range - 1;
+        rng_start_y = active_unit->y + active_unit->fire_range;
+        rng_end_y   = active_unit->y - active_unit->fire_range - 1;
+        rng_step = -1;
+    }
+
+    // 2. If we're the aggressor, target LBGuns if possible
+    if (!defender_turn) {
+        for (int i = rng_start_x; i != rng_end_x; i += rng_step) {
+            for (int j = rng_start_y; j != rng_end_y; j += rng_step) {
+                BattleUnit *u = unit_at(i, j);
+                if (u && u->type == UNIT_LBGun) {
+                    target_unit = u;
+                    return true;
+                }
+            }
+        }
+    }
+
+    // 3. Pick the most advanced unit that we find
+    for (int i = rng_start_x; i != rng_end_x; i += rng_step) {
+        for (int j = rng_start_y; j != rng_end_y; j += rng_step) {
+            BattleUnit *u = unit_at(i, j);
+            if (!u) {
+                continue;
+            }
+            bool enemy = defender_turn ^ u->defending;
+            if (enemy && u->hp > 0 && in_range(u->x, u->y)) {
+                target_unit = u;
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+bool LunarBattle::in_range(int x, int y) {
+    if (enable_infinite_range) {
+        // TODO: Ensure we set this
+        // It happens when only artillery or LBCtl are alive
+        return true;
+    }
+    if (x < active_unit->x - active_unit->fire_range) return false;
+    if (x > active_unit->x + active_unit->fire_range) return false;
+    if (y < active_unit->y - active_unit->fire_range) return false;
+    if (y > active_unit->y + active_unit->fire_range) return false;
+    return true;
 }
 
 void LunarBattle::update_arrows() {

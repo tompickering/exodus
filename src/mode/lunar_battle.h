@@ -99,6 +99,7 @@ class LunarBattle : ModeBase, CommPanelDrawer {
         bool select_unit();
         void reset_round();
         BattleUnit* active_unit;
+        BattleUnit* target_unit;
 
         BattleUnit* unit_at(int, int);
 
@@ -118,6 +119,10 @@ class LunarBattle : ModeBase, CommPanelDrawer {
 
         char get_valid_move_directions();
         Direction get_random_move_direction();
+
+        bool enable_infinite_range;
+        bool set_target_unit();
+        bool in_range(int, int);
 
         bool defender_turn;
         bool human_turn;
