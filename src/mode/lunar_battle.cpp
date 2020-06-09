@@ -400,32 +400,40 @@ BattleUnit* LunarBattle::unit_at(int x, int y) {
 }
 
 void LunarBattle::draw_units() {
-    for (int i = 0; i < n_units; ++i) {
-        int x = units[i].x;
-        int y = units[i].y;
-        int tx = units[i].tgt_x;
-        int ty = units[i].tgt_y;
+    for (int pass = 0; pass < 2; ++pass) {
+        bool draw_dead = pass == 0;
+        for (int i = 0; i < n_units; ++i) {
+            if (draw_dead && units[i].hp > 0)
+                continue;
+            if (!draw_dead && units[i].hp <= 0)
+                continue;
 
-        const char *spr = units[i].idle;
-        int draw_x = SURF_X + x * BLK_SZ;
-        int draw_y = SURF_Y + y * BLK_SZ;
+            int x = units[i].x;
+            int y = units[i].y;
+            int tx = units[i].tgt_x;
+            int ty = units[i].tgt_y;
 
-        // Unit is moving - interpolate draw position
-        if (x != tx || y !=ty) {
-            int tdraw_x = SURF_X + tx * BLK_SZ;
-            int tdraw_y = SURF_Y + ty * BLK_SZ;
-            draw_x += (int)((float)(tdraw_x - draw_x) * move_interp);
-            draw_y += (int)((float)(tdraw_y - draw_y) * move_interp);
-            if (fmod(move_interp, 0.4) < 0.2) spr = units[i].walk;
+            const char *spr = units[i].idle;
+            int draw_x = SURF_X + x * BLK_SZ;
+            int draw_y = SURF_Y + y * BLK_SZ;
+
+            // Unit is moving - interpolate draw position
+            if (x != tx || y !=ty) {
+                int tdraw_x = SURF_X + tx * BLK_SZ;
+                int tdraw_y = SURF_Y + ty * BLK_SZ;
+                draw_x += (int)((float)(tdraw_x - draw_x) * move_interp);
+                draw_y += (int)((float)(tdraw_y - draw_y) * move_interp);
+                if (fmod(move_interp, 0.4) < 0.2) spr = units[i].walk;
+            }
+
+            if (units[i].hp <= 0) spr = units[i].dead;
+
+            draw_manager.draw(
+                units[i].spr_id,
+                spr,
+                {draw_x, draw_y,
+                 0, 0, 1, 1});
         }
-
-        if (units[i].hp <= 0) spr = units[i].dead;
-
-        draw_manager.draw(
-            units[i].spr_id,
-            spr,
-            {draw_x, draw_y,
-             0, 0, 1, 1});
     }
 }
 
