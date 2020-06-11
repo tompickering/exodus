@@ -465,26 +465,35 @@ void LunarBattle::draw_units() {
                 if (fmod(move_interp, 0.4) < 0.2) spr = units[i].walk;
             }
 
-            if (units[i].hp <= 0) spr = units[i].dead;
-
             if (&units[i] == active_unit) {
                 if (shot_interp > 0.5f) {
                     spr = units[i].fire;
                 }
             }
 
-            if (units[i].defending) {
-                draw_manager.draw(
-                    units[i].spr_id,
-                    spr,
-                    {draw_x + BLK_SZ, draw_y,
-                     1, 0, 1, 1});
-            } else {
-                draw_manager.draw(
-                    units[i].spr_id,
-                    spr,
-                    {draw_x, draw_y,
-                     0, 0, 1, 1});
+            if (units[i].hp <= 0) spr = units[i].dead;
+
+            if (units[i].hp > 0 || !units[i].drawn_dead_bg) {
+                if (units[i].defending) {
+                    draw_manager.draw(
+                        units[i].spr_id,
+                        spr,
+                        {draw_x + BLK_SZ, draw_y,
+                         1, 0, 1, 1});
+                } else {
+                    draw_manager.draw(
+                        units[i].spr_id,
+                        spr,
+                        {draw_x, draw_y,
+                         0, 0, 1, 1});
+                }
+            }
+
+            if (units[i].hp <= 0 && !units[i].drawn_dead_bg) {
+                // A dead unit has just been drawn - save this area to the background
+                units[i].drawn_dead_bg = true;
+                DrawArea area = {draw_x, draw_y, BLK_SZ, BLK_SZ};
+                draw_manager.save_background(area);
             }
         }
     }
@@ -805,6 +814,7 @@ BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     shoot_sfx = nullptr;
     can_shoot_behind = true;
     turn_taken = false;
+    drawn_dead_bg = false;
 }
 
 BattleUnit& BattleUnit::init(int _x, int _y) {
@@ -815,6 +825,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
     tgt_y = y;
 
     turn_taken = false;
+    drawn_dead_bg = false;
 
     switch (type) {
         case UNIT_Inf:
