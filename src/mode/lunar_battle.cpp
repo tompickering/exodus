@@ -221,32 +221,31 @@ ExodusMode LunarBattle::update(float delta) {
                 if (shot_interp < 0) {
                     shot_interp = 0;
                 }
-            } else {
-                if (active_unit->shots_remaining > 0) {
-                    if (!target_unit) {
-                        set_target_unit();
-                    }
+                break;
+            }
 
-                    // TODO: Only for CPU
-                    if (target_unit) {
-                        target_unit->hp--;
-                        active_unit->shots_remaining--;
-                        shot_interp = 1;
-                        // TODO: SFX
-                        // If we've killed 'em, I suppose we should stop
-                        if (target_unit->hp <= 0) {
-                            active_unit->shots_remaining = 0;
-                        }
-                    } else {
-                        // No valid targets - give up
-                        active_unit->shots_remaining = 0;
-                    }
+            if (active_unit->shots_remaining <= 0) {
+                active_unit->turn_taken = true;
+                shot_interp = 0;
+                stage = LB_CheckWon;
+            } else {
+                if (!target_unit) {
+                    set_target_unit();
                 }
 
-                if (active_unit->shots_remaining <= 0) {
-                    active_unit->turn_taken = true;
-                    shot_interp = 0;
-                    stage = LB_CheckWon;
+                // TODO: Only for CPU
+                if (target_unit) {
+                    target_unit->hp--;
+                    active_unit->shots_remaining--;
+                    shot_interp = 1;
+                    // TODO: SFX
+                    // If we've killed 'em, I suppose we should stop
+                    if (target_unit->hp <= 0) {
+                        active_unit->shots_remaining = 0;
+                    }
+                } else {
+                    // No valid targets - give up
+                    active_unit->shots_remaining = 0;
                 }
             }
             break;
