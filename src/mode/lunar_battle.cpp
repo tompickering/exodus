@@ -230,10 +230,20 @@ ExodusMode LunarBattle::update(float delta) {
                 stage = LB_CheckWon;
             } else {
                 if (!target_unit) {
-                    set_target_unit();
+                    if (human_turn) {
+                        for (int i = 0; i < n_units; ++i) {
+                            if (draw_manager.query_click(units[i].spr_id).id) {
+                                target_unit = &units[i];
+                                break;
+                            }
+                        }
+                    } else {
+                        if (!target_unit) {
+                            set_target_unit();
+                        }
+                    }
                 }
 
-                // TODO: Only for CPU
                 if (target_unit) {
                     target_unit->hp--;
                     active_unit->shots_remaining--;
@@ -244,8 +254,10 @@ ExodusMode LunarBattle::update(float delta) {
                         active_unit->shots_remaining = 0;
                     }
                 } else {
-                    // No valid targets - give up
-                    active_unit->shots_remaining = 0;
+                    if (!human_turn || !check_viable_targets()) {
+                        // No valid targets - give up
+                        active_unit->shots_remaining = 0;
+                    }
                 }
             }
             break;
@@ -640,6 +652,7 @@ bool LunarBattle::set_target_unit() {
     int rng_end_y   = 0;
     int rng_step    = 0;
 
+    // TODO: Check ability to shoot behind here
     if (active_unit->defending) {
         rng_start_x = active_unit->x + active_unit->fire_range;
         rng_end_x   = active_unit->x - active_unit->fire_range - 1;
@@ -686,12 +699,27 @@ bool LunarBattle::set_target_unit() {
     return false;
 }
 
+bool LunarBattle::check_viable_targets() {
+    for (int i = 0; i < n_units; ++i) {
+        if (active_unit != &units[i] && in_range(units[i].x, units[i].y)) {
+            if (units[i].defending != active_unit->defending) {
+                if (units[i].hp > 0) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 bool LunarBattle::in_range(int x, int y) {
     if (enable_infinite_range) {
         // TODO: Ensure we set this
         // It happens when only artillery or LBCtl are alive
+        // It should probably be a function instead of a variable
         return true;
     }
+    // TODO: Check ability to shoot behind here
     if (x < active_unit->x - active_unit->fire_range) return false;
     if (x > active_unit->x + active_unit->fire_range) return false;
     if (y < active_unit->y - active_unit->fire_range) return false;

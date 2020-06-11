@@ -124,6 +124,7 @@ class LunarBattle : ModeBase, CommPanelDrawer {
         Direction get_random_move_direction();
 
         bool enable_infinite_range;
+        bool check_viable_targets();
         bool set_target_unit();
         bool in_range(int, int);
 
