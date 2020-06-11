@@ -16,7 +16,7 @@ static const int BG_HEIGHT = 11;
 
 enum ID {
     BG,
-    CURSOR,
+    BG_REPAIR,
     ARROW_UP,
     ARROW_DOWN,
     ARROW_LEFT,
@@ -31,6 +31,10 @@ LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer() {
     shot_interp = 0;
     defender_turn = true;
     target_unit = nullptr;
+    cursor_x = -1;
+    cursor_y = -1;
+    cursor_prev_x = -1;
+    cursor_prev_y = -1;
     enable_infinite_range = false;
 }
 
@@ -50,6 +54,11 @@ void LunarBattle::enter() {
     move_interp = 0;
     shot_interp = 0;
     n_cover = 0;
+
+    cursor_x = -1;
+    cursor_y = -1;
+    cursor_prev_x = -1;
+    cursor_prev_y = -1;
 
     use_alt_aliens = (bool)(rand() % 2);
 
@@ -272,8 +281,22 @@ ExodusMode LunarBattle::update(float delta) {
             return ephstate.get_appropriate_mode();
     }
 
-    draw_units();
+    draw_units(false);
     update_cursor();
+
+    bool cursor_moved = (cursor_x != cursor_prev_x || cursor_y != cursor_prev_y);
+
+    if (cursor_moved) {
+        DrawArea a = {cursor_prev_x * BLK_SZ, cursor_prev_y * BLK_SZ, BLK_SZ, BLK_SZ};
+        draw_manager.set_source_region(id(ID::BG_REPAIR), &a);
+        draw_manager.draw(
+            id(ID::BG_REPAIR),
+            p->moon_sprites()->bg,
+            {SURF_X + a.x, SURF_Y + a.y, 0, 0, 1, 1});
+        // FIXME: We should really just redraw unit under the previous position, if any...
+        draw_units(true);
+    }
+
     update_arrows();
 
     return ExodusMode::MODE_None;
@@ -438,7 +461,7 @@ BattleUnit* LunarBattle::unit_at(int x, int y) {
     return nullptr;
 }
 
-void LunarBattle::draw_units() {
+void LunarBattle::draw_units(bool full_redraw) {
     for (int pass = 0; pass < 2; ++pass) {
         bool draw_dead = pass == 0;
         for (int i = 0; i < n_units; ++i) {
@@ -473,7 +496,7 @@ void LunarBattle::draw_units() {
 
             if (units[i].hp <= 0) spr = units[i].dead;
 
-            if (units[i].hp > 0 || !units[i].drawn_dead_bg) {
+            if (full_redraw || (units[i].hp > 0 || !units[i].drawn_dead_bg)) {
                 if (units[i].defending) {
                     draw_manager.draw(
                         units[i].spr_id,
@@ -501,6 +524,10 @@ void LunarBattle::draw_units() {
 
 void LunarBattle::update_cursor() {
     SpriteClick mouseover = draw_manager.query_mouseover(id(ID::BG));
+
+    cursor_prev_x = cursor_x;
+    cursor_prev_y = cursor_y;
+
     if (mouseover.id) {
         cursor_x = min((int)(mouseover.x * BG_WIDTH), BG_WIDTH - 1);
         cursor_y = min((int)(mouseover.y * BG_HEIGHT), BG_HEIGHT - 1);;
@@ -509,14 +536,9 @@ void LunarBattle::update_cursor() {
         cursor_y = -1;
     }
 
-    draw_manager.draw(
-        id(ID::CURSOR),
-        nullptr);
-
     // TODO: Highlight in red if invalid
     if (cursor_x >= 0 && cursor_y >= 0) {
         draw_manager.draw(
-            id(ID::CURSOR),
             IMG_CURSOR_BATTLE0,
             {SURF_X + BLK_SZ * cursor_x,
              SURF_Y + BLK_SZ * cursor_y,

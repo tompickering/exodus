@@ -106,6 +106,8 @@ class LunarBattle : ModeBase, CommPanelDrawer {
 
         int cursor_x;
         int cursor_y;
+        int cursor_prev_x;
+        int cursor_prev_y;
 
         bool use_alt_aliens;
 
@@ -114,7 +116,7 @@ class LunarBattle : ModeBase, CommPanelDrawer {
         void place_side_units(bool);
         void place_unit(BattleUnit);
 
-        void draw_units();
+        void draw_units(bool);
         void update_cursor();
         void update_arrows();
 
