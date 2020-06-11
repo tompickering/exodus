@@ -16,7 +16,6 @@ static const int BG_HEIGHT = 11;
 
 enum ID {
     BG,
-    BG_REPAIR,
     ARROW_UP,
     ARROW_DOWN,
     ARROW_LEFT,
@@ -287,12 +286,10 @@ ExodusMode LunarBattle::update(float delta) {
     bool cursor_moved = (cursor_x != cursor_prev_x || cursor_y != cursor_prev_y);
 
     if (cursor_moved) {
-        DrawArea a = {cursor_prev_x * BLK_SZ, cursor_prev_y * BLK_SZ, BLK_SZ, BLK_SZ};
-        draw_manager.set_source_region(id(ID::BG_REPAIR), &a);
-        draw_manager.draw(
-            id(ID::BG_REPAIR),
-            p->moon_sprites()->bg,
-            {SURF_X + a.x, SURF_Y + a.y, 0, 0, 1, 1});
+        DrawArea a = {SURF_X + cursor_prev_x * BLK_SZ,
+                      SURF_Y + cursor_prev_y * BLK_SZ,
+                      BLK_SZ, BLK_SZ};
+        draw_manager.restore_background(a);
         // FIXME: We should really just redraw unit under the previous position, if any...
         draw_units(true);
     }

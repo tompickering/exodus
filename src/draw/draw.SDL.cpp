@@ -298,6 +298,19 @@ void DrawManagerSDL::save_background(DrawArea area) {
     }
 }
 
+void DrawManagerSDL::restore_background(DrawArea area) {
+    area.x *= UPSCALE_X;
+    area.y *= UPSCALE_Y;
+    area.w *= UPSCALE_X;
+    area.h *= UPSCALE_Y;
+
+    SDL_Rect rect = {area.x, area.y, area.w, area.h};
+
+    if (SDL_BlitSurface(background, &rect, surf, &rect)) {
+        L.warn("Background area blit failed");
+    }
+}
+
 void* DrawManagerSDL::get_sprite_data(const char* img_path) {
     if (strnlen(img_path, 1)) {
         if (!sprite_data.count(img_path)) {
