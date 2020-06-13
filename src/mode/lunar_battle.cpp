@@ -10,7 +10,6 @@ static const int SURF_X =  0;
 static const int SURF_Y = 72;
 static const int BLK_SZ = 40;
 static const float MOVE_RATE = 1.5f;
-static const float SHOT_RATE = 2.f;
 static const int BG_WIDTH = 16;
 static const int BG_HEIGHT = 11;
 
@@ -221,7 +220,7 @@ ExodusMode LunarBattle::update(float delta) {
             break;
         case LB_Fire:
             if (shot_interp > 0) {
-                shot_interp -= delta * SHOT_RATE;
+                shot_interp -= delta * active_unit->fire_rate;
                 if (shot_interp < 0) {
                     shot_interp = 0;
                 }
@@ -853,6 +852,7 @@ BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     tgt_y = 0;
     move = 0;
     fire_range = 0;
+    fire_rate = 4.f;
     moves_remaining = 0;
     shots_remaining = 0;
     can_act = true;
