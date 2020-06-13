@@ -236,8 +236,10 @@ ExodusMode LunarBattle::update(float delta) {
                     if (human_turn) {
                         for (int i = 0; i < n_units; ++i) {
                             if (draw_manager.query_click(units[i].spr_id).id) {
-                                target_unit = &units[i];
-                                break;
+                                if (check_viable_target(&units[i])) {
+                                    target_unit = &units[i];
+                                    break;
+                                }
                             }
                         }
                     } else {
@@ -547,10 +549,11 @@ void LunarBattle::update_cursor() {
         cursor_y = -1;
     }
 
-    // TODO: Highlight in red if invalid
+    bool over_target = stage == LB_Fire && check_viable_target(unit_at(cursor_x, cursor_y));
+
     if (cursor_x >= 0 && cursor_y >= 0) {
         draw_manager.draw(
-            IMG_CURSOR_BATTLE0,
+            over_target ? IMG_CURSOR_BATTLE1 : IMG_CURSOR_BATTLE0,
             {SURF_X + BLK_SZ * cursor_x,
              SURF_Y + BLK_SZ * cursor_y,
              0, 0, 1, 1});
