@@ -34,6 +34,7 @@ LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer() {
     cursor_prev_x = -1;
     cursor_prev_y = -1;
     enable_infinite_range = false;
+    damage_to_apply = 0;
 }
 
 void LunarBattle::enter() {
@@ -160,6 +161,7 @@ ExodusMode LunarBattle::update(float delta) {
             }
             L.info("Next unit selected");
             target_unit = nullptr;
+            damage_to_apply = 0;
             stage = LB_Move;
             // Give chance to update human_player
             return ExodusMode::MODE_None;
@@ -230,7 +232,7 @@ ExodusMode LunarBattle::update(float delta) {
             if (active_unit->shots_remaining <= 0) {
                 active_unit->turn_taken = true;
                 shot_interp = 0;
-                stage = LB_CheckWon;
+                stage = LB_CalcDamage;
             } else {
                 if (!target_unit) {
                     if (human_turn) {
@@ -250,14 +252,9 @@ ExodusMode LunarBattle::update(float delta) {
                 }
 
                 if (target_unit) {
-                    target_unit->hp--;
                     active_unit->shots_remaining--;
                     shot_interp = 1;
                     // TODO: SFX
-                    // If we've killed 'em, I suppose we should stop
-                    if (target_unit->hp <= 0) {
-                        active_unit->shots_remaining = 0;
-                    }
                 } else {
                     if (!human_turn || !check_viable_targets()) {
                         // No valid targets - give up
@@ -265,6 +262,24 @@ ExodusMode LunarBattle::update(float delta) {
                     }
                 }
             }
+            break;
+        case LB_CalcDamage:
+            damage_to_apply = 0;
+            if (target_unit) {
+                // TODO: Correct number of hits logic. Depends on officers etc.
+                damage_to_apply = RND(active_unit->hp);
+            }
+            stage = LB_Damage;
+            break;
+        case LB_Damage:
+            if (damage_to_apply > 0) {
+                // TODO: Explosions etc
+                L.info("%d fired %d shots for %d damage to %d with %dHP",
+                    active_unit->type, active_unit->hp, damage_to_apply,
+                    target_unit->type, target_unit->hp);
+                target_unit->hp = max(0, target_unit->hp - damage_to_apply);
+            }
+            stage = LB_CheckWon;
             break;
         case LB_CheckWon:
             {

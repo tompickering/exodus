@@ -86,6 +86,8 @@ class LunarBattle : ModeBase, CommPanelDrawer {
             LB_SelectUnit,
             LB_Move,
             LB_Fire,
+            LB_CalcDamage,
+            LB_Damage,
             LB_CheckWon,
             LB_Won,
         };
@@ -137,6 +139,8 @@ class LunarBattle : ModeBase, CommPanelDrawer {
         bool unit_moving;
         float move_interp;
         float shot_interp;
+
+        int damage_to_apply;
 };
 
 #endif
