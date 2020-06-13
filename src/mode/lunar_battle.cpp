@@ -704,11 +704,18 @@ bool LunarBattle::set_target_unit() {
 
 bool LunarBattle::check_viable_targets() {
     for (int i = 0; i < n_units; ++i) {
-        if (active_unit != &units[i] && in_range(units[i].x, units[i].y)) {
-            if (units[i].defending != active_unit->defending) {
-                if (units[i].hp > 0) {
-                    return true;
-                }
+        if (check_viable_target(&units[i])) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool LunarBattle::check_viable_target(BattleUnit* u) {
+    if (u && active_unit != u && in_range(u->x, u->y)) {
+        if (u->defending != active_unit->defending) {
+            if (u->hp > 0) {
+                return true;
             }
         }
     }

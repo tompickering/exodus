@@ -127,6 +127,7 @@ class LunarBattle : ModeBase, CommPanelDrawer {
 
         bool enable_infinite_range;
         bool check_viable_targets();
+        bool check_viable_target(BattleUnit*);
         bool set_target_unit();
         bool in_range(int, int);
 
