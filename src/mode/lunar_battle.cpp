@@ -66,26 +66,9 @@ void LunarBattle::enter() {
     if (b.auto_battle) {
         stage = LB_Auto;
     } else {
-        draw_manager.draw(
-            id(ID::BG),
-            p->moon_sprites()->bg,
-            {SURF_X, SURF_Y, 0, 0, 1, 1});
-
         place_cover();
-
-        for (int i = 0; i < n_cover; ++i) {
-            const char *spr = p->moon_sprites()->cover0;
-            if (cover[i].alt) spr = p->moon_sprites()->cover1;
-            draw_manager.draw(
-                spr,
-                {SURF_X + cover[i].x * BLK_SZ,
-                 SURF_Y + cover[i].y * BLK_SZ,
-                 0, 0, 1, 1});
-        }
-
-        draw_manager.save_background();
-
         place_units();
+        draw_ground();
 
         // Ensure this happens *after* place_units()!
         for (int i = 0; i < BATTLE_UNITS_MAX; ++i) {
@@ -104,6 +87,27 @@ void LunarBattle::enter() {
     target_unit = nullptr;
 
     enable_infinite_range = false;
+}
+
+void LunarBattle::draw_ground() {
+    Planet *p = exostate.get_active_planet();
+
+    draw_manager.draw(
+        id(ID::BG),
+        p->moon_sprites()->bg,
+        {SURF_X, SURF_Y, 0, 0, 1, 1});
+
+    for (int i = 0; i < n_cover; ++i) {
+        const char *spr = p->moon_sprites()->cover0;
+        if (cover[i].alt) spr = p->moon_sprites()->cover1;
+        draw_manager.draw(
+            spr,
+            {SURF_X + cover[i].x * BLK_SZ,
+             SURF_Y + cover[i].y * BLK_SZ,
+             0, 0, 1, 1});
+    }
+
+    draw_manager.save_background({SURF_X, SURF_Y, RES_X, RES_Y});
 }
 
 void LunarBattle::exit() {

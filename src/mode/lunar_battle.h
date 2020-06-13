@@ -116,6 +116,7 @@ class LunarBattle : ModeBase, CommPanelDrawer {
         void place_side_units(bool);
         void place_unit(BattleUnit);
 
+        void draw_ground();
         void draw_units(bool);
         void update_cursor();
         void update_arrows();
