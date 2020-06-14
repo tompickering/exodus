@@ -563,10 +563,12 @@ void LunarBattle::draw_units(bool full_redraw) {
 
             if (human_turn && stage == LB_Fire && active_unit == &units[i]) {
                 if (!target_unit && (fire_time > 1 || fmod(fire_time, 0.2) < 0.1)) {
-                    draw_manager.draw(
-                        IMG_CURSOR_BATTLE1,
-                        {draw_x, draw_y,
-                         0, 0, 1, 1});
+                    if (check_viable_targets()) {
+                        draw_manager.draw(
+                            IMG_CURSOR_BATTLE1,
+                            {draw_x, draw_y,
+                             0, 0, 1, 1});
+                    }
                 }
             }
         }
