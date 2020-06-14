@@ -576,7 +576,7 @@ void LunarBattle::draw_units(bool full_redraw) {
 }
 
 void LunarBattle::update_cursor() {
-    if (unit_moving) {
+    if (human_turn && unit_moving) {
         cursor_x = -1;
         cursor_y = -1;
         return;
