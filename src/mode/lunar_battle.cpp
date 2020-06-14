@@ -27,6 +27,7 @@ LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer() {
     unit_moving = false;
     move_interp = 0;
     shot_interp = 0;
+    fire_time = 0;
     defender_turn = true;
     target_unit = nullptr;
     cursor_x = -1;
@@ -52,6 +53,7 @@ void LunarBattle::enter() {
     unit_moving = false;
     move_interp = 0;
     shot_interp = 0;
+    fire_time = 0;
     n_cover = 0;
 
     cursor_x = -1;
@@ -160,6 +162,7 @@ ExodusMode LunarBattle::update(float delta) {
                 }
             }
             L.info("Next unit selected");
+            fire_time = 0;
             target_unit = nullptr;
             damage_to_apply = 0;
             stage = LB_Move;
@@ -326,6 +329,8 @@ ExodusMode LunarBattle::update(float delta) {
     }
 
     update_arrows();
+
+    fire_time += delta;
 
     return ExodusMode::MODE_None;
 }
@@ -545,6 +550,15 @@ void LunarBattle::draw_units(bool full_redraw) {
                 units[i].drawn_dead_bg = true;
                 DrawArea area = {draw_x, draw_y, BLK_SZ, BLK_SZ};
                 draw_manager.save_background(area);
+            }
+
+            if (human_turn && stage == LB_Fire && active_unit == &units[i]) {
+                if (!target_unit && (fire_time > 1 || fmod(fire_time, 0.2) < 0.1)) {
+                    draw_manager.draw(
+                        IMG_CURSOR_BATTLE1,
+                        {draw_x, draw_y,
+                         0, 0, 1, 1});
+                }
             }
         }
     }

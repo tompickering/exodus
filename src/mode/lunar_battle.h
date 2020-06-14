@@ -139,6 +139,7 @@ class LunarBattle : ModeBase, CommPanelDrawer {
         bool unit_moving;
         float move_interp;
         float shot_interp;
+        float fire_time;
 
         int damage_to_apply;
 };
