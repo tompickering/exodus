@@ -19,6 +19,8 @@ enum ID {
     BTN_SPEED,
     BTN_TALK,
     BTN_QUIT,
+    PANEL_UNIT_BG,
+    PANEL_UNIT,
     ARROW_UP,
     ARROW_DOWN,
     ARROW_LEFT,
@@ -636,7 +638,15 @@ void LunarBattle::update_panel() {
             draw_manager.draw_text("The battle of", Justify::Left, 12, 18, COL_TEXT);
             draw_manager.draw_text(p->get_name(), Justify::Left, 12, 36, COL_TEXT);
 
-            draw_manager.pattern_fill({176, 16, 42, 42});
+            draw_manager.fill({175, 15, 44, 44}, {0, 0, 0});
+
+            DrawArea a = {0, 0, 40, 40};
+            draw_manager.set_source_region(id(ID::PANEL_UNIT_BG), &a);
+            draw_manager.draw(
+                id(ID::PANEL_UNIT_BG),
+                p->moon_sprites()->bg,
+                {177, 17, 0, 0, 1, 1});
+
             draw_manager.pattern_fill({226, 12, 200, 50});
             draw_manager.draw(
                 id(ID::BTN_INFO),
@@ -668,6 +678,20 @@ void LunarBattle::update_panel_setup() {
 
 // The panel as drawn during battle
 void LunarBattle::update_panel_battle() {
+    const char* panel_spr = nullptr;
+    BattleUnit *draw_unit = nullptr;
+
+    if (human_turn && stage == LB_Move) {
+        draw_unit = active_unit;
+    } else {
+        draw_unit = unit_at(cursor_x, cursor_y);
+    }
+
+    if (draw_unit) {
+        panel_spr = draw_unit->idle;
+    }
+
+    draw_manager.draw(id(ID::PANEL_UNIT), panel_spr, {177, 17, 0, 0, 1, 1});
 }
 
 // 4 bits - UDLR
