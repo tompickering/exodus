@@ -587,7 +587,17 @@ void LunarBattle::update_cursor() {
         cursor_y = -1;
     }
 
-    bool over_target = stage == LB_Fire && check_viable_target(unit_at(cursor_x, cursor_y));
+    bool over_target = false;
+    bool over_aiming = false;
+
+    if (stage == LB_Fire) {
+        over_target = check_viable_target(unit_at(cursor_x, cursor_y));
+        over_aiming = !target_unit && unit_at(cursor_x, cursor_y) == active_unit;
+    }
+
+    if (over_aiming) {
+        return;
+    }
 
     if (cursor_x >= 0 && cursor_y >= 0) {
         draw_manager.draw(
