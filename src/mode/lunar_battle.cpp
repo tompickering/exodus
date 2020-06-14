@@ -41,7 +41,6 @@ LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer() {
     cursor_y = -1;
     cursor_prev_x = -1;
     cursor_prev_y = -1;
-    enable_infinite_range = false;
     damage_to_apply = 0;
 }
 
@@ -95,8 +94,6 @@ void LunarBattle::enter() {
     // Modified at the start of combat, but best always pointing to something valid
     active_unit = &units[0];
     target_unit = nullptr;
-
-    enable_infinite_range = false;
 }
 
 void LunarBattle::draw_ground() {
@@ -793,17 +790,18 @@ bool LunarBattle::set_target_unit() {
     int rng_step    = 0;
 
     // TODO: Check ability to shoot behind here
+    int range = infinite_range() ? BG_WIDTH : active_unit->fire_range;
     if (active_unit->defending) {
-        rng_start_x = active_unit->x + active_unit->fire_range;
-        rng_end_x   = active_unit->x - active_unit->fire_range - 1;
-        rng_start_y = active_unit->y + active_unit->fire_range;
-        rng_end_y   = active_unit->y - active_unit->fire_range - 1;
+        rng_start_x = active_unit->x + range;
+        rng_end_x   = active_unit->x - range - 1;
+        rng_start_y = active_unit->y + range;
+        rng_end_y   = active_unit->y - range - 1;
         rng_step = -1;
     } else {
-        rng_start_x = active_unit->x - active_unit->fire_range;
-        rng_end_x   = active_unit->x + active_unit->fire_range + 1;
-        rng_start_y = active_unit->y - active_unit->fire_range;
-        rng_end_y   = active_unit->y + active_unit->fire_range + 1;
+        rng_start_x = active_unit->x - range;
+        rng_end_x   = active_unit->x + range + 1;
+        rng_start_y = active_unit->y - range;
+        rng_end_y   = active_unit->y + range + 1;
          // TODO: Is y inverted in orig? If so, we to invert y (and need rng_y_step)
         rng_step = 1;
     }
@@ -859,11 +857,21 @@ bool LunarBattle::check_viable_target(BattleUnit* u) {
     return false;
 }
 
+bool LunarBattle::infinite_range() {
+    for (int i = 0; i < n_units; ++i) {
+        if (units[i].hp > 0) {
+            if (units[i].type == UNIT_Inf)   return false;
+            if (units[i].type == UNIT_Gli)   return false;
+            if (units[i].type == UNIT_Rebel) return false;
+            if (units[i].type == UNIT_AInf)  return false;
+        }
+    }
+
+    return true;
+}
+
 bool LunarBattle::in_range(int x, int y) {
-    if (enable_infinite_range) {
-        // TODO: Ensure we set this
-        // It happens when only artillery or LBCtl are alive
-        // It should probably be a function instead of a variable
+    if (infinite_range()) {
         return true;
     }
     // TODO: Check ability to shoot behind here
