@@ -629,9 +629,15 @@ void LunarBattle::update_panel() {
             draw_manager.pattern_fill({400, 16, 100, 42});
         }
         if (target_mode == LBPM_Battle) {
-            draw_manager.pattern_fill({  8, 16, 160, 42});
+            Planet *p = exostate.get_active_planet();
+
+            draw_manager.pattern_fill({  8, 12, 160, 50});
+
+            draw_manager.draw_text("The battle of", Justify::Left, 12, 18, COL_TEXT);
+            draw_manager.draw_text(p->get_name(), Justify::Left, 12, 36, COL_TEXT);
+
             draw_manager.pattern_fill({176, 16, 42, 42});
-            draw_manager.pattern_fill({226, 16, 200, 42});
+            draw_manager.pattern_fill({226, 12, 200, 50});
             draw_manager.draw(
                 id(ID::BTN_INFO),
                 IMG_GF4_HMENU1,
