@@ -13,6 +13,12 @@
 
 extern ExodusState exostate;
 
+enum LBPanelMode {
+    LBPM_None,
+    LBPM_Setup,
+    LBPM_Battle,
+};
+
 enum Direction {
     DIR_None,
     DIR_Up,
@@ -123,6 +129,11 @@ class LunarBattle : ModeBase, CommPanelDrawer {
         void draw_units(bool);
         void update_cursor();
         void update_arrows();
+
+        LBPanelMode panel_mode;
+        void update_panel();
+        void update_panel_setup();
+        void update_panel_battle();
 
         char get_valid_move_directions();
         Direction get_random_move_direction();

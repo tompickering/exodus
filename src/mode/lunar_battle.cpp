@@ -15,6 +15,10 @@ static const int BG_HEIGHT = 11;
 
 enum ID {
     BG,
+    BTN_INFO,
+    BTN_SPEED,
+    BTN_TALK,
+    BTN_QUIT,
     ARROW_UP,
     ARROW_DOWN,
     ARROW_LEFT,
@@ -24,6 +28,7 @@ enum ID {
 
 LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer() {
     stage = LB_Move;
+    panel_mode = LBPM_None;
     unit_moving = false;
     move_interp = 0;
     shot_interp = 0;
@@ -41,6 +46,7 @@ LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer() {
 void LunarBattle::enter() {
     ModeBase::enter(ID::END);
     stage = LB_Move;
+    panel_mode = LBPM_None;
 
     LunarBattleParams &b = ephstate.lunar_battle;
 
@@ -314,6 +320,7 @@ ExodusMode LunarBattle::update(float delta) {
             return ephstate.get_appropriate_mode();
     }
 
+    update_panel();
     draw_units(false);
     update_cursor();
 
@@ -587,6 +594,54 @@ void LunarBattle::update_cursor() {
              SURF_Y + BLK_SZ * cursor_y,
              0, 0, 1, 1});
     }
+}
+
+void LunarBattle::update_panel() {
+    // TODO: Determine appropriate mode
+    LBPanelMode target_mode = LBPM_Battle;
+    if (panel_mode != target_mode) {
+        draw_manager.fill({0, SURF_Y - 1, RES_X, 1}, {0, 0, 0});
+        draw_manager.fill({0, 0, RES_X, SURF_Y - 1}, COL_BORDERS);
+        if (target_mode == LBPM_Setup) {
+            for (int i = 0; i < 4; ++i) {
+                draw_manager.fill({8 + i*60, 16, 42, 42}, {0, 0, 0});
+            }
+            draw_manager.pattern_fill({400, 16, 100, 42});
+        }
+        if (target_mode == LBPM_Battle) {
+            draw_manager.pattern_fill({  8, 16, 160, 42});
+            draw_manager.pattern_fill({176, 16, 42, 42});
+            draw_manager.pattern_fill({226, 16, 200, 42});
+            draw_manager.draw(
+                id(ID::BTN_INFO),
+                IMG_GF4_HMENU1,
+                {442, 8, 0, 0, 1, 1});
+            draw_manager.draw(
+                id(ID::BTN_SPEED),
+                IMG_GF4_HMENU5,
+                {442, 38, 0, 0, 1, 1});
+            draw_manager.draw(
+                id(ID::BTN_TALK),
+                IMG_GF4_HMENU2,
+                {536, 8, 0, 0, 1, 1});
+            draw_manager.draw(
+                id(ID::BTN_QUIT),
+                IMG_GF4_HMENU4,
+                {536, 38, 0, 0, 1, 1});
+        }
+        draw_manager.save_background({0, 0, RES_X, SURF_Y - 1});
+    }
+    // TODO: Call update_panel_setup() during setup
+    update_panel_battle();
+    panel_mode = target_mode;
+}
+
+// The panel as drawn during unit placement
+void LunarBattle::update_panel_setup() {
+}
+
+// The panel as drawn during battle
+void LunarBattle::update_panel_battle() {
 }
 
 // 4 bits - UDLR
