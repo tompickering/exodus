@@ -337,7 +337,9 @@ ExodusMode LunarBattle::update(float delta) {
 
     update_arrows();
 
-    fire_time += delta;
+    if (stage == LB_Fire) {
+        fire_time += delta;
+    }
 
     return ExodusMode::MODE_None;
 }
