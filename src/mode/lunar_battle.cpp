@@ -574,6 +574,12 @@ void LunarBattle::draw_units(bool full_redraw) {
 }
 
 void LunarBattle::update_cursor() {
+    if (unit_moving) {
+        cursor_x = -1;
+        cursor_y = -1;
+        return;
+    }
+
     SpriteClick mouseover = draw_manager.query_mouseover(id(ID::BG));
 
     cursor_prev_x = cursor_x;
