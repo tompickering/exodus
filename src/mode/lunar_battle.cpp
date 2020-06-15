@@ -721,11 +721,18 @@ void LunarBattle::update_panel_battle() {
                 for (int i = 0; i < draw_unit->hp; ++i) {
                     draw_manager.draw(
                         IMG_GF4_SBR,
-                        {234 + 10*i, 37, 0, 0, 1, 1});
+                        {232 + 10*i, 35, 0, 0, 1, 1});
                 }
             }
+
+            // TODO: Conditional based on cover
+            if (true) {
+                draw_manager.draw(
+                    IMG_GF4_COVER,
+                    {232, 50, 0, 0, 1, 1});
+            }
         }
-        draw_manager.draw_text(text, Justify::Left, 232, 14, text_col);
+        draw_manager.draw_text(text, Justify::Left, 232, 13, text_col);
     }
 
     draw_manager.draw(id(ID::PANEL_UNIT), panel_spr, {177, 17, 0, 0, 1, 1});
