@@ -789,19 +789,19 @@ bool LunarBattle::set_target_unit() {
     int rng_end_y   = 0;
     int rng_step    = 0;
 
-    // TODO: Check ability to shoot behind here
     int range = infinite_range() ? BG_WIDTH : active_unit->fire_range;
+    BattleUnit *au = active_unit;
     if (active_unit->defending) {
-        rng_start_x = active_unit->x + range;
-        rng_end_x   = active_unit->x - range - 1;
-        rng_start_y = active_unit->y + range;
-        rng_end_y   = active_unit->y - range - 1;
+        rng_start_x = au->x + range;
+        rng_end_x   = au->can_shoot_behind ? (au->x - range - 1) : (au->x - 1);
+        rng_start_y = au->y + range;
+        rng_end_y   = au->y - range - 1;
         rng_step = -1;
     } else {
-        rng_start_x = active_unit->x - range;
-        rng_end_x   = active_unit->x + range + 1;
-        rng_start_y = active_unit->y - range;
-        rng_end_y   = active_unit->y + range + 1;
+        rng_start_x = au->x - range;
+        rng_end_x   = au->can_shoot_behind ? (au->x + range + 1) : (au->x + 1);
+        rng_start_y = au->y - range;
+        rng_end_y   = au->y + range + 1;
          // TODO: Is y inverted in orig? If so, we to invert y (and need rng_y_step)
         rng_step = 1;
     }
@@ -874,9 +874,20 @@ bool LunarBattle::in_range(int x, int y) {
     if (infinite_range()) {
         return true;
     }
-    // TODO: Check ability to shoot behind here
-    if (x < active_unit->x - active_unit->fire_range) return false;
-    if (x > active_unit->x + active_unit->fire_range) return false;
+
+    int x_min = active_unit->x - active_unit->fire_range;
+    int x_max = active_unit->x + active_unit->fire_range;
+
+    if (!active_unit->can_shoot_behind) {
+        if (active_unit->defending) {
+            x_max = active_unit->x;
+        } else {
+            x_min = active_unit->x;
+        }
+    }
+
+    if (x < x_min) return false;
+    if (x > x_max) return false;
     if (y < active_unit->y - active_unit->fire_range) return false;
     if (y > active_unit->y + active_unit->fire_range) return false;
     return true;
