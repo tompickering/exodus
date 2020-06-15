@@ -13,6 +13,16 @@ static const float MOVE_RATE = 1.5f;
 static const int BG_WIDTH = 16;
 static const int BG_HEIGHT = 11;
 
+const char* STR_None   = "";
+const char* STR_Ground = "Ground";
+const char* STR_Inf    = "Infantry";
+const char* STR_Gli    = "Gliders";
+const char* STR_Art    = "Artillery";
+const char* STR_LBGun  = "Base, Gun";
+const char* STR_LBCtl  = "Base, Control";
+const char* STR_Tele   = "Rescue Beam";
+const char* STR_Mine   = "Mine";
+
 enum ID {
     BG,
     BTN_INFO,
@@ -698,19 +708,24 @@ void LunarBattle::update_panel_battle() {
     }
 
     if (draw_unit != panel_unit) {
+        const char* text = STR_Ground;
+        RGB text_col = {0, 0xFF, 0};  // TODO: Check exact colour
         panel_unit = draw_unit;
         // Clears over drawn health info etc
         draw_manager.pattern_fill({226, 12, 200, 50});
         if (draw_unit) {
+            text = draw_unit->name;
             // Check if the unit is on our side
             if (human_turn && active_unit->defending == draw_unit->defending) {
+                text_col = {0, 0, 0xFF};  // TODO: Check exact colour
                 for (int i = 0; i < draw_unit->hp; ++i) {
                     draw_manager.draw(
                         IMG_GF4_SBR,
-                        {235 + 10*i, 46, 0, 0, 1, 1});
+                        {234 + 10*i, 37, 0, 0, 1, 1});
                 }
             }
         }
+        draw_manager.draw_text(text, Justify::Left, 232, 14, text_col);
     }
 
     draw_manager.draw(id(ID::PANEL_UNIT), panel_spr, {177, 17, 0, 0, 1, 1});
@@ -1034,6 +1049,7 @@ void LunarBattle::reset_round() {
 }
 
 BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
+    name = STR_None;
     x = 0;
     y = 0;
     tgt_x = 0;
@@ -1067,6 +1083,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
 
     switch (type) {
         case UNIT_Inf:
+            name = STR_Inf;
             move = 3;
             fire_range = 3;
             // TODO: SFX
@@ -1083,6 +1100,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             }
             break;
         case UNIT_Gli:
+            name = STR_Gli;
             move = 4;
             fire_range = 4;
             // TODO: SFX
@@ -1102,6 +1120,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             }
             break;
         case UNIT_Art:
+            name = STR_Art;
             move = 0;
             fire_range = 7;
             can_shoot_behind = false;
@@ -1118,6 +1137,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             }
             break;
         case UNIT_LBGun:
+            name = STR_LBGun;
             move = 0;
             fire_range = 100;
             hp = 6;
@@ -1128,6 +1148,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             dead = IMG_GF4_23;
             break;
         case UNIT_LBCtl:
+            name = STR_LBCtl;
             move = 0;
             fire_range = 0;
             hp = 10;
@@ -1139,6 +1160,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             dead = IMG_GF4_22;
             break;
         case UNIT_Rebel:
+            name = STR_Inf;
             // TODO: Check these
             move = 3;
             fire_range = 3;
@@ -1149,6 +1171,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             dead = IMG_RF1_7;
             break;
         case UNIT_AInf:
+            name = STR_Inf;
             move = 3;
             fire_range = 3;
             defending = false;
@@ -1166,6 +1189,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             }
             break;
         case UNIT_AArt:
+            name = STR_Art;
             move = 0;
             fire_range = 7;
             can_shoot_behind = false;

@@ -47,6 +47,7 @@ class BattleUnit {
         BattleUnit& init(int, int, int, bool);
         BattleUnitType type;
         void do_move(Direction);
+        const char* name;
         int x;
         int y;
         int tgt_x;
