@@ -110,6 +110,7 @@ class LunarBattle : ModeBase, CommPanelDrawer {
         void reset_round();
         BattleUnit* active_unit;
         BattleUnit* target_unit;
+        BattleUnit* panel_unit;
 
         BattleUnit* unit_at(int, int);
 

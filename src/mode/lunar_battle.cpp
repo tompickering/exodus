@@ -42,6 +42,7 @@ LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer() {
     cursor_prev_x = -1;
     cursor_prev_y = -1;
     damage_to_apply = 0;
+    panel_unit = nullptr;
 }
 
 void LunarBattle::enter() {
@@ -94,6 +95,7 @@ void LunarBattle::enter() {
     // Modified at the start of combat, but best always pointing to something valid
     active_unit = &units[0];
     target_unit = nullptr;
+    panel_unit = nullptr;
 }
 
 void LunarBattle::draw_ground() {
@@ -645,6 +647,7 @@ void LunarBattle::update_panel() {
                 {177, 17, 0, 0, 1, 1});
 
             draw_manager.pattern_fill({226, 12, 200, 50});
+
             draw_manager.draw(
                 id(ID::BTN_INFO),
                 IMG_GF4_HMENU1,
@@ -678,14 +681,36 @@ void LunarBattle::update_panel_battle() {
     const char* panel_spr = nullptr;
     BattleUnit *draw_unit = nullptr;
 
+    draw_unit = unit_at(cursor_x, cursor_y);
+
+    // Orig doesn't show cursor during walk phase, but it's
+    // useful to be able to check unit HPs before moving...
+    /*
     if (human_turn && stage == LB_Move) {
         draw_unit = active_unit;
     } else {
         draw_unit = unit_at(cursor_x, cursor_y);
     }
+    */
 
     if (draw_unit) {
         panel_spr = draw_unit->idle;
+    }
+
+    if (draw_unit != panel_unit) {
+        panel_unit = draw_unit;
+        // Clears over drawn health info etc
+        draw_manager.pattern_fill({226, 12, 200, 50});
+        if (draw_unit) {
+            // Check if the unit is on our side
+            if (human_turn && active_unit->defending == draw_unit->defending) {
+                for (int i = 0; i < draw_unit->hp; ++i) {
+                    draw_manager.draw(
+                        IMG_GF4_SBR,
+                        {235 + 10*i, 46, 0, 0, 1, 1});
+                }
+            }
+        }
     }
 
     draw_manager.draw(id(ID::PANEL_UNIT), panel_spr, {177, 17, 0, 0, 1, 1});
