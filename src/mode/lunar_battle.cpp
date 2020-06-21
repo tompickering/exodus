@@ -342,7 +342,7 @@ ExodusMode LunarBattle::update(float delta) {
                     target_unit->hp, max(0, target_unit->hp - damage_to_apply));
             }
             if (damage_to_apply > 0) {
-                draw_manager.save_background();
+                draw_manager.save_background({SURF_X, SURF_Y, RES_X, RES_Y});
             }
             stage = LB_Damage;
             break;
