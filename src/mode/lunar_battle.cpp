@@ -286,17 +286,40 @@ ExodusMode LunarBattle::update(float delta) {
         case LB_CalcDamage:
             damage_to_apply = 0;
             if (target_unit) {
-                // TODO: Correct number of hits logic. Depends on officers etc.
-                damage_to_apply = RND(active_unit->hp);
+                int power = active_unit->fire_power;
+                bool cover = is_in_cover(target_unit);
+                bool alienhit = false;
+                // CPU units except rebels get a firepower bonus
+                if (!human_turn && active_unit->type != UNIT_Rebel) {
+                    ++power;
+                }
+                if (cover) {
+                    power -= 3;
+                }
+                // TODO: Officer power bonuses
+                power = clamp(power, 0, 4);
+                if (active_unit->is_alien) {
+                    if (cover) {
+                        power = 1;
+                    } else {
+                        alienhit = true;
+                    }
+                }
+                for (int i = 0; i < active_unit->hp; ++i) {
+                    // Aliens shooting on units not in cover always hit
+                    if (alienhit || onein(6 - power)) {
+                        ++damage_to_apply;
+                    }
+                }
             }
             stage = LB_Damage;
             break;
         case LB_Damage:
-            if (damage_to_apply > 0) {
+            if (target_unit) {
                 // TODO: Explosions etc
-                L.info("%d fired %d shots for %d damage to %d with %dHP",
-                    active_unit->type, active_unit->hp, damage_to_apply,
-                    target_unit->type, target_unit->hp);
+                L.info("Fired %d shots for %d damage - HP %d -> %d",
+                    active_unit->hp, damage_to_apply,
+                    target_unit->hp, max(0, target_unit->hp - damage_to_apply));
                 target_unit->hp = max(0, target_unit->hp - damage_to_apply);
             }
             stage = LB_CheckWon;
@@ -1078,10 +1101,12 @@ BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     move = 0;
     fire_range = 0;
     fire_rate = 4.f;
+    fire_power = 0;
     moves_remaining = 0;
     shots_remaining = 0;
     can_act = true;
     can_use_cover = false;
+    is_alien = false;
     idle = nullptr;
     walk = nullptr;
     fire = nullptr;
@@ -1108,6 +1133,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             name = STR_Inf;
             move = 3;
             fire_range = 3;
+            fire_power = 1;
             can_use_cover = true;
             // TODO: SFX
             if (defending) {
@@ -1126,6 +1152,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             name = STR_Gli;
             move = 4;
             fire_range = 4;
+            fire_power = 2;
             // TODO: SFX
             // TODO: Glider crashing sprite
             if (defending) {
@@ -1146,6 +1173,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             name = STR_Art;
             move = 0;
             fire_range = 7;
+            fire_power = 3;
             can_shoot_behind = false;
             if (defending) {
                 idle = IMG_GF4_6;
@@ -1163,6 +1191,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             name = STR_LBGun;
             move = 0;
             fire_range = 100;
+            fire_power = 4;
             hp = 6;
             defending = true;
             idle = IMG_GF4_21;
@@ -1187,6 +1216,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             // TODO: Check these
             move = 3;
             fire_range = 3;
+            fire_power = 1;
             defending = false;
             can_use_cover = true;
             idle = IMG_RF1_1;
@@ -1198,6 +1228,8 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             name = STR_Inf;
             move = 3;
             fire_range = 3;
+            fire_power = 1;
+            is_alien = true;
             defending = false;
             can_use_cover = true;
             // TODO: Alt aliens
@@ -1217,6 +1249,8 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             name = STR_Art;
             move = 0;
             fire_range = 7;
+            fire_power = 3;
+            is_alien = true;
             can_shoot_behind = false;
             defending = false;
             // TODO: Alt aliens

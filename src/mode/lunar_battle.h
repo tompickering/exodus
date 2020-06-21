@@ -56,10 +56,12 @@ class BattleUnit {
         int move;
         int fire_range;
         float fire_rate;
+        int fire_power;
         bool defending;
         bool can_shoot_behind;
         bool can_act;
         bool can_use_cover;
+        bool is_alien;
         int moves_remaining;
         int shots_remaining;
         bool turn_taken;
