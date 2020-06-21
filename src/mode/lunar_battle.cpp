@@ -326,6 +326,14 @@ ExodusMode LunarBattle::update(float delta) {
                     active_unit->hp, damage_to_apply,
                     target_unit->hp, max(0, target_unit->hp - damage_to_apply));
                 target_unit->hp = max(0, target_unit->hp - damage_to_apply);
+                // If the lunar base control is destroyed, destroy all lunar base guns
+                if (target_unit->type == UNIT_LBCtl && target_unit->hp <= 0) {
+                    for (int i = 0; i < n_units; ++i) {
+                        if (units[i].type == UNIT_LBGun) {
+                            units[i].hp = 0;
+                        }
+                    }
+                }
             }
             stage = LB_CheckWon;
             break;
