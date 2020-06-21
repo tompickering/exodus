@@ -247,6 +247,20 @@ ExodusMode LunarBattle::update(float delta) {
                         move_dir = DIR_None;
                         active_unit->moves_remaining = 0;
                     }
+
+                    if (input_manager.consume(K_Up))
+                        move_dir = DIR_Up;
+                    if (input_manager.consume(K_Down))
+                        move_dir = DIR_Down;
+                    if (input_manager.consume(K_Left))
+                        move_dir = DIR_Left;
+                    if (input_manager.consume(K_Right))
+                        move_dir = DIR_Right;
+                    if (input_manager.consume(K_Enter)) {
+                        // We wish to end our movement phase early
+                        move_dir = DIR_None;
+                        active_unit->moves_remaining = 0;
+                    }
                 } else {
                     // TODO: AI movement - for now just stick with the random choice
                     move_dir = get_random_move_direction();

@@ -10,6 +10,10 @@ int sdl_input_key[] = {
     SDLK_ESCAPE,
     SDLK_RETURN,
     SDLK_BACKSPACE,
+    SDLK_UP,
+    SDLK_DOWN,
+    SDLK_LEFT,
+    SDLK_RIGHT,
     SDLK_LSHIFT,
     SDLK_RSHIFT,
 };
