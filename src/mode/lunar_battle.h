@@ -59,6 +59,7 @@ class BattleUnit {
         bool defending;
         bool can_shoot_behind;
         bool can_act;
+        bool can_use_cover;
         int moves_remaining;
         int shots_remaining;
         bool turn_taken;
@@ -112,6 +113,7 @@ class LunarBattle : ModeBase, CommPanelDrawer {
         BattleUnit* active_unit;
         BattleUnit* target_unit;
         BattleUnit* panel_unit;
+        bool is_in_cover(BattleUnit*);
 
         BattleUnit* unit_at(int, int);
 

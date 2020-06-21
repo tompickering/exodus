@@ -726,7 +726,7 @@ void LunarBattle::update_panel_battle() {
             }
 
             // TODO: Conditional based on cover
-            if (true) {
+            if (is_in_cover(draw_unit)) {
                 draw_manager.draw(
                     IMG_GF4_COVER,
                     {232, 50, 0, 0, 1, 1});
@@ -1055,6 +1055,20 @@ void LunarBattle::reset_round() {
     }
 }
 
+bool LunarBattle::is_in_cover(BattleUnit* u) {
+    if (!u || !u->can_use_cover) {
+        return false;
+    }
+
+    for (int i = 0; i < n_cover; ++i) {
+        if (cover[i].x == u->x && cover[i].y == u->y) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     name = STR_None;
     x = 0;
@@ -1067,6 +1081,7 @@ BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     moves_remaining = 0;
     shots_remaining = 0;
     can_act = true;
+    can_use_cover = false;
     idle = nullptr;
     walk = nullptr;
     fire = nullptr;
@@ -1093,6 +1108,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             name = STR_Inf;
             move = 3;
             fire_range = 3;
+            can_use_cover = true;
             // TODO: SFX
             if (defending) {
                 idle = IMG_GF4_4;
@@ -1172,6 +1188,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             move = 3;
             fire_range = 3;
             defending = false;
+            can_use_cover = true;
             idle = IMG_RF1_1;
             walk = IMG_RF1_1_2;
             fire = IMG_RF1_13;
@@ -1182,6 +1199,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             move = 3;
             fire_range = 3;
             defending = false;
+            can_use_cover = true;
             // TODO: Alt aliens
             if (true) {
                 idle = IMG_AL1_1;
