@@ -57,7 +57,7 @@ Anim anim_target {
     nullptr
 };
 
-Anim anim_explode(
+static Anim anim_explode(
     11,
     IMG_SU1_DEAD1,
     IMG_SU1_DEAD2,

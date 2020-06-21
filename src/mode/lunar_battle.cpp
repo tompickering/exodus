@@ -2,6 +2,7 @@
 
 #include <cmath>
 
+#include "anim.h"
 #include "assetpaths.h"
 
 #include "util/value.h"
@@ -10,6 +11,7 @@ static const int SURF_X =  0;
 static const int SURF_Y = 72;
 static const int BLK_SZ = 40;
 static const float MOVE_RATE = 1.5f;
+static const float EXP_RATE = 2.f;
 static const int BG_WIDTH = 16;
 static const int BG_HEIGHT = 11;
 
@@ -35,8 +37,20 @@ enum ID {
     ARROW_DOWN,
     ARROW_LEFT,
     ARROW_RIGHT,
+    EXPLOSION,
     END,
 };
+
+static Anim anim_explode(
+    7,
+    IMG_GF4_XP1,
+    IMG_GF4_XP2,
+    IMG_GF4_XP3,
+    IMG_GF4_XP4,
+    IMG_GF4_XP5,
+    IMG_GF4_XP6,
+    nullptr
+);
 
 LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer() {
     stage = LB_Move;
@@ -44,6 +58,7 @@ LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer() {
     unit_moving = false;
     move_interp = 0;
     shot_interp = 0;
+    exp_interp = 0;
     fire_time = 0;
     defender_turn = true;
     target_unit = nullptr;
@@ -71,6 +86,7 @@ void LunarBattle::enter() {
     unit_moving = false;
     move_interp = 0;
     shot_interp = 0;
+    exp_interp = 0;
     fire_time = 0;
     n_cover = 0;
 
@@ -127,6 +143,10 @@ void LunarBattle::draw_ground() {
     }
 
     draw_manager.save_background({SURF_X, SURF_Y, RES_X, RES_Y});
+
+    for (int i = 0; i < n_units; ++i) {
+        units[i].drawn_dead_bg = false;
+    }
 }
 
 void LunarBattle::exit() {
@@ -316,16 +336,37 @@ ExodusMode LunarBattle::update(float delta) {
                         ++damage_to_apply;
                     }
                 }
+                damage_to_apply = min(damage_to_apply, target_unit->hp);
+                L.info("Fired %d shots for %d damage - HP %d -> %d",
+                    active_unit->hp, damage_to_apply,
+                    target_unit->hp, max(0, target_unit->hp - damage_to_apply));
+            }
+            if (damage_to_apply > 0) {
+                draw_manager.save_background();
             }
             stage = LB_Damage;
             break;
         case LB_Damage:
+            if (!target_unit) {
+                stage = LB_CheckWon;
+                break;
+            }
+
+            if (exp_interp > 0) {
+                exp_interp -= delta * EXP_RATE;
+                if (exp_interp < 0) {
+                    exp_interp = 0;
+                    --damage_to_apply;
+                    target_unit->hp = max(0, target_unit->hp - 1);
+                }
+                break;
+            } else if (damage_to_apply > 0) {
+                exp_interp = 1;
+                // TODO: Explosion SFX
+                break;
+            }
+
             if (target_unit) {
-                // TODO: Explosions etc
-                L.info("Fired %d shots for %d damage - HP %d -> %d",
-                    active_unit->hp, damage_to_apply,
-                    target_unit->hp, max(0, target_unit->hp - damage_to_apply));
-                target_unit->hp = max(0, target_unit->hp - damage_to_apply);
                 // If the lunar base control is destroyed, destroy all lunar base guns
                 if (target_unit->type == UNIT_LBCtl && target_unit->hp <= 0) {
                     for (int i = 0; i < n_units; ++i) {
@@ -334,6 +375,8 @@ ExodusMode LunarBattle::update(float delta) {
                         }
                     }
                 }
+                // Ensure the units are removed from the background
+                draw_ground();
             }
             stage = LB_CheckWon;
             break;
@@ -368,7 +411,7 @@ ExodusMode LunarBattle::update(float delta) {
     }
 
     update_panel();
-    draw_units(false);
+    draw_units();
     update_cursor();
 
     bool cursor_moved = (cursor_x != cursor_prev_x || cursor_y != cursor_prev_y);
@@ -379,7 +422,7 @@ ExodusMode LunarBattle::update(float delta) {
                       BLK_SZ, BLK_SZ};
         draw_manager.restore_background(a);
         // FIXME: We should really just redraw unit under the previous position, if any...
-        draw_units(true);
+        draw_units();
     }
 
     update_arrows();
@@ -550,7 +593,7 @@ BattleUnit* LunarBattle::unit_at(int x, int y) {
     return nullptr;
 }
 
-void LunarBattle::draw_units(bool full_redraw) {
+void LunarBattle::draw_units() {
     for (int pass = 0; pass < 2; ++pass) {
         bool draw_dead = pass == 0;
         for (int i = 0; i < n_units; ++i) {
@@ -585,7 +628,7 @@ void LunarBattle::draw_units(bool full_redraw) {
 
             if (units[i].hp <= 0) spr = units[i].dead;
 
-            if (full_redraw || (units[i].hp > 0 || !units[i].drawn_dead_bg)) {
+            if (units[i].hp > 0 || !units[i].drawn_dead_bg) {
                 if (units[i].defending) {
                     draw_manager.draw(
                         units[i].spr_id,
@@ -606,6 +649,14 @@ void LunarBattle::draw_units(bool full_redraw) {
                 units[i].drawn_dead_bg = true;
                 DrawArea area = {draw_x, draw_y, BLK_SZ, BLK_SZ};
                 draw_manager.save_background(area);
+            }
+
+            if (exp_interp > 0 && target_unit == &units[i]) {
+                draw_manager.draw(
+                    id(ID::EXPLOSION),
+                    anim_explode.interp(1 - exp_interp),
+                    {draw_x + BLK_SZ/2, draw_y + BLK_SZ/2,
+                     0.5, 0.5, 1, 1});
             }
 
             if (human_turn && stage == LB_Fire && active_unit == &units[i]) {
