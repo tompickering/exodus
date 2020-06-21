@@ -8,5 +8,6 @@ bool in_radius(float x, float y, float ax, float ay, float r);
 
 int min(int, int);
 int max(int, int);
+int clamp(int, int, int);
 
 #endif

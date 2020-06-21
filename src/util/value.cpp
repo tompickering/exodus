@@ -29,3 +29,7 @@ int max(int a, int b) {
         return a;
     return b;
 }
+
+int clamp(int a, int minimum, int maximum) {
+    return min(max(a, minimum), maximum);
+}
