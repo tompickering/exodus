@@ -256,6 +256,11 @@ ExodusMode LunarBattle::update(float delta) {
             } else {
                 if (!target_unit) {
                     if (human_turn) {
+                        if (draw_manager.query_click(active_unit->spr_id).id) {
+                            // We are choosing not to fire
+                            active_unit->shots_remaining = 0;
+                            break;
+                        }
                         for (int i = 0; i < n_units; ++i) {
                             if (draw_manager.query_click(units[i].spr_id).id) {
                                 if (check_viable_target(&units[i])) {
