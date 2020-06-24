@@ -719,9 +719,12 @@ void LunarBattle::update_cursor() {
         return;
     }
 
+    Planet *p = exostate.get_active_planet();
+    bool ice = p->get_moon_class() == MOON_Ice;
+
     if (cursor_x >= 0 && cursor_y >= 0) {
         draw_manager.draw(
-            over_target ? IMG_CURSOR_BATTLE1 : IMG_CURSOR_BATTLE0,
+            (over_target || ice) ? IMG_CURSOR_BATTLE1 : IMG_CURSOR_BATTLE0,
             {SURF_X + BLK_SZ * cursor_x,
              SURF_Y + BLK_SZ * cursor_y,
              0, 0, 1, 1});
