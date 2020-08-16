@@ -25,6 +25,20 @@ static const char* text[] = {
 };
 
 enum ID {
+    TEXT0,
+    TEXT1,
+    TEXT2,
+    TEXT3,
+    TEXT4,
+    TEXT5,
+    TEXT6,
+    TEXT7,
+    TEXT8,
+    TEXT9,
+    TEXT10,
+    TEXT11,
+    TEXT12,
+    TEXT13,
     END,
 };
 
@@ -59,6 +73,10 @@ ExodusMode GalaxyIntro::update(float delta) {
         return ExodusMode::MODE_None;
     }
 
+    if (time == 0) {
+        draw_manager.save_background();
+    }
+
     Player *player = exostate.get_active_player();
     player->set_intro_seen();
 
@@ -78,6 +96,7 @@ ExodusMode GalaxyIntro::update(float delta) {
     if (this_text_idx <= n_lines) {
         if (this_text_idx > 0) {
             draw_manager.draw_text(
+                id(ID::TEXT0 + this_text_idx - 1),
                 text[this_text_idx - 1],
                 Justify::Left,
                 INDENT_X,
@@ -87,6 +106,7 @@ ExodusMode GalaxyIntro::update(float delta) {
         float this_text_interp = n_lines * fmod(progress, 1.f/n_lines);
         grey = (char)(this_text_interp * 0xD0);
         draw_manager.draw_text(
+            id(ID::TEXT0 + this_text_idx),
             text[this_text_idx],
             Justify::Left,
             INDENT_X,
