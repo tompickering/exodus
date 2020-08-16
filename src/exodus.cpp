@@ -41,6 +41,10 @@ INPUTMANAGER input_manager;
 ExodusState exostate;
 EphemeralState ephstate;
 
+#ifdef DBG
+ExodusDebug exodebug;
+#endif
+
 volatile bool running;
 
 void signal_handler(int signum) {
@@ -170,6 +174,10 @@ int Exodus::run(int argc, char** argv) {
 
         if (input_manager.read(Input::K_RShift)) {
             delta_time *= 10;
+        }
+
+        if (input_manager.consume(Input::K_F1)) {
+            exodebug.add_mc(1000);
         }
 #endif
     }

@@ -17,6 +17,8 @@
 #include "galaxy/star.h"
 #include "galaxy/planet.h"
 
+#include "exodus_debug.h"
+
 #define MAX_HUMAN_PLAYERS    5
 
 #define N_PLAYERS 15
@@ -92,6 +94,8 @@ class ExodusState {
         Galaxy galaxy;
         bool galaxy_finalised;
         bool active_flytarget_is_guild;
+
+    friend class ExodusDebug;
 };
 
 #endif

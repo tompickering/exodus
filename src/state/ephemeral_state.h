@@ -11,6 +11,8 @@
 
 #include "galaxy/planet.h"
 
+#include "exodus_debug.h"
+
 enum AggressorType {
     AGG_Player,
     AGG_Rebels,
@@ -79,6 +81,8 @@ class EphemeralState {
         PlanetDestruction destruction;
     private:
         EphState eph_state;
+
+    friend class ExodusDebug;
 };
 
 
