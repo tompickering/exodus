@@ -28,6 +28,7 @@
 #include "mode/lunar_battle_prep.h"
 #include "mode/lunar_battle.h"
 
+#include <cstdlib>
 #include <csignal>
 
 const float MAX_FPS = 60.f;
@@ -132,6 +133,29 @@ int Exodus::run(int argc, char** argv) {
 
     MousePos mouse_pos = {-1, -1};
     MousePos click_pos = {-1, -1};
+
+#ifdef DBG
+    for (int i = 0; i < argc; ++i) {
+        if (!strcmp(argv[i], "--setup")) {
+            GameConfig config;
+            config.n_players = 1;
+            config.size = GAL_Medium;
+            config.players[0].set_name("Debug");
+            config.players[0].set_gender(GENDER_Female);
+            config.players[0].set_title("Lady");
+            config.players[0].set_ref("milady");
+            config.players[0].set_flag_idx(0);
+            config.aim = AIM_Might;
+            config.enemy_start = ENEMY_Weak;
+            exostate.init(config);
+            srand(0);
+            exostate.generate_galaxy();
+            exostate.finalise_galaxy();
+            reset_mode_stack();
+            push_mode(MODE_GalaxyMap);
+        }
+    }
+#endif
 
     while (running) {
         frame_start = game_timer.get_delta();
