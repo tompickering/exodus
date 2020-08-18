@@ -263,7 +263,12 @@ ExodusMode LunarBattle::update(float delta) {
                     }
                 } else {
                     // TODO: AI movement - for now just stick with the random choice
-                    move_dir = get_random_move_direction();
+                    move_dir = ai_decide_move_direction();
+
+                    if (move_dir == DIR_None) {
+                        // DIR_None from AI function indicates we can't move
+                        active_unit->moves_remaining = 0;
+                    }
                 }
 
                 if (move_dir != DIR_None) {
@@ -877,6 +882,144 @@ Direction LunarBattle::get_random_move_direction() {
         }
         v >>= 1;
         d = (Direction)((int)d - 1);
+    }
+
+    return DIR_None;
+}
+
+bool LunarBattle::ai_can_move_to(BattleUnit *u, int x, int y) {
+    if (!u) {
+        return false;
+    }
+
+    if (x < 0 || x >= BG_WIDTH) {
+        return false;
+    }
+
+    if (y < 0 || y >= BG_HEIGHT) {
+        return false;
+    }
+
+    if (unit_at(x, y)) {
+        return false;
+    }
+
+    // TODO: If it's a teleporter, return false
+    // TODO: If it's a mine, return false if we're defending
+
+    return true;
+}
+
+Direction LunarBattle::ai_decide_move_direction() {
+    BattleUnit *u = active_unit;
+
+    if (is_in_cover(u) && onein(2)) {
+        // 50% chance that units in cover will stay there
+        return DIR_None;
+    }
+
+    Direction dir = u->defending ? DIR_Left : DIR_Right;
+
+    bool move_up = false;
+    bool move_down = false;
+
+    if (   (dir == DIR_Right && u->x < BG_WIDTH - 1)
+        || (dir == DIR_Left  && u->x > 0)) {
+        int h_off = dir == DIR_Right ? 1 : -1;
+        // If we can't move in the desired horizontal direction
+        if (!ai_can_move_to(u, u->x + h_off, u->y)) {
+            bool can_move_up   = (u->y >             0) && (ai_can_move_to(u, u->x, u->y - 1));
+            bool can_move_down = (u->y < BG_HEIGHT - 1) && (ai_can_move_to(u, u->x, u->y + 1));
+            if (!(can_move_up || can_move_down)) {
+                // Don't move at all (although backwards might be possible)
+                return DIR_None;
+            }
+            if (can_move_down && !can_move_up) {
+                move_down = true;
+            }
+
+            if (!can_move_down && can_move_up) {
+                move_up = true;
+            }
+
+            if (can_move_up && can_move_down) {
+                if (onein(2)) {
+                    move_up = true;
+                } else {
+                    move_down = true;
+                }
+            }
+        }
+    }
+
+    bool move = true;
+
+    // The column 'behind' us - or our column if we're at the edge
+    int col_behind = 0;
+    if (dir == DIR_Right) {
+        col_behind = u->x > 0 ? u->x-1 : u->x;
+    } else {
+        col_behind = (u->x < BG_WIDTH - 1) ? u->x+1 : u->x;
+    }
+
+    // If there are enemy units in the column 'behind' us, unset the move flag
+    for (int j = 0; j < BG_WIDTH; ++j) {
+        BattleUnit *other = unit_at(col_behind, j);
+        if (other && other->defending != u->defending) {
+            move = false;
+            break;
+        }
+    }
+
+    if (!move) {
+        for (int j = 0; j < BG_WIDTH; ++j) {
+            BattleUnit *other = unit_at(col_behind, j);
+            if (other && other->defending != u->defending) {
+                if (other->y > u->y) {
+                    if (ai_can_move_to(u, u->x, u->y + 1)) {
+                        move_down = true;
+                    }
+                } else {
+                    if (ai_can_move_to(u, u->x, u->y - 1)) {
+                        move_up = true;
+                    }
+                }
+            }
+        }
+
+        if (move_up || move_down) {
+            move = true;
+        }
+    }
+
+    if (move) {
+        if (!(move_up || move_down)) {
+            if ((dir == DIR_Right) && (u->x >= BG_WIDTH - 1 || !ai_can_move_to(u, u->x + 1, u->y))) {
+                return DIR_None;
+            }
+            if ((dir == DIR_Left) && (u->x <= 0 || !ai_can_move_to(u, u->x - 1, u->y))) {
+                return DIR_None;
+            }
+            if (move_up && (u->y <= 0 || !ai_can_move_to(u, u->x, u->y - 1))) {
+                return DIR_None;
+
+            }
+            if (move_down && (u->y >= BG_HEIGHT - 1 || !ai_can_move_to(u, u->x, u->y + 1))) {
+                return DIR_None;
+            }
+        }
+
+        if (!(move_up || move_down)) {
+            return dir;
+        }
+
+        if (move_up) {
+            return DIR_Up;
+        }
+
+        if (move_down) {
+            return DIR_Down;
+        }
     }
 
     return DIR_None;
