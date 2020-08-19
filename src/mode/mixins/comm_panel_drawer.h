@@ -28,6 +28,15 @@ enum CommAction {
     CA_Text5,
 };
 
+enum CommImg {
+    CI_Human,
+    CI_Yokon,
+    CI_Teri,
+    CI_Urkash,
+    CI_Gordoon,
+    CI_Rebels,
+};
+
 class CommPanelDrawer {
     public:
         CommPanelDrawer();
@@ -35,7 +44,8 @@ class CommPanelDrawer {
         void comm_draw_text();
         void comm_set_title(const char*);
         void comm_set_title(const char*, bool);
-        void comm_set_anim(const Anim&);
+        void comm_set_race(Race);
+        void comm_set_img(CommImg);
         void comm_set_img_caption(const char*);
         void comm_set_img_caption(const char*, const char*);
         void comm_set_text(int, const char*, ...);

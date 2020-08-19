@@ -13,6 +13,13 @@ const int COMM_Y = (RES_Y / 2) - (COMM_H / 2);
 const int COMM_RCOL_X = COMM_X + 196 + COMM_BORDER * 2;
 const float COMM_SPEECH_SPEED = 10.f;
 
+const Anim comm_anim_human_static(  1, IMG_LD0_LD0);
+const Anim comm_anim_yokon_static(  1, IMG_LD1_LD1);
+const Anim comm_anim_teri_static(   1, IMG_LD2_LD2);
+const Anim comm_anim_urkash_static( 1, IMG_LD3_LD3);
+const Anim comm_anim_gordoon_static(1, IMG_LD4_LD4);
+const Anim comm_anim_rebels_static( 1, IMG_LD5_LD5);
+
 CommPanelDrawer::CommPanelDrawer() {
     comm_text[0] = comm_text0; comm_text[1] = comm_text1; comm_text[2] = comm_text2;
     comm_text[3] = comm_text3; comm_text[4] = comm_text4; comm_text[5] = comm_text5;
@@ -103,8 +110,47 @@ void CommPanelDrawer::comm_set_title(const char* text, bool gradual) {
     comm_title_gradual = gradual;
 }
 
-void CommPanelDrawer::comm_set_anim(const Anim& a) {
-    comm_anim = a;
+void CommPanelDrawer::comm_set_race(Race race) {
+    switch (race) {
+        case RACE_Human:
+            comm_set_img(CI_Human);
+            break;
+        case RACE_Yokon:
+            comm_set_img(CI_Yokon);
+            break;
+        case RACE_Teri:
+            comm_set_img(CI_Teri);
+            break;
+        case RACE_Urkash:
+            comm_set_img(CI_Urkash);
+            break;
+        case RACE_Gordoon:
+            comm_set_img(CI_Gordoon);
+            break;
+    }
+}
+
+void CommPanelDrawer::comm_set_img(CommImg img) {
+    switch (img) {
+        case CI_Human:
+            comm_anim = comm_anim_human_static;
+            break;
+        case CI_Yokon:
+            comm_anim = comm_anim_yokon_static;
+            break;
+        case CI_Teri:
+            comm_anim = comm_anim_teri_static;
+            break;
+        case CI_Urkash:
+            comm_anim = comm_anim_urkash_static;
+            break;
+        case CI_Gordoon:
+            comm_anim = comm_anim_gordoon_static;
+            break;
+        case CI_Rebels:
+            comm_anim = comm_anim_rebels_static;
+            break;
+    }
 }
 
 void CommPanelDrawer::comm_set_img_caption(const char* text) {
@@ -271,7 +317,7 @@ void CommPanelDrawer::comm_close() {
     strncpy(comm_img_caption_upper, "", 1);
     strncpy(comm_img_caption_lower, "", 1);
 
-    new (&comm_anim) Anim(1, IMG_LD0_LD0);
+    comm_set_img(CI_Human);
 }
 
 void CommPanelDrawer::comm_ensure_closed() {
