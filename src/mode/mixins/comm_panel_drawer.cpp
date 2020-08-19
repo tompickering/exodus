@@ -3,6 +3,8 @@
 #include "assetpaths.h"
 #include "shared.h"
 
+#include "util/str.h"
+
 const int COMM_BORDER = 8;
 const int COMM_W = 580;
 const int COMM_H = 206 + (COMM_BORDER + 1) * 2;
@@ -85,10 +87,12 @@ void CommPanelDrawer::comm_set_img_caption(const char* text) {
 void CommPanelDrawer::comm_set_img_caption(const char* text_upper, const char* text_lower) {
     if (text_upper) {
         strncpy(comm_img_caption_upper, text_upper, COMM_MAX_TEXT - 1);
+        capitalise(comm_img_caption_upper, COMM_MAX_TEXT);
     }
 
     if (text_lower) {
         strncpy(comm_img_caption_lower, text_lower, COMM_MAX_TEXT - 1);
+        capitalise(comm_img_caption_lower, COMM_MAX_TEXT);
     }
 }
 
