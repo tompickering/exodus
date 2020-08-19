@@ -47,7 +47,8 @@ class CommPanelDrawer {
         void comm_set_race(Race);
         void comm_set_img(CommImg);
         void comm_set_img_caption(const char*);
-        void comm_set_img_caption(const char*, const char*);
+        void comm_set_img_caption_upper(const char*, ...);
+        void comm_set_img_caption_lower(const char*, ...);
         void comm_set_text(int, const char*, ...);
         void comm_set_buttons(bool);
         void comm_open(int);

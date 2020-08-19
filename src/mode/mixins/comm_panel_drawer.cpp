@@ -164,19 +164,25 @@ void CommPanelDrawer::comm_set_img(CommImg img) {
 }
 
 void CommPanelDrawer::comm_set_img_caption(const char* text) {
-    comm_set_img_caption(nullptr, text);
+    comm_set_img_caption_lower(text);
 }
 
-void CommPanelDrawer::comm_set_img_caption(const char* text_upper, const char* text_lower) {
-    if (text_upper) {
-        strncpy(comm_img_caption_upper, text_upper, COMM_MAX_TEXT - 1);
-        capitalise(comm_img_caption_upper, COMM_MAX_TEXT);
-    }
+void CommPanelDrawer::comm_set_img_caption_upper(const char* text, ...) {
+    va_list args;
+    va_start(args, text);
+    vsnprintf(comm_img_caption_upper, COMM_MAX_TEXT - 1, text, args);
+    va_end(args);
 
-    if (text_lower) {
-        strncpy(comm_img_caption_lower, text_lower, COMM_MAX_TEXT - 1);
-        capitalise(comm_img_caption_lower, COMM_MAX_TEXT);
-    }
+    capitalise(comm_img_caption_upper, COMM_MAX_TEXT);
+}
+
+void CommPanelDrawer::comm_set_img_caption_lower(const char* text, ...) {
+    va_list args;
+    va_start(args, text);
+    vsnprintf(comm_img_caption_lower, COMM_MAX_TEXT - 1, text, args);
+    va_end(args);
+
+    capitalise(comm_img_caption_lower, COMM_MAX_TEXT);
 }
 
 void CommPanelDrawer::comm_set_buttons(bool buttons_on) {
