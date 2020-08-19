@@ -150,6 +150,7 @@ class DrawManager {
         virtual SpriteClick get_clicked_sprite();
         virtual SpriteClick query_click(SprID);
         virtual SpriteClick query_mouseover(SprID);
+        virtual void consume_click();
         virtual bool mouse_over(SprID);
         virtual bool mouse_in_area(DrawArea);
         virtual void clear_sprite_ids();

@@ -131,6 +131,11 @@ SpriteClick DrawManager::query_mouseover(SprID query) {
     return res;
 }
 
+void DrawManager::consume_click() {
+    click_pos = {-1, -1};
+    clicked_this_frame = false;
+}
+
 bool DrawManager::mouse_over(SprID query) {
     DrawArea *area = nullptr;
 
