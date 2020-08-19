@@ -167,6 +167,12 @@ int Exodus::run(int argc, char** argv) {
                 pop_mode();
             } else if (next == ExodusMode::MODE_Reload) {
                 // No stack change - just reset the current mode
+                // However, consume click event. This prevents clicks which resulted in
+                // the reload be consumed again by the first frame of the new mode. For
+                // example, selecting a StarMap comm panel option which closes the dialog
+                // should not also change the planet selection to any that is drawn in the
+                // same area of the screen.
+                draw_manager.consume_click();
                 set_mode(current_mode);
             } else {
                 if (next == ExodusMode::MODE_GalaxyMap) {
