@@ -36,6 +36,7 @@ class CommPanelDrawer {
         void comm_set_title(const char*);
         void comm_set_anim(const Anim&);
         void comm_set_img_caption(const char*);
+        void comm_set_img_caption(const char*, const char*);
         void comm_set_text(int, const char*, ...);
         void comm_set_buttons(bool);
         void comm_open(int);
@@ -48,7 +49,8 @@ class CommPanelDrawer {
         bool _comm_is_open;
 
         char comm_title[COMM_MAX_TEXT];
-        char comm_img_caption[COMM_MAX_TEXT];
+        char comm_img_caption_upper[COMM_MAX_TEXT];
+        char comm_img_caption_lower[COMM_MAX_TEXT];
         char comm_text0[COMM_MAX_TEXT];
         char comm_text1[COMM_MAX_TEXT];
         char comm_text2[COMM_MAX_TEXT];

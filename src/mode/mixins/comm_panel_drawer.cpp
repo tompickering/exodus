@@ -19,7 +19,8 @@ CommPanelDrawer::CommPanelDrawer() {
     }
 
     strncpy(comm_title, "", 1);
-    strncpy(comm_img_caption, "", 1);
+    strncpy(comm_img_caption_upper, "", 1);
+    strncpy(comm_img_caption_lower, "", 1);
 
     new (&comm_anim) Anim(1, IMG_LD0_LD0);
 
@@ -78,7 +79,17 @@ void CommPanelDrawer::comm_set_anim(const Anim& a) {
 }
 
 void CommPanelDrawer::comm_set_img_caption(const char* text) {
-    strncpy(comm_img_caption, text, COMM_MAX_TEXT - 1);
+    comm_set_img_caption(nullptr, text);
+}
+
+void CommPanelDrawer::comm_set_img_caption(const char* text_upper, const char* text_lower) {
+    if (text_upper) {
+        strncpy(comm_img_caption_upper, text_upper, COMM_MAX_TEXT - 1);
+    }
+
+    if (text_lower) {
+        strncpy(comm_img_caption_lower, text_lower, COMM_MAX_TEXT - 1);
+    }
 }
 
 void CommPanelDrawer::comm_set_buttons(bool buttons_on) {
@@ -173,7 +184,15 @@ void CommPanelDrawer::comm_open(int text_slots) {
 
     draw_manager.draw_text(
         Font::Tiny,
-        comm_img_caption,
+        comm_img_caption_upper,
+        Justify::Left,
+        COMM_X + COMM_BORDER + 6,
+        COMM_Y + COMM_H - COMM_BORDER - 28,
+        COL_TEXT2);
+
+    draw_manager.draw_text(
+        Font::Tiny,
+        comm_img_caption_lower,
         Justify::Left,
         COMM_X + COMM_BORDER + 6,
         COMM_Y + COMM_H - COMM_BORDER - 16,
@@ -211,7 +230,8 @@ void CommPanelDrawer::comm_close() {
     comm_text_interactive_mask = 0;
 
     strncpy(comm_title, "", 1);
-    strncpy(comm_img_caption, "", 1);
+    strncpy(comm_img_caption_upper, "", 1);
+    strncpy(comm_img_caption_lower, "", 1);
 
     new (&comm_anim) Anim(1, IMG_LD0_LD0);
 }
