@@ -100,14 +100,24 @@ void CommPanelDrawer::comm_draw_text() {
     }
 }
 
-void CommPanelDrawer::comm_set_title(const char* text) {
-    comm_set_title(text, false);
+void CommPanelDrawer::comm_set_title(const char* text, ...) {
+    va_list args;
+    va_start(args, text);
+    vsnprintf(comm_title, COMM_MAX_TEXT - 1, text, args);
+    va_end(args);
+
+    comm_title_len = strnlen(comm_title, COMM_MAX_TEXT);
+    comm_speech = false;
 }
 
-void CommPanelDrawer::comm_set_title(const char* text, bool speech) {
-    strncpy(comm_title, text, COMM_MAX_TEXT - 1);
+void CommPanelDrawer::comm_set_speech(const char* text, ...) {
+    va_list args;
+    va_start(args, text);
+    vsnprintf(comm_title, COMM_MAX_TEXT - 1, text, args);
+    va_end(args);
+
     comm_title_len = strnlen(comm_title, COMM_MAX_TEXT);
-    comm_speech = speech;
+    comm_speech = true;
 }
 
 void CommPanelDrawer::comm_set_race(Race race) {

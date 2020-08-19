@@ -42,8 +42,8 @@ class CommPanelDrawer {
         CommPanelDrawer();
         void comm_update(float);
         void comm_draw_text();
-        void comm_set_title(const char*);
-        void comm_set_title(const char*, bool);
+        void comm_set_title(const char*, ...);
+        void comm_set_speech(const char*, ...);
         void comm_set_race(Race);
         void comm_set_img(CommImg);
         void comm_set_img_caption(const char*);
