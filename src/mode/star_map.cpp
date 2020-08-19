@@ -107,7 +107,22 @@ ExodusMode StarMap::update(float delta) {
                             if (planet->get_owner() == player_idx) {
                                 // TODO: Comms with own planet
                             } else {
-                                // TODO: Comms with enemy planet
+                                // Comms with enemy planet
+                                Player *enemy = exostate.get_player(planet->get_owner());
+                                // TODO: Set plauyer title here
+                                comm_set_speech("What do you want, %s...?", player->get_name());
+                                comm_set_img_caption_upper(enemy->get_full_name());
+                                comm_set_img_caption_lower("RACE: %s", enemy->get_race_str());
+                                comm_set_race(enemy->get_race());
+                                comm_set_text(0, "Let us not talk, I want %s.", planet->get_name());
+                                comm_set_text(1, "I wish to trade.");
+                                comm_set_text(2, "I have an interesting offer.");
+                                comm_set_text(3, "I have something to say.");
+                                comm_set_buttons(false);
+                                comm_set_text_interactive_mask(0xF);
+                                comm_open(4);
+                                stage = SM_EnemyComm;
+                                return ExodusMode::MODE_None;
                             }
                         } else {
                             comm_set_title("Message from counsellor");
@@ -239,6 +254,16 @@ ExodusMode StarMap::update(float delta) {
                 comm_close();
                 return ExodusMode::MODE_PlanetColonise;
             }
+            break;
+        case SM_EnemyComm:
+            // TODO
+            comm_update(delta);
+            action = comm_check_action();
+            if (action != CA_None) {
+                comm_close();
+                return ExodusMode::MODE_Reload;
+            }
+            return ExodusMode::MODE_None;
             break;
         case SM_Back2Gal:
             return ExodusMode::MODE_Pop;
