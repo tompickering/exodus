@@ -108,8 +108,8 @@ ExodusMode StarMap::update(float delta) {
                                 // TODO: Comms with own planet
                             } else {
                                 // Comms with enemy planet
+                                // TODO: Rest of conversation here
                                 Player *enemy = exostate.get_player(planet->get_owner());
-                                // TODO: Set plauyer title here
                                 comm_set_speech("What do you want, %s...?", player->get_name());
                                 comm_set_img_caption_upper(enemy->get_full_name());
                                 comm_set_img_caption_lower("RACE: %s", enemy->get_race_str());
