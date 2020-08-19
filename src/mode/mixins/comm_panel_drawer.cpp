@@ -76,7 +76,6 @@ void CommPanelDrawer::comm_draw_text() {
                     comm_time_since_text_mouseover = 0;
                 }
                 col = draw_manager.text_pulse_col(comm_time_since_text_mouseover);
-                L.debug("%d", col.r);
             }
         }
 
