@@ -98,6 +98,21 @@ Race Player::get_race() {
     return race;
 }
 
+const char* Player::get_race_str() {
+    switch (get_race()) {
+        case RACE_Human:
+            return "Human";
+        case RACE_Yokon:
+            return "Yo' kon";
+        case RACE_Teri:
+            return "Teri";
+        case RACE_Urkash:
+            return "Urkash";
+        case RACE_Gordoon:
+            return "Gordoon";
+    }
+}
+
 bool Player::is_human() {
     return race == RACE_Human;
 }

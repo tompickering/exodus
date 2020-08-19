@@ -94,6 +94,7 @@ class Player {
         void set_ref(const char*);
         void set_gender(Gender);
         Race get_race();
+        const char* get_race_str();
         bool is_human();
         bool is_alive();
         bool is_active();
