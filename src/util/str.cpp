@@ -5,6 +5,12 @@
 
 #define CAP_MAX_LEN 512
 
+void capitalise(char* str, int len) {
+    for (int i = 0; i < len; ++i) {
+        str[i] = toupper(str[i]);
+    }
+}
+
 char _tmp_caps[CAP_MAX_LEN];
 
 const char* tmp_caps(const char* str) {
