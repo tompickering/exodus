@@ -11,6 +11,7 @@ const int COMM_H = 206 + (COMM_BORDER + 1) * 2;
 const int COMM_X = (RES_X / 2) - (COMM_W / 2);
 const int COMM_Y = (RES_Y / 2) - (COMM_H / 2);
 const int COMM_RCOL_X = COMM_X + 196 + COMM_BORDER * 2;
+const float COMM_SPEECH_SPEED = 10.f;
 
 CommPanelDrawer::CommPanelDrawer() {
     comm_text[0] = comm_text0; comm_text[1] = comm_text1; comm_text[2] = comm_text2;
@@ -34,11 +35,32 @@ CommPanelDrawer::CommPanelDrawer() {
 }
 
 void CommPanelDrawer::comm_update(float dt) {
+    comm_time_open += dt;
     comm_time_since_text_mouseover += dt;
     comm_draw_text();
 }
 
 void CommPanelDrawer::comm_draw_text() {
+    if (comm_title_gradual) {
+        int max_chars_to_draw = COMM_SPEECH_SPEED * comm_time_open;
+        char comm_title_tmp[COMM_MAX_TEXT];
+        strncpy(comm_title_tmp, comm_title, max_chars_to_draw);
+        comm_title_tmp[max_chars_to_draw] = '\0';
+        draw_manager.draw_text(
+            id_comm_title,
+            comm_title_tmp,
+            Justify::Left,
+            COMM_RCOL_X + 8,
+            COMM_Y + 11,
+            COL_TEXT);
+
+        if (max_chars_to_draw >= comm_title_len) {
+            comm_title_gradual = false;
+        }
+
+        return;
+    }
+
     bool mouseover_any = false;
     // FIXME: We can optimise redraws by only drawing text that has just stopped
     // or having or currently has the mouse over it - but we'll also need to know whether
@@ -73,7 +95,13 @@ void CommPanelDrawer::comm_draw_text() {
 }
 
 void CommPanelDrawer::comm_set_title(const char* text) {
+    comm_set_title(text, false);
+}
+
+void CommPanelDrawer::comm_set_title(const char* text, bool gradual) {
     strncpy(comm_title, text, COMM_MAX_TEXT - 1);
+    comm_title_len = strnlen(comm_title, COMM_MAX_TEXT);
+    comm_title_gradual = gradual;
 }
 
 void CommPanelDrawer::comm_set_anim(const Anim& a) {
@@ -116,6 +144,8 @@ void CommPanelDrawer::comm_set_text_interactive_mask(unsigned char mask) {
 }
 
 void CommPanelDrawer::comm_open(int text_slots) {
+    comm_time_open = 0;
+
     comm_text_slots = text_slots;
 
     comm_mouseover_text = -1;
@@ -126,6 +156,7 @@ void CommPanelDrawer::comm_open(int text_slots) {
     }
 
     id_comm_panel = draw_manager.new_sprite_id();
+    id_comm_title = draw_manager.new_sprite_id();
     id_comm_img = draw_manager.new_sprite_id();
     id_comm_buttons = draw_manager.new_sprite_id();
 
@@ -179,12 +210,15 @@ void CommPanelDrawer::comm_open(int text_slots) {
          COMM_Y + COMM_BORDER + 1,
          0, 0, 1, 1});
 
-    draw_manager.draw_text(
-        comm_title,
-        Justify::Left,
-        COMM_RCOL_X + 8,
-        COMM_Y + 11,
-        COL_TEXT);
+    if (!comm_title_gradual) {
+        draw_manager.draw_text(
+            id_comm_title,
+            comm_title,
+            Justify::Left,
+            COMM_RCOL_X + 8,
+            COMM_Y + 11,
+            COL_TEXT);
+    }
 
     draw_manager.draw_text(
         Font::Tiny,
@@ -216,6 +250,7 @@ void CommPanelDrawer::comm_close() {
         draw_manager.release_sprite_id(id_text[i]);
     }
 
+    draw_manager.release_sprite_id(id_comm_title);
     draw_manager.release_sprite_id(id_comm_img);
     draw_manager.release_sprite_id(id_comm_buttons);
 
@@ -250,6 +285,10 @@ bool CommPanelDrawer::comm_is_open() {
 }
 
 CommAction CommPanelDrawer::comm_check_action() {
+    if (comm_title_gradual) {
+        return CA_None;
+    }
+
     SpriteClick click;
     click = draw_manager.query_click(id_comm_buttons);
     if (click.id) {

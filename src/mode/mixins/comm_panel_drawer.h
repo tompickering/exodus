@@ -34,6 +34,7 @@ class CommPanelDrawer {
         void comm_update(float);
         void comm_draw_text();
         void comm_set_title(const char*);
+        void comm_set_title(const char*, bool);
         void comm_set_anim(const Anim&);
         void comm_set_img_caption(const char*);
         void comm_set_img_caption(const char*, const char*);
@@ -58,12 +59,17 @@ class CommPanelDrawer {
         char comm_text4[COMM_MAX_TEXT];
         char comm_text5[COMM_MAX_TEXT];
         char *comm_text[6];
+        float comm_time_open;
         float comm_time_since_text_mouseover;
         unsigned char comm_text_interactive_mask;
         int comm_mouseover_text;
         Anim comm_anim;
 
+        int comm_title_len;
+        bool comm_title_gradual;
+
         SprID id_comm_panel;
+        SprID id_comm_title;
         SprID id_comm_img;
         SprID id_comm_buttons;
         SprID id_text[6];
