@@ -48,7 +48,7 @@ void CommPanelDrawer::comm_update(float dt) {
 }
 
 void CommPanelDrawer::comm_draw_text() {
-    if (comm_title_gradual) {
+    if (comm_speech) {
         int max_chars_to_draw = COMM_SPEECH_SPEED * comm_time_open;
         char comm_title_tmp[COMM_MAX_TEXT];
         strncpy(comm_title_tmp, comm_title, max_chars_to_draw);
@@ -62,7 +62,7 @@ void CommPanelDrawer::comm_draw_text() {
             COL_TEXT);
 
         if (max_chars_to_draw >= comm_title_len) {
-            comm_title_gradual = false;
+            comm_speech = false;
         }
 
         return;
@@ -104,10 +104,10 @@ void CommPanelDrawer::comm_set_title(const char* text) {
     comm_set_title(text, false);
 }
 
-void CommPanelDrawer::comm_set_title(const char* text, bool gradual) {
+void CommPanelDrawer::comm_set_title(const char* text, bool speech) {
     strncpy(comm_title, text, COMM_MAX_TEXT - 1);
     comm_title_len = strnlen(comm_title, COMM_MAX_TEXT);
-    comm_title_gradual = gradual;
+    comm_speech = speech;
 }
 
 void CommPanelDrawer::comm_set_race(Race race) {
@@ -255,7 +255,7 @@ void CommPanelDrawer::comm_open(int text_slots) {
          COMM_Y + COMM_BORDER + 1,
          0, 0, 1, 1});
 
-    if (!comm_title_gradual) {
+    if (!comm_speech) {
         draw_manager.draw_text(
             id_comm_title,
             comm_title,
@@ -330,7 +330,7 @@ bool CommPanelDrawer::comm_is_open() {
 }
 
 CommAction CommPanelDrawer::comm_check_action() {
-    if (comm_title_gradual) {
+    if (comm_speech) {
         return CA_None;
     }
 

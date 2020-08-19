@@ -76,7 +76,7 @@ class CommPanelDrawer {
         Anim comm_anim;
 
         int comm_title_len;
-        bool comm_title_gradual;
+        bool comm_speech;
 
         SprID id_comm_panel;
         SprID id_comm_title;
