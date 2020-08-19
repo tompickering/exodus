@@ -59,7 +59,7 @@ void CommPanelDrawer::comm_draw_text() {
             Justify::Left,
             COMM_RCOL_X + 8,
             COMM_Y + 11,
-            COL_TEXT);
+            COL_TEXT_SPEECH);
 
         if (max_chars_to_draw >= comm_title_len) {
             comm_speech = false;
