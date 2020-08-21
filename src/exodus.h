@@ -50,6 +50,7 @@ class Exodus {
         void push_mode(ExodusMode);
         void pop_mode();
         void reset_mode_stack();
+        bool mode_updated_since_enter;
 };
 
 #ifdef SDL

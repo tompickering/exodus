@@ -56,6 +56,7 @@ Exodus::Exodus() {
     mode = nullptr;
     mode_stack_head = 0;
     current_mode = MODE_None;
+    mode_updated_since_enter = false;
 }
 
 Exodus::~Exodus() {
@@ -161,7 +162,11 @@ int Exodus::run(int argc, char** argv) {
     while (running) {
         frame_start = game_timer.get_delta();
 
-        ExodusMode next = mode->update(delta_time);
+        // Main game update, handled by the current mode
+        ExodusMode next = mode->update(mode_updated_since_enter ? delta_time : 0);
+        mode_updated_since_enter = true;
+
+        // Handle any mode transitions returned following update
         if (next != ExodusMode::MODE_None) {
             if (next == ExodusMode::MODE_Pop) {
                 pop_mode();
@@ -182,7 +187,17 @@ int Exodus::run(int argc, char** argv) {
             }
         }
 
-        draw_manager.update(delta_time, mouse_pos, click_pos);
+        /*
+         * It's possible we have entered a new mode following a return code from
+         * mode->update(). In this case, we want to avoid drawing until the new
+         * mode has had a chance to update in preparation for render (or even
+         * to signal a further mode transition, in which case this will apply
+         * again).
+         */
+        if (mode_updated_since_enter) {
+            draw_manager.update(delta_time, mouse_pos, click_pos);
+            game_timer.sleep_until(frame_start + MIN_FRAME_DELTA);
+        }
 
         if (!input_manager.update()) {
             running = false;
@@ -195,7 +210,6 @@ int Exodus::run(int argc, char** argv) {
         mouse_pos = input_manager.get_mouse_pos();
         click_pos = input_manager.read_click();
 
-        game_timer.sleep_until(frame_start + MIN_FRAME_DELTA);
         delta_time = game_timer.get_delta() - frame_start;
 
 #ifdef DBG
@@ -226,9 +240,7 @@ void Exodus::set_mode(ExodusMode new_mode) {
     L.debug("MODE: %s -> %s", mode_name, new_mode_name);
     current_mode = new_mode;
     mode->enter();
-    // When we see a mode transition, allow the new one an update
-    // before the draw manager kicks in.
-    mode->update(0);
+    mode_updated_since_enter = false;
 }
 
 void Exodus::push_mode(ExodusMode new_mode) {
