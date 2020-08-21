@@ -25,7 +25,7 @@ const char* flags[] = {
 
 ExodusState::ExodusState() {
     galaxy_finalised = false;
-    active_flytarget_is_guild = false;
+    active_flytarget_is_guild = true;
     first_city_done = false;
     first_spaceport_done = false;
 }
