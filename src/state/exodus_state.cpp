@@ -1,5 +1,6 @@
 #include "exodus_state.h"
 
+#include <cstdio>
 #include <cstring>
 
 #include "assetpaths.h"

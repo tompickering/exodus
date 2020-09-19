@@ -1,5 +1,6 @@
 #include "player.h"
 
+#include <cstdio>
 #include <cstring>
 
 #include "alien_names.h"

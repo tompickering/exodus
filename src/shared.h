@@ -1,6 +1,9 @@
 #ifndef GUARD_SHARED_H
 #define GUARD_SHARED_H
 
+#include <cstdlib>
+#include <cstdint>
+
 #include "logger.h"
 #include "platform.h"
 
