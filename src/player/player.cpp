@@ -112,6 +112,7 @@ const char* Player::get_race_str() {
         case RACE_Gordoon:
             return "Gordoon";
     }
+    return "<NO RACE>";
 }
 
 bool Player::is_human() {
