@@ -163,7 +163,7 @@ void ExodusState::init(GameConfig config) {
     for (i = 0; i < N_PLAYERS; ++i) {
         snprintf(
             players[i].full_name,
-            MAX_PLAYER_TITLE + 1 + MAX_PLAYER_NAME + 1,
+            MAX_PLAYER_FULLNAME + 1,
             "%s %s",
             players[i].title,
             players[i].name);
