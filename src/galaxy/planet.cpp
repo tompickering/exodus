@@ -48,6 +48,12 @@ bool Planet::exists() {
     return _exists;
 }
 
+int Planet::get_quality() const {
+    int quality = 0;
+    // TODO
+    return quality;
+}
+
 const int* get_loadplans_data(int file, PlanetClass cls, int r) {
     int offset = 0;
     // File offset

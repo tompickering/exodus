@@ -52,6 +52,12 @@ typedef struct {
     EnemyStart enemy_start;
 } GameConfig;
 
+typedef struct {
+    Planet* planet;
+    Star* star;
+    int index;
+} PlanetInfo;
+
 class ExodusState {
     public:
         ExodusState();
@@ -80,6 +86,7 @@ class ExodusState {
         int get_player_idx(Player*);
         unsigned int get_n_planets(Player*);
         bool active_player_local(); // Is the active player at the active flytarget?
+        PlanetInfo recommend_planet();
         bool first_city_done;
         bool first_spaceport_done;
     private:

@@ -442,3 +442,27 @@ bool ExodusState::active_player_local() {
     FlyTarget *orbit = loc2tgt(player->get_location().get_target());
     return orbit == get_active_flytarget();
 }
+
+PlanetInfo ExodusState::recommend_planet() {
+    PlanetInfo info;
+    int quality = -1;
+
+    Galaxy *gal = get_galaxy();
+    unsigned int n_stars;
+    Star *stars = gal->get_stars(n_stars);
+
+    for (unsigned int star_idx = 0; star_idx < n_stars; ++star_idx) {
+        Star *s = &stars[star_idx];
+        for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
+            Planet *p = s->get_planet(planet_idx);
+            int this_quality = p->get_quality();
+            if (this_quality > quality) {
+                quality = this_quality;
+                info.planet = p;
+                info.star = s;
+                info.index = planet_idx;
+            }
+        }
+    }
+    return info;
+}

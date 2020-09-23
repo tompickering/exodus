@@ -124,16 +124,29 @@ ExodusMode GuildBar::update(float delta) {
                         COL_TEXT);
                     {
                         const char* report_text[3];
-                        char planet_line[16 + FT_MAX_NAME];
+                        char planet_line[16 + FT_MAX_NAME + PLANET_MAX_NAME];
                         if (exostate.get_n_human_players() == 1) {
+                            PlanetInfo info = exostate.recommend_planet();
+                            if (info.planet->is_named()) {
+                                snprintf(
+                                    planet_line,
+                                    16 + FT_MAX_NAME + PLANET_MAX_NAME,
+                                    "%s at %s.",
+                                    info.planet->get_name(),
+                                    info.star->name);
+                            } else {
+                                snprintf(
+                                    planet_line,
+                                    16 + FT_MAX_NAME + PLANET_MAX_NAME,
+                                    "planet %d at %s.",
+                                    info.index + 1,
+                                    info.star->name);
+                            }
+
                             report_text[0] = "The best free planet that waits";
                             report_text[1] = "for colonization is probably";
                             report_text[2] = planet_line;
-                            snprintf(
-                                planet_line,
-                                16 + FT_MAX_NAME,
-                                "planet %d at %s.",
-                                0, "???");
+
                         } else {
                             report_text[0] = "Leaving an airlock without";
                             report_text[1] = "a proper space suit seriously";
