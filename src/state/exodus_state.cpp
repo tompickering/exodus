@@ -455,7 +455,20 @@ PlanetInfo ExodusState::recommend_planet() {
         Star *s = &stars[star_idx];
         for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
             Planet *p = s->get_planet(planet_idx);
+            if (!p || !p->exists()) {
+                continue;
+            }
             int this_quality = p->get_quality();
+            for (int i = 0;  i < STAR_MAX_PLANETS; ++i) {
+                if (i == planet_idx) {
+                    continue;
+                }
+                Planet *neighbour = s->get_planet(i);
+                if (neighbour && neighbour->exists() && neighbour->is_owned()) {
+                    this_quality += 2;
+                    break;
+                }
+            }
             if (this_quality > quality) {
                 quality = this_quality;
                 info.planet = p;

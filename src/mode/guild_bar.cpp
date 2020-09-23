@@ -143,6 +143,7 @@ ExodusMode GuildBar::update(float delta) {
                                     info.star->name);
                             }
 
+                            // FIXME: There is no case for when no planets are free
                             report_text[0] = "The best free planet that waits";
                             report_text[1] = "for colonization is probably";
                             report_text[2] = planet_line;

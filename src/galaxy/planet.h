@@ -113,7 +113,7 @@ class Planet {
         Planet();
         Planet(PlanetClass);
         bool exists();
-        int get_quality() const;
+        int get_quality();
         PlanetClass get_class();
         const char* get_class_str();
         const char* get_class_str_lower();

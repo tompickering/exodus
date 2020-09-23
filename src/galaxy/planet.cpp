@@ -48,9 +48,41 @@ bool Planet::exists() {
     return _exists;
 }
 
-int Planet::get_quality() const {
-    int quality = 0;
-    // TODO
+int Planet::get_quality() {
+    if (!exists() || is_owned()) {
+        return 0;
+    }
+
+    int quality = 1;
+
+    switch (cls) {
+        case Forest:
+            quality = 5;
+            break;
+        case Desert:
+            quality = 2;
+            break;
+        case Volcano:
+            quality = 1;
+            break;
+        case Rock:
+            quality = 4;
+            break;
+        case Ice:
+            quality = 1;
+            break;
+        case Terra:
+            quality = 5;
+            break;
+        case Artificial:
+            quality = 10;
+            break;
+    }
+
+    if (is_named()) {
+        quality += 2;
+    }
+
     return quality;
 }
 
