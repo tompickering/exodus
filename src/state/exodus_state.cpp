@@ -292,6 +292,10 @@ Galaxy* ExodusState::get_galaxy() {
     return &galaxy;
 }
 
+unsigned int ExodusState::get_n_human_players() {
+    return n_players;
+}
+
 unsigned int ExodusState::get_month() {
     return month;
 }

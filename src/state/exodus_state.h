@@ -60,6 +60,7 @@ class ExodusState {
         void finalise_galaxy();
         void init_cpu_lords();
         Galaxy* get_galaxy();
+        unsigned int get_n_human_players();
         unsigned int get_month();
         unsigned int get_orig_month();
         void advance_month();
