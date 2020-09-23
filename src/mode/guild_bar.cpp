@@ -76,7 +76,7 @@ extern const char* RUMOUR_HEADINGS[];
 extern const char* PINS[];
 
 void GuildBar::update_pin_and_rumours() {
-    pin = RND(20);
+    pin = RND(20) - 1;
     rumour_headings[0] = RND(5) - 1;
     rumour_headings[1] = RND(5) - 1;
 }
