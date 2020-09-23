@@ -14,10 +14,15 @@ class GuildBar : ModeBase {
         enum Stage {
             GB_Idle,
             GB_Pinboard,
+            GB_Barkeeper,
         };
 
+        void update_pin_and_rumours();
+
         Stage stage;
+        int last_update_month;
         int pin;
+        int rumour_headings[2];
         float talk_loop;
         float light_loop;
 };

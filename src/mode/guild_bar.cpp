@@ -20,11 +20,15 @@ enum ID {
     TALK,
     LIGHT,
     TEXT,
+    BARKEEP,
     PINBOARD,
     END,
 };
 
 GuildBar::GuildBar() : ModeBase("GuildBar") {
+    last_update_month = -1;
+    rumour_headings[0] = 0;
+    rumour_headings[1] = 0;
 }
 
 void GuildBar::enter() {
@@ -34,8 +38,12 @@ void GuildBar::enter() {
     draw_manager.show_cursor(true);
     talk_loop = 0.f;
     light_loop = 0.f;
-    pin = RND(20);
     stage = GB_Idle;
+
+    if (exostate.get_month() != last_update_month) {
+        update_pin_and_rumours();
+        last_update_month = exostate.get_month();
+    }
 }
 
 Anim talk_anim(
@@ -64,7 +72,14 @@ Anim talk_anim(
     IMG_SG3_TALK6
 );
 
+extern const char* RUMOUR_HEADINGS[];
 extern const char* PINS[];
+
+void GuildBar::update_pin_and_rumours() {
+    pin = RND(20);
+    rumour_headings[0] = RND(5) - 1;
+    rumour_headings[1] = RND(5) - 1;
+}
 
 ExodusMode GuildBar::update(float delta) {
     bool click = draw_manager.clicked();
@@ -89,6 +104,38 @@ ExodusMode GuildBar::update(float delta) {
                     Justify::Left,
                     10, RES_Y - 30,
                     COL_TEXT2);
+                if (click) {
+                    draw_manager.fill(
+                        id(ID::BARKEEP),
+                        {PINBOARD_X - BORDER, PINBOARD_Y - BORDER,
+                         PINBOARD_W + 2*BORDER, PINBOARD_H + 2*BORDER},
+                         COL_BORDERS);
+                    draw_manager.pattern_fill(
+                        {PINBOARD_X, PINBOARD_Y,
+                         PINBOARD_W, PINBOARD_H});
+                    draw_manager.draw_text(
+                        "Today's rumours",
+                        Justify::Left,
+                        PINBOARD_X + 4, PINBOARD_Y + 4,
+                        COL_TEXT2);
+                    draw_manager.draw_text(
+                        RUMOUR_HEADINGS[rumour_headings[0]],
+                        Justify::Left,
+                        PINBOARD_X + 4, PINBOARD_Y + 60,
+                        COL_TEXT);
+                    for (int i = 0; i < 2; ++i) {
+                        // TODO
+                    }
+                    draw_manager.draw_text(
+                        RUMOUR_HEADINGS[rumour_headings[1]],
+                        Justify::Left,
+                        PINBOARD_X + 4, PINBOARD_Y + 160,
+                        COL_TEXT);
+                    for (int i = 0; i < 2; ++i) {
+                        // TODO
+                    }
+                    stage = GB_Barkeeper;
+                }
             } else if (draw_manager.mouse_in_area(AREA_SHERIFF)) {
                 draw_manager.draw_text(
                     id(ID::TEXT),
@@ -185,6 +232,12 @@ ExodusMode GuildBar::update(float delta) {
                 draw_manager.draw(id(ID::TEXT), nullptr);
             }
             break;
+        case GB_Barkeeper:
+            if (click) {
+                draw_manager.draw(id(ID::BARKEEP), nullptr);
+                stage = GB_Idle;
+            }
+            break;
         case GB_Pinboard:
             if (click) {
                 draw_manager.draw(id(ID::PINBOARD), nullptr);
@@ -195,6 +248,14 @@ ExodusMode GuildBar::update(float delta) {
 
     return ExodusMode::MODE_None;
 }
+
+const char* RUMOUR_HEADINGS[] = {
+    "It is said that",
+    "There are rumors that",
+    "There is a rumor that",
+    "There's a strong rumor that",
+    "It has been heard that"
+};
 
 const char* PINS[] = {
     "WANTED!",
