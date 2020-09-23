@@ -21,6 +21,8 @@
 #define COL_TOOL {0x00, 0x00, 0x00}
 #define COL_TOOL_HL {0x00, 0x00, 0xFF}
 
+#define BORDER 4
+
 #define TEXT_Y_SEP 20
 
 // Mimics BBC BASIC's RND()

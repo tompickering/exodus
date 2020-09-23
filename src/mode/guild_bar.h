@@ -11,6 +11,13 @@ class GuildBar : ModeBase {
         virtual void enter() override;
         virtual ExodusMode update(float) override;
     private:
+        enum Stage {
+            GB_Idle,
+            GB_Pinboard,
+        };
+
+        Stage stage;
+        int pin;
         float talk_loop;
         float light_loop;
 };
