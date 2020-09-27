@@ -123,7 +123,7 @@ bool Player::is_alive() {
     return !dead;
 }
 
-bool Player::is_active() {
+bool Player::is_participating() {
     // Indicate whether this player should be 'taking part' in the game
     // TODO: Check for has-left-the-galaxy etc
     return participating_in_game && is_alive();

@@ -97,7 +97,7 @@ class Player {
         const char* get_race_str();
         bool is_human();
         bool is_alive();
-        bool is_active();
+        bool is_participating();
         int get_mc();
         int get_flag_idx();
         void set_flag_idx(int);

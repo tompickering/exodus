@@ -314,7 +314,7 @@ void GalaxyMap::month_pass_end() {
     bool reset;
     for (int i = 0; i < N_PLAYERS; ++i) {
         p = exostate.set_active_player(i);
-        if (p && p->is_active() && p->is_human()) {
+        if (p && p->is_participating() && p->is_human()) {
             reset = true;
             break;
         }
@@ -521,7 +521,7 @@ ExodusMode GalaxyMap::month_pass_update() {
     if (mp_stage == MP_UpdateHumanFly) {
         for (; mp_player_idx < N_PLAYERS; ++mp_player_idx) {
             Player *p = exostate.set_active_player(mp_player_idx);
-            if (p && p->is_active() && p->is_human()) {
+            if (p && p->is_participating() && p->is_human()) {
                 if (p->get_location().advance()) {
                     // Show arrival animation for human players
                     if (p->is_human()) {
