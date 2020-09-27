@@ -98,14 +98,20 @@ void GuildBar::update_pin_and_rumours() {
         ++rumour_indices[1];
     }
 
-    // TODO: Populate with data
+    Player *player;
 
     // Rumour 0: Number of planets
+    player = exostate.get_random_active_player();
+    int n_planets = exostate.get_n_planets(player);
+    if (onein(3)) {
+        n_planets = RND(5);
+    }
     snprintf(rumours[0].line0,
              RUMOUR_LINE_MAX,
-             "%s owns %d planets.",
-             "XXX",
-             9001);
+             "%s owns %d planet%s.",
+             player->get_name(),
+             n_planets,
+             n_planets == 1 ? "" : "s");
     rumours[0].line1[0] = '\0';
 
     // Rumour 1: Defence

@@ -419,6 +419,28 @@ int ExodusState::get_player_idx(Player* player) {
     return 0;
 }
 
+int ExodusState::get_n_active_players() {
+    int n_active_players = 0;
+    for (int i = 0; i < N_PLAYERS; ++i)
+        if (players[i].is_active())
+           ++ n_active_players;
+    return n_active_players;
+}
+
+Player* ExodusState::get_random_active_player() {
+    int n_active_players = get_n_active_players();
+    int rand_idx = rand() % n_active_players;
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        if (players[i].is_active()) {
+            if (rand_idx-- == 0) {
+                return &players[i];
+            }
+        }
+    }
+    L.fatal("Couldn't find active player which we checked exists");
+    return nullptr;
+}
+
 unsigned int ExodusState::get_n_planets(Player* player) {
     Galaxy *gal = get_galaxy();
     unsigned int n_stars;

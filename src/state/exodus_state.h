@@ -84,6 +84,8 @@ class ExodusState {
         FlyTarget* loc2tgt(int); // indicies and FlyTarget objects.
         Player* get_player(int);
         int get_player_idx(Player*);
+        int get_n_active_players();
+        Player* get_random_active_player();
         unsigned int get_n_planets(Player*);
         bool active_player_local(); // Is the active player at the active flytarget?
         PlanetInfo recommend_planet();
