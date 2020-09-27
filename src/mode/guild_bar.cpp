@@ -208,11 +208,16 @@ void GuildBar::update_pin_and_rumours() {
              "has the largest population.");
 
     // Rumour 4: Reputation
+    player = exostate.get_random_active_player();
+    int rep = player->get_reputation();
+    if (onein(3)) {
+        rep = RND(5);
+    }
     snprintf(rumours[4].line0,
              RUMOUR_LINE_MAX,
              "%s has %s good",
-             "XXX",
-             "a");
+             player->get_name(),
+             rep < 3 ? "no" : "a");
     snprintf(rumours[4].line1,
              RUMOUR_LINE_MAX,
              "reputation.");
