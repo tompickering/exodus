@@ -98,7 +98,13 @@ void GuildBar::update_pin_and_rumours() {
         ++rumour_indices[1];
     }
 
+    Galaxy *gal = exostate.get_galaxy();
+    unsigned int n_stars;
+    Star *stars = gal->get_stars(n_stars);
     Player *player;
+    Star *star;
+    Planet *planet;
+    PlanetInfo planet_info;
 
     // Rumour 0: Number of planets
     player = exostate.get_random_active_player();
@@ -115,11 +121,30 @@ void GuildBar::update_pin_and_rumours() {
     rumours[0].line1[0] = '\0';
 
     // Rumour 1: Defence
+    int min_army_size = 10000;
+    if (onein(3)) {
+        min_army_size = 100;
+    }
+    planet_info = exostate.get_random_owned_planet_info();
+    for (unsigned int i = 0; i < n_stars; ++i) {
+        star = &stars[i];
+        for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
+            planet = star->get_planet(planet_idx);
+            if (planet && planet->exists() && planet->is_owned()) {
+                if (planet->get_army_size() < min_army_size) {
+                    min_army_size = planet->get_army_size();
+                    planet_info.planet = planet;
+                    planet_info.star = star;
+                    planet_info.index = planet_idx;
+                }
+            }
+        }
+    }
     snprintf(rumours[1].line0,
              RUMOUR_LINE_MAX,
              "%s at %s",
-             "XXX",
-             "XXX");
+             planet_info.planet->is_named() ? planet_info.planet->get_name() : "Utopia",
+             planet_info.star->name);
     snprintf(rumours[1].line1,
              RUMOUR_LINE_MAX,
              "has the weakest defence.");

@@ -199,6 +199,7 @@ class Planet {
         const char* get_moon_bg();
         bool has_army();
         void get_army(int&, int&, int&);
+        int get_army_size();
         void adjust_army(int, int, int);
         void disown();
         bool expand_city();

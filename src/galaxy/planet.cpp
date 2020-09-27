@@ -1262,6 +1262,10 @@ void Planet::get_army(int& inf, int& gli, int& art) {
     art = army_art;
 }
 
+int Planet::get_army_size() {
+    return army_inf + army_gli + army_art;
+}
+
 void Planet::adjust_army(int inf, int gli, int art) {
     army_inf += inf;
     army_gli += gli;

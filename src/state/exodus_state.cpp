@@ -441,6 +441,48 @@ Player* ExodusState::get_random_active_player() {
     return nullptr;
 }
 
+int ExodusState::get_n_owned_planets() {
+    int n_owned_planets = 0;
+    Galaxy *gal = get_galaxy();
+    unsigned int n_stars;
+    Star *stars = gal->get_stars(n_stars);
+    for (unsigned int star_idx = 0; star_idx < n_stars; ++star_idx) {
+        Star *s = &stars[star_idx];
+        for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
+            Planet *p = s->get_planet(planet_idx);
+            if (p && p->exists() && p->is_owned()) {
+                ++n_owned_planets;
+            }
+        }
+    }
+    return n_owned_planets;
+}
+
+PlanetInfo ExodusState::get_random_owned_planet_info() {
+    PlanetInfo info;
+    int n_owned_planets = get_n_owned_planets();
+    int rand_idx = rand() % n_owned_planets;
+    Galaxy *gal = get_galaxy();
+    unsigned int n_stars;
+    Star *stars = gal->get_stars(n_stars);
+    for (unsigned int star_idx = 0; star_idx < n_stars; ++star_idx) {
+        Star *s = &stars[star_idx];
+        for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
+            Planet *p = s->get_planet(planet_idx);
+            if (p && p->exists() && p->is_owned()) {
+                if (rand_idx-- == 0) {
+                    info.planet = p;
+                    info.star = s;
+                    info.index = planet_idx;
+                    return info;
+                }
+            }
+        }
+    }
+    L.fatal("Couldn't find owned planet which we checked exists");
+    return info;
+}
+
 unsigned int ExodusState::get_n_planets(Player* player) {
     Galaxy *gal = get_galaxy();
     unsigned int n_stars;
