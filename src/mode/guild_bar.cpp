@@ -179,11 +179,30 @@ void GuildBar::update_pin_and_rumours() {
              "holds the most goods.");
 
     // Rumour 3: Population
+    int max_pop = 0;
+    if (onein(3)) {
+        max_pop = RND(20);
+    }
+    planet_info = exostate.get_random_owned_planet_info();
+    for (unsigned int i = 0; i < n_stars; ++i) {
+        star = &stars[i];
+        for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
+            planet = star->get_planet(planet_idx);
+            if (planet && planet->exists()) {
+                if (planet->get_n_cities() > max_pop) {
+                    max_pop = planet->get_n_cities();
+                    planet_info.planet = planet;
+                    planet_info.star = star;
+                    planet_info.index = planet_idx;
+                }
+            }
+        }
+    }
     snprintf(rumours[3].line0,
              RUMOUR_LINE_MAX,
              "%s at %s",
-             "XXX",
-             "XXX");
+             planet_info.planet->is_named() ? planet_info.planet->get_name() : "Utopia",
+             planet_info.star->name);
     snprintf(rumours[3].line1,
              RUMOUR_LINE_MAX,
              "has the largest population.");
