@@ -6,6 +6,8 @@
 #include "assetpaths.h"
 #include "galaxy/flytarget.h"
 
+#define RUMOUR_LINE_MAX 64
+
 static const DrawArea AREA_BARKEEP  = {200, 230, 40, 50};
 static const DrawArea AREA_SHERIFF  = {400, 230, 60, 40};
 static const DrawArea AREA_PINBOARD = {590, 200, 50, 50};
@@ -15,6 +17,13 @@ static const int PINBOARD_X = 280;
 static const int PINBOARD_Y = 40;
 static const int PINBOARD_W = 332;
 static const int PINBOARD_H = 318;
+
+typedef struct {
+    char line0[RUMOUR_LINE_MAX];
+    char line1[RUMOUR_LINE_MAX];
+} Rumour;
+
+Rumour rumours[5];
 
 enum ID {
     TALK,
@@ -29,6 +38,8 @@ GuildBar::GuildBar() : ModeBase("GuildBar") {
     last_update_month = -1;
     rumour_headings[0] = 0;
     rumour_headings[1] = 0;
+    rumour_indices[0] = 0;
+    rumour_indices[1] = 0;
 }
 
 void GuildBar::enter() {
@@ -79,6 +90,68 @@ void GuildBar::update_pin_and_rumours() {
     pin = RND(20) - 1;
     rumour_headings[0] = RND(5) - 1;
     rumour_headings[1] = RND(5) - 1;
+
+    rumour_indices[0] = RND(5) - 1;
+    rumour_indices[1] = RND(4) - 1;
+    // Using >= here to avoid bias
+    if (rumour_indices[1] >= rumour_indices[0]) {
+        ++rumour_indices[1];
+    }
+
+    // TODO: Populate with data
+
+    // Rumour 0: Number of planets
+    snprintf(rumours[0].line0,
+             RUMOUR_LINE_MAX,
+             "%s owns %d planets.",
+             "XXX",
+             9001);
+    rumours[0].line1[0] = '\0';
+
+    // Rumour 1: Defence
+    snprintf(rumours[1].line0,
+             RUMOUR_LINE_MAX,
+             "%s at %s",
+             "XXX",
+             "XXX");
+    snprintf(rumours[1].line1,
+             RUMOUR_LINE_MAX,
+             "has the weakest defence.");
+
+    // Rumour 2: Goods
+    snprintf(rumours[2].line0,
+             RUMOUR_LINE_MAX,
+             "%s at %s",
+             "XXX",
+             "XXX");
+    snprintf(rumours[2].line1,
+             RUMOUR_LINE_MAX,
+             "holds the most goods.");
+
+    // Rumour 3: Population
+    snprintf(rumours[3].line0,
+             RUMOUR_LINE_MAX,
+             "%s at %s",
+             "XXX",
+             "XXX");
+    snprintf(rumours[3].line1,
+             RUMOUR_LINE_MAX,
+             "has the largest population.");
+
+    // Rumour 4: Reputation
+    snprintf(rumours[4].line0,
+             RUMOUR_LINE_MAX,
+             "%s has %s good",
+             "XXX",
+             "a");
+    snprintf(rumours[4].line1,
+             RUMOUR_LINE_MAX,
+             "reputation.");
+
+    for (int i = 0; i < 5; ++i) {
+        rumours[i].line0[RUMOUR_LINE_MAX - 1] = '\0';
+        rumours[i].line1[RUMOUR_LINE_MAX - 1] = '\0';
+    }
 }
 
 ExodusMode GuildBar::update(float delta) {
@@ -118,22 +191,39 @@ ExodusMode GuildBar::update(float delta) {
                         Justify::Left,
                         PINBOARD_X + 4, PINBOARD_Y + 4,
                         COL_TEXT2);
+
                     draw_manager.draw_text(
                         RUMOUR_HEADINGS[rumour_headings[0]],
                         Justify::Left,
                         PINBOARD_X + 4, PINBOARD_Y + 60,
                         COL_TEXT);
-                    for (int i = 0; i < 2; ++i) {
-                        // TODO
-                    }
+                    draw_manager.draw_text(
+                        rumours[rumour_indices[0]].line0,
+                        Justify::Left,
+                        PINBOARD_X + 4, PINBOARD_Y + 80,
+                        COL_TEXT);
+                    draw_manager.draw_text(
+                        rumours[rumour_indices[0]].line1,
+                        Justify::Left,
+                        PINBOARD_X + 4, PINBOARD_Y + 100,
+                        COL_TEXT);
+
                     draw_manager.draw_text(
                         RUMOUR_HEADINGS[rumour_headings[1]],
                         Justify::Left,
                         PINBOARD_X + 4, PINBOARD_Y + 160,
                         COL_TEXT);
-                    for (int i = 0; i < 2; ++i) {
-                        // TODO
-                    }
+                    draw_manager.draw_text(
+                        rumours[rumour_indices[1]].line0,
+                        Justify::Left,
+                        PINBOARD_X + 4, PINBOARD_Y + 180,
+                        COL_TEXT);
+                    draw_manager.draw_text(
+                        rumours[rumour_indices[1]].line1,
+                        Justify::Left,
+                        PINBOARD_X + 4, PINBOARD_Y + 200,
+                        COL_TEXT);
+
                     stage = GB_Barkeeper;
                 }
             } else if (draw_manager.mouse_in_area(AREA_SHERIFF)) {

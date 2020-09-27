@@ -23,6 +23,7 @@ class GuildBar : ModeBase {
         int last_update_month;
         int pin;
         int rumour_headings[2];
+        int rumour_indices[2];
         float talk_loop;
         float light_loop;
 };
