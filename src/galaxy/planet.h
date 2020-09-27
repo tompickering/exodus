@@ -201,6 +201,7 @@ class Planet {
         void get_army(int&, int&, int&);
         int get_army_size();
         void adjust_army(int, int, int);
+        int get_total_reserves();
         void disown();
         bool expand_city();
         bool expand_village();

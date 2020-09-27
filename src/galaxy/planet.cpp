@@ -1279,6 +1279,10 @@ void Planet::adjust_army(int inf, int gli, int art) {
     if (army_art > max) army_art = max;
 }
 
+int Planet::get_total_reserves() {
+    return reserves_min + reserves_food + reserves_plu;
+}
+
 void Planet::disown() {
     unset_owner();
     army_inf = 0;
