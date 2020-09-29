@@ -20,6 +20,8 @@ DrawManager::DrawManager() {
     draw_cursor = false;
     sprite_click.id = ID_NONE;
     clicked_this_frame = false;
+    prev_mouseover_selectable_text_id = ID_NONE;
+    mouseover_selectable_text_id = ID_NONE;
 }
 
 void DrawManager::update(float delta, MousePos new_mouse_pos, MousePos new_click_pos) {
@@ -61,6 +63,26 @@ void DrawManager::update(float delta, MousePos new_mouse_pos, MousePos new_click
             }
         }
     }
+
+    bool found_mouseover_selectable_text = false;
+    for (std::vector<SprID>::size_type i = 0; i < selectable_text_ids.size(); ++i) {
+        if (query_mouseover(selectable_text_ids[i]).id) {
+            found_mouseover_selectable_text = true;
+            mouseover_selectable_text_id = selectable_text_ids[i];
+        }
+    }
+
+    if (found_mouseover_selectable_text) {
+        if (mouseover_selectable_text_id != prev_mouseover_selectable_text_id) {
+            mouseover_selectable_text_time = 0;
+        } else {
+            mouseover_selectable_text_time += delta;
+        }
+    } else {
+        mouseover_selectable_text_id = ID_NONE;
+    }
+
+    prev_mouseover_selectable_text_id = mouseover_selectable_text_id;
 
     if (sprite_click.id != ID_NONE) {
         L.debug("CLICK: %d: %f, %f", sprite_click.id, sprite_click.x, sprite_click.y);
@@ -224,6 +246,7 @@ DrawArea* DrawManager::get_source_region(SprID id) {
 void DrawManager::clear_sprite_ids() {
     drawn_spr_info.clear();
     id_source_regions.clear();
+    selectable_text_ids.clear();
 }
 
 void DrawManager::clear(DrawTarget tgt) {
@@ -270,4 +293,19 @@ RGB DrawManager::text_pulse_col(float t) {
     unsigned char g = (unsigned char)((int16_t)g0 + (int16_t)(t * ((float)g1 - (float)g0)));
     unsigned char b = (unsigned char)((int16_t)b0 + (int16_t)(t * ((float)b1 - (float)b0)));
     return {r, g, b};
+}
+
+void DrawManager::set_selectable(SprID id) {
+    for (std::vector<SprID>::size_type i = 0; i < selectable_text_ids.size(); ++i) {
+        if (id == selectable_text_ids[i]) {
+            return;
+        }
+    }
+    selectable_text_ids.push_back(id);
+}
+
+void DrawManager::adjust_selectable_text_col(SprID id, RGB& rgb) {
+    if (id && id == mouseover_selectable_text_id) {
+        rgb = text_pulse_col(mouseover_selectable_text_time);
+    }
 }

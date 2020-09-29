@@ -530,7 +530,10 @@ void DrawManagerSDL::draw_text(DrawTarget tgt, SprID id, Font font, const char* 
 }
 
 void DrawManagerSDL::draw_text(DrawTarget tgt, SprID id, Font font, const char* text, Justify jst, int x, int y, RGB* rgb, RGB* bg_rgb) {
-    SDL_Color colour = {rgb->r, rgb->g, rgb->b};
+    RGB adjustable_col = *rgb;
+    adjust_selectable_text_col(id, adjustable_col);
+
+    SDL_Color colour = {adjustable_col.r, adjustable_col.g, adjustable_col.b};
     SDL_Surface *msg_surf;
     SDL_Surface *tgt_surf = get_target(tgt);
 

@@ -158,9 +158,11 @@ class DrawManager {
         virtual int right(SprID);
         virtual void get_upscale(float&, float&);
         virtual RGB text_pulse_col(float);
+        virtual void set_selectable(SprID);
     protected:
         map<const char*, void*> sprite_data;
         virtual void* get_sprite_data(const char*) = 0;
+        virtual void adjust_selectable_text_col(SprID, RGB&);
         map<SprID, DrawArea> id_source_regions;
         map<Font, void*> font_data;
         SprID next_id;
@@ -177,6 +179,10 @@ class DrawManager {
         MousePos mouse_pos;
         MousePos click_pos;
         SpriteClick sprite_click;
+        SprID prev_mouseover_selectable_text_id;
+        SprID mouseover_selectable_text_id;
+        float mouseover_selectable_text_time;
+        vector<SprID> selectable_text_ids;
 };
 
 #ifdef SDL
