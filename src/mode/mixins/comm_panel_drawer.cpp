@@ -73,17 +73,8 @@ void CommPanelDrawer::comm_draw_text() {
     // or having or currently has the mouse over it - but we'll also need to know whether
     // this is a redraw vs an initial draw...
     for (int i = 0; i < 6; ++i) {
-        RGB col = COL_TEXT;
-
         if (comm_text_interactive_mask & (1 << i)) {
-            if (draw_manager.mouse_over(id_text[i])) {
-                mouseover_any = true;
-                if (i != comm_mouseover_text) {
-                    comm_mouseover_text = i;
-                    comm_time_since_text_mouseover = 0;
-                }
-                col = draw_manager.text_pulse_col(comm_time_since_text_mouseover);
-            }
+            draw_manager.set_selectable(id_text[i]);
         }
 
         draw_manager.draw_text(
@@ -92,7 +83,7 @@ void CommPanelDrawer::comm_draw_text() {
             Justify::Left,
             COMM_RCOL_X + 8,
             comm_text_y(i),
-            col);
+            COL_TEXT);
     }
 
     if (!mouseover_any) {
