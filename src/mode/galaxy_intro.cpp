@@ -64,8 +64,8 @@ void GalaxyIntro::enter() {
     time = 0;
 }
 
-const int INDENT_X = 40;
-const int INDENT_Y = 40;
+const int INDENT_X = RES_X / 2;
+const int INDENT_Y = 80;
 const int SEP_Y = 20;
 
 ExodusMode GalaxyIntro::update(float delta) {
@@ -98,7 +98,7 @@ ExodusMode GalaxyIntro::update(float delta) {
             draw_manager.draw_text(
                 id(ID::TEXT0 + this_text_idx - 1),
                 text[this_text_idx - 1],
-                Justify::Left,
+                Justify::Centre,
                 INDENT_X,
                 INDENT_Y + (this_text_idx - 1) * SEP_Y,
                 {0xD0, 0xD0, 0xD0});
@@ -108,7 +108,7 @@ ExodusMode GalaxyIntro::update(float delta) {
         draw_manager.draw_text(
             id(ID::TEXT0 + this_text_idx),
             text[this_text_idx],
-            Justify::Left,
+            Justify::Centre,
             INDENT_X,
             INDENT_Y + this_text_idx * SEP_Y,
             {grey, grey, grey});
