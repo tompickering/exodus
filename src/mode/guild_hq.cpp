@@ -8,11 +8,17 @@ static const DrawArea AREA_BOT  = {100, 200, 120, 120};
 static const DrawArea AREA_DOOR = {200, 200, 120, 120};
 static const DrawArea AREA_EXIT = {RES_X - 120, 0, 120, RES_Y};
 
+static const int PANEL_X = 280;
+static const int PANEL_Y = 40;
+static const int PANEL_W = 332;
+static const int PANEL_H = 318;
+
 enum ID {
     BOT,
     EYES,
     EYES_REF,
     TEXT,
+    PANEL,
     END,
 };
 
@@ -67,10 +73,6 @@ ExodusMode GuildHQ::update(float delta) {
         }
     }
 
-    if (guildbot_interp == 1) {
-        stage = HQ_Guildbot;
-    }
-
     switch (stage) {
         case HQ_Idle:
             if (draw_manager.mouse_in_area(AREA_BOT)) {
@@ -103,9 +105,33 @@ ExodusMode GuildHQ::update(float delta) {
             } else {
                 draw_manager.draw(id(ID::TEXT), nullptr);
             }
+
+            if (guildbot_interp == 1) {
+                stage = HQ_Guildbot;
+                draw_manager.fill(
+                    id(ID::PANEL),
+                    {PANEL_X - BORDER, PANEL_Y - BORDER,
+                     PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+                    COL_BORDERS);
+                draw_manager.pattern_fill(
+                    {PANEL_X, PANEL_Y,
+                     PANEL_W, PANEL_H});
+                draw_manager.draw_text(
+                    "Welcome to the Space Guild.",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 4,
+                    COL_TEXT2);
+                draw_manager.draw_text(
+                    "What do you desire?",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 24,
+                    COL_TEXT2);
+            }
+
             break;
         case HQ_Guildbot:
             if (click) {
+                draw_manager.draw(id(ID::PANEL), nullptr);
                 guildbot_active = false;
                 stage = HQ_Idle;
             }
