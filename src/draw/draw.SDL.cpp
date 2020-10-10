@@ -392,6 +392,9 @@ DrawnSprite* DrawManagerSDL::update_dirty_area(SprID id, DrawArea area) {
         DrawnSprite new_drawn_area_info;
         new_drawn_area_info.id = id;
         new_drawn_area_info.area = area;
+        new_drawn_area_info.type = DRAWTYPE_Unknown;
+        new_drawn_area_info.sprite = nullptr;
+        new_drawn_area_info.colour = {0, 0, 0};
         drawn_spr_info.push_back(new_drawn_area_info);
         dirty_area_info = &drawn_spr_info.back();
     }

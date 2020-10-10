@@ -64,6 +64,7 @@ typedef struct {
 } DrawArea;
 
 enum DrawType {
+    DRAWTYPE_Unknown,
     DRAWTYPE_Sprite,
     DRAWTYPE_Text,
     DRAWTYPE_Fill,
