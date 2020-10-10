@@ -13,12 +13,21 @@ static const int PANEL_Y = 40;
 static const int PANEL_W = 332;
 static const int PANEL_H = 318;
 
+static DrawArea REPAIR_AREA = {PANEL_X - BORDER, 0,
+                               RES_X - (PANEL_X - BORDER), RES_Y};
+
 enum ID {
     BOT,
     EYES,
     EYES_REF,
     TEXT,
     PANEL,
+    BOT_MISSIONINFO,
+    BOT_SGJOIN,
+    BOT_SGQUIT,
+    BOT_REP,
+    BOT_QUIT,
+    BG_REPAIR,
     END,
 };
 
@@ -34,6 +43,12 @@ void GuildHQ::enter() {
     guildbot_interp = 0.f;
     eyes_loop = 0;
     stage = HQ_Idle;
+    draw_manager.set_selectable(id(ID::BOT_MISSIONINFO));
+    draw_manager.set_selectable(id(ID::BOT_SGJOIN));
+    draw_manager.set_selectable(id(ID::BOT_SGQUIT));
+    draw_manager.set_selectable(id(ID::BOT_REP));
+    draw_manager.set_selectable(id(ID::BOT_QUIT));
+    draw_manager.set_source_region(id(ID::BG_REPAIR), &REPAIR_AREA);
 }
 
 ExodusMode GuildHQ::update(float delta) {
@@ -126,15 +141,48 @@ ExodusMode GuildHQ::update(float delta) {
                     Justify::Left,
                     PANEL_X + 4, PANEL_Y + 24,
                     COL_TEXT2);
+                draw_manager.save_background(REPAIR_AREA);
             }
 
             break;
         case HQ_Guildbot:
-            if (click) {
-                draw_manager.draw(id(ID::PANEL), nullptr);
+            draw_manager.draw_text(
+                id(ID::BOT_MISSIONINFO),
+                "Information about the mission",
+                Justify::Left,
+                PANEL_X + 4, PANEL_Y + 80,
+                COL_TEXT);
+            // TODO: Check guild membership, offer quit option
+            draw_manager.draw_text(
+                id(ID::BOT_SGJOIN),
+                "Become a Guild member",
+                Justify::Left,
+                PANEL_X + 4, PANEL_Y + 120,
+                COL_TEXT);
+            draw_manager.draw_text(
+                id(ID::BOT_REP),
+                "View personal reputation",
+                Justify::Left,
+                PANEL_X + 4, PANEL_Y + 160,
+                COL_TEXT);
+            draw_manager.draw_text(
+                id(ID::BOT_QUIT),
+                "Never mind...",
+                Justify::Left,
+                PANEL_X + 4, PANEL_Y + 220,
+                COL_TEXT);
+
+            if (draw_manager.query_click(id(ID::BOT_QUIT)).id) {
+                draw_manager.draw(
+                    id(ID::BG_REPAIR),
+                    IMG_SG2_INS1,
+                    {REPAIR_AREA.x, REPAIR_AREA.y,
+                     0, 0, 1, 1});
+                draw_manager.save_background(REPAIR_AREA);
                 guildbot_active = false;
                 stage = HQ_Idle;
             }
+
             break;
     }
 
