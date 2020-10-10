@@ -11,6 +11,12 @@ class GuildHQ : ModeBase {
         virtual void enter() override;
         virtual ExodusMode update(float) override;
     private:
+        enum Stage {
+            HQ_Idle,
+            HQ_Guildbot,
+        };
+
+        Stage stage;
         bool guildbot_active;
         float guildbot_interp;
         float eyes_loop;

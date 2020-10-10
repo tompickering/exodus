@@ -27,6 +27,7 @@ void GuildHQ::enter() {
     guildbot_active = false;
     guildbot_interp = 0.f;
     eyes_loop = 0;
+    stage = HQ_Idle;
 }
 
 ExodusMode GuildHQ::update(float delta) {
@@ -66,35 +67,49 @@ ExodusMode GuildHQ::update(float delta) {
         }
     }
 
-    if (draw_manager.mouse_in_area(AREA_BOT)) {
-        draw_manager.draw_text(
-            id(ID::TEXT),
-            "Infobot",
-            Justify::Left,
-            10, RES_Y - 30,
-            COL_TEXT2);
-        if (click) {
-            guildbot_active = true;
-        }
-    } else if (draw_manager.mouse_in_area(AREA_DOOR)) {
-        draw_manager.draw_text(
-            id(ID::TEXT),
-            "Guildmaster Entrance",
-            Justify::Left,
-            10, RES_Y - 30,
-            COL_TEXT2);
-    } else if (draw_manager.mouse_in_area(AREA_EXIT)) {
-        draw_manager.draw_text(
-            id(ID::TEXT),
-            "Exit",
-            Justify::Left,
-            10, RES_Y - 30,
-            COL_TEXT2);
-        if (click) {
-            return ExodusMode::MODE_Pop;
-        }
-    } else {
-        draw_manager.draw(id(ID::TEXT), nullptr);
+    if (guildbot_interp == 1) {
+        stage = HQ_Guildbot;
+    }
+
+    switch (stage) {
+        case HQ_Idle:
+            if (draw_manager.mouse_in_area(AREA_BOT)) {
+                draw_manager.draw_text(
+                    id(ID::TEXT),
+                    "Infobot",
+                    Justify::Left,
+                    10, RES_Y - 30,
+                    COL_TEXT2);
+                if (click) {
+                    guildbot_active = true;
+                }
+            } else if (draw_manager.mouse_in_area(AREA_DOOR)) {
+                draw_manager.draw_text(
+                    id(ID::TEXT),
+                    "Guildmaster Entrance",
+                    Justify::Left,
+                    10, RES_Y - 30,
+                    COL_TEXT2);
+            } else if (draw_manager.mouse_in_area(AREA_EXIT)) {
+                draw_manager.draw_text(
+                    id(ID::TEXT),
+                    "Exit",
+                    Justify::Left,
+                    10, RES_Y - 30,
+                    COL_TEXT2);
+                if (click) {
+                    return ExodusMode::MODE_Pop;
+                }
+            } else {
+                draw_manager.draw(id(ID::TEXT), nullptr);
+            }
+            break;
+        case HQ_Guildbot:
+            if (click) {
+                guildbot_active = false;
+                stage = HQ_Idle;
+            }
+            break;
     }
 
     return ExodusMode::MODE_None;
