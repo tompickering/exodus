@@ -88,6 +88,8 @@ ExodusMode GuildHQ::update(float delta) {
         }
     }
 
+    Player *player = exostate.get_active_player();
+
     switch (stage) {
         case HQ_Idle:
             if (draw_manager.mouse_in_area(AREA_BOT)) {
@@ -152,13 +154,21 @@ ExodusMode GuildHQ::update(float delta) {
                 Justify::Left,
                 PANEL_X + 4, PANEL_Y + 80,
                 COL_TEXT);
-            // TODO: Check guild membership, offer quit option
-            draw_manager.draw_text(
-                id(ID::BOT_SGJOIN),
-                "Become a Guild member",
-                Justify::Left,
-                PANEL_X + 4, PANEL_Y + 120,
-                COL_TEXT);
+            if (player->is_guild_member()) {
+                draw_manager.draw_text(
+                    id(ID::BOT_SGQUIT),
+                    "Quit Guild membership",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 120,
+                    COL_TEXT);
+            } else {
+                draw_manager.draw_text(
+                    id(ID::BOT_SGJOIN),
+                    "Become a Guild member",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 120,
+                    COL_TEXT);
+            }
             draw_manager.draw_text(
                 id(ID::BOT_REP),
                 "View personal reputation",
