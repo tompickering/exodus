@@ -98,6 +98,7 @@ class Player {
         bool is_human();
         bool is_alive();
         bool is_participating();
+        bool is_guild_member();
         int get_mc();
         int get_flag_idx();
         void set_flag_idx(int);
@@ -136,6 +137,7 @@ class Player {
         uint16_t inventions;
         int reputation;
         void refresh_full_name();
+        bool guild_member;
 
     // The ExodusState sets up the player data during game init.
     friend class ExodusState;

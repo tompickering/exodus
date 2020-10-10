@@ -27,6 +27,7 @@ Player::Player() {
     _intro_seen = false;
     reputation = 3;
     inventions = 0;
+    guild_member = false;
 }
 
 void Player::init_alien_name(int idx) {
@@ -127,6 +128,10 @@ bool Player::is_participating() {
     // Indicate whether this player should be 'taking part' in the game
     // TODO: Check for has-left-the-galaxy etc
     return participating_in_game && is_alive();
+}
+
+bool Player::is_guild_member() {
+    return guild_member;
 }
 
 int Player::get_flag_idx() {
