@@ -216,13 +216,18 @@ void DrawManager::release_sprite_id(SprID id) {
     }
 }
 
-DrawArea* DrawManager::get_drawn_area(SprID id) {
+DrawnSprite* DrawManager::get_drawn_info(SprID id) {
     for (std::vector<DrawnSprite>::size_type i = 0; i < drawn_spr_info.size(); ++i) {
         if (drawn_spr_info[i].id == id) {
-            return &(drawn_spr_info[i].area);
+            return &drawn_spr_info[i];
         }
     }
     return nullptr;
+}
+
+DrawArea* DrawManager::get_drawn_area(SprID id) {
+    DrawnSprite *drawn_info = get_drawn_info(id);
+    return drawn_info ? &(drawn_info->area) : nullptr;
 }
 
 void DrawManager::set_source_region(SprID id, DrawArea* area) {

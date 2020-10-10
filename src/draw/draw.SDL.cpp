@@ -381,14 +381,21 @@ void DrawManagerSDL::repair_dirty_area(SprID id) {
     }
 }
 
-void DrawManagerSDL::update_dirty_area(SprID id, DrawArea area) {
-    DrawArea *dirty_area = get_drawn_area(id);
+DrawnSprite* DrawManagerSDL::update_dirty_area(SprID id, DrawArea area) {
+    DrawnSprite *dirty_area_info = get_drawn_info(id);
+    DrawArea *dirty_area = dirty_area_info ? &(dirty_area_info->area) : nullptr;
     if (dirty_area) {
         // Update the old area to be redrawn with this draw's area
         *dirty_area = area;
     } else {
-        drawn_spr_info.push_back({id, area});
+        // We don't have an existing record for this draw - create a new one
+        DrawnSprite new_drawn_area_info;
+        new_drawn_area_info.id = id;
+        new_drawn_area_info.area = area;
+        drawn_spr_info.push_back(new_drawn_area_info);
+        dirty_area_info = &drawn_spr_info.back();
     }
+    return dirty_area_info;
 }
 
 void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key, DrawTransform t, SprID* id) {
@@ -448,7 +455,12 @@ void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key, DrawArea* area, S
             repair_dirty_area(*id);
         }
         if (spr_key) {
-            update_dirty_area(*id, *area);
+            DrawnSprite *drawn_info = update_dirty_area(*id, *area);
+            if (!drawn_info) {
+                L.fatal("Could not attain draw info for %s", spr_key);
+            }
+            drawn_info->type = DRAWTYPE_Sprite;
+            drawn_info->sprite = spr_key;
         } else {
             release_sprite_id(*id);
         }
@@ -564,7 +576,13 @@ void DrawManagerSDL::draw_text(DrawTarget tgt, SprID id, Font font, const char* 
         if (tgt_surf == surf) {
             repair_dirty_area(id);
         }
-        update_dirty_area(id, area);
+        DrawnSprite *drawn_info = update_dirty_area(id, area);
+        if (!drawn_info) {
+            L.fatal("Could not attain draw info for text %s", text);
+        }
+        drawn_info->type = DRAWTYPE_Text;
+        // FIXME: We don't store the text info here, so we can't use this to repair later
+        // It would look something like strncpy(drawn_info->text, MAX, text)
     }
 
     SDL_BlitSurface(msg_surf, nullptr, tgt_surf, &msg_rect);
@@ -607,7 +625,12 @@ void DrawManagerSDL::fill(SprID id, DrawArea area, RGB col) {
         (int)((float)area.y * UPSCALE_Y),
         (int)((float)area.w * UPSCALE_X),
         (int)((float)area.h * UPSCALE_Y)};
-    update_dirty_area(id, transformed_area);
+    DrawnSprite *drawn_info = update_dirty_area(id, transformed_area);
+    if (!drawn_info) {
+        L.fatal("Could not attain draw info for fill");
+    }
+    drawn_info->type = DRAWTYPE_Fill;
+    drawn_info->colour = col;
     fill(TGT_Primary, area, col);
 }
 
