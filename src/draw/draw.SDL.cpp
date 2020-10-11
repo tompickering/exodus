@@ -424,10 +424,10 @@ void DrawManagerSDL::repair_dirty_area(SprID id) {
                         }
                         break;
                     case DRAWTYPE_Fill:
-                        // TODO
+                        fill(info->area, info->colour);
                         break;
                     case DRAWTYPE_Pattern:
-                        // TODO
+                        pattern_fill(info->area);
                         break;
                     default:
                         L.warn("Can't repair draw of type %d", info->type);
