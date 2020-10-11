@@ -704,4 +704,5 @@ ExodusMode Menu::update(float delta) {
 void Menu::set_stage(Stage new_stage) {
     trans_state = None;
     stage = new_stage;
+    draw_manager.clear_sprite_ids();
 }
