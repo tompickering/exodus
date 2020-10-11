@@ -235,6 +235,7 @@ void Exodus::set_mode(ExodusMode new_mode) {
     current_mode = new_mode;
     // Ensure that input state is reset before entering a new mode
     draw_manager.consume_click();
+    draw_manager.clear_sprite_ids();
     mode->enter();
     mode_updated_since_enter = false;
 }
