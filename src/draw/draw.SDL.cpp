@@ -397,6 +397,7 @@ void DrawManagerSDL::repair_dirty_area(SprID id) {
                             }
 
                             // TODO: Deduplicate with draw()
+                            // TODO: Only repair the area inside the overlap
 
                             DrawArea *src_area = get_source_region(info->id);
                             SDL_Rect src_rect;
@@ -423,8 +424,10 @@ void DrawManagerSDL::repair_dirty_area(SprID id) {
                         }
                         break;
                     case DRAWTYPE_Fill:
+                        // TODO
                         break;
                     case DRAWTYPE_Pattern:
+                        // TODO
                         break;
                     default:
                         L.warn("Can't repair draw of type %d", info->type);
