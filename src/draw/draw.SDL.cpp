@@ -378,6 +378,60 @@ void DrawManagerSDL::repair_dirty_area(SprID id) {
         // Wipe that area with the background.
         SDL_Rect r = {dirty_area->x, dirty_area->y, dirty_area->w, dirty_area->h};
         SDL_BlitSurface(background, &r, surf, &r);
+        // Now iterate over all recorded draw information
+        for (std::vector<DrawnSprite>::size_type i = 0; i < drawn_spr_info.size(); ++i) {
+            DrawnSprite *info = &drawn_spr_info[i];
+            // If we've found our current draw ID ('layer'), then we must stop,
+            // as we've looked at everything 'below' this sprite.
+            if (info->id == id) {
+                break;
+            }
+            if (info->area.overlaps(*dirty_area)) {
+                // This needs redrawing
+                switch (info->type) {
+                    case DRAWTYPE_Sprite:
+                        {
+                            if (!info->sprite) {
+                                L.error("Drawn sprite record has no sprite reference");
+                                continue;
+                            }
+
+                            // TODO: Deduplicate with draw()
+
+                            DrawArea *src_area = get_source_region(info->id);
+                            SDL_Rect src_rect;
+                            SDL_Rect *src_rect_ptr = nullptr;
+                            if (src_area) {
+                                src_rect = {src_area->x, src_area->y, src_area->w, src_area->h};
+                                src_rect_ptr = &src_rect;
+                            }
+
+                            SDL_Rect dst_rect = {info->area.x,
+                                                 info->area.y,
+                                                 info->area.w,
+                                                 info->area.h};
+
+                            SDL_Surface *spr = (SDL_Surface*)get_sprite_data(info->sprite);
+                            if (!spr) {
+                                L.warn("Unknown sprite during repair: %s", info->sprite);
+                                continue;
+                            }
+
+                            if (SDL_BlitScaled(spr, src_rect_ptr, surf, &dst_rect)) {
+                                L.debug("Repair blit unsuccessful: %s", info->sprite);
+                            }
+                        }
+                        break;
+                    case DRAWTYPE_Fill:
+                        break;
+                    case DRAWTYPE_Pattern:
+                        break;
+                    default:
+                        L.warn("Can't repair draw of type %d", info->type);
+                        break;
+                }
+            }
+        }
     }
 }
 
@@ -494,6 +548,10 @@ void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key, DrawArea* area, S
     if (SDL_BlitScaled(spr, src_rect_ptr, tgt_surf, &dst_rect)) {
         L.debug("Blit unsuccessful: %s", spr_key);
     }
+
+    // FIXME: If we want to be able to move sprites below other sprites,
+    // we need an equivalent of repair_dirty_area() to carry out draws
+    // *after* the original SprID here.
 }
 
 void DrawManagerSDL::draw_text(const char* text, Justify jst, int x, int y, RGB rgb) {
@@ -591,6 +649,10 @@ void DrawManagerSDL::draw_text(DrawTarget tgt, SprID id, Font font, const char* 
     SDL_BlitSurface(msg_surf, nullptr, tgt_surf, &msg_rect);
 
     SDL_FreeSurface(msg_surf);
+
+    // FIXME: If we want to be able to move sprites below other sprites,
+    // we need an equivalent of repair_dirty_area() to carry out draws
+    // *after* the original SprID here.
 }
 
 void DrawManagerSDL::pixelswap_start() {
@@ -635,6 +697,10 @@ void DrawManagerSDL::fill(SprID id, DrawArea area, RGB col) {
     drawn_info->type = DRAWTYPE_Fill;
     drawn_info->colour = col;
     fill(TGT_Primary, area, col);
+
+    // FIXME: If we want to be able to move sprites below other sprites,
+    // we need an equivalent of repair_dirty_area() to carry out draws
+    // *after* the original SprID here.
 }
 
 void DrawManagerSDL::fill(DrawTarget tgt, DrawArea area, RGB col) {

@@ -56,11 +56,18 @@ typedef struct {
 
 } DrawTransform;
 
-typedef struct {
+typedef struct DrawArea {
     int x;
     int y;
     int w;
     int h;
+    bool overlaps(DrawArea& o) {
+        if (x+w < o.x)   return false;
+        if (x > o.x+o.w) return false;
+        if (y+h < o.y)   return false;
+        if (y > o.y+o.h) return false;
+        return true;
+    }
 } DrawArea;
 
 enum DrawType {
