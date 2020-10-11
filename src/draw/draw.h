@@ -41,6 +41,12 @@ typedef unsigned int SprID;
 extern const SprID ID_NONE;
 
 typedef struct {
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+} RGB;
+
+typedef struct {
     int x;
     int y;
     float anchor_x;
@@ -50,16 +56,42 @@ typedef struct {
 
 } DrawTransform;
 
-typedef struct {
+typedef struct DrawArea {
     int x;
     int y;
     int w;
     int h;
+    bool overlaps(DrawArea& o) {
+        if (x+w < o.x)   return false;
+        if (x > o.x+o.w) return false;
+        if (y+h < o.y)   return false;
+        if (y > o.y+o.h) return false;
+        return true;
+    }
 } DrawArea;
+
+enum DrawType {
+    DRAWTYPE_Unknown,
+    DRAWTYPE_Sprite,
+    DRAWTYPE_Text,
+    DRAWTYPE_Fill,
+    DRAWTYPE_Pattern,
+};
 
 typedef struct {
     SprID id;
     DrawArea area;
+    /*
+     * FIXME: We store some information to record *what* was actually drawn
+     * so we can later use it to repair if necessary, after an overlaid sprite
+     * is moved / removed. However, we currently only record sufficient data
+     * for sprite, fill and pattern-type draws - not text, as this would require
+     * us to allocate large amounts of space per-entry to remember the text content
+     * and draw style.
+     */
+    DrawType type;
+    const char *sprite;
+    RGB colour;
 } DrawnSprite;
 
 typedef struct {
@@ -81,12 +113,6 @@ enum Justify {
     Right,
 };
 
-typedef struct {
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
-} RGB;
-
 enum DrawTarget {
     TGT_Primary,
     TGT_Secondary,
@@ -106,6 +132,7 @@ class DrawManager {
         virtual void clear(DrawTarget) = 0;
         virtual SprID new_sprite_id();
         virtual void release_sprite_id(SprID);
+        virtual DrawnSprite* get_drawn_info(SprID);
         virtual DrawArea* get_drawn_area(SprID);
         virtual void draw_init_image() = 0;
         virtual void draw(const char*) = 0;

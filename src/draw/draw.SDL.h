@@ -80,7 +80,7 @@ class DrawManagerSDL : public DrawManager {
         void draw(DrawTarget, const char*, DrawTransform, SprID*);
         void draw_text(DrawTarget, SprID, Font, const char*, Justify, int, int, RGB*, RGB*);
         void repair_dirty_area(SprID);
-        void update_dirty_area(SprID, DrawArea);
+        DrawnSprite* update_dirty_area(SprID, DrawArea);
 };
 
 #endif

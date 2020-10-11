@@ -378,17 +378,81 @@ void DrawManagerSDL::repair_dirty_area(SprID id) {
         // Wipe that area with the background.
         SDL_Rect r = {dirty_area->x, dirty_area->y, dirty_area->w, dirty_area->h};
         SDL_BlitSurface(background, &r, surf, &r);
+        // Now iterate over all recorded draw information
+        for (std::vector<DrawnSprite>::size_type i = 0; i < drawn_spr_info.size(); ++i) {
+            DrawnSprite *info = &drawn_spr_info[i];
+            // If we've found our current draw ID ('layer'), then we must stop,
+            // as we've looked at everything 'below' this sprite.
+            if (info->id == id) {
+                break;
+            }
+            if (info->area.overlaps(*dirty_area)) {
+                // This needs redrawing
+                switch (info->type) {
+                    case DRAWTYPE_Sprite:
+                        {
+                            if (!info->sprite) {
+                                L.error("Drawn sprite record has no sprite reference");
+                                continue;
+                            }
+
+                            // TODO: Deduplicate with draw()
+
+                            DrawArea *src_area = get_source_region(info->id);
+                            SDL_Rect src_rect;
+                            SDL_Rect *src_rect_ptr = nullptr;
+                            if (src_area) {
+                                src_rect = {src_area->x, src_area->y, src_area->w, src_area->h};
+                                src_rect_ptr = &src_rect;
+                            }
+
+                            SDL_Rect dst_rect = {info->area.x,
+                                                 info->area.y,
+                                                 info->area.w,
+                                                 info->area.h};
+
+                            SDL_Surface *spr = (SDL_Surface*)get_sprite_data(info->sprite);
+                            if (!spr) {
+                                L.warn("Unknown sprite during repair: %s", info->sprite);
+                                continue;
+                            }
+
+                            if (SDL_BlitScaled(spr, src_rect_ptr, surf, &dst_rect)) {
+                                L.debug("Repair blit unsuccessful: %s", info->sprite);
+                            }
+                        }
+                        break;
+                    case DRAWTYPE_Fill:
+                        break;
+                    case DRAWTYPE_Pattern:
+                        break;
+                    default:
+                        L.warn("Can't repair draw of type %d", info->type);
+                        break;
+                }
+            }
+        }
     }
 }
 
-void DrawManagerSDL::update_dirty_area(SprID id, DrawArea area) {
-    DrawArea *dirty_area = get_drawn_area(id);
+DrawnSprite* DrawManagerSDL::update_dirty_area(SprID id, DrawArea area) {
+    DrawnSprite *dirty_area_info = get_drawn_info(id);
+    DrawArea *dirty_area = dirty_area_info ? &(dirty_area_info->area) : nullptr;
     if (dirty_area) {
         // Update the old area to be redrawn with this draw's area
         *dirty_area = area;
     } else {
-        drawn_spr_info.push_back({id, area});
+        // We don't have an existing record for this draw - create a new one
+        DrawnSprite new_drawn_area_info;
+        new_drawn_area_info.id = id;
+        new_drawn_area_info.area = area;
+        new_drawn_area_info.type = DRAWTYPE_Unknown;
+        new_drawn_area_info.sprite = nullptr;
+        new_drawn_area_info.colour = {0, 0, 0};
+        drawn_spr_info.push_back(new_drawn_area_info);
+        dirty_area_info = &drawn_spr_info.back();
     }
+    return dirty_area_info;
 }
 
 void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key, DrawTransform t, SprID* id) {
@@ -448,7 +512,12 @@ void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key, DrawArea* area, S
             repair_dirty_area(*id);
         }
         if (spr_key) {
-            update_dirty_area(*id, *area);
+            DrawnSprite *drawn_info = update_dirty_area(*id, *area);
+            if (!drawn_info) {
+                L.fatal("Could not attain draw info for %s", spr_key);
+            }
+            drawn_info->type = DRAWTYPE_Sprite;
+            drawn_info->sprite = spr_key;
         } else {
             release_sprite_id(*id);
         }
@@ -479,6 +548,10 @@ void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key, DrawArea* area, S
     if (SDL_BlitScaled(spr, src_rect_ptr, tgt_surf, &dst_rect)) {
         L.debug("Blit unsuccessful: %s", spr_key);
     }
+
+    // FIXME: If we want to be able to move sprites below other sprites,
+    // we need an equivalent of repair_dirty_area() to carry out draws
+    // *after* the original SprID here.
 }
 
 void DrawManagerSDL::draw_text(const char* text, Justify jst, int x, int y, RGB rgb) {
@@ -564,12 +637,22 @@ void DrawManagerSDL::draw_text(DrawTarget tgt, SprID id, Font font, const char* 
         if (tgt_surf == surf) {
             repair_dirty_area(id);
         }
-        update_dirty_area(id, area);
+        DrawnSprite *drawn_info = update_dirty_area(id, area);
+        if (!drawn_info) {
+            L.fatal("Could not attain draw info for text %s", text);
+        }
+        drawn_info->type = DRAWTYPE_Text;
+        // FIXME: We don't store the text info here, so we can't use this to repair later
+        // It would look something like strncpy(drawn_info->text, MAX, text)
     }
 
     SDL_BlitSurface(msg_surf, nullptr, tgt_surf, &msg_rect);
 
     SDL_FreeSurface(msg_surf);
+
+    // FIXME: If we want to be able to move sprites below other sprites,
+    // we need an equivalent of repair_dirty_area() to carry out draws
+    // *after* the original SprID here.
 }
 
 void DrawManagerSDL::pixelswap_start() {
@@ -607,8 +690,17 @@ void DrawManagerSDL::fill(SprID id, DrawArea area, RGB col) {
         (int)((float)area.y * UPSCALE_Y),
         (int)((float)area.w * UPSCALE_X),
         (int)((float)area.h * UPSCALE_Y)};
-    update_dirty_area(id, transformed_area);
+    DrawnSprite *drawn_info = update_dirty_area(id, transformed_area);
+    if (!drawn_info) {
+        L.fatal("Could not attain draw info for fill");
+    }
+    drawn_info->type = DRAWTYPE_Fill;
+    drawn_info->colour = col;
     fill(TGT_Primary, area, col);
+
+    // FIXME: If we want to be able to move sprites below other sprites,
+    // we need an equivalent of repair_dirty_area() to carry out draws
+    // *after* the original SprID here.
 }
 
 void DrawManagerSDL::fill(DrawTarget tgt, DrawArea area, RGB col) {
