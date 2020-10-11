@@ -806,6 +806,7 @@ ExodusMode Intro::update(float delta) {
 }
 
 void Intro::next_stage() {
+    draw_manager.clear_sprite_ids();
     if (stage != Stage::End) {
         stage = (Stage)((int)stage + 1);
         stage_started = false;
