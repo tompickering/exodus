@@ -239,6 +239,8 @@ void Exodus::set_mode(ExodusMode new_mode) {
     const char* new_mode_name = mode->name;
     L.debug("MODE: %s -> %s", mode_name, new_mode_name);
     current_mode = new_mode;
+    // Ensure that input state is reset before entering a new mode
+    draw_manager.consume_click();
     mode->enter();
     mode_updated_since_enter = false;
 }
