@@ -390,15 +390,15 @@ void DrawManagerSDL::repair_dirty_area(SprID id) {
             }
             if (info->area.overlaps(*dirty_area)) {
                 // Determine the on-screen area which is overlapping
-                DrawArea overlapping_area;
-                overlapping_area.x = max(dirty_area->x, info->area.x);
-                overlapping_area.y = max(dirty_area->y, info->area.y);
-                int overlapping_area_br_x = min(dirty_area->x + dirty_area->w,
-                                                info->area.x + info->area.w);
-                int overlapping_area_br_y = min(dirty_area->y + dirty_area->h,
-                                                info->area.y + info->area.h);
-                overlapping_area.w = overlapping_area_br_x - overlapping_area.x;
-                overlapping_area.h = overlapping_area_br_y - overlapping_area.y;
+                DrawArea overlap_area;
+                overlap_area.x = max(dirty_area->x, info->area.x);
+                overlap_area.y = max(dirty_area->y, info->area.y);
+                int overlap_area_br_x = min(dirty_area->x + dirty_area->w,
+                                            info->area.x + info->area.w);
+                int overlap_area_br_y = min(dirty_area->y + dirty_area->h,
+                                            info->area.y + info->area.h);
+                overlap_area.w = overlap_area_br_x - overlap_area.x;
+                overlap_area.h = overlap_area_br_y - overlap_area.y;
 
                 // This needs redrawing
                 switch (info->type) {
@@ -437,10 +437,10 @@ void DrawManagerSDL::repair_dirty_area(SprID id) {
                         }
                         break;
                     case DRAWTYPE_Fill:
-                        fill(overlapping_area, info->colour);
+                        fill(overlap_area, info->colour);
                         break;
                     case DRAWTYPE_Pattern:
-                        pattern_fill(overlapping_area);
+                        pattern_fill(overlap_area);
                         break;
                     default:
                         L.warn("Can't repair draw of type %d", info->type);
