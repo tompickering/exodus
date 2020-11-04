@@ -412,26 +412,49 @@ void DrawManagerSDL::repair_dirty_area(SprID id) {
                             // TODO: Deduplicate with draw()
                             // TODO: Only repair the area inside the overlap
 
-                            DrawArea *src_area = get_source_region(info->id);
-                            SDL_Rect src_rect;
-                            SDL_Rect *src_rect_ptr = nullptr;
-                            if (src_area) {
-                                src_rect = {src_area->x, src_area->y, src_area->w, src_area->h};
-                                src_rect_ptr = &src_rect;
-                            }
-
-                            SDL_Rect dst_rect = {info->area.x,
-                                                 info->area.y,
-                                                 info->area.w,
-                                                 info->area.h};
-
                             SDL_Surface *spr = (SDL_Surface*)get_sprite_data(info->sprite);
                             if (!spr) {
-                                L.warn("Unknown sprite during repair: %s", info->sprite);
-                                continue;
+                                L.fatal("Unknown sprite during repair: %s", info->sprite);
+                                return;
                             }
 
-                            if (SDL_BlitScaled(spr, src_rect_ptr, surf, &dst_rect)) {
+                            // Determine the area of the source sprite which we need to draw.
+                            // During repair, as we're only drawing the overlapping region,
+                            // it may be that we only want to draw part of the image even
+                            // if there's no registered source region. For clarity, even if
+                            // we don't find one, set the source region explicitly based
+                            // on the sprite's width and height.
+                            DrawArea *src_area = get_source_region(info->id);
+                            SDL_Rect entire_src_rect;
+                            if (src_area) {
+                                entire_src_rect = {src_area->x, src_area->y, src_area->w, src_area->h};
+                            } else {
+                                entire_src_rect = {0, 0, spr->w, spr->h};
+                            }
+
+                            // entire_src_rect now contains the area of the source sprite
+                            // that occupies info->area. We now want to determine the
+                            // (non-strict) sub-region which occupies overlapping_area.
+                            // We first want to find the proportions of info->area that
+                            // occupy overlapping area - and then index into entire_src_rect
+                            // with those same proportions - to get the source region that
+                            // we need to draw for repair.
+                            float prop_x = (float)(overlap_area.x - info->area.x) / info->area.w;
+                            float prop_y = (float)(overlap_area.y - info->area.y) / info->area.h;
+                            float prop_w = (float)(overlap_area.w) / info->area.w;
+                            float prop_h = (float)(overlap_area.h) / info->area.h;
+
+                            SDL_Rect overlap_src_rect = {entire_src_rect.x + (int)(.5f + prop_x * entire_src_rect.w),
+                                                         entire_src_rect.y + (int)(.5f + prop_y * entire_src_rect.h),
+                                                         (int)(.5f + entire_src_rect.w * prop_w),
+                                                         (int)(.5f + entire_src_rect.h * prop_h)};
+
+                            SDL_Rect dst_rect = {overlap_area.x,
+                                                 overlap_area.y,
+                                                 overlap_area.w,
+                                                 overlap_area.h};
+
+                            if (SDL_BlitScaled(spr, &overlap_src_rect, surf, &dst_rect)) {
                                 L.debug("Repair blit unsuccessful: %s", info->sprite);
                             }
                         }
