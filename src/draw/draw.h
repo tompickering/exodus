@@ -154,6 +154,7 @@ class DrawManager {
         virtual void fill(SprID, DrawArea area, RGB) = 0;
         virtual void fill(DrawTarget, DrawArea area, RGB) = 0;
         virtual void fill_pattern(DrawArea area) = 0;
+        virtual void fill_pattern(SprID, DrawArea area) = 0;
         virtual void fill_pattern(DrawTarget, DrawArea area) = 0;
         virtual void draw_text(const char*, Justify, int, int, RGB) = 0;
         virtual void draw_text(const char*, Justify, int, int, RGB, RGB) = 0;

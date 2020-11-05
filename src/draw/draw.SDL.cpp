@@ -756,6 +756,24 @@ void DrawManagerSDL::fill_pattern(DrawArea area) {
     fill_pattern(TGT_Primary, area);
 }
 
+void DrawManagerSDL::fill_pattern(SprID id, DrawArea area) {
+    DrawArea transformed_area = {
+        (int)((float)area.x * UPSCALE_X),
+        (int)((float)area.y * UPSCALE_Y),
+        (int)((float)area.w * UPSCALE_X),
+        (int)((float)area.h * UPSCALE_Y)};
+    DrawnSprite *drawn_info = update_dirty_area(id, transformed_area);
+    if (!drawn_info) {
+        L.fatal("Could not attain draw info for pattern fill");
+    }
+    drawn_info->type = DRAWTYPE_Pattern;
+    fill_pattern(TGT_Primary, area);
+
+    // FIXME: If we want to be able to move sprites below other sprites,
+    // we need an equivalent of repair_dirty_area() to carry out draws
+    // *after* the original SprID here.
+}
+
 void DrawManagerSDL::fill_pattern(DrawTarget tgt, DrawArea area) {
     SDL_Surface *tgt_surf = get_target(tgt);
     SDL_Rect r;
