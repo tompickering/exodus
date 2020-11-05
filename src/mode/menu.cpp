@@ -225,7 +225,7 @@ ExodusMode Menu::update(float delta) {
                     IMG_BR11_OK,
                     {305, 250, 0, 0.5, 1, 1}
                     );
-                draw_manager.pattern_fill({260, 230, 40, 40});
+                draw_manager.fill_pattern({260, 230, 40, 40});
                 draw_manager.save_background();
                 trans_state = Done;
             }

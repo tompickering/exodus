@@ -191,7 +191,7 @@ void PlanetMap::draw() {
             {menu_x, menu_y,
             0, 0, 1, 1});
 
-        draw_manager.pattern_fill({menu_x + 4, menu_y + 198, 118, 24});
+        draw_manager.fill_pattern({menu_x + 4, menu_y + 198, 118, 24});
         draw_manager.draw(
             id(ID::ICON_FOOD),
             IMG_SU1_CTRL1,
@@ -212,9 +212,9 @@ void PlanetMap::draw() {
 
         update_gauges();
 
-        draw_manager.pattern_fill({menu_x + 4, menu_y + 226, 118, 66});
-        draw_manager.pattern_fill({menu_x + 4, menu_y + 296, 118, 26});
-        draw_manager.pattern_fill({menu_x + 4, menu_y + 326, 118, 26});
+        draw_manager.fill_pattern({menu_x + 4, menu_y + 226, 118, 66});
+        draw_manager.fill_pattern({menu_x + 4, menu_y + 296, 118, 26});
+        draw_manager.fill_pattern({menu_x + 4, menu_y + 326, 118, 26});
 
         draw_manager.draw(
             id(ID::TRIBUTTONS),
@@ -796,7 +796,7 @@ void PlanetMap::draw_mc() {
 }
 
 void PlanetMap::draw_army_funding() {
-    draw_manager.pattern_fill({menu_x + 4, menu_y + 326, 118, 26});
+    draw_manager.fill_pattern({menu_x + 4, menu_y + 326, 118, 26});
     char ar_str[21];
     snprintf(ar_str, 20, "Ar: %d/%d", planet->get_army_funding(), planet->get_income());
     RGB col = COL_TEXT;

@@ -463,7 +463,7 @@ void DrawManagerSDL::repair_dirty_area(SprID id) {
                         fill(overlap_area, info->colour);
                         break;
                     case DRAWTYPE_Pattern:
-                        pattern_fill(overlap_area);
+                        fill_pattern(overlap_area);
                         break;
                     default:
                         L.warn("Can't repair draw of type %d", info->type);
@@ -752,11 +752,11 @@ void DrawManagerSDL::fill(DrawTarget tgt, DrawArea area, RGB col) {
     SDL_FillRect(tgt_surf, &r, SDL_MapRGB(surf->format, col.r, col.g, col.b));
 }
 
-void DrawManagerSDL::pattern_fill(DrawArea area) {
-    pattern_fill(TGT_Primary, area);
+void DrawManagerSDL::fill_pattern(DrawArea area) {
+    fill_pattern(TGT_Primary, area);
 }
 
-void DrawManagerSDL::pattern_fill(DrawTarget tgt, DrawArea area) {
+void DrawManagerSDL::fill_pattern(DrawTarget tgt, DrawArea area) {
     SDL_Surface *tgt_surf = get_target(tgt);
     SDL_Rect r;
     r.x = area.x * UPSCALE_X;

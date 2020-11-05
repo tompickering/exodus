@@ -130,7 +130,7 @@ ExodusMode GuildHQ::update(float delta) {
                     {PANEL_X - BORDER, PANEL_Y - BORDER,
                      PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
                     COL_BORDERS);
-                draw_manager.pattern_fill(
+                draw_manager.fill_pattern(
                     {PANEL_X, PANEL_Y,
                      PANEL_W, PANEL_H});
                 draw_manager.draw_text(

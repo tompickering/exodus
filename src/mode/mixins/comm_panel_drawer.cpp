@@ -226,12 +226,12 @@ void CommPanelDrawer::comm_open(int text_slots) {
          COMM_Y + COMM_BORDER,
          196, 208},
          {0, 0, 0});
-    draw_manager.pattern_fill(
+    draw_manager.fill_pattern(
         {COMM_RCOL_X,
          COMM_Y + COMM_BORDER,
          COMM_X + COMM_W - COMM_RCOL_X - COMM_BORDER,
          28});
-    draw_manager.pattern_fill(
+    draw_manager.fill_pattern(
         {COMM_RCOL_X,
          COMM_Y + 28 + COMM_BORDER*2,
          COMM_X + COMM_W - COMM_RCOL_X - COMM_BORDER,

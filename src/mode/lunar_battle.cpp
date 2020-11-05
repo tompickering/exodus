@@ -746,12 +746,12 @@ void LunarBattle::update_panel() {
             for (int i = 0; i < 4; ++i) {
                 draw_manager.fill({8 + i*60, 16, 42, 42}, {0, 0, 0});
             }
-            draw_manager.pattern_fill({400, 16, 100, 42});
+            draw_manager.fill_pattern({400, 16, 100, 42});
         }
         if (target_mode == LBPM_Battle) {
             Planet *p = exostate.get_active_planet();
 
-            draw_manager.pattern_fill({  8, 12, 160, 50});
+            draw_manager.fill_pattern({  8, 12, 160, 50});
 
             draw_manager.draw_text("The battle of", Justify::Left, 12, 18, COL_TEXT);
             draw_manager.draw_text(p->get_name(), Justify::Left, 12, 36, COL_TEXT);
@@ -765,7 +765,7 @@ void LunarBattle::update_panel() {
                 p->moon_sprites()->bg,
                 {177, 17, 0, 0, 1, 1});
 
-            draw_manager.pattern_fill({226, 12, 200, 50});
+            draw_manager.fill_pattern({226, 12, 200, 50});
 
             draw_manager.draw(
                 id(ID::BTN_INFO),
@@ -821,7 +821,7 @@ void LunarBattle::update_panel_battle() {
         RGB text_col = {0, 0xFF, 0};  // TODO: Check exact colour
         panel_unit = draw_unit;
         // Clears over drawn health info etc
-        draw_manager.pattern_fill({226, 12, 200, 50});
+        draw_manager.fill_pattern({226, 12, 200, 50});
         if (draw_unit) {
             text = draw_unit->name;
             // Check if the unit is on our side

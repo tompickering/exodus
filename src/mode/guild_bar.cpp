@@ -257,7 +257,7 @@ ExodusMode GuildBar::update(float delta) {
                         {PINBOARD_X - BORDER, PINBOARD_Y - BORDER,
                          PINBOARD_W + 2*BORDER, PINBOARD_H + 2*BORDER},
                          COL_BORDERS);
-                    draw_manager.pattern_fill(
+                    draw_manager.fill_pattern(
                         {PINBOARD_X, PINBOARD_Y,
                          PINBOARD_W, PINBOARD_H});
                     draw_manager.draw_text(
@@ -320,7 +320,7 @@ ExodusMode GuildBar::update(float delta) {
                         {PINBOARD_X - BORDER, PINBOARD_Y - BORDER,
                          PINBOARD_W + 2*BORDER, PINBOARD_H + 2*BORDER},
                          COL_BORDERS);
-                    draw_manager.pattern_fill(
+                    draw_manager.fill_pattern(
                         {PINBOARD_X, PINBOARD_Y,
                          PINBOARD_W, PINBOARD_H});
                     draw_manager.draw_text(

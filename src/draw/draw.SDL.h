@@ -42,8 +42,8 @@ class DrawManagerSDL : public DrawManager {
         virtual void fill(DrawArea, RGB) override;
         virtual void fill(SprID, DrawArea, RGB) override;
         virtual void fill(DrawTarget, DrawArea, RGB) override;
-        virtual void pattern_fill(DrawArea) override;
-        virtual void pattern_fill(DrawTarget, DrawArea) override;
+        virtual void fill_pattern(DrawArea) override;
+        virtual void fill_pattern(DrawTarget, DrawArea) override;
         virtual void draw_text(const char*, Justify, int, int, RGB) override;
         virtual void draw_text(const char*, Justify, int, int, RGB, RGB) override;
         virtual void draw_text(Font, const char*, Justify, int, int, RGB) override;

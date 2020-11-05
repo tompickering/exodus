@@ -28,7 +28,7 @@ void PlanetStatus::enter() {
     // Orig: PROCstatus
     draw_manager.draw(p->sprites()->landscape);
     draw_manager.fill({0, 0, RES_X, 70}, COL_BORDERS);
-    draw_manager.pattern_fill({4, 4, RES_X - 8, 62});
+    draw_manager.fill_pattern({4, 4, RES_X - 8, 62});
 
     char heading[12 + PLANET_MAX_NAME];
 
