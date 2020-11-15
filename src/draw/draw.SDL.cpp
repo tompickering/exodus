@@ -454,6 +454,36 @@ void DrawManagerSDL::repair_dirty_area(SprID id) {
                                                  overlap_area.w,
                                                  overlap_area.h};
 
+                            /*
+                             * FIXME: Note that this may not work perfectly when
+                             * repairing scaled sprites, and is liable to result
+                             * in a 'jitter' distortion. This happens because it's
+                             * possible that there is no integer-specifiable region
+                             * in the source sprite that maps to the overlap region
+                             * being repaired.
+                             *
+                             * One solution may be to extend the repair region to consider
+                             * all sprites occupying the space, however it may not be
+                             * possible to find a suitable region to satisfy them all,
+                             * depending on the scales.
+                             *
+                             * Being able to blit with a fractional position and dimensions
+                             * would work, thereby determining the output pixel from
+                             * exactly the same blitter state as if it had been drawing
+                             * the entire sprite, however I am not aware of an interface
+                             * for this in SDL.
+                             *
+                             * Note that as I proof-of-concept, I was able to demonstrate
+                             * the effect disappeared completely when setting the overlap
+                             * region to the full screen:
+                             *
+                             * overlap_area = {0, 0, RES_X, RES_Y};
+                             *
+                             * This of course defeats the object of efficient blitting,
+                             * however extending the region out to incorporate all scaled
+                             * sprites may be a viable workaround for some use cases.
+                             *
+                             */
                             if (SDL_BlitScaled(spr, &overlap_src_rect, surf, &dst_rect)) {
                                 L.debug("Repair blit unsuccessful: %s", info->sprite);
                             }
