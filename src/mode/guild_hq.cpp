@@ -13,21 +13,18 @@ static const int PANEL_Y = 40;
 static const int PANEL_W = 332;
 static const int PANEL_H = 318;
 
-static DrawArea REPAIR_AREA = {PANEL_X - BORDER, 0,
-                               RES_X - (PANEL_X - BORDER), RES_Y};
-
 enum ID {
     BOT,
     EYES,
     EYES_REF,
     TEXT,
     PANEL,
+    PANEL_PATTERN,
     BOT_MISSIONINFO,
     BOT_SGJOIN,
     BOT_SGQUIT,
     BOT_REP,
     BOT_QUIT,
-    BG_REPAIR,
     END,
 };
 
@@ -48,7 +45,6 @@ void GuildHQ::enter() {
     draw_manager.set_selectable(id(ID::BOT_SGQUIT));
     draw_manager.set_selectable(id(ID::BOT_REP));
     draw_manager.set_selectable(id(ID::BOT_QUIT));
-    draw_manager.set_source_region(id(ID::BG_REPAIR), &REPAIR_AREA);
 }
 
 ExodusMode GuildHQ::update(float delta) {
@@ -131,6 +127,7 @@ ExodusMode GuildHQ::update(float delta) {
                      PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
                     COL_BORDERS);
                 draw_manager.fill_pattern(
+                    id(ID::PANEL_PATTERN),
                     {PANEL_X, PANEL_Y,
                      PANEL_W, PANEL_H});
                 draw_manager.draw_text(
@@ -143,7 +140,6 @@ ExodusMode GuildHQ::update(float delta) {
                     Justify::Left,
                     PANEL_X + 4, PANEL_Y + 24,
                     COL_TEXT2);
-                draw_manager.save_background(REPAIR_AREA);
             }
 
             break;
@@ -183,12 +179,8 @@ ExodusMode GuildHQ::update(float delta) {
                 COL_TEXT);
 
             if (draw_manager.query_click(id(ID::BOT_QUIT)).id) {
-                draw_manager.draw(
-                    id(ID::BG_REPAIR),
-                    IMG_SG2_INS1,
-                    {REPAIR_AREA.x, REPAIR_AREA.y,
-                     0, 0, 1, 1});
-                draw_manager.save_background(REPAIR_AREA);
+                draw_manager.draw(id(ID::PANEL_PATTERN), nullptr);
+                draw_manager.draw(id(ID::PANEL), nullptr);
                 guildbot_active = false;
                 stage = HQ_Idle;
             }
