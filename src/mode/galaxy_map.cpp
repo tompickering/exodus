@@ -396,8 +396,23 @@ ExodusMode GalaxyMap::month_pass_update() {
         next_mp_stage();
     }
 
+    // FIXME: In the original, we iterate over the players and run
+    // PROClordreturn, PROClorddies and PROCet_main in turn. Here,
+    // we iterate over the players once for each of these. Is this
+    // liable to make a meaningful difference...?
+
+    if (mp_stage == MP_EnemyReturns) {
+        // TODO - PROClordreturn
+        next_mp_stage();
+    }
+
+    if (mp_stage == MP_EnemyDies) {
+        // TODO - PROClorddies
+        next_mp_stage();
+    }
+
     if (mp_stage == MP_EnemyTactics) {
-        // TODO - PROCenemythinks
+        // TODO - PROCet_main
         next_mp_stage();
     }
 

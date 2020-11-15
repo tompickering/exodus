@@ -60,6 +60,8 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
             MP_UpdateReputation,
             MP_SunExpansion,
             MP_MoveArtificialPlanets,
+            MP_EnemyReturns,
+            MP_EnemyDies,
             MP_EnemyTactics,
             MP_ArtificialWorldNews,
             MP_EnemyActions,
