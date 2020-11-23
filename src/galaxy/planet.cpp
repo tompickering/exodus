@@ -1457,5 +1457,63 @@ void Planet::plunder() {
 
 void Planet::ai_update() {
     // AI planet developments originally done in PROCenemytactics / PROCeta*
+
+    if (!is_owned()) {
+        L.warn("AI update on unowned planet");
+        return;
+    }
+
+    Player *owner = exostate.get_player(get_owner());
+
+    if (owner->is_human()) {
+        L.warn("AI update on human-owned planet");
+        return;
+    }
+
+    if (!owner->is_participating()) {
+        L.warn("AI update on planet with non-participating owner");
+        return;
+    }
+
+    bool stop = false;
+    do {
+        const int free = count_stones(STONE_Clear) + count_stones(STONE_NaturalSmall);
+
+        if (owner->has_invention(INV_WeatherInfluence)) {
+            PlanetClass c = get_class();
+            bool viable = (c == Desert || c == Volcano || c == Ice || c == Rock);
+            if (viable && onein(c == Rock ? 20 : 10)) {
+                // FIXME: Should be a cost variable somewhere
+                if (owner->attempt_spend(500)) {
+                    PlanetClass new_class = Desert;
+                    switch (c) {
+                        case Desert:
+                            new_class = Ice;
+                            break;
+                        case Volcano:
+                            new_class = Desert;
+                            break;
+                        case Rock:
+                            new_class = Terra;
+                            break;
+                        case Ice:
+                            new_class = Rock;
+                            break;
+                        default:
+                            L.fatal("Terraform target not viable");
+                            break;
+                    }
+                    change_class(new_class);
+                }
+            }
+        }
+
+        // TODO
+
+        stop = stop || exostate.get_orig_month() > 2;
+        stop = stop || owner->get_mc() < 30;
+        stop = stop || free < 5;
+        stop = stop || onein(5);
+    } while (!stop);
     // TODO
 }
