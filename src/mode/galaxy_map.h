@@ -34,6 +34,87 @@ typedef struct {
     }
 } PlanetReport;
 
+// Enum order determines order of processing
+enum MonthPassStage {
+    MP_None,
+    MP_TimeDelay,
+    MP_CheckMissionFail,
+    MP_StarshipRepairs,
+    MP_UpdateReputation,
+    MP_SunExpansion,
+    MP_MoveArtificialPlanets,
+    MP_EnemyReturns,
+    MP_EnemyDies,
+    MP_EnemyTactics,
+    MP_ArtificialWorldNews,
+    MP_EnemyActions,
+    MP_UpdatePirateProbabilities,
+    MP_PlanetBackgroundUpdate,
+    MP_PlanetMainUpdate, // PROCcal_plan - comprised of MonthPassPlanetStages
+    MP_UpdateAlienFly,
+    MP_AlienMissions,
+    MP_PayOfficers,
+    MP_GuildCommendations,
+    MP_AlienExile,
+    MP_UpdateHumanFly,
+    MP_End,
+};
+
+enum MonthPassPlanetStage {
+    MPP_ShuffleTrade,
+    MPP_FirstCity,
+    MPP_FirstSpaceport,
+    MPP_Research1,
+    MPP_Meteors,
+    MPP_KillArmies,
+    MPP_ClimateChange,
+    MPP_Epidemic,
+    MPP_AlienAttack,
+    MPP_AlienAttackResult,
+    MPP_Research2,
+    MPP_DiscoverSpecies,
+    MPP_CityEpidemic,
+    MPP_RebelAttack,
+    MPP_LawsIncreaseUnrest,
+    MPP_ParksReduceUnrest,
+    MPP_ClearRadiation,
+    MPP_ReactorMeltdown,
+    MPP_ClimateChangeDueToCultivation,
+    MPP_ClimateChangeDueToDeforestation,
+    MPP_LosePlanetControl,
+    MPP_Income,
+    MPP_ProducePlutonium,
+    MPP_ProduceMilitary,
+    MPP_Mining,
+    // Can use excess plu in production / mining, but not trade
+    MPP_ResourceCap1,
+    MPP_MilitaryFacilityShutdown,
+    MPP_Trade,
+    MPP_VillageGifts,
+    MPP_FoodPerishes,
+    MPP_FoodProduction,
+    MPP_AgriCollapse,
+    MPP_CityExpansion,
+    MPP_VillageExpansion,
+    MPP_ConsumeFood,
+    // Can consume excess food before we apply cap
+    MPP_ResourceCap2,
+    MPP_AdvanceUnrest,
+    MPP_AmendMilitaryFunding,
+    MPP_DisplayPlanetReport,
+    MPP_EnsureComplete,
+    MPP_End,
+};
+
+typedef struct {
+    MonthPassStage mp_stage;
+    MonthPassPlanetStage mpp_stage;
+    float month_pass_time;
+    int mp_player_idx;
+    unsigned int mp_star_idx;
+    int mp_planet_idx;
+} MPState;
+
 class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, BulletinDrawer, FrameDrawer {
     public:
         GalaxyMap();
@@ -51,89 +132,11 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
             GM_MP_FirstCity,
         };
 
-        // Enum order determines order of processing
-        enum MonthPassStage {
-            MP_None,
-            MP_TimeDelay,
-            MP_CheckMissionFail,
-            MP_StarshipRepairs,
-            MP_UpdateReputation,
-            MP_SunExpansion,
-            MP_MoveArtificialPlanets,
-            MP_EnemyReturns,
-            MP_EnemyDies,
-            MP_EnemyTactics,
-            MP_ArtificialWorldNews,
-            MP_EnemyActions,
-            MP_UpdatePirateProbabilities,
-            MP_PlanetBackgroundUpdate,
-            MP_PlanetMainUpdate, // PROCcal_plan - comprised of MonthPassPlanetStages
-            MP_UpdateAlienFly,
-            MP_AlienMissions,
-            MP_PayOfficers,
-            MP_GuildCommendations,
-            MP_AlienExile,
-            MP_UpdateHumanFly,
-            MP_End,
-        };
-
-        enum MonthPassPlanetStage {
-            MPP_ShuffleTrade,
-            MPP_FirstCity,
-            MPP_FirstSpaceport,
-            MPP_Research1,
-            MPP_Meteors,
-            MPP_KillArmies,
-            MPP_ClimateChange,
-            MPP_Epidemic,
-            MPP_AlienAttack,
-            MPP_AlienAttackResult,
-            MPP_Research2,
-            MPP_DiscoverSpecies,
-            MPP_CityEpidemic,
-            MPP_RebelAttack,
-            MPP_LawsIncreaseUnrest,
-            MPP_ParksReduceUnrest,
-            MPP_ClearRadiation,
-            MPP_ReactorMeltdown,
-            MPP_ClimateChangeDueToCultivation,
-            MPP_ClimateChangeDueToDeforestation,
-            MPP_LosePlanetControl,
-            MPP_Income,
-            MPP_ProducePlutonium,
-            MPP_ProduceMilitary,
-            MPP_Mining,
-            // Can use excess plu in production / mining, but not trade
-            MPP_ResourceCap1,
-            MPP_MilitaryFacilityShutdown,
-            MPP_Trade,
-            MPP_VillageGifts,
-            MPP_FoodPerishes,
-            MPP_FoodProduction,
-            MPP_AgriCollapse,
-            MPP_CityExpansion,
-            MPP_VillageExpansion,
-            MPP_ConsumeFood,
-            // Can consume excess food before we apply cap
-            MPP_ResourceCap2,
-            MPP_AdvanceUnrest,
-            MPP_AmendMilitaryFunding,
-            MPP_DisplayPlanetReport,
-            MPP_EnsureComplete,
-            MPP_End,
-        };
-
         Stage stage;
         FlyTarget *selected_ft;
         float selected_ft_blink;
 
-        MonthPassStage mp_stage;
-        MonthPassPlanetStage mpp_stage;
-        float month_pass_time;
-        int mp_player_idx;
-        unsigned int mp_star_idx;
-        int mp_planet_idx;
-
+        MPState mp_state;
         ExodusMode month_pass_update();
         ExodusMode month_pass_planet_update();
         void month_pass_start();

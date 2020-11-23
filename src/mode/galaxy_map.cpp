@@ -18,9 +18,11 @@ GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer(), PanelDrawer(PNL_
     stage = GM_SwapIn;
     selected_ft = nullptr;
     selected_ft_blink = 0;
-    mp_stage = MP_None;
-    mpp_stage = (MonthPassPlanetStage)0;
-    month_pass_time = 0;
+
+    mp_state.mp_stage = MP_None;
+    mp_state.mpp_stage = (MonthPassPlanetStage)0;
+    mp_state.month_pass_time = 0;
+
     do_first_city = false;
     do_meteor = false;
     do_meltdown = false;
@@ -42,7 +44,7 @@ void GalaxyMap::enter() {
         draw_manager.pixelswap_start(&galaxy_panel_area);
     }
 
-    if (mp_stage == MP_None) {
+    if (mp_state.mp_stage == MP_None) {
         stage = GM_SwapIn;
     } else {
         stage = GM_MonthPassing;
@@ -227,8 +229,8 @@ ExodusMode GalaxyMap::update(float delta) {
                     }
                 }
                 ExodusMode next_mode = month_pass_update();
-                month_pass_time += delta;
-                if (mp_stage == MP_None) {
+                mp_state.month_pass_time += delta;
+                if (mp_state.mp_stage == MP_None) {
                     bulletin_ensure_closed();
                     // The only place we emerge from month-pass-specific stages...
                     stage = GM_Idle;
@@ -259,28 +261,28 @@ void GalaxyMap::exit() {
 }
 
 void GalaxyMap::next_mp_stage() {
-    mp_stage = (MonthPassStage)((int)mp_stage + 1);
-    L.debug("MP stage %d", mp_stage);
+    mp_state.mp_stage = (MonthPassStage)((int)mp_state.mp_stage + 1);
+    L.debug("MP stage %d", mp_state.mp_stage);
     // Reset all mp-stage state tracking
-    mp_player_idx = 0;
-    mp_star_idx = 0;
-    mp_planet_idx = 0;
+    mp_state.mp_player_idx = 0;
+    mp_state.mp_star_idx = 0;
+    mp_state.mp_planet_idx = 0;
 }
 
 void GalaxyMap::next_mpp_stage() {
-    mpp_stage = (MonthPassPlanetStage)((int)mpp_stage + 1);
+    mp_state.mpp_stage = (MonthPassPlanetStage)((int)mp_state.mpp_stage + 1);
     Star *s = exostate.get_active_star();
     Planet *p = exostate.get_active_planet();
-    L.debug("[%s/%s] MPP stage %d", s->name, p->get_name(), mpp_stage);
+    L.debug("[%s/%s] MPP stage %d", s->name, p->get_name(), mp_state.mpp_stage);
 
 }
 
 void GalaxyMap::month_pass_start() {
     L.info("Month passing...");
-    month_pass_time = 0;
-    mpp_stage = (MonthPassPlanetStage)0;
+    mp_state.month_pass_time = 0;
+    mp_state.mpp_stage = (MonthPassPlanetStage)0;
 
-    if (mp_stage != MP_None) {
+    if (mp_state.mp_stage != MP_None) {
         L.fatal("We started a month-pass whilst one was still in progress");
     }
 
@@ -303,8 +305,8 @@ void GalaxyMap::month_pass_start() {
 
 void GalaxyMap::month_pass_end() {
     draw_manager.draw(id(ID::MONTH_PASSING), nullptr);
-    mp_stage = MP_None;
-    mpp_stage = (MonthPassPlanetStage)0;
+    mp_state.mp_stage = MP_None;
+    mp_state.mpp_stage = (MonthPassPlanetStage)0;
 
     L.info("Month passed");
 
@@ -340,30 +342,30 @@ ExodusMode GalaxyMap::month_pass_update() {
     Galaxy *gal = exostate.get_galaxy();
     Star *stars = gal->get_stars(n_stars);
 
-    if (mp_stage == MP_None) {
+    if (mp_state.mp_stage == MP_None) {
         month_pass_start();
         next_mp_stage();
         // Allow an update to display the 'waiting' dialogue...
         return ExodusMode::MODE_None;
     }
 
-    if (mp_stage == MP_TimeDelay) {
+    if (mp_state.mp_stage == MP_TimeDelay) {
         // Time delay here so the "Month passing" notification doesn't flicker.
-        if (month_pass_time > 1.f) {
+        if (mp_state.month_pass_time > 1.f) {
             next_mp_stage();
         } else {
             return ExodusMode::MODE_None;
         }
     }
 
-    if (mp_stage == MP_CheckMissionFail) {
+    if (mp_state.mp_stage == MP_CheckMissionFail) {
         // TODO: Check if we've run out of time for our mission
         next_mp_stage();
     }
 
-    if (mp_stage == MP_StarshipRepairs) {
-        for (; mp_player_idx < N_PLAYERS; ++mp_player_idx) {
-            Player *p = exostate.set_active_player(mp_player_idx);
+    if (mp_state.mp_stage == MP_StarshipRepairs) {
+        for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
+            Player *p = exostate.set_active_player(mp_state.mp_player_idx);
             Starship &ship = p->get_starship();
             int crew = ship.crew;
             ship.pct_damage_thrust -= (int)(crew / 5);
@@ -376,9 +378,9 @@ ExodusMode GalaxyMap::month_pass_update() {
         next_mp_stage();
     }
 
-    if (mp_stage == MP_UpdateReputation) {
-        for (; mp_player_idx < N_PLAYERS; ++mp_player_idx) {
-            Player *p = exostate.set_active_player(mp_player_idx);
+    if (mp_state.mp_stage == MP_UpdateReputation) {
+        for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
+            Player *p = exostate.set_active_player(mp_state.mp_player_idx);
             if (p->get_reputation() < 3 && onein(20)) {
                 p->adjust_reputation(1);
             }
@@ -386,12 +388,12 @@ ExodusMode GalaxyMap::month_pass_update() {
         next_mp_stage();
     }
 
-    if (mp_stage == MP_SunExpansion) {
+    if (mp_state.mp_stage == MP_SunExpansion) {
         // TODO - PROCsunexpand
         next_mp_stage();
     }
 
-    if (mp_stage == MP_MoveArtificialPlanets) {
+    if (mp_state.mp_stage == MP_MoveArtificialPlanets) {
         // TODO - PROCarrivewp
         next_mp_stage();
     }
@@ -401,40 +403,45 @@ ExodusMode GalaxyMap::month_pass_update() {
     // we iterate over the players once for each of these. Is this
     // liable to make a meaningful difference...?
 
-    if (mp_stage == MP_EnemyReturns) {
+    if (mp_state.mp_stage == MP_EnemyReturns) {
         // TODO - PROClordreturn
         next_mp_stage();
     }
 
-    if (mp_stage == MP_EnemyDies) {
+    if (mp_state.mp_stage == MP_EnemyDies) {
         // TODO - PROClorddies
         next_mp_stage();
     }
 
-    if (mp_stage == MP_EnemyTactics) {
-        // TODO - PROCet_main
+    if (mp_state.mp_stage == MP_EnemyTactics) {
+        // PROCet_main
+        for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
+            Player *p = exostate.set_active_player(mp_state.mp_player_idx);
+            if (!p->is_human() && p->is_participating() && !p->get_location().in_flight()) {
+            }
+        }
         next_mp_stage();
     }
 
-    if (mp_stage == MP_ArtificialWorldNews) {
+    if (mp_state.mp_stage == MP_ArtificialWorldNews) {
         // TODO - PROCwpc
         next_mp_stage();
     }
 
-    if (mp_stage == MP_EnemyActions) {
+    if (mp_state.mp_stage == MP_EnemyActions) {
         // TODO - PROCenemytactics / run PROCeta functions
         next_mp_stage();
     }
 
-    if (mp_stage == MP_UpdatePirateProbabilities) {
+    if (mp_state.mp_stage == MP_UpdatePirateProbabilities) {
         // TODO SunP
         next_mp_stage();
     }
 
-    if (mp_stage == MP_PlanetBackgroundUpdate) {
-        for (; mp_star_idx < n_stars; ++mp_star_idx) {
-            for (; mp_planet_idx < STAR_MAX_PLANETS; ++mp_planet_idx) {
-                Planet *p = stars[mp_star_idx].get_planet(mp_planet_idx);
+    if (mp_state.mp_stage == MP_PlanetBackgroundUpdate) {
+        for (; mp_state.mp_star_idx < n_stars; ++mp_state.mp_star_idx) {
+            for (; mp_state.mp_planet_idx < STAR_MAX_PLANETS; ++mp_state.mp_planet_idx) {
+                Planet *p = stars[mp_state.mp_star_idx].get_planet(mp_state.mp_planet_idx);
                 if (!(p && p->exists()))
                     continue;
 
@@ -448,7 +455,7 @@ ExodusMode GalaxyMap::month_pass_update() {
 
                 // TODO: Owned planet maintenance
             }
-            mp_planet_idx = 0;
+            mp_state.mp_planet_idx = 0;
         }
         next_mp_stage();
     }
@@ -473,11 +480,11 @@ ExodusMode GalaxyMap::month_pass_update() {
      * of the 'MP' stages which will always complete one planet at a time, which still
      * allows us to temporarily exit into other modes or mode stages at any time.
      */
-    if (mp_stage == MP_PlanetMainUpdate) {
-        for (; mp_star_idx < n_stars; ++mp_star_idx) {
-            exostate.set_active_flytarget(&stars[mp_star_idx]);
-            for (; mp_planet_idx < STAR_MAX_PLANETS; ++mp_planet_idx) {
-                Planet *p = stars[mp_star_idx].get_planet(mp_planet_idx);
+    if (mp_state.mp_stage == MP_PlanetMainUpdate) {
+        for (; mp_state.mp_star_idx < n_stars; ++mp_state.mp_star_idx) {
+            exostate.set_active_flytarget(&stars[mp_state.mp_star_idx]);
+            for (; mp_state.mp_planet_idx < STAR_MAX_PLANETS; ++mp_state.mp_planet_idx) {
+                Planet *p = stars[mp_state.mp_star_idx].get_planet(mp_state.mp_planet_idx);
                 if (!(p && p->exists())) {
                     continue;
                 }
@@ -493,49 +500,49 @@ ExodusMode GalaxyMap::month_pass_update() {
 
                 p->monthly_processing_start();
 
-                exostate.set_active_planet(mp_planet_idx);
+                exostate.set_active_planet(mp_state.mp_planet_idx);
                 ExodusMode next_mode = month_pass_planet_update();
 
-                if (mpp_stage != MPP_End) {
+                if (mp_state.mpp_stage != MPP_End) {
                     return next_mode;
                 }
 
-                mpp_stage = (MonthPassPlanetStage)0;
+                mp_state.mpp_stage = (MonthPassPlanetStage)0;
                 reset_planet_report();
             }
-            mp_planet_idx = 0;
+            mp_state.mp_planet_idx = 0;
         }
         next_mp_stage();
     }
 
-    if (mp_stage == MP_UpdateAlienFly) {
+    if (mp_state.mp_stage == MP_UpdateAlienFly) {
         // TODO
         next_mp_stage();
     }
 
-    if (mp_stage == MP_AlienMissions) {
+    if (mp_state.mp_stage == MP_AlienMissions) {
         // TODO - PROCdomission etc
         next_mp_stage();
     }
 
-    if (mp_stage == MP_PayOfficers) {
+    if (mp_state.mp_stage == MP_PayOfficers) {
         // TODO - PROCpayoff etc
         next_mp_stage();
     }
 
-    if (mp_stage == MP_GuildCommendations) {
+    if (mp_state.mp_stage == MP_GuildCommendations) {
         // TODO - PROCnewtitle
         next_mp_stage();
     }
 
-    if (mp_stage == MP_AlienExile) {
+    if (mp_state.mp_stage == MP_AlienExile) {
         // TODO - PROCcheckalive
         next_mp_stage();
     }
 
-    if (mp_stage == MP_UpdateHumanFly) {
-        for (; mp_player_idx < N_PLAYERS; ++mp_player_idx) {
-            Player *p = exostate.set_active_player(mp_player_idx);
+    if (mp_state.mp_stage == MP_UpdateHumanFly) {
+        for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
+            Player *p = exostate.set_active_player(mp_state.mp_player_idx);
             if (p && p->is_participating() && p->is_human()) {
                 if (p->get_location().advance()) {
                     // Show arrival animation for human players
@@ -548,7 +555,7 @@ ExodusMode GalaxyMap::month_pass_update() {
         next_mp_stage();
     }
 
-    if (mp_stage == MP_End) {
+    if (mp_state.mp_stage == MP_End) {
         // When we decide we're done with updates...
         month_pass_end();
         return ExodusMode::MODE_None;
@@ -572,12 +579,12 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         owner = exostate.get_player(p->get_owner());
     }
 
-    if (mpp_stage == MPP_ShuffleTrade) {
+    if (mp_state.mpp_stage == MPP_ShuffleTrade) {
         if (onein(7)) p->randomise_trade_quality();
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_FirstCity) {
+    if (mp_state.mpp_stage == MPP_FirstCity) {
         if (owner && !exostate.first_city_done) {
             if (owner->is_human() && p->count_stones(STONE_City) > 0) {
                 // TODO - Music...
@@ -605,7 +612,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_FirstSpaceport) {
+    if (mp_state.mpp_stage == MPP_FirstSpaceport) {
         if (!exostate.first_spaceport_done) {
             if (owner->is_human()
                 && p->count_stones(STONE_Port0) > 0
@@ -618,12 +625,12 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_Research1) {
+    if (mp_state.mpp_stage == MPP_Research1) {
         // TODO
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_Meteors) {
+    if (mp_state.mpp_stage == MPP_Meteors) {
         if (onein(200)) {
             // TODO PROCdonotice
             bulletin_start_new(false);
@@ -665,7 +672,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_KillArmies) {
+    if (mp_state.mpp_stage == MPP_KillArmies) {
         // We kill at least 1 of each thing, so if has_army() returns
         // true, we know that *something* is going to die. >:D
         if (onein(90)) {
@@ -691,7 +698,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_ClimateChange) {
+    if (mp_state.mpp_stage == MPP_ClimateChange) {
         if (onein(250)) {
             const char* before = p->get_class_str_lower();
             p->surfchange();
@@ -712,7 +719,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_Epidemic) {
+    if (mp_state.mpp_stage == MPP_Epidemic) {
         // PROCepidemic(1) case
         if (onein(150)) {
             if (exostate.get_orig_month() >= 10 && !owner->has_invention(INV_Acid)) {
@@ -747,7 +754,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     // Doesn't cause planet loss - only damage
-    if (mpp_stage == MPP_AlienAttack) {
+    if (mp_state.mpp_stage == MPP_AlienAttack) {
         if (onein(200) && exostate.get_orig_month() >= 10) {
             // TODO: PROCdonotice, music
             bulletin_start_new(false);
@@ -769,7 +776,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_AlienAttackResult) {
+    if (mp_state.mpp_stage == MPP_AlienAttackResult) {
         if (ephstate.get_ephemeral_state() == EPH_LunarBattleReport) {
             LunarBattleReport &rpt = ephstate.lunar_battle_report;
             ephstate.clear_ephemeral_state();
@@ -793,34 +800,34 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_Research2) {
+    if (mp_state.mpp_stage == MPP_Research2) {
         // TODO
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_DiscoverSpecies) {
+    if (mp_state.mpp_stage == MPP_DiscoverSpecies) {
         // TODO
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_CityEpidemic) {
+    if (mp_state.mpp_stage == MPP_CityEpidemic) {
         // TODO
         next_mpp_stage();
     }
 
     // Can cause the owner to change - we should return to ensure
     // that the 'owner' variable is updated when we resume processing.
-    if (mpp_stage == MPP_RebelAttack) {
+    if (mp_state.mpp_stage == MPP_RebelAttack) {
         // TODO
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_LawsIncreaseUnrest) {
+    if (mp_state.mpp_stage == MPP_LawsIncreaseUnrest) {
         if (p->laws_cause_unrest()) p->adjust_unrest(1);
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_ParksReduceUnrest) {
+    if (mp_state.mpp_stage == MPP_ParksReduceUnrest) {
         if (onein(2)) {
             int parks = p->count_stones(STONE_Park);
             int cities = p->count_stones(STONE_City);
@@ -829,12 +836,12 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_ClearRadiation) {
+    if (mp_state.mpp_stage == MPP_ClearRadiation) {
         p->clear_radiation();
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_ReactorMeltdown) {
+    if (mp_state.mpp_stage == MPP_ReactorMeltdown) {
         if (onein(200)) {
             if (p->has_stone(STONE_Plu)) {
                 // TODO: Music
@@ -863,7 +870,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_ClimateChangeDueToCultivation) {
+    if (mp_state.mpp_stage == MPP_ClimateChangeDueToCultivation) {
         if (p->get_class() == Desert || p->get_class() == Rock) {
             if (!p->surfchange_happened_this_month()) {
                 int threshold = 86;
@@ -878,7 +885,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_ClimateChangeDueToDeforestation) {
+    if (mp_state.mpp_stage == MPP_ClimateChangeDueToDeforestation) {
         if (p->get_class() == Forest) {
             if (!p->surfchange_happened_this_month()) {
                 int threshold = 30;
@@ -893,7 +900,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_LosePlanetControl) {
+    if (mp_state.mpp_stage == MPP_LosePlanetControl) {
         if (p->count_stones(STONE_Base) == 0) {
             // TODO: music
             // No PROCdonotice here?
@@ -918,7 +925,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     // 'owner' can be null after this point
     // TODO: Check whether each subsequent stage should happen with no owner
 
-    if (mpp_stage == MPP_Income) {
+    if (mp_state.mpp_stage == MPP_Income) {
         // TODO - Check the weird case in PROCcal_plan based on the t% DIM
         if (owner) {
             owner->give_mc(p->get_net_income());
@@ -926,12 +933,12 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_ProducePlutonium) {
+    if (mp_state.mpp_stage == MPP_ProducePlutonium) {
         p->produce_plutonium();
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_ProduceMilitary) {
+    if (mp_state.mpp_stage == MPP_ProduceMilitary) {
         ProductionReport rpt = p->produce_military();
         if (rpt.inf + rpt.gli + rpt.art > 0) {
             report.add_line("Produced battle units: %d / %d / %d",
@@ -955,22 +962,22 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_Mining) {
+    if (mp_state.mpp_stage == MPP_Mining) {
         p->mine();
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_ResourceCap1) {
+    if (mp_state.mpp_stage == MPP_ResourceCap1) {
         p->discard_excess_resources();
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_MilitaryFacilityShutdown) {
+    if (mp_state.mpp_stage == MPP_MilitaryFacilityShutdown) {
         // TODO
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_Trade) {
+    if (mp_state.mpp_stage == MPP_Trade) {
         if (p->count_stones(STONE_Trade)) {
             TradeReport rpt = p->monthly_trade();
             report.add_line("Trading Centre sold:");
@@ -980,7 +987,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_VillageGifts) {
+    if (mp_state.mpp_stage == MPP_VillageGifts) {
         int n_villages = p->count_stones(STONE_Village);
         if (owner && n_villages > 2) {
             int mc = RND(n_villages);
@@ -993,25 +1000,25 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_FoodPerishes) {
+    if (mp_state.mpp_stage == MPP_FoodPerishes) {
         // SUGGEST: Should we include perished food in the report?
         p->perish_food();
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_FoodProduction) {
+    if (mp_state.mpp_stage == MPP_FoodProduction) {
         p->produce_food();
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_AgriCollapse) {
+    if (mp_state.mpp_stage == MPP_AgriCollapse) {
         if (p->agri_collapse()) {
             report.add_line("Some cultivated area has collapsed.");
         }
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_CityExpansion) {
+    if (mp_state.mpp_stage == MPP_CityExpansion) {
         for (int i = 0; i < p->count_stones(STONE_City); ++i) {
             if (onein(20)) {
                 if (p->expand_city()) {
@@ -1024,7 +1031,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_VillageExpansion) {
+    if (mp_state.mpp_stage == MPP_VillageExpansion) {
         for (int i = 0; i < p->count_stones(STONE_Village); ++i) {
             if (onein(18)) {
                 // N.B. Orig doesn't report in bulletin or news item.
@@ -1036,27 +1043,27 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_ConsumeFood) {
+    if (mp_state.mpp_stage == MPP_ConsumeFood) {
         // TODO
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_ResourceCap2) {
+    if (mp_state.mpp_stage == MPP_ResourceCap2) {
         p->discard_excess_resources();
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_AdvanceUnrest) {
+    if (mp_state.mpp_stage == MPP_AdvanceUnrest) {
         p->update_unrest_history();
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_AmendMilitaryFunding) {
+    if (mp_state.mpp_stage == MPP_AmendMilitaryFunding) {
         p->validate_army_funding();
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_DisplayPlanetReport) {
+    if (mp_state.mpp_stage == MPP_DisplayPlanetReport) {
         if (owner && owner->is_human()) {
             // Skip any reports which don't have content
             if (report.items > 0) {
@@ -1075,7 +1082,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
-    if (mpp_stage == MPP_EnsureComplete) {
+    if (mp_state.mpp_stage == MPP_EnsureComplete) {
         // Bit of a hack, but ensures that when we return to display
         // the final planet report, we don't try to exit the planet
         // pass mode until acknowledgement, which seems cleaner.
