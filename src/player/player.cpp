@@ -34,6 +34,7 @@ Player::Player() {
     reputation = 3;
     inventions = 0;
     guild_member = false;
+    ai_tactic = 0;
 }
 
 void Player::init_alien_name(int idx) {
@@ -307,4 +308,12 @@ InventionType Player::get_invention_type(Invention inv) {
 
 const Fleet& Player::get_fleet() {
     return fleet;
+}
+
+int Player::get_tactic() {
+    return ai_tactic;
+}
+
+void Player::set_tactic(int tactic) {
+    ai_tactic = tactic;
 }

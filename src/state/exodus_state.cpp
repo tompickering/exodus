@@ -169,6 +169,7 @@ void ExodusState::init(GameConfig config) {
             players[i].name);
         players[i].dead = false;
         players[i].reputation = 3;
+        players[i].set_tactic(0);
     }
 
     aim = config.aim;

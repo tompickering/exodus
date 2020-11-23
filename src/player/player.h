@@ -126,6 +126,10 @@ class Player {
         bool has_invention(Invention);
         InventionType get_invention_type(Invention);
         const Fleet& get_fleet();
+
+        // AI
+        int get_tactic();
+        void set_tactic(int);
     private:
         Race race;
         Gender gender;
@@ -146,7 +150,10 @@ class Player {
         int reputation;
         void refresh_full_name();
         bool guild_member;
+
+        // AI
         AIFlag ai_flags[9];
+        int ai_tactic;
 
     // The ExodusState sets up the player data during game init.
     friend class ExodusState;
