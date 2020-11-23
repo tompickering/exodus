@@ -569,62 +569,77 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     Player *player = exostate.get_active_player();
 
     if (mp_state.mpai_stage == MPAI_Return) {
+        // TODO
         next_mpai_stage();
     }
 
     if (mp_state.mpai_stage == MPAI_Die) {
+        // TODO
         next_mpai_stage();
     }
 
     if (mp_state.mpai_stage == MPAI_Hostilities) {
+        // TODO
         next_mpai_stage();
     }
 
     if (mp_state.mpai_stage == MPAI_Alliances) {
+        // TODO
         next_mpai_stage();
     }
 
     if (mp_state.mpai_stage == MPAI_AllianceAccept) {
+        // TODO
         next_mpai_stage();
     }
 
     if (mp_state.mpai_stage == MPAI_AllianceReject) {
+        // TODO
         next_mpai_stage();
     }
 
     if (mp_state.mpai_stage == MPAI_UpdateTaxes) {
+        // TODO
         next_mpai_stage();
     }
 
     if (mp_state.mpai_stage == MPAI_DecideTerrorAttacks) {
+        // TODO
         next_mpai_stage();
     }
 
     if (mp_state.mpai_stage == MPAI_FleetPurchase) {
+        // TODO
         next_mpai_stage();
     }
 
     if (mp_state.mpai_stage == MPAI_NewOfficers) {
+        // TODO
         next_mpai_stage();
     }
 
     if (mp_state.mpai_stage == MPAI_DevelopArtificialPlanet) {
+        // TODO
         next_mpai_stage();
     }
 
     if (mp_state.mpai_stage == MPAI_MoveArtificialPlanet) {
+        // TODO
         next_mpai_stage();
     }
 
     if (mp_state.mpai_stage == MPAI_CheckArmy) {
+        // TODO
         next_mpai_stage();
     }
 
     if (mp_state.mpai_stage == MPAI_SwitchTactics) {
+        // TODO
         next_mpai_stage();
     }
 
     if (mp_state.mpai_stage == MPAI_ExecTactics) {
+        // TODO
         next_mpai_stage();
     }
 
