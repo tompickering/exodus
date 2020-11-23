@@ -1477,8 +1477,6 @@ void Planet::ai_update() {
 
     bool stop = false;
     do {
-        const int free = count_stones(STONE_Clear) + count_stones(STONE_NaturalSmall);
-
         if (owner->has_invention(INV_WeatherInfluence)) {
             PlanetClass c = get_class();
             bool viable = (c == Desert || c == Volcano || c == Ice || c == Rock);
@@ -1508,12 +1506,134 @@ void Planet::ai_update() {
             }
         }
 
-        // TODO
+        // FIXME: Can count these in one pass!
+        const int free = count_stones(STONE_Clear) + count_stones(STONE_NaturalSmall);
+        const int stations = count_stones(STONE_Base);
+        const int food = count_stones(STONE_Agri);
+        const int mining = count_stones(STONE_Mine);
+        const int pluton = count_stones(STONE_Plu);
+        const int possfree = count_stones(STONE_NaturalLarge);
+        const int dirt = count_stones(STONE_AgriDead) + count_stones(STONE_Rubble);
+        const int produce_inf = count_stones(STONE_Inf);
+        const int produce_gli = count_stones(STONE_Gli);
+        const int produce_art = count_stones(STONE_Art);
+        const int port_a = count_stones(STONE_Port0);
+        const int port_b = count_stones(STONE_Port1);
+        const int port_c = count_stones(STONE_Port2);
+        const int tcentre = count_stones(STONE_Trade);
+        const int cities = count_stones(STONE_City);
 
-        stop = stop || exostate.get_orig_month() > 2;
+        int action = 0;
+
+        const int m = exostate.get_orig_month();
+
+        // FIXME: Should probably have a method for this
+        bool spaceport = (port_a > 0 && port_b > 0 && port_c > 0);
+
+        if (cities*CITY_FOOD_REQ + 5 < food) {
+            action = 7;
+        }
+
+        if (possfree + free > 6 && cities < 40) {
+            action = 1;
+        }
+
+        if (get_robots() <= cities*2) {
+            action = 11;
+        }
+
+        if (   get_minerals() > 15
+            && owner->get_mc() > 40
+            && mining < 3
+            && m > 5) {
+            action = 4;
+        }
+
+        if (onein(3)) {
+            action = 9;
+        }
+
+        if (   get_n_agri() > 60
+            && owner->get_mc() >= 100
+            && tcentre == 0) {
+            action = 5;
+        }
+
+        if (   reserves_min > 40
+            && owner->get_mc() >= 100
+            && tcentre == 0) {
+            action = 5;
+        }
+
+        if (dirt > 20 && m > 30) {
+            action = 12;
+        }
+
+        if (   owner->get_mc() > 120
+            && m > 10
+            && get_class() != Artificial) {
+            action = 6;
+        }
+
+        if (cities < 4) {
+            action = 1;
+        }
+
+        if (get_army_size() < 120 && m > 10) {
+            action = 2;
+        }
+
+        if (!spaceport) {
+            action = 3;
+        }
+
+        if (produce_inf + produce_gli + produce_art < 2 && cities > 2) {
+            action = 2;
+        }
+
+        if (produce_inf + produce_gli + produce_art > cities) {
+            action = 1;
+        }
+
+        if (cities == 0) {
+            action = 1;
+        }
+
+        if (produce_inf + produce_gli + produce_art == 0) {
+            action = 2;
+        }
+
+        if (get_class() == Artificial && cities < 5) {
+            action = 1;
+        }
+
+        if (pluton < produce_inf + produce_gli + produce_art + mining) {
+            action = 13;
+        }
+
+        if (stations < 2) {
+            action = 10;
+        }
+
+        if (free <= 7 || (free <= 10 && m > 50)) {
+            action = 8;
+        }
+
+        if (!agri_sufficient() || food < 1) {
+            action = 7;
+        }
+
+        L.debug("[%s] BUILD TACTIC: %d", owner->get_full_name(), action);
+
+        stop = stop || action == 0;
+
+        // TODO: Apply action
+
+        stop = stop || m > 2;
         stop = stop || owner->get_mc() < 30;
         stop = stop || free < 5;
         stop = stop || onein(5);
     } while (!stop);
-    // TODO
+
+    // TODO: PROCenemytactics bit at the end
 }
