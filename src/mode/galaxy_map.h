@@ -166,6 +166,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
         void next_mp_stage();
         void next_mpai_stage();
         void next_mpp_stage();
+        void ai_planet_update(Planet*);
 
         PlanetReport report;
         void reset_planet_report();

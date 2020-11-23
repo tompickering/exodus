@@ -430,7 +430,14 @@ ExodusMode GalaxyMap::month_pass_update() {
     }
 
     if (mp_state.mp_stage == MP_EnemyActions) {
-        // TODO - PROCenemytactics / run PROCeta functions
+        // Orig: PROCenemytactics / PROCeta
+        // This is planet maintenance performed by AI
+        for (; mp_state.mp_star_idx < n_stars; ++mp_state.mp_star_idx) {
+            for (; mp_state.mp_planet_idx < STAR_MAX_PLANETS; ++mp_state.mp_planet_idx) {
+                Planet *p = stars[mp_state.mp_star_idx].get_planet(mp_state.mp_planet_idx);
+                ai_planet_update(p);
+            }
+        }
         next_mp_stage();
     }
 
@@ -1172,6 +1179,36 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     return ExodusMode::MODE_None;
+}
+
+void GalaxyMap::ai_planet_update(Planet* p) {
+    // Orig: PROCenemytactics
+    if (!(p && p->exists() && p->is_owned())) {
+        return;
+    }
+
+    Player* owner = exostate.get_player(p->get_owner());
+
+    if (owner->is_human()) {
+        return;
+    }
+
+    if (!owner->is_participating()) {
+        return;
+    }
+
+    if (p->get_unrest() == 0) {
+        p->collect_taxes();
+    }
+
+    bool hunger = (exostate.get_orig_month() > 2) && !(p->agri_sufficient());
+
+    // If we don't have much money and we're not desperate then do nothing
+    if (owner->get_mc() < 30 && !hunger) {
+        return;
+    }
+
+    // TODO: Rest of PROCenemytactics
 }
 
 void GalaxyMap::reset_planet_report() {
