@@ -43,8 +43,6 @@ enum MonthPassStage {
     MP_UpdateReputation,
     MP_SunExpansion,
     MP_MoveArtificialPlanets,
-    MP_EnemyReturns,
-    MP_EnemyDies,
     MP_EnemyTactics,
     MP_ArtificialWorldNews,
     MP_EnemyActions,
@@ -58,6 +56,28 @@ enum MonthPassStage {
     MP_AlienExile,
     MP_UpdateHumanFly,
     MP_End,
+};
+
+enum MonthPassAIStage {
+    // PROClordreturn
+    MPAI_Return,
+    // PROClorddies
+    MPAI_Die,
+    // PROCet_main
+    MPAI_Hostilities,
+    MPAI_Alliances,
+    MPAI_AllianceAccept,
+    MPAI_AllianceReject,
+    MPAI_UpdateTaxes,
+    MPAI_DecideTerrorAttacks,
+    MPAI_FleetPurchase,
+    MPAI_NewOfficers,
+    MPAI_DevelopArtificialPlanet,
+    MPAI_MoveArtificialPlanet,
+    MPAI_CheckArmy,
+    MPAI_SwitchTactics,
+    MPAI_ExecTactics,
+    MPAI_End,
 };
 
 enum MonthPassPlanetStage {
@@ -108,6 +128,7 @@ enum MonthPassPlanetStage {
 
 typedef struct {
     MonthPassStage mp_stage;
+    MonthPassAIStage mpai_stage;
     MonthPassPlanetStage mpp_stage;
     float month_pass_time;
     int mp_player_idx;
@@ -138,10 +159,12 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
 
         MPState mp_state;
         ExodusMode month_pass_update();
+        ExodusMode month_pass_ai_update();
         ExodusMode month_pass_planet_update();
         void month_pass_start();
         void month_pass_end();
         void next_mp_stage();
+        void next_mpai_stage();
         void next_mpp_stage();
 
         PlanetReport report;

@@ -20,6 +20,7 @@ GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer(), PanelDrawer(PNL_
     selected_ft_blink = 0;
 
     mp_state.mp_stage = MP_None;
+    mp_state.mpai_stage = (MonthPassAIStage)0;
     mp_state.mpp_stage = (MonthPassPlanetStage)0;
     mp_state.month_pass_time = 0;
 
@@ -269,6 +270,12 @@ void GalaxyMap::next_mp_stage() {
     mp_state.mp_planet_idx = 0;
 }
 
+void GalaxyMap::next_mpai_stage() {
+    mp_state.mpai_stage = (MonthPassAIStage)((int)mp_state.mpai_stage + 1);
+    Player *p = exostate.get_active_player();
+    L.debug("[%s] MPAI stage %d", p->get_full_name(), mp_state.mpai_stage);
+}
+
 void GalaxyMap::next_mpp_stage() {
     mp_state.mpp_stage = (MonthPassPlanetStage)((int)mp_state.mpp_stage + 1);
     Star *s = exostate.get_active_star();
@@ -280,6 +287,7 @@ void GalaxyMap::next_mpp_stage() {
 void GalaxyMap::month_pass_start() {
     L.info("Month passing...");
     mp_state.month_pass_time = 0;
+    mp_state.mpai_stage = (MonthPassAIStage)0;
     mp_state.mpp_stage = (MonthPassPlanetStage)0;
 
     if (mp_state.mp_stage != MP_None) {
@@ -306,6 +314,7 @@ void GalaxyMap::month_pass_start() {
 void GalaxyMap::month_pass_end() {
     draw_manager.draw(id(ID::MONTH_PASSING), nullptr);
     mp_state.mp_stage = MP_None;
+    mp_state.mpai_stage = (MonthPassAIStage)0;
     mp_state.mpp_stage = (MonthPassPlanetStage)0;
 
     L.info("Month passed");
@@ -398,27 +407,19 @@ ExodusMode GalaxyMap::month_pass_update() {
         next_mp_stage();
     }
 
-    // FIXME: In the original, we iterate over the players and run
-    // PROClordreturn, PROClorddies and PROCet_main in turn. Here,
-    // we iterate over the players once for each of these. Is this
-    // liable to make a meaningful difference...?
-
-    if (mp_state.mp_stage == MP_EnemyReturns) {
-        // TODO - PROClordreturn
-        next_mp_stage();
-    }
-
-    if (mp_state.mp_stage == MP_EnemyDies) {
-        // TODO - PROClorddies
-        next_mp_stage();
-    }
-
     if (mp_state.mp_stage == MP_EnemyTactics) {
-        // PROCet_main
         for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
             Player *p = exostate.set_active_player(mp_state.mp_player_idx);
-            if (!p->is_human() && p->is_participating() && !p->get_location().in_flight()) {
+            if (p->is_human()) {
+                continue;
             }
+
+            ExodusMode next_mode = month_pass_ai_update();
+            if (mp_state.mpai_stage != MPAI_End) {
+                return next_mode;
+            }
+
+            mp_state.mpai_stage = (MonthPassAIStage)0;
         }
         next_mp_stage();
     }
@@ -559,6 +560,72 @@ ExodusMode GalaxyMap::month_pass_update() {
         // When we decide we're done with updates...
         month_pass_end();
         return ExodusMode::MODE_None;
+    }
+
+    return ExodusMode::MODE_None;
+}
+
+ExodusMode GalaxyMap::month_pass_ai_update() {
+    Player *player = exostate.get_active_player();
+
+    if (mp_state.mpai_stage == MPAI_Return) {
+        next_mpai_stage();
+    }
+
+    if (mp_state.mpai_stage == MPAI_Die) {
+        next_mpai_stage();
+    }
+
+    if (mp_state.mpai_stage == MPAI_Hostilities) {
+        next_mpai_stage();
+    }
+
+    if (mp_state.mpai_stage == MPAI_Alliances) {
+        next_mpai_stage();
+    }
+
+    if (mp_state.mpai_stage == MPAI_AllianceAccept) {
+        next_mpai_stage();
+    }
+
+    if (mp_state.mpai_stage == MPAI_AllianceReject) {
+        next_mpai_stage();
+    }
+
+    if (mp_state.mpai_stage == MPAI_UpdateTaxes) {
+        next_mpai_stage();
+    }
+
+    if (mp_state.mpai_stage == MPAI_DecideTerrorAttacks) {
+        next_mpai_stage();
+    }
+
+    if (mp_state.mpai_stage == MPAI_FleetPurchase) {
+        next_mpai_stage();
+    }
+
+    if (mp_state.mpai_stage == MPAI_NewOfficers) {
+        next_mpai_stage();
+    }
+
+    if (mp_state.mpai_stage == MPAI_DevelopArtificialPlanet) {
+        next_mpai_stage();
+    }
+
+    if (mp_state.mpai_stage == MPAI_MoveArtificialPlanet) {
+        next_mpai_stage();
+    }
+
+    if (mp_state.mpai_stage == MPAI_CheckArmy) {
+        next_mpai_stage();
+    }
+
+    if (mp_state.mpai_stage == MPAI_SwitchTactics) {
+        next_mpai_stage();
+    }
+
+    if (mp_state.mpai_stage == MPAI_ExecTactics) {
+        next_mpai_stage();
     }
 
     return ExodusMode::MODE_None;
