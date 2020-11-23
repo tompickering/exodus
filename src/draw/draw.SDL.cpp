@@ -496,7 +496,7 @@ void DrawManagerSDL::repair_dirty_area(SprID id) {
                         fill_pattern(overlap_area);
                         break;
                     default:
-                        L.warn("Can't repair draw of type %d", info->type);
+                        //L.warn("Can't repair draw of type %d", info->type);
                         break;
                 }
             }
