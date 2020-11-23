@@ -209,6 +209,7 @@ class Planet {
         void monthly_processing_start();
         bool monthly_processing_in_progress();
         void plunder();
+        void ai_update();
     private:
         void init();
 

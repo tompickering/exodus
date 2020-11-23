@@ -1454,3 +1454,8 @@ void Planet::plunder() {
     }
 
 }
+
+void Planet::ai_update() {
+    // AI planet developments originally done in PROCenemytactics / PROCeta*
+    // TODO
+}

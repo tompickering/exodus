@@ -1208,7 +1208,22 @@ void GalaxyMap::ai_planet_update(Planet* p) {
         return;
     }
 
-    // TODO: Rest of PROCenemytactics
+    int n_planets = exostate.get_n_planets(owner);
+
+    if (   n_planets > 2
+        && (RND(n_planets - 1) != 1)
+        && owner->get_mc() < 200
+        && !hunger) {
+           return;
+    }
+
+    if (   owner->get_tactic() >= 7
+        && (p->get_class() != Artificial)
+        && !hunger) {
+            return;
+    }
+
+    p->ai_update();
 }
 
 void GalaxyMap::reset_planet_report() {
