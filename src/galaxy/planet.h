@@ -34,21 +34,21 @@ enum Stone : uint8_t {
     STONE_NaturalAnim,   // 29
     STONE_Village,       // 22
     STONE_Agri,          // 2
-    STONE_Base,
-    STONE_AgriDead,
-    STONE_Mine,
-    STONE_Plu,
-    STONE_City,
-    STONE_Inf,
-    STONE_Gli,
-    STONE_Art,
-    STONE_Port0,
-    STONE_Port1,
-    STONE_Port2,
-    STONE_Trade,
-    STONE_Park,
-    STONE_Rubble,
-    STONE_Radiation,
+    STONE_Base,          // 1
+    STONE_AgriDead,      // 10
+    STONE_Mine,          // 3
+    STONE_Plu,           // 4
+    STONE_City,          // 5
+    STONE_Inf,           // 11
+    STONE_Gli,           // 12
+    STONE_Art,           // 13
+    STONE_Port0,         // 14
+    STONE_Port1,         // 15
+    STONE_Port2,         // 16
+    STONE_Trade,         // 17
+    STONE_Park,          // 23
+    STONE_Rubble,        // 20
+    STONE_Radiation,     // 6
     STONE_END,
 };
 
