@@ -82,7 +82,7 @@ void ExodusState::init(GameConfig config) {
 
     // PLAYER INIT: Human
     for (i = 0; i < n_players; ++i) {
-        players[i].race = RACE_Human;
+        players[i].init_race(RACE_Human);
         players[i]._intro_seen = false;
         switch(i) {
             case 0:
@@ -129,7 +129,7 @@ void ExodusState::init(GameConfig config) {
 
     // PLAYER INIT: CPU
     for (; i < N_PLAYERS; ++i) {
-        players[i].race = (Race)(RACE_Human + RND(4));
+        players[i].init_race((Race)(RACE_Human + RND(4)));
         players[i].fleet_marker = nullptr;
         players[i].init_alien_name(i); // Orig: Assigned in PROCclear_memory
         bool flag_assigned = false;

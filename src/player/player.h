@@ -80,10 +80,18 @@ enum Gender {
     GENDER_Other,
 };
 
+// Orig: lo%/md%/hi%
+enum AIFlag {
+    AI_Lo,
+    AI_Md,
+    AI_Hi,
+};
+
 class Player {
     public:
         Player();
         void init_alien_name(int);
+        void init_race(Race);
         const char* get_name();
         const char* get_title();
         const char* get_ref();
@@ -138,6 +146,7 @@ class Player {
         int reputation;
         void refresh_full_name();
         bool guild_member;
+        AIFlag ai_flags[9];
 
     // The ExodusState sets up the player data during game init.
     friend class ExodusState;

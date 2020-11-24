@@ -8,6 +8,12 @@
 
 static int alien_names_offset = -1;
 
+const AIFlag ai_hum[9] = {AI_Md, AI_Md, AI_Md, AI_Md, AI_Md, AI_Md, AI_Md, AI_Md, AI_Md};
+const AIFlag ai_yok[9] = {AI_Md, AI_Hi, AI_Md, AI_Md, AI_Md, AI_Lo, AI_Hi, AI_Lo, AI_Md};
+const AIFlag ai_ter[9] = {AI_Hi, AI_Hi, AI_Lo, AI_Lo, AI_Lo, AI_Hi, AI_Md, AI_Hi, AI_Lo};
+const AIFlag ai_urk[9] = {AI_Lo, AI_Hi, AI_Hi, AI_Hi, AI_Hi, AI_Md, AI_Md, AI_Lo, AI_Hi};
+const AIFlag ai_gor[9] = {AI_Hi, AI_Lo, AI_Md, AI_Hi, AI_Md, AI_Md, AI_Lo, AI_Md, AI_Hi};
+
 const char* get_alien_name(Race race, int idx) {
     if (idx >= N_ALIEN_NAMES) {
         L.fatal("Request name with invalid index %d", idx);
@@ -46,6 +52,35 @@ void Player::init_alien_name(int idx) {
     } else {
         set_title("Lord");
         set_ref("Milord");
+    }
+}
+
+void Player::init_race(Race _race) {
+    race = _race;
+    const AIFlag *flags;
+    switch (race) {
+        case RACE_Human:
+            flags = ai_hum;
+            break;
+        case RACE_Yokon:
+            flags = ai_yok;
+            break;
+        case RACE_Teri:
+            flags = ai_ter;
+            break;
+        case RACE_Urkash:
+            flags = ai_urk;
+            break;
+        case RACE_Gordoon:
+            flags = ai_gor;
+            break;
+        default:
+            L.fatal("Unknown race when setting AI flags");
+            break;
+    }
+
+    for (int i = 0; i < 9; ++i) {
+        ai_flags[i] = flags[i];
     }
 }
 
