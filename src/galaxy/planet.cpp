@@ -547,7 +547,7 @@ bool Planet::find_random_buildable_stone_next_to_8(Stone st, int& x, int& y) {
                                     continue;
                                 }
                                 Stone neighbour = get_stone(i + ii, j + jj);
-                                if (neighbour == STONE_Clear || neighbour == STONE_NaturalAnim) {
+                                if (neighbour == STONE_Clear || neighbour == STONE_NaturalSmall) {
                                     ++buildable_count;
                                 }
                             }
@@ -559,7 +559,7 @@ bool Planet::find_random_buildable_stone_next_to_8(Stone st, int& x, int& y) {
                                     continue;
                                 }
                                 Stone neighbour = get_stone(i + ii, j + jj);
-                                if (neighbour == STONE_Clear || neighbour == STONE_NaturalAnim) {
+                                if (neighbour == STONE_Clear || neighbour == STONE_NaturalSmall) {
                                     if (buildable_idx == 0) {
                                         x = i + ii;
                                         y = j + jj;
