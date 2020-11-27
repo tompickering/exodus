@@ -1641,7 +1641,7 @@ void Planet::ai_update() {
         }
 
         // FIXME: Can count these in one pass!
-        const int free = count_stones(STONE_Clear) + count_stones(STONE_NaturalSmall);
+        int free = count_stones(STONE_Clear) + count_stones(STONE_NaturalSmall);
         const int stations = count_stones(STONE_Base);
         const int food = count_stones(STONE_Agri);
         const int mining = count_stones(STONE_Mine);
@@ -1761,12 +1761,69 @@ void Planet::ai_update() {
 
         stop = stop || action == 0;
 
-        // TODO: Apply action
+        // Apply action (Orig: PROCeta*)
+        switch (action) {
+            case 1:
+                {
+                    // BUILD CITIES + AGRI
+                    /*
+                     * TODO: There are two apparent bugs in PROCeta1.
+                     *         * The charge is 45MC regardless of agri_needed
+                     *         * This happens when >=42 MC are avaiable, allowing -ve MC
+                     *
+                     *       These two issues are redressed here, but this could impact
+                     *       the balance of the game. Consider restoring these issues.
+                     */
+                    int agri_needed = 4;
+                    if (cls == Desert || cls == Volcano) {
+                        agri_needed = 7;
+                    }
+                    int cost = stone_cost(STONE_City) + agri_needed*stone_cost(STONE_Agri);
+                    for (int i = 0; i < 5; ++i) {
+                        if (free >= agri_needed+1) {
+                            if (owner->attempt_spend(cost)) {
+                                ai_place_stone(1, STONE_City, STONE_City);
+                                ai_place_stone(agri_needed, STONE_Agri, STONE_Agri);
+                            }
+                        }
+                    }
+                }
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
+            case 7:
+                break;
+            case 8:
+                break;
+            case 9:
+                break;
+            case 10:
+                break;
+            case 11:
+                break;
+            case 12:
+                break;
+            case 13:
+                break;
+            default:
+                break;
+        }
+
+        free = count_stones(STONE_Clear) + count_stones(STONE_NaturalSmall);
 
         stop = stop || m > 2;
         stop = stop || owner->get_mc() < 30;
         stop = stop || free < 5;
         stop = stop || onein(5);
+        stop = stop || action == 0;
     } while (!stop);
 
     // TODO: PROCenemytactics bit at the end
