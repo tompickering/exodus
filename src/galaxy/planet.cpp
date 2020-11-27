@@ -1864,5 +1864,8 @@ int Planet::ai_place_stone(int n, Stone to_place, Stone target_neighbour) {
             }
         }
     }
+    if (placed < n) {
+        L.warn("Tried to place %d of %d but only %d could be placed", n, (int)to_place, placed);
+    }
     return placed;
 }
