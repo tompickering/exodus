@@ -473,6 +473,80 @@ bool Planet::find_random_buildable_stone(int& x, int& y) {
     return false;
 }
 
+/*
+ * First identify a random stone of type st which has >=1 buildable area around it.
+ * Then, return a random buildable location around that stone.
+ *
+ * As such, the selection is biased in favour of spaces with fewer buildable spaces
+ * adjacent to the target. I.E. if there are 3 viable areas - two next to target A
+ * and one next to target B, then the probabilities of selection are 25%, 25% and 50%
+ * respectively, rather than 33% apiece.
+ */
+bool Planet::find_random_buildable_stone_next_to_8(Stone st, int& x, int& y) {
+    int count = 0;
+    int sz = get_size_blocks();
+    for (int j = 0; j < sz; ++j) {
+        for (int i = 0; i < sz; ++i) {
+            if (get_stone(i, j) == st) {
+                if (next_to_8(i, j, STONE_Clear) || next_to_8(i, j, STONE_NaturalSmall)) {
+                    ++count;
+                }
+            }
+        }
+    }
+    if (!count)
+        return false;
+    int idx = (rand() % count);
+    for (int j = 0; j < sz; ++j) {
+        for (int i = 0; i < sz; ++i) {
+            if (get_stone(i, j) == st) {
+                if (next_to_8(i, j, STONE_Clear) || next_to_8(i, j, STONE_NaturalSmall)) {
+                    if (idx == 0) {
+                        // We'll select this target
+                        // Randomly select a buildable neighbour
+                        int buildable_count = 0;
+                        for (int ii = -1; ii <= 1; ++ii) {
+                            for (int jj = -1; jj <= 1; ++jj) {
+                                if (ii == 0 && jj == 0) {
+                                    continue;
+                                }
+                                Stone neighbour = get_stone(i + ii, j + jj);
+                                if (neighbour == STONE_Clear || neighbour == STONE_NaturalAnim) {
+                                    ++buildable_count;
+                                }
+                            }
+                        }
+                        int buildable_idx = (rand() % buildable_count);
+                        for (int ii = -1; ii <= 1; ++ii) {
+                            for (int jj = -1; jj <= 1; ++jj) {
+                                if (ii == 0 && jj == 0) {
+                                    continue;
+                                }
+                                Stone neighbour = get_stone(i + ii, j + jj);
+                                if (neighbour == STONE_Clear || neighbour == STONE_NaturalAnim) {
+                                    if (buildable_idx == 0) {
+                                        x = i + ii;
+                                        y = j + jj;
+                                        return true;
+                                    } else {
+                                        --buildable_idx;
+                                    }
+                                }
+                            }
+                        }
+                        L.fatal("Could not find buildable neighbour when we verified at least one existed");
+                    } else {
+                        --idx;
+                    }
+                }
+            }
+        }
+    }
+
+    L.fatal("Could not find neighbour stone when we verified at least one existed");
+    return false;
+}
+
 bool Planet::next_to_4(int x, int y, Stone st) {
     if (get_stone_wrap(x - 1, y) == st) return true;
     if (get_stone_wrap(x + 1, y) == st) return true;

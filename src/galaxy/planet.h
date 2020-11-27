@@ -151,6 +151,7 @@ class Planet {
         Stone get_random_point(int&, int&);
         bool find_random_stone(Stone, int&, int&);
         bool find_random_buildable_stone(int&, int&);
+        bool find_random_buildable_stone_next_to_8(Stone, int&, int&);
         bool next_to_4(int, int, Stone);
         bool next_to_8(int, int, Stone);
         int count_stones(Stone);
