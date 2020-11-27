@@ -110,6 +110,8 @@ typedef struct {
 
 class Planet {
     public:
+        static int stone_cost(Stone);
+
         Planet();
         Planet(PlanetClass);
         bool exists();

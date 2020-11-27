@@ -30,6 +30,42 @@ const char** get_names_for_class(PlanetClass cls) {
     return nullptr;
 }
 
+int Planet::stone_cost(Stone st) {
+    switch(st) {
+        case STONE_Base:
+            return 20;
+        case STONE_Agri:
+            return 3;
+        case STONE_Mine:
+            return 15;
+        case STONE_Plu:
+            return 25;
+        case STONE_City:
+            return 30;
+        case STONE_Clear:
+            return 5;
+        case STONE_Inf:
+            return 10;
+        case STONE_Gli:
+            return 20;
+        case STONE_Art:
+            return 30;
+        case STONE_Port0:
+            return 15;
+        case STONE_Port1:
+            return 10;
+        case STONE_Port2:
+            return 20;
+        case STONE_Trade:
+            return 100;
+        case STONE_Park:
+            return 10;
+        default:
+            L.warn("Checking cost of unbuildable stone %d", (int)st);
+            return 0;
+    }
+}
+
 Planet::Planet() {
     _exists = false;
     name[0] = '\0';
