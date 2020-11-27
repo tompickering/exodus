@@ -1735,3 +1735,41 @@ void Planet::ai_update() {
 
     // TODO: PROCenemytactics bit at the end
 }
+
+bool Planet::_ai_place_random(Stone to_place) {
+    int x; int y;
+    bool found = find_random_buildable_stone(x, y);
+    if (found) {
+        L.debug("%s: AI placing stone randomly at (%d, %d)", get_name(), x, y);
+        set_stone(x, y, to_place);
+        return true;
+    }
+    return false;
+}
+
+bool Planet::_ai_place_tactical(Stone to_place, Stone target_neighbour) {
+    int x; int y;
+    bool found = find_random_buildable_stone_next_to_8(target_neighbour, x, y);
+    if (found) {
+        L.debug("%s: AI placing stone tactically at (%d, %d)", get_name(), x, y);
+        set_stone(x, y, to_place);
+        return true;
+    }
+    return false;
+}
+
+// Orig: PROCpl_stone
+// Places n to_place stones in a free spot next to a target_neighbour
+// (8-connectivity) if possible - otherwise place randomly.
+// Return number placed.
+int Planet::ai_place_stone(int n, Stone to_place, Stone target_neighbour) {
+    int placed = n;
+    for (int i = 0; i < n; ++i) {
+        if (!_ai_place_tactical(to_place, target_neighbour)) {
+            if (!_ai_place_random(to_place)) {
+                --placed;
+            }
+        }
+    }
+    return placed;
+}

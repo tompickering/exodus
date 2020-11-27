@@ -266,6 +266,10 @@ class Planet {
         void _set_stone(int, int, Stone);
         void _to_real(int, int, int&, int&);
         bool _real_in_bounds(int, int);
+
+        bool _ai_place_random(Stone);
+        bool _ai_place_tactical(Stone, Stone);
+        int ai_place_stone(int, Stone, Stone);  // Orig: PROCpl_stone
 };
 
 #endif
