@@ -449,6 +449,30 @@ bool Planet::find_random_stone(Stone st, int& x, int& y) {
     return false;
 }
 
+bool Planet::find_random_buildable_stone(int& x, int& y) {
+    int count = count_stones(STONE_Clear) + count_stones(STONE_NaturalSmall);
+    if (!count)
+        return false;
+    int idx = (rand() % count);
+    int sz = get_size_blocks();
+    for (int j = 0; j < sz; ++j) {
+        for (int i = 0; i < sz; ++i) {
+            Stone st = get_stone(i, j);
+            if (st == STONE_Clear || st == STONE_NaturalSmall) {
+                if (idx == 0) {
+                    x = i; y = j;
+                    return true;
+                } else {
+                    --idx;
+                }
+            }
+        }
+    }
+
+    L.fatal("Could not find nth stone when we verified at least n exist");
+    return false;
+}
+
 bool Planet::next_to_4(int x, int y, Stone st) {
     if (get_stone_wrap(x - 1, y) == st) return true;
     if (get_stone_wrap(x + 1, y) == st) return true;
