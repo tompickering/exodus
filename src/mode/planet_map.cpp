@@ -917,6 +917,7 @@ Stone PlanetMap::tool2stone(Tool t) {
 }
 
 unsigned int PlanetMap::tool2cost(Tool t) {
+    // FIXME: Deduplcate with Planet::stone_cost()
     switch(t) {
         case TOOL_HQ:
             return 20;
