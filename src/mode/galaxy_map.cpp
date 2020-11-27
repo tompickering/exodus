@@ -437,6 +437,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                 Planet *p = stars[mp_state.mp_star_idx].get_planet(mp_state.mp_planet_idx);
                 ai_planet_update(p);
             }
+            mp_state.mp_planet_idx = 0;
         }
         next_mp_stage();
     }
