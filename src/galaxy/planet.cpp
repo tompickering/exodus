@@ -1782,7 +1782,7 @@ void Planet::ai_update() {
                         agri_needed = 7;
                     }
                     int cost = stone_cost(STONE_City) + agri_needed*stone_cost(STONE_Agri);
-                    for (int i = 0; i < 5; ++i) {
+                    for (int i = 0; i < RND(5); ++i) {
                         if (free >= agri_needed+1) {
                             if (owner->attempt_spend(cost)) {
                                 ai_place_stone(1, STONE_City, STONE_City);
