@@ -788,9 +788,12 @@ void Planet::_set_stone(int x, int y, Stone stone) {
 }
 
 void Planet::_to_real(int x, int y, int& real_x, int& real_y) {
-    int offset = (PLANET_BLOCKS_LG - get_size_blocks()) / 2;
-    real_x = x + offset;
-    real_y = y + offset;
+    int sz = get_size_blocks();
+    while (x < 0) x += sz;
+    while (y < 0) y += sz;
+    int offset = (PLANET_BLOCKS_LG - sz) / 2;
+    real_x = (x % sz) + offset;
+    real_y = (y % sz) + offset;
 }
 
 bool Planet::_real_in_bounds(int x, int y) {
