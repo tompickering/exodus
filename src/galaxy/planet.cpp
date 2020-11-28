@@ -1785,8 +1785,8 @@ void Planet::ai_update() {
                     for (int i = 0; i < RND(5); ++i) {
                         if (free >= agri_needed+1) {
                             if (owner->attempt_spend(cost)) {
-                                ai_place_stone(1, STONE_City, STONE_City);
-                                ai_place_stone(agri_needed, STONE_Agri, STONE_Agri);
+                                free -= ai_place_stone(1, STONE_City, STONE_City);
+                                free -= ai_place_stone(agri_needed, STONE_Agri, STONE_Agri);
                             }
                         }
                     }
