@@ -1592,6 +1592,13 @@ void Planet::plunder() {
 
 }
 
+Stone random_military() {
+    int i = rand() % 3;
+    if (i == 0) return STONE_Inf;
+    if (i == 1) return STONE_Gli;
+    return STONE_Art;
+}
+
 void Planet::ai_update() {
     // AI planet developments originally done in PROCenemytactics / PROCeta*
 
@@ -1793,6 +1800,16 @@ void Planet::ai_update() {
                 }
                 break;
             case 2:
+                // BUILD MILITARY + PLU
+                for (int i = 0; i < RND(5); ++i) {
+                    Stone to_build = random_military();
+                    Stone target_neighbour = random_military();
+                    int cost = stone_cost(to_build) + stone_cost(STONE_Plu);
+                    if (free > 1 && owner->attempt_spend(cost)) {
+                        free -= ai_place_stone(1, to_build, target_neighbour);
+                        free -= ai_place_stone(1, STONE_Plu, STONE_NaturalLarge);
+                    }
+                }
                 break;
             case 3:
                 break;
