@@ -1890,6 +1890,11 @@ eta8:
             case 9:
                 break;
             case 10:
+                // BUILD A BACKUP BASE
+                // TODO: PROCeta8 skips MC check here
+                if (owner->attempt_spend(stone_cost(STONE_Base))) {
+                    free -= ai_place_stone(1, STONE_Base, STONE_Base);
+                }
                 break;
             case 11:
                 break;
