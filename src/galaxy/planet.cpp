@@ -1837,6 +1837,11 @@ void Planet::ai_update() {
                 }
                 break;
             case 5:
+                // TODO: PROCeta5 doesn't check that the owner can afford the cost
+                // and can result in -ve MC. Should we retain that behaviour here?
+                if (free > 0 && owner->attempt_spend(stone_cost(STONE_Trade))) {
+                    free -= ai_place_stone(1, STONE_Trade, STONE_City);
+                }
                 break;
             case 6:
                 break;
