@@ -27,29 +27,31 @@ enum PlanetClass {
     Artificial,  // 8  -       to represent uninhabitable gas giants).
 };
 
+// These are assigned the values that they had in the original.
+// This is inconsequential, but can help with debugging!
 enum Stone : uint8_t {
-    STONE_Clear,         // 0
-    STONE_NaturalLarge,  // 8
-    STONE_NaturalSmall,  // 9
-    STONE_NaturalAnim,   // 29
-    STONE_Village,       // 22
-    STONE_Agri,          // 2
-    STONE_Base,          // 1
-    STONE_AgriDead,      // 10
-    STONE_Mine,          // 3
-    STONE_Plu,           // 4
-    STONE_City,          // 5
-    STONE_Inf,           // 11
-    STONE_Gli,           // 12
-    STONE_Art,           // 13
-    STONE_Port0,         // 14
-    STONE_Port1,         // 15
-    STONE_Port2,         // 16
-    STONE_Trade,         // 17
-    STONE_Park,          // 23
-    STONE_Rubble,        // 20
-    STONE_Radiation,     // 6
-    STONE_END,
+    STONE_Clear         =  0,
+    STONE_Base          =  1,
+    STONE_Agri          =  2,
+    STONE_Mine          =  3,
+    STONE_Plu           =  4,
+    STONE_City          =  5,
+    STONE_Radiation     =  6,
+    STONE_NaturalLarge  =  8,
+    STONE_NaturalSmall  =  9,
+    STONE_AgriDead      = 10,
+    STONE_Inf           = 11,
+    STONE_Gli           = 12,
+    STONE_Art           = 13,
+    STONE_Port0         = 14,
+    STONE_Port1         = 15,
+    STONE_Port2         = 16,
+    STONE_Trade         = 17,
+    STONE_Rubble        = 20,
+    STONE_Village       = 22,
+    STONE_Park          = 23,
+    STONE_NaturalAnim   = 29,
+    STONE_END           = 30,
 };
 
 enum TradeQuality {
