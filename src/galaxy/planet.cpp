@@ -1813,16 +1813,28 @@ void Planet::ai_update() {
                 break;
             case 3:
                 // BUILD SPACEPORT
-                int cost = stone_cost(STONE_Port0)
-                         + stone_cost(STONE_Port1)
-                         + stone_cost(STONE_Port2);
-                if (free >= 3 && owner->attempt_spend(cost)) {
-                    free -= ai_place_stone(1, STONE_Port0, STONE_Base);
-                    free -= ai_place_stone(1, STONE_Port1, STONE_Port0);
-                    free -= ai_place_stone(1, STONE_Port2, STONE_Port1);
+                {
+                    int cost = stone_cost(STONE_Port0)
+                             + stone_cost(STONE_Port1)
+                             + stone_cost(STONE_Port2);
+                    if (free >= 3 && owner->attempt_spend(cost)) {
+                        free -= ai_place_stone(1, STONE_Port0, STONE_Base);
+                        free -= ai_place_stone(1, STONE_Port1, STONE_Port0);
+                        free -= ai_place_stone(1, STONE_Port2, STONE_Port1);
+                    }
                 }
                 break;
             case 4:
+                // BUILD MINE + PLU
+                {
+                    int cost = stone_cost(STONE_Mine) + stone_cost(STONE_Plu);
+                    for (int i = 0; i < RND(4); ++i) {
+                        if (free > 1 && owner->attempt_spend(cost)) {
+                            free -= ai_place_stone(1, STONE_Mine, STONE_Mine);
+                            free -= ai_place_stone(1, STONE_Plu, STONE_NaturalLarge);
+                        }
+                    }
+                }
                 break;
             case 5:
                 break;
