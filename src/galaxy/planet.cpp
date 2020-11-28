@@ -1878,6 +1878,7 @@ void Planet::ai_update() {
                     if (r > free) {
                         r = rand() % free;
                     }
+                    // TODO: PROCeta7 skips MC check here
                     if (owner->attempt_spend(r * stone_cost(STONE_Agri))) {
                         free -= ai_place_stone(r, STONE_Agri, STONE_Agri);
                     }
