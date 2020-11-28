@@ -1844,6 +1844,15 @@ void Planet::ai_update() {
                 }
                 break;
             case 6:
+                // TODO: PROCeta6 doesn't check that the owner can afford the cost
+                // and can result in -ve MC. Should we retain that behaviour here?
+                // FIXME: 120 shouldn't be hard-coded and should match planet_map.cpp
+                if (!has_lunar_base() && owner->attempt_spend(120)) {
+                    build_lunar_base();
+                } else {
+                    // TODO: PROCeta6 sets action=2 in this case. It looks ineconsequential,
+                    // but verify.
+                }
                 break;
             case 7:
                 break;
