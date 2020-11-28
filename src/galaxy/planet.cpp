@@ -1855,8 +1855,36 @@ void Planet::ai_update() {
                 }
                 break;
             case 7:
+                // HANDLE HUNGER BY REPLACING CITIES WITH AGRI
+                if (!agri_sufficient() && free < 5) {
+                    goto eta8;
+                }
+                if (free > 0) {
+                    if (!agri_sufficient() && (free + possfree) < 5) {
+                        // TODO: Original always finds first cities
+                        int n = 2;
+                        int x, y;
+                        while (n > 0 && find_random_stone(STONE_City, x, y)) {
+                            int cost = stone_cost(STONE_Clear) + stone_cost(STONE_Agri);
+                            if (owner->attempt_spend(cost)) {
+                                set_stone(x, y, STONE_Agri);
+                            } else {
+                                break;
+                            }
+                            --n;
+                        }
+                    }
+                    int r = RND(5) + 5;
+                    if (r > free) {
+                        r = rand() % free;
+                    }
+                    if (owner->attempt_spend(r * stone_cost(STONE_Agri))) {
+                        free -= ai_place_stone(r, STONE_Agri, STONE_Agri);
+                    }
+                }
                 break;
             case 8:
+eta8:
                 break;
             case 9:
                 break;
