@@ -1847,7 +1847,7 @@ bool Planet::_ai_place_tactical(Stone to_place, Stone target_neighbour) {
     int x; int y;
     bool found = find_random_buildable_stone_next_to_8(target_neighbour, x, y);
     if (found) {
-        L.debug("%s: AI placing stone tactically at (%d, %d)", get_name(), x, y);
+        L.debug("%s: AI placing stone %d tactically at (%d, %d)", get_name(), (int)to_place, x, y);
         set_stone(x, y, to_place);
         return true;
     }
