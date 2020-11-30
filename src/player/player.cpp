@@ -310,6 +310,13 @@ const Fleet& Player::get_fleet() {
     return fleet;
 }
 
+AIFlag Player::get_flag(int idx) {
+    if (idx >= 9) {
+        L.fatal("Tried to access AI flag > maximum (%d)", idx);
+    }
+    return ai_flags[idx];
+}
+
 int Player::get_tactic() {
     return ai_tactic;
 }

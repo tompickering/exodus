@@ -128,6 +128,7 @@ class Player {
         const Fleet& get_fleet();
 
         // AI
+        AIFlag get_flag(int);
         int get_tactic();
         void set_tactic(int);
     private:
