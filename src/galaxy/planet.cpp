@@ -1938,6 +1938,7 @@ void Planet::ai_update() {
                 {
                     int sz = get_size_blocks();
                     for (int i = 0; i < 20; ++i) {
+                        bool placed = false;
                         for (int y = rand() % sz; y < sz; ++y) {
                             for (int x = rand() % sz; x < sz; ++x) {
                                 Stone s = get_stone(x, y);
@@ -1945,14 +1946,16 @@ void Planet::ai_update() {
                                     // TODO: PROCeta12 skips MC check
                                     if (owner->attempt_spend(stone_cost(STONE_Clear))) {
                                         set_stone(x, y, STONE_Clear);
-                                        goto eta12_done;
+                                        break;
                                     }
                                 }
+                            }
+                            if (placed) {
+                                break;
                             }
                         }
                     }
                 }
-eta12_done:
                 break;
             case 13:
                 break;
@@ -1984,6 +1987,7 @@ void Planet::_ai_make_space() {
     Stone ac = (get_minerals() <= 0) ? STONE_Mine : STONE_Rubble;
     int sz = get_size_blocks();
     for (int i = 0; i < 25; ++i) {
+        bool placed = false;
         for (int y = rand() % sz; y < sz; ++y) {
             for (int x = rand() % sz; x < sz; ++x) {
                 Stone s = get_stone(x, y);
@@ -1995,11 +1999,16 @@ void Planet::_ai_make_space() {
                     || s == ac) {
                     if (owner->attempt_spend(stone_cost(STONE_Clear))) {
                         set_stone(x, y, STONE_Clear);
+                        placed = true;
+                        break;
                     } else {
                         // No point in continuing if we can't afford to clear space anyway
                         return;
                     }
                 }
+            }
+            if (placed) {
+                break;
             }
         }
     }
