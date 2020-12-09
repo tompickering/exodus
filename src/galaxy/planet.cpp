@@ -1857,7 +1857,7 @@ void Planet::ai_update() {
             case 7:
                 // HANDLE HUNGER BY REPLACING CITIES WITH AGRI
                 if (!agri_sufficient() && free < 5) {
-                    goto eta8;
+                    _ai_make_space();
                 }
                 if (free > 0) {
                     if (!agri_sufficient() && (free + possfree) < 5) {
@@ -1885,29 +1885,7 @@ void Planet::ai_update() {
                 }
                 break;
             case 8:
-eta8:
-                {
-                    int ab = owner->get_flag(4) == AI_Hi ? STONE_Village : STONE_Rubble;
-                    Stone ac = (get_minerals() <= 0) ? STONE_Mine : STONE_Rubble;
-                    int sz = get_size_blocks();
-                    for (int i = 0; i < 25; ++i) {
-                        for (int y = rand() % sz; y < sz; ++y) {
-                            for (int x = rand() % sz; x < sz; ++x) {
-                                Stone s = get_stone(x, y);
-                                if (   s == STONE_AgriDead
-                                    || s == STONE_NaturalLarge
-                                    || s == STONE_NaturalAnim
-                                    || s == STONE_Rubble
-                                    || s == ab
-                                    || s == ac) {
-                                    if (owner->attempt_spend(stone_cost(STONE_Clear))) {
-                                        set_stone(x, y, STONE_Clear);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                _ai_make_space();
                 break;
             case 9:
                 break;
@@ -1938,6 +1916,39 @@ eta8:
     } while (!stop);
 
     // TODO: PROCenemytactics bit at the end
+}
+
+void Planet::_ai_make_space() {
+    if (!is_owned()) {
+        L.fatal("Tried to make space on unowned planet");
+        return;
+    }
+
+    Player *owner = exostate.get_player(get_owner());
+
+    int ab = owner->get_flag(4) == AI_Hi ? STONE_Village : STONE_Rubble;
+    Stone ac = (get_minerals() <= 0) ? STONE_Mine : STONE_Rubble;
+    int sz = get_size_blocks();
+    for (int i = 0; i < 25; ++i) {
+        for (int y = rand() % sz; y < sz; ++y) {
+            for (int x = rand() % sz; x < sz; ++x) {
+                Stone s = get_stone(x, y);
+                if (   s == STONE_AgriDead
+                    || s == STONE_NaturalLarge
+                    || s == STONE_NaturalAnim
+                    || s == STONE_Rubble
+                    || s == ab
+                    || s == ac) {
+                    if (owner->attempt_spend(stone_cost(STONE_Clear))) {
+                        set_stone(x, y, STONE_Clear);
+                    } else {
+                        // No point in continuing if we can't afford to clear space anyway
+                        return;
+                    }
+                }
+            }
+        }
+    }
 }
 
 bool Planet::_ai_place_random(Stone to_place) {
