@@ -1983,6 +1983,15 @@ void Planet::_ai_make_space() {
 
     Player *owner = exostate.get_player(get_owner());
 
+    if (!owner->is_participating()) {
+        L.fatal("Tried to make space on a planet owned by an inert player");
+        return;
+    }
+
+    if (!owner->can_afford(stone_cost(STONE_Clear))) {
+        return;
+    }
+
     int ab = owner->get_flag(4) == AI_Hi ? STONE_Village : STONE_Rubble;
     Stone ac = (get_minerals() <= 0) ? STONE_Mine : STONE_Rubble;
     int sz = get_size_blocks();
