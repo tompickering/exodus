@@ -917,38 +917,37 @@ Stone PlanetMap::tool2stone(Tool t) {
 }
 
 unsigned int PlanetMap::tool2cost(Tool t) {
-    // FIXME: Deduplcate with Planet::stone_cost()
     switch(t) {
         case TOOL_HQ:
-            return 20;
+            return Planet::stone_cost(STONE_Base);
         case TOOL_Cultivate:
-            return 3;
+            return Planet::stone_cost(STONE_Agri);
         case TOOL_Mine:
-            return 15;
+            return Planet::stone_cost(STONE_Mine);
         case TOOL_Plu:
-            return 25;
+            return Planet::stone_cost(STONE_Plu);
         case TOOL_City:
-            return 30;
+            return Planet::stone_cost(STONE_City);
         case TOOL_Clear:
-            return 5;
+            return Planet::stone_cost(STONE_Clear);
         case TOOL_Inf:
-            return 10;
+            return Planet::stone_cost(STONE_Inf);
         case TOOL_Gli:
-            return 20;
+            return Planet::stone_cost(STONE_Gli);
         case TOOL_Art:
-            return 30;
+            return Planet::stone_cost(STONE_Art);
         case TOOL_Port0:
-            return 15;
+            return Planet::stone_cost(STONE_Port0);
         case TOOL_Port1:
-            return 10;
+            return Planet::stone_cost(STONE_Port1);
         case TOOL_Port2:
-            return 20;
+            return Planet::stone_cost(STONE_Port2);
         case TOOL_Trade:
-            return 100;
+            return Planet::stone_cost(STONE_Trade);
         case TOOL_LunarBase:
             return COST_LUNAR_BASE;
         case TOOL_Park:
-            return 10;
+            return Planet::stone_cost(STONE_Park);
         case TOOL_END:
             break;
     }
