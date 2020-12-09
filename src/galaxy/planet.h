@@ -11,6 +11,8 @@
 #define CITY_FOOD_REQ 3
 #define N_UNREST 8
 
+#define COST_AIRDEF 5
+
 enum PlanetSize {
     PLANET_Small,
     PLANET_Medium,

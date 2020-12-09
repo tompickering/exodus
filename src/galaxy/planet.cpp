@@ -1895,6 +1895,25 @@ void Planet::ai_update() {
                 free = count_stones(STONE_Clear) + count_stones(STONE_NaturalSmall);
                 break;
             case 9:
+                // BUILD AIRDEF GUNS
+                {
+                    int p = get_resource_cap();
+                    int guns = get_airdef_guns();
+                    if (guns < p) {
+                        int r = RND(20);
+                        if (!owner->can_afford(r*COST_AIRDEF)) {
+                            r = owner->get_mc() / COST_AIRDEF;
+                        }
+                        if (r + guns > p) {
+                            r = p - guns;
+                        }
+                        if (owner->attempt_spend(r * COST_AIRDEF)) {
+                            airdef_guns += r;
+                        } else {
+                            L.error("Could not afford MC that we checked we had");
+                        }
+                    }
+                }
                 break;
             case 10:
                 // BUILD A BACKUP BASE
