@@ -1959,6 +1959,27 @@ void Planet::ai_update() {
                 }
                 break;
             case 13:
+                // BUILD PLUTONIUM
+                {
+                    // TODO: It appears PROCeta13 doesn't account for the extra
+                    // plutonium produced on volcanic planets, as get_plu_production()
+                    // does, and just takes the number of plutonium reactors.
+                    // Should we preserve this behaviour?
+                    int to_build = get_plu_consumption() - get_plu_production();
+                    // TODO: Orig zeroes credits here if <0 - if we allow -ve MC, we should add this
+                    // FIXME: Should we halve (rounding up) build count of volcano worlds?
+                    int crd = owner->get_mc();
+                    int cost = stone_cost(STONE_Plu);
+                    if (to_build > (crd/cost)+3) {
+                        to_build = (crd/cost)+1;
+                    }
+                    for (int i = 0; i < to_build; ++i) {
+                        // TODO: PROCeta13 skips MC check
+                        if (owner->attempt_spend(cost)) {
+                            free -= ai_place_stone(1, STONE_Plu, STONE_NaturalLarge);
+                        }
+                    }
+                }
                 break;
             default:
                 break;
