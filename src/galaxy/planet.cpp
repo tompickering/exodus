@@ -1717,7 +1717,7 @@ void Planet::ai_update() {
             action = 12;
         }
 
-        if (   owner->get_mc() > 120
+        if (   owner->get_mc() > COST_LUNAR_BASE
             && m > 10
             && get_class() != Artificial) {
             action = 6;
@@ -1852,8 +1852,7 @@ void Planet::ai_update() {
                 // BUILD LUNAR BASE
                 // TODO: PROCeta6 doesn't check that the owner can afford the cost
                 // and can result in -ve MC. Should we retain that behaviour here?
-                // FIXME: 120 shouldn't be hard-coded and should match planet_map.cpp
-                if (!has_lunar_base() && owner->attempt_spend(120)) {
+                if (!has_lunar_base() && owner->attempt_spend(COST_LUNAR_BASE)) {
                     build_lunar_base();
                 } else {
                     // TODO: PROCeta6 sets action=2 in this case. It looks ineconsequential,

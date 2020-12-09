@@ -11,6 +11,7 @@
 #define CITY_FOOD_REQ 3
 #define N_UNREST 8
 
+#define COST_LUNAR_BASE 120
 #define COST_AIRDEF 5
 #define COST_ROBOT  6
 

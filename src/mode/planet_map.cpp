@@ -946,7 +946,7 @@ unsigned int PlanetMap::tool2cost(Tool t) {
         case TOOL_Trade:
             return 100;
         case TOOL_LunarBase:
-            return 120;
+            return COST_LUNAR_BASE;
         case TOOL_Park:
             return 10;
         case TOOL_END:
