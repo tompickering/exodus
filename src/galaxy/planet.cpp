@@ -1491,7 +1491,11 @@ bool Planet::expand(Stone st) {
                             if (dir == 2) j_off++;
                             if (dir == 3) j_off--;
                             Stone tgt = get_stone_wrap(i + i_off, j + j_off);
-                            if (tgt == STONE_Clear || tgt == STONE_NaturalSmall) {
+                            bool tgt_ok = tgt == STONE_Clear || tgt == STONE_NaturalSmall;
+                            if (st == STONE_Village) {
+                                tgt_ok = tgt_ok || tgt == STONE_City;
+                            }
+                            if (tgt_ok) {
                                 set_stone_wrap(i + i_off, j + j_off, st);
                                 L.info("Expansion %d,%d", i, j);
                                 return true;
