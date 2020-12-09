@@ -1837,6 +1837,7 @@ void Planet::ai_update() {
                 }
                 break;
             case 5:
+                // BUILD TRADE CENTRE
                 // TODO: PROCeta5 doesn't check that the owner can afford the cost
                 // and can result in -ve MC. Should we retain that behaviour here?
                 if (free > 0 && owner->attempt_spend(stone_cost(STONE_Trade))) {
@@ -1844,6 +1845,7 @@ void Planet::ai_update() {
                 }
                 break;
             case 6:
+                // BUILD LUNAR BASE
                 // TODO: PROCeta6 doesn't check that the owner can afford the cost
                 // and can result in -ve MC. Should we retain that behaviour here?
                 // FIXME: 120 shouldn't be hard-coded and should match planet_map.cpp
@@ -1858,6 +1860,9 @@ void Planet::ai_update() {
                 // HANDLE HUNGER BY REPLACING CITIES WITH AGRI
                 if (!agri_sufficient() && free < 5) {
                     _ai_make_space();
+                    // TODO: PROCeta7 doesn't recalculate free after potentially
+                    // creating space - should we retain that behaviour?
+                    free = count_stones(STONE_Clear) + count_stones(STONE_NaturalSmall);
                 }
                 if (free > 0) {
                     if (!agri_sufficient() && (free + possfree) < 5) {
@@ -1885,13 +1890,15 @@ void Planet::ai_update() {
                 }
                 break;
             case 8:
+                // CLEAR USELESS STONES
                 _ai_make_space();
+                free = count_stones(STONE_Clear) + count_stones(STONE_NaturalSmall);
                 break;
             case 9:
                 break;
             case 10:
                 // BUILD A BACKUP BASE
-                // TODO: PROCeta8 skips MC check here
+                // TODO: PROCeta10 skips MC check here
                 if (owner->attempt_spend(stone_cost(STONE_Base))) {
                     free -= ai_place_stone(1, STONE_Base, STONE_Base);
                 }
