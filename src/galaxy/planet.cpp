@@ -1505,7 +1505,7 @@ bool Planet::expand(Stone st) {
         }
     }
 
-    L.fatal("Could not find suitable expanstion after verifying it must be possible");
+    L.fatal("Could not find suitable expansion after verifying it must be possible");
     return false;
 }
 
