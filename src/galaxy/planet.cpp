@@ -1935,6 +1935,7 @@ void Planet::ai_update() {
                 }
                 break;
             case 12:
+                // CLEAR DEAD AGRI / RUBBLE
                 {
                     int sz = get_size_blocks();
                     for (int i = 0; i < 20; ++i) {
