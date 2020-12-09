@@ -1935,6 +1935,24 @@ void Planet::ai_update() {
                 }
                 break;
             case 12:
+                {
+                    int sz = get_size_blocks();
+                    for (int i = 0; i < 20; ++i) {
+                        for (int y = rand() % sz; y < sz; ++y) {
+                            for (int x = rand() % sz; x < sz; ++x) {
+                                Stone s = get_stone(x, y);
+                                if (s == STONE_AgriDead || s == STONE_Rubble) {
+                                    // TODO: PROCeta12 skips MC check
+                                    if (owner->attempt_spend(stone_cost(STONE_Clear))) {
+                                        set_stone(x, y, STONE_Clear);
+                                        goto eta12_done;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+eta12_done:
                 break;
             case 13:
                 break;
