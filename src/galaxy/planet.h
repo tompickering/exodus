@@ -12,6 +12,7 @@
 #define N_UNREST 8
 
 #define COST_AIRDEF 5
+#define COST_ROBOT  6
 
 enum PlanetSize {
     PLANET_Small,

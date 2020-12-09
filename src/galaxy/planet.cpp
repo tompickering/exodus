@@ -1923,6 +1923,16 @@ void Planet::ai_update() {
                 }
                 break;
             case 11:
+                // BUILD ROBOTS
+                {
+                    int r = RND(3);
+                    // TODO: PROCeta11 skips MC check here
+                    // TODO: Should we check we're within resource limits here?!
+                    // These robots might be scrapped on discard_excess_resources()!
+                    if (owner->attempt_spend(r * COST_ROBOT)) {
+                        robots += r;
+                    }
+                }
                 break;
             case 12:
                 break;
