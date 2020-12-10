@@ -137,7 +137,7 @@ void ExodusState::init(GameConfig config) {
         while (!flag_assigned) {
             int flag_try = rand() % 15;
             bool flag_ok = true;
-            for (unsigned int j = 0; j < i; ++j) {
+            for (int j = 0; j < i; ++j) {
                 if (flag_try == players[j].flag_idx) {
                     flag_ok = false;
                     break;
