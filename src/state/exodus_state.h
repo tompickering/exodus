@@ -74,7 +74,7 @@ class ExodusState {
         int get_active_player_idx();
         Player* set_active_player(int);
         Star* get_active_star();
-        unsigned int get_active_star_idx();
+        int get_active_star_idx();
         Planet* get_active_planet();
         int get_active_planet_idx();
         FlyTarget* get_active_flytarget();
@@ -98,7 +98,7 @@ class ExodusState {
         int n_players;
         int month;
         int active_player;
-        unsigned int active_star;
+        int active_star;
         int active_planet;
         Player players[N_PLAYERS];
         Aim aim;

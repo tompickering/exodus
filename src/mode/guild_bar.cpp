@@ -99,7 +99,7 @@ void GuildBar::update_pin_and_rumours() {
     }
 
     Galaxy *gal = exostate.get_galaxy();
-    unsigned int n_stars;
+    int n_stars;
     Star *stars = gal->get_stars(n_stars);
     Player *player;
     Star *star;
@@ -126,7 +126,7 @@ void GuildBar::update_pin_and_rumours() {
         min_army_size = 100;
     }
     planet_info = exostate.get_random_owned_planet_info();
-    for (unsigned int i = 0; i < n_stars; ++i) {
+    for (int i = 0; i < n_stars; ++i) {
         star = &stars[i];
         for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
             planet = star->get_planet(planet_idx);
@@ -155,7 +155,7 @@ void GuildBar::update_pin_and_rumours() {
         max_reserves = RND(200);
     }
     planet_info = exostate.get_random_owned_planet_info();
-    for (unsigned int i = 0; i < n_stars; ++i) {
+    for (int i = 0; i < n_stars; ++i) {
         star = &stars[i];
         for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
             planet = star->get_planet(planet_idx);
@@ -184,7 +184,7 @@ void GuildBar::update_pin_and_rumours() {
         max_pop = RND(20);
     }
     planet_info = exostate.get_random_owned_planet_info();
-    for (unsigned int i = 0; i < n_stars; ++i) {
+    for (int i = 0; i < n_stars; ++i) {
         star = &stars[i];
         for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
             planet = star->get_planet(planet_idx);
