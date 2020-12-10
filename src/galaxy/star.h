@@ -22,7 +22,7 @@ class Star : public FlyTarget {
         Planet* get_planet(int);
     private:
         StarSize size;
-        unsigned int n_planets;
+        int n_planets;
         Planet planets[STAR_MAX_PLANETS];
 };
 

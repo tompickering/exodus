@@ -484,11 +484,11 @@ PlanetInfo ExodusState::get_random_owned_planet_info() {
     return info;
 }
 
-unsigned int ExodusState::get_n_planets(Player* player) {
+int ExodusState::get_n_planets(Player* player) {
     Galaxy *gal = get_galaxy();
     unsigned int n_stars;
     Star *stars = gal->get_stars(n_stars);
-    unsigned int count = 0;
+    int count = 0;
     for (unsigned int i = 0; i < n_stars; ++i) {
         for (int j = 0; j < STAR_MAX_PLANETS; ++j) {
             Planet *p = stars[i].get_planet(j);
