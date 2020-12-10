@@ -32,20 +32,20 @@ typedef struct {
 } Starship;
 
 typedef struct {
-    unsigned int minerals;
-    unsigned int food;
-    unsigned int plutonium;
-    unsigned int robots;
-    unsigned int infantry;
-    unsigned int gliders;
-    unsigned int artillery;
+    int minerals;
+    int food;
+    int plutonium;
+    int robots;
+    int infantry;
+    int gliders;
+    int artillery;
 } Freight;
 
 typedef struct {
-    unsigned int scouts;
-    unsigned int transporters;
-    unsigned int warships;
-    unsigned int bombers;
+    int scouts;
+    int transporters;
+    int warships;
+    int bombers;
     Freight freight;
 } Fleet;
 
