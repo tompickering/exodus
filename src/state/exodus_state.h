@@ -46,7 +46,7 @@ enum EnemyStart {
 
 typedef struct {
     GalaxySize size;
-    unsigned int n_players;
+    int n_players;
     Player players[MAX_HUMAN_PLAYERS];
     Aim aim;
     EnemyStart enemy_start;
@@ -66,13 +66,13 @@ class ExodusState {
         void finalise_galaxy();
         void init_cpu_lords();
         Galaxy* get_galaxy();
-        unsigned int get_n_human_players();
+        int get_n_human_players();
         int get_month();
         int get_orig_month();
         void advance_month();
         Player* get_active_player();
         int get_active_player_idx();
-        Player* set_active_player(unsigned int);
+        Player* set_active_player(int);
         Star* get_active_star();
         unsigned int get_active_star_idx();
         Planet* get_active_planet();
@@ -95,9 +95,9 @@ class ExodusState {
         bool first_spaceport_done;
     private:
         GalaxySize size;
-        unsigned int n_players;
+        int n_players;
         int month;
-        unsigned int active_player;
+        int active_player;
         unsigned int active_star;
         int active_planet;
         Player players[N_PLAYERS];

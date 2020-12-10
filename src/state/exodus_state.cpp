@@ -41,7 +41,7 @@ void ExodusState::init(GameConfig config) {
     active_planet = -1;
     first_city_done = false;
     first_spaceport_done = false;
-    unsigned int i;
+    int i;
 
     for (i = 0; i < n_players; ++i) {
         memcpy(&players[i], &config.players[i], sizeof(Player));
@@ -177,7 +177,7 @@ void ExodusState::init(GameConfig config) {
     L.debug("ExodusState init");
     L.debug("      Size: %d", size);
     L.debug("   Players: %d", n_players);
-    for (unsigned int i = 0; i < n_players; ++i) {
+    for (int i = 0; i < n_players; ++i) {
         Player *inf = &players[i];
         L.debug("       %s %s : Flag %d", inf->title, inf->name, inf->flag_idx);
     }
@@ -190,7 +190,7 @@ void ExodusState::init_cpu_lords() {
     unsigned int n_stars;
     Star *stars = gal->get_stars(n_stars);
 
-    for (unsigned int i = n_players; i < N_PLAYERS; ++i) {
+    for (int i = n_players; i < N_PLAYERS; ++i) {
         // Assign initial planet to CPU lords. Orig: PROCstart_the_lords
         // We follow the original's logic of iterating over stars in the
         // same order for each lord, which affects the probability of
@@ -220,7 +220,7 @@ void ExodusState::init_cpu_lords() {
                             L.debug("Checking existing ownership");
                             // TODO: Can we just check planet->is_owned() at this point?
                             bool ok = true;
-                            for (unsigned int other_idx = n_players; other_idx < i; other_idx++) {
+                            for (int other_idx = n_players; other_idx < i; other_idx++) {
                                 Player *other = &players[other_idx];
                                 FlyTarget *other_ts = loc2tgt(other->get_location().get_target());
                                 int other_tp = other->get_location().get_planet_target();
@@ -293,7 +293,7 @@ Galaxy* ExodusState::get_galaxy() {
     return &galaxy;
 }
 
-unsigned int ExodusState::get_n_human_players() {
+int ExodusState::get_n_human_players() {
     return n_players;
 }
 
@@ -324,7 +324,7 @@ int ExodusState::get_active_player_idx() {
     return (int)active_player;
 }
 
-Player* ExodusState::set_active_player(unsigned int idx) {
+Player* ExodusState::set_active_player(int idx) {
     if (idx >= N_PLAYERS) {
         L.fatal("Attempt to set invalid player active %d", idx);
     }

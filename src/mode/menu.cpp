@@ -660,7 +660,7 @@ ExodusMode Menu::update(float delta) {
                     Justify::Centre, RES_X/2, 300,
                     COL_TEXT2);
 
-                for (unsigned int i = 0; i < config.n_players; ++i) {
+                for (int i = 0; i < config.n_players; ++i) {
                     int sep = RES_X / (config.n_players + 1);
                     draw_manager.draw(
                         flags[config.players[i].get_flag_idx()],
