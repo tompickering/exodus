@@ -67,8 +67,8 @@ class ExodusState {
         void init_cpu_lords();
         Galaxy* get_galaxy();
         unsigned int get_n_human_players();
-        unsigned int get_month();
-        unsigned int get_orig_month();
+        int get_month();
+        int get_orig_month();
         void advance_month();
         Player* get_active_player();
         int get_active_player_idx();
@@ -96,7 +96,7 @@ class ExodusState {
     private:
         GalaxySize size;
         unsigned int n_players;
-        unsigned int month;
+        int month;
         unsigned int active_player;
         unsigned int active_star;
         int active_planet;

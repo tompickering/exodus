@@ -297,11 +297,11 @@ unsigned int ExodusState::get_n_human_players() {
     return n_players;
 }
 
-unsigned int ExodusState::get_month() {
+int ExodusState::get_month() {
     return month;
 }
 
-unsigned int ExodusState::get_orig_month() {
+int ExodusState::get_orig_month() {
     /*
      * For some reason, the original tracks months at 1 greater than what is
      * displayed in the UI. The 'months' variable is set to 2 during some of
