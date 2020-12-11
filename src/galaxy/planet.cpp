@@ -1997,7 +1997,30 @@ void Planet::ai_update() {
         stop = stop || action == 0;
     } while (!stop);
 
-    // TODO: PROCenemytactics bit at the end
+    // Allocate max MC to army without overspending
+    army_funding = get_army_required_mc();
+    validate_army_funding();
+
+    laws = 0;
+    set_law(LAW_TradeMinerals, true);
+    set_law(LAW_TradeFood, true);
+    switch (owner->get_flag(4)) {
+        case AI_Hi:
+            set_law(LAW_DrugLegalisation, true);
+            set_law(LAW_TradePlutonium, true);
+            break;
+        case AI_Md:
+            set_law(LAW_PrivateIndustry, true);
+            set_law(LAW_DifferentReligions, true);
+            set_law(LAW_TradePlutonium, true);
+            break;
+        case AI_Lo:
+            set_law(LAW_FreeSpeech, true);
+            set_law(LAW_PrivateIndustry, true);
+            set_law(LAW_AllowSystemEnemies, true);
+            set_law(LAW_DifferentReligions, true);
+            break;
+    }
 }
 
 void Planet::_ai_make_space() {
