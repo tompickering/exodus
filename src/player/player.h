@@ -113,8 +113,8 @@ class Player {
         bool intro_seen();
         void set_intro_seen();
         void give_mc(int);
-        bool can_afford(unsigned int);
-        bool attempt_spend(unsigned int);
+        bool can_afford(int);
+        bool attempt_spend(int);
         const char *get_fleet_marker();
         void set_fleet_marker(const char*);
         PlayerLocation& get_location();
