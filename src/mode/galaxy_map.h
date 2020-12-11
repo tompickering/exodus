@@ -132,7 +132,7 @@ typedef struct {
     MonthPassPlanetStage mpp_stage;
     float month_pass_time;
     int mp_player_idx;
-    unsigned int mp_star_idx;
+    int mp_star_idx;
     int mp_planet_idx;
 } MPState;
 

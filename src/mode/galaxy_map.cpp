@@ -347,7 +347,7 @@ ExodusMode GalaxyMap::month_pass_update() {
     // *promise* to only enter a subset of month-pass-specific stages.
     // We *cannot* enter GM_Idle until all month pass logic is complete!
 
-    unsigned int n_stars;
+    int n_stars;
     Galaxy *gal = exostate.get_galaxy();
     Star *stars = gal->get_stars(n_stars);
 

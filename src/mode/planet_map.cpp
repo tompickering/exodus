@@ -916,7 +916,7 @@ Stone PlanetMap::tool2stone(Tool t) {
     return STONE_Clear;
 }
 
-unsigned int PlanetMap::tool2cost(Tool t) {
+int PlanetMap::tool2cost(Tool t) {
     switch(t) {
         case TOOL_HQ:
             return Planet::stone_cost(STONE_Base);

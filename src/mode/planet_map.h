@@ -89,7 +89,7 @@ class PlanetMap : ModeBase {
         void set_tool(Tool);
         void draw_tool_rect(Tool, RGB);
         Stone tool2stone(Tool);
-        unsigned int tool2cost(Tool);
+        int tool2cost(Tool);
 
         bool can_build_on(Stone);
         void draw_mc();

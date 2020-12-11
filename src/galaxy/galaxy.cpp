@@ -58,7 +58,7 @@ const PlanetClass PLANET_DISTRIB[5][6] = {
     {Desert, Desert, Volcano, Volcano, Rock, Rock},
 };
 
-Galaxy::Galaxy(unsigned int _n_stars) {
+Galaxy::Galaxy(int _n_stars) {
     n_stars = _n_stars;
 
     if (n_stars > GALAXY_MAX_STARS) {
@@ -71,7 +71,7 @@ Galaxy::Galaxy(unsigned int _n_stars) {
     int star_x, star_y;
     uint64_t names_taken = 0;
     Star *star;
-    for (unsigned int i = 0; i < n_stars; ++i) {
+    for (int i = 0; i < n_stars; ++i) {
         while (true) {
             bool ok = true;
 
@@ -82,7 +82,7 @@ Galaxy::Galaxy(unsigned int _n_stars) {
                 ok = false;
             }
 
-            for (unsigned int j = 0; j < i; ++j) {
+            for (int j = 0; j < i; ++j) {
                 if (star_x == stars[j].x  && star_y == stars[j].y) {
                     ok = false;
                     break;
@@ -125,11 +125,11 @@ Galaxy::Galaxy(unsigned int _n_stars) {
 }
 
 Star* Galaxy::get_stars() {
-    unsigned int i;
+    int i;
     return get_stars(i);
 }
 
-Star* Galaxy::get_stars(unsigned int &_n_stars) {
+Star* Galaxy::get_stars(int &_n_stars) {
     _n_stars = n_stars;
     return stars;
 }

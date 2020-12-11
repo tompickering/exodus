@@ -73,10 +73,10 @@ void GalaxyDrawer::draw_galaxy(bool pixelswap) {
 
     draw_manager.clear_sprite_ids();
     draw_manager.draw(tgt, BG_SPR);
-    unsigned int n_stars;
+    int n_stars;
     Galaxy *gal = exostate.get_galaxy();
     const Star *stars = gal->get_stars(n_stars);
-    for (unsigned int i = 0; i < n_stars; ++i) {
+    for (int i = 0; i < n_stars; ++i) {
         const Star *s = &stars[i];
         spr = STAR_SPRITES[s->get_size()];
         get_draw_position(s, x, y);

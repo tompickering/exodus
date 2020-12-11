@@ -14,14 +14,14 @@
 class Galaxy {
     public:
         Galaxy() {};
-        Galaxy(unsigned int);
+        Galaxy(int);
         Star* get_stars();
-        Star* get_stars(unsigned int&);
+        Star* get_stars(int&);
         Guild* get_guild();
     private:
         Guild guild;
         Star stars[GALAXY_MAX_STARS];
-        unsigned int n_stars;
+        int n_stars;
 };
 
 #endif

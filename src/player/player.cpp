@@ -198,11 +198,18 @@ void Player::give_mc(int extra_mc) {
     mc += extra_mc;
 }
 
-bool Player::can_afford(unsigned int cost) {
+bool Player::can_afford(int cost) {
+    if (cost < 0) {
+        L.warn("Calling can_afford() with -ve value %d", cost);
+    }
     return mc >= (int)cost;
 }
 
-bool Player::attempt_spend(unsigned int cost) {
+bool Player::attempt_spend(int cost) {
+    if (cost < 0) {
+        L.warn("Calling attempt_spend() with -ve value %d", cost);
+    }
+
     if (can_afford(cost)) {
         mc -= cost;
         return true;

@@ -41,7 +41,7 @@ void ExodusState::init(GameConfig config) {
     active_planet = -1;
     first_city_done = false;
     first_spaceport_done = false;
-    unsigned int i;
+    int i;
 
     for (i = 0; i < n_players; ++i) {
         memcpy(&players[i], &config.players[i], sizeof(Player));
@@ -137,7 +137,7 @@ void ExodusState::init(GameConfig config) {
         while (!flag_assigned) {
             int flag_try = rand() % 15;
             bool flag_ok = true;
-            for (unsigned int j = 0; j < i; ++j) {
+            for (int j = 0; j < i; ++j) {
                 if (flag_try == players[j].flag_idx) {
                     flag_ok = false;
                     break;
@@ -177,7 +177,7 @@ void ExodusState::init(GameConfig config) {
     L.debug("ExodusState init");
     L.debug("      Size: %d", size);
     L.debug("   Players: %d", n_players);
-    for (unsigned int i = 0; i < n_players; ++i) {
+    for (int i = 0; i < n_players; ++i) {
         Player *inf = &players[i];
         L.debug("       %s %s : Flag %d", inf->title, inf->name, inf->flag_idx);
     }
@@ -187,10 +187,10 @@ void ExodusState::init(GameConfig config) {
 
 void ExodusState::init_cpu_lords() {
     Galaxy *gal = get_galaxy();
-    unsigned int n_stars;
+    int n_stars;
     Star *stars = gal->get_stars(n_stars);
 
-    for (unsigned int i = n_players; i < N_PLAYERS; ++i) {
+    for (int i = n_players; i < N_PLAYERS; ++i) {
         // Assign initial planet to CPU lords. Orig: PROCstart_the_lords
         // We follow the original's logic of iterating over stars in the
         // same order for each lord, which affects the probability of
@@ -202,7 +202,7 @@ void ExodusState::init_cpu_lords() {
         L.debug("Choosing initial planet for CPU lord %d", i);
         while(!initial_planet_selected) {
             int quality = 0;
-            for (unsigned int star_idx = 0; star_idx < n_stars; ++star_idx) {
+            for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
                 L.debug("Considering star %d", star_idx);
                 Star *s = &stars[star_idx];
                 for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
@@ -220,7 +220,7 @@ void ExodusState::init_cpu_lords() {
                             L.debug("Checking existing ownership");
                             // TODO: Can we just check planet->is_owned() at this point?
                             bool ok = true;
-                            for (unsigned int other_idx = n_players; other_idx < i; other_idx++) {
+                            for (int other_idx = n_players; other_idx < i; other_idx++) {
                                 Player *other = &players[other_idx];
                                 FlyTarget *other_ts = loc2tgt(other->get_location().get_target());
                                 int other_tp = other->get_location().get_planet_target();
@@ -275,7 +275,7 @@ void ExodusState::generate_galaxy() {
         L.error("Cannot regenerate galaxy after finalisation");
     }
 
-    unsigned int n_stars = 15;
+    int n_stars = 15;
     if (size == GAL_Medium)
         n_stars = 25;
     if (size == GAL_Large)
@@ -293,15 +293,15 @@ Galaxy* ExodusState::get_galaxy() {
     return &galaxy;
 }
 
-unsigned int ExodusState::get_n_human_players() {
+int ExodusState::get_n_human_players() {
     return n_players;
 }
 
-unsigned int ExodusState::get_month() {
+int ExodusState::get_month() {
     return month;
 }
 
-unsigned int ExodusState::get_orig_month() {
+int ExodusState::get_orig_month() {
     /*
      * For some reason, the original tracks months at 1 greater than what is
      * displayed in the UI. The 'months' variable is set to 2 during some of
@@ -324,7 +324,7 @@ int ExodusState::get_active_player_idx() {
     return (int)active_player;
 }
 
-Player* ExodusState::set_active_player(unsigned int idx) {
+Player* ExodusState::set_active_player(int idx) {
     if (idx >= N_PLAYERS) {
         L.fatal("Attempt to set invalid player active %d", idx);
     }
@@ -338,7 +338,7 @@ Star* ExodusState::get_active_star() {
     return &(get_galaxy()->get_stars()[active_star]);
 }
 
-unsigned int ExodusState::get_active_star_idx() {
+int ExodusState::get_active_star_idx() {
     return active_star;
 }
 
@@ -445,9 +445,9 @@ Player* ExodusState::get_random_active_player() {
 int ExodusState::get_n_owned_planets() {
     int n_owned_planets = 0;
     Galaxy *gal = get_galaxy();
-    unsigned int n_stars;
+    int n_stars;
     Star *stars = gal->get_stars(n_stars);
-    for (unsigned int star_idx = 0; star_idx < n_stars; ++star_idx) {
+    for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
         Star *s = &stars[star_idx];
         for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
             Planet *p = s->get_planet(planet_idx);
@@ -464,9 +464,9 @@ PlanetInfo ExodusState::get_random_owned_planet_info() {
     int n_owned_planets = get_n_owned_planets();
     int rand_idx = rand() % n_owned_planets;
     Galaxy *gal = get_galaxy();
-    unsigned int n_stars;
+    int n_stars;
     Star *stars = gal->get_stars(n_stars);
-    for (unsigned int star_idx = 0; star_idx < n_stars; ++star_idx) {
+    for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
         Star *s = &stars[star_idx];
         for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
             Planet *p = s->get_planet(planet_idx);
@@ -484,12 +484,12 @@ PlanetInfo ExodusState::get_random_owned_planet_info() {
     return info;
 }
 
-unsigned int ExodusState::get_n_planets(Player* player) {
+int ExodusState::get_n_planets(Player* player) {
     Galaxy *gal = get_galaxy();
-    unsigned int n_stars;
+    int n_stars;
     Star *stars = gal->get_stars(n_stars);
-    unsigned int count = 0;
-    for (unsigned int i = 0; i < n_stars; ++i) {
+    int count = 0;
+    for (int i = 0; i < n_stars; ++i) {
         for (int j = 0; j < STAR_MAX_PLANETS; ++j) {
             Planet *p = stars[i].get_planet(j);
             if (p && p->exists() && p->is_owned() && get_player(p->get_owner()) == player) {
@@ -513,10 +513,10 @@ PlanetInfo ExodusState::recommend_planet() {
     int quality = -1;
 
     Galaxy *gal = get_galaxy();
-    unsigned int n_stars;
+    int n_stars;
     Star *stars = gal->get_stars(n_stars);
 
-    for (unsigned int star_idx = 0; star_idx < n_stars; ++star_idx) {
+    for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
         Star *s = &stars[star_idx];
         for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
             Planet *p = s->get_planet(planet_idx);
