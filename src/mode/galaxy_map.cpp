@@ -607,7 +607,11 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     }
 
     if (mp_state.mpai_stage == MPAI_UpdateTaxes) {
-        // TODO
+        if (exostate.get_orig_month() < 25) {
+            player->set_tax(0);
+        } else if (player->get_tactic() != 6) {
+            player->init_tax();
+        }
         next_mpai_stage();
     }
 
