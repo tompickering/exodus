@@ -171,6 +171,7 @@ void ExodusState::init(GameConfig config) {
         players[i].reputation = 3;
         players[i].init_tax();
         players[i].set_tactic(0);
+        players[i].set_random_hostility(N_PLAYERS, i);
     }
 
     aim = config.aim;

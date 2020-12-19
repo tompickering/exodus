@@ -364,3 +364,18 @@ int Player::get_tactic() {
 void Player::set_tactic(int tactic) {
     ai_tactic = tactic;
 }
+
+bool Player::is_hostile_to(int p) {
+    return p == ai_hostile_to;
+}
+
+void Player::set_hostile_to(int p) {
+    ai_hostile_to = p;
+}
+
+void Player::set_random_hostility(int n, int avoid) {
+    ai_hostile_to = rand() % (n-1);
+    if (ai_hostile_to == avoid) {
+        ai_hostile_to++;
+    }
+}

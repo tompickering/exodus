@@ -135,6 +135,9 @@ class Player {
         AIFlag get_flag(int);
         int get_tactic();
         void set_tactic(int);
+        bool is_hostile_to(int);
+        void set_hostile_to(int);
+        void set_random_hostility(int, int);
     private:
         Race race;
         Gender gender;
@@ -160,6 +163,7 @@ class Player {
         // AI
         AIFlag ai_flags[9];
         int ai_tactic;
+        int ai_hostile_to;
 
     // The ExodusState sets up the player data during game init.
     friend class ExodusState;
