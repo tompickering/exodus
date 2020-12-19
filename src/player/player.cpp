@@ -35,6 +35,8 @@ Player::Player() {
     inventions = 0;
     guild_member = false;
     ai_tactic = 0;
+
+    set_tax(30);
 }
 
 void Player::init_alien_name(int idx) {
@@ -315,6 +317,37 @@ InventionType Player::get_invention_type(Invention inv) {
 
 const Fleet& Player::get_fleet() {
     return fleet;
+}
+
+void Player::init_tax() {
+    tax = 30;
+    if (race != RACE_Human) {
+        if (get_flag(4) == AI_Hi) {
+            adjust_tax(-10);
+        }
+        if (get_flag(8) == AI_Hi) {
+            adjust_tax(10);
+        }
+        if (get_flag(8) == AI_Lo) {
+            adjust_tax(-10);
+        }
+    }
+}
+
+int Player::get_tax() {
+    return tax;
+}
+
+void Player::adjust_tax(int adj) {
+    tax += adj;
+    if (tax < 0) tax = 0;
+    if (tax > 100) tax = 100;
+}
+
+void Player::set_tax(int t) {
+    tax = t;
+    if (tax < 0) tax = 0;
+    if (tax > 100) tax = 100;
 }
 
 AIFlag Player::get_flag(int idx) {

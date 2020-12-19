@@ -126,6 +126,10 @@ class Player {
         bool has_invention(Invention);
         InventionType get_invention_type(Invention);
         const Fleet& get_fleet();
+        void init_tax();
+        int get_tax();
+        void set_tax(int);
+        void adjust_tax(int);
 
         // AI
         AIFlag get_flag(int);
@@ -151,6 +155,7 @@ class Player {
         int reputation;
         void refresh_full_name();
         bool guild_member;
+        int tax;  // Orig: t%
 
         // AI
         AIFlag ai_flags[9];
