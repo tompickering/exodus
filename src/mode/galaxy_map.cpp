@@ -1022,7 +1022,12 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     if (mp_state.mpp_stage == MPP_Income) {
         // TODO - Check the weird case in PROCcal_plan based on the t% DIM
         if (owner) {
-            owner->give_mc(p->get_net_income());
+            int income = p->get_net_income();
+            // If income is 1, we allow it to remain at 1 if taxes are <50%
+            if (!(income == 1 && owner->get_tax() < 50)) {
+                income = (income * (100 - owner->get_tax())) / 100;
+            }
+            owner->give_mc(income);
         }
         next_mpp_stage();
     }
