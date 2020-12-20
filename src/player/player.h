@@ -136,6 +136,7 @@ class Player {
         int get_tactic();
         void set_tactic(int);
         bool is_hostile_to(int);
+        int get_hostile_to();
         void set_hostile_to(int);
         void set_random_hostility(int, int);
         void clear_hostility();

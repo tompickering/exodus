@@ -370,6 +370,10 @@ bool Player::is_hostile_to(int p) {
     return p == ai_hostile_to;
 }
 
+int Player::get_hostile_to() {
+    return ai_hostile_to;
+}
+
 void Player::set_hostile_to(int p) {
     ai_hostile_to = p;
 }
