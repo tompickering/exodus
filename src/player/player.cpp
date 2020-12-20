@@ -35,6 +35,7 @@ Player::Player() {
     inventions = 0;
     guild_member = false;
     ai_tactic = 0;
+    clear_hostility();
 
     set_tax(30);
 }
@@ -378,4 +379,8 @@ void Player::set_random_hostility(int n, int avoid) {
     if (ai_hostile_to == avoid) {
         ai_hostile_to++;
     }
+}
+
+void Player::clear_hostility() {
+    ai_hostile_to = -1;
 }
