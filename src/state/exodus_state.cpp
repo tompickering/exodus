@@ -546,3 +546,15 @@ PlanetInfo ExodusState::recommend_planet() {
     }
     return info;
 }
+
+Player* ExodusState::get_hostile_to(Player& p) {
+    Player *result = nullptr;
+    int hostile_to_idx = p.get_hostile_to();
+    if (hostile_to_idx >= 0) {
+        Player *hostile_to = get_player(hostile_to_idx);
+        if (hostile_to && hostile_to->is_participating()) {
+            result = hostile_to;
+        }
+    }
+    return result;
+}
