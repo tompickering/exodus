@@ -171,7 +171,7 @@ void ExodusState::init(GameConfig config) {
         players[i].reputation = 3;
         players[i].init_tax();
         players[i].set_tactic(0);
-        players[i].set_random_hostility(N_PLAYERS, i);
+        set_random_hostility(players[i]);
     }
 
     aim = config.aim;
@@ -557,4 +557,23 @@ Player* ExodusState::get_hostile_to(Player& p) {
         }
     }
     return result;
+}
+
+void ExodusState::set_random_hostility(Player& p) {
+    int count = 0;
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        if ((&players[i] != &p) && players[i].is_participating()) {
+            count++;
+        }
+    }
+    int idx = rand() % count;
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        if ((&players[i] != &p) && players[i].is_participating()) {
+            if (idx == 0) {
+                p.set_hostile_to(idx);
+                return;
+            }
+            idx--;
+        }
+    }
 }

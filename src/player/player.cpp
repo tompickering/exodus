@@ -378,13 +378,6 @@ void Player::set_hostile_to(int p) {
     ai_hostile_to = p;
 }
 
-void Player::set_random_hostility(int n, int avoid) {
-    ai_hostile_to = rand() % (n-1);
-    if (ai_hostile_to == avoid) {
-        ai_hostile_to++;
-    }
-}
-
 void Player::clear_hostility() {
     ai_hostile_to = -1;
 }

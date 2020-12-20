@@ -92,6 +92,7 @@ class ExodusState {
         bool active_player_local(); // Is the active player at the active flytarget?
         PlanetInfo recommend_planet();
         Player* get_hostile_to(Player&);
+        void set_random_hostility(Player&);
         bool first_city_done;
         bool first_spaceport_done;
     private:
