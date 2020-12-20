@@ -587,7 +587,15 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     }
 
     if (mp_state.mpai_stage == MPAI_Hostilities) {
-        // TODO
+        if (onein(40)) {
+            // If we're hostile to no-one, 1/40 chance we gain a hostility
+            Player *hostile_to = exostate.get_hostile_to(*player);
+            if (hostile_to) {
+                player->clear_hostility();
+            } else {
+                exostate.set_random_hostility(*player);
+            }
+        }
         next_mpai_stage();
     }
 
