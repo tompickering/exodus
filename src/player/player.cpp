@@ -375,9 +375,10 @@ int Player::get_hostile_to() {
 }
 
 void Player::set_hostile_to(int p) {
+    L.debug("%s: HOSTILE TO %d", get_full_name(), p);
     ai_hostile_to = p;
 }
 
 void Player::clear_hostility() {
-    ai_hostile_to = -1;
+    set_hostile_to(-1);
 }
