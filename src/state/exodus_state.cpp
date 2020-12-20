@@ -570,7 +570,7 @@ void ExodusState::set_random_hostility(Player& p) {
     for (int i = 0; i < N_PLAYERS; ++i) {
         if ((&players[i] != &p) && players[i].is_participating()) {
             if (idx == 0) {
-                p.set_hostile_to(idx);
+                p.set_hostile_to(i);
                 return;
             }
             idx--;
