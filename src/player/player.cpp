@@ -209,11 +209,18 @@ bool Player::can_afford(int cost) {
 }
 
 bool Player::attempt_spend(int cost) {
+    return attempt_spend_with_remaining(cost, 0);
+}
+
+bool Player::attempt_spend_with_remaining(int cost, int remaining) {
     if (cost < 0) {
-        L.warn("Calling attempt_spend() with -ve value %d", cost);
+        L.warn("Calling attempt_spend_with_remaining() with -ve value %d", cost);
+    }
+    if (remaining < 0) {
+        L.warn("Calling attempt_spend_with_remaining() with -ve remaining value %d", cost);
     }
 
-    if (can_afford(cost)) {
+    if (can_afford(cost + remaining)) {
         mc -= cost;
         return true;
     }

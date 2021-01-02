@@ -131,6 +131,7 @@ class Player {
         void give_mc(int);
         bool can_afford(int);
         bool attempt_spend(int);
+        bool attempt_spend_with_remaining(int, int);
         const char *get_fleet_marker();
         void set_fleet_marker(const char*);
         PlayerLocation& get_location();
