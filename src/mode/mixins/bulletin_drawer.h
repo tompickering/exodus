@@ -27,10 +27,12 @@ class BulletinDrawer {
         void bulletin_ensure_closed();
         bool bulletin_is_open();
         bool bulletin_acknowledged();
+        bool bulletin_was_yesno_yes();
         void bulletin_set_bg(const char*);
         void bulletin_set_flag(const char*);
         void bulletin_set_player_flag(Player*);
         void bulletin_set_active_player_flag();
+        void bulletin_set_yesno();
     private:
         void bulletin_open();    // Open using bulletin_start_new()
         void bulletin_close();   // Close using bulletin_ensure_closed()
@@ -49,6 +51,7 @@ class BulletinDrawer {
         SprID id_bulletin_bg;
         SprID id_bulletin_bg_scan;
         SprID id_bulletin_text[BULLETIN_LINES];
+        SprID id_bulletin_yesno;
 
         void bulletin_draw_text();
         int bulletin_text_y(int);
@@ -58,6 +61,9 @@ class BulletinDrawer {
         float bulletin_transition;
 
         bool bulletin_redraws_needed;
+
+        bool bulletin_is_yesno;
+        bool bulletin_yesno_was_yes;
 };
 
 #endif
