@@ -172,6 +172,9 @@ void ExodusState::init(GameConfig config) {
         players[i].init_tax();
         players[i].set_tactic(0);
         set_random_hostility(players[i]);
+        for (int j = 0; j < OFF_MAX; ++j) {
+            players[i].set_officer((Officer)j, OFFQ_Poor);
+        }
     }
 
     aim = config.aim;

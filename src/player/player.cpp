@@ -351,6 +351,23 @@ void Player::set_tax(int t) {
     if (tax > 100) tax = 100;
 }
 
+OfficerQuality Player::get_officer(Officer off) {
+    if (off >= OFF_MAX) {
+        L.fatal("Requested invalid officer %d (max is %d)", off, OFF_MAX-1);
+    }
+    return officers[off];
+}
+
+void Player::set_officer(Officer off, OfficerQuality off_q) {
+    if (off >= OFF_MAX) {
+        L.fatal("Setting invalid officer %d (max is %d)", off, OFF_MAX-1);
+    }
+    if (off_q >= OFFQ_MAX) {
+        L.fatal("Setting invalid officer quality %d (max is %d)", off, OFFQ_MAX-1);
+    }
+    officers[off] = off_q;
+}
+
 AIFlag Player::get_flag(int idx) {
     if (idx >= 9) {
         L.fatal("Tried to access AI flag > maximum (%d)", idx);

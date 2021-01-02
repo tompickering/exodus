@@ -74,6 +74,22 @@ enum InventionType {
     IT_Weapon,
 };
 
+enum Officer {
+    OFF_Science,
+    OFF_Fleet,
+    OFF_Battle,
+    OFF_Secret,
+    OFF_Counsellor,
+    OFF_MAX
+};
+
+enum OfficerQuality {
+    OFFQ_Poor,
+    OFFQ_Average,
+    OFFQ_Good,
+    OFFQ_MAX,
+};
+
 enum Gender {
     GENDER_Female,
     GENDER_Male,
@@ -130,6 +146,8 @@ class Player {
         int get_tax();
         void set_tax(int);
         void adjust_tax(int);
+        OfficerQuality get_officer(Officer);
+        void set_officer(Officer, OfficerQuality);
 
         // AI
         AIFlag get_flag(int);
@@ -160,6 +178,7 @@ class Player {
         void refresh_full_name();
         bool guild_member;
         int tax;  // Orig: t%
+        OfficerQuality officers[OFF_MAX];  // Orig: Ps%
 
         // AI
         AIFlag ai_flags[9];
