@@ -634,7 +634,25 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     }
 
     if (mp_state.mpai_stage == MPAI_NewOfficers) {
-        // TODO
+        if (exostate.get_orig_month() > 20 && onein(2)) {
+            for (int i = 0; i < 3; ++i) {
+                Officer off = OFF_Battle;
+                if (i == 1) off = OFF_Science;
+                if (i == 2) off = OFF_Secret;
+                if (player->get_officer(off) < OFFQ_Good) {
+                    if (player->attempt_spend_with_remaining(800, 1)) {
+                        player->set_officer(off, OFFQ_Good);
+                        break;
+                    }
+                }
+                if (player->get_officer(off) < OFFQ_Average) {
+                    if (player->attempt_spend_with_remaining(400, 1)) {
+                        player->set_officer(off, OFFQ_Average);
+                        break;
+                    }
+                }
+            }
+        }
         next_mpai_stage();
     }
 
