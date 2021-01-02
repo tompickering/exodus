@@ -228,6 +228,10 @@ ExodusMode GalaxyMap::update(float delta) {
                         do_lunar_battle = false;
                         bulletin_ensure_closed();
                         return ephstate.get_appropriate_mode();
+                    } else if (ephstate.get_ephemeral_state() == EPH_ResearchCheck) {
+                        ephstate.research.done = bulletin_was_yesno_yes();
+                        bulletin_ensure_closed();
+                        return ephstate.get_appropriate_mode();
                     }
                 }
                 ExodusMode next_mode = month_pass_update();
@@ -774,7 +778,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                         bulletin_set_next_text("project.");
                         bulletin_set_next_text("");
                         bulletin_set_next_text("Do you wish to pay?");
-                        // TODO: Bulletin buttons, respond to yes / no
+                        bulletin_set_yesno();
                         next_mpp_stage();
                         return ExodusMode::MODE_None;
                     }
@@ -790,6 +794,10 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     if (mp_state.mpp_stage == MPP_Research) {
         if (ephstate.research.done) {
+            L.debug("%s: RESEARCH (%dMC)", owner->get_full_name(), ephstate.research.cost);
+            if (!owner->attempt_spend(ephstate.research.cost)) {
+                L.fatal("Option was given to spend more on research than player's MC");
+            }
             // TODO
             ephstate.research.done = false;
         }
