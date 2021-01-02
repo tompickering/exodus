@@ -31,6 +31,8 @@ ExodusMode EphemeralState::get_appropriate_mode() {
             return ExodusMode::MODE_Pop;
         case EPH_Destruction:
             return ExodusMode::MODE_PlanetMap;
+        case EPH_ResearchCheck:
+            return ExodusMode::MODE_None;
     }
 
     return ExodusMode::MODE_None;

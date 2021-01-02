@@ -3,6 +3,7 @@
 #include "assetpaths.h"
 
 #include "util/str.h"
+#include "util/value.h"
 
 #define BLINK_TIME 0.5
 
@@ -745,8 +746,53 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
-    if (mp_state.mpp_stage == MPP_Research1) {
-        // TODO
+    if (mp_state.mpp_stage == MPP_ResearchCheck) {
+        ephstate.research.done = false;
+        if (exostate.get_orig_month() > 2 && p->has_stone(STONE_City)) {
+            int threshold = 1;
+            int q = (int)owner->get_officer(OFF_Science);
+            // This means threshold can be -ve - I wonder if the -2 here
+            // mistakenly assumed that the quality started from 1...?
+            threshold += 2*q - 2;
+            threshold += owner->get_tax() / 20;
+            if (RND(40) <= threshold) {
+                if (owner->is_human()) {
+                    // If we're a human player, we need to exit to ask if
+                    // they wish to pay for the invension (PROCscimoney)
+                    ephstate.research.cost = max(10 * (RND(owner->get_mc()) / 50), 20);
+                    if (owner->can_afford(ephstate.research.cost)) {
+                        ephstate.set_ephemeral_state(EPH_ResearchCheck);
+                        bulletin_start_new(true);
+                        bulletin_set_bg(p->sprites()->bulletin_bg);
+                        bulletin_set_active_player_flag();
+                        bulletin_write_planet_info(s, p);
+                        bulletin_set_next_text("Request from scientists");
+                        bulletin_set_next_text("");
+                        bulletin_set_next_text("The scientists of %s demand", p->get_name());
+                        bulletin_set_next_text("%d MC from you to support their latest",
+                                               ephstate.research.cost);
+                        bulletin_set_next_text("project.");
+                        bulletin_set_next_text("");
+                        bulletin_set_next_text("Do you wish to pay?");
+                        // TODO: Bulletin buttons, respond to yes / no
+                        next_mpp_stage();
+                        return ExodusMode::MODE_None;
+                    }
+                } else {
+                    // CPU players will always get the research free of charge
+                    ephstate.research.cost = 0;
+                    ephstate.research.done = true;
+                }
+            }
+        }
+        next_mpp_stage();
+    }
+
+    if (mp_state.mpp_stage == MPP_Research) {
+        if (ephstate.research.done) {
+            // TODO
+            ephstate.research.done = false;
+        }
         next_mpp_stage();
     }
 
@@ -920,7 +966,12 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
-    if (mp_state.mpp_stage == MPP_Research2) {
+    if (mp_state.mpp_stage == MPP_AlienResearchCheck) {
+        // TODO
+        next_mpp_stage();
+    }
+
+    if (mp_state.mpp_stage == MPP_AlienResearch) {
         // TODO
         next_mpp_stage();
     }

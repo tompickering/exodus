@@ -60,12 +60,18 @@ typedef struct {
     bool show_target;
 } PlanetDestruction;
 
+typedef struct {
+    bool done;
+    int cost;
+} Research;
+
 enum EphState {
     EPH_None,
     EPH_LunarBattlePrep,
     EPH_LunarBattle,
     EPH_LunarBattleReport,
     EPH_Destruction,
+    EPH_ResearchCheck,
 };
 
 class EphemeralState {
@@ -79,6 +85,7 @@ class EphemeralState {
         LunarBattleParams lunar_battle;
         LunarBattleReport lunar_battle_report;
         PlanetDestruction destruction;
+        Research research;
     private:
         EphState eph_state;
 
