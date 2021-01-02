@@ -372,6 +372,7 @@ void Player::set_officer(Officer off, OfficerQuality off_q) {
     if (off_q >= OFFQ_MAX) {
         L.fatal("Setting invalid officer quality %d (max is %d)", off, OFFQ_MAX-1);
     }
+    L.debug("%s: NEW OFFICER %d: %d->%d", get_full_name(), off, officers[off], off_q);
     officers[off] = off_q;
 }
 
