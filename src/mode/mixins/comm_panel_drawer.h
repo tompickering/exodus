@@ -80,6 +80,8 @@ class CommPanelDrawer {
         bool comm_speech;
 
         SprID id_comm_panel;
+        SprID id_comm_bg_t;
+        SprID id_comm_bg_b;
         SprID id_comm_title;
         SprID id_comm_img;
         SprID id_comm_buttons;

@@ -208,6 +208,8 @@ void CommPanelDrawer::comm_open(int text_slots) {
     }
 
     id_comm_panel = draw_manager.new_sprite_id();
+    id_comm_bg_t  = draw_manager.new_sprite_id();
+    id_comm_bg_b  = draw_manager.new_sprite_id();
     id_comm_title = draw_manager.new_sprite_id();
     id_comm_img = draw_manager.new_sprite_id();
     id_comm_buttons = draw_manager.new_sprite_id();
@@ -227,11 +229,13 @@ void CommPanelDrawer::comm_open(int text_slots) {
          196, 208},
          {0, 0, 0});
     draw_manager.fill_pattern(
+        id_comm_bg_t,
         {COMM_RCOL_X,
          COMM_Y + COMM_BORDER,
          COMM_X + COMM_W - COMM_RCOL_X - COMM_BORDER,
          28});
     draw_manager.fill_pattern(
+        id_comm_bg_b,
         {COMM_RCOL_X,
          COMM_Y + 28 + COMM_BORDER*2,
          COMM_X + COMM_W - COMM_RCOL_X - COMM_BORDER,
@@ -305,6 +309,11 @@ void CommPanelDrawer::comm_close() {
     draw_manager.release_sprite_id(id_comm_title);
     draw_manager.release_sprite_id(id_comm_img);
     draw_manager.release_sprite_id(id_comm_buttons);
+
+    draw_manager.draw(id_comm_bg_t, nullptr);
+    draw_manager.draw(id_comm_bg_b, nullptr);
+    draw_manager.release_sprite_id(id_comm_bg_t);
+    draw_manager.release_sprite_id(id_comm_bg_b);
 
     draw_manager.draw(id_comm_panel, nullptr);
     draw_manager.release_sprite_id(id_comm_panel);
