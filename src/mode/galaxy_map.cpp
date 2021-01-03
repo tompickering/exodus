@@ -850,7 +850,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 bulletin_set_next_text("fragments possible.");
             } else {
                 bulletin_set_next_text("A meteor has reached the planet %s", p->get_name());
-                bulletin_set_next_text("and several fragments of it have it");
+                bulletin_set_next_text("and several fragments of it have hit");
                 bulletin_set_next_text("the world's surface.");
                 bulletin_set_next_text("");
 
