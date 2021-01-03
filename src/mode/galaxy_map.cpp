@@ -317,7 +317,6 @@ void GalaxyMap::month_pass_start() {
 }
 
 void GalaxyMap::month_pass_end() {
-    draw_manager.draw(id(ID::MONTH_PASSING), nullptr);
     mp_state.mp_stage = MP_None;
     mp_state.mpai_stage = (MonthPassAIStage)0;
     mp_state.mpp_stage = (MonthPassPlanetStage)0;
@@ -366,6 +365,7 @@ ExodusMode GalaxyMap::month_pass_update() {
     if (mp_state.mp_stage == MP_TimeDelay) {
         // Time delay here so the "Month passing" notification doesn't flicker.
         if (mp_state.month_pass_time > 1.f) {
+            draw_manager.draw(id(ID::MONTH_PASSING), nullptr);
             next_mp_stage();
         } else {
             return ExodusMode::MODE_None;
