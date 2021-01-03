@@ -794,12 +794,43 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     if (mp_state.mpp_stage == MPP_Research) {
         if (ephstate.research.done) {
-            L.debug("%s: RESEARCH (%dMC)", owner->get_full_name(), ephstate.research.cost);
+            ephstate.research.done = false;
             if (!owner->attempt_spend(ephstate.research.cost)) {
                 L.fatal("Option was given to spend more on research than player's MC");
             }
-            // TODO
-            ephstate.research.done = false;
+            Invention inv = owner->get_random_researchable_invention();
+            L.debug("%s: RESEARCH %d (%dMC)",
+                    owner->get_full_name(),
+                    inv,
+                    ephstate.research.cost);
+            if (inv != INV_MAX) {
+                if (!owner->research_invention(inv)) {
+                    L.fatal("Unable to research invention identified as researchable");
+                }
+                int mc_reward = RND(10) * 10;
+                if (owner->is_human()) {
+                    bulletin_start_new(false);
+                    bulletin_set_bg(IMG_ME7_MENU);
+                    bulletin_set_active_player_flag();
+                    bulletin_set_text_col(COL_TEXT2);
+                    bulletin_set_next_text("New invention: %s", owner->get_invention_str(inv));
+                    bulletin_set_text_col(COL_TEXT_SPEECH);
+                    bulletin_set_next_text("(%s Research)", owner->get_invention_type_str(inv));
+                    // TODO: Descriptions
+                    // TODO: "This makes possible:"
+                    if (inv > INV_UniversalVaccine) {
+                        // TODO: Show awarded credits
+                        owner->give_mc(mc_reward);
+                    }
+                    next_mpp_stage();
+                    return ExodusMode::MODE_None;
+                } else {
+                    // CPU players get MC for all inventions - not just the later ones
+                    owner->give_mc(mc_reward);
+                }
+            } else {
+                // TODO: New species discovery if all inventions researched
+            }
         }
         next_mpp_stage();
     }
