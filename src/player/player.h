@@ -49,6 +49,7 @@ typedef struct {
     Freight freight;
 } Fleet;
 
+// N.B. This is sensitive to order
 enum Invention {
     INV_MassProduction,           // 1   -
     INV_UltraRangeScanner,        // 2    |
@@ -64,6 +65,7 @@ enum Invention {
     INV_IndustryGuard,            // 12   |
     INV_DreamInfluence,           // 13   |
     INV_RadarExtension,           // 14  -
+    INV_MAX
 };
 
 enum InventionType {
@@ -141,7 +143,11 @@ class Player {
         bool can_research(Invention);
         bool research_invention(Invention);
         bool has_invention(Invention);
+        bool has_all_inventions();
+        Invention get_random_researchable_invention();
         InventionType get_invention_type(Invention);
+        const char* get_invention_str(Invention);
+        const char* get_invention_type_str(Invention);
         const Fleet& get_fleet();
         void init_tax();
         int get_tax();

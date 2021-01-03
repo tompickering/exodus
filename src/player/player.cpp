@@ -303,6 +303,38 @@ bool Player::has_invention(Invention inv) {
     return (bool)(inventions & (1 << (int)inv));
 }
 
+bool Player::has_all_inventions() {
+    for (int i = 0; i < (int)INV_MAX; ++i) {
+        if (!has_invention((Invention)i)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+Invention Player::get_random_researchable_invention() {
+    int count = 0;
+    for (int i = 0; i < (int)INV_MAX; ++i) {
+        if (can_research((Invention)i)) {
+            ++count;
+        }
+    }
+    if (count == 0) {
+        return INV_MAX;
+    }
+    int idx = rand() % count;
+    for (int i = 0; i < (int)INV_MAX; ++i) {
+        if (can_research((Invention)i)) {
+            if (idx == 0) {
+                return (Invention)i;
+            }
+            --idx;
+        }
+    }
+    L.fatal("Could not find researchable invention which we checked exists");
+    return INV_MAX;
+}
+
 InventionType Player::get_invention_type(Invention inv) {
     if (inv == INV_MassProduction)          return IT_Physical;
     if (inv == INV_UltraRangeScanner)       return IT_Electronical;
@@ -321,6 +353,36 @@ InventionType Player::get_invention_type(Invention inv) {
 
     L.fatal("Requested type for invalid invention %d", inv);
     return IT_Mechanical;
+}
+
+const char* Player::get_invention_str(Invention inv) {
+    if (inv == INV_MassProduction)          return "Mass Production System";
+    if (inv == INV_UltraRangeScanner)       return "Ultra Range Scanner";
+    if (inv == INV_FusionEngine)            return "Fusion Engine";
+    if (inv == INV_MicroMechanicElements)   return "Micro Mechanic Elements";
+    if (inv == INV_UniversalVaccine)        return "Universal Vaccine";
+    if (inv == INV_OrbitalBombs)            return "Orbital Bombs";
+    if (inv == INV_OrbitalMassConstruction) return "Orbital Mass Construction";
+    if (inv == INV_OrbitalMassThrust)       return "Orbital Mass Thrust";
+    if (inv == INV_WeatherInfluence)        return "Weather Influence";
+    if (inv == INV_MultiFunctionalVaccine)  return "Multi-Functional Vaccine";
+    if (inv == INV_Acid)                    return "Highly Sensitive Acid";
+    if (inv == INV_IndustryGuard)           return "Industry Guard Computer";
+    if (inv == INV_DreamInfluence)          return "Dream Influencing System";
+    if (inv == INV_RadarExtension)          return "Radar Extension & Manipul.";
+    L.fatal("Requested name for invalid invention %d", (int)inv);
+    return "<NO INVENTION>";
+}
+
+const char* Player::get_invention_type_str(Invention inv) {
+    InventionType t = get_invention_type(inv);
+    if (t == IT_Physical)     return "Physical";
+    if (t == IT_Mechanical)   return "Mechanical";
+    if (t == IT_Electronical) return "Electronic";
+    if (t == IT_Medical)      return "Medical";
+    if (t == IT_Weapon)       return "Weapon";
+    L.fatal("Requested name for invalid type %d of invention %d", (int)t, (int)inv);
+    return "<NO INVENTION TYPE>";
 }
 
 const Fleet& Player::get_fleet() {
