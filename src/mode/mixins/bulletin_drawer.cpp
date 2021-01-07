@@ -145,6 +145,7 @@ void BulletinDrawer::bulletin_open() {
     id_bulletin_header_l = draw_manager.new_sprite_id();
     id_bulletin_header_r = draw_manager.new_sprite_id();
     id_bulletin_panel = draw_manager.new_sprite_id();
+    id_bulletin_black = draw_manager.new_sprite_id();
     id_bulletin_bg = draw_manager.new_sprite_id();
     id_bulletin_bg_scan = draw_manager.new_sprite_id();
     id_bulletin_yesno = draw_manager.new_sprite_id();
@@ -162,6 +163,7 @@ void BulletinDrawer::bulletin_open() {
     bulletin_set_bg(nullptr);
 
     draw_manager.fill(
+        id_bulletin_black,
         {BULLETIN_X + BULLETIN_BORDER,
          BULLETIN_Y + BULLETIN_BORDER,
          436, 306},
@@ -201,14 +203,18 @@ void BulletinDrawer::bulletin_close() {
     }
 
     draw_manager.draw(id_bulletin_panel, nullptr);
+    draw_manager.draw(id_bulletin_black, nullptr);
     draw_manager.draw(id_bulletin_header_flag, nullptr);
     draw_manager.draw(id_bulletin_header_l, nullptr);
     draw_manager.draw(id_bulletin_header_r, nullptr);
+    draw_manager.draw(id_bulletin_bg, nullptr);
+    draw_manager.draw(id_bulletin_bg_scan, nullptr);
 
     draw_manager.release_sprite_id(id_bulletin_header_flag);
     draw_manager.release_sprite_id(id_bulletin_header_l);
     draw_manager.release_sprite_id(id_bulletin_header_r);
     draw_manager.release_sprite_id(id_bulletin_panel);
+    draw_manager.release_sprite_id(id_bulletin_black);
     draw_manager.release_sprite_id(id_bulletin_bg);
     draw_manager.release_sprite_id(id_bulletin_bg_scan);
     draw_manager.release_sprite_id(id_bulletin_yesno);
