@@ -293,6 +293,7 @@ void BulletinDrawer::bulletin_update_bg() {
     } else {
         // nullptr -> black background
         draw_manager.fill(
+            id_bulletin_black,
             {BULLETIN_BG_X,
              BULLETIN_BG_Y,
              436, h},
