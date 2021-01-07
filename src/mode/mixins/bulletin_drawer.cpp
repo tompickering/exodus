@@ -299,15 +299,16 @@ void BulletinDrawer::bulletin_update_bg() {
              {0, 0, 0});
     }
 
-    if (bulletin_transition == 1) {
-        // The above will have drawn over the last scan bar
-        draw_manager.save_background({BULLETIN_X, BULLETIN_Y,
-                                      BULLETIN_W, BULLETIN_H});
-    } else if (h < 434) { // Ensures we don't draw lower then the bg area
+    // Ensure we don't draw lower then the bg area
+    if (bulletin_transition < 1 && h < 434) {
         draw_manager.fill(
             id_bulletin_bg_scan,
             {BULLETIN_BG_X, BULLETIN_BG_Y + h, 436, 2},
              {0, 0, 0xFF});
+    } else {
+        draw_manager.draw(
+            id_bulletin_bg_scan,
+            nullptr);
     }
 }
 
