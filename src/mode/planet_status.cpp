@@ -350,6 +350,70 @@ void PlanetStatus::enter() {
         COL_TEXT2);
 
     // TODO: Min / Food / Plu gauges
+    bool see_resources = false;
+    if (p->is_owned() && player == exostate.get_player(p->get_owner())) {
+        see_resources = true;
+    }
+
+    if (local && player->get_fleet().scouts >= 40) {
+        see_resources = true;
+    }
+
+    if (see_resources) {
+        int max = p->get_resource_cap();
+        for (int i = 0; i < 3; ++i) {
+            const char* heading = "M";
+            int val = p->get_reserves_min();
+            RGB col = {0xFF, 0, 0};
+
+            if (i == 1) {
+                heading = "F";
+                val = p->get_reserves_food();
+                col = {0, 0, 0xFF};
+            }
+
+            if (i == 2) {
+                heading = "P";
+                val = p->get_reserves_plu();
+                col = {0, 0xFF, 0};
+            }
+
+            int x = 39 + 20*i;
+            int y = 200;
+            int w = 8;
+            int h = 80;
+
+            int prop = (val * h) / max;
+
+            draw_manager.fill(
+                {x+1, y+h-prop, w-1, prop},
+                col
+            );
+
+            draw_manager.fill(
+                {x, y, 1, h+1},
+                COL_TEXT2
+            );
+            draw_manager.fill(
+                {x+w, y, 1, h+1},
+                COL_TEXT2
+            );
+            draw_manager.fill(
+                {x, y, w, 1},
+                COL_TEXT2
+            );
+            draw_manager.fill(
+                {x, y+h, w, 1},
+                COL_TEXT2
+            );
+            draw_manager.draw_text(
+                heading,
+                Justify::Centre,
+                x+(w/2), y+h+12,
+                COL_TEXT2
+            );
+        }
+    }
 
     draw_manager.save_background();
     draw_manager.show_cursor(true);
