@@ -218,7 +218,7 @@ ExodusMode StarMap::update(float delta) {
             // there should really just be the one button.
             if (action == CA_Proceed || action == CA_Abort) {
                 comm_close();
-                return ExodusMode::MODE_Reload;
+                stage = SM_Idle;
             }
             break;
         case SM_SettleConfirm:
@@ -234,7 +234,7 @@ ExodusMode StarMap::update(float delta) {
                 stage = SM_NamePlanet;
             } else if (action == CA_Abort) {
                 comm_close();
-                return ExodusMode::MODE_Reload;
+                stage = SM_Idle;
             }
             break;
         case SM_NamePlanet:
@@ -261,7 +261,7 @@ ExodusMode StarMap::update(float delta) {
             action = comm_check_action();
             if (action != CA_None) {
                 comm_close();
-                return ExodusMode::MODE_Reload;
+                stage = SM_Idle;
             }
             return ExodusMode::MODE_None;
             break;

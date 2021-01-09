@@ -242,8 +242,6 @@ ExodusMode GalaxyMap::update(float delta) {
                     bulletin_ensure_closed();
                     // The only place we emerge from month-pass-specific stages...
                     stage = GM_Idle;
-                    // This ensures that the screen is redrawn after the bulletin closes
-                    return ExodusMode::MODE_Reload;
                 }
                 return next_mode;
             }
