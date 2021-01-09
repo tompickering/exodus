@@ -205,6 +205,18 @@ void MenuDrawer::menu_open_specific_mode() {
         case MM_Save:
             break;
         case MM_Stat:
+            menu_set_txt(0, COL_TEXT2, "Please select, %s", p->get_ref());
+            menu_set_opt(2, "General Information");
+            menu_set_opt(3, "Fleet Information");
+            // TODO: Hotkey
+            menu_set_opt(4, "Recall Latest News (R)");
+            menu_set_opt(5, "List Planets");
+            menu_set_opt(6, "List Inventions");
+            menu_set_opt(7, "Relationship to Lords");
+            menu_set_opt(9, "Starship Status");
+            menu_set_opt(10, "Starship Damage");
+            menu_set_opt(12, "Statistics");
+            menu_set_opt(14, "Exit Menu");
             break;
         case MM_GenInfo:
             break;
@@ -259,6 +271,19 @@ void MenuDrawer::menu_specific_update() {
         case MM_Save:
             break;
         case MM_Stat:
+            // 2: General Information
+            // 3: Fleet Information
+            // 4: Recall Latest News
+            // 5: List Planets
+            // 6: List Inventions
+            // 7: Relationship to Lords
+            // 9: Starship Status
+            // 10: Starship Damage
+            // 12: Statistics
+            // 14: Exit Menu
+            if (draw_manager.query_click(id_menu_lines[14]).id) {
+                menu_close();
+            }
             break;
         case MM_GenInfo:
             break;
