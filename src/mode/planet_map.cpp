@@ -143,13 +143,16 @@ void PlanetMap::enter() {
     destruction_done = false;
     exploding_stone = STONE_Clear;
 
+    for (int i = 0; i < MAX_STONES; ++i) {
+        id_stones[i] = draw_manager.new_sprite_id();
+    }
+
     if (ephstate.get_ephemeral_state() == EPH_Destruction) {
         draw_menu = false;
         do_animations = false;
         if (ephstate.destruction.draw) {
             draw();
             draw_stones();
-            draw_manager.save_background();
         }
         stage = PM_Destruction;
     } else {
@@ -157,6 +160,12 @@ void PlanetMap::enter() {
         do_animations = true;
         draw();
         stage = PM_Idle;
+    }
+}
+
+void PlanetMap::exit() {
+    for (int i = 0; i < MAX_STONES; ++i) {
+        draw_manager.release_sprite_id(id_stones[i]);
     }
 }
 
@@ -254,8 +263,6 @@ void PlanetMap::draw() {
         planet->sprites()->surf,
         {surf_x, surf_y,
          0, 0, 1, 1});
-
-    draw_manager.save_background();
 
     draw_stones();
 
@@ -414,6 +421,7 @@ void PlanetMap::draw_stones() {
             }
 
             draw_manager.draw(
+                id_stones[y*blocks+x],
                 sprite,
                 {surf_x + x*STONE_SZ, surf_y + y*STONE_SZ,
                  0, 0, 1, 1});

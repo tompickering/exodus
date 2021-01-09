@@ -49,6 +49,7 @@ class PlanetMap : ModeBase {
     public:
         PlanetMap();
         virtual void enter() override;
+        virtual void exit() override;
         virtual ExodusMode update(float) override;
     private:
         void draw();
@@ -110,6 +111,8 @@ class PlanetMap : ModeBase {
         int chained_explosion_idx;
         int chained_explosion_head;
         ChainedExplosion chained_explosions[MAX_CHAINED_EXPLOSIONS];
+
+        SprID id_stones[MAX_STONES];
 };
 
 #endif
