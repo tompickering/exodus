@@ -33,59 +33,62 @@ void MenuDrawer::menu_open(MenuMode mode) {
 
     for (int i = 0; i < MENU_LINES; ++i) {
         strncpy(menu_text[i], "", 1);
+        draw_manager.unset_selectable(id_menu_lines[i]);
     }
 
-    id_menu_header_flag_bg = draw_manager.new_sprite_id();
-    id_menu_header_flag    = draw_manager.new_sprite_id();
-    id_menu_header_l       = draw_manager.new_sprite_id();
-    id_menu_header_r       = draw_manager.new_sprite_id();
-    id_menu_panel          = draw_manager.new_sprite_id();
-    id_menu_bg             = draw_manager.new_sprite_id();
+    if (!_menu_is_open) {
+        id_menu_header_flag_bg = draw_manager.new_sprite_id();
+        id_menu_header_flag    = draw_manager.new_sprite_id();
+        id_menu_header_l       = draw_manager.new_sprite_id();
+        id_menu_header_r       = draw_manager.new_sprite_id();
+        id_menu_panel          = draw_manager.new_sprite_id();
+        id_menu_bg             = draw_manager.new_sprite_id();
 
-    for (int i = 0; i < MENU_LINES; ++i) {
-        id_menu_lines[i] = draw_manager.new_sprite_id();
+        for (int i = 0; i < MENU_LINES; ++i) {
+            id_menu_lines[i] = draw_manager.new_sprite_id();
+        }
+
+        draw_manager.fill(
+            id_menu_panel,
+            {MENU_X, MENU_Y,
+             MENU_W, MENU_H},
+            COL_BORDERS);
+
+        draw_manager.draw(
+            id_menu_bg,
+            IMG_ME1_MENU,
+            {MENU_X + MENU_BORDER,
+             MENU_Y + MENU_BORDER,
+             0, 0, 1, 1});
+
+        // Draw header flag and background
+        draw_manager.fill(
+            id_menu_header_flag_bg,
+            {MENU_FLAG_BG_X, MENU_FLAG_BG_Y,
+             MENU_FLAG_BG_W, MENU_FLAG_BG_H},
+             COL_BORDERS);
+
+        draw_manager.draw(
+            id_menu_header_flag,
+            flags[exostate.get_active_player()->get_flag_idx()],
+            {MENU_FLAG_BG_X + MENU_BORDER,
+             MENU_FLAG_BG_Y + MENU_BORDER,
+             0, 0, 1, 1});
+
+        draw_manager.draw(
+            id_menu_header_l,
+            IMG_TS1_HEADER,
+            {MENU_FLAG_BG_X - 2,
+             MENU_Y - 2,
+             1, 1, 1, 1});
+
+        draw_manager.draw(
+            id_menu_header_r,
+            IMG_TS1_HEADER,
+            {MENU_FLAG_BG_X + MENU_FLAG_BG_W + 2,
+             MENU_Y - 2,
+             0, 1, 1, 1});
     }
-
-    draw_manager.fill(
-        id_menu_panel,
-        {MENU_X, MENU_Y,
-         MENU_W, MENU_H},
-        COL_BORDERS);
-
-    draw_manager.draw(
-        id_menu_bg,
-        IMG_ME1_MENU,
-        {MENU_X + MENU_BORDER,
-         MENU_Y + MENU_BORDER,
-         0, 0, 1, 1});
-
-    // Draw header flag and background
-    draw_manager.fill(
-        id_menu_header_flag_bg,
-        {MENU_FLAG_BG_X, MENU_FLAG_BG_Y,
-         MENU_FLAG_BG_W, MENU_FLAG_BG_H},
-         COL_BORDERS);
-
-    draw_manager.draw(
-        id_menu_header_flag,
-        flags[exostate.get_active_player()->get_flag_idx()],
-        {MENU_FLAG_BG_X + MENU_BORDER,
-         MENU_FLAG_BG_Y + MENU_BORDER,
-         0, 0, 1, 1});
-
-    draw_manager.draw(
-        id_menu_header_l,
-        IMG_TS1_HEADER,
-        {MENU_FLAG_BG_X - 2,
-         MENU_Y - 2,
-         1, 1, 1, 1});
-
-    draw_manager.draw(
-        id_menu_header_r,
-        IMG_TS1_HEADER,
-        {MENU_FLAG_BG_X + MENU_FLAG_BG_W + 2,
-         MENU_Y - 2,
-         0, 1, 1, 1});
 
     menu_open_specific_mode();
 
@@ -195,6 +198,13 @@ void MenuDrawer::menu_open_specific_mode() {
         case MM_NewOfficer:
             break;
         case MM_SecretService:
+            menu_set_txt(0, COL_TEXT2, "Secret Service");
+            menu_set_txt(2, COL_TEXT, "Please choose:");
+            menu_set_opt(4, "Information Services (20+ MC)");
+            menu_set_opt(5, "A Personal File (100 MC)");
+            menu_set_opt(6, "Terrorist Attacks (50+ MC)");
+            menu_set_opt(7, "Orbital Bomb Attacks (500+ MC)");
+            menu_set_opt(14, "Exit Menu");
             break;
         case MM_StarMarker:
             break;
@@ -244,6 +254,9 @@ void MenuDrawer::menu_specific_update() {
         case MM_Ctrl:
             // 2: Change Officers & Taxes
             // 3: Secret Service
+            if (draw_manager.query_click(id_menu_lines[3]).id) {
+                menu_open(MM_SecretService);
+            }
             // 4: Set / Replace Star Markers
             // 5: Equip Starship
             // 6: Build Artificial Planet
@@ -261,6 +274,14 @@ void MenuDrawer::menu_specific_update() {
         case MM_NewOfficer:
             break;
         case MM_SecretService:
+            // 4: Information Services (20+ MC)
+            // 5: A Personal File (100 MC)
+            // 6: Terrorist Attacks (50+ MC)
+            // 7: Orbital Bomb Attacks (500+ MC)
+            // 14: Exit Menu
+            if (draw_manager.query_click(id_menu_lines[14]).id) {
+                menu_open(MM_Ctrl);
+            }
             break;
         case MM_StarMarker:
             break;

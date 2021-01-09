@@ -309,6 +309,17 @@ void DrawManager::set_selectable(SprID id) {
     selectable_text_ids.push_back(id);
 }
 
+void DrawManager::unset_selectable(SprID id) {
+    for (std::vector<SprID>::iterator i = selectable_text_ids.begin();
+         i < selectable_text_ids.end();
+         ++i) {
+        if (id == *i) {
+            selectable_text_ids.erase(i);
+            return;
+        }
+    }
+}
+
 void DrawManager::adjust_selectable_text_col(SprID id, RGB& rgb) {
     if (id && id == mouseover_selectable_text_id) {
         rgb = text_pulse_col(mouseover_selectable_text_time);
