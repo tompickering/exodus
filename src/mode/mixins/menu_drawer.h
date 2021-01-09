@@ -38,6 +38,7 @@ class MenuDrawer {
         void menu_open(MenuMode);
         void menu_update(float);
         void menu_close();
+        bool menu_is_open();
     private:
         MenuMode menu_mode;
 
@@ -49,7 +50,13 @@ class MenuDrawer {
         SprID id_menu_panel;
         SprID id_menu_bg;
         char menu_text[MENU_LINES][MENU_MAX_TEXT];
-        bool menu_is_open;
+        RGB menu_text_col[MENU_LINES];
+        bool _menu_is_open;
+
+        void menu_set_txt(int, RGB, const char*, ...);
+        void menu_set_opt(int, const char*, ...);
+        void menu_open_specific_mode();
+        void menu_specific_update();
 };
 
 #endif

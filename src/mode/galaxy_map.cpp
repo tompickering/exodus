@@ -257,8 +257,9 @@ ExodusMode GalaxyMap::update(float delta) {
             }
             break;
         case GM_Menu:
-            if (draw_manager.clicked()) {
-                menu_close();
+            if (menu_is_open()) {
+                menu_update(delta);
+            } else {
                 stage = GM_Idle;
             }
         default:
