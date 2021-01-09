@@ -32,6 +32,11 @@ enum MenuMode {
     MM_Stats,
 };
 
+enum MenuAction {
+    MA_None,
+    MA_Close,
+};
+
 class MenuDrawer {
     public:
         MenuDrawer();
@@ -39,6 +44,7 @@ class MenuDrawer {
         void menu_update(float);
         void menu_close();
         bool menu_is_open();
+        MenuAction menu_get_action();
     private:
         MenuMode menu_mode;
 
@@ -52,6 +58,7 @@ class MenuDrawer {
         char menu_text[MENU_LINES][MENU_MAX_TEXT];
         RGB menu_text_col[MENU_LINES];
         bool _menu_is_open;
+        MenuAction menu_action;
 
         const char* menu_get_bg();
         void menu_set_txt(int, RGB, const char*, ...);

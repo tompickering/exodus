@@ -28,8 +28,13 @@ bool MenuDrawer::menu_is_open() {
     return _menu_is_open;
 }
 
+MenuAction MenuDrawer::menu_get_action() {
+    return menu_action;
+}
+
 void MenuDrawer::menu_open(MenuMode mode) {
     menu_mode = mode;
+    menu_action = MA_None;
 
     for (int i = 0; i < MENU_LINES; ++i) {
         strncpy(menu_text[i], "", 1);
@@ -96,6 +101,8 @@ void MenuDrawer::menu_open(MenuMode mode) {
 }
 
 void MenuDrawer::menu_close() {
+    menu_action = MA_None;
+
     for (int i = 0; i < MENU_LINES; ++i) {
         draw_manager.draw(id_menu_lines[i], nullptr);
         draw_manager.release_sprite_id(id_menu_lines[i]);
@@ -119,6 +126,8 @@ void MenuDrawer::menu_close() {
 }
 
 void MenuDrawer::menu_update(float delta) {
+    menu_action = MA_None;
+
     for (int i = 0; i < MENU_LINES; ++i) {
         draw_manager.draw_text(
             id_menu_lines[i],
@@ -281,7 +290,7 @@ void MenuDrawer::menu_specific_update() {
             // 12: Quit Game
             // 14: Exit Menu
             if (draw_manager.query_click(id_menu_lines[14]).id) {
-                menu_close();
+                menu_action = MA_Close;
             }
             break;
         case MM_OfficersAndTaxes:
@@ -321,7 +330,7 @@ void MenuDrawer::menu_specific_update() {
             // 12: Statistics
             // 14: Exit Menu
             if (draw_manager.query_click(id_menu_lines[14]).id) {
-                menu_close();
+                menu_action = MA_Close;
             }
             break;
         case MM_GenInfo:

@@ -259,6 +259,13 @@ ExodusMode GalaxyMap::update(float delta) {
         case GM_Menu:
             if (menu_is_open()) {
                 menu_update(delta);
+                switch (menu_get_action()) {
+                    case MA_Close:
+                        menu_close();
+                        stage = GM_Idle;
+                    default:
+                        break;
+                }
             } else {
                 stage = GM_Idle;
             }
