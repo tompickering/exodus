@@ -256,9 +256,6 @@ void CommPanelDrawer::comm_open(int text_slots) {
              COL_BORDERS);
     }
 
-    draw_manager.save_background({COMM_X, COMM_Y,
-                                  COMM_W, COMM_H});
-
     draw_manager.draw(
         id_comm_img,
         comm_anim.frame(0),
@@ -312,6 +309,7 @@ void CommPanelDrawer::comm_close() {
 
     draw_manager.draw(id_comm_bg_t, nullptr);
     draw_manager.draw(id_comm_bg_b, nullptr);
+
     draw_manager.release_sprite_id(id_comm_bg_t);
     draw_manager.release_sprite_id(id_comm_bg_b);
 
