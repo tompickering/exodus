@@ -54,13 +54,6 @@ void MenuDrawer::menu_open(MenuMode mode) {
              MENU_W, MENU_H},
             COL_BORDERS);
 
-        draw_manager.draw(
-            id_menu_bg,
-            IMG_ME1_MENU,
-            {MENU_X + MENU_BORDER,
-             MENU_Y + MENU_BORDER,
-             0, 0, 1, 1});
-
         // Draw header flag and background
         draw_manager.fill(
             id_menu_header_flag_bg,
@@ -89,6 +82,13 @@ void MenuDrawer::menu_open(MenuMode mode) {
              MENU_Y - 2,
              0, 1, 1, 1});
     }
+
+    draw_manager.draw(
+        id_menu_bg,
+        menu_get_bg(),
+        {MENU_X + MENU_BORDER,
+         MENU_Y + MENU_BORDER,
+         0, 0, 1, 1});
 
     menu_open_specific_mode();
 
@@ -130,6 +130,16 @@ void MenuDrawer::menu_update(float delta) {
     }
 
     menu_specific_update();
+}
+
+const char* MenuDrawer::menu_get_bg() {
+    switch (menu_mode) {
+        case MM_Save:
+            return IMG_ME2_MENU;
+        default:
+            return IMG_ME1_MENU;
+    }
+    return IMG_ME1_MENU;
 }
 
 void MenuDrawer::menu_set_txt(int idx, RGB col, const char* in_text, ...) {
@@ -213,6 +223,8 @@ void MenuDrawer::menu_open_specific_mode() {
         case MM_ArtificialWorld:
             break;
         case MM_Save:
+            menu_set_txt(0, COL_TEXT2, "Save game in slot:");
+            menu_set_opt(14, "Exit Menu");
             break;
         case MM_Stat:
             menu_set_txt(0, COL_TEXT2, "Please select, %s", p->get_ref());
@@ -263,6 +275,9 @@ void MenuDrawer::menu_specific_update() {
             // 8: Wait One Month
             // 10: Show Distances
             // 11: Save Game
+            if (draw_manager.query_click(id_menu_lines[11]).id) {
+                menu_open(MM_Save);
+            }
             // 12: Quit Game
             // 14: Exit Menu
             if (draw_manager.query_click(id_menu_lines[14]).id) {
@@ -290,6 +305,9 @@ void MenuDrawer::menu_specific_update() {
         case MM_ArtificialWorld:
             break;
         case MM_Save:
+            if (draw_manager.query_click(id_menu_lines[14]).id) {
+                menu_open(MM_Ctrl);
+            }
             break;
         case MM_Stat:
             // 2: General Information

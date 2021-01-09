@@ -53,6 +53,7 @@ class MenuDrawer {
         RGB menu_text_col[MENU_LINES];
         bool _menu_is_open;
 
+        const char* menu_get_bg();
         void menu_set_txt(int, RGB, const char*, ...);
         void menu_set_opt(int, const char*, ...);
         void menu_open_specific_mode();
