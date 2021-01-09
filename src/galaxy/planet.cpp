@@ -1416,6 +1416,18 @@ void Planet::adjust_army(int inf, int gli, int art) {
     if (army_art > max) army_art = max;
 }
 
+int Planet::get_reserves_min() {
+    return reserves_min;
+}
+
+int Planet::get_reserves_food() {
+    return reserves_food;
+}
+
+int Planet::get_reserves_plu() {
+    return reserves_plu;
+}
+
 int Planet::get_total_reserves() {
     return reserves_min + reserves_food + reserves_plu;
 }

@@ -211,6 +211,9 @@ class Planet {
         void get_army(int&, int&, int&);
         int get_army_size();
         void adjust_army(int, int, int);
+        int get_reserves_min();
+        int get_reserves_food();
+        int get_reserves_plu();
         int get_total_reserves();
         void disown();
         bool expand_city();
