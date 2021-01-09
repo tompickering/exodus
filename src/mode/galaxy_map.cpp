@@ -155,9 +155,11 @@ ExodusMode GalaxyMap::update(float delta) {
                         return ExodusMode::MODE_None;
                     }
                 } else if (click.x < 0.5) {
-                    L.debug("Panel 1");
+                    stage = GM_Menu;
+                    menu_open(MM_Ctrl);
                 } else if (click.x < 0.75) {
-                    L.debug("Panel 2");
+                    stage = GM_Menu;
+                    menu_open(MM_Stat);
                 } else {
                     // Zoom
                     if (player->get_location().has_visited(exostate.tgt2loc(selected_ft))) {
@@ -254,6 +256,11 @@ ExodusMode GalaxyMap::update(float delta) {
                 stage = GM_MonthPassing;
             }
             break;
+        case GM_Menu:
+            if (draw_manager.clicked()) {
+                menu_close();
+                stage = GM_Idle;
+            }
         default:
             break;
     }

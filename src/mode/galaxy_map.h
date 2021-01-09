@@ -7,6 +7,7 @@
 #include "mixins/comm_panel_drawer.h"
 #include "mixins/bulletin_drawer.h"
 #include "mixins/frame_drawer.h"
+#include "mixins/menu_drawer.h"
 
 #include "platform.h"
 #include "draw/draw.h"
@@ -138,7 +139,7 @@ typedef struct {
     int mp_planet_idx;
 } MPState;
 
-class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, BulletinDrawer, FrameDrawer {
+class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, BulletinDrawer, FrameDrawer, MenuDrawer {
     public:
         GalaxyMap();
         virtual void enter() override;
@@ -153,6 +154,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
             GM_FlyConfirm,
             GM_MonthPassing,
             GM_MP_FirstCity,
+            GM_Menu,
         };
 
         Stage stage;
