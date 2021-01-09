@@ -10,6 +10,7 @@
 #define CITY_INCOME 2
 #define CITY_FOOD_REQ 3
 #define N_UNREST 8
+#define MAX_STONES (PLANET_BLOCKS_LG * PLANET_BLOCKS_LG)
 
 #define COST_LUNAR_BASE 120
 #define COST_AIRDEF 5
@@ -233,7 +234,7 @@ class Planet {
         PlanetClass cls;
         MoonClass moon_cls;    // Determines battle background. Orig was random each time.
         char name[PLANET_MAX_NAME + 1];
-        Stone surf[PLANET_BLOCKS_LG * PLANET_BLOCKS_LG];
+        Stone surf[MAX_STONES];
 
         int pspeed;            // Orig: pspeed
         int diameter;          // Orig: SId.
