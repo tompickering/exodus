@@ -1272,7 +1272,46 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mp_state.mpp_stage == MPP_ConsumeFood) {
-        // TODO
+        int food_needed = p->consume_food();
+        if (food_needed > 0) {
+            report.add_line("There is not enough food for all systems.");
+            // TODO: PROCdonotice for human players
+            p->adjust_unrest(3);
+            int cities_closed = 0;
+            bool bases_collapsed = false;
+            while (!p->agri_sufficient()) {
+                int x, y;
+                if (p->find_random_stone(STONE_City, x, y)) {
+                    p->set_stone(x, y, STONE_Rubble);
+                    cities_closed++;
+                    continue;
+                }
+                if (p->find_random_stone(STONE_Base, x, y)) {
+                    p->set_stone(x, y, STONE_AgriDead);
+                    continue;
+                }
+                bases_collapsed = true;
+                break;
+            }
+            if (cities_closed > 0) {
+                report.add_line("%d %s closed down.",
+                                cities_closed,
+                                cities_closed == 1 ? "city has" : "cities have");
+            }
+            if (bases_collapsed) {
+                // TODO: PROCdonotice
+                report.add_line("COMMAND STATION HAS COLLAPSED");
+                if (owner) {
+                    if (owner->is_human()) {
+                        report.add_line("You have lost all access to the planet.");
+                    } else {
+                        report.add_line("%s has lost this planet.", owner->get_full_name());
+                    }
+                }
+                p->disown();
+            }
+
+        }
         next_mpp_stage();
     }
 
