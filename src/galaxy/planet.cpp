@@ -1283,6 +1283,18 @@ ProductionReport Planet::produce_military() {
     return rpt;
 }
 
+int Planet::consume_food() {
+    int needed = get_food_consumption();
+    if (reserves_food < needed) {
+        // Not enough food
+        needed -= reserves_food;
+        reserves_food = 0;
+        return needed;
+    }
+    reserves_food -= needed;
+    return 0;
+}
+
 TradeReport Planet::monthly_trade() {
     TradeReport rpt;
     int n = count_stones(STONE_Trade);

@@ -202,6 +202,7 @@ class Planet {
         void produce_food();
         void produce_plutonium();
         ProductionReport produce_military();
+        int consume_food();
         TradeReport monthly_trade();
         void mine();
         void perish_food();
