@@ -181,6 +181,11 @@ ExodusMode GuildHQ::update(float delta) {
             if (draw_manager.query_click(id(ID::BOT_QUIT)).id) {
                 draw_manager.draw(id(ID::PANEL_PATTERN), nullptr);
                 draw_manager.draw(id(ID::PANEL), nullptr);
+                draw_manager.draw(id(ID::BOT_MISSIONINFO), nullptr);
+                draw_manager.draw(id(ID::BOT_SGQUIT), nullptr);
+                draw_manager.draw(id(ID::BOT_SGJOIN), nullptr);
+                draw_manager.draw(id(ID::BOT_REP), nullptr);
+                draw_manager.draw(id(ID::BOT_QUIT), nullptr);
                 guildbot_active = false;
                 stage = HQ_Idle;
             }
