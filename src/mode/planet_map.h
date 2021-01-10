@@ -58,6 +58,7 @@ class PlanetMap : ModeBase {
             PM_Idle,
             PM_Construct,
             PM_Destruction,
+            PM_Frame,
         };
 
         Stage stage;
@@ -111,6 +112,13 @@ class PlanetMap : ModeBase {
         int chained_explosion_idx;
         int chained_explosion_head;
         ChainedExplosion chained_explosions[MAX_CHAINED_EXPLOSIONS];
+
+        void draw_frame_fd();
+        void draw_frame_pl();
+        void draw_frame_unrest();
+        void draw_frame_help(Tool);
+        void draw_frame(int, int);
+        void close_frame();
 
         SprID id_stones[MAX_STONES];
 };

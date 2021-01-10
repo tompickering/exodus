@@ -38,6 +38,7 @@ enum ID {
     EXIT,
     TARGET,
     EXPLOSION,
+    FRAME,
     END,
 };
 
@@ -253,6 +254,8 @@ void PlanetMap::draw() {
 
     }
 
+    draw_manager.save_background();
+
     int sz = blocks * STONE_SZ;
     area = {0, 0, sz, sz};
     draw_manager.set_source_region(id(ID::SURF), &area);
@@ -328,8 +331,8 @@ ExodusMode PlanetMap::update(float delta) {
                 } else if (click.x <= 0.67) {
                     planet->adjust_army_funding(1);
                 } else {
-                    // TODO: Query
-                    L.debug("Query clicked");
+                    draw_frame_help(active_tool);
+                    stage = PM_Frame;
                 }
             }
 
@@ -350,6 +353,17 @@ ExodusMode PlanetMap::update(float delta) {
 
             if (draw_manager.query_click(id(ID::EXIT)).id) {
                 return ExodusMode::MODE_Pop;
+            }
+
+            if (draw_manager.query_click(id(ID::ICON_FOOD)).id) {
+                draw_frame_fd();
+                stage = PM_Frame;
+            } else if (draw_manager.query_click(id(ID::ICON_PLU)).id) {
+                draw_frame_pl();
+                stage = PM_Frame;
+            } else if (draw_manager.query_click(id(ID::ICON_UNREST)).id) {
+                draw_frame_unrest();
+                stage = PM_Frame;
             }
             break;
         case PM_Construct:
@@ -384,6 +398,13 @@ ExodusMode PlanetMap::update(float delta) {
             break;
         case PM_Destruction:
             return update_destruction(delta);
+        case PM_Frame:
+            if (draw_manager.clicked()) {
+                close_frame();
+                set_tool(active_tool);
+                stage = PM_Idle;
+            }
+            break;
     }
 
     return ExodusMode::MODE_None;
@@ -1116,4 +1137,44 @@ ExodusMode PlanetMap::update_destruction(float delta) {
     }
 
     return ExodusMode::MODE_None;
+}
+
+void PlanetMap::draw_frame(int w, int h) {
+    int border = 6;
+    draw_manager.fill(
+        id(ID::FRAME),
+        {(RES_X - w) / 2 - border,
+         (RES_Y - h) / 2 - border - 18,
+         w + 2*border,
+         h + 2*border},
+         COL_BORDERS);
+    draw_manager.fill_pattern(
+        {(RES_X - w) / 2,
+         (RES_Y - h) / 2 - 18,
+         w, h}
+     );
+}
+
+void PlanetMap::close_frame() {
+    draw_manager.draw(id(ID::FRAME), nullptr);
+}
+
+void PlanetMap::draw_frame_fd() {
+    // TODO
+    draw_frame(436, 306);
+}
+
+void PlanetMap::draw_frame_pl() {
+    // TODO
+    draw_frame(436, 306);
+}
+
+void PlanetMap::draw_frame_unrest() {
+    // TODO
+    draw_frame(436, 306);
+}
+
+void PlanetMap::draw_frame_help(Tool t) {
+    // TODO
+    draw_frame(436, 306);
 }
