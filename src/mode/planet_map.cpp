@@ -495,6 +495,7 @@ void PlanetMap::clear_surf(int x, int y) {
     int sz = planet->get_size_blocks();
     x = (x + sz) % sz;
     y = (y + sz) % sz;
+    draw_manager.draw(id_stones[y*blocks+x], nullptr);
     int x_off = x * STONE_SZ;
     int y_off = y * STONE_SZ;
     SprID id_surfclear = draw_manager.new_sprite_id();
