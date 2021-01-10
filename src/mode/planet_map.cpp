@@ -1244,8 +1244,88 @@ void PlanetMap::draw_frame_fd() {
 }
 
 void PlanetMap::draw_frame_pl() {
-    // TODO
     draw_frame(436, 306);
+
+    int prod = planet->get_plu_production();
+    int cons = planet->get_plu_consumption();
+    int stock = planet->get_reserves_plu();
+
+    char str_prod[8];
+    char str_cons[8];
+    char str_stock[8];
+    char str_advisor[128];
+
+    snprintf(str_prod, 7, "%d", prod);
+    str_prod[7] = '\0';
+    snprintf(str_cons, 7, "%d", cons);
+    str_cons[7] = '\0';
+    snprintf(str_stock, 7, "%d", stock);
+    str_stock[7] = '\0';
+
+    if (prod > cons) {
+        int surp = prod - cons;
+        snprintf(str_advisor, 127,
+            "\"There is a monthly surplus of %d unit%s.\"",
+            surp, surp == 1 ? "" : "s");
+    } else if (cons > prod) {
+        int lack = cons - prod;
+        snprintf(str_advisor, 127,
+            "\"%d more unit%s needed monthly.\"",
+            lack, lack == 1 ? " is" : "s are");
+    } else {
+        snprintf(str_advisor, 127, "\"Perfect calculation.\"");
+    }
+
+    draw_frame(436, 306);
+    draw_manager.draw_text(
+        "Information about energy systems",
+        Justify::Left,
+        120, 105,
+        COL_TEXT2);
+
+    draw_manager.draw_text(
+        "Monthly Plutonium",
+        Justify::Left,
+        135, 165,
+        COL_TEXT);
+    draw_manager.draw_text(
+        str_prod,
+        Justify::Left,
+        360, 165,
+        COL_TEXT);
+
+    draw_manager.draw_text(
+        "Monthly Demand",
+        Justify::Left,
+        135, 205,
+        COL_TEXT);
+    draw_manager.draw_text(
+        str_cons,
+        Justify::Left,
+        360, 205,
+        COL_TEXT);
+
+    draw_manager.draw_text(
+        "Stock",
+        Justify::Left,
+        135, 245,
+        COL_TEXT);
+    draw_manager.draw_text(
+        str_stock,
+        Justify::Left,
+        360, 245,
+        COL_TEXT);
+
+    draw_manager.draw_text(
+        "Advisor:",
+        Justify::Left,
+        120, 325,
+        COL_TEXT2);
+    draw_manager.draw_text(
+        str_advisor,
+        Justify::Left,
+        120, 345,
+        COL_TEXT2);
 }
 
 void PlanetMap::draw_frame_unrest() {
