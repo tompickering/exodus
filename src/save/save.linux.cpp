@@ -37,10 +37,26 @@ bool SaveManagerLinux::save_data(int slot, const char *data) {
     snprintf(file, MAX_PATH, "%s/%d", dir, slot);
     file[MAX_PATH] = '\0';
 
-    // TODO: Error checking for failed write
     ofstream out(string(file), ios::out | ios::binary);
+
+    if (out.fail()) {
+        L.error("Could not open file %s for save", file);
+        return false;
+    }
+
     out.write(data, SAVE_SIZE);
+
+    if (out.fail()) {
+        L.error("Could not write to file %s", file);
+        return false;
+    }
+
     out.close();
+
+    if (out.fail()) {
+        L.warn("Could not close file after save: %s", file);
+    }
+
     return true;
 }
 
@@ -56,9 +72,25 @@ bool SaveManagerLinux::load_data(int slot, char *data) {
     snprintf(file, MAX_PATH, "%s/%d", dir, slot);
     file[MAX_PATH] = '\0';
 
-    // TODO: Error checking for failed read or no such file
     ifstream in(string(file), ios::in | ios::binary);
+
+    if (in.fail()) {
+        // File most likely does not exist
+        return false;
+    }
+
     in.read(data, SAVE_SIZE);
+
+    if (in.fail()) {
+        L.error("Could not read from file %s", file);
+        return false;
+    }
+
     in.close();
+
+    if (in.fail()) {
+        L.warn("Could not close file after load: %s", file);
+    }
+
     return true;
 }
