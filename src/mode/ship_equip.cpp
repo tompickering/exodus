@@ -70,6 +70,32 @@ void ShipEquip::enter() {
         rows[i].produce = 0;
     }
 
+    draw_manager.draw_text(
+        "Equipment",
+        Justify::Left,
+        100, 40,
+        COL_TEXT2);
+    draw_manager.draw_text(
+        "Own",
+        Justify::Left,
+        280, 40,
+        COL_TEXT2);
+    draw_manager.draw_text(
+        "Max",
+        Justify::Left,
+        350, 40,
+        COL_TEXT2);
+    draw_manager.draw_text(
+        "Cost",
+        Justify::Left,
+        420, 40,
+        COL_TEXT2);
+    draw_manager.draw_text(
+        "Produce",
+        Justify::Left,
+        490, 40,
+        COL_TEXT2);
+
     char val[13];
     for (int i = 0; i < 7; ++i) {
         int y = 80 + 40*i;
