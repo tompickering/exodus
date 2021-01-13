@@ -240,9 +240,9 @@ void MenuDrawer::menu_open_specific_mode() {
                 if (meta[i].exists) {
                     // TODO: Position these elements nicely
                     menu_set_opt(i+2, "%d: %s / Month %d / Planets %d",
-                                 i, meta[i].name, meta[i].month, meta[i].planets);
+                                 i+1, meta[i].name, meta[i].month, meta[i].planets);
                 } else {
-                    menu_set_opt(i+2, "%d", i);
+                    menu_set_opt(i+2, "%d", i+1);
                 }
             }
             menu_set_opt(14, "Exit Menu");
