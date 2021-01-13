@@ -6,6 +6,7 @@ extern ExodusState exostate;
 
 enum ID {
     MC,
+    EXIT,
     END,
 };
 
@@ -69,14 +70,67 @@ void ShipEquip::enter() {
         rows[i].produce = 0;
     }
 
+    char val[13];
     for (int i = 0; i < 7; ++i) {
         int y = 80 + 40*i;
         draw_manager.draw(
+            rows[i].img,
+            {20, y, 0, 0, 1, 1});
+        draw_manager.draw_text(
+            rows[i].name,
+            Justify::Left,
+            100, y+10,
+            COL_TEXT);
+
+        snprintf(val, 12, "%d", rows[i].own);
+        val[12] = '\0';
+        draw_manager.draw_text(
+            val,
+            Justify::Left,
+            280, y+10,
+            COL_TEXT);
+
+        snprintf(val, 12, "%d", rows[i].max);
+        val[12] = '\0';
+        draw_manager.draw_text(
+            val,
+            Justify::Left,
+            350, y+10,
+            COL_TEXT);
+
+        snprintf(val, 12, "%d", rows[i].cost);
+        val[12] = '\0';
+        draw_manager.draw_text(
+            val,
+            Justify::Left,
+            420, y+10,
+            COL_TEXT);
+
+        snprintf(val, 12, "%d", rows[i].produce);
+        val[12] = '\0';
+        draw_manager.draw_text(
+            rows[i].id_produce,
+            val,
+            Justify::Left,
+            490, y+10,
+            COL_TEXT);
+
+        draw_manager.draw(
             rows[i].id_adj,
             IMG_BR4_EXPORT3,
-            {300, y, 0, 0, 1, 1}
-        );
+            {550, y+6, 0, 0, 1, 1});
     }
+
+    draw_manager.fill(
+        {0, 460, RES_X, 26},
+        COL_BORDERS);
+    draw_manager.fill(
+        {18, 460, 122, 26},
+        {0, 0, 0});
+    draw_manager.draw(
+        id(ID::EXIT),
+        IMG_BR5_EXPORT4,
+        {20, 460, 0, 0, 1, 1});
 }
 
 void ShipEquip::exit() {
@@ -87,5 +141,10 @@ void ShipEquip::exit() {
 }
 
 ExodusMode ShipEquip::update(float delta) {
+    if (draw_manager.query_click(id(ID::EXIT)).id) {
+        // TODO: Spend MC
+        return ExodusMode::MODE_Pop;
+    }
+
     return ExodusMode::MODE_None;
 }
