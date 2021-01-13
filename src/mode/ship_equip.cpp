@@ -121,6 +121,12 @@ void ShipEquip::enter() {
             {550, y+6, 0, 0, 1, 1});
     }
 
+    draw_manager.draw_text(
+        "MC:",
+        Justify::Left,
+        20, 420,
+        COL_TEXT);
+
     draw_manager.fill(
         {0, 460, RES_X, 26},
         COL_BORDERS);
@@ -141,10 +147,71 @@ void ShipEquip::exit() {
 }
 
 ExodusMode ShipEquip::update(float delta) {
+    Player *p = exostate.get_active_player();
+
+    char mc[32];
+    snprintf(mc, 32, "%d", p->get_mc() - total_cost());
+    mc[31] = '\0';
+    draw_manager.draw_text(
+        id(ID::MC),
+        mc,
+        Justify::Left,
+        80, 420,
+        COL_TEXT2);
+
+    for (int i = 0; i < 7; ++i) {
+        SpriteClick clk = draw_manager.query_click(rows[i].id_adj);
+        if (clk.id) {
+            if (clk.x < 0.5) {
+                if (rows[i].produce > 0) {
+                    rows[i].produce--;
+                }
+            } else {
+                if (rows[i].produce < rows[i].max - rows[i].own) {
+                    if (p->can_afford(total_cost() + rows[i].cost)) {
+                        rows[i].produce++;
+                    }
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < 7; ++i) {
+        int y = 80 + 40*i;
+        char val[12];
+        snprintf(val, 12, "%d", rows[i].produce);
+        val[12] = '\0';
+        draw_manager.draw_text(
+            rows[i].id_produce,
+            val,
+            Justify::Left,
+            490, y+10,
+            COL_TEXT);
+    }
+
     if (draw_manager.query_click(id(ID::EXIT)).id) {
-        // TODO: Spend MC
+        if (p->attempt_spend(total_cost())) {
+            Starship &s = p->get_starship();
+            s.shield_generators += rows[0].produce;
+            s.laser_guns += rows[1].produce;
+            s.missile_launchers += rows[2].produce;
+            s.crew += rows[3].produce;
+            s.bionic_probes += rows[4].produce;
+            s.escape_capsule |= rows[5].produce == 1;
+            s.repair_hangar |= rows[6].produce == 1;
+        } else {
+            L.error("Player should not be able to buy more than they can afford");
+        }
         return ExodusMode::MODE_Pop;
     }
 
     return ExodusMode::MODE_None;
+}
+
+int ShipEquip::total_cost() {
+    int cost = 0;
+    for (int i = 0; i < 7; ++i) {
+        cost += rows[i].cost * rows[i].produce;
+    }
+    return cost;
 }

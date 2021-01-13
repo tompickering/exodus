@@ -24,6 +24,7 @@ class ShipEquip : ModeBase {
         virtual ExodusMode update(float) override;
     private:
         ShipEquipRow rows[7];
+        int total_cost();
 };
 
 #endif
