@@ -28,6 +28,7 @@
 #include "mode/planet_colonise.h"
 #include "mode/lunar_battle_prep.h"
 #include "mode/lunar_battle.h"
+#include "mode/ship_equip.h"
 
 #include <cstdlib>
 #include <csignal>
@@ -114,6 +115,7 @@ int Exodus::run(int argc, char** argv) {
     PlanetColonise mode_planetcolonise;
     LunarBattlePrep mode_lunarbattleprep;
     LunarBattle mode_lunarbattle;
+    ShipEquip mode_shipequip;
     mode_map[MODE_Intro] = (ModeBase*) &mode_intro;
     mode_map[MODE_Menu] = (ModeBase*) &mode_menu;
     mode_map[MODE_GalaxyGen] = (ModeBase*) &mode_galaxygen;
@@ -129,6 +131,7 @@ int Exodus::run(int argc, char** argv) {
     mode_map[MODE_PlanetColonise] = (ModeBase*) &mode_planetcolonise;
     mode_map[MODE_LunarBattlePrep] = (ModeBase*) &mode_lunarbattleprep;
     mode_map[MODE_LunarBattle] = (ModeBase*) &mode_lunarbattle;
+    mode_map[MODE_ShipEquip] = (ModeBase*) &mode_shipequip;
 
     push_mode(MODE_Intro);
 

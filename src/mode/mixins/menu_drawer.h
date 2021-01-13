@@ -34,6 +34,7 @@ enum MenuMode {
 
 enum MenuAction {
     MA_None,
+    MA_EquipShip,
     MA_Close,
 };
 

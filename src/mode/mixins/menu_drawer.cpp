@@ -293,6 +293,9 @@ void MenuDrawer::menu_specific_update() {
             }
             // 4: Set / Replace Star Markers
             // 5: Equip Starship
+            if (draw_manager.query_click(id_menu_lines[5]).id) {
+                menu_action = MA_EquipShip;
+            }
             // 6: Build Artificial Planet
             // 8: Wait One Month
             // 10: Show Distances
