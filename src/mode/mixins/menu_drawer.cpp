@@ -1,11 +1,13 @@
 #include "menu_drawer.h"
 
 #include "state/exodus_state.h"
+#include "save/save.h"
 
 #include "shared.h"
 #include "assetpaths.h"
 
 extern ExodusState exostate;
+extern SAVEMANAGER save_manager;
 
 const int MENU_BORDER = 6;
 const int MENU_W = 436 + (MENU_BORDER) * 2;
@@ -231,10 +233,21 @@ void MenuDrawer::menu_open_specific_mode() {
             break;
         case MM_ArtificialWorld:
             break;
-        case MM_Save:
+        case MM_Save: {
+            const SaveMeta *meta = save_manager.get_all_meta(true);
             menu_set_txt(0, COL_TEXT2, "Save game in slot:");
+            for (int i = 0; i < MAX_SLOTS; ++i) {
+                if (meta[i].exists) {
+                    // TODO: Position these elements nicely
+                    menu_set_opt(i+2, "%d: %s / Month %d / Planets %d",
+                                 i, meta[i].name, meta[i].month, meta[i].planets);
+                } else {
+                    menu_set_opt(i+2, "%d", i);
+                }
+            }
             menu_set_opt(14, "Exit Menu");
             break;
+            }
         case MM_Stat:
             menu_set_txt(0, COL_TEXT2, "Please select, %s", p->get_ref());
             menu_set_opt(2, "General Information");
@@ -285,6 +298,7 @@ void MenuDrawer::menu_specific_update() {
             // 10: Show Distances
             // 11: Save Game
             if (draw_manager.query_click(id_menu_lines[11]).id) {
+                // Re-open save menu to refresh metadata
                 menu_open(MM_Save);
             }
             // 12: Quit Game
@@ -314,6 +328,12 @@ void MenuDrawer::menu_specific_update() {
         case MM_ArtificialWorld:
             break;
         case MM_Save:
+            for (int i = 0; i < MAX_SLOTS; ++i) {
+                if (draw_manager.query_click(id_menu_lines[i+2]).id) {
+                    save_manager.save(i);
+                    menu_open(MM_Save);
+                }
+            }
             if (draw_manager.query_click(id_menu_lines[14]).id) {
                 menu_open(MM_Ctrl);
             }
