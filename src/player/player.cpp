@@ -6,9 +6,6 @@
 #include "alien_names.h"
 #include "shared.h"
 
-// FIXME: Used for fleet markers - but just get the index and look up assets elsewhere
-#include "assetpaths.h"
-
 static int alien_names_offset = -1;
 
 const AIFlag ai_hum[9] = {AI_Md, AI_Md, AI_Md, AI_Md, AI_Md, AI_Md, AI_Md, AI_Md, AI_Md};
@@ -231,22 +228,8 @@ bool Player::attempt_spend_with_remaining(int cost, int remaining) {
     return false;
 }
 
-const char* Player::get_fleet_marker() {
-    switch(fleet_marker_idx) {
-        case 0:
-            return IMG_TS1_ICON1;
-        case 1:
-            return IMG_TS1_ICON2;
-        case 2:
-            return IMG_TS1_ICON3;
-        case 3:
-            return IMG_TS1_ICON4;
-        case 4:
-            return IMG_TS1_ICON5;
-    }
-
-    L.fatal("Should have returned a fleet marker already");
-    return IMG_TS1_ICON1;
+int Player::get_fleet_marker_idx() {
+    return fleet_marker_idx;
 }
 
 PlayerLocation& Player::get_location() {

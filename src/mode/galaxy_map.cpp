@@ -119,13 +119,30 @@ ExodusMode GalaxyMap::update(float delta) {
 
             {
                 FlyTarget *fleet_pos = exostate.loc2tgt(player->get_location().get_target());
-                const char* marker_icon;
+                const char* marker_icon = IMG_TS1_DEST;
                 get_draw_position(fleet_pos, draw_x, draw_y);
 
                 if (!player->get_location().in_flight()) {
-                    marker_icon = player->get_fleet_marker();
-                } else {
-                    marker_icon = IMG_TS1_DEST;
+                    switch (player->get_fleet_marker_idx()) {
+                        case 0:
+                            marker_icon = IMG_TS1_ICON1;
+                            break;
+                        case 1:
+                            marker_icon = IMG_TS1_ICON2;
+                            break;
+                        case 2:
+                            marker_icon = IMG_TS1_ICON3;
+                            break;
+                        case 3:
+                            marker_icon = IMG_TS1_ICON4;
+                            break;
+                        case 4:
+                            marker_icon = IMG_TS1_ICON5;
+                            break;
+                        default:
+                            L.fatal("Invalid fleet marker index");
+                            break;
+                    }
                 }
 
                 draw_manager.draw(

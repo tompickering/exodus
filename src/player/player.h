@@ -134,7 +134,7 @@ class Player {
         bool can_afford(int);
         bool attempt_spend(int);
         bool attempt_spend_with_remaining(int, int);
-        const char *get_fleet_marker();
+        int get_fleet_marker_idx();
         PlayerLocation& get_location();
         Starship& get_starship();
         int get_reputation();
