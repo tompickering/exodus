@@ -7,6 +7,7 @@
 #include "audio/audio.h"
 #include "draw/draw.h"
 #include "input/input.h"
+#include "save/save.h"
 
 #include "state/exodus_state.h"
 #include "state/ephemeral_state.h"
@@ -38,6 +39,7 @@ Log::Logger L(Log::Level::DEBUG);
 AUDIOMANAGER audio_manager;
 DRAWMANAGER draw_manager;
 INPUTMANAGER input_manager;
+SAVEMANAGER save_manager;
 
 ExodusState exostate;
 EphemeralState ephstate;
@@ -217,6 +219,16 @@ int Exodus::run(int argc, char** argv) {
 
         if (input_manager.consume(Input::K_F1)) {
             exodebug.add_mc(1000);
+        }
+
+        if (input_manager.consume(Input::K_F8)) {
+            save_manager.save(8);
+        }
+
+        if (input_manager.consume(Input::K_F9)) {
+            save_manager.load(8);
+            reset_mode_stack();
+            push_mode(MODE_GalaxyMap);
         }
 #endif
     }

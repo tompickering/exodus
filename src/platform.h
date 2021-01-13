@@ -24,6 +24,7 @@
 
 #ifdef LINUX
 #define TIMER TimerChrono
+#define SAVEMANAGER SaveManagerLinux
 #endif
 
 #endif
