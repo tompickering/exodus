@@ -84,23 +84,7 @@ void ExodusState::init(GameConfig config) {
     for (i = 0; i < n_players; ++i) {
         players[i].init_race(RACE_Human);
         players[i]._intro_seen = false;
-        switch(i) {
-            case 0:
-                players[i].fleet_marker = IMG_TS1_ICON1;
-                break;
-            case 1:
-                players[i].fleet_marker = IMG_TS1_ICON2;
-                break;
-            case 2:
-                players[i].fleet_marker = IMG_TS1_ICON3;
-                break;
-            case 3:
-                players[i].fleet_marker = IMG_TS1_ICON4;
-                break;
-            case 4:
-                players[i].fleet_marker = IMG_TS1_ICON5;
-                break;
-        }
+        players[i].fleet_marker_idx = i;
 
         if (config.enemy_start == ENEMY_None) {
             players[i].mc = 1000;
@@ -130,7 +114,7 @@ void ExodusState::init(GameConfig config) {
     // PLAYER INIT: CPU
     for (; i < N_PLAYERS; ++i) {
         players[i].init_race((Race)(RACE_Human + RND(4)));
-        players[i].fleet_marker = nullptr;
+        players[i].fleet_marker_idx = 0;
         players[i].init_alien_name(i); // Orig: Assigned in PROCclear_memory
         bool flag_assigned = false;
         L.debug("Assigning flag for player %d (CPU)", i);

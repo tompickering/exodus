@@ -135,7 +135,6 @@ class Player {
         bool attempt_spend(int);
         bool attempt_spend_with_remaining(int, int);
         const char *get_fleet_marker();
-        void set_fleet_marker(const char*);
         PlayerLocation& get_location();
         Starship& get_starship();
         int get_reputation();
@@ -176,7 +175,7 @@ class Player {
         int flag_idx;
         int mc;
         bool _intro_seen;
-        const char *fleet_marker;
+        int fleet_marker_idx;
         PlayerLocation location;
         Starship starship;
         Fleet fleet;
