@@ -16,7 +16,7 @@ typedef struct {
 
 class SaveManager {
     public:
-        virtual const SaveMeta* get_all_meta();
+        virtual const SaveMeta* get_all_meta(bool);
         virtual bool save(int);
         virtual bool load(int);
     protected:

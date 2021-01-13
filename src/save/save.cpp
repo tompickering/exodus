@@ -10,13 +10,15 @@ static SaveMeta metadata[MAX_SLOTS];
 
 extern ExodusState exostate;
 
-const SaveMeta* SaveManager::get_all_meta() {
-    L.info("Reading save metadata");
-    char data[SAVE_SIZE];
-    for (int i = 0; i < MAX_SLOTS; ++i) {
-        metadata[i].exists = false;
-        if (load_data(i, data)) {
-            memcpy(&metadata[i], data, sizeof(SaveMeta));
+const SaveMeta* SaveManager::get_all_meta(bool refresh) {
+    if (refresh) {
+        L.info("Reading save metadata");
+        char data[SAVE_SIZE];
+        for (int i = 0; i < MAX_SLOTS; ++i) {
+            metadata[i].exists = false;
+            if (load_data(i, data)) {
+                memcpy(&metadata[i], data, sizeof(SaveMeta));
+            }
         }
     }
     return metadata;
