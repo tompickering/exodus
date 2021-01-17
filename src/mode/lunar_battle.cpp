@@ -225,7 +225,9 @@ ExodusMode LunarBattle::update(float delta) {
             } else {
                 Direction move_dir = DIR_None;
 
-                if (get_valid_move_directions() == 0) {
+                char valid_dirs = get_valid_move_directions();
+
+                if (valid_dirs == 0) {
                     // Movement is impossible - skip this stage
                     active_unit->moves_remaining = 0;
                     break;
@@ -258,6 +260,13 @@ ExodusMode LunarBattle::update(float delta) {
                         // We wish to end our movement phase early
                         move_dir = DIR_None;
                         active_unit->moves_remaining = 0;
+                    }
+
+                    if (   (move_dir == DIR_Right && !(valid_dirs & 1))
+                        || (move_dir == DIR_Left && !(valid_dirs & 2))
+                        || (move_dir == DIR_Down && !(valid_dirs & 4))
+                        || (move_dir == DIR_Up && !(valid_dirs & 8))) {
+                        move_dir = DIR_None;
                     }
                 } else {
                     // TODO: AI movement - for now just stick with the random choice
