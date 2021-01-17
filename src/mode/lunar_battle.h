@@ -65,7 +65,6 @@ class BattleUnit {
         int moves_remaining;
         int shots_remaining;
         bool turn_taken;
-        bool drawn_dead_bg;
         const char* idle;
         const char* walk;
         const char* fire;

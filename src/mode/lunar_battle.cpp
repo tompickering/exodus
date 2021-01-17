@@ -37,7 +37,9 @@ enum ID {
     ARROW_DOWN,
     ARROW_LEFT,
     ARROW_RIGHT,
+    CURSOR,
     EXPLOSION,
+    HIGHLIGHT,
     END,
 };
 
@@ -143,10 +145,6 @@ void LunarBattle::draw_ground() {
     }
 
     draw_manager.save_background({SURF_X, SURF_Y, RES_X, RES_Y});
-
-    for (int i = 0; i < n_units; ++i) {
-        units[i].drawn_dead_bg = false;
-    }
 }
 
 void LunarBattle::exit() {
@@ -360,9 +358,6 @@ ExodusMode LunarBattle::update(float delta) {
                     active_unit->hp, damage_to_apply,
                     target_unit->hp, max(0, target_unit->hp - damage_to_apply));
             }
-            if (damage_to_apply > 0) {
-                draw_manager.save_background({SURF_X, SURF_Y, RES_X, RES_Y});
-            }
             stage = LB_Damage;
             break;
         case LB_Damage:
@@ -385,18 +380,28 @@ ExodusMode LunarBattle::update(float delta) {
                 break;
             }
 
-            if (target_unit) {
-                // If the lunar base control is destroyed, destroy all lunar base guns
-                if (target_unit->type == UNIT_LBCtl && target_unit->hp <= 0) {
-                    for (int i = 0; i < n_units; ++i) {
-                        if (units[i].type == UNIT_LBGun) {
-                            units[i].hp = 0;
-                        }
+            // Ensure that dead units are at the bottom of the draw stack
+            // (Move live ones back to the top)
+            if (target_unit->hp <= 0) {
+                for (int i = 0; i < BATTLE_UNITS_MAX; ++i) {
+                    if (units[i].hp > 0) {
+                        draw_manager.refresh_sprite_id(units[i].spr_id);
                     }
                 }
-                // Ensure the units are removed from the background
-                draw_ground();
+                // But leave the cursor and explosion on top
+                draw_manager.refresh_sprite_id(id(ID::CURSOR));
+                draw_manager.refresh_sprite_id(id(ID::EXPLOSION));
             }
+
+            // If the lunar base control is destroyed, destroy all lunar base guns
+            if (target_unit->type == UNIT_LBCtl && target_unit->hp <= 0) {
+                for (int i = 0; i < n_units; ++i) {
+                    if (units[i].type == UNIT_LBGun) {
+                        units[i].hp = 0;
+                    }
+                }
+            }
+
             stage = LB_CheckWon;
             break;
         case LB_CheckWon:
@@ -432,17 +437,6 @@ ExodusMode LunarBattle::update(float delta) {
     update_panel();
     draw_units();
     update_cursor();
-
-    bool cursor_moved = (cursor_x != cursor_prev_x || cursor_y != cursor_prev_y);
-
-    if (cursor_moved) {
-        DrawArea a = {SURF_X + cursor_prev_x * BLK_SZ,
-                      SURF_Y + cursor_prev_y * BLK_SZ,
-                      BLK_SZ, BLK_SZ};
-        draw_manager.restore_background(a);
-        // FIXME: We should really just redraw unit under the previous position, if any...
-        draw_units();
-    }
 
     update_arrows();
 
@@ -645,29 +639,22 @@ void LunarBattle::draw_units() {
                 }
             }
 
-            if (units[i].hp <= 0) spr = units[i].dead;
-
-            if (units[i].hp > 0 || !units[i].drawn_dead_bg) {
-                if (units[i].defending) {
-                    draw_manager.draw(
-                        units[i].spr_id,
-                        spr,
-                        {draw_x + BLK_SZ, draw_y,
-                         1, 0, 1, 1});
-                } else {
-                    draw_manager.draw(
-                        units[i].spr_id,
-                        spr,
-                        {draw_x, draw_y,
-                         0, 0, 1, 1});
-                }
+            if (units[i].hp <= 0) {
+                spr = units[i].dead;
             }
 
-            if (units[i].hp <= 0 && !units[i].drawn_dead_bg) {
-                // A dead unit has just been drawn - save this area to the background
-                units[i].drawn_dead_bg = true;
-                DrawArea area = {draw_x, draw_y, BLK_SZ, BLK_SZ};
-                draw_manager.save_background(area);
+            if (units[i].defending) {
+                draw_manager.draw(
+                    units[i].spr_id,
+                    spr,
+                    {draw_x + BLK_SZ, draw_y,
+                     1, 0, 1, 1});
+            } else {
+                draw_manager.draw(
+                    units[i].spr_id,
+                    spr,
+                    {draw_x, draw_y,
+                     0, 0, 1, 1});
             }
 
             if (exp_interp > 0 && target_unit == &units[i]) {
@@ -679,13 +666,22 @@ void LunarBattle::draw_units() {
             }
 
             if (human_turn && stage == LB_Fire && active_unit == &units[i]) {
+                bool draw_highlight = false;
                 if (!target_unit && (fire_time > 1 || fmod(fire_time, 0.2) < 0.1)) {
                     if (check_viable_targets()) {
-                        draw_manager.draw(
-                            IMG_CURSOR_BATTLE1,
-                            {draw_x, draw_y,
-                             0, 0, 1, 1});
+                        draw_highlight = true;
                     }
+                }
+                if (draw_highlight) {
+                    draw_manager.draw(
+                        id(ID::HIGHLIGHT),
+                        IMG_CURSOR_BATTLE1,
+                        {draw_x, draw_y,
+                         0, 0, 1, 1});
+                } else {
+                    draw_manager.draw(
+                        id(ID::HIGHLIGHT),
+                        nullptr);
                 }
             }
         }
@@ -729,6 +725,7 @@ void LunarBattle::update_cursor() {
 
     if (cursor_x >= 0 && cursor_y >= 0) {
         draw_manager.draw(
+            id(ID::CURSOR),
             (over_target || ice) ? IMG_CURSOR_BATTLE1 : IMG_CURSOR_BATTLE0,
             {SURF_X + BLK_SZ * cursor_x,
              SURF_Y + BLK_SZ * cursor_y,
@@ -1339,7 +1336,6 @@ BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     shoot_sfx = nullptr;
     can_shoot_behind = true;
     turn_taken = false;
-    drawn_dead_bg = false;
 }
 
 BattleUnit& BattleUnit::init(int _x, int _y) {
@@ -1350,7 +1346,6 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
     tgt_y = y;
 
     turn_taken = false;
-    drawn_dead_bg = false;
 
     switch (type) {
         case UNIT_Inf:
