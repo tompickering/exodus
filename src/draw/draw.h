@@ -132,6 +132,7 @@ class DrawManager {
         virtual void clear(DrawTarget) = 0;
         virtual SprID new_sprite_id();
         virtual void release_sprite_id(SprID);
+        virtual void refresh_sprite_id(SprID);
         virtual DrawnSprite* get_drawn_info(SprID);
         virtual DrawArea* get_drawn_area(SprID);
         virtual void draw_init_image() = 0;

@@ -216,6 +216,17 @@ void DrawManager::release_sprite_id(SprID id) {
     }
 }
 
+void DrawManager::refresh_sprite_id(SprID id) {
+    for (std::vector<DrawnSprite>::size_type i = 0; i < drawn_spr_info.size(); ++i) {
+        if (drawn_spr_info[i].id == id) {
+            DrawnSprite ds = drawn_spr_info[i];
+            drawn_spr_info.erase(drawn_spr_info.begin() + i);
+            drawn_spr_info.push_back(ds);
+            break;
+        }
+    }
+}
+
 DrawnSprite* DrawManager::get_drawn_info(SprID id) {
     for (std::vector<DrawnSprite>::size_type i = 0; i < drawn_spr_info.size(); ++i) {
         if (drawn_spr_info[i].id == id) {
