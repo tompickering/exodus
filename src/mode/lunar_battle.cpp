@@ -113,6 +113,10 @@ void LunarBattle::enter() {
             units[i].spr_id = draw_manager.new_sprite_id();
         }
 
+        for (int i = 0; i < n_cover; ++i) {
+            cover[i].spr_id = draw_manager.new_sprite_id();
+        }
+
         defender_turn = (bool)(owner && owner->is_human());
         reset_round();
         stage = LB_SelectUnit;
@@ -134,17 +138,18 @@ void LunarBattle::draw_ground() {
         p->moon_sprites()->bg,
         {SURF_X, SURF_Y, 0, 0, 1, 1});
 
+    draw_manager.save_background({SURF_X, SURF_Y, RES_X, RES_Y});
+
     for (int i = 0; i < n_cover; ++i) {
         const char *spr = p->moon_sprites()->cover0;
         if (cover[i].alt) spr = p->moon_sprites()->cover1;
         draw_manager.draw(
+            cover[i].spr_id,
             spr,
             {SURF_X + cover[i].x * BLK_SZ,
              SURF_Y + cover[i].y * BLK_SZ,
              0, 0, 1, 1});
     }
-
-    draw_manager.save_background({SURF_X, SURF_Y, RES_X, RES_Y});
 }
 
 void LunarBattle::exit() {
@@ -153,6 +158,9 @@ void LunarBattle::exit() {
     if (!b.auto_battle) {
         for (int i = 0; i < BATTLE_UNITS_MAX; ++i) {
             draw_manager.release_sprite_id(units[i].spr_id);
+        }
+        for (int i = 0; i < n_cover; ++i) {
+            draw_manager.release_sprite_id(cover[i].spr_id);
         }
     }
 

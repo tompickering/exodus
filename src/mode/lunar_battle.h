@@ -81,6 +81,7 @@ class Cover {
         int x;
         int y;
         bool alt;
+        SprID spr_id;
 };
 
 class LunarBattle : ModeBase, CommPanelDrawer {
