@@ -78,7 +78,31 @@ void LunarBattlePrep::enter() {
     else if (m < 100) mines_available = 10;
     else              mines_available = 12;
 
+    // TODO: Populate this for human players during setup (CPU done)
     b.defender_mines = 0;
+
+    int r = RND(mines_available);
+    if (!owner->is_human()) {
+        if (owner->can_afford(3) && onein(3)) {
+            int to_purchase = 0;
+            do {
+                to_purchase = min(RND(r) + 3, r);
+                /*
+                 * FIXME: Orig allows spend of 6MC more than we can afford.
+                 * It allows -ve MC - we change the behaviour to ensure
+                 * we can afford the full price.
+                 * I wonder if the '6' was supposed to be added rather than
+                 * subtracted, ensuring that the CPU wouldn't spend so much
+                 * as to leave themselves with <6MC.
+                 */
+                int to_spend = max(to_purchase * mines_price /*- 6*/, 0);
+                if (owner->attempt_spend(to_spend)) {
+                    b.defender_mines = to_purchase;
+                    break;
+                }
+            } while (RND(30) != 1);
+        }
+    }
 
     // TODO - Supplements from war allies - ensure we don't subtrace these from
     // garrison at the end of combat!
