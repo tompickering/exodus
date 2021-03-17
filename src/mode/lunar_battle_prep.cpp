@@ -1,5 +1,7 @@
 #include "lunar_battle_prep.h"
 
+#include "util/value.h"
+
 #include "assetpaths.h"
 
 enum ID {
