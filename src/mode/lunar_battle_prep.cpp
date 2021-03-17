@@ -62,13 +62,27 @@ void LunarBattlePrep::enter() {
     // Get numbers of defending units
     p->get_army(b.defender_inf, b.defender_gli, b.defender_art);
 
-    // TODO: Populate this during setup
+    int m = exostate.get_orig_month();
+
+    // Orig: PROCb_gpr
+    int def_mc = owner->get_mc();
+    if      (def_mc <  30) mines_price = 5;
+    else if (def_mc <  60) mines_price = 8;
+    else if (def_mc < 100) mines_price = 10;
+    else if (def_mc < 200) mines_price = 15;
+    else if (def_mc < 501) mines_price = 20;
+    else                   mines_price = 25;
+
+    if      (m <  20) mines_available = 5;
+    else if (m <  50) mines_available = 8;
+    else if (m < 100) mines_available = 10;
+    else              mines_available = 12;
+
     b.defender_mines = 0;
 
     // TODO - Supplements from war allies - ensure we don't subtrace these from
     // garrison at the end of combat!
 
-    int m = exostate.get_orig_month();
     switch (b.aggressor_type) {
         case AGG_Player:
             b.aggressor_inf = aggressor->get_fleet().freight.infantry;

@@ -20,6 +20,9 @@ class LunarBattlePrep : ModeBase {
         };
 
         Stage stage;
+
+        int mines_available;
+        int mines_price;
 };
 
 #endif
