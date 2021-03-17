@@ -102,6 +102,11 @@ void LunarBattlePrep::enter() {
                 }
             } while (RND(30) != 1);
         }
+        if (owner->is_guild_member()) {
+            b.defender_inf += 5;
+            b.defender_gli += 5;
+            b.defender_art += 5;
+        }
     }
 
     // TODO - Supplements from war allies - ensure we don't subtrace these from
