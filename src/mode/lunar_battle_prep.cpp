@@ -260,8 +260,42 @@ ExodusMode LunarBattlePrep::update(float delta) {
             set_stage(LBP_GuildSupport);
             break;
         case LBP_GuildSupport:
-            // TODO
-            set_stage(LBP_BuyMines);
+            if (!owner->is_guild_member()) {
+                set_stage(LBP_BuyMines);
+                break;
+            }
+
+            if (!stage_started) {
+                // TODO: Check if these need to be subtracted after battle
+                b.aggressor_inf += 5;
+                b.aggressor_gli += 5;
+                b.aggressor_art += 10;
+
+                draw_manager.fill(
+                    id(ID::PANEL),
+                    {PANEL_X - BORDER, PANEL_Y - BORDER,
+                     PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+                    COL_BORDERS);
+                draw_manager.fill_pattern(
+                    id(ID::PANEL_PATTERN),
+                    {PANEL_X, PANEL_Y,
+                     PANEL_W, PANEL_H});
+                draw_manager.draw_text(
+                    "The Space Guild sends",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 4,
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    "20 battle units.",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 24,
+                    COL_TEXT);
+                break;
+            }
+
+            if (draw_manager.clicked()) {
+                set_stage(LBP_BuyMines);
+            }
             break;
         case LBP_BuyMines:
             // TODO
