@@ -14,6 +14,10 @@ enum ID {
     PANEL_PATTERN,
     OPT_COMMAND,
     OPT_WAIT,
+    OPT_GROUP_AUTO,
+    OPT_GROUP_MAN,
+    OPT_PLACE_AUTO,
+    OPT_PLACE_MAN,
     END,
 };
 
@@ -172,6 +176,10 @@ void LunarBattlePrep::enter() {
 
     draw_manager.set_selectable(id(ID::OPT_COMMAND));
     draw_manager.set_selectable(id(ID::OPT_WAIT));
+    draw_manager.set_selectable(id(ID::OPT_GROUP_AUTO));
+    draw_manager.set_selectable(id(ID::OPT_GROUP_MAN));
+    draw_manager.set_selectable(id(ID::OPT_PLACE_AUTO));
+    draw_manager.set_selectable(id(ID::OPT_PLACE_MAN));
 
     draw_manager.show_cursor(b.human_battle);
 }
@@ -179,6 +187,10 @@ void LunarBattlePrep::enter() {
 void LunarBattlePrep::exit() {
     draw_manager.unset_selectable(id(ID::OPT_COMMAND));
     draw_manager.unset_selectable(id(ID::OPT_WAIT));
+    draw_manager.unset_selectable(id(ID::OPT_GROUP_AUTO));
+    draw_manager.unset_selectable(id(ID::OPT_GROUP_MAN));
+    draw_manager.unset_selectable(id(ID::OPT_PLACE_AUTO));
+    draw_manager.unset_selectable(id(ID::OPT_PLACE_MAN));
 }
 
 ExodusMode LunarBattlePrep::update(float delta) {
@@ -197,12 +209,14 @@ ExodusMode LunarBattlePrep::update(float delta) {
         aggressor = exostate.get_player(b.aggressor_idx);
     }
 
+    bool defending = b.aggressor_type != AGG_Player;
+
     switch (stage) {
         case LBP_Auto:
             break;
         case LBP_InitialPause:
             if (initial_pause > 0.8f) {
-                if (b.aggressor_type != AGG_Player) {
+                if (defending) {
                     // Show 'We have spotted X invading units'
                     // only if attacker is CPU
                     set_stage(LBP_InvaderReport);
@@ -256,8 +270,46 @@ ExodusMode LunarBattlePrep::update(float delta) {
             }
             break;
         case LBP_AllySupport:
-            // TODO
-            set_stage(LBP_GuildSupport);
+            if (!stage_started) {
+                stage_started = true;
+                int m = exostate.get_orig_month();
+                int s = 11;
+                if      (m <  30) s =  4;
+                else if (m <  50) s =  6;
+                else if (m < 100) s =  9;
+                else              s = 11;
+
+                Player *player;
+                for (int i = 0; i < N_PLAYERS; ++i) {
+                    player = exostate.get_player(i);
+                    if (player == owner) {
+                        continue;
+                    }
+                    // TODO
+                }
+
+                draw_manager.fill(
+                    id(ID::PANEL),
+                    {PANEL_X - BORDER, PANEL_Y - BORDER,
+                     PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+                    COL_BORDERS);
+                draw_manager.fill_pattern(
+                    id(ID::PANEL_PATTERN),
+                    {PANEL_X, PANEL_Y,
+                     PANEL_W, PANEL_H});
+                // TODO
+                draw_manager.draw_text(
+                    "WAR ALLY PLACEHOLDER",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 4,
+                    COL_TEXT);
+
+                break;
+            }
+
+            if (draw_manager.clicked()) {
+                set_stage(LBP_GuildSupport);
+            }
             break;
         case LBP_GuildSupport:
             if (!owner->is_guild_member()) {
@@ -300,11 +352,38 @@ ExodusMode LunarBattlePrep::update(float delta) {
             }
             break;
         case LBP_BuyMines:
-            // TODO
-            set_stage(LBP_CommandOrWait);
+            if (!stage_started) {
+                stage_started = true;
+
+                if (!(owner->get_mc() > 4 && onein(3))) {
+                    set_stage(LBP_CommandOrWait);
+                    break;
+                }
+
+                draw_manager.fill(
+                    id(ID::PANEL),
+                    {PANEL_X - BORDER, PANEL_Y - BORDER,
+                     PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+                    COL_BORDERS);
+                draw_manager.fill_pattern(
+                    id(ID::PANEL_PATTERN),
+                    {PANEL_X, PANEL_Y,
+                     PANEL_W, PANEL_H});
+                // TODO
+                draw_manager.draw_text(
+                    "MINE PURCHASE PLACEHOLDER",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 4,
+                    COL_TEXT);
+
+                break;
+            }
+
+            if (draw_manager.clicked()) {
+                set_stage(LBP_CommandOrWait);
+            }
             break;
         case LBP_CommandOrWait:
-            // TODO
             if (!stage_started) {
                 stage_started = true;
 
@@ -347,16 +426,98 @@ ExodusMode LunarBattlePrep::update(float delta) {
             }
             break;
         case LBP_OptionGroupSize:
-            // TODO
-            set_stage(LBP_GroupSize);
+            if (!stage_started) {
+                stage_started = true;
+
+                draw_manager.fill(
+                    id(ID::PANEL),
+                    {PANEL_X - BORDER, PANEL_Y - BORDER,
+                     PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+                    COL_BORDERS);
+                draw_manager.fill_pattern(
+                    id(ID::PANEL_PATTERN),
+                    {PANEL_X, PANEL_Y,
+                     PANEL_W, PANEL_H});
+                draw_manager.draw_text(
+                    "Please select:",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 4,
+                    COL_TEXT);
+                break;
+            }
+
+            draw_manager.draw_text(
+                id(ID::OPT_GROUP_AUTO),
+                "Automatic group size",
+                Justify::Left,
+                PANEL_X + 4, PANEL_Y + 44,
+                COL_TEXT);
+            draw_manager.draw_text(
+                id(ID::OPT_GROUP_MAN),
+                "(Manual group size)",
+                Justify::Left,
+                PANEL_X + 4, PANEL_Y + 64,
+                COL_TEXT);
+
+            if (draw_manager.query_click(id(ID::OPT_GROUP_AUTO)).id) {
+                set_stage(LBP_OptionPlacement);
+            } else if (draw_manager.query_click(id(ID::OPT_GROUP_MAN)).id) {
+                set_stage(LBP_GroupSize);
+            }
             break;
         case LBP_GroupSize:
             // TODO
             set_stage(LBP_OptionPlacement);
             break;
         case LBP_OptionPlacement:
-            // TODO
-            set_stage(LBP_Close);
+            if (!stage_started) {
+                stage_started = true;
+
+                draw_manager.fill(
+                    id(ID::PANEL),
+                    {PANEL_X - BORDER, PANEL_Y - BORDER,
+                     PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+                    COL_BORDERS);
+                draw_manager.fill_pattern(
+                    id(ID::PANEL_PATTERN),
+                    {PANEL_X, PANEL_Y,
+                     PANEL_W, PANEL_H});
+                draw_manager.draw_text(
+                    "Please select:",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 4,
+                    COL_TEXT);
+                break;
+            }
+
+            draw_manager.draw_text(
+                id(ID::OPT_PLACE_MAN),
+                "Manual unit positioning",
+                Justify::Left,
+                PANEL_X + 4, PANEL_Y + 44,
+                COL_TEXT);
+            draw_manager.draw_text(
+                id(ID::OPT_PLACE_AUTO),
+                "(Automatic unit positioning)",
+                Justify::Left,
+                PANEL_X + 4, PANEL_Y + 64,
+                COL_TEXT);
+
+            if (draw_manager.query_click(id(ID::OPT_PLACE_MAN)).id) {
+                if (defending) {
+                    b.defender_manual_placement = true;
+                } else {
+                    b.aggressor_manual_placement = true;
+                }
+                set_stage(LBP_Close);
+            } else if (draw_manager.query_click(id(ID::OPT_PLACE_AUTO)).id) {
+                if (defending) {
+                    b.defender_manual_placement = false;
+                } else {
+                    b.aggressor_manual_placement = false;
+                }
+                set_stage(LBP_Close);
+            }
             break;
         case LBP_Close:
             // TODO: Set this based on preferences
