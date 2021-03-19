@@ -4,18 +4,32 @@
 
 #include "assetpaths.h"
 
+static const int PANEL_W = 328;
+static const int PANEL_H = 120;
+static const int PANEL_X = RES_X/2 - (PANEL_W/2);
+static const int PANEL_Y = 150;
+
 enum ID {
+    PANEL,
+    PANEL_PATTERN,
+    OPT_COMMAND,
+    OPT_WAIT,
     END,
 };
 
 LunarBattlePrep::LunarBattlePrep() : ModeBase("LunarBattlePrep") {
     stackable = false;
-    stage = LBP_Idle;
+    stage = LBP_Auto;
+    stage_started = false;
+    initial_pause = 0;
 }
 
 void LunarBattlePrep::enter() {
     ModeBase::enter(ID::END);
-    stage = LBP_Idle;
+    set_stage(LBP_Auto);
+
+    stage_started = false;
+    initial_pause = 0;
 
     LunarBattleParams &b = ephstate.lunar_battle;
 
@@ -129,8 +143,8 @@ void LunarBattlePrep::enter() {
             break;
     }
 
-    int agg_total = b.aggressor_inf + b.aggressor_gli + b.aggressor_art;
-    int def_total = b.defender_inf  + b.defender_gli  + b.defender_art;
+    agg_total = b.aggressor_inf + b.aggressor_gli + b.aggressor_art;
+    def_total = b.defender_inf  + b.defender_gli  + b.defender_art;
 
     // TODO: I think this only happens for humans
     if (def_total == 0) {
@@ -152,15 +166,23 @@ void LunarBattlePrep::enter() {
     if (b.human_battle) {
         draw_manager.draw(IMG_BATTLE_PREP);
         draw_manager.save_background();
+        // TODO: Music
+        set_stage(LBP_InitialPause);
     }
+
+    draw_manager.set_selectable(id(ID::OPT_COMMAND));
+    draw_manager.set_selectable(id(ID::OPT_WAIT));
 
     draw_manager.show_cursor(b.human_battle);
 }
 
+void LunarBattlePrep::exit() {
+    draw_manager.unset_selectable(id(ID::OPT_COMMAND));
+    draw_manager.unset_selectable(id(ID::OPT_WAIT));
+}
+
 ExodusMode LunarBattlePrep::update(float delta) {
     LunarBattleParams &b = ephstate.lunar_battle;
-
-    L.debug("<<< LUNAR BATTLE PREP PLACEHOLDER >>>>");
 
     if (!b.human_battle) {
         // We've done all prep in enter()
@@ -168,15 +190,154 @@ ExodusMode LunarBattlePrep::update(float delta) {
         return ephstate.get_appropriate_mode();
     }
 
-    if (draw_manager.clicked()) {
-        // TODO: Set this based on 'wait for the report' selection
-        b.auto_battle = false;
-        // TODO: Set this based on preferences
-        b.aggressor_manual_placement = false;
-        b.defender_manual_placement = false;
-        ephstate.set_ephemeral_state(EPH_LunarBattle);
-        return ephstate.get_appropriate_mode();
+    Planet *p = exostate.get_active_planet();
+    Player *owner = exostate.get_player(p->get_owner());
+    Player *aggressor = nullptr;
+    if (b.aggressor_type == AGG_Player) {
+        aggressor = exostate.get_player(b.aggressor_idx);
+    }
+
+    switch (stage) {
+        case LBP_Auto:
+            break;
+        case LBP_InitialPause:
+            if (initial_pause > 0.8f) {
+                if (b.aggressor_type != AGG_Player) {
+                    // Show 'We have spotted X invading units'
+                    // only if attacker is CPU
+                    set_stage(LBP_InvaderReport);
+                } else {
+                    set_stage(LBP_CommandOrWait);
+                }
+            }
+            initial_pause += delta;
+            break;
+        case LBP_InvaderReport:
+            if (!stage_started) {
+                stage_started = true;
+
+                char text[32];
+                int invaders_approx = max(((int)(agg_total/10))*10, 5);
+                draw_manager.fill(
+                    id(ID::PANEL),
+                    {PANEL_X - BORDER, PANEL_Y - BORDER,
+                     PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+                    COL_BORDERS);
+                draw_manager.fill_pattern(
+                    id(ID::PANEL_PATTERN),
+                    {PANEL_X, PANEL_Y,
+                     PANEL_W, PANEL_H});
+                draw_manager.draw_text(
+                    "We have spotted about",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 4,
+                    COL_TEXT);
+                snprintf(text, 31, "%d invading units.", invaders_approx);
+                draw_manager.draw_text(
+                    text,
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 24,
+                    COL_TEXT);
+                snprintf(text, 31, "%d machines defend", def_total);
+                draw_manager.draw_text(
+                    text,
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 64,
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    "our planet.",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 84,
+                    COL_TEXT);
+                break;
+            }
+            if (draw_manager.clicked()) {
+                set_stage(LBP_AllySupport);
+            }
+            break;
+        case LBP_AllySupport:
+            // TODO
+            set_stage(LBP_GuildSupport);
+            break;
+        case LBP_GuildSupport:
+            // TODO
+            set_stage(LBP_BuyMines);
+            break;
+        case LBP_BuyMines:
+            // TODO
+            set_stage(LBP_CommandOrWait);
+            break;
+        case LBP_CommandOrWait:
+            // TODO
+            if (!stage_started) {
+                stage_started = true;
+
+                draw_manager.fill(
+                    id(ID::PANEL),
+                    {PANEL_X - BORDER, PANEL_Y - BORDER,
+                     PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+                    COL_BORDERS);
+                draw_manager.fill_pattern(
+                    id(ID::PANEL_PATTERN),
+                    {PANEL_X, PANEL_Y,
+                     PANEL_W, PANEL_H});
+                draw_manager.draw_text(
+                    "Sir, do you wish to...",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 4,
+                    COL_TEXT);
+                break;
+            }
+
+            draw_manager.draw_text(
+                id(ID::OPT_COMMAND),
+                "...command our troops",
+                Justify::Left,
+                PANEL_X + 4, PANEL_Y + 44,
+                COL_TEXT);
+            draw_manager.draw_text(
+                id(ID::OPT_WAIT),
+                "(...wait for the report)",
+                Justify::Left,
+                PANEL_X + 4, PANEL_Y + 64,
+                COL_TEXT);
+
+            if (draw_manager.query_click(id(ID::OPT_COMMAND)).id) {
+                b.auto_battle = false;
+                set_stage(LBP_OptionGroupSize);
+            } else if (draw_manager.query_click(id(ID::OPT_WAIT)).id) {
+                b.auto_battle = true;
+                set_stage(LBP_AutoBattleWait);
+            }
+            break;
+        case LBP_OptionGroupSize:
+            // TODO
+            set_stage(LBP_GroupSize);
+            break;
+        case LBP_GroupSize:
+            // TODO
+            set_stage(LBP_OptionPlacement);
+            break;
+        case LBP_OptionPlacement:
+            // TODO
+            set_stage(LBP_Close);
+            break;
+        case LBP_Close:
+            // TODO: Set this based on preferences
+            b.aggressor_manual_placement = false;
+            b.defender_manual_placement = false;
+            ephstate.set_ephemeral_state(EPH_LunarBattle);
+            return ephstate.get_appropriate_mode();
+        default:
+            // TODO: Remove this
+            set_stage(LBP_Close);
+            break;
     }
 
     return ExodusMode::MODE_None;
+}
+
+void LunarBattlePrep::set_stage(Stage new_stage) {
+    stage = new_stage;
+    stage_started = false;
 }

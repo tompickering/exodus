@@ -13,16 +13,36 @@ class LunarBattlePrep : ModeBase {
     public:
         LunarBattlePrep();
         virtual void enter() override;
+        virtual void exit() override;
         virtual ExodusMode update(float) override;
     private:
         enum Stage {
-            LBP_Idle,
+            LBP_Auto,
+            LBP_InitialPause,
+            LBP_InvaderReport,
+            LBP_AllySupport,
+            LBP_GuildSupport,
+            LBP_BuyMines,
+            LBP_CommandOrWait,
+            LBP_OptionGroupSize,
+            LBP_GroupSize,
+            LBP_OptionPlacement,
+            LBP_AutoBattleWait,
+            LBP_AutoBattleConclude,
+            LBP_Close,
         };
 
         Stage stage;
 
+        int agg_total;
+        int def_total;
         int mines_available;
         int mines_price;
+
+        bool stage_started;
+        float initial_pause;
+
+        void set_stage(Stage);
 };
 
 #endif
