@@ -227,6 +227,11 @@ ExodusMode LunarBattlePrep::update(float delta) {
             initial_pause += delta;
             break;
         case LBP_InvaderReport:
+            if (!defending) {
+                L.error("LBP_InvaderReport invalid for attacker");
+                set_stage(LBP_CommandOrWait);
+            }
+
             if (!stage_started) {
                 stage_started = true;
 
@@ -270,6 +275,11 @@ ExodusMode LunarBattlePrep::update(float delta) {
             }
             break;
         case LBP_AllySupport:
+            if (!defending) {
+                L.error("LBP_AllySupport invalid for attacker");
+                set_stage(LBP_CommandOrWait);
+            }
+
             if (!stage_started) {
                 stage_started = true;
                 int m = exostate.get_orig_month();
@@ -312,6 +322,11 @@ ExodusMode LunarBattlePrep::update(float delta) {
             }
             break;
         case LBP_GuildSupport:
+            if (!defending) {
+                L.error("LBP_GuildSupport invalid for attacker");
+                set_stage(LBP_CommandOrWait);
+            }
+
             if (!owner->is_guild_member()) {
                 set_stage(LBP_BuyMines);
                 break;
@@ -352,6 +367,11 @@ ExodusMode LunarBattlePrep::update(float delta) {
             }
             break;
         case LBP_BuyMines:
+            if (!defending) {
+                L.error("LBP_BuyMines invalid for attacker");
+                set_stage(LBP_CommandOrWait);
+            }
+
             if (!stage_started) {
                 stage_started = true;
 
