@@ -157,25 +157,21 @@ void LunarBattlePrep::enter() {
     b.defender_gli = 20;
     b.defender_art = 10;
 
-    agg_total = b.aggressor_inf + b.aggressor_gli + b.aggressor_art;
-    def_total = b.defender_inf  + b.defender_gli  + b.defender_art;
-
     // TODO: I think this only happens for humans
-    if (def_total == 0) {
+    if (get_def_total() == 0) {
         b.defender_inf = 1;
-        def_total = 1;
     }
 
     // Default group sizes - humans can override.
     b.aggressor_group_size = 12;
-    if (agg_total <= 200) b.aggressor_group_size = 8;
-    if (agg_total <=  90) b.aggressor_group_size = 5;
-    if (agg_total <=  30) b.aggressor_group_size = 3;
+    if (get_agg_total() <= 200) b.aggressor_group_size = 8;
+    if (get_agg_total() <=  90) b.aggressor_group_size = 5;
+    if (get_agg_total() <=  30) b.aggressor_group_size = 3;
 
     b.defender_group_size = 12;
-    if (def_total <= 200) b.defender_group_size = 8;
-    if (def_total <=  90) b.defender_group_size = 5;
-    if (def_total <=  30) b.defender_group_size = 3;
+    if (get_def_total() <= 200) b.defender_group_size = 8;
+    if (get_def_total() <=  90) b.defender_group_size = 5;
+    if (get_def_total() <=  30) b.defender_group_size = 3;
 
     if (b.human_battle) {
         draw_manager.draw(IMG_BATTLE_PREP);
@@ -246,7 +242,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
                 stage_started = true;
 
                 char text[32];
-                int invaders_approx = max(((int)(agg_total/10))*10, 5);
+                int invaders_approx = max(((int)(get_agg_total()/10))*10, 5);
                 draw_manager.fill(
                     id(ID::PANEL),
                     {PANEL_X - BORDER, PANEL_Y - BORDER,
@@ -267,7 +263,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
                     Justify::Left,
                     PANEL_X + 4, PANEL_Y + 24,
                     COL_TEXT);
-                snprintf(text, 31, "%d machines defend", def_total);
+                snprintf(text, 31, "%d machines defend", get_def_total());
                 draw_manager.draw_text(
                     text,
                     Justify::Left,
@@ -681,4 +677,14 @@ ExodusMode LunarBattlePrep::update(float delta) {
 void LunarBattlePrep::set_stage(Stage new_stage) {
     stage = new_stage;
     stage_started = false;
+}
+
+int LunarBattlePrep::get_agg_total() {
+    LunarBattleParams &b = ephstate.lunar_battle;
+    return b.aggressor_inf + b.aggressor_gli + b.aggressor_art;
+}
+
+int LunarBattlePrep::get_def_total() {
+    LunarBattleParams &b = ephstate.lunar_battle;
+    return b.defender_inf  + b.defender_gli  + b.defender_art;
 }

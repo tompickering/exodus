@@ -34,8 +34,6 @@ class LunarBattlePrep : ModeBase {
 
         Stage stage;
 
-        int agg_total;
-        int def_total;
         int mines_available;
         int mines_price;
         int mines_to_buy;
@@ -44,6 +42,9 @@ class LunarBattlePrep : ModeBase {
         float initial_pause;
 
         void set_stage(Stage);
+
+        int get_agg_total();
+        int get_def_total();
 };
 
 #endif
