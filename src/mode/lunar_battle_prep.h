@@ -38,6 +38,7 @@ class LunarBattlePrep : ModeBase {
         int def_total;
         int mines_available;
         int mines_price;
+        int mines_to_buy;
 
         bool stage_started;
         float initial_pause;

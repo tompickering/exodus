@@ -12,6 +12,8 @@ static const int PANEL_Y = 150;
 enum ID {
     PANEL,
     PANEL_PATTERN,
+    MINES_TO_BUY,
+    MINES_ADJUST,
     OPT_COMMAND,
     OPT_WAIT,
     OPT_GROUP_AUTO,
@@ -100,7 +102,6 @@ void LunarBattlePrep::enter() {
     else if (m < 100) mines_available = 10;
     else              mines_available = 12;
 
-    // TODO: Populate this for human players during setup (CPU done)
     b.defender_mines = 0;
 
     int r = RND(mines_available);
@@ -389,6 +390,8 @@ ExodusMode LunarBattlePrep::update(float delta) {
                     break;
                 }
 
+                char text[32];
+
                 draw_manager.fill(
                     id(ID::PANEL),
                     {PANEL_X - BORDER, PANEL_Y - BORDER,
@@ -398,19 +401,64 @@ ExodusMode LunarBattlePrep::update(float delta) {
                     id(ID::PANEL_PATTERN),
                     {PANEL_X, PANEL_Y,
                      PANEL_W, PANEL_H});
-                // TODO
                 draw_manager.draw_text(
-                    "MINE PURCHASE PLACEHOLDER",
+                    "A private concern offers",
                     Justify::Left,
                     PANEL_X + 4, PANEL_Y + 4,
                     COL_TEXT);
+                snprintf(text, sizeof(text), "%d AntiGrav mines for", mines_available);
+                draw_manager.draw_text(
+                    text,
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 24,
+                    COL_TEXT);
+                snprintf(text, sizeof(text), "%dMC each.", mines_price);
+                draw_manager.draw_text(
+                    text,
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 44,
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    "Buy:",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 84,
+                    COL_TEXT);
+                draw_manager.draw(
+                    id(ID::MINES_ADJUST),
+                    IMG_BR3_EXPORT2,
+                    {PANEL_X + PANEL_W - 4, PANEL_Y + PANEL_H - 4,
+                     1, 1,
+                     1, 1});
 
+                mines_to_buy = 0;
                 break;
             }
 
-            if (draw_manager.clicked()) {
-                set_stage(LBP_CommandOrWait);
+            {
+                char n[3];
+                snprintf(n, sizeof(n), "%d", mines_to_buy);
+                draw_manager.draw_text(
+                    id(ID::MINES_TO_BUY),
+                    n,
+                    Justify::Left,
+                    PANEL_X + 50, PANEL_Y + 84,
+                    COL_TEXT2);
+
+                SpriteClick clk = draw_manager.query_click(id(ID::MINES_ADJUST));
+                if (clk.id) {
+                    if (clk.y > .5f) {
+                        if (owner->attempt_spend(mines_price * mines_to_buy)) {
+                            b.defender_mines = mines_to_buy;
+                            set_stage(LBP_CommandOrWait);
+                        }
+                    } else if (clk.x < .5f) {
+                        mines_to_buy = max(mines_to_buy-1, 0);
+                    } else {
+                        mines_to_buy = min(mines_to_buy+1, mines_available);
+                    }
+                }
             }
+
             break;
         case LBP_CommandOrWait:
             if (!stage_started) {
