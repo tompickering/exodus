@@ -444,6 +444,8 @@ ExodusMode LunarBattlePrep::update(float delta) {
                     PANEL_X + 50, PANEL_Y + 84,
                     COL_TEXT2);
 
+                // TODO: Orig in PROCb_ready looks like it can allow us to
+                // buy one more mine than we can afford - check this
                 SpriteClick clk = draw_manager.query_click(id(ID::MINES_ADJUST));
                 if (clk.id) {
                     if (clk.y > .5f) {
