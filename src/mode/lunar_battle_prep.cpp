@@ -16,6 +16,8 @@ enum ID {
     OPT_WAIT,
     OPT_GROUP_AUTO,
     OPT_GROUP_MAN,
+    OPT_GROUP_NUM,
+    OPT_GROUP_ADJUST,
     OPT_PLACE_AUTO,
     OPT_PLACE_MAN,
     END,
@@ -146,6 +148,13 @@ void LunarBattlePrep::enter() {
             b.aggressor_art = RND(m);
             break;
     }
+
+    b.aggressor_inf = 30;
+    b.aggressor_gli = 20;
+    b.aggressor_art = 10;
+    b.defender_inf = 30;
+    b.defender_gli = 20;
+    b.defender_art = 10;
 
     agg_total = b.aggressor_inf + b.aggressor_gli + b.aggressor_art;
     def_total = b.defender_inf  + b.defender_gli  + b.defender_art;
@@ -486,8 +495,73 @@ ExodusMode LunarBattlePrep::update(float delta) {
             }
             break;
         case LBP_GroupSize:
-            // TODO
-            set_stage(LBP_OptionPlacement);
+            {
+                int &size = defending ? b.defender_group_size
+                                      : b.aggressor_group_size;
+
+                char n[3];
+                snprintf(n, sizeof(n), "%d", size);
+
+                if (!stage_started) {
+                    stage_started = true;
+
+                    draw_manager.fill(
+                        id(ID::PANEL),
+                        {PANEL_X - BORDER, PANEL_Y - BORDER,
+                         PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+                        COL_BORDERS);
+                    draw_manager.fill_pattern(
+                        id(ID::PANEL_PATTERN),
+                        {PANEL_X, PANEL_Y,
+                         PANEL_W, PANEL_H});
+                    draw_manager.draw_text(
+                        "Group size recommended:",
+                        Justify::Left,
+                        PANEL_X + 4, PANEL_Y + 4,
+                        COL_TEXT);
+                    draw_manager.draw_text(
+                        n,
+                        Justify::Left,
+                        PANEL_X + 240, PANEL_Y + 4,
+                        COL_TEXT);
+                    draw_manager.draw_text(
+                        "Your choice:",
+                        Justify::Left,
+                        PANEL_X + 4, PANEL_Y + 44,
+                        COL_TEXT);
+                    draw_manager.draw_text(
+                        id(ID::OPT_GROUP_MAN),
+                        "(Min: 2 Max: 20)",
+                        Justify::Left,
+                        PANEL_X + 4, PANEL_Y + 84,
+                        COL_TEXT);
+                    draw_manager.draw(
+                        id(ID::OPT_GROUP_ADJUST),
+                        IMG_BR3_EXPORT2,
+                        {PANEL_X + PANEL_W - 4, PANEL_Y + PANEL_H - 4,
+                         1, 1,
+                         1, 1});
+                        break;
+                }
+
+                draw_manager.draw_text(
+                    id(ID::OPT_GROUP_NUM),
+                    n,
+                    Justify::Left,
+                    PANEL_X + 130, PANEL_Y + 44,
+                    COL_TEXT2);
+
+                SpriteClick clk = draw_manager.query_click(id(ID::OPT_GROUP_ADJUST));
+                if (clk.id) {
+                    if (clk.y > .5f) {
+                        set_stage(LBP_OptionPlacement);
+                    } else if (clk.x < .5f) {
+                        size = max(size-1, 2);
+                    } else {
+                        size = min(size+1, 20);
+                    }
+                }
+            }
             break;
         case LBP_OptionPlacement:
             if (!stage_started) {
