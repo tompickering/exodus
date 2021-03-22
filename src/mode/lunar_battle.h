@@ -9,6 +9,8 @@
 #include "state/exodus_state.h"
 
 #define COVER_MAX 10
+// FIXME: Unify with mines_available values in lunar_battle_prep.cpp
+#define MINES_MAX 12
 #define BATTLE_UNITS_MAX 176    // Battlefield is 16x11
 
 extern ExodusState exostate;
@@ -84,6 +86,15 @@ class Cover {
         SprID spr_id;
 };
 
+class Mine {
+    public:
+        Mine() : x(0), y(0), live(true) {}
+        int x;
+        int y;
+        bool live;
+        SprID spr_id;
+};
+
 class LunarBattle : ModeBase, CommPanelDrawer {
     public:
         LunarBattle();
@@ -106,6 +117,9 @@ class LunarBattle : ModeBase, CommPanelDrawer {
 
         int n_cover;
         Cover cover[COVER_MAX];
+
+        int n_mines;
+        Mine mines[MINES_MAX];
 
         int n_units;
         BattleUnit units[BATTLE_UNITS_MAX];

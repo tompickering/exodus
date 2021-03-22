@@ -79,7 +79,9 @@ ExodusMode GalaxyMap::update(float delta) {
         case GM_SwapIn:
             draw_manager.save_background();
             stage = GM_Idle;
-            break;
+            // Ensure we prepare the next frame straight away
+            // Otherwise causes an annoying flicker e.g. at the end of Fly...
+            return update(0);
         case GM_Idle:
             if (player->get_race() == RACE_Human && !player->intro_seen()) {
                 exostate.set_active_flytarget(gal->get_guild());
@@ -259,6 +261,9 @@ ExodusMode GalaxyMap::update(float delta) {
                     bulletin_ensure_closed();
                     // The only place we emerge from month-pass-specific stages...
                     stage = GM_Idle;
+                    // Ensure we prepare the next frame straight away
+                    // Otherwise causes an annoying flicker on month pass end
+                    update(0);
                 }
                 return next_mode;
             }

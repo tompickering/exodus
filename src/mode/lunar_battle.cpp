@@ -91,6 +91,7 @@ void LunarBattle::enter() {
     exp_interp = 0;
     fire_time = 0;
     n_cover = 0;
+    n_mines = 0;
 
     cursor_x = -1;
     cursor_y = -1;
@@ -149,6 +150,19 @@ void LunarBattle::draw_ground() {
             {SURF_X + cover[i].x * BLK_SZ,
              SURF_Y + cover[i].y * BLK_SZ,
              0, 0, 1, 1});
+    }
+
+    if (ephstate.lunar_battle.aggressor_type != AGG_Player) {
+        for (int i = 0; i < n_mines; ++i) {
+            if (mines[i].live) {
+                draw_manager.draw(
+                    mines[i].spr_id,
+                    IMG_GF4_19,
+                    {SURF_X + mines[i].x * BLK_SZ,
+                     SURF_Y + mines[i].y * BLK_SZ,
+                     0, 0, 1, 1});
+            }
+        }
     }
 }
 
@@ -604,8 +618,43 @@ void LunarBattle::place_side_units(bool def) {
         }
     }
 
-    // TODO: Mine placement (orig seems to be defenders only)
     // TODO: Clear up ground (cover etc) with a unit on it
+
+    // Place defender mines
+    if (def) {
+        for (int i = 0; i < b.defender_mines; ++i) {
+            for (int attempts = 0; attempts < 10000; ++attempts) {
+                int mine_x = (RND(3) + 9) - 1;
+                int mine_y = RND(11) - 1;
+                bool is_suitable = !(unit_at(mine_x, mine_y));
+                if (is_suitable) {
+                    for (int j = 0; j < n_cover; ++j) {
+                        if (cover[j].x == mine_x && cover[j].y == mine_y) {
+                            is_suitable = false;
+                            break;
+                        }
+                    }
+                }
+                if (is_suitable) {
+                    for (int j = 0; j < n_mines; ++j) {
+                        if (mines[j].x == mine_x && mines[j].y == mine_y) {
+                            is_suitable = false;
+                            break;
+                        }
+                    }
+                }
+                if (is_suitable) {
+                    // Place mine
+                    mines[n_mines].x = mine_x;
+                    mines[n_mines].y = mine_y;
+                    mines[n_mines].spr_id = draw_manager.new_sprite_id();
+                    n_mines++;
+                    L.debug("Placed mine at %d %d", mine_x, mine_y);
+                    break;
+                }
+            }
+        }
+    }
 }
 
 void LunarBattle::place_unit(BattleUnit u) {
