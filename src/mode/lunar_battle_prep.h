@@ -48,6 +48,8 @@ class LunarBattlePrep : ModeBase {
 
         int get_agg_total();
         int get_def_total();
+
+        void draw_panel();
 };
 
 #endif

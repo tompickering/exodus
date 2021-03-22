@@ -242,15 +242,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
 
                 char text[32];
                 int invaders_approx = max(((int)(get_agg_total()/10))*10, 5);
-                draw_manager.fill(
-                    id(ID::PANEL),
-                    {PANEL_X - BORDER, PANEL_Y - BORDER,
-                     PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
-                    COL_BORDERS);
-                draw_manager.fill_pattern(
-                    id(ID::PANEL_PATTERN),
-                    {PANEL_X, PANEL_Y,
-                     PANEL_W, PANEL_H});
+                draw_panel();
                 draw_manager.draw_text(
                     "We have spotted about",
                     Justify::Left,
@@ -303,15 +295,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
                     // TODO
                 }
 
-                draw_manager.fill(
-                    id(ID::PANEL),
-                    {PANEL_X - BORDER, PANEL_Y - BORDER,
-                     PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
-                    COL_BORDERS);
-                draw_manager.fill_pattern(
-                    id(ID::PANEL_PATTERN),
-                    {PANEL_X, PANEL_Y,
-                     PANEL_W, PANEL_H});
+                draw_panel();
                 // TODO
                 draw_manager.draw_text(
                     "WAR ALLY PLACEHOLDER",
@@ -345,15 +329,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
                 b.aggressor_gli += 5;
                 b.aggressor_art += 10;
 
-                draw_manager.fill(
-                    id(ID::PANEL),
-                    {PANEL_X - BORDER, PANEL_Y - BORDER,
-                     PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
-                    COL_BORDERS);
-                draw_manager.fill_pattern(
-                    id(ID::PANEL_PATTERN),
-                    {PANEL_X, PANEL_Y,
-                     PANEL_W, PANEL_H});
+                draw_panel();
                 draw_manager.draw_text(
                     "The Space Guild sends",
                     Justify::Left,
@@ -387,15 +363,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
 
                 char text[32];
 
-                draw_manager.fill(
-                    id(ID::PANEL),
-                    {PANEL_X - BORDER, PANEL_Y - BORDER,
-                     PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
-                    COL_BORDERS);
-                draw_manager.fill_pattern(
-                    id(ID::PANEL_PATTERN),
-                    {PANEL_X, PANEL_Y,
-                     PANEL_W, PANEL_H});
+                draw_panel();
                 draw_manager.draw_text(
                     "A private concern offers",
                     Justify::Left,
@@ -461,15 +429,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
             if (!stage_started) {
                 stage_started = true;
 
-                draw_manager.fill(
-                    id(ID::PANEL),
-                    {PANEL_X - BORDER, PANEL_Y - BORDER,
-                     PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
-                    COL_BORDERS);
-                draw_manager.fill_pattern(
-                    id(ID::PANEL_PATTERN),
-                    {PANEL_X, PANEL_Y,
-                     PANEL_W, PANEL_H});
+                draw_panel();
                 draw_manager.draw_text(
                     "Sir, do you wish to...",
                     Justify::Left,
@@ -503,15 +463,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
             if (!stage_started) {
                 stage_started = true;
 
-                draw_manager.fill(
-                    id(ID::PANEL),
-                    {PANEL_X - BORDER, PANEL_Y - BORDER,
-                     PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
-                    COL_BORDERS);
-                draw_manager.fill_pattern(
-                    id(ID::PANEL_PATTERN),
-                    {PANEL_X, PANEL_Y,
-                     PANEL_W, PANEL_H});
+                draw_panel();
                 draw_manager.draw_text(
                     "Please select:",
                     Justify::Left,
@@ -550,15 +502,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
                 if (!stage_started) {
                     stage_started = true;
 
-                    draw_manager.fill(
-                        id(ID::PANEL),
-                        {PANEL_X - BORDER, PANEL_Y - BORDER,
-                         PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
-                        COL_BORDERS);
-                    draw_manager.fill_pattern(
-                        id(ID::PANEL_PATTERN),
-                        {PANEL_X, PANEL_Y,
-                         PANEL_W, PANEL_H});
+                    draw_panel();
                     draw_manager.draw_text(
                         "Group size recommended:",
                         Justify::Left,
@@ -612,15 +556,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
             if (!stage_started) {
                 stage_started = true;
 
-                draw_manager.fill(
-                    id(ID::PANEL),
-                    {PANEL_X - BORDER, PANEL_Y - BORDER,
-                     PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
-                    COL_BORDERS);
-                draw_manager.fill_pattern(
-                    id(ID::PANEL_PATTERN),
-                    {PANEL_X, PANEL_Y,
-                     PANEL_W, PANEL_H});
+                draw_panel();
                 draw_manager.draw_text(
                     "Please select:",
                     Justify::Left,
@@ -682,15 +618,8 @@ ExodusMode LunarBattlePrep::update(float delta) {
             if (!stage_started) {
                 stage_started = true;
 
-                draw_manager.fill(
-                    id(ID::PANEL),
-                    {PANEL_X - BORDER, PANEL_Y - BORDER,
-                     PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
-                    COL_BORDERS);
-                draw_manager.fill_pattern(
-                    id(ID::PANEL_PATTERN),
-                    {PANEL_X, PANEL_Y,
-                     PANEL_W, PANEL_H});
+                draw_panel();
+
                 char text[15 + PLANET_MAX_NAME];
                 snprintf(text, sizeof(text), "The battle of %s", p->get_name());
                 draw_manager.draw_text(
@@ -756,15 +685,9 @@ ExodusMode LunarBattlePrep::update(float delta) {
                 LunarBattleReport &rpt = ephstate.lunar_battle_report;
                 bool won = (defending ^ rpt.aggressor_won);
                 // TODO: Music
-                draw_manager.fill(
-                    id(ID::PANEL),
-                    {PANEL_X - BORDER, PANEL_Y - BORDER,
-                     PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
-                    COL_BORDERS);
-                draw_manager.fill_pattern(
-                    id(ID::PANEL_PATTERN),
-                    {PANEL_X, PANEL_Y,
-                     PANEL_W, PANEL_H});
+
+                draw_panel();
+
                 // TODO
                 draw_manager.draw_text(
                     won ? "WON" : "LOST",
@@ -796,4 +719,18 @@ int LunarBattlePrep::get_agg_total() {
 int LunarBattlePrep::get_def_total() {
     LunarBattleParams &b = ephstate.lunar_battle;
     return b.defender_inf  + b.defender_gli  + b.defender_art;
+}
+
+void LunarBattlePrep::draw_panel() {
+    draw_manager.refresh_sprite_id(id(ID::PANEL));
+    draw_manager.refresh_sprite_id(id(ID::PANEL_PATTERN));
+    draw_manager.fill(
+        id(ID::PANEL),
+        {PANEL_X - BORDER, PANEL_Y - BORDER,
+         PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+        COL_BORDERS);
+    draw_manager.fill_pattern(
+        id(ID::PANEL_PATTERN),
+        {PANEL_X, PANEL_Y,
+         PANEL_W, PANEL_H});
 }
