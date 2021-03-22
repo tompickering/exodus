@@ -28,6 +28,8 @@ class LunarBattlePrep : ModeBase {
             LBP_GroupSize,
             LBP_OptionPlacement,
             LBP_AutoBattleWait,
+            LBP_AutoBattleWait1,
+            LBP_AutoBattleWait2,
             LBP_StartBattle,
             LBP_Conclude,
             LBP_AutoBattleConclude,
@@ -40,7 +42,7 @@ class LunarBattlePrep : ModeBase {
         int mines_to_buy;
 
         bool stage_started;
-        float initial_pause;
+        float pause;
 
         void set_stage(Stage);
 

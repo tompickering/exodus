@@ -28,7 +28,7 @@ enum ID {
 LunarBattlePrep::LunarBattlePrep() : ModeBase("LunarBattlePrep") {
     stage = LBP_Auto;
     stage_started = false;
-    initial_pause = 0;
+    pause = 0;
 }
 
 void LunarBattlePrep::enter() {
@@ -36,7 +36,7 @@ void LunarBattlePrep::enter() {
     set_stage(LBP_Auto);
 
     stage_started = false;
-    initial_pause = 0;
+    pause = 0;
 
     if (ephstate.get_ephemeral_state() == EPH_LunarBattleReport) {
         // LunarBattlePrep does NOT clear ephemeral state - that's the
@@ -220,7 +220,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
         case LBP_Auto:
             break;
         case LBP_InitialPause:
-            if (initial_pause > 0.8f) {
+            if (pause > 0.8f) {
                 if (defending) {
                     // Show 'We have spotted X invading units'
                     // only if attacker is CPU
@@ -229,7 +229,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
                     set_stage(LBP_CommandOrWait);
                 }
             }
-            initial_pause += delta;
+            pause += delta;
             break;
         case LBP_InvaderReport:
             if (!defending) {
@@ -659,8 +659,82 @@ ExodusMode LunarBattlePrep::update(float delta) {
             }
             break;
         case LBP_AutoBattleWait:
-            // TODO: "The battle of XXX has begun..." - then run this after delay:
-            set_stage(LBP_StartBattle);
+            if (!stage_started) {
+                stage_started = true;
+                draw_manager.draw(TGT_Secondary, IMG_BATTLE);
+                draw_manager.pixelswap_start(nullptr);
+                pause = 0;
+            }
+
+            if (draw_manager.pixelswap_active()) {
+                break;
+            }
+
+            if (pause > 0.8) {
+                set_stage(LBP_AutoBattleWait1);
+                break;
+            }
+
+            pause += delta;
+
+            break;
+        case LBP_AutoBattleWait1:
+            if (!stage_started) {
+                stage_started = true;
+
+                draw_manager.fill(
+                    id(ID::PANEL),
+                    {PANEL_X - BORDER, PANEL_Y - BORDER,
+                     PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+                    COL_BORDERS);
+                draw_manager.fill_pattern(
+                    id(ID::PANEL_PATTERN),
+                    {PANEL_X, PANEL_Y,
+                     PANEL_W, PANEL_H});
+                char text[15 + PLANET_MAX_NAME];
+                snprintf(text, sizeof(text), "The battle of %s", p->get_name());
+                draw_manager.draw_text(
+                    text,
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 4,
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    "has begun...",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 24,
+                    COL_TEXT);
+
+                pause = 0;
+
+                break;
+            }
+
+            if (pause > 4.f) {
+                set_stage(LBP_AutoBattleWait2);
+            }
+
+            pause += delta;
+
+            break;
+        case LBP_AutoBattleWait2:
+            if (!stage_started) {
+                stage_started = true;
+                draw_manager.draw(TGT_Secondary, IMG_BATTLE);
+                draw_manager.pixelswap_start(nullptr);
+                pause = 0;
+            }
+
+            if (draw_manager.pixelswap_active()) {
+                break;
+            }
+
+            if (pause > 2.f) {
+                set_stage(LBP_StartBattle);
+                break;
+            }
+
+            pause += delta;
+
             break;
         case LBP_StartBattle:
             ephstate.set_ephemeral_state(EPH_LunarBattle);
