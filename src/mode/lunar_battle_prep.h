@@ -28,8 +28,9 @@ class LunarBattlePrep : ModeBase {
             LBP_GroupSize,
             LBP_OptionPlacement,
             LBP_AutoBattleWait,
+            LBP_StartBattle,
+            LBP_Conclude,
             LBP_AutoBattleConclude,
-            LBP_Close,
         };
 
         Stage stage;

@@ -26,7 +26,6 @@ enum ID {
 };
 
 LunarBattlePrep::LunarBattlePrep() : ModeBase("LunarBattlePrep") {
-    stackable = false;
     stage = LBP_Auto;
     stage_started = false;
     initial_pause = 0;
@@ -38,6 +37,13 @@ void LunarBattlePrep::enter() {
 
     stage_started = false;
     initial_pause = 0;
+
+    if (ephstate.get_ephemeral_state() == EPH_LunarBattleReport) {
+        // LunarBattlePrep does NOT clear ephemeral state - that's the
+        // responsibility of whatever invoked LunarBattlePrep.
+        set_stage(LBP_Conclude);
+        return;
+    }
 
     LunarBattleParams &b = ephstate.lunar_battle;
 
@@ -649,25 +655,61 @@ ExodusMode LunarBattlePrep::update(float delta) {
                 } else {
                     b.aggressor_manual_placement = true;
                 }
-                set_stage(LBP_Close);
+                set_stage(LBP_StartBattle);
             } else if (draw_manager.query_click(id(ID::OPT_PLACE_AUTO)).id) {
                 if (defending) {
                     b.defender_manual_placement = false;
                 } else {
                     b.aggressor_manual_placement = false;
                 }
-                set_stage(LBP_Close);
+                set_stage(LBP_StartBattle);
             }
             break;
-        case LBP_Close:
-            // TODO: Set this based on preferences
-            b.aggressor_manual_placement = false;
-            b.defender_manual_placement = false;
+        case LBP_AutoBattleWait:
+            // TODO: "The battle of XXX has begun..." - then run this after delay:
+            set_stage(LBP_StartBattle);
+            break;
+        case LBP_StartBattle:
             ephstate.set_ephemeral_state(EPH_LunarBattle);
             return ephstate.get_appropriate_mode();
-        default:
-            // TODO: Remove this
-            set_stage(LBP_Close);
+        case LBP_Conclude:
+            // If this is an auto-battle involving a human, we have a
+            // results sequence to present. Otherwise, pop immediately.
+            if (b.auto_battle && b.human_battle) {
+                set_stage(LBP_AutoBattleConclude);
+            } else {
+                return ExodusMode::MODE_Pop;
+            }
+            break;
+        case LBP_AutoBattleConclude:
+            if (!stage_started) {
+                stage_started = true;
+
+                draw_manager.show_cursor(true);
+                LunarBattleReport &rpt = ephstate.lunar_battle_report;
+                bool won = (defending ^ rpt.aggressor_won);
+                // TODO: Music
+                draw_manager.fill(
+                    id(ID::PANEL),
+                    {PANEL_X - BORDER, PANEL_Y - BORDER,
+                     PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+                    COL_BORDERS);
+                draw_manager.fill_pattern(
+                    id(ID::PANEL_PATTERN),
+                    {PANEL_X, PANEL_Y,
+                     PANEL_W, PANEL_H});
+                // TODO
+                draw_manager.draw_text(
+                    won ? "WON" : "LOST",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 4,
+                    COL_TEXT);
+                break;
+            }
+
+            if (draw_manager.clicked()) {
+                return ExodusMode::MODE_Pop;
+            }
             break;
     }
 
