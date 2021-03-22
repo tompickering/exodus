@@ -156,13 +156,6 @@ void LunarBattlePrep::enter() {
             break;
     }
 
-    b.aggressor_inf = 30;
-    b.aggressor_gli = 20;
-    b.aggressor_art = 10;
-    b.defender_inf = 30;
-    b.defender_gli = 20;
-    b.defender_art = 10;
-
     // TODO: I think this only happens for humans
     if (get_def_total() == 0) {
         b.defender_inf = 1;
