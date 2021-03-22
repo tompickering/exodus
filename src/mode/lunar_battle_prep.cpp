@@ -519,7 +519,6 @@ ExodusMode LunarBattlePrep::update(float delta) {
                         PANEL_X + 4, PANEL_Y + 44,
                         COL_TEXT);
                     draw_manager.draw_text(
-                        id(ID::OPT_GROUP_MAN),
                         "(Min: 2 Max: 20)",
                         Justify::Left,
                         PANEL_X + 4, PANEL_Y + 84,
