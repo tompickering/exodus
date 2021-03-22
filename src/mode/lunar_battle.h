@@ -106,6 +106,7 @@ class LunarBattle : ModeBase, CommPanelDrawer {
             LB_Auto,
             LB_SelectUnit,
             LB_Move,
+            LB_Mine,
             LB_Fire,
             LB_CalcDamage,
             LB_Damage,
@@ -178,6 +179,11 @@ class LunarBattle : ModeBase, CommPanelDrawer {
         float fire_time;
 
         int damage_to_apply;
+
+        float mine_timer;
+        int mine_beeps;
+        bool mine_damage;
+        Mine *active_mine;
 };
 
 #endif

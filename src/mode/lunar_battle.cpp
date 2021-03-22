@@ -98,6 +98,11 @@ void LunarBattle::enter() {
     cursor_prev_x = -1;
     cursor_prev_y = -1;
 
+    mine_timer = 0;
+    mine_beeps = 0;
+    mine_damage = false;
+    active_mine = nullptr;
+
     use_alt_aliens = (bool)(rand() % 2);
 
     human_turn = true;
@@ -237,7 +242,20 @@ ExodusMode LunarBattle::update(float delta) {
                 active_unit->x = active_unit->tgt_x;
                 active_unit->y = active_unit->tgt_y;
                 active_unit->moves_remaining--;
-                // TODO: Check if we've stepped on a mine. If so, LB_CheckWon.
+
+                // If we're a glider, check if we've on a mine
+                if (active_unit->type == UNIT_Gli) {
+                    for (int i = 0; i < n_mines; ++i) {
+                        if (mines[i].x == active_unit->x && mines[i].y == active_unit->y) {
+                            if (mines[i].live) {
+                                active_mine = &mines[i];
+                                stage = LB_Mine;
+                                return ExodusMode::MODE_None;
+                            }
+                        }
+                    }
+                }
+
                 break;
             }
 
@@ -306,6 +324,38 @@ ExodusMode LunarBattle::update(float delta) {
                     move_interp = 0;
                     // TODO: move SFX
                 }
+            }
+            break;
+        case LB_Mine:
+            if (!active_mine) {
+                L.fatal("Entered LB_Mine mode with no active mine");
+            }
+
+            if (mine_beeps < 5) {
+                if (mine_timer > .05f) {
+                    // Final 'beep' is silent
+                    if (mine_beeps < 4) {
+                        // TODO: Beep
+                    }
+                    mine_timer = 0;
+                    mine_beeps++;
+                    return ExodusMode::MODE_None;
+                }
+                mine_timer += delta;
+                return ExodusMode::MODE_None;
+            } else {
+                mine_beeps = 0;
+                mine_timer = 0;
+                // Mine explosion
+                target_unit = active_unit;
+                damage_to_apply = active_unit->hp;
+                mine_damage = true;
+
+                active_mine->live = false;
+                draw_manager.draw(active_mine->spr_id, nullptr);
+                active_mine = nullptr;
+
+                stage = LB_Damage;
             }
             break;
         case LB_Fire:
@@ -401,13 +451,19 @@ ExodusMode LunarBattle::update(float delta) {
                 exp_interp -= delta * EXP_RATE;
                 if (exp_interp < 0) {
                     exp_interp = 0;
-                    --damage_to_apply;
-                    target_unit->hp = max(0, target_unit->hp - 1);
+                    if (mine_damage) {
+                        damage_to_apply = 0;
+                        target_unit->hp = 0;
+                    } else {
+                        --damage_to_apply;
+                        target_unit->hp = max(0, target_unit->hp - 1);
+                    }
                 }
                 break;
             } else if (damage_to_apply > 0) {
                 exp_interp = 1;
                 // TODO: Explosion SFX
+                // Louder if mine_damage?
                 break;
             }
 
@@ -647,6 +703,7 @@ void LunarBattle::place_side_units(bool def) {
                     // Place mine
                     mines[n_mines].x = mine_x;
                     mines[n_mines].y = mine_y;
+                    mines[n_mines].live = true;
                     mines[n_mines].spr_id = draw_manager.new_sprite_id();
                     n_mines++;
                     L.debug("Placed mine at %d %d", mine_x, mine_y);
