@@ -143,6 +143,15 @@ void LunarBattle::enter() {
 
         place_cover();
 
+        // From PROCb_ground - set up lunar base for defender
+        if (p->has_lunar_base()) {
+            place_unit(BattleUnit(UNIT_LBCtl).init(14, 5));
+            place_unit(BattleUnit(UNIT_LBGun).init(13, 5));
+            place_unit(BattleUnit(UNIT_LBGun).init(13, 4));
+            place_unit(BattleUnit(UNIT_LBGun).init(13, 6));
+            place_unit(BattleUnit(UNIT_LBGun).init(12, 5));
+        }
+
         // Place the units for the non-'acting' side
         place_units(!defending);
 
@@ -723,17 +732,6 @@ void LunarBattle::place_cover() {
 void LunarBattle::place_units(bool def) {
     LunarBattleParams &b = ephstate.lunar_battle;
     Planet *p = exostate.get_active_planet();
-
-    // From PROCb_ground - set up lunar base for defender
-    if (def) {
-        if (p->has_lunar_base()) {
-            place_unit(BattleUnit(UNIT_LBCtl).init(14, 5));
-            place_unit(BattleUnit(UNIT_LBGun).init(13, 5));
-            place_unit(BattleUnit(UNIT_LBGun).init(13, 4));
-            place_unit(BattleUnit(UNIT_LBGun).init(13, 6));
-            place_unit(BattleUnit(UNIT_LBGun).init(12, 5));
-        }
-    }
 
     int inf = b.aggressor_inf;
     int gli = b.aggressor_gli;
