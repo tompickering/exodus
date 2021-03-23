@@ -17,7 +17,7 @@ extern ExodusState exostate;
 
 enum LBPanelMode {
     LBPM_None,
-    LBPM_Setup,
+    LBPM_Placement,
     LBPM_Battle,
 };
 
@@ -121,6 +121,7 @@ class LunarBattle : ModeBase, CommPanelDrawer {
 
         Stage stage;
 
+        bool manual_placement;
         bool placement_def;
 
         int n_cover;

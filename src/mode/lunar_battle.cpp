@@ -77,6 +77,7 @@ LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer() {
     cursor_prev_y = -1;
     damage_to_apply = 0;
     panel_unit = nullptr;
+    manual_placement = false;
     placement_def = true;
 }
 
@@ -113,13 +114,16 @@ void LunarBattle::enter() {
     human_turn = true;
 
     bool defending = b.aggressor_type != AGG_Player;
-    // TODO: If we never support true multiplayer battles, can coalesce these into one flag
-    bool manual_placement = defending ? b.defender_manual_placement
-                                      : b.aggressor_manual_placement;
+
+    manual_placement = false;
 
     if (b.auto_battle) {
         stage = LB_Auto;
     } else {
+        // TODO: If we never support true multiplayer battles, coalesce into one flag
+        manual_placement = defending ? b.defender_manual_placement
+                                     : b.aggressor_manual_placement;
+
         place_cover();
 
         // Place the units for the non-'acting' side
@@ -940,16 +944,21 @@ void LunarBattle::update_cursor() {
 
 void LunarBattle::update_panel() {
     // TODO: Determine appropriate mode
-    LBPanelMode target_mode = LBPM_Battle;
+    LBPanelMode target_mode = (stage == LB_Placement || stage == LB_PlacementEnd)
+                              ? LBPM_Placement
+                              : LBPM_Battle;
+
     if (panel_mode != target_mode) {
         draw_manager.fill({0, SURF_Y - 1, RES_X, 1}, {0, 0, 0});
         draw_manager.fill({0, 0, RES_X, SURF_Y - 1}, COL_BORDERS);
-        if (target_mode == LBPM_Setup) {
+
+        if (target_mode == LBPM_Placement) {
             for (int i = 0; i < 4; ++i) {
                 draw_manager.fill({8 + i*60, 16, 42, 42}, {0, 0, 0});
             }
             draw_manager.fill_pattern({400, 16, 100, 42});
         }
+
         if (target_mode == LBPM_Battle) {
             Planet *p = exostate.get_active_planet();
 
@@ -988,9 +997,19 @@ void LunarBattle::update_panel() {
         }
         draw_manager.save_background({0, 0, RES_X, SURF_Y - 1});
     }
-    // TODO: Call update_panel_setup() during setup
-    update_panel_battle();
+
     panel_mode = target_mode;
+
+    switch (panel_mode) {
+        case LBPM_Placement:
+            update_panel_setup();
+            break;
+        case LBPM_Battle:
+            update_panel_battle();
+            break;
+        case LBPM_None:
+            break;
+    }
 }
 
 // The panel as drawn during unit placement
