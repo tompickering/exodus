@@ -954,9 +954,10 @@ void LunarBattle::update_panel() {
 
         if (target_mode == LBPM_Placement) {
             for (int i = 0; i < 4; ++i) {
-                draw_manager.fill({8 + i*60, 16, 42, 42}, {0, 0, 0});
+                draw_manager.fill({8 + i*96, 16, 42, 42}, {0, 0, 0});
+                draw_manager.fill_pattern({54 + i*96, 37, 28, 21});
             }
-            draw_manager.fill_pattern({400, 16, 100, 42});
+            draw_manager.fill_pattern({390, 16, 240, 42});
         }
 
         if (target_mode == LBPM_Battle) {
