@@ -169,6 +169,8 @@ class LunarBattle : ModeBase, CommPanelDrawer {
         void update_panel_setup();
         void update_panel_battle();
 
+        bool valid_placement(int, int);
+
         char get_valid_move_directions();
         Direction get_random_move_direction();
 

@@ -255,14 +255,77 @@ ExodusMode LunarBattle::update(float delta) {
                     }
                 }
 
+                if (draw_manager.query_click(id(ID::BG)).id) {
+                    bool do_place = cursor_x >= 0 && cursor_y >= 0;
+                    if (do_place) {
+                        if (placement_def) {
+                            do_place = cursor_x >= 8;
+                        } else {
+                            do_place = cursor_x < 8;
+                        }
+                    }
+                    if (do_place) {
+                        do_place = valid_placement(cursor_x, cursor_y);
+                    }
+                    if (do_place) {
+                        int group = placement_def ? b.defender_group_size
+                                                  : b.aggressor_group_size;
+                        int stack = 1;
+                        switch (placement_item) {
+                            case 0:
+                                stack = to_place_inf < group ? to_place_inf : group;
+                                if (stack > 0) {
+                                    place_unit(BattleUnit(UNIT_Inf).init(
+                                                   cursor_x, cursor_y,
+                                                   stack,
+                                                   placement_def));
+                                    to_place_inf -= stack;
+                                }
+                                break;
+                            case 1:
+                                stack = to_place_gli < group ? to_place_gli : group;
+                                if (stack > 0) {
+                                    place_unit(BattleUnit(UNIT_Gli).init(
+                                                   cursor_x, cursor_y,
+                                                   stack,
+                                                   placement_def));
+                                    to_place_gli -= stack;
+                                }
+                                break;
+                            case 2:
+                                stack = to_place_art < group ? to_place_art : group;
+                                if (stack > 0) {
+                                    place_unit(BattleUnit(UNIT_Art).init(
+                                                   cursor_x, cursor_y,
+                                                   stack,
+                                                   placement_def));
+                                    to_place_art -= stack;
+                                }
+                                break;
+                            case 3:
+                                if (to_place_msc > 0) {
+                                    if (placement_def) {
+                                        mines[n_mines].x = cursor_x;
+                                        mines[n_mines].y = cursor_y;
+                                        mines[n_mines].live = true;
+                                        mines[n_mines].spr_id = draw_manager.new_sprite_id();
+                                        n_mines++;
+                                    } else {
+                                        // TODO: Teleporters
+                                    }
+                                    to_place_msc--;
+                                }
+                                break;
+                        }
+                    }
+                }
+
                 int to_place = to_place_inf
                              + to_place_gli
                              + to_place_art
                              + to_place_msc;
 
                 if (to_place == 0) {
-                    place_units(placement_def);
-
                     draw_manager.fill(
                         id(ID::PANEL),
                         {PANEL_X - BORDER, PANEL_Y - BORDER,
@@ -791,18 +854,10 @@ void LunarBattle::place_units(bool def) {
             for (int attempts = 0; attempts < 10000; ++attempts) {
                 int mine_x = (RND(3) + 9) - 1;
                 int mine_y = RND(11) - 1;
-                bool is_suitable = !(unit_at(mine_x, mine_y));
+                bool is_suitable = valid_placement(mine_x, mine_y);
                 if (is_suitable) {
                     for (int j = 0; j < n_cover; ++j) {
                         if (cover[j].x == mine_x && cover[j].y == mine_y) {
-                            is_suitable = false;
-                            break;
-                        }
-                    }
-                }
-                if (is_suitable) {
-                    for (int j = 0; j < n_mines; ++j) {
-                        if (mines[j].x == mine_x && mines[j].y == mine_y) {
                             is_suitable = false;
                             break;
                         }
@@ -1067,23 +1122,26 @@ void LunarBattle::update_panel_setup() {
     for (int i = 0; i < 4; ++i) {
         const char* spr = spr_inf;
         int n = 0;
+        int n_groups = 0;
         if (i == 0) { spr = spr_inf; n = to_place_inf; }
         if (i == 1) { spr = spr_gli; n = to_place_gli; }
         if (i == 2) { spr = spr_art; n = to_place_art; }
         if (i == 3) { spr = spr_msc; n = to_place_msc; }
 
-        if (i != 3) {
+        if (i < 3) {
             if (placement_def) {
-                n /= b.defender_group_size;
-                if (n % b.defender_group_size > 0) {
-                    n++;
+                n_groups = n / b.defender_group_size;
+                if ((n % b.defender_group_size) > 0) {
+                    n_groups++;
                 }
             } else {
-                n /= b.aggressor_group_size;
-                if (n % b.aggressor_group_size > 0) {
-                    n++;
+                n_groups = n / b.aggressor_group_size;
+                if ((n % b.aggressor_group_size) > 0) {
+                    n_groups++;
                 }
             }
+        } else {
+            n_groups = n;
         }
 
         draw_manager.draw(
@@ -1092,7 +1150,7 @@ void LunarBattle::update_panel_setup() {
             {9 + i*96, 17,
              0, 0, 1, 1});
         char n_str[8];
-        snprintf(n_str, sizeof(n_str), "%d", n);
+        snprintf(n_str, sizeof(n_str), "%d", n_groups);
         draw_manager.draw_text(
             placement_ids[4+i],
             n_str,
@@ -1529,6 +1587,18 @@ bool LunarBattle::in_range(int x, int y) {
     if (x > x_max) return false;
     if (y < active_unit->y - active_unit->fire_range) return false;
     if (y > active_unit->y + active_unit->fire_range) return false;
+    return true;
+}
+
+bool LunarBattle::valid_placement(int x, int y) {
+    if (unit_at(x, y)) {
+        return false;
+    }
+    for (int j = 0; j < n_mines; ++j) {
+        if (mines[j].x == x && mines[j].y == y) {
+            return false;
+        }
+    }
     return true;
 }
 
