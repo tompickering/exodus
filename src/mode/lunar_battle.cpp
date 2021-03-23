@@ -548,7 +548,7 @@ ExodusMode LunarBattle::update(float delta) {
             // (Move this back to the top, then all live ones)
             if (target_unit->hp <= 0) {
                 draw_manager.refresh_sprite_id(target_unit->spr_id);
-                for (int i = 0; i < BATTLE_UNITS_MAX; ++i) {
+                for (int i = 0; i < n_units; ++i) {
                     if (units[i].hp > 0) {
                         if (!units[i].spr_id_set) {
                             L.error("Unit has no sprite ID on refresh");
