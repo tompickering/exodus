@@ -168,19 +168,6 @@ void LunarBattle::draw_ground() {
              SURF_Y + cover[i].y * BLK_SZ,
              0, 0, 1, 1});
     }
-
-    if (ephstate.lunar_battle.aggressor_type != AGG_Player) {
-        for (int i = 0; i < n_mines; ++i) {
-            if (mines[i].live) {
-                draw_manager.draw(
-                    mines[i].spr_id,
-                    IMG_GF4_19,
-                    {SURF_X + mines[i].x * BLK_SZ,
-                     SURF_Y + mines[i].y * BLK_SZ,
-                     0, 0, 1, 1});
-            }
-        }
-    }
 }
 
 void LunarBattle::exit() {
@@ -807,6 +794,19 @@ BattleUnit* LunarBattle::unit_at(int x, int y) {
 }
 
 void LunarBattle::draw_units() {
+    if (ephstate.lunar_battle.aggressor_type != AGG_Player) {
+        for (int i = 0; i < n_mines; ++i) {
+            if (mines[i].live) {
+                draw_manager.draw(
+                    mines[i].spr_id,
+                    IMG_GF4_19,
+                    {SURF_X + mines[i].x * BLK_SZ,
+                     SURF_Y + mines[i].y * BLK_SZ,
+                     0, 0, 1, 1});
+            }
+        }
+    }
+
     for (int pass = 0; pass < 2; ++pass) {
         bool draw_dead = pass == 0;
         for (int i = 0; i < n_units; ++i) {
