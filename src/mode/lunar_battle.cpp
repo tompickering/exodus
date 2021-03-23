@@ -967,24 +967,24 @@ void LunarBattle::update_panel() {
                 p->moon_sprites()->bg,
                 {177, 17, 0, 0, 1, 1});
 
-            draw_manager.fill_pattern({226, 12, 200, 50});
+            draw_manager.fill_pattern({226, 12, 210, 50});
 
             draw_manager.draw(
                 id(ID::BTN_INFO),
                 IMG_GF4_HMENU1,
-                {442, 8, 0, 0, 1, 1});
+                {447, 8, 0, 0, 1, 1});
             draw_manager.draw(
                 id(ID::BTN_SPEED),
                 IMG_GF4_HMENU5,
-                {442, 38, 0, 0, 1, 1});
+                {447, 38, 0, 0, 1, 1});
             draw_manager.draw(
                 id(ID::BTN_TALK),
                 IMG_GF4_HMENU2,
-                {536, 8, 0, 0, 1, 1});
+                {541, 8, 0, 0, 1, 1});
             draw_manager.draw(
                 id(ID::BTN_QUIT),
                 IMG_GF4_HMENU4,
-                {536, 38, 0, 0, 1, 1});
+                {541, 38, 0, 0, 1, 1});
         }
         draw_manager.save_background({0, 0, RES_X, SURF_Y - 1});
     }
@@ -1023,7 +1023,7 @@ void LunarBattle::update_panel_battle() {
         RGB text_col = {0, 0xFF, 0};  // TODO: Check exact colour
         panel_unit = draw_unit;
         // Clears over drawn health info etc
-        draw_manager.fill_pattern({226, 12, 200, 50});
+        draw_manager.fill_pattern({226, 12, 210, 50});
         if (draw_unit) {
             text = draw_unit->name;
             // Check if the unit is on our side
