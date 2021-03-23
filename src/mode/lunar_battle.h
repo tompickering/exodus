@@ -47,6 +47,7 @@ class BattleUnit {
         BattleUnit& init(int, int);
         BattleUnit& init(int, int, int);
         BattleUnit& init(int, int, int, bool);
+        void release_spr_id();
         BattleUnitType type;
         void do_move(Direction);
         const char* name;
@@ -74,6 +75,7 @@ class BattleUnit {
         const char* move_sfx;
         const char* shoot_sfx;
         SprID spr_id;
+        bool spr_id_set;
 };
 
 class Cover {
@@ -104,6 +106,9 @@ class LunarBattle : ModeBase, CommPanelDrawer {
     private:
         enum Stage {
             LB_Auto,
+            LB_Placement,
+            LB_PlacementEnd,
+            LB_StartBattle,
             LB_SelectUnit,
             LB_Move,
             LB_Mine,
@@ -115,6 +120,8 @@ class LunarBattle : ModeBase, CommPanelDrawer {
         };
 
         Stage stage;
+
+        bool placement_def;
 
         int n_cover;
         Cover cover[COVER_MAX];
@@ -142,8 +149,7 @@ class LunarBattle : ModeBase, CommPanelDrawer {
         bool use_alt_aliens;
 
         void place_cover();
-        void place_units();
-        void place_side_units(bool);
+        void place_units(bool);
         void place_unit(BattleUnit);
 
         void draw_ground();

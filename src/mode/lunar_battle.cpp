@@ -15,6 +15,11 @@ static const float EXP_RATE = 2.f;
 static const int BG_WIDTH = 16;
 static const int BG_HEIGHT = 11;
 
+static const int PANEL_W = 328;
+static const int PANEL_H = 120;
+static const int PANEL_X = RES_X/2 - (PANEL_W/2);
+static const int PANEL_Y = 150;
+
 const char* STR_None   = "";
 const char* STR_Ground = "Ground";
 const char* STR_Inf    = "Infantry";
@@ -26,6 +31,8 @@ const char* STR_Tele   = "Rescue Beam";
 const char* STR_Mine   = "Mine";
 
 enum ID {
+    PANEL,
+    PANEL_PATTERN,
     BG,
     BTN_INFO,
     BTN_SPEED,
@@ -70,6 +77,7 @@ LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer() {
     cursor_prev_y = -1;
     damage_to_apply = 0;
     panel_unit = nullptr;
+    placement_def = true;
 }
 
 void LunarBattle::enter() {
@@ -80,9 +88,6 @@ void LunarBattle::enter() {
     LunarBattleParams &b = ephstate.lunar_battle;
 
     Planet *p = exostate.get_active_planet();
-
-    Player *owner = nullptr;
-    if (p->is_owned()) owner = exostate.get_player(p->get_owner());
 
     n_units = 0;
     unit_moving = false;
@@ -107,25 +112,32 @@ void LunarBattle::enter() {
 
     human_turn = true;
 
+    bool defending = b.aggressor_type != AGG_Player;
+    // TODO: If we never support true multiplayer battles, can coalesce these into one flag
+    bool manual_placement = defending ? b.defender_manual_placement
+                                      : b.aggressor_manual_placement;
+
     if (b.auto_battle) {
         stage = LB_Auto;
     } else {
         place_cover();
-        place_units();
-        draw_ground();
 
-        // Ensure this happens *after* place_units()!
-        for (int i = 0; i < BATTLE_UNITS_MAX; ++i) {
-            units[i].spr_id = draw_manager.new_sprite_id();
+        // Place the units for the non-'acting' side
+        place_units(!defending);
+
+        if (manual_placement) {
+            placement_def = defending;
+        } else {
+            place_units(defending);
         }
 
         for (int i = 0; i < n_cover; ++i) {
             cover[i].spr_id = draw_manager.new_sprite_id();
         }
 
-        defender_turn = (bool)(owner && owner->is_human());
-        reset_round();
-        stage = LB_SelectUnit;
+        draw_ground();
+
+        stage = manual_placement ? LB_Placement : LB_StartBattle;
     }
 
     draw_manager.show_cursor(!b.auto_battle);
@@ -176,7 +188,7 @@ void LunarBattle::exit() {
 
     if (!b.auto_battle) {
         for (int i = 0; i < BATTLE_UNITS_MAX; ++i) {
-            draw_manager.release_sprite_id(units[i].spr_id);
+            units[i].release_spr_id();
         }
         for (int i = 0; i < n_cover; ++i) {
             draw_manager.release_sprite_id(cover[i].spr_id);
@@ -213,6 +225,70 @@ ExodusMode LunarBattle::update(float delta) {
             rpt.aggressor_won = (bool)(rand() % 2);
             ephstate.set_ephemeral_state(EPH_LunarBattleReport);
             return ephstate.get_appropriate_mode();
+        case LB_Placement:
+            // TODO
+            if (draw_manager.clicked()) {
+                place_units(placement_def);
+
+                draw_manager.fill(
+                    id(ID::PANEL),
+                    {PANEL_X - BORDER, PANEL_Y - BORDER,
+                    PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+                    COL_BORDERS);
+                draw_manager.fill_pattern(
+                    id(ID::PANEL_PATTERN),
+                    {PANEL_X, PANEL_Y,
+                    PANEL_W, PANEL_H});
+
+                draw_manager.draw_text(
+                    "As the last battle unit",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 4,
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    "is positioned onto the battlefield",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 24,
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    "the radio disturbances stop",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 44,
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    "allowing a clear view of",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 64,
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    "the enemy's machines.",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 84,
+                    COL_TEXT);
+
+                stage = LB_PlacementEnd;
+
+                // Skip remaining drawing etc until this is closed
+                return ExodusMode::MODE_None;
+            }
+            break;
+        case LB_PlacementEnd:
+            if (draw_manager.clicked()) {
+                draw_manager.draw(id(ID::PANEL_PATTERN), nullptr);
+                draw_manager.draw(id(ID::PANEL), nullptr);
+                stage = LB_StartBattle;
+            }
+            // Skip remaining drawing etc until this is closed
+            return ExodusMode::MODE_None;
+        case LB_StartBattle:
+            {
+                Player *owner = nullptr;
+                if (p->is_owned()) owner = exostate.get_player(p->get_owner());
+                defender_turn = (bool)(owner && owner->is_human());
+                reset_round();
+                stage = LB_SelectUnit;
+            }
+            break;
         case LB_SelectUnit:
             if (!select_unit()) {
                 // Neither side has a unit which can move.
@@ -474,6 +550,9 @@ ExodusMode LunarBattle::update(float delta) {
                 draw_manager.refresh_sprite_id(target_unit->spr_id);
                 for (int i = 0; i < BATTLE_UNITS_MAX; ++i) {
                     if (units[i].hp > 0) {
+                        if (!units[i].spr_id_set) {
+                            L.error("Unit has no sprite ID on refresh");
+                        }
                         draw_manager.refresh_sprite_id(units[i].spr_id);
                     }
                 }
@@ -543,26 +622,22 @@ void LunarBattle::place_cover() {
     }
 }
 
-void LunarBattle::place_units() {
+// PROCb_esetup
+void LunarBattle::place_units(bool def) {
+    LunarBattleParams &b = ephstate.lunar_battle;
     Planet *p = exostate.get_active_planet();
 
-    // From PROCb_ground
-    if (p->has_lunar_base()) {
-        place_unit(BattleUnit(UNIT_LBCtl).init(14, 5));
-        place_unit(BattleUnit(UNIT_LBGun).init(13, 5));
-        place_unit(BattleUnit(UNIT_LBGun).init(13, 4));
-        place_unit(BattleUnit(UNIT_LBGun).init(13, 6));
-        place_unit(BattleUnit(UNIT_LBGun).init(12, 5));
+    // From PROCb_ground - set up lunar base for defender
+    if (def) {
+        if (p->has_lunar_base()) {
+            place_unit(BattleUnit(UNIT_LBCtl).init(14, 5));
+            place_unit(BattleUnit(UNIT_LBGun).init(13, 5));
+            place_unit(BattleUnit(UNIT_LBGun).init(13, 4));
+            place_unit(BattleUnit(UNIT_LBGun).init(13, 6));
+            place_unit(BattleUnit(UNIT_LBGun).init(12, 5));
+        }
     }
 
-    // TODO: Manual unit positioning
-    place_side_units(true);
-    place_side_units(false);
-}
-
-// PROCb_esetup
-void LunarBattle::place_side_units(bool def) {
-    LunarBattleParams &b = ephstate.lunar_battle;
     int inf = b.aggressor_inf;
     int gli = b.aggressor_gli;
     int art = b.aggressor_art;
@@ -739,6 +814,11 @@ void LunarBattle::draw_units() {
                 continue;
             if (!draw_dead && units[i].hp <= 0)
                 continue;
+
+            if (!units[i].spr_id_set) {
+                L.error("Unit has no sprite ID on draw");
+                continue;
+            }
 
             int x = units[i].x;
             int y = units[i].y;
@@ -1461,6 +1541,7 @@ BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     shoot_sfx = nullptr;
     can_shoot_behind = true;
     turn_taken = false;
+    spr_id_set = false;
 }
 
 BattleUnit& BattleUnit::init(int _x, int _y) {
@@ -1612,6 +1693,9 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             break;
     }
 
+    spr_id = draw_manager.new_sprite_id();
+    spr_id_set = true;
+
     return *this;
 }
 
@@ -1623,6 +1707,13 @@ BattleUnit& BattleUnit::init(int _x, int _y, int _hp) {
 BattleUnit& BattleUnit::init(int _x, int _y, int _hp, bool _def) {
     defending = _def;
     return init(_x, _y, _hp);
+}
+
+void BattleUnit::release_spr_id() {
+    if (spr_id_set) {
+        draw_manager.release_sprite_id(spr_id);
+        spr_id_set = false;
+    }
 }
 
 // No validation here - LunarBattle is responsible for correct puppeteering
