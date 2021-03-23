@@ -33,6 +33,9 @@ const char* STR_Mine   = "Mine";
 enum ID {
     PANEL,
     PANEL_PATTERN,
+    PLACEMENT_SELECTED,
+    PLACEMENT_SELECTED_NAME,
+    PLACEMENT_SELECTED_DESC,
     BG,
     BTN_INFO,
     BTN_SPEED,
@@ -79,6 +82,11 @@ LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer() {
     panel_unit = nullptr;
     manual_placement = false;
     placement_def = true;
+    placement_item = 0;
+    to_place_inf = 0;
+    to_place_gli = 0;
+    to_place_art = 0;
+    to_place_msc = 0;
 }
 
 void LunarBattle::enter() {
@@ -116,10 +124,19 @@ void LunarBattle::enter() {
     bool defending = b.aggressor_type != AGG_Player;
 
     manual_placement = false;
+    placement_item = 0;
+    to_place_inf = 0;
+    to_place_gli = 0;
+    to_place_art = 0;
+    to_place_msc = 0;
 
     if (b.auto_battle) {
         stage = LB_Auto;
     } else {
+        for (int i = 0; i < 8; ++i) {
+            placement_ids[i] = draw_manager.new_sprite_id();
+        }
+
         // TODO: If we never support true multiplayer battles, coalesce into one flag
         manual_placement = defending ? b.defender_manual_placement
                                      : b.aggressor_manual_placement;
@@ -131,6 +148,17 @@ void LunarBattle::enter() {
 
         if (manual_placement) {
             placement_def = defending;
+            if (placement_def) {
+                to_place_inf = b.defender_inf;
+                to_place_gli = b.defender_gli;
+                to_place_art = b.defender_art;
+                to_place_msc = b.defender_mines;
+            } else {
+                to_place_inf = b.aggressor_inf;
+                to_place_gli = b.aggressor_gli;
+                to_place_art = b.aggressor_art;
+                to_place_msc = b.aggressor_tele;
+            }
         } else {
             place_units(defending);
         }
@@ -178,6 +206,9 @@ void LunarBattle::exit() {
     LunarBattleParams &b = ephstate.lunar_battle;
 
     if (!b.auto_battle) {
+        for (int i = 0; i < 8; ++i) {
+            draw_manager.release_sprite_id(placement_ids[i]);
+        }
         for (int i = 0; i < BATTLE_UNITS_MAX; ++i) {
             units[i].release_spr_id();
         }
@@ -217,50 +248,62 @@ ExodusMode LunarBattle::update(float delta) {
             ephstate.set_ephemeral_state(EPH_LunarBattleReport);
             return ephstate.get_appropriate_mode();
         case LB_Placement:
-            // TODO
-            if (draw_manager.clicked()) {
-                place_units(placement_def);
+            {
+                for (int i = 0; i < 4; ++i) {
+                    if (draw_manager.query_click(placement_ids[i]).id) {
+                        placement_item = i;
+                    }
+                }
 
-                draw_manager.fill(
-                    id(ID::PANEL),
-                    {PANEL_X - BORDER, PANEL_Y - BORDER,
-                    PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
-                    COL_BORDERS);
-                draw_manager.fill_pattern(
-                    id(ID::PANEL_PATTERN),
-                    {PANEL_X, PANEL_Y,
-                    PANEL_W, PANEL_H});
+                int to_place = to_place_inf
+                             + to_place_gli
+                             + to_place_art
+                             + to_place_msc;
 
-                draw_manager.draw_text(
-                    "As the last battle unit",
-                    Justify::Left,
-                    PANEL_X + 4, PANEL_Y + 4,
-                    COL_TEXT);
-                draw_manager.draw_text(
-                    "is positioned onto the battlefield",
-                    Justify::Left,
-                    PANEL_X + 4, PANEL_Y + 24,
-                    COL_TEXT);
-                draw_manager.draw_text(
-                    "the radio disturbances stop",
-                    Justify::Left,
-                    PANEL_X + 4, PANEL_Y + 44,
-                    COL_TEXT);
-                draw_manager.draw_text(
-                    "allowing a clear view of",
-                    Justify::Left,
-                    PANEL_X + 4, PANEL_Y + 64,
-                    COL_TEXT);
-                draw_manager.draw_text(
-                    "the enemy's machines.",
-                    Justify::Left,
-                    PANEL_X + 4, PANEL_Y + 84,
-                    COL_TEXT);
+                if (to_place == 0) {
+                    place_units(placement_def);
 
-                stage = LB_PlacementEnd;
+                    draw_manager.fill(
+                        id(ID::PANEL),
+                        {PANEL_X - BORDER, PANEL_Y - BORDER,
+                        PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+                        COL_BORDERS);
+                    draw_manager.fill_pattern(
+                        id(ID::PANEL_PATTERN),
+                        {PANEL_X, PANEL_Y,
+                        PANEL_W, PANEL_H});
 
-                // Skip remaining drawing etc until this is closed
-                return ExodusMode::MODE_None;
+                    draw_manager.draw_text(
+                        "As the last battle unit",
+                        Justify::Left,
+                        PANEL_X + 4, PANEL_Y + 4,
+                        COL_TEXT);
+                    draw_manager.draw_text(
+                        "is positioned onto the battlefield",
+                        Justify::Left,
+                        PANEL_X + 4, PANEL_Y + 24,
+                        COL_TEXT);
+                    draw_manager.draw_text(
+                        "the radio disturbances stop",
+                        Justify::Left,
+                        PANEL_X + 4, PANEL_Y + 44,
+                        COL_TEXT);
+                    draw_manager.draw_text(
+                        "allowing a clear view of",
+                        Justify::Left,
+                        PANEL_X + 4, PANEL_Y + 64,
+                        COL_TEXT);
+                    draw_manager.draw_text(
+                        "the enemy's machines.",
+                        Justify::Left,
+                        PANEL_X + 4, PANEL_Y + 84,
+                        COL_TEXT);
+
+                    stage = LB_PlacementEnd;
+
+                    // Skip remaining drawing etc until this is closed
+                    return ExodusMode::MODE_None;
+                }
             }
             break;
         case LB_PlacementEnd:
@@ -955,7 +998,7 @@ void LunarBattle::update_panel() {
         if (target_mode == LBPM_Placement) {
             for (int i = 0; i < 4; ++i) {
                 draw_manager.fill({8 + i*96, 16, 42, 42}, {0, 0, 0});
-                draw_manager.fill_pattern({54 + i*96, 37, 28, 21});
+                draw_manager.fill_pattern({54 + i*96, 37, 35, 21});
             }
             draw_manager.fill_pattern({390, 16, 240, 42});
         }
@@ -1015,6 +1058,86 @@ void LunarBattle::update_panel() {
 
 // The panel as drawn during unit placement
 void LunarBattle::update_panel_setup() {
+    LunarBattleParams &b = ephstate.lunar_battle;
+    const char* spr_inf = placement_def ? IMG_GF4_4  : IMG_GF4_1;
+    const char* spr_gli = placement_def ? IMG_GF4_5  : IMG_GF4_2;
+    const char* spr_art = placement_def ? IMG_GF4_6  : IMG_GF4_3;
+    const char* spr_msc = placement_def ? IMG_GF4_19 : IMG_GF1_25;
+
+    for (int i = 0; i < 4; ++i) {
+        const char* spr = spr_inf;
+        int n = 0;
+        if (i == 0) { spr = spr_inf; n = to_place_inf; }
+        if (i == 1) { spr = spr_gli; n = to_place_gli; }
+        if (i == 2) { spr = spr_art; n = to_place_art; }
+        if (i == 3) { spr = spr_msc; n = to_place_msc; }
+
+        if (i != 3) {
+            if (placement_def) {
+                n /= b.defender_group_size;
+                if (n % b.defender_group_size > 0) {
+                    n++;
+                }
+            } else {
+                n /= b.aggressor_group_size;
+                if (n % b.aggressor_group_size > 0) {
+                    n++;
+                }
+            }
+        }
+
+        draw_manager.draw(
+            placement_ids[i],
+            spr,
+            {9 + i*96, 17,
+             0, 0, 1, 1});
+        char n_str[8];
+        snprintf(n_str, sizeof(n_str), "%d", n);
+        draw_manager.draw_text(
+            placement_ids[4+i],
+            n_str,
+            Justify::Left,
+            58 + i*96, 37,
+            COL_TEXT);
+    }
+
+    const char* item_name = "Infantry";
+    const char* spr_selected = spr_inf;
+    char text[16];
+    snprintf(text, sizeof(text),
+             "(max %d/group)",
+             placement_def ? b.defender_group_size : b.aggressor_group_size);
+
+    if (placement_item == 1) {
+        item_name = "Gliders";
+        spr_selected = spr_gli;
+    }
+    if (placement_item == 2) {
+        item_name = "Artillery",
+        spr_selected = spr_art;
+    }
+    if (placement_item == 3) {
+        item_name = placement_def ? "Mines" : "Teleporters",
+        spr_selected = spr_msc;
+        text[0] = '\0';
+    }
+    draw_manager.draw(
+        id(ID::PLACEMENT_SELECTED),
+        spr_selected,
+        {391, 17,
+         0, 0, 1, 1});
+    draw_manager.draw_text(
+        id(ID::PLACEMENT_SELECTED_NAME),
+        item_name,
+        Justify::Left,
+        437, 17,
+        COL_TEXT2);
+    draw_manager.draw_text(
+        id(ID::PLACEMENT_SELECTED_DESC),
+        text,
+        Justify::Left,
+        437, 35,
+        COL_TEXT);
 }
 
 // The panel as drawn during battle

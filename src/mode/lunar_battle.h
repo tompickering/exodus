@@ -123,6 +123,12 @@ class LunarBattle : ModeBase, CommPanelDrawer {
 
         bool manual_placement;
         bool placement_def;
+        int placement_item;
+        SprID placement_ids[8];
+        int to_place_inf;
+        int to_place_gli;
+        int to_place_art;
+        int to_place_msc;
 
         int n_cover;
         Cover cover[COVER_MAX];

@@ -33,6 +33,7 @@ typedef struct {
     int aggressor_inf;
     int aggressor_gli;
     int aggressor_art;
+    int aggressor_tele;
     int defender_inf;
     int defender_gli;
     int defender_art;

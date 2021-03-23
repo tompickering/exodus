@@ -89,6 +89,8 @@ void LunarBattlePrep::enter() {
     b.defender_gli = 0;
     b.defender_art = 0;
 
+    b.aggressor_tele = (b.aggressor_type == AGG_Player) ? 3 : 0;
+
     // Get numbers of defending units
     p->get_army(b.defender_inf, b.defender_gli, b.defender_art);
 
