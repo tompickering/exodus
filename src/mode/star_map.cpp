@@ -259,7 +259,12 @@ ExodusMode StarMap::update(float delta) {
             // TODO
             comm_update(delta);
             action = comm_check_action();
-            if (action != CA_None) {
+            // PLACEHOLDER
+            if (action == CA_Text0) {
+                ephstate.set_ephemeral_state(EPH_LunarBattlePrep);
+                ephstate.lunar_battle.aggressor_type = AGG_Player;
+                return ephstate.get_appropriate_mode();
+            } else if (action != CA_None) {
                 comm_close();
                 stage = SM_Idle;
             }
