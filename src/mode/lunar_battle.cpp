@@ -398,6 +398,10 @@ ExodusMode LunarBattle::update(float delta) {
                 draw_manager.draw(id(ID::PANEL_PATTERN), nullptr);
                 draw_manager.draw(id(ID::PANEL), nullptr);
                 stage = LB_StartBattle;
+                // First draw for enemy units, so neeed to put cursor on top afterwards
+                draw_units();
+                draw_manager.refresh_sprite_id(id(ID::CURSOR));
+                return ExodusMode::MODE_None;
             }
             // Skip remaining drawing etc until this is closed
             return ExodusMode::MODE_None;
@@ -909,6 +913,11 @@ BattleUnit* LunarBattle::unit_at(int x, int y) {
 }
 
 void LunarBattle::draw_units() {
+    bool hide_enemies = false;
+    if (stage == LB_Placement || stage == LB_PlacementEnd) {
+        hide_enemies = true;
+    }
+
     if (ephstate.lunar_battle.aggressor_type != AGG_Player) {
         for (int i = 0; i < n_mines; ++i) {
             if (mines[i].live) {
@@ -925,6 +934,13 @@ void LunarBattle::draw_units() {
     for (int pass = 0; pass < 2; ++pass) {
         bool draw_dead = pass == 0;
         for (int i = 0; i < n_units; ++i) {
+            // If in placement mode, don't draw enemies
+            if (hide_enemies) {
+                if (units[i].defending != placement_def) {
+                    continue;
+                }
+            }
+
             if (draw_dead && units[i].hp > 0)
                 continue;
             if (!draw_dead && units[i].hp <= 0)
