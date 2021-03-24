@@ -129,6 +129,7 @@ class LunarBattle : ModeBase, CommPanelDrawer {
         int to_place_gli;
         int to_place_art;
         int to_place_msc;
+        SprID fog_ids[88];
 
         int n_cover;
         Cover cover[COVER_MAX];

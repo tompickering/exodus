@@ -136,6 +136,9 @@ void LunarBattle::enter() {
         for (int i = 0; i < 8; ++i) {
             placement_ids[i] = draw_manager.new_sprite_id();
         }
+        for (int i = 0; i < 88; ++i) {
+            fog_ids[i] = draw_manager.new_sprite_id();
+        }
 
         // TODO: If we never support true multiplayer battles, coalesce into one flag
         manual_placement = defending ? b.defender_manual_placement
@@ -178,7 +181,19 @@ void LunarBattle::enter() {
 
         draw_ground();
 
-        stage = manual_placement ? LB_Placement : LB_StartBattle;
+        if (manual_placement) {
+            for (int i = 0; i < 88; ++i) {
+                draw_manager.draw(
+                    fog_ids[i],
+                    IMG_GF4_SHADE,
+                    {SURF_X + ((i/BG_HEIGHT) + (placement_def ? 0 : 8)) * BLK_SZ,
+                     SURF_Y + (i%BG_HEIGHT) * BLK_SZ,
+                     0, 0, 1, 1});
+            }
+            stage = LB_Placement;
+        } else {
+            stage = LB_StartBattle;
+        }
     }
 
     draw_manager.show_cursor(!b.auto_battle);
@@ -215,6 +230,9 @@ void LunarBattle::exit() {
     LunarBattleParams &b = ephstate.lunar_battle;
 
     if (!b.auto_battle) {
+        for (int i = 0; i < 88; ++i) {
+            draw_manager.release_sprite_id(fog_ids[i]);
+        }
         for (int i = 0; i < 8; ++i) {
             draw_manager.release_sprite_id(placement_ids[i]);
         }
@@ -398,6 +416,9 @@ ExodusMode LunarBattle::update(float delta) {
                 draw_manager.draw(id(ID::PANEL_PATTERN), nullptr);
                 draw_manager.draw(id(ID::PANEL), nullptr);
                 stage = LB_StartBattle;
+                for (int i = 0; i < 88; ++i) {
+                    draw_manager.draw(fog_ids[i], nullptr);
+                }
                 // First draw for enemy units, so neeed to put cursor on top afterwards
                 draw_units();
                 draw_manager.refresh_sprite_id(id(ID::CURSOR));
