@@ -326,6 +326,21 @@ ExodusMode LunarBattle::update(float delta) {
                                 }
                                 break;
                         }
+                        /*
+                         * At the moment, the cursor will 'hide' the unit sprite.
+                         * This is because the new sprite's ID will be appended
+                         * to the drawn sprite info records when it's drawn for
+                         * the first time - and this will be on top of the cursor.
+                         * As the cursor is drawn subsequently, it only repairs
+                         * things below it, before it itself is drawn.
+                         *
+                         * To correct this, we need to first draw the unit, to
+                         * have its ID added to the drawn info vector, and THEN
+                         * shuffle the cursor to the top of the pile.
+                         */
+                        draw_units();
+                        draw_manager.refresh_sprite_id(id(ID::CURSOR));
+                        return ExodusMode::MODE_None;
                     }
                 }
 
