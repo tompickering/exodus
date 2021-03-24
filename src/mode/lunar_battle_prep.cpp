@@ -216,7 +216,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
         aggressor = exostate.get_player(b.aggressor_idx);
     }
 
-    bool defending = b.aggressor_type != AGG_Player;
+    bool defending = !(aggressor && aggressor->is_human());
 
     switch (stage) {
         case LBP_Auto:

@@ -66,6 +66,7 @@ static Anim anim_explode(
 
 LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer() {
     stage = LB_Move;
+    aggressor = nullptr;
     panel_mode = LBPM_None;
     unit_moving = false;
     move_interp = 0;
@@ -98,6 +99,11 @@ void LunarBattle::enter() {
 
     Planet *p = exostate.get_active_planet();
 
+    aggressor = nullptr;
+    if (b.aggressor_type == AGG_Player) {
+        aggressor = exostate.get_player(b.aggressor_idx);
+    }
+
     n_units = 0;
     unit_moving = false;
     move_interp = 0;
@@ -121,7 +127,7 @@ void LunarBattle::enter() {
 
     human_turn = true;
 
-    bool defending = b.aggressor_type != AGG_Player;
+    bool defending = !(aggressor && aggressor->is_human());
 
     manual_placement = false;
     placement_item = 0;
@@ -253,16 +259,11 @@ ExodusMode LunarBattle::update(float delta) {
 
     Planet *p = exostate.get_active_planet();
     Player *defender = exostate.get_player(p->get_owner());
-    Player *aggressor_player = nullptr;
-
-    if (b.aggressor_type == AGG_Player) {
-        aggressor_player = exostate.get_player(b.aggressor_idx);
-    }
 
     if (defender_turn) {
         human_turn = defender->is_human();
     } else {
-        human_turn = (bool)(aggressor_player && aggressor_player->is_human());
+        human_turn = (bool)(aggressor && aggressor->is_human());
     }
 
     switch (stage) {
@@ -939,7 +940,7 @@ void LunarBattle::draw_units() {
         hide_enemies = true;
     }
 
-    if (ephstate.lunar_battle.aggressor_type != AGG_Player) {
+    if (!(aggressor && aggressor->is_human())) {
         for (int i = 0; i < n_mines; ++i) {
             if (mines[i].live) {
                 draw_manager.draw(

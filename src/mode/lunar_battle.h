@@ -121,6 +121,8 @@ class LunarBattle : ModeBase, CommPanelDrawer {
 
         Stage stage;
 
+        Player *aggressor;
+
         bool manual_placement;
         bool placement_def;
         int placement_item;
