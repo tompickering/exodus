@@ -104,6 +104,8 @@ class CommPanelDrawer {
         int comm_title_len;
         bool comm_speech;
 
+        void comm_complete_speech();
+
         SprID id_comm_panel;
         SprID id_comm_bg_t;
         SprID id_comm_bg_b;

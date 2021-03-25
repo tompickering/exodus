@@ -53,6 +53,19 @@ void CommPanelDrawer::comm_update(float dt) {
     comm_draw_text();
 }
 
+void CommPanelDrawer::comm_complete_speech() {
+    if (comm_speech) {
+        comm_speech = false;
+        draw_manager.draw_text(
+            id_comm_title,
+            comm_title,
+            Justify::Left,
+            COMM_RCOL_X + 8,
+            COMM_Y + 11,
+            COL_TEXT_SPEECH);
+    }
+}
+
 void CommPanelDrawer::comm_draw_text() {
     if (comm_speech) {
         int max_chars_to_draw = COMM_SPEECH_SPEED * comm_time;
@@ -522,6 +535,13 @@ void CommPanelDrawer::comm_process_responses() {
     bool abort = false;
 
     bool clicked = draw_manager.clicked();
+
+    if (comm_speech) {
+        if (clicked) {
+            comm_complete_speech();
+        }
+        return;
+    }
 
     SpriteClick click;
     click = draw_manager.query_click(id_comm_buttons);
