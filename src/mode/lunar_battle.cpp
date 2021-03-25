@@ -772,7 +772,6 @@ void LunarBattle::place_cover() {
 // PROCb_esetup
 void LunarBattle::place_units(bool def) {
     LunarBattleParams &b = ephstate.lunar_battle;
-    Planet *p = exostate.get_active_planet();
 
     int inf = b.aggressor_inf;
     int gli = b.aggressor_gli;
