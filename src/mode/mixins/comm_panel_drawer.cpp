@@ -306,6 +306,7 @@ void CommPanelDrawer::comm_prepare(int text_slots) {
 
     // Clear old per-dialogue-phase info
     for (int i = 0; i < 6; ++i) {
+        draw_manager.draw(id_text[i], nullptr);
         comm_text[i][0] = '\0';
     }
 
@@ -514,6 +515,12 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_set_text_interactive_mask(0xF);
             comm_recv(DIA_R_Greeting);
             break;
+        case DIA_S_Attack:
+            // TODO: This is just placeholder...
+            comm_prepare(1);
+            comm_set_speech("oh noes...");
+            comm_recv(DIA_R_NoAttackResponse);
+            break;
         default:
             L.warn("Unhandled comm input on send: %d", (int)input);
             break;
@@ -549,6 +556,15 @@ void CommPanelDrawer::comm_process_responses() {
         proceed = click.x < 0.55;
         abort = !proceed;
     }
+
+    int opt = -1;
+    for (int i = 0; i < 6; ++i) {
+        if (draw_manager.query_click(id_text[i]).id) {
+            opt = i;
+            break;
+        }
+    }
+
 
     switch (comm_state) {
         case DIA_R_ProceedOrAbort:
@@ -589,6 +605,24 @@ void CommPanelDrawer::comm_process_responses() {
                     }
                 }
 
+            }
+            break;
+        case DIA_R_Greeting:
+            switch (opt) {
+                case 0:
+                    comm_send(DIA_S_Attack);
+                    break;
+                // TODO: Handle other options
+            }
+            // TODO: This is just placeholder - remove later
+            if (opt > 0) {
+                comm_report_action = CA_Abort;
+            }
+            break;
+        case DIA_R_NoAttackResponse:
+            // TODO (placeholder)
+            if (clicked) {
+                comm_report_action = CA_PlanAttack;
             }
             break;
         default:

@@ -134,9 +134,8 @@ ExodusMode StarMap::update(float delta) {
             // TODO
             comm_update(delta);
             action = comm_check_action();
-            /* WIP REFACTOR
-            // PLACEHOLDER
-            if (action == CA_Text0) {
+            if (action == CA_PlanAttack) {
+                // TODO: Counsellor opinion on whether we should attack
                 ephstate.set_ephemeral_state(EPH_LunarBattlePrep);
                 ephstate.lunar_battle.aggressor_type = AGG_Player;
                 return ephstate.get_appropriate_mode();
@@ -144,7 +143,6 @@ ExodusMode StarMap::update(float delta) {
                 comm_close();
                 stage = SM_Idle;
             }
-            */
             return ExodusMode::MODE_None;
             break;
         case SM_Back2Gal:

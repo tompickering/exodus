@@ -20,6 +20,7 @@ enum CommAction {
     CA_None,
     CA_Proceed,
     CA_Abort,
+    CA_PlanAttack,
 };
 
 enum CommImg {
@@ -54,6 +55,7 @@ enum CommRecv {
     DIA_R_SettlePlanetInfo,
     DIA_R_SettleNamePlanet,
     DIA_R_Greeting,
+    DIA_R_NoAttackResponse,
 };
 
 class CommPanelDrawer {
