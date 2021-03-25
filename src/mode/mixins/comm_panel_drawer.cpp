@@ -392,6 +392,10 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_title("Message from counsellor");
             comm_set_img_caption("COUNSELLOR");
             break;
+        case DIA_S_HailPlanet:
+            comm_set_img_caption_upper(comm_other->get_full_name());
+            comm_set_img_caption_lower("RACE: %s", comm_other->get_race_str());
+            comm_set_race(comm_other->get_race());
         default:
             L.warn("Unhandled comm input on init: %d", (int)input);
     }
@@ -411,7 +415,14 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_show_buttons(true);
             break;
         case DIA_S_HailPlanet:
+            comm_prepare(4);
             // TODO: "Welcome to X" / "You again?"
+            comm_set_speech("What do you want, %s...?", comm_player->get_name());
+            comm_set_text(0, "Let us not talk. I want %s.", comm_planet->get_name());
+            comm_set_text(1, "I wish to trade.");
+            comm_set_text(2, "I have an interesting offer.");
+            comm_set_text(3, "I have something to say.");
+            comm_set_text_interactive_mask(0xF);
             comm_recv(DIA_R_Greeting);
             break;
         default:

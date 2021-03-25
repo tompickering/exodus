@@ -110,19 +110,7 @@ ExodusMode StarMap::update(float delta) {
                                 // Comms with enemy planet
                                 // TODO: Rest of conversation here
                                 Player *enemy = exostate.get_player(planet->get_owner());
-                                /* WIP REFACTOR
-                                comm_set_speech("What do you want, %s...?", player->get_name());
-                                comm_set_img_caption_upper(enemy->get_full_name());
-                                comm_set_img_caption_lower("RACE: %s", enemy->get_race_str());
-                                comm_set_race(enemy->get_race());
-                                comm_set_text(0, "Let us not talk, I want %s.", planet->get_name());
-                                comm_set_text(1, "I wish to trade.");
-                                comm_set_text(2, "I have an interesting offer.");
-                                comm_set_text(3, "I have something to say.");
-                                comm_set_buttons(false);
-                                comm_set_text_interactive_mask(0xF);
-                                comm_open(4);
-                                */
+                                comm_open(DIA_S_HailPlanet);
                                 stage = SM_EnemyComm;
                                 return ExodusMode::MODE_None;
                             }
@@ -265,10 +253,9 @@ ExodusMode StarMap::update(float delta) {
             break;
         case SM_EnemyComm:
             // TODO
-            /* WIP REFACTOR
             comm_update(delta);
-            */
             action = comm_check_action();
+            /* WIP REFACTOR
             // PLACEHOLDER
             if (action == CA_Text0) {
                 ephstate.set_ephemeral_state(EPH_LunarBattlePrep);
@@ -278,6 +265,7 @@ ExodusMode StarMap::update(float delta) {
                 comm_close();
                 stage = SM_Idle;
             }
+            */
             return ExodusMode::MODE_None;
             break;
         case SM_Back2Gal:
