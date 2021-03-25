@@ -102,7 +102,6 @@ ExodusMode StarMap::update(float delta) {
                             } else {
                                 // Comms with enemy planet
                                 // TODO: Rest of conversation here
-                                Player *enemy = exostate.get_player(planet->get_owner());
                                 comm_open(DIA_S_HailPlanet);
                                 stage = SM_EnemyComm;
                                 return ExodusMode::MODE_None;
