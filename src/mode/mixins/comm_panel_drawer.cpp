@@ -1,9 +1,13 @@
 #include "comm_panel_drawer.h"
 
+#include "input/input.h"
+
 #include "assetpaths.h"
 #include "shared.h"
 
 #include "util/str.h"
+
+extern INPUTMANAGER input_manager;
 
 const int COMM_BORDER = 8;
 const int COMM_W = 580;
@@ -45,6 +49,7 @@ CommPanelDrawer::CommPanelDrawer() {
 void CommPanelDrawer::comm_update(float dt) {
     comm_time += dt;
     comm_time_since_text_mouseover += dt;
+    comm_process_responses();
     comm_draw_text();
 }
 
@@ -195,6 +200,9 @@ void CommPanelDrawer::comm_set_text_interactive_mask(unsigned char mask) {
 void CommPanelDrawer::comm_open(CommSend input) {
     comm_init(input);
 
+    comm_state = DIA_R_None;
+    comm_report_action = CA_None;
+
     id_comm_panel = draw_manager.new_sprite_id();
     id_comm_bg_t  = draw_manager.new_sprite_id();
     id_comm_bg_b  = draw_manager.new_sprite_id();
@@ -282,6 +290,12 @@ void CommPanelDrawer::comm_prepare(int text_slots) {
     }
 
     comm_show_buttons(false);
+
+    // Clear old per-dialogue-phase info
+    for (int i = 0; i < 6; ++i) {
+        comm_text[i][0] = '\0';
+    }
+
 }
 
 void CommPanelDrawer::comm_close() {
@@ -308,11 +322,6 @@ void CommPanelDrawer::comm_close() {
     draw_manager.release_sprite_id(id_comm_panel);
     _comm_is_open = false;
 
-    // Wipe all info
-    for (int i = 0; i < 6; ++i) {
-        strncpy(comm_text[i], "", 1);
-    }
-
     comm_mouseover_text = -1;
     comm_time_since_text_mouseover = 0;
     comm_text_interactive_mask = 0;
@@ -334,21 +343,7 @@ bool CommPanelDrawer::comm_is_open() {
 }
 
 CommAction CommPanelDrawer::comm_check_action() {
-    if (comm_speech) {
-        return CA_None;
-    }
-
-    SpriteClick click;
-    click = draw_manager.query_click(id_comm_buttons);
-    if (click.id) {
-        return click.x < 0.55 ? CA_Proceed : CA_Abort;
-    }
-    for (int i = 0; i < 6; ++i) {
-        if (draw_manager.query_click(id_text[i]).id) {
-            return (CommAction)((int)CA_Text0 + i);
-        }
-    }
-    return CA_None;
+    return comm_report_action;
 }
 
 int CommPanelDrawer::comm_text_y(int idx) {
@@ -392,6 +387,11 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_title("Message from counsellor");
             comm_set_img_caption("COUNSELLOR");
             break;
+        case DIA_S_PlanSettle:
+            comm_set_img(CI_Human);
+            comm_set_title("Message from counsellor");
+            comm_set_img_caption("COUNSELLOR");
+            break;
         case DIA_S_HailPlanet:
             comm_set_img_caption_upper(comm_other->get_full_name());
             comm_set_img_caption_lower("RACE: %s", comm_other->get_race_str());
@@ -413,6 +413,82 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_set_text(2, "A pirate attack is unlikely.");
             comm_set_text(4, "Do you wish to start?");
             comm_show_buttons(true);
+            comm_recv(DIA_R_ProceedOrAbort);
+            break;
+        case DIA_S_PlanSettle:
+            if (!comm_player->can_afford(comm_planet->get_settlement_cost())) {
+                comm_prepare(6);
+                comm_set_text(0, "We do not have the money for a");
+                comm_set_text(1, "colonization.");
+                comm_set_text(3, "(Cost: %d MC)", comm_planet->get_settlement_cost());
+                comm_show_buttons(true);
+                comm_recv(DIA_R_SettleCannotAfford);
+                break;
+            }
+
+            // TODO: Check for villages, show data from Co14
+
+            {
+                comm_prepare(6);
+                const char *size_str = "small";
+                if (comm_planet->get_size() == PLANET_Medium) size_str = "medium";
+                if (comm_planet->get_size() == PLANET_Large) size_str = "large";
+                if (!strnlen(comm_planet->get_name(), 1)) {
+                    comm_set_text(0, "Claim this %s planet?",
+                            comm_planet->get_class_str_lower());
+                } else {
+                    comm_set_text(0, "Claim planet %s?",
+                            comm_planet->get_name());
+                }
+                comm_set_text(1, "  Size: %s -> Cost: %d MC",
+                        size_str, comm_planet->get_settlement_cost());
+                comm_set_text(2, "Advantages / Disadvantages:");
+                int textidx = 3;
+                switch (comm_planet->get_class()) {
+                    case Forest:
+                        comm_set_text(textidx++, "  Good basis for agriculture");
+                        break;
+                    case Desert:
+                        comm_set_text(textidx++, "  Possibly rich in minerals");
+                        comm_set_text(textidx++, "  Bad basis for agriculture");
+                        break;
+                    case Volcano:
+                        comm_set_text(textidx++, "  Plutonium prod. is very effective");
+                        comm_set_text(textidx++, "  Bad basis for agriculture");
+                        break;
+                    case Rock:
+                        comm_set_text(textidx++, "  Mining is very effective");
+                        break;
+                    case Ice:
+                        comm_set_text(textidx++, "  Possibly rich in minerals");
+                        comm_set_text(textidx++, "  Bad basis for agriculture");
+                        break;
+                    case Terra:
+                        comm_set_text(textidx++, "  Good basis for agriculture");
+                        break;
+                    case Artificial:
+                        comm_set_text(textidx++, "  The planet may be moved");
+                        comm_set_text(textidx++, "  No mining possible");
+                        break;
+                    default:
+                        break;
+                }
+
+                if (comm_planet->is_named()) {
+                    comm_set_text(textidx++, "  Possibly already built-up");
+                }
+
+                comm_show_buttons(true);
+                comm_recv(DIA_R_SettlePlanetInfo);
+            }
+            break;
+        case DIA_S_NamePlanet:
+            comm_prepare(6);
+            comm_set_title("Claim a planet");
+            comm_set_text(0, "Please name the new planet.");
+            input_manager.start_text_input();
+            input_manager.set_input_text(comm_planet->get_name_suggestion());
+            comm_recv(DIA_R_SettleNamePlanet);
             break;
         case DIA_S_HailPlanet:
             comm_prepare(4);
@@ -433,4 +509,69 @@ void CommPanelDrawer::comm_send(CommSend input) {
 
 void CommPanelDrawer::comm_recv(CommRecv output) {
     comm_state = output;
+}
+
+void CommPanelDrawer::comm_process_responses() {
+    /*
+     * Respond to user interaction.
+     * This could involve triggering a new phase of the dialogue with
+     * comm_send(), or setting comm_report_action in order to flag
+     * the ultimate outcome of the conversation to the caller.
+     */
+    bool proceed = false;
+    bool abort = false;
+
+    bool clicked = draw_manager.clicked();
+
+    SpriteClick click;
+    click = draw_manager.query_click(id_comm_buttons);
+    if (click.id) {
+        proceed = click.x < 0.55;
+        abort = !proceed;
+    }
+
+    switch (comm_state) {
+        case DIA_R_ProceedOrAbort:
+            if (proceed) {
+                comm_report_action = CA_Proceed;
+            } else if (abort) {
+                comm_report_action = CA_Abort;
+            }
+            break;
+        case DIA_R_SettleCannotAfford:
+            if (clicked) {
+                comm_report_action = CA_Abort;
+            }
+            break;
+        case DIA_R_SettlePlanetInfo:
+            if (proceed) {
+                comm_send(DIA_S_NamePlanet);
+            } else if (abort) {
+                comm_report_action = CA_Abort;
+            }
+            break;
+        case DIA_R_SettleNamePlanet:
+            {
+                if (input_manager.consume(K_Backspace)) {
+                    input_manager.backspace();
+                }
+
+                const char *name = input_manager.get_input_text(PLANET_MAX_NAME);
+                comm_set_text(2, name);
+                if (input_manager.consume(K_Enter) && strnlen(name, 1)) {
+                    if (comm_player->attempt_spend(comm_planet->get_settlement_cost())) {
+                        comm_planet->set_name(name);
+                        comm_planet->set_owner(exostate.get_player_idx(comm_player));
+                        comm_report_action = CA_Proceed;
+                    } else {
+                        comm_report_action = CA_Abort;
+                        L.error("Cannot afford planet - but should have checked sooner!");
+                    }
+                }
+
+            }
+            break;
+        default:
+            break;
+    }
 }

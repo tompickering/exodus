@@ -20,12 +20,6 @@ enum CommAction {
     CA_None,
     CA_Proceed,
     CA_Abort,
-    CA_Text0,
-    CA_Text1,
-    CA_Text2,
-    CA_Text3,
-    CA_Text4,
-    CA_Text5,
 };
 
 enum CommImg {
@@ -43,6 +37,8 @@ enum CommImg {
 // conversation with us.
 enum CommSend {
     DIA_S_PlanFly,
+    DIA_S_PlanSettle,
+    DIA_S_NamePlanet,
     DIA_S_HailPlanet,
     DIA_S_Attack,
     DIA_S_Offer,
@@ -52,6 +48,11 @@ enum CommSend {
 // These are from the perspective of the *player*
 // I.E. what is currently being said to *us*
 enum CommRecv {
+    DIA_R_None,
+    DIA_R_ProceedOrAbort,
+    DIA_R_SettleCannotAfford,
+    DIA_R_SettlePlanetInfo,
+    DIA_R_SettleNamePlanet,
     DIA_R_Greeting,
 };
 
@@ -81,6 +82,8 @@ class CommPanelDrawer {
         Player *comm_other;
         Planet *comm_planet;
         CommRecv comm_state;
+
+        CommAction comm_report_action;
 
         char comm_title[COMM_MAX_TEXT];
         char comm_img_caption_upper[COMM_MAX_TEXT];
@@ -121,6 +124,7 @@ class CommPanelDrawer {
         void comm_prepare(int);   // Called for each new dialogue phase
         void comm_send(CommSend);
         void comm_recv(CommRecv);
+        void comm_process_responses();
 };
 
 #endif

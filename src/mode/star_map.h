@@ -20,9 +20,7 @@ class StarMap : ModeBase, PanelDrawer, CommPanelDrawer {
     private:
         enum Stage {
             SM_Idle,
-            SM_CannotAffordSettle,
-            SM_SettleConfirm,
-            SM_NamePlanet,
+            SM_PlanSettle,
             SM_EnemyComm,
             SM_Back2Gal,
         };

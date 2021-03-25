@@ -18,10 +18,6 @@ enum ID {
     END,
 };
 
-static const char *str_size_sm = "small";
-static const char *str_size_md = "medium";
-static const char *str_size_lg = "large";
-
 StarMap::StarMap() : ModeBase("StarMap"), PanelDrawer(PNL_Star), CommPanelDrawer() {
     stage = SM_Idle;
     for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
@@ -63,9 +59,6 @@ void StarMap::enter() {
 ExodusMode StarMap::update(float delta) {
     SpriteClick click;
     CommAction action;
-    const char *size_str = nullptr;
-    const char* input_name;
-    int textidx = 0;
 
     if (draw_manager.fade_active()) {
         return ExodusMode::MODE_None;
@@ -115,86 +108,9 @@ ExodusMode StarMap::update(float delta) {
                                 return ExodusMode::MODE_None;
                             }
                         } else {
-                            /* WIP REFACTOR
-                            comm_set_title("Message from counsellor");
-                            comm_set_img_caption("COUNSELLOR");
-
-                            if (!player->can_afford(planet->get_settlement_cost())) {
-                                comm_set_text(0, "We do not have the money for a");
-                                comm_set_text(1, "colonization.");
-                                comm_set_text(3, "(Cost: %d MC)",
-                                    planet->get_settlement_cost());
-                                comm_open(6);
-                                stage = SM_CannotAffordSettle;
-                                return ExodusMode::MODE_None;
-                            }
-
-                            // TODO: Check for villages, show data from Co14
-
-                            size_str = str_size_sm;
-                            if (planet->get_size() == PLANET_Medium) size_str = str_size_md;
-                            if (planet->get_size() == PLANET_Large) size_str = str_size_lg;
-                            if (!strnlen(planet->get_name(), 1)) {
-                                comm_set_text(0, "Claim this %s planet?",
-                                    planet->get_class_str_lower());
-                            } else {
-                                comm_set_text(0, "Claim planet %s?",
-                                    planet->get_name());
-                            }
-                            comm_set_text(1, "  Size: %s -> Cost: %d MC",
-                                size_str, planet->get_settlement_cost());
-                            comm_set_text(2, "Advantages / Disadvantages:");
-                            textidx = 3;
-                            switch (planet->get_class()) {
-                                case Forest:
-                                    comm_set_text(textidx++,
-                                        "  Good basis for agriculture");
-                                    break;
-                                case Desert:
-                                    comm_set_text(textidx++,
-                                        "  Possibly rich in minerals");
-                                    comm_set_text(textidx++,
-                                        "  Bad basis for agriculture");
-                                    break;
-                                case Volcano:
-                                    comm_set_text(textidx++,
-                                        "  Plutonium prod. is very effective");
-                                    comm_set_text(textidx++,
-                                        "  Bad basis for agriculture");
-                                    break;
-                                case Rock:
-                                    comm_set_text(textidx++,
-                                        "  Mining is very effective");
-                                    break;
-                                case Ice:
-                                    comm_set_text(textidx++,
-                                        "  Possibly rich in minerals");
-                                    comm_set_text(textidx++,
-                                        "  Bad basis for agriculture");
-                                    break;
-                                case Terra:
-                                    comm_set_text(textidx++,
-                                        "  Good basis for agriculture");
-                                    break;
-                                case Artificial:
-                                    comm_set_text(textidx++,
-                                        "  The planet may be moved");
-                                    comm_set_text(textidx++,
-                                        "  No mining possible");
-                                    break;
-                                default:
-                                    break;
-                            }
-
-                            if (planet->is_named()) {
-                                comm_set_text(textidx++,
-                                    "  Possibly already built-up");
-                            }
-
-                            comm_open(6);
-                            stage = SM_SettleConfirm;
+                            comm_open(DIA_S_PlanSettle);
+                            stage = SM_PlanSettle;
                             return ExodusMode::MODE_None;
-                        */
                         }
                     }
                 } else {
@@ -204,51 +120,14 @@ ExodusMode StarMap::update(float delta) {
                 }
             }
             break;
-        case SM_CannotAffordSettle:
-            action = comm_check_action();
-            // TODO: This is actually what the original does, but
-            // there should really just be the one button.
-            if (action == CA_Proceed || action == CA_Abort) {
-                comm_close();
-                stage = SM_Idle;
-            }
-            break;
-        case SM_SettleConfirm:
+        case SM_PlanSettle:
+            comm_update(delta);
             action = comm_check_action();
             if (action == CA_Proceed) {
-                comm_close();
-                /* WIP REFACTOR
-                comm_set_title("Claim a planet");
-                comm_set_text(0, "Please name the new planet.");
-                comm_set_buttons(false);
-                input_manager.start_text_input();
-                input_manager.set_input_text(planet->get_name_suggestion());
-                comm_open(6);
-                */
-                stage = SM_NamePlanet;
+                return ExodusMode::MODE_PlanetColonise;
             } else if (action == CA_Abort) {
                 comm_close();
                 stage = SM_Idle;
-            }
-            break;
-        case SM_NamePlanet:
-            if (input_manager.consume(K_Backspace)) {
-                input_manager.backspace();
-            }
-            input_name = input_manager.get_input_text(PLANET_MAX_NAME);
-            /* WIP REFACTOR
-            comm_set_text(2, input_name);
-            comm_draw_text();
-            */
-            if (input_manager.consume(K_Enter) && strnlen(input_name, 1)) {
-                if (player->attempt_spend(planet->get_settlement_cost())) {
-                    planet->set_name(input_name);
-                    planet->set_owner(player_idx);
-                } else {
-                    L.error("Cannot afford planet - but should have checked sooner!");
-                }
-                comm_close();
-                return ExodusMode::MODE_PlanetColonise;
             }
             break;
         case SM_EnemyComm:
