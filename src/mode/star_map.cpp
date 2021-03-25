@@ -110,6 +110,7 @@ ExodusMode StarMap::update(float delta) {
                                 // Comms with enemy planet
                                 // TODO: Rest of conversation here
                                 Player *enemy = exostate.get_player(planet->get_owner());
+                                /* WIP REFACTOR
                                 comm_set_speech("What do you want, %s...?", player->get_name());
                                 comm_set_img_caption_upper(enemy->get_full_name());
                                 comm_set_img_caption_lower("RACE: %s", enemy->get_race_str());
@@ -121,10 +122,12 @@ ExodusMode StarMap::update(float delta) {
                                 comm_set_buttons(false);
                                 comm_set_text_interactive_mask(0xF);
                                 comm_open(4);
+                                */
                                 stage = SM_EnemyComm;
                                 return ExodusMode::MODE_None;
                             }
                         } else {
+                            /* WIP REFACTOR
                             comm_set_title("Message from counsellor");
                             comm_set_img_caption("COUNSELLOR");
 
@@ -203,6 +206,7 @@ ExodusMode StarMap::update(float delta) {
                             comm_open(6);
                             stage = SM_SettleConfirm;
                             return ExodusMode::MODE_None;
+                        */
                         }
                     }
                 } else {
@@ -225,12 +229,14 @@ ExodusMode StarMap::update(float delta) {
             action = comm_check_action();
             if (action == CA_Proceed) {
                 comm_close();
+                /* WIP REFACTOR
                 comm_set_title("Claim a planet");
                 comm_set_text(0, "Please name the new planet.");
                 comm_set_buttons(false);
                 input_manager.start_text_input();
                 input_manager.set_input_text(planet->get_name_suggestion());
                 comm_open(6);
+                */
                 stage = SM_NamePlanet;
             } else if (action == CA_Abort) {
                 comm_close();
@@ -242,8 +248,10 @@ ExodusMode StarMap::update(float delta) {
                 input_manager.backspace();
             }
             input_name = input_manager.get_input_text(PLANET_MAX_NAME);
+            /* WIP REFACTOR
             comm_set_text(2, input_name);
             comm_draw_text();
+            */
             if (input_manager.consume(K_Enter) && strnlen(input_name, 1)) {
                 if (player->attempt_spend(planet->get_settlement_cost())) {
                     planet->set_name(input_name);
@@ -257,7 +265,9 @@ ExodusMode StarMap::update(float delta) {
             break;
         case SM_EnemyComm:
             // TODO
+            /* WIP REFACTOR
             comm_update(delta);
+            */
             action = comm_check_action();
             // PLACEHOLDER
             if (action == CA_Text0) {

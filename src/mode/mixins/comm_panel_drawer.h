@@ -37,6 +37,24 @@ enum CommImg {
     CI_Rebels,
 };
 
+// These are the player's *input* into the conversation
+// These are always used to initiate the comm panel,
+// even when a CPU player appears to be initiating a
+// conversation with us.
+enum CommSend {
+    DIA_S_PlanFly,
+    DIA_S_HailPlanet,
+    DIA_S_Attack,
+    DIA_S_Offer,
+    DIA_S_Comment,
+};
+
+// These are from the perspective of the *player*
+// I.E. what is currently being said to *us*
+enum CommRecv {
+    DIA_R_Greeting,
+};
+
 class CommPanelDrawer {
     public:
         CommPanelDrawer();
@@ -50,8 +68,7 @@ class CommPanelDrawer {
         void comm_set_img_caption_upper(const char*, ...);
         void comm_set_img_caption_lower(const char*, ...);
         void comm_set_text(int, const char*, ...);
-        void comm_set_buttons(bool);
-        void comm_open(int);
+        void comm_open(CommSend);
         void comm_close();
         void comm_ensure_closed();
         bool comm_is_open();
@@ -59,6 +76,11 @@ class CommPanelDrawer {
         void comm_set_text_interactive_mask(unsigned char);
     private:
         bool _comm_is_open;
+
+        Player *comm_player;
+        Player *comm_other;
+        Planet *comm_planet;
+        CommRecv comm_state;
 
         char comm_title[COMM_MAX_TEXT];
         char comm_img_caption_upper[COMM_MAX_TEXT];
@@ -70,7 +92,7 @@ class CommPanelDrawer {
         char comm_text4[COMM_MAX_TEXT];
         char comm_text5[COMM_MAX_TEXT];
         char *comm_text[6];
-        float comm_time_open;
+        float comm_time;
         float comm_time_since_text_mouseover;
         unsigned char comm_text_interactive_mask;
         int comm_mouseover_text;
@@ -85,6 +107,7 @@ class CommPanelDrawer {
         SprID id_comm_title;
         SprID id_comm_img;
         SprID id_comm_buttons;
+        SprID id_comm_buttons_bg;
         SprID id_text[6];
 
         CommAction comm_action;
@@ -92,7 +115,12 @@ class CommPanelDrawer {
         int comm_text_slots;
         int comm_text_y(int);
 
-        bool show_buttons;
+        void comm_show_buttons(bool);
+
+        void comm_init(CommSend); // Called once to set image etc
+        void comm_prepare(int);   // Called for each new dialogue phase
+        void comm_send(CommSend);
+        void comm_recv(CommRecv);
 };
 
 #endif

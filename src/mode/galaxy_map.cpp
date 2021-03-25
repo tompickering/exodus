@@ -158,18 +158,7 @@ ExodusMode GalaxyMap::update(float delta) {
                 if (click.x < 0.25) {
                     // Fly
                     if (!player->get_location().in_flight() && selected_ft != exostate.loc2tgt(player->get_location().get_target())) {
-                        comm_set_title("Message from counsellor");
-                        comm_set_img_caption("COUNSELLOR");
-                        if (selected_ft == gal->get_guild()) {
-                            comm_set_text(0, "For our flight to the space");
-                            comm_set_text(1, "guild, we need X months.", selected_ft->name);
-                        } else {
-                            comm_set_text(0, "For our flight to the star");
-                            comm_set_text(1, "%s, we need X months.", selected_ft->name);
-                        }
-                        comm_set_text(2, "A pirate attack is unlikely.");
-                        comm_set_text(4, "Do you wish to start?");
-                        comm_open(6);
+                        comm_open(DIA_S_PlanFly);
                         stage = GM_FlyConfirm;
                         return ExodusMode::MODE_None;
                     }

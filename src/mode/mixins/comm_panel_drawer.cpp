@@ -34,22 +34,23 @@ CommPanelDrawer::CommPanelDrawer() {
 
     new (&comm_anim) Anim(1, IMG_LD0_LD0);
 
-    show_buttons = true;
     comm_mouseover_text = -1;
     comm_time_since_text_mouseover = 0;
     comm_text_interactive_mask = 0;
     _comm_is_open = false;
+
+    comm_other = nullptr;
 }
 
 void CommPanelDrawer::comm_update(float dt) {
-    comm_time_open += dt;
+    comm_time += dt;
     comm_time_since_text_mouseover += dt;
     comm_draw_text();
 }
 
 void CommPanelDrawer::comm_draw_text() {
     if (comm_speech) {
-        int max_chars_to_draw = COMM_SPEECH_SPEED * comm_time_open;
+        int max_chars_to_draw = COMM_SPEECH_SPEED * comm_time;
         char comm_title_tmp[COMM_MAX_TEXT];
         strncpy(comm_title_tmp, comm_title, max_chars_to_draw);
         comm_title_tmp[max_chars_to_draw] = '\0';
@@ -176,10 +177,6 @@ void CommPanelDrawer::comm_set_img_caption_lower(const char* text, ...) {
     capitalise(comm_img_caption_lower, COMM_MAX_TEXT);
 }
 
-void CommPanelDrawer::comm_set_buttons(bool buttons_on) {
-    show_buttons = buttons_on;
-}
-
 void CommPanelDrawer::comm_set_text(int idx, const char* in_text, ...) {
     if (idx >= 6) {
         L.fatal("Tried to set invalid text index %d to %s", idx, in_text);
@@ -195,17 +192,8 @@ void CommPanelDrawer::comm_set_text_interactive_mask(unsigned char mask) {
     comm_text_interactive_mask = mask;
 }
 
-void CommPanelDrawer::comm_open(int text_slots) {
-    comm_time_open = 0;
-
-    comm_text_slots = text_slots;
-
-    comm_mouseover_text = -1;
-    comm_time_since_text_mouseover = 0;
-
-    if (comm_text_slots <= 0) {
-        comm_text_slots = 1;
-    }
+void CommPanelDrawer::comm_open(CommSend input) {
+    comm_init(input);
 
     id_comm_panel = draw_manager.new_sprite_id();
     id_comm_bg_t  = draw_manager.new_sprite_id();
@@ -213,6 +201,7 @@ void CommPanelDrawer::comm_open(int text_slots) {
     id_comm_title = draw_manager.new_sprite_id();
     id_comm_img = draw_manager.new_sprite_id();
     id_comm_buttons = draw_manager.new_sprite_id();
+    id_comm_buttons_bg = draw_manager.new_sprite_id();
 
     for (int i = 0; i < 6; ++i) {
         id_text[i] = draw_manager.new_sprite_id();
@@ -240,21 +229,6 @@ void CommPanelDrawer::comm_open(int text_slots) {
          COMM_Y + 28 + COMM_BORDER*2,
          COMM_X + COMM_W - COMM_RCOL_X - COMM_BORDER,
          172});
-
-    if (show_buttons) {
-        draw_manager.draw(
-            id_comm_buttons,
-            IMG_BR1_EXPORT,
-            {COMM_RCOL_X + 2,
-             COMM_Y + COMM_H - COMM_BORDER - 2,
-             0, 1, 1, 1});
-
-        draw_manager.fill(
-            {COMM_RCOL_X + 4 + 236,
-             COMM_Y + COMM_H - COMM_BORDER - 28,
-             118, 26},
-             COL_BORDERS);
-    }
 
     draw_manager.draw(
         id_comm_img,
@@ -289,9 +263,25 @@ void CommPanelDrawer::comm_open(int text_slots) {
         COMM_Y + COMM_H - COMM_BORDER - 16,
         COL_TEXT2);
 
-    comm_draw_text();
-
     _comm_is_open = true;
+
+    comm_send(input);
+    comm_draw_text();
+}
+
+void CommPanelDrawer::comm_prepare(int text_slots) {
+    comm_time = 0;
+
+    comm_text_slots = text_slots;
+
+    comm_mouseover_text = -1;
+    comm_time_since_text_mouseover = 0;
+
+    if (comm_text_slots <= 0) {
+        comm_text_slots = 1;
+    }
+
+    comm_show_buttons(false);
 }
 
 void CommPanelDrawer::comm_close() {
@@ -306,6 +296,7 @@ void CommPanelDrawer::comm_close() {
     draw_manager.release_sprite_id(id_comm_title);
     draw_manager.release_sprite_id(id_comm_img);
     draw_manager.release_sprite_id(id_comm_buttons);
+    draw_manager.release_sprite_id(id_comm_buttons_bg);
 
     draw_manager.draw(id_comm_bg_t, nullptr);
     draw_manager.draw(id_comm_bg_b, nullptr);
@@ -315,7 +306,6 @@ void CommPanelDrawer::comm_close() {
 
     draw_manager.draw(id_comm_panel, nullptr);
     draw_manager.release_sprite_id(id_comm_panel);
-    show_buttons = true;
     _comm_is_open = false;
 
     // Wipe all info
@@ -363,4 +353,73 @@ CommAction CommPanelDrawer::comm_check_action() {
 
 int CommPanelDrawer::comm_text_y(int idx) {
     return COMM_Y + 36 + COMM_BORDER*2 + idx*120/comm_text_slots;
+}
+
+void CommPanelDrawer::comm_show_buttons(bool show) {
+    if (show) {
+        draw_manager.draw(
+            id_comm_buttons,
+            IMG_BR1_EXPORT,
+            {COMM_RCOL_X + 2,
+             COMM_Y + COMM_H - COMM_BORDER - 2,
+             0, 1, 1, 1});
+
+        draw_manager.fill(
+            id_comm_buttons_bg,
+            {COMM_RCOL_X + 4 + 236,
+             COMM_Y + COMM_H - COMM_BORDER - 28,
+             118, 26},
+             COL_BORDERS);
+    } else {
+        draw_manager.draw(id_comm_buttons_bg, nullptr);
+        draw_manager.draw(id_comm_buttons, nullptr);
+    }
+}
+
+
+void CommPanelDrawer::comm_init(CommSend input) {
+    comm_player = exostate.get_active_player();
+    comm_planet = exostate.get_active_planet();
+    comm_other = nullptr;
+
+    if (comm_planet && comm_planet->is_owned()) {
+        comm_other = exostate.get_player(comm_planet->get_owner());
+    }
+
+    switch (input) {
+        case DIA_S_PlanFly:
+            comm_set_img(CI_Human);
+            comm_set_title("Message from counsellor");
+            comm_set_img_caption("COUNSELLOR");
+            break;
+        default:
+            L.warn("Unhandled comm input on init: %d", (int)input);
+    }
+}
+
+void CommPanelDrawer::comm_send(CommSend input) {
+    switch (input) {
+        case DIA_S_PlanFly:
+            comm_prepare(6);
+            // TODO: Need way to pass star / space guild
+            comm_set_text(0, "For our flight to the space");
+            comm_set_text(1, "guild, we need X months.");
+            //comm_set_text(0, "For our flight to the star");
+            //comm_set_text(1, "XXX, we need X months.");
+            comm_set_text(2, "A pirate attack is unlikely.");
+            comm_set_text(4, "Do you wish to start?");
+            comm_show_buttons(true);
+            break;
+        case DIA_S_HailPlanet:
+            // TODO: "Welcome to X" / "You again?"
+            comm_recv(DIA_R_Greeting);
+            break;
+        default:
+            L.warn("Unhandled comm input on send: %d", (int)input);
+            break;
+    }
+}
+
+void CommPanelDrawer::comm_recv(CommRecv output) {
+    comm_state = output;
 }
