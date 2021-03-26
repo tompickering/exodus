@@ -21,6 +21,7 @@ enum CommAction {
     CA_Proceed,
     CA_Abort,
     CA_PlanAttack,
+    CA_Trade,
 };
 
 enum CommImg {
@@ -42,6 +43,7 @@ enum CommSend {
     DIA_S_NamePlanet,
     DIA_S_HailPlanet,
     DIA_S_Attack,
+    DIA_S_Trade,
     DIA_S_Offer,
     DIA_S_Comment,
 };
@@ -56,6 +58,9 @@ enum CommRecv {
     DIA_R_SettleNamePlanet,
     DIA_R_Greeting,
     DIA_R_NoAttackResponse,
+    DIA_R_TradeOK,
+    DIA_R_OfferListen,
+    DIA_R_CommentListen,
 };
 
 class CommPanelDrawer {

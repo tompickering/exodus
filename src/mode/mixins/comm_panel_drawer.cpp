@@ -521,6 +521,24 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_set_speech("oh noes...");
             comm_recv(DIA_R_NoAttackResponse);
             break;
+        case DIA_S_Trade:
+            // TODO: This is just placeholder...
+            comm_prepare(1);
+            comm_set_speech("ok i trade");
+            comm_recv(DIA_R_TradeOK);
+            break;
+        case DIA_S_Offer:
+            // TODO: This is just placeholder...
+            comm_prepare(1);
+            comm_set_speech("tell me more");
+            comm_recv(DIA_R_OfferListen);
+            break;
+        case DIA_S_Comment:
+            // TODO: This is just placeholder...
+            comm_prepare(1);
+            comm_set_speech("im listening");
+            comm_recv(DIA_R_CommentListen);
+            break;
         default:
             L.warn("Unhandled comm input on send: %d", (int)input);
             break;
@@ -564,7 +582,6 @@ void CommPanelDrawer::comm_process_responses() {
             break;
         }
     }
-
 
     switch (comm_state) {
         case DIA_R_ProceedOrAbort:
@@ -612,11 +629,15 @@ void CommPanelDrawer::comm_process_responses() {
                 case 0:
                     comm_send(DIA_S_Attack);
                     break;
-                // TODO: Handle other options
-            }
-            // TODO: This is just placeholder - remove later
-            if (opt > 0) {
-                comm_report_action = CA_Abort;
+                case 1:
+                    comm_send(DIA_S_Trade);
+                    break;
+                case 2:
+                    comm_send(DIA_S_Offer);
+                    break;
+                case 3:
+                    comm_send(DIA_S_Comment);
+                    break;
             }
             break;
         case DIA_R_NoAttackResponse:
@@ -625,6 +646,21 @@ void CommPanelDrawer::comm_process_responses() {
                 comm_report_action = CA_PlanAttack;
             }
             break;
+        case DIA_R_TradeOK:
+            // TODO (placeholder)
+            if (clicked) {
+                comm_report_action = CA_Abort;
+            }
+        case DIA_R_OfferListen:
+            // TODO (placeholder)
+            if (clicked) {
+                comm_report_action = CA_Abort;
+            }
+        case DIA_R_CommentListen:
+            // TODO (placeholder)
+            if (clicked) {
+                comm_report_action = CA_Abort;
+            }
         default:
             break;
     }

@@ -133,14 +133,22 @@ ExodusMode StarMap::update(float delta) {
             // TODO
             comm_update(delta);
             action = comm_check_action();
-            if (action == CA_PlanAttack) {
-                // TODO: Counsellor opinion on whether we should attack
-                ephstate.set_ephemeral_state(EPH_LunarBattlePrep);
-                ephstate.lunar_battle.aggressor_type = AGG_Player;
-                return ephstate.get_appropriate_mode();
-            } else if (action != CA_None) {
-                comm_close();
-                stage = SM_Idle;
+            switch (action) {
+                case CA_None:
+                    break;
+                case CA_Abort:
+                    comm_close();
+                    stage = SM_Idle;
+                    break;
+                case CA_PlanAttack:
+                    // TODO: Counsellor opinion on whether we should attack
+                    ephstate.set_ephemeral_state(EPH_LunarBattlePrep);
+                    ephstate.lunar_battle.aggressor_type = AGG_Player;
+                    return ephstate.get_appropriate_mode();
+                case CA_Trade:
+                    break;
+                default:
+                    L.fatal("Unexpected comm action in SM_EnemyComm: %d", (int)action);
             }
             return ExodusMode::MODE_None;
             break;
