@@ -58,6 +58,12 @@ typedef struct {
     int index;
 } PlanetInfo;
 
+enum AllianceType {
+    ALLY_Trade,
+    ALLY_NonAttack,
+    ALLY_War,
+};
+
 class ExodusState {
     public:
         ExodusState();

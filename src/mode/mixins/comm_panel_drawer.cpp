@@ -6,6 +6,7 @@
 #include "shared.h"
 
 #include "util/str.h"
+#include "util/value.h"
 
 extern INPUTMANAGER input_manager;
 
@@ -223,6 +224,8 @@ void CommPanelDrawer::comm_open(CommSend input) {
     id_comm_img = draw_manager.new_sprite_id();
     id_comm_buttons = draw_manager.new_sprite_id();
     id_comm_buttons_bg = draw_manager.new_sprite_id();
+    id_comm_adj = draw_manager.new_sprite_id();
+    id_comm_adj_ok = draw_manager.new_sprite_id();
 
     for (int i = 0; i < 6; ++i) {
         id_text[i] = draw_manager.new_sprite_id();
@@ -303,6 +306,7 @@ void CommPanelDrawer::comm_prepare(int text_slots) {
     }
 
     comm_show_buttons(false);
+    comm_show_adj(false);
 
     // Clear old per-dialogue-phase info
     for (int i = 0; i < 6; ++i) {
@@ -323,6 +327,8 @@ void CommPanelDrawer::comm_close() {
 
     draw_manager.release_sprite_id(id_comm_title);
     draw_manager.release_sprite_id(id_comm_img);
+    draw_manager.release_sprite_id(id_comm_adj);
+    draw_manager.release_sprite_id(id_comm_adj_ok);
     draw_manager.release_sprite_id(id_comm_buttons);
     draw_manager.release_sprite_id(id_comm_buttons_bg);
 
@@ -382,6 +388,27 @@ void CommPanelDrawer::comm_show_buttons(bool show) {
     } else {
         draw_manager.draw(id_comm_buttons_bg, nullptr);
         draw_manager.draw(id_comm_buttons, nullptr);
+    }
+}
+
+void CommPanelDrawer::comm_show_adj(bool show) {
+    if (show) {
+        draw_manager.draw(
+            id_comm_adj,
+            IMG_BR4_EXPORT3,
+            {COMM_RCOL_X + 2,
+             COMM_Y + COMM_H - COMM_BORDER - 2,
+             0, 1, 1, 1});
+
+        draw_manager.draw(
+            id_comm_adj_ok,
+            IMG_BR6_OK,
+            {COMM_RCOL_X + 2 + 236,
+             COMM_Y + COMM_H - COMM_BORDER - 2,
+             0, 1, 1, 1});
+    } else {
+        draw_manager.draw(id_comm_adj, nullptr);
+        draw_manager.draw(id_comm_adj_ok, nullptr);
     }
 }
 
@@ -509,7 +536,9 @@ void CommPanelDrawer::comm_send(CommSend input) {
             // TODO: "Welcome to X" / "You again?"
             comm_set_speech("What do you want, %s...?", comm_player->get_name());
             comm_set_text(0, "Let us not talk. I want %s.", comm_planet->get_name());
+            // TODO: Disable this based on SIt - rather planet->trade_possible()
             comm_set_text(1, "I wish to trade.");
+            // TODO: Disable this if we have all 3 alliance types
             comm_set_text(2, "I have an interesting offer.");
             comm_set_text(3, "I have something to say.");
             comm_set_text_interactive_mask(0xF);
@@ -523,15 +552,95 @@ void CommPanelDrawer::comm_send(CommSend input) {
             break;
         case DIA_S_Trade:
             // TODO: This is just placeholder...
-            comm_prepare(1);
-            comm_set_speech("ok i trade");
-            comm_recv(DIA_R_TradeOK);
+            {
+                // TODO: If trading alliance, always allow. For now 50%
+                if (onein(2)) {
+                    comm_prepare(1);
+                    comm_set_speech("You may trade.");
+                    comm_recv(DIA_R_TradeOK);
+                } else {
+                    int player_idx = exostate.get_player_idx(comm_player);
+                    if (comm_other->is_hostile_to(player_idx)) {
+                        // TODO: (This is placeholder)
+                        comm_prepare(1);
+                        comm_set_speech("nah mate");
+                        comm_recv(DIA_R_TradeOK);
+                    } else {
+                        comm_prepare(4);
+                        comm_ctx.mc = RND(3) * 10;
+                        comm_set_speech("You have to pay a fee of %dMC.", comm_ctx.mc);
+                        // TODO: Disable this option if we can't afford it
+                        comm_set_text(0, "I accept this.");
+                        comm_set_text(1, "I will not trade then.");
+                        comm_set_text_interactive_mask(0x3);
+                        comm_recv(DIA_R_TradeFee);
+                    }
+                }
+            }
             break;
         case DIA_S_Offer:
             // TODO: This is just placeholder...
-            comm_prepare(1);
-            comm_set_speech("tell me more");
+            comm_prepare(4);
+            if (onein(2)) {
+                comm_set_speech("Tell me more.");
+            } else {
+                comm_set_speech("Do you?");
+            }
+            // TODO: Disable these if already allied
+            comm_set_text(0, "I propose a trading alliance.");
+            comm_set_text(1, "I propose a non-attack alliance.");
+            comm_set_text(2, "I propose a war alliance.");
+            comm_set_text(3, "Become my ally or I attack.");
+            comm_set_text_interactive_mask(0xF);
             comm_recv(DIA_R_OfferListen);
+            break;
+        case DIA_S_ProposeAlliance:
+            {
+                int idx = exostate.get_player_idx(comm_player);
+                if (comm_other->is_hostile_to(idx) || comm_player->get_reputation() < 1) {
+                    comm_prepare(1);
+                    comm_set_speech("I am not interested.");
+                    comm_recv(DIA_R_Close);
+                }
+                comm_prepare(4);
+                comm_set_speech("Why should I do so?");
+                // TODO: Disable if 0 credits
+                comm_set_text(0, "Because I offer money.");
+                comm_set_text(1, "There are strong enemies.");
+                comm_set_text(2, "My alliance is valuable");
+                comm_set_text_interactive_mask(0x7);
+                comm_recv(DIA_R_OfferQuery);
+            }
+            break;
+        case DIA_S_OfferAllianceMoney:
+            comm_prepare(1);
+            comm_set_speech("I will listen.");
+            // TODO: Update this in comm_process_responses()
+            comm_ctx.mc = comm_player->get_mc() / 2;
+            comm_set_text(0, "I offer %dMC.", comm_ctx.mc);
+            comm_show_adj(true);
+            comm_recv(DIA_R_OfferAllianceMoneyResponse);
+            break;
+        case DIA_S_OfferAllianceResponse:
+            comm_prepare(1);
+            // TODO: IF firstplanet(1)=0 I=99 (I being comm_ctx.alliance_prob)
+            // TODO: Multiplayer - 'verhalten'
+            if (onein(max(comm_ctx.alliance_prob, 1))) {
+                if (!comm_player->attempt_spend(comm_ctx.mc)) {
+                    // Shouldn't be able to set value higher than we can afford
+                    L.fatal("We offered more than we could afford");
+                }
+                // TODO: It looks like the player is charged these credits -
+                //       but they don't go to the other lord! More important
+                //       in multiplayer.
+                // TODO: Set alliance
+                // TODO: Orig sets 'trace%(11)+=1' and 'san=1' here - why?
+                comm_set_speech("I accept this.");
+                comm_recv(DIA_R_Close);
+            } else {
+                comm_set_speech("I am not interested.");
+                comm_recv(DIA_R_Close);
+            }
             break;
         case DIA_S_Comment:
             // TODO: This is just placeholder...
@@ -584,6 +693,11 @@ void CommPanelDrawer::comm_process_responses() {
     }
 
     switch (comm_state) {
+        case DIA_R_Close:
+            if (clicked) {
+                comm_report_action = CA_Abort;
+            }
+            break;
         case DIA_R_ProceedOrAbort:
             if (proceed) {
                 comm_report_action = CA_Proceed;
@@ -633,6 +747,7 @@ void CommPanelDrawer::comm_process_responses() {
                     comm_send(DIA_S_Trade);
                     break;
                 case 2:
+                    // TODO: Consider limiting to once per player per month...?
                     comm_send(DIA_S_Offer);
                     break;
                 case 3:
@@ -651,16 +766,92 @@ void CommPanelDrawer::comm_process_responses() {
             if (clicked) {
                 comm_report_action = CA_Abort;
             }
-        case DIA_R_OfferListen:
-            // TODO (placeholder)
-            if (clicked) {
-                comm_report_action = CA_Abort;
+            break;
+        case DIA_R_TradeFee:
+            switch (opt) {
+                case 0:
+                    if (comm_player->attempt_spend(comm_ctx.mc)) {
+                        comm_report_action = CA_Trade;
+                    }
+                    break;
+                case 1:
+                    comm_report_action = CA_Abort;
+                    break;
             }
+            break;
+        case DIA_R_OfferListen:
+            switch (opt) {
+                case 0:
+                    // Trading alliance
+                    comm_ctx.alliance_type = ALLY_Trade;
+                    comm_send(DIA_S_ProposeAlliance);
+                    break;
+                case 1:
+                    // Non-attack alliance
+                    comm_ctx.alliance_type = ALLY_NonAttack;
+                    comm_send(DIA_S_ProposeAlliance);
+                    break;
+                case 2:
+                    // War alliance
+                    comm_ctx.alliance_type = ALLY_War;
+                    comm_send(DIA_S_ProposeAlliance);
+                    break;
+                case 3:
+                    // Threaten
+                    // TODO
+                    break;
+            }
+            break;
+        case DIA_R_OfferQuery:
+            comm_ctx.mc = 0;
+            switch (opt) {
+                case 0:
+                    comm_ctx.alliance_prob = 2;
+                    comm_send(DIA_S_OfferAllianceMoney);
+                    break;
+                case 1:
+                    comm_ctx.alliance_prob = 3;
+                    // TODO: Adjustments to prob
+                    comm_send(DIA_S_OfferAllianceResponse);
+                    break;
+                case 2:
+                    comm_ctx.alliance_prob = 5;
+                    // TODO: Adjustments to prob
+                    comm_send(DIA_S_OfferAllianceResponse);
+                    break;
+            }
+            break;
+        case DIA_R_OfferAllianceMoneyResponse:
+            {
+                SpriteClick adjclick = draw_manager.query_click(id_comm_adj);
+                if (adjclick.id) {
+                    // FIXME: Can we hold a button to make this go faster? Or
+                    //        alternatively allow keyboard input?
+                    if (adjclick.x < 0.5f) {
+                        comm_ctx.mc = max(comm_ctx.mc - 1, 0);
+                    } else {
+                        comm_ctx.mc = min(comm_ctx.mc + 1, comm_player->get_mc());
+                    }
+                    comm_set_text(0, "I offer %dMC.", comm_ctx.mc);
+                }
+
+                if (draw_manager.query_click(id_comm_adj_ok).id) {
+                    if (comm_ctx.mc >= 5 && comm_ctx.mc >= exostate.get_orig_month()/2) {
+                        comm_ctx.alliance_prob -= 2;
+                    }
+                    if (comm_ctx.mc < 5) {
+                        comm_ctx.alliance_prob = 20;
+                    }
+                    comm_send(DIA_S_OfferAllianceResponse);
+                }
+            }
+            break;
         case DIA_R_CommentListen:
             // TODO (placeholder)
             if (clicked) {
                 comm_report_action = CA_Abort;
             }
+            break;
         default:
             break;
     }

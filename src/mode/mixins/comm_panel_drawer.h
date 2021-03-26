@@ -45,6 +45,9 @@ enum CommSend {
     DIA_S_Attack,
     DIA_S_Trade,
     DIA_S_Offer,
+    DIA_S_ProposeAlliance,
+    DIA_S_OfferAllianceMoney,
+    DIA_S_OfferAllianceResponse,
     DIA_S_Comment,
 };
 
@@ -52,6 +55,7 @@ enum CommSend {
 // I.E. what is currently being said to *us*
 enum CommRecv {
     DIA_R_None,
+    DIA_R_Close,
     DIA_R_ProceedOrAbort,
     DIA_R_SettleCannotAfford,
     DIA_R_SettlePlanetInfo,
@@ -59,9 +63,18 @@ enum CommRecv {
     DIA_R_Greeting,
     DIA_R_NoAttackResponse,
     DIA_R_TradeOK,
+    DIA_R_TradeFee,
     DIA_R_OfferListen,
+    DIA_R_OfferQuery,
+    DIA_R_OfferAllianceMoneyResponse,
     DIA_R_CommentListen,
 };
+
+typedef struct {
+    int mc;
+    AllianceType alliance_type;
+    int alliance_prob;
+} CommContext;
 
 class CommPanelDrawer {
     public:
@@ -82,6 +95,7 @@ class CommPanelDrawer {
         bool comm_is_open();
         CommAction comm_check_action();
         void comm_set_text_interactive_mask(unsigned char);
+        CommContext comm_ctx;
     private:
         bool _comm_is_open;
 
@@ -120,6 +134,8 @@ class CommPanelDrawer {
         SprID id_comm_img;
         SprID id_comm_buttons;
         SprID id_comm_buttons_bg;
+        SprID id_comm_adj;
+        SprID id_comm_adj_ok;
         SprID id_text[6];
 
         CommAction comm_action;
@@ -128,6 +144,7 @@ class CommPanelDrawer {
         int comm_text_y(int);
 
         void comm_show_buttons(bool);
+        void comm_show_adj(bool);
 
         void comm_init(CommSend); // Called once to set image etc
         void comm_prepare(int);   // Called for each new dialogue phase
