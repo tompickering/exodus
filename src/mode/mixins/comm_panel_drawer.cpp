@@ -18,12 +18,13 @@ const int COMM_Y = (RES_Y / 2) - (COMM_H / 2);
 const int COMM_RCOL_X = COMM_X + 196 + COMM_BORDER * 2;
 const float COMM_SPEECH_SPEED = 10.f;
 
-const Anim comm_anim_human_static(  1, IMG_LD0_LD0);
-const Anim comm_anim_yokon_static(  1, IMG_LD1_LD1);
-const Anim comm_anim_teri_static(   1, IMG_LD2_LD2);
-const Anim comm_anim_urkash_static( 1, IMG_LD3_LD3);
-const Anim comm_anim_gordoon_static(1, IMG_LD4_LD4);
-const Anim comm_anim_rebels_static( 1, IMG_LD5_LD5);
+const Anim comm_anim_human_static(         1, IMG_LD0_LD0);
+const Anim comm_anim_yokon_static(         1, IMG_LD1_LD1);
+const Anim comm_anim_teri_static(          1, IMG_LD2_LD2);
+const Anim comm_anim_urkash_static(        1, IMG_LD3_LD3);
+const Anim comm_anim_gordoon_static(       1, IMG_LD4_LD4);
+const Anim comm_anim_rebels_static(        1, IMG_LD5_LD5);
+const Anim comm_anim_human_planet_static(  1, IMG_CS4_C  );
 
 CommPanelDrawer::CommPanelDrawer() {
     comm_text[0] = comm_text0; comm_text[1] = comm_text1; comm_text[2] = comm_text2;
@@ -177,6 +178,9 @@ void CommPanelDrawer::comm_set_img(CommImg img) {
             break;
         case CI_Rebels:
             comm_anim = comm_anim_rebels_static;
+            break;
+        case CI_HumanPlanet:
+            comm_anim = comm_anim_human_planet_static;
             break;
     }
 }
@@ -440,6 +444,10 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_title("Message from counsellor");
             comm_set_img_caption("COUNSELLOR");
             break;
+        case DIA_S_PlanetComm:
+            comm_set_img(CI_HumanPlanet);
+            comm_set_img_caption("COUNSELLOR");
+            break;
         case DIA_S_HailPlanet:
             comm_set_img_caption_upper(comm_other->get_full_name());
             comm_set_img_caption_lower("RACE: %s", comm_other->get_race_str());
@@ -548,6 +556,25 @@ void CommPanelDrawer::comm_send(CommSend input) {
             input_manager.start_text_input();
             input_manager.set_input_text(comm_planet->get_name_suggestion());
             comm_recv(DIA_R_SettleNamePlanet);
+            break;
+        case DIA_S_PlanetComm:
+            comm_prepare(4);
+            comm_set_speech("What are your orders?");
+            // TODO: Disable
+            comm_set_text(0, "Activate a goods transfer.");
+            // TODO: Disable
+            comm_set_text(1, "Start Fleet/AirDef production.");
+            // TODO: This is "Move the artificial planet" for artificial worlds
+            comm_set_text(2, "Change global climate (500MC)");
+            if (!comm_player->has_invention(INV_WeatherInfluence)) {
+                comm_text_disabled_mask |= 0x4;
+            }
+            if (!comm_player->can_afford(500)) {
+                comm_text_disabled_mask |= 0x4;
+            }
+            comm_set_text(3, "Never mind...");
+            comm_text_interactive_mask = 0xF;
+            comm_recv(DIA_R_AwaitingOrders);
             break;
         case DIA_S_HailPlanet:
             comm_prepare(4);
@@ -778,6 +805,23 @@ void CommPanelDrawer::comm_process_responses() {
                     }
                 }
 
+            }
+            break;
+        case DIA_R_AwaitingOrders:
+            switch (opt) {
+                case 0:
+                    comm_report_action = CA_GoodsTransfer;
+                    break;
+                case 1:
+                    comm_report_action = CA_StartProduction;
+                    break;
+                case 2:
+                    // TODO: Change global climate
+                    comm_report_action = CA_Abort;
+                    break;
+                case 3:
+                    comm_report_action = CA_Abort;
+                    break;
             }
             break;
         case DIA_R_Greeting:

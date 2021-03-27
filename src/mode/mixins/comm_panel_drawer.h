@@ -20,6 +20,8 @@ enum CommAction {
     CA_None,
     CA_Proceed,
     CA_Abort,
+    CA_GoodsTransfer,
+    CA_StartProduction,
     CA_PlanAttack,
     CA_Trade,
 };
@@ -31,6 +33,7 @@ enum CommImg {
     CI_Urkash,
     CI_Gordoon,
     CI_Rebels,
+    CI_HumanPlanet,
 };
 
 // These are the player's *input* into the conversation
@@ -41,6 +44,7 @@ enum CommSend {
     DIA_S_PlanFly,
     DIA_S_PlanSettle,
     DIA_S_NamePlanet,
+    DIA_S_PlanetComm,
     DIA_S_HailPlanet,
     DIA_S_Attack,
     DIA_S_Trade,
@@ -60,6 +64,7 @@ enum CommRecv {
     DIA_R_SettleCannotAfford,
     DIA_R_SettlePlanetInfo,
     DIA_R_SettleNamePlanet,
+    DIA_R_AwaitingOrders,
     DIA_R_Greeting,
     DIA_R_NoAttackResponse,
     DIA_R_TradeOK,

@@ -98,10 +98,12 @@ ExodusMode StarMap::update(float delta) {
                     if (planet && planet->exists()) {
                         if (planet->is_owned()) {
                             if (planet->get_owner() == player_idx) {
-                                // TODO: Comms with own planet
+                                // Comms with own planet
+                                comm_open(DIA_S_PlanetComm);
+                                stage = SM_PlanetComm;
+                                return ExodusMode::MODE_None;
                             } else {
                                 // Comms with enemy planet
-                                // TODO: Rest of conversation here
                                 comm_open(DIA_S_HailPlanet);
                                 stage = SM_EnemyComm;
                                 return ExodusMode::MODE_None;
@@ -129,8 +131,31 @@ ExodusMode StarMap::update(float delta) {
                 stage = SM_Idle;
             }
             break;
+        case SM_PlanetComm:
+            comm_update(delta);
+            action = comm_check_action();
+            switch (action) {
+                case CA_None:
+                    break;
+                case CA_Abort:
+                    comm_close();
+                    stage = SM_Idle;
+                    break;
+                case CA_GoodsTransfer:
+                    // TODO
+                    comm_close();
+                    stage = SM_Idle;
+                    break;
+                case CA_StartProduction:
+                    // TODO
+                    comm_close();
+                    stage = SM_Idle;
+                    return ephstate.get_appropriate_mode();
+                default:
+                    L.fatal("Unexpected comm action in SM_PlanetComm: %d", (int)action);
+            }
+            break;
         case SM_EnemyComm:
-            // TODO
             comm_update(delta);
             action = comm_check_action();
             switch (action) {
@@ -151,7 +176,6 @@ ExodusMode StarMap::update(float delta) {
                 default:
                     L.fatal("Unexpected comm action in SM_EnemyComm: %d", (int)action);
             }
-            return ExodusMode::MODE_None;
             break;
         case SM_Back2Gal:
             return ExodusMode::MODE_Pop;
