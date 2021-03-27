@@ -161,6 +161,14 @@ void ExodusState::init(GameConfig config) {
         }
     }
 
+    // TODO: Check whether any initial alliances are set up
+    // TODO: Check all references to alliance matrix in orig code have been carried over
+    for (int j = 0; j < N_PLAYERS; ++j) {
+        for (int i = 0; i < N_PLAYERS; ++i) {
+            alliance_matrix[i][j] = 0;
+        }
+    }
+
     aim = config.aim;
     enemy_start = config.enemy_start;
     L.debug("ExodusState init");
@@ -562,5 +570,49 @@ void ExodusState::set_random_hostility(Player& p) {
             }
             idx--;
         }
+    }
+}
+
+bool ExodusState::is_allied(int a, int b) {
+    return get_alliances(a, b) > 0;
+}
+
+bool ExodusState::has_alliance(int a, int b, AllianceType t) {
+    return (get_alliances(a, b) & (1<<(int)t)) > 0;
+}
+
+bool ExodusState::has_all_alliances(int a, int b) {
+    return get_alliances(a, b) == 0x7;
+}
+
+void ExodusState::set_alliance(int a, int b, AllianceType t) {
+    set_alliances(a, b, get_alliances(a, b) | (1<<(int)t));
+}
+
+void ExodusState::unset_alliance(int a, int b, AllianceType t) {
+    set_alliances(a, b, get_alliances(a, b) & ~(1<<(int)t));
+}
+
+void ExodusState::unset_alliances(int a, int b) {
+    set_alliances(a, b, 0);
+}
+
+/*
+ * These two functions are the *only* places outside init
+ * alliance_matrix is read or written.
+ * We ensure a consistent order of access into the matrix,
+ * such that [b][a] will always refer to [a][b] if b > a.
+ */
+uint8_t ExodusState::get_alliances(int a, int b) {
+    if (b > a) {
+        return alliance_matrix[a][b];
+    }
+    return alliance_matrix[b][a];
+}
+void ExodusState::set_alliances(int a, int b, uint8_t alliances) {
+    if (b > a) {
+        alliance_matrix[a][b] = alliances;
+    } else {
+        alliance_matrix[b][a] = alliances;
     }
 }

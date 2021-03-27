@@ -58,7 +58,7 @@ typedef struct {
     int index;
 } PlanetInfo;
 
-enum AllianceType {
+enum AllianceType : uint8_t {
     ALLY_Trade,
     ALLY_NonAttack,
     ALLY_War,
@@ -101,6 +101,12 @@ class ExodusState {
         void set_random_hostility(Player&);
         bool first_city_done;
         bool first_spaceport_done;
+        bool is_allied(int, int);
+        bool has_alliance(int, int, AllianceType);
+        bool has_all_alliances(int, int);
+        void set_alliance(int, int, AllianceType);
+        void unset_alliance(int, int, AllianceType);
+        void unset_alliances(int, int);
     private:
         GalaxySize size;
         int n_players;
@@ -114,6 +120,10 @@ class ExodusState {
         Galaxy galaxy;
         bool galaxy_finalised;
         bool active_flytarget_is_guild;
+
+        uint8_t get_alliances(int, int);
+        void set_alliances(int, int, uint8_t);
+        uint8_t alliance_matrix[N_PLAYERS][N_PLAYERS];
 
     friend class ExodusDebug;
 };
