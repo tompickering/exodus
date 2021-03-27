@@ -443,6 +443,17 @@ void CommPanelDrawer::comm_init(CommSend input) {
 }
 
 void CommPanelDrawer::comm_send(CommSend input) {
+    int comm_player_idx = -1;
+    int comm_other_idx  = -1;
+
+    if (comm_player) {
+        comm_player_idx = exostate.get_player_idx(comm_player);
+    }
+
+    if (comm_other) {
+        comm_other_idx = exostate.get_player_idx(comm_other);
+    }
+
     switch (input) {
         case DIA_S_PlanFly:
             comm_prepare(6);
@@ -533,8 +544,14 @@ void CommPanelDrawer::comm_send(CommSend input) {
             break;
         case DIA_S_HailPlanet:
             comm_prepare(4);
-            // TODO: "Welcome to X" / "You again?"
-            comm_set_speech("What do you want, %s...?", comm_player->get_name());
+            if (exostate.is_allied(comm_player_idx, comm_other_idx)){
+                comm_set_speech("Welcome to %s, %s!",
+                                 comm_planet->get_name(),
+                                 comm_player->get_name());
+            } else {
+                comm_set_speech("What do you want, %s...?",
+                                comm_player->get_name());
+            }
             comm_set_text(0, "Let us not talk. I want %s.", comm_planet->get_name());
             // TODO: Disable this based on SIt - rather planet->trade_possible()
             comm_set_text(1, "I wish to trade.");
@@ -553,8 +570,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
         case DIA_S_Trade:
             // TODO: This is just placeholder...
             {
-                // TODO: If trading alliance, always allow. For now 50%
-                if (onein(2)) {
+                if (exostate.has_alliance(comm_player_idx, comm_other_idx, ALLY_Trade)) {
                     comm_prepare(1);
                     comm_set_speech("You may trade.");
                     comm_recv(DIA_R_TradeOK);
@@ -633,7 +649,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 // TODO: It looks like the player is charged these credits -
                 //       but they don't go to the other lord! More important
                 //       in multiplayer.
-                // TODO: Set alliance
+                exostate.set_alliance(comm_player_idx, comm_other_idx, comm_ctx.alliance_type);
                 // TODO: Orig sets 'trace%(11)+=1' and 'san=1' here - why?
                 comm_set_speech("I accept this.");
                 comm_recv(DIA_R_Close);
