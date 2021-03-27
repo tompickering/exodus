@@ -145,6 +145,9 @@ class CommPanelDrawer {
         SprID id_comm_bg_b;
         SprID id_comm_title;
         SprID id_comm_img;
+        SprID id_comm_ally_trade;
+        SprID id_comm_ally_nonattack;
+        SprID id_comm_ally_war;
         SprID id_comm_buttons;
         SprID id_comm_buttons_bg;
         SprID id_comm_adj;

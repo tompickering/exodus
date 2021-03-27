@@ -229,6 +229,9 @@ void CommPanelDrawer::comm_open(CommSend input) {
     id_comm_bg_b  = draw_manager.new_sprite_id();
     id_comm_title = draw_manager.new_sprite_id();
     id_comm_img = draw_manager.new_sprite_id();
+    id_comm_ally_trade = draw_manager.new_sprite_id();
+    id_comm_ally_nonattack = draw_manager.new_sprite_id();
+    id_comm_ally_war = draw_manager.new_sprite_id();
     id_comm_buttons = draw_manager.new_sprite_id();
     id_comm_buttons_bg = draw_manager.new_sprite_id();
     id_comm_adj = draw_manager.new_sprite_id();
@@ -267,6 +270,41 @@ void CommPanelDrawer::comm_open(CommSend input) {
         {COMM_X + COMM_BORDER + 1,
          COMM_Y + COMM_BORDER + 1,
          0, 0, 1, 1});
+
+    // TODO: These might need drawing each frame when comm img anims are done,
+    // unless the draw manager repairs sprites on top when ones underneath change...
+    if (comm_other) {
+        int x = 4;
+        int p_idx = exostate.get_player_idx(comm_player);
+        int o_idx = exostate.get_player_idx(comm_other);
+        if (exostate.has_alliance(p_idx, o_idx, ALLY_Trade)) {
+            draw_manager.draw(
+                id_comm_ally_trade,
+                IMG_TS1_ALL1,
+                {COMM_X + COMM_BORDER + 1 + x,
+                 COMM_Y + COMM_BORDER + 1 + 4,
+                 0, 0, 1, 1});
+            x += 32;
+        }
+        if (exostate.has_alliance(p_idx, o_idx, ALLY_NonAttack)) {
+            draw_manager.draw(
+                id_comm_ally_nonattack,
+                IMG_TS1_ALL2,
+                {COMM_X + COMM_BORDER + 1 + x,
+                 COMM_Y + COMM_BORDER + 1 + 4,
+                 0, 0, 1, 1});
+            x += 32;
+        }
+        if (exostate.has_alliance(p_idx, o_idx, ALLY_War)) {
+            draw_manager.draw(
+                id_comm_ally_war,
+                IMG_TS1_ALL3,
+                {COMM_X + COMM_BORDER + 1 + x,
+                 COMM_Y + COMM_BORDER + 1 + 4,
+                 0, 0, 1, 1});
+            x += 32;
+        }
+    }
 
     if (!comm_speech) {
         draw_manager.draw_text(
@@ -339,6 +377,9 @@ void CommPanelDrawer::comm_close() {
     draw_manager.release_sprite_id(id_comm_img);
     draw_manager.release_sprite_id(id_comm_adj);
     draw_manager.release_sprite_id(id_comm_adj_ok);
+    draw_manager.release_sprite_id(id_comm_ally_trade);
+    draw_manager.release_sprite_id(id_comm_ally_nonattack);
+    draw_manager.release_sprite_id(id_comm_ally_war);
     draw_manager.release_sprite_id(id_comm_buttons);
     draw_manager.release_sprite_id(id_comm_buttons_bg);
 
