@@ -123,7 +123,7 @@ class ExodusState {
 
         uint8_t get_alliances(int, int);
         void set_alliances(int, int, uint8_t);
-        uint8_t alliance_matrix[N_PLAYERS][N_PLAYERS];
+        uint8_t alliance_matrix[N_PLAYERS * N_PLAYERS];
 
     friend class ExodusDebug;
 };

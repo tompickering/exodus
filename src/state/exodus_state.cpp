@@ -165,7 +165,7 @@ void ExodusState::init(GameConfig config) {
     // TODO: Check all references to alliance matrix in orig code have been carried over
     for (int j = 0; j < N_PLAYERS; ++j) {
         for (int i = 0; i < N_PLAYERS; ++i) {
-            alliance_matrix[i][j] = 0;
+            alliance_matrix[j*N_PLAYERS + i] = 0;
         }
     }
 
@@ -605,14 +605,14 @@ void ExodusState::unset_alliances(int a, int b) {
  */
 uint8_t ExodusState::get_alliances(int a, int b) {
     if (b > a) {
-        return alliance_matrix[a][b];
+        return alliance_matrix[a*N_PLAYERS + b];
     }
-    return alliance_matrix[b][a];
+    return alliance_matrix[b*N_PLAYERS + a];
 }
 void ExodusState::set_alliances(int a, int b, uint8_t alliances) {
     if (b > a) {
-        alliance_matrix[a][b] = alliances;
+        alliance_matrix[a*N_PLAYERS + b] = alliances;
     } else {
-        alliance_matrix[b][a] = alliances;
+        alliance_matrix[b*N_PLAYERS + a] = alliances;
     }
 }
