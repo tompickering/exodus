@@ -1118,9 +1118,8 @@ void CommPanelDrawer::comm_process_responses() {
             }
             break;
         case DIA_R_TradeOK:
-            // TODO (placeholder)
             if (clicked) {
-                comm_report_action = CA_Abort;
+                comm_report_action = CA_Trade;
             }
             break;
         case DIA_R_TradeFee:
