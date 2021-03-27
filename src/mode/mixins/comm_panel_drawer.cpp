@@ -633,7 +633,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     comm_prepare(4);
                     comm_ctx.mc = min(comm_other->get_mc(), 100);
                     comm_ctx.mc = max(comm_ctx.mc - 5, 5);
-                    comm_set_speech("I offer you %dMC if you leave.");
+                    comm_set_speech("I offer you %dMC if you leave.", comm_ctx.mc);
                     comm_set_text(0, "I wish for more.");
                     comm_set_text(1, "I accept this.");
                     comm_set_text(2, "I do not want your money...");
