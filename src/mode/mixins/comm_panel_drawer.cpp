@@ -42,6 +42,7 @@ CommPanelDrawer::CommPanelDrawer() {
     comm_mouseover_text = -1;
     comm_time_since_text_mouseover = 0;
     comm_text_interactive_mask = 0;
+    comm_text_disabled_mask = 0;
     _comm_is_open = false;
 
     comm_other = nullptr;
@@ -97,13 +98,19 @@ void CommPanelDrawer::comm_draw_text() {
             draw_manager.set_selectable(id_text[i]);
         }
 
+        RGB col = COL_TEXT;
+        if (comm_text_disabled_mask & (1 << i)) {
+            draw_manager.unset_selectable(id_text[i]);
+            col = COL_TEXT_GREYED;
+        }
+
         draw_manager.draw_text(
             id_text[i],
             comm_text[i],
             Justify::Left,
             COMM_RCOL_X + 8,
             comm_text_y(i),
-            COL_TEXT);
+            col);
     }
 
     if (!mouseover_any) {
@@ -305,6 +312,9 @@ void CommPanelDrawer::comm_prepare(int text_slots) {
         comm_text_slots = 1;
     }
 
+    comm_text_interactive_mask = 0;
+    comm_text_disabled_mask = 0;
+
     comm_show_buttons(false);
     comm_show_adj(false);
 
@@ -345,6 +355,7 @@ void CommPanelDrawer::comm_close() {
     comm_mouseover_text = -1;
     comm_time_since_text_mouseover = 0;
     comm_text_interactive_mask = 0;
+    comm_text_disabled_mask = 0;
 
     strncpy(comm_title, "", 1);
     strncpy(comm_img_caption_upper, "", 1);
@@ -555,8 +566,10 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_set_text(0, "Let us not talk. I want %s.", comm_planet->get_name());
             // TODO: Disable this based on SIt - rather planet->trade_possible()
             comm_set_text(1, "I wish to trade.");
-            // TODO: Disable this if we have all 3 alliance types
             comm_set_text(2, "I have an interesting offer.");
+            if (exostate.has_all_alliances(comm_player_idx, comm_other_idx)) {
+                comm_text_disabled_mask |= 4;
+            }
             comm_set_text(3, "I have something to say.");
             comm_set_text_interactive_mask(0xF);
             comm_recv(DIA_R_Greeting);
@@ -585,8 +598,10 @@ void CommPanelDrawer::comm_send(CommSend input) {
                         comm_prepare(4);
                         comm_ctx.mc = RND(3) * 10;
                         comm_set_speech("You have to pay a fee of %dMC.", comm_ctx.mc);
-                        // TODO: Disable this option if we can't afford it
                         comm_set_text(0, "I accept this.");
+                        if (!comm_player->can_afford(comm_ctx.mc)) {
+                            comm_text_disabled_mask |= 1;
+                        }
                         comm_set_text(1, "I will not trade then.");
                         comm_set_text_interactive_mask(0x3);
                         comm_recv(DIA_R_TradeFee);
@@ -602,11 +617,19 @@ void CommPanelDrawer::comm_send(CommSend input) {
             } else {
                 comm_set_speech("Do you?");
             }
-            // TODO: Disable these if already allied
             comm_set_text(0, "I propose a trading alliance.");
             comm_set_text(1, "I propose a non-attack alliance.");
             comm_set_text(2, "I propose a war alliance.");
             comm_set_text(3, "Become my ally or I attack.");
+            if (exostate.has_alliance(comm_player_idx, comm_other_idx, ALLY_Trade)) {
+                comm_text_disabled_mask |= 1;
+            }
+            if (exostate.has_alliance(comm_player_idx, comm_other_idx, ALLY_NonAttack)) {
+                comm_text_disabled_mask |= 2;
+            }
+            if (exostate.has_alliance(comm_player_idx, comm_other_idx, ALLY_War)) {
+                comm_text_disabled_mask |= 4;
+            }
             comm_set_text_interactive_mask(0xF);
             comm_recv(DIA_R_OfferListen);
             break;
@@ -620,8 +643,10 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 }
                 comm_prepare(4);
                 comm_set_speech("Why should I do so?");
-                // TODO: Disable if 0 credits
                 comm_set_text(0, "Because I offer money.");
+                if (comm_player->get_mc() <= 0) {
+                    comm_text_disabled_mask |= 1;
+                }
                 comm_set_text(1, "There are strong enemies.");
                 comm_set_text(2, "My alliance is valuable");
                 comm_set_text_interactive_mask(0x7);
@@ -702,6 +727,9 @@ void CommPanelDrawer::comm_process_responses() {
 
     int opt = -1;
     for (int i = 0; i < 6; ++i) {
+        if (comm_text_disabled_mask & (1 << i)) {
+            continue;
+        }
         if (draw_manager.query_click(id_text[i]).id) {
             opt = i;
             break;

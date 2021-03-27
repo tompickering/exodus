@@ -119,6 +119,7 @@ class CommPanelDrawer {
         float comm_time;
         float comm_time_since_text_mouseover;
         unsigned char comm_text_interactive_mask;
+        unsigned char comm_text_disabled_mask;
         int comm_mouseover_text;
         Anim comm_anim;
 
