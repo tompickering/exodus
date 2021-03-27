@@ -773,7 +773,6 @@ void CommPanelDrawer::comm_send(CommSend input) {
             }
             break;
         case DIA_S_Trade:
-            // TODO: This is just placeholder...
             {
                 if (exostate.has_alliance(comm_player_idx, comm_other_idx, ALLY_Trade)) {
                     comm_prepare(1);
@@ -803,7 +802,6 @@ void CommPanelDrawer::comm_send(CommSend input) {
             }
             break;
         case DIA_S_Offer:
-            // TODO: This is just placeholder...
             comm_prepare(4);
             if (onein(2)) {
                 comm_set_speech("Tell me more.");
@@ -849,7 +847,6 @@ void CommPanelDrawer::comm_send(CommSend input) {
         case DIA_S_OfferAllianceMoney:
             comm_prepare(1);
             comm_set_speech("I will listen.");
-            // TODO: Update this in comm_process_responses()
             comm_ctx.mc = comm_player->get_mc() / 2;
             comm_set_text(0, "I offer %dMC.", comm_ctx.mc);
             comm_show_adj(true);
@@ -1116,7 +1113,6 @@ void CommPanelDrawer::comm_process_responses() {
             }
             break;
         case DIA_R_NoAttackResponse:
-            // TODO (placeholder)
             if (clicked) {
                 comm_report_action = CA_PlanAttack;
             }
