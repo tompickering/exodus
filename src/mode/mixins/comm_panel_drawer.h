@@ -58,6 +58,9 @@ enum CommSend {
     DIA_S_OfferAllianceResponse,
     DIA_S_Comment,
     DIA_S_CommentApology,
+    DIA_S_CommentCompensationLower,
+    DIA_S_CommentCompensationRefuse,
+    DIA_S_CommentCompensationAccept,
     DIA_S_CommentCompliment,
     DIA_S_CommentInsult,
     DIA_S_CommentThreaten,
@@ -84,10 +87,12 @@ enum CommRecv {
     DIA_R_OfferQuery,
     DIA_R_OfferAllianceMoneyResponse,
     DIA_R_CommentListen,
+    DIA_R_CommentRequestCompensation,
 };
 
 typedef struct {
     int mc;
+    int mc2;
     AllianceType alliance_type;
     int alliance_prob;
 } CommContext;

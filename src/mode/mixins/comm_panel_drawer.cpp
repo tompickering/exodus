@@ -888,7 +888,71 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_recv(DIA_R_CommentListen);
             break;
         case DIA_S_CommentApology:
-            // TODO
+            {
+                bool hostile = comm_other->is_hostile_to(comm_player_idx);
+                if ((!hostile) && (comm_other->get_flag(4) != AI_Hi)) {
+                    comm_prepare(1);
+                    comm_set_speech("This is not necessary.");
+                    comm_recv(DIA_R_Close);
+                } else if (comm_other->get_flag(2) == AI_Lo) {
+                    comm_prepare(1);
+                    comm_set_speech("I do not wish you as my friend.");
+                    comm_recv(DIA_R_Close);
+                } else {
+                    comm_prepare(4);
+                    comm_ctx.mc = RND(5)*100;
+                    if (onein(3)) {
+                        comm_ctx.mc *= 2;
+                    }
+                    comm_set_speech("You could pay me %dMC...", comm_ctx.mc);
+                    comm_ctx.mc2 = min((int)((float)comm_ctx.mc/1.5f), comm_player->get_mc());
+                    comm_set_text(0, "That is too much! I offer %dMC.", comm_ctx.mc2);
+                    comm_set_text(1, "I will not pay this sum!");
+                    comm_set_text(2, "I will pay.");
+                    if (!comm_player->can_afford(comm_ctx.mc)) {
+                        comm_text_disabled_mask = 0x4;
+                    }
+                    comm_recv(DIA_R_CommentRequestCompensation);
+                }
+            }
+            break;
+        case DIA_S_CommentCompensationLower:
+            {
+                comm_prepare(1);
+                if (comm_other->get_flag(4) == AI_Hi || comm_ctx.mc < 50) {
+                    comm_set_speech("Sorry, but I have to refuse.");
+                    comm_recv(DIA_R_Close);
+                } else {
+                    comm_set_speech("I accept this.");
+                    if (!comm_player->attempt_spend(comm_ctx.mc)) {
+                        L.fatal("Compensate (lower) with more than we can afford (%d/%d)",
+                                comm_ctx.mc, comm_player->get_mc());
+                    }
+                    comm_other->give_mc(comm_ctx.mc);
+                    comm_other->clear_hostility();
+                    comm_recv(DIA_R_Close);
+                }
+            }
+            break;
+        case DIA_S_CommentCompensationRefuse:
+            {
+                comm_prepare(1);
+                comm_set_speech("I do not wish you as my friend.");
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_CommentCompensationAccept:
+            {
+                comm_prepare(1);
+                comm_set_speech("I accept this.");
+                if (!comm_player->attempt_spend(comm_ctx.mc)) {
+                    L.fatal("Compensate with more than we can afford (%d/%d)",
+                            comm_ctx.mc, comm_player->get_mc());
+                }
+                comm_other->give_mc(comm_ctx.mc);
+                comm_other->clear_hostility();
+                comm_recv(DIA_R_Close);
+            }
             break;
         case DIA_S_CommentCompliment:
             {
@@ -1214,6 +1278,20 @@ void CommPanelDrawer::comm_process_responses() {
                     break;
                 case 3:
                     comm_send(DIA_S_CommentThreaten);
+                    break;
+            }
+            break;
+        case DIA_R_CommentRequestCompensation:
+            switch (opt) {
+                case 0:
+                    comm_ctx.mc = comm_ctx.mc2;
+                    comm_send(DIA_S_CommentCompensationLower);
+                    break;
+                case 1:
+                    comm_send(DIA_S_CommentCompensationRefuse);
+                    break;
+                case 2:
+                    comm_send(DIA_S_CommentCompensationAccept);
                     break;
             }
             break;
