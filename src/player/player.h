@@ -39,6 +39,9 @@ typedef struct {
     int infantry;
     int gliders;
     int artillery;
+    int army_size() const {
+        return infantry + gliders + artillery;
+    }
 } Freight;
 
 typedef struct {

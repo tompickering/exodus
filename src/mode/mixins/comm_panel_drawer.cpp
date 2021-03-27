@@ -601,10 +601,135 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_recv(DIA_R_Greeting);
             break;
         case DIA_S_Attack:
-            // TODO: This is just placeholder...
+            if (exostate.has_alliance(comm_player_idx, comm_other_idx, ALLY_NonAttack)) {
+                comm_prepare(4);
+                if (onein(2)) {
+                    comm_set_speech("But we have an ALLIANCE!");
+                } else {
+                    comm_set_speech("Aren't you my ALLY?");
+                }
+                comm_ctx.mc = min(comm_player->get_mc()/3, 200);
+                // FIXME: This is a bit weird - 50MC->16MC but 49MC->49MC?
+                if (comm_ctx.mc < 50) {
+                    comm_ctx.mc = comm_player->get_mc();
+                }
+                comm_set_text(0, "Forgive me! I will pay %dMC!", comm_ctx.mc);
+                if (comm_ctx.mc <= 0) {
+                    comm_text_disabled_mask |= 0x1;
+                }
+                comm_set_text(1, "Uh... sorry, I forgot!");
+                comm_set_text(2, "What? I cannot remember!");
+                comm_set_text(3, "I herewith quit the alliance.");
+                comm_text_interactive_mask = 0xF;
+                comm_recv(DIA_R_AttackAlly);
+            } else {
+                exostate.unset_alliances(comm_player_idx, comm_other_idx);
+                if (comm_other->get_flag(0) == AI_Hi) {
+                    comm_other->set_hostile_to(comm_player_idx);
+                }
+                int n_planets = exostate.get_n_planets(comm_other);
+                int army_size = comm_player->get_fleet().freight.army_size();
+                if (army_size>30 && onein(5) && comm_other->can_afford(50) && n_planets<2) {
+                    comm_prepare(4);
+                    comm_ctx.mc = min(comm_other->get_mc(), 100);
+                    comm_ctx.mc = max(comm_ctx.mc - 5, 5);
+                    comm_set_speech("I offer you %dMC if you leave.");
+                    comm_set_text(0, "I wish for more.");
+                    comm_set_text(1, "I accept this.");
+                    comm_set_text(2, "I do not want your money...");
+                    comm_text_interactive_mask = 0x7;
+                    comm_recv(DIA_R_AttackPayOff);
+                } else {
+                    comm_prepare(1);
+                    int r = rand() % 3;
+                    if (r == 2) {
+                        if (comm_other->get_flag(0) != AI_Hi) {
+                            comm_set_speech("Let us both live in peace.");
+                        } else {
+                            r = 0;
+                        }
+                    }
+                    switch (r) {
+                        case 0:
+                            comm_set_speech("The %s are not afraid!",
+                                            comm_other->get_race_str());
+                            break;
+                        case 1:
+                            comm_set_speech("Do not risk a war.");
+                            break;
+                    }
+
+                    if (onein(comm_other->get_flag(0) == AI_Hi ? 2 : 4)) {
+                        comm_other->set_hostile_to(comm_player_idx);
+                    }
+
+                    comm_recv(DIA_R_NoAttackResponse);
+                }
+            }
+            break;
+        case DIA_S_AttackPayOffWantMore:
+            if (onein(3)) {
+                comm_prepare(4);
+                comm_ctx.mc = min(comm_other->get_mc(), 100+(RND(10)*20));
+                comm_set_speech("Well... I offer %dMC...", comm_ctx.mc);
+                comm_set_text(1, "This is acceptable.");
+                comm_set_text(2, "I do not want your money...");
+                comm_text_interactive_mask = 0x3;
+                comm_recv(DIA_R_AttackPayOffMore);
+            } else {
+                comm_prepare(1);
+                comm_set_speech("You will have to attack.");
+                comm_recv(DIA_R_NoAttackResponse);
+            }
+            break;
+        case DIA_S_AttackAllyCompensate:
+            if (!comm_player->attempt_spend(comm_ctx.mc)) {
+                L.fatal("Not able to afford alliance breach compensation");
+            }
             comm_prepare(1);
-            comm_set_speech("oh noes...");
-            comm_recv(DIA_R_NoAttackResponse);
+            if ((comm_other->get_flag(0) == AI_Hi) || onein(5)) {
+                exostate.unset_alliances(comm_player_idx, comm_other_idx);
+                comm_set_speech("There is no more alliance!");
+            } else {
+                comm_set_speech("I am deeply disappointed.");
+            }
+            comm_recv(DIA_R_Close);
+            break;
+        case DIA_S_AttackAllyApology:
+            comm_prepare(1);
+            if ((comm_other->get_flag(0) == AI_Hi) || onein(2)) {
+                exostate.unset_alliances(comm_player_idx, comm_other_idx);
+                comm_set_speech("There is no more alliance!");
+            } else {
+                comm_set_speech("I am deeply disappointed.");
+            }
+            comm_recv(DIA_R_Close);
+            break;
+        case DIA_S_AttackAllyProceed:
+            {
+                comm_prepare(1);
+                exostate.unset_alliances(comm_player_idx, comm_other_idx);
+                comm_player->adjust_reputation(-1);
+                // TODO: Orig sets trace%(2)+=1 here - why?
+                int r = RND(3);
+                if ((r == 2) && (comm_other->get_flag(5) == AI_Hi)) {
+                    r = 1;
+                }
+                switch (r) {
+                    case 1:
+                        comm_other->set_hostile_to(comm_player_idx);
+                        comm_set_speech("You will pay for this.");
+                        break;
+                    case 2:
+                        comm_set_speech("The %s are not afraid!", comm_other->get_race_str());
+                        break;
+                    case 3:
+                        comm_set_speech("%s bastard.", comm_player->get_race_str());
+                        comm_other->set_hostile_to(comm_player_idx);
+                        break;
+                }
+                comm_recv(DIA_R_NoAttackResponse);
+            }
             break;
         case DIA_S_Trade:
             // TODO: This is just placeholder...
@@ -839,6 +964,55 @@ void CommPanelDrawer::comm_process_responses() {
                     break;
                 case 3:
                     comm_send(DIA_S_Comment);
+                    break;
+            }
+            break;
+        case DIA_R_AttackAlly:
+            switch (opt) {
+                case 0:
+                    comm_send(DIA_S_AttackAllyCompensate);
+                    break;
+                case 1:
+                    comm_send(DIA_S_AttackAllyApology);
+                    break;
+                case 2:
+                    comm_send(DIA_S_AttackAllyProceed);
+                    break;
+                case 3:
+                    comm_send(DIA_S_AttackAllyProceed);
+                    break;
+            }
+            break;
+        case DIA_R_AttackPayOff:
+            switch (opt) {
+                case 0:
+                    comm_send(DIA_S_AttackPayOffWantMore);
+                    break;
+                case 1:
+                    if (!comm_other->attempt_spend(comm_ctx.mc)) {
+                        L.fatal("CPU offered more than they could afford");
+                    }
+                    comm_player->give_mc(comm_ctx.mc);
+                    // TODO: Prevent further attacks this month
+                    comm_report_action = CA_Abort;
+                    break;
+                case 2:
+                    comm_report_action = CA_PlanAttack;
+                    break;
+            }
+            break;
+        case DIA_R_AttackPayOffMore:
+            switch (opt) {
+                case 0:
+                    if (!comm_other->attempt_spend(comm_ctx.mc)) {
+                        L.fatal("CPU offered more than they could afford after increase");
+                    }
+                    comm_player->give_mc(comm_ctx.mc);
+                    // TODO: Prevent further attacks this month (hmm, orig does not here!)
+                    comm_report_action = CA_Abort;
+                    break;
+                case 1:
+                    comm_report_action = CA_PlanAttack;
                     break;
             }
             break;
