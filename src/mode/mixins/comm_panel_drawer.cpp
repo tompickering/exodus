@@ -876,10 +876,67 @@ void CommPanelDrawer::comm_send(CommSend input) {
             }
             break;
         case DIA_S_Comment:
-            // TODO: This is just placeholder...
-            comm_prepare(1);
-            comm_set_speech("im listening");
+            comm_prepare(4);
+            if (onein(2)) {
+                comm_set_speech("Go on then...");
+            } else {
+                comm_set_speech("I will listen.");
+            }
+            comm_set_text(0, "Accept my apologies.");
+            comm_set_text(1, "I appreciate your empire.");
+            comm_set_text(2, "The %s are futile beings!", comm_other->get_race_str());
+            comm_set_text(3, "Your 'empire' is doomed to die.");
+            comm_text_interactive_mask = 0xF;
             comm_recv(DIA_R_CommentListen);
+            break;
+        case DIA_S_CommentApology:
+            // TODO
+            break;
+        case DIA_S_CommentCompliment:
+            {
+                comm_prepare(1);
+                if (comm_other->get_flag(0) == AI_Lo) {
+                    // FIXME: Should we clear hostilities that aren't against us?!
+                    comm_other->clear_hostility();
+                }
+                bool allied = exostate.is_allied(comm_player_idx, comm_other_idx);
+                if (comm_other->is_hostile_to(comm_player_idx) && !allied) {
+                    comm_set_speech("I do not wish you as my friend.");
+                } else {
+                    comm_set_speech("Thank you very much.");
+                }
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_CommentInsult:
+            {
+                comm_prepare(1);
+                exostate.unset_alliances(comm_player_idx, comm_other_idx);
+                if (onein(2)) {
+                    comm_set_speech("You will pay for this.");
+                } else {
+                    comm_set_speech("The humans will die.");
+                }
+                comm_other->set_hostile_to(comm_player_idx);
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_CommentThreaten:
+            {
+                comm_prepare(1);
+                exostate.unset_alliances(comm_player_idx, comm_other_idx);
+                if (comm_other->get_flag(0) != AI_Lo || onein(3)) {
+                    if (onein(2)) {
+                        comm_set_speech("You will pay for this.");
+                    } else {
+                        comm_set_speech("The humans will die.");
+                    }
+                    comm_other->set_hostile_to(comm_player_idx);
+                } else {
+                    comm_set_speech("I am not afraid of you.");
+                }
+                comm_recv(DIA_R_Close);
+            }
             break;
         default:
             L.warn("Unhandled comm input on send: %d", (int)input);
@@ -1149,9 +1206,19 @@ void CommPanelDrawer::comm_process_responses() {
             }
             break;
         case DIA_R_CommentListen:
-            // TODO (placeholder)
-            if (clicked) {
-                comm_report_action = CA_Abort;
+            switch (opt) {
+                case 0:
+                    comm_send(DIA_S_CommentApology);
+                    break;
+                case 1:
+                    comm_send(DIA_S_CommentCompliment);
+                    break;
+                case 2:
+                    comm_send(DIA_S_CommentInsult);
+                    break;
+                case 3:
+                    comm_send(DIA_S_CommentThreaten);
+                    break;
             }
             break;
         default:

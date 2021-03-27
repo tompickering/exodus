@@ -57,6 +57,10 @@ enum CommSend {
     DIA_S_OfferAllianceMoney,
     DIA_S_OfferAllianceResponse,
     DIA_S_Comment,
+    DIA_S_CommentApology,
+    DIA_S_CommentCompliment,
+    DIA_S_CommentInsult,
+    DIA_S_CommentThreaten,
 };
 
 // These are from the perspective of the *player*
