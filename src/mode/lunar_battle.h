@@ -166,6 +166,7 @@ class LunarBattle : ModeBase, CommPanelDrawer {
         void draw_units();
         void update_cursor();
         void update_arrows();
+        void draw_explosion();
 
         LBPanelMode panel_mode;
         void update_panel();

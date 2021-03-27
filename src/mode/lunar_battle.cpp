@@ -752,8 +752,8 @@ ExodusMode LunarBattle::update(float delta) {
     update_panel();
     draw_units();
     update_cursor();
-
     update_arrows();
+    draw_explosion();
 
     if (stage == LB_Fire) {
         fire_time += delta;
@@ -1014,14 +1014,6 @@ void LunarBattle::draw_units() {
                      0, 0, 1, 1});
             }
 
-            if (exp_interp > 0 && target_unit == &units[i]) {
-                draw_manager.draw(
-                    id(ID::EXPLOSION),
-                    anim_explode.interp(1 - exp_interp),
-                    {draw_x + BLK_SZ/2, draw_y + BLK_SZ/2,
-                     0.5, 0.5, 1, 1});
-            }
-
             if (human_turn && stage == LB_Fire && active_unit == &units[i]) {
                 bool draw_highlight = false;
                 if (!target_unit && (fire_time > 1 || fmod(fire_time, 0.2) < 0.1)) {
@@ -1042,6 +1034,20 @@ void LunarBattle::draw_units() {
                 }
             }
         }
+    }
+}
+
+void LunarBattle::draw_explosion() {
+    if (exp_interp > 0 && target_unit) {
+        int x = target_unit->x;
+        int y = target_unit->y;
+        int draw_x = SURF_X + x * BLK_SZ;
+        int draw_y = SURF_Y + y * BLK_SZ;
+            draw_manager.draw(
+                id(ID::EXPLOSION),
+                anim_explode.interp(1 - exp_interp),
+                {draw_x + BLK_SZ/2, draw_y + BLK_SZ/2,
+                 0.5, 0.5, 1, 1});
     }
 }
 
