@@ -214,10 +214,6 @@ void CommPanelDrawer::comm_set_text(int idx, const char* in_text, ...) {
     va_end(args);
 }
 
-void CommPanelDrawer::comm_set_text_interactive_mask(unsigned char mask) {
-    comm_text_interactive_mask = mask;
-}
-
 void CommPanelDrawer::comm_open(CommSend input) {
     comm_init(input);
 
@@ -571,7 +567,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_text_disabled_mask |= 4;
             }
             comm_set_text(3, "I have something to say.");
-            comm_set_text_interactive_mask(0xF);
+            comm_text_interactive_mask = 0xF;
             comm_recv(DIA_R_Greeting);
             break;
         case DIA_S_Attack:
@@ -603,7 +599,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                             comm_text_disabled_mask |= 1;
                         }
                         comm_set_text(1, "I will not trade then.");
-                        comm_set_text_interactive_mask(0x3);
+                        comm_text_interactive_mask = 0x3;
                         comm_recv(DIA_R_TradeFee);
                     }
                 }
@@ -630,7 +626,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             if (exostate.has_alliance(comm_player_idx, comm_other_idx, ALLY_War)) {
                 comm_text_disabled_mask |= 4;
             }
-            comm_set_text_interactive_mask(0xF);
+            comm_text_interactive_mask = 0xF;
             comm_recv(DIA_R_OfferListen);
             break;
         case DIA_S_ProposeAlliance:
@@ -649,7 +645,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 }
                 comm_set_text(1, "There are strong enemies.");
                 comm_set_text(2, "My alliance is valuable");
-                comm_set_text_interactive_mask(0x7);
+                comm_text_interactive_mask = 0x7;
                 comm_recv(DIA_R_OfferQuery);
             }
             break;

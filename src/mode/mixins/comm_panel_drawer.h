@@ -80,6 +80,15 @@ class CommPanelDrawer {
     public:
         CommPanelDrawer();
         void comm_update(float);
+        void comm_open(CommSend);
+        void comm_close();
+        void comm_ensure_closed();
+        bool comm_is_open();
+        CommAction comm_check_action();
+        CommContext comm_ctx;
+    private:
+        bool _comm_is_open;
+
         void comm_draw_text();
         void comm_set_title(const char*, ...);
         void comm_set_speech(const char*, ...);
@@ -89,15 +98,6 @@ class CommPanelDrawer {
         void comm_set_img_caption_upper(const char*, ...);
         void comm_set_img_caption_lower(const char*, ...);
         void comm_set_text(int, const char*, ...);
-        void comm_open(CommSend);
-        void comm_close();
-        void comm_ensure_closed();
-        bool comm_is_open();
-        CommAction comm_check_action();
-        void comm_set_text_interactive_mask(unsigned char);
-        CommContext comm_ctx;
-    private:
-        bool _comm_is_open;
 
         Player *comm_player;
         Player *comm_other;
