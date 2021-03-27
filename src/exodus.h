@@ -27,6 +27,7 @@ enum ExodusMode {
     MODE_PlanetColonise,
     MODE_LunarBattlePrep,
     MODE_LunarBattle,
+    MODE_Trade,
     MODE_ShipEquip,
 };
 

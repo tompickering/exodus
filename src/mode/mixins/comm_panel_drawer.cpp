@@ -560,8 +560,10 @@ void CommPanelDrawer::comm_send(CommSend input) {
                                 comm_player->get_name());
             }
             comm_set_text(0, "Let us not talk. I want %s.", comm_planet->get_name());
-            // TODO: Disable this based on SIt - rather planet->trade_possible()
             comm_set_text(1, "I wish to trade.");
+            if (!comm_planet->trade_possible(comm_player_idx)) {
+                comm_text_disabled_mask |= 2;
+            }
             comm_set_text(2, "I have an interesting offer.");
             if (exostate.has_all_alliances(comm_player_idx, comm_other_idx)) {
                 comm_text_disabled_mask |= 4;

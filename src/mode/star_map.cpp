@@ -146,10 +146,8 @@ ExodusMode StarMap::update(float delta) {
                     ephstate.lunar_battle.aggressor_type = AGG_Player;
                     return ephstate.get_appropriate_mode();
                 case CA_Trade:
-                    // TODO: Use planet->initiate_trade()
                     comm_close();
-                    stage = SM_Idle;
-                    break;
+                    return ExodusMode::MODE_Trade;
                 default:
                     L.fatal("Unexpected comm action in SM_EnemyComm: %d", (int)action);
             }
