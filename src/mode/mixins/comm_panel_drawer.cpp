@@ -789,6 +789,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     } else {
                         comm_prepare(4);
                         comm_ctx.mc = RND(3) * 10;
+                        // FIXME: If reject then should't be able to try again this month
                         comm_set_speech("You have to pay a fee of %dMC.", comm_ctx.mc);
                         comm_set_text(0, "I accept this.");
                         if (!comm_player->can_afford(comm_ctx.mc)) {
