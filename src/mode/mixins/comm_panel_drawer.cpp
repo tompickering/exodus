@@ -560,10 +560,11 @@ void CommPanelDrawer::comm_send(CommSend input) {
         case DIA_S_PlanetComm:
             comm_prepare(4);
             comm_set_speech("What are your orders?");
-            // TODO: Disable
             comm_set_text(0, "Activate a goods transfer.");
-            // TODO: Disable
             comm_set_text(1, "Start Fleet/AirDef production.");
+            if (!comm_planet->has_spaceport()) {
+                comm_text_disabled_mask |= 0x3;
+            }
             // TODO: This is "Move the artificial planet" for artificial worlds
             comm_set_text(2, "Change global climate (500MC)");
             if (!comm_player->has_invention(INV_WeatherInfluence)) {

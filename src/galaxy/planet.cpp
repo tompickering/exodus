@@ -401,6 +401,12 @@ void Planet::destroy_lunar_base() {
     lunar_base = false;
 }
 
+bool Planet::has_spaceport() {
+    return has_stone(STONE_Port0)
+        && has_stone(STONE_Port1)
+        && has_stone(STONE_Port2);
+}
+
 int Planet::get_owner() {
     return owner;
 }

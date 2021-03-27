@@ -142,6 +142,7 @@ class Planet {
         bool has_lunar_base();       // Orig: SIb
         void build_lunar_base();
         void destroy_lunar_base();
+        bool has_spaceport();
         const char* get_name();      // Orig: SIn
         void set_name(const char*);
         bool is_named();
