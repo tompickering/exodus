@@ -29,6 +29,7 @@ enum ExodusMode {
     MODE_LunarBattle,
     MODE_Trade,
     MODE_ShipEquip,
+    MODE_Arrive,
 };
 
 class ModeBase;
