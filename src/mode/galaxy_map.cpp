@@ -755,6 +755,19 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         exostate.set_all_alliances(player_idx, owner_idx);
                     }
                 }
+
+                int r = 50;
+                if (player->get_flag(1) == AI_Md) {
+                    r = 20;
+                } else if (player->get_flag(1) == AI_Lo) {
+                    r = 10;
+                }
+                // FIXME: Randomly lose alliances - should exclude player?
+                for (int i = 0; i < N_PLAYERS= ++i) {
+                    if (onein(r)) {
+                        exostate.unset_alliances(player_idx, i);
+                    }
+                }
             }
         }
         next_mpai_stage();
