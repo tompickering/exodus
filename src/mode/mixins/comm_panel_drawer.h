@@ -54,6 +54,7 @@ enum CommSend {
     DIA_S_Trade,
     DIA_S_Offer,
     DIA_S_ProposeAlliance,
+    DIA_S_ProposeAllianceAggressively,
     DIA_S_OfferAllianceMoney,
     DIA_S_OfferAllianceResponse,
     DIA_S_Comment,

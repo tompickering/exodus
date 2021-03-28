@@ -850,6 +850,28 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_recv(DIA_R_OfferQuery);
             }
             break;
+        case DIA_S_ProposeAllianceAggressively:
+            {
+                comm_prepare(1);
+                const Freight &f = comm_player->get_fleet().freight;
+                int army = f.infantry + f.gliders + f.artillery*2;
+                if ((army > comm_planet->get_army_size()) && (comm_other->get_flag(3) != AI_Lo)) {
+                    // FIXME: Should this say something else...?
+                    comm_set_speech("But we have an ALLIANCE!");
+                    exostate.set_alliance(comm_player_idx, comm_other_idx, ALLY_Trade);
+                    exostate.set_alliance(comm_player_idx, comm_other_idx, ALLY_NonAttack);
+                    exostate.set_alliance(comm_player_idx, comm_other_idx, ALLY_War);
+                    // TODO: trace%(11)+=1
+                    comm_recv(DIA_R_Close);
+                } else {
+                    if ((comm_other->get_flag(0) == AI_Hi) || onein(4)) {
+                        comm_other->set_hostile_to(comm_player_idx);
+                    }
+                    comm_set_speech("Do not risk a war.");
+                    comm_recv(DIA_R_NoAttackResponse);
+                }
+            }
+            break;
         case DIA_S_OfferAllianceMoney:
             comm_prepare(1);
             comm_set_speech("I will listen.");
@@ -1223,7 +1245,7 @@ void CommPanelDrawer::comm_process_responses() {
                     break;
                 case 3:
                     // Threaten
-                    // TODO
+                    comm_send(DIA_S_ProposeAllianceAggressively);
                     break;
             }
             break;
