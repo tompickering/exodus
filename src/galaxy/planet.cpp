@@ -1421,6 +1421,10 @@ int Planet::get_army_size() {
     return army_inf + army_gli + army_art;
 }
 
+int Planet::get_army_size_weighted() {
+    return army_inf + army_gli*2 + army_art*3;
+}
+
 void Planet::adjust_army(int inf, int gli, int art) {
     army_inf += inf;
     army_gli += gli;

@@ -18,13 +18,15 @@ const int COMM_Y = (RES_Y / 2) - (COMM_H / 2);
 const int COMM_RCOL_X = COMM_X + 196 + COMM_BORDER * 2;
 const float COMM_SPEECH_SPEED = 10.f;
 
-const Anim comm_anim_human_static(         1, IMG_LD0_LD0);
-const Anim comm_anim_yokon_static(         1, IMG_LD1_LD1);
-const Anim comm_anim_teri_static(          1, IMG_LD2_LD2);
-const Anim comm_anim_urkash_static(        1, IMG_LD3_LD3);
-const Anim comm_anim_gordoon_static(       1, IMG_LD4_LD4);
-const Anim comm_anim_rebels_static(        1, IMG_LD5_LD5);
-const Anim comm_anim_human_planet_static(  1, IMG_CS4_C  );
+const Anim comm_anim_human_static(            1, IMG_LD0_LD0);
+const Anim comm_anim_human_thoughtful_static( 1, IMG_CS2_C  );
+const Anim comm_anim_human_confident_static(  1, IMG_CS3_C  );
+const Anim comm_anim_human_planet_static(     1, IMG_CS4_C  );
+const Anim comm_anim_yokon_static(            1, IMG_LD1_LD1);
+const Anim comm_anim_teri_static(             1, IMG_LD2_LD2);
+const Anim comm_anim_urkash_static(           1, IMG_LD3_LD3);
+const Anim comm_anim_gordoon_static(          1, IMG_LD4_LD4);
+const Anim comm_anim_rebels_static(           1, IMG_LD5_LD5);
 
 CommPanelDrawer::CommPanelDrawer() {
     comm_text[0] = comm_text0; comm_text[1] = comm_text1; comm_text[2] = comm_text2;
@@ -163,6 +165,12 @@ void CommPanelDrawer::comm_set_img(CommImg img) {
     switch (img) {
         case CI_Human:
             comm_anim = comm_anim_human_static;
+            break;
+        case CI_HumanThoughtful:
+            comm_anim = comm_anim_human_thoughtful_static;
+            break;
+        case CI_HumanConfident:
+            comm_anim = comm_anim_human_confident_static;
             break;
         case CI_Yokon:
             comm_anim = comm_anim_yokon_static;
@@ -493,6 +501,45 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img_caption_upper(comm_other->get_full_name());
             comm_set_img_caption_lower("RACE: %s", comm_other->get_race_str());
             comm_set_race(comm_other->get_race());
+            break;
+        case DIA_S_PlanAttack:
+            {
+                comm_set_title("Message from counsellor");
+                comm_set_img_caption("COUNSELLOR");
+                comm_prepare(6);
+                int army = comm_player->get_fleet().freight.army_size_weighted();
+                if (army <= 0) {
+                    comm_set_img(CI_HumanThoughtful);
+                    comm_set_text(0, "We do not have any troops.");
+                    comm_ctx.may_proceed = false;
+                } else {
+                    int army_enemy = comm_planet->get_army_size_weighted();
+                    bool base = comm_planet->has_lunar_base();
+                    if (base) {
+                        army_enemy += 20;
+                    }
+                    if (army > army_enemy) {
+                        comm_set_img(CI_HumanConfident);
+                    } else {
+                        comm_set_img(CI_Human);
+                    }
+                    // TODO: Check text layout against orig
+                    comm_set_text(0, "Attack %s", comm_planet->get_name());
+                    const char *odds = "good";
+                    if (army_enemy >= army) odds = "not good";
+                    if (army > army_enemy*2) odds = "very good";
+                    if (army_enemy > army*2) odds = "extremely bad";
+                    comm_set_text(2, "The winning chances are %s.", odds);
+                    if (base) {
+                        comm_set_text(4, "%s owns a lunar base.");
+                    } else {
+                        comm_set_text(4, "No lunar base is present.");
+                    }
+                    comm_set_text(5, "Do you wish to attack?");
+                    comm_ctx.may_proceed = true;
+                }
+            }
+            break;
         default:
             L.warn("Unhandled comm input on init: %d", (int)input);
     }
@@ -1048,6 +1095,14 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 } else {
                     comm_set_speech("I am not afraid of you.");
                 }
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_PlanAttack:
+            if (comm_ctx.may_proceed) {
+                comm_show_buttons(true);
+                comm_recv(DIA_R_ProceedOrAbort);
+            } else {
                 comm_recv(DIA_R_Close);
             }
             break;

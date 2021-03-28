@@ -28,12 +28,14 @@ enum CommAction {
 
 enum CommImg {
     CI_Human,
+    CI_HumanThoughtful,
+    CI_HumanConfident,
+    CI_HumanPlanet,
     CI_Yokon,
     CI_Teri,
     CI_Urkash,
     CI_Gordoon,
     CI_Rebels,
-    CI_HumanPlanet,
 };
 
 // These are the player's *input* into the conversation
@@ -66,6 +68,7 @@ enum CommSend {
     DIA_S_CommentCompliment,
     DIA_S_CommentInsult,
     DIA_S_CommentThreaten,
+    DIA_S_PlanAttack,
 };
 
 // These are from the perspective of the *player*
@@ -98,6 +101,7 @@ typedef struct {
     int mc2;
     AllianceType alliance_type;
     int alliance_prob;
+    bool may_proceed;
 } CommContext;
 
 class CommPanelDrawer {

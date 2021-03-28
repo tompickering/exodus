@@ -42,6 +42,9 @@ typedef struct {
     int army_size() const {
         return infantry + gliders + artillery;
     }
+    int army_size_weighted() const {
+        return infantry + gliders*2 + artillery*3;
+    }
 } Freight;
 
 typedef struct {

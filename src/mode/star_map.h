@@ -23,6 +23,7 @@ class StarMap : ModeBase, PanelDrawer, CommPanelDrawer {
             SM_PlanSettle,
             SM_PlanetComm,
             SM_EnemyComm,
+            SM_PlanAttack,
             SM_Back2Gal,
         };
 
