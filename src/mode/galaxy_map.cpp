@@ -197,8 +197,7 @@ ExodusMode GalaxyMap::update(float delta) {
         case GM_Zoom2Star:
             return ExodusMode::MODE_StarMap;
         case GM_FlyConfirm:
-            comm_update(delta);
-            action = comm_check_action();
+            action = comm_update(delta);
             if (action == CA_Proceed) {
                 // TODO: Vary number of months
                 player->get_location().set_target(exostate.tgt2loc(selected_ft), 1);

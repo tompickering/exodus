@@ -107,12 +107,11 @@ typedef struct {
 class CommPanelDrawer {
     public:
         CommPanelDrawer();
-        void comm_update(float);
+        CommAction comm_update(float);
         void comm_open(CommSend);
         void comm_close();
         void comm_ensure_closed();
         bool comm_is_open();
-        CommAction comm_check_action();
         CommContext comm_ctx;
     private:
         bool _comm_is_open;

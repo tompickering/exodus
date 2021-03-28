@@ -122,8 +122,7 @@ ExodusMode StarMap::update(float delta) {
             }
             break;
         case SM_PlanSettle:
-            comm_update(delta);
-            action = comm_check_action();
+            action = comm_update(delta);
             if (action == CA_Proceed) {
                 return ExodusMode::MODE_PlanetColonise;
             } else if (action == CA_Abort) {
@@ -132,8 +131,7 @@ ExodusMode StarMap::update(float delta) {
             }
             break;
         case SM_PlanetComm:
-            comm_update(delta);
-            action = comm_check_action();
+            action = comm_update(delta);
             switch (action) {
                 case CA_None:
                     break;
@@ -156,8 +154,7 @@ ExodusMode StarMap::update(float delta) {
             }
             break;
         case SM_EnemyComm:
-            comm_update(delta);
-            action = comm_check_action();
+            action = comm_update(delta);
             switch (action) {
                 case CA_None:
                     break;
@@ -178,8 +175,7 @@ ExodusMode StarMap::update(float delta) {
             }
             break;
         case SM_PlanAttack:
-            comm_update(delta);
-            action = comm_check_action();
+            action = comm_update(delta);
             switch (action) {
                 case CA_None:
                     break;

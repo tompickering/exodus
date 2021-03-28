@@ -51,11 +51,12 @@ CommPanelDrawer::CommPanelDrawer() {
     comm_other = nullptr;
 }
 
-void CommPanelDrawer::comm_update(float dt) {
+CommAction CommPanelDrawer::comm_update(float dt) {
     comm_time += dt;
     comm_time_since_text_mouseover += dt;
     comm_process_responses();
     comm_draw_text();
+    return comm_report_action;
 }
 
 void CommPanelDrawer::comm_complete_speech() {
@@ -420,10 +421,6 @@ void CommPanelDrawer::comm_ensure_closed() {
 
 bool CommPanelDrawer::comm_is_open() {
     return _comm_is_open;
-}
-
-CommAction CommPanelDrawer::comm_check_action() {
-    return comm_report_action;
 }
 
 int CommPanelDrawer::comm_text_y(int idx) {
