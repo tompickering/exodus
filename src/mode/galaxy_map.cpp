@@ -773,16 +773,6 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
         next_mpai_stage();
     }
 
-    if (mp_state.mpai_stage == MPAI_AllianceAccept) {
-        // TODO
-        next_mpai_stage();
-    }
-
-    if (mp_state.mpai_stage == MPAI_AllianceReject) {
-        // TODO
-        next_mpai_stage();
-    }
-
     if (mp_state.mpai_stage == MPAI_UpdateTaxes) {
         if (exostate.get_orig_month() < 25) {
             player->set_tax(0);

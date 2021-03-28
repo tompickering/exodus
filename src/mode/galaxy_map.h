@@ -67,8 +67,6 @@ enum MonthPassAIStage {
     // PROCet_main
     MPAI_Hostilities,
     MPAI_Alliances,
-    MPAI_AllianceAccept,
-    MPAI_AllianceReject,
     MPAI_UpdateTaxes,
     MPAI_DecideTerrorAttacks,
     MPAI_FleetPurchase,
