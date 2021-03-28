@@ -604,6 +604,9 @@ void ExodusState::unset_alliances(int a, int b) {
  * such that [b][a] will always refer to [a][b] if b > a.
  */
 uint8_t ExodusState::get_alliances(int a, int b) {
+    if (a == b) {
+        return 0;
+    }
     if (b > a) {
         return alliance_matrix[a*N_PLAYERS + b];
     }
