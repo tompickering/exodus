@@ -781,10 +781,20 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 } else {
                     int player_idx = exostate.get_player_idx(comm_player);
                     if (comm_other->is_hostile_to(player_idx)) {
-                        // TODO: (This is placeholder)
-                        comm_prepare(1);
-                        comm_set_speech("nah mate");
-                        comm_recv(DIA_R_TradeOK);
+                        if (comm_other->get_flag(0) == AI_Hi) {
+                            comm_prepare(4);
+                            comm_set_speech("The %s do not trade with you!",
+                                            comm_other->get_race_str());
+                            comm_set_text(0, "Do not enrage me.");
+                            comm_set_text(1, "Curb your tongue!");
+                            comm_set_text(2, "So I'm going to leave.");
+                            comm_text_interactive_mask = 0x7;
+                            comm_recv(DIA_R_TradeRefuse);
+                        } else {
+                            comm_prepare(1);
+                            comm_set_speech("I do not want you to trade.");
+                            comm_recv(DIA_R_Close);
+                        }
                     } else {
                         comm_prepare(4);
                         comm_ctx.mc = RND(3) * 10;
@@ -800,6 +810,19 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     }
                 }
             }
+            break;
+        case DIA_S_TradeRefuseRebuke:
+            comm_prepare(1);
+            if (comm_other->get_flag(5) == AI_Hi) {
+                comm_set_speech("I am not afraid of you.");
+                if (onein(3)) {
+                    comm_other->set_hostile_to(comm_player_idx);
+                }
+            } else {
+                // TODO: This seems like a weird thing to say...
+                comm_set_speech("Why should I do so?");
+            }
+            comm_recv(DIA_R_Close);
             break;
         case DIA_S_Offer:
             comm_prepare(4);
@@ -1222,6 +1245,20 @@ void CommPanelDrawer::comm_process_responses() {
                     }
                     break;
                 case 1:
+                    comm_report_action = CA_Abort;
+                    break;
+            }
+            break;
+        case DIA_R_TradeRefuse:
+            switch (opt) {
+                case 0:
+                    comm_send(DIA_S_TradeRefuseRebuke);
+                    break;
+                case 1:
+                    // FIXME: Should "Curb your tongue!" do more than close the comms?
+                    comm_report_action = CA_Abort;
+                    break;
+                case 2:
                     comm_report_action = CA_Abort;
                     break;
             }
