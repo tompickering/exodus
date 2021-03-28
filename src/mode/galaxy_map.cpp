@@ -705,7 +705,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 }
             }
             if (resume || onein(r)) {
-                // PROCalliances
+                // PROCet_alliances
                 // Can cast - AI never visit the guild
                 Star *s = (Star*)exostate.loc2tgt(player->get_location().get_target());
                 int &i = mp_state.mpai_planet_idx;
