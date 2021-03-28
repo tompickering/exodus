@@ -763,7 +763,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     r = 10;
                 }
                 // FIXME: Randomly lose alliances - should exclude player?
-                for (int i = 0; i < N_PLAYERS= ++i) {
+                for (int i = 0; i < N_PLAYERS; ++i) {
                     if (onein(r)) {
                         exostate.unset_alliances(player_idx, i);
                     }
