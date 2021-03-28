@@ -55,6 +55,13 @@ typedef struct {
     Freight freight;
 } Fleet;
 
+enum ArtificialPlanetPhase {
+    AP_None,
+    AP_Phase1,
+    AP_Phase2,
+    AP_Complete,
+};
+
 // N.B. This is sensitive to order
 enum Invention {
     INV_MassProduction,           // 1   -
@@ -160,6 +167,7 @@ class Player {
         void adjust_tax(int);
         OfficerQuality get_officer(Officer);
         void set_officer(Officer, OfficerQuality);
+        ArtificialPlanetPhase ap_phase;
 
         // AI
         AIFlag get_flag(int);

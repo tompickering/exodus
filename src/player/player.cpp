@@ -38,6 +38,8 @@ Player::Player() {
     clear_hostility();
 
     set_tax(30);
+
+    ap_phase = AP_None;
 }
 
 void Player::init_alien_name(int idx) {
