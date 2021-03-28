@@ -831,6 +831,12 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     comm_prepare(1);
                     comm_set_speech("I am not interested.");
                     comm_recv(DIA_R_Close);
+                    break;
+                } else if (comm_other->get_flag(2) == AI_Lo) {
+                    comm_prepare(1);
+                    comm_set_speech("Sorry, but I have to refuse.");
+                    comm_recv(DIA_R_Close);
+                    break;
                 }
                 comm_prepare(4);
                 comm_set_speech("Why should I do so?");
