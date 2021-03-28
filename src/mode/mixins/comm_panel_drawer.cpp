@@ -1119,7 +1119,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_recv(DIA_R_CPU_OfferElaborate);
             break;
         case DIA_S_CPU_ProposeAlliance:
-            comm_prepare(6);
+            comm_prepare(4);
             switch (comm_ctx.alliance_type) {
                 case ALLY_Trade:
                     comm_set_speech("I propose a trading alliance.");
@@ -1131,14 +1131,40 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     comm_set_speech("I propose a war alliance.");
                     break;
             }
-            // TODO - this is placeholder
-            comm_recv(DIA_R_Close);
+            comm_set_text(0, "I am not interested.");
+            comm_set_text(1, "Why should I do so?");
+            comm_set_text(2, "Sorry, but I have to refuse.");
+            comm_set_text(3, "I accept this.");
+            comm_text_interactive_mask = 0xF;
+            comm_recv(DIA_R_CPU_ProposeAlliance);
             break;
         case DIA_S_CPU_ProposeAllianceAggressively:
-            comm_prepare(6);
+            comm_prepare(4);
             comm_set_speech("Become my ally or I attack.");
             // TODO - this is placeholder
             comm_recv(DIA_R_Close);
+            break;
+        case DIA_S_CPU_AllianceQuery:
+            comm_prepare(4);
+            comm_ctx.mc = 0;
+            if (comm_player->get_flag(3) == AI_Lo) {
+                comm_ctx.mc = exostate.get_orig_month()*3;
+                if (comm_ctx.mc > 100) {
+                    comm_ctx.mc = 100 - RND(3)*10;
+                }
+                comm_ctx.mc = min(comm_ctx.mc, comm_player->get_mc());
+                comm_set_speech("Well... I offer %dMC.", comm_ctx.mc);
+            } else {
+                if (onein(2)) {
+                    comm_set_speech("There are strong enemies.");
+                } else {
+                    comm_set_speech("My alliance is valuable.");
+                }
+            }
+            comm_set_text(0, "I accept this.");
+            comm_set_text(1, "I am not interested.");
+            comm_text_interactive_mask = 0x3;
+            comm_recv(DIA_R_CPU_ProposeAllianceMoney);
             break;
         default:
             L.warn("Unhandled comm input on send: %d", (int)input);
@@ -1487,6 +1513,42 @@ void CommPanelDrawer::comm_process_responses() {
                     }
                     comm_send(DIA_S_CPU_ProposeAlliance);
                 }
+            }
+            break;
+        case DIA_R_CPU_ProposeAlliance:
+            switch (opt) {
+                case 0:
+                    // I am not interested
+                    comm_report_action = CA_Abort;
+                    break;
+                case 1:
+                    // Why should I do so?
+                    comm_send(DIA_S_CPU_AllianceQuery);
+                    break;
+                case 2:
+                    // Sorry, but I have to refuse
+                    comm_report_action = CA_Abort;
+                    break;
+                case 3:
+                    // I accept this
+                    exostate.set_alliance(comm_player_idx, comm_other_idx, comm_ctx.alliance_type);
+                    comm_report_action = CA_Abort;
+                    break;
+            }
+            break;
+        case DIA_R_CPU_ProposeAllianceMoney:
+            switch (opt) {
+                case 0:
+                    // I accept this
+                    // FIXME: Orig doesn't subtract MC from CPU lord, so neither do we
+                    comm_other->give_mc(comm_ctx.mc);
+                    exostate.set_alliance(comm_player_idx, comm_other_idx, comm_ctx.alliance_type);
+                    comm_report_action = CA_Abort;
+                    break;
+                case 1:
+                    // I am not interested
+                    comm_report_action = CA_Abort;
+                    break;
             }
             break;
         default:

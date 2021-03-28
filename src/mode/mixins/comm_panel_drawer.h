@@ -74,6 +74,7 @@ enum CommSend {
     DIA_S_CPU_Offer,
     DIA_S_CPU_ProposeAlliance,
     DIA_S_CPU_ProposeAllianceAggressively,
+    DIA_S_CPU_AllianceQuery,
 };
 
 // These are from the perspective of the *player*
@@ -101,6 +102,8 @@ enum CommRecv {
     DIA_R_CommentRequestCompensation,
     // For these, CPU is talking to us - so CPU is comm_player and human is comm_other
     DIA_R_CPU_OfferElaborate,
+    DIA_R_CPU_ProposeAlliance,
+    DIA_R_CPU_ProposeAllianceMoney,
 };
 
 typedef struct {
