@@ -597,6 +597,16 @@ void ExodusState::unset_alliances(int a, int b) {
     set_alliances(a, b, 0);
 }
 
+int ExodusState::count_alliances(int a) {
+    int count = 0;
+    for (int b = 0; b < N_PLAYERS; ++b) {
+        if (is_allied(a, b)) {
+            count++;
+        }
+    }
+    return count;
+}
+
 /*
  * These two functions are the *only* places outside init
  * alliance_matrix is read or written.
