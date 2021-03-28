@@ -203,12 +203,6 @@ void LunarBattlePrep::exit() {
 ExodusMode LunarBattlePrep::update(float delta) {
     LunarBattleParams &b = ephstate.lunar_battle;
 
-    if (!b.human_battle) {
-        // We've done all prep in enter()
-        ephstate.set_ephemeral_state(EPH_LunarBattle);
-        return ephstate.get_appropriate_mode();
-    }
-
     Planet *p = exostate.get_active_planet();
     Player *owner = exostate.get_player(p->get_owner());
     Player *aggressor = nullptr;
@@ -220,6 +214,11 @@ ExodusMode LunarBattlePrep::update(float delta) {
 
     switch (stage) {
         case LBP_Auto:
+            if (!b.human_battle) {
+                // We've done all prep in enter()
+                ephstate.set_ephemeral_state(EPH_LunarBattle);
+                return ephstate.get_appropriate_mode();
+            }
             break;
         case LBP_InitialPause:
             if (pause > 0.8f) {
