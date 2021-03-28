@@ -105,6 +105,7 @@ class ExodusState {
         bool has_alliance(int, int, AllianceType);
         bool has_all_alliances(int, int);
         void set_alliance(int, int, AllianceType);
+        void set_all_alliances(int, int);
         void unset_alliance(int, int, AllianceType);
         void unset_alliances(int, int);
         int count_alliances(int);

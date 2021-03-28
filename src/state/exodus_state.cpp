@@ -589,6 +589,10 @@ void ExodusState::set_alliance(int a, int b, AllianceType t) {
     set_alliances(a, b, get_alliances(a, b) | (1<<(int)t));
 }
 
+void ExodusState::set_all_alliances(int a, int b) {
+    set_alliances(a, b, 0x7);
+}
+
 void ExodusState::unset_alliance(int a, int b, AllianceType t) {
     set_alliances(a, b, get_alliances(a, b) & ~(1<<(int)t));
 }

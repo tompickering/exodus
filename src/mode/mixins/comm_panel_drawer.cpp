@@ -925,9 +925,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 if ((army > comm_planet->get_army_size()) && (comm_other->get_flag(3) != AI_Lo)) {
                     // FIXME: Should this say something else...?
                     comm_set_speech("But we have an ALLIANCE!");
-                    exostate.set_alliance(comm_player_idx, comm_other_idx, ALLY_Trade);
-                    exostate.set_alliance(comm_player_idx, comm_other_idx, ALLY_NonAttack);
-                    exostate.set_alliance(comm_player_idx, comm_other_idx, ALLY_War);
+                    exostate.set_all_alliances(comm_player_idx, comm_other_idx);
                     // TODO: trace%(11)+=1
                     comm_recv(DIA_R_Close);
                 } else {
