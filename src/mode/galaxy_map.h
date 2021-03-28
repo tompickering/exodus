@@ -137,6 +137,10 @@ typedef struct {
     int mp_player_idx;
     int mp_star_idx;
     int mp_planet_idx;
+    int mpai_player_idx;
+    int mpai_star_idx;
+    int mpai_planet_idx;
+    int mpai_substage;
 } MPState;
 
 class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, BulletinDrawer, FrameDrawer, MenuDrawer {

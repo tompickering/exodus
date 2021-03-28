@@ -56,7 +56,7 @@ CommAction CommPanelDrawer::comm_update(float dt) {
     comm_time_since_text_mouseover += dt;
     comm_process_responses();
     comm_draw_text();
-    return comm_report_action;
+    return comm_action_check();
 }
 
 void CommPanelDrawer::comm_complete_speech() {
@@ -423,6 +423,10 @@ bool CommPanelDrawer::comm_is_open() {
     return _comm_is_open;
 }
 
+CommAction CommPanelDrawer::comm_action_check() {
+    return comm_report_action;
+}
+
 int CommPanelDrawer::comm_text_y(int idx) {
     return COMM_Y + 36 + COMM_BORDER*2 + idx*120/comm_text_slots;
 }
@@ -536,6 +540,11 @@ void CommPanelDrawer::comm_init(CommSend input) {
                     comm_ctx.may_proceed = true;
                 }
             }
+            break;
+        case DIA_S_CPU_Offer:
+            comm_set_img_caption_upper(comm_player->get_full_name());
+            comm_set_img_caption_lower("RACE: %s", comm_player->get_race_str());
+            comm_set_race(comm_player->get_race());
             break;
         default:
             L.warn("Unhandled comm input on init: %d", (int)input);
@@ -1101,6 +1110,36 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_recv(DIA_R_Close);
             }
             break;
+        case DIA_S_CPU_Offer:
+            comm_prepare(4);
+            comm_set_speech("I have an interesting offer.");
+            comm_set_text(0, "Tell me more.");
+            comm_set_text(1, "Do you?");
+            comm_text_interactive_mask = 0x3;
+            comm_recv(DIA_R_CPU_OfferElaborate);
+            break;
+        case DIA_S_CPU_ProposeAlliance:
+            comm_prepare(6);
+            switch (comm_ctx.alliance_type) {
+                case ALLY_Trade:
+                    comm_set_speech("I propose a trading alliance.");
+                    break;
+                case ALLY_NonAttack:
+                    comm_set_speech("I propose a non-attack alliance.");
+                    break;
+                case ALLY_War:
+                    comm_set_speech("I propose a war alliance.");
+                    break;
+            }
+            // TODO - this is placeholder
+            comm_recv(DIA_R_Close);
+            break;
+        case DIA_S_CPU_ProposeAllianceAggressively:
+            comm_prepare(6);
+            comm_set_speech("Become my ally or I attack.");
+            // TODO - this is placeholder
+            comm_recv(DIA_R_Close);
+            break;
         default:
             L.warn("Unhandled comm input on send: %d", (int)input);
             break;
@@ -1118,6 +1157,17 @@ void CommPanelDrawer::comm_process_responses() {
      * comm_send(), or setting comm_report_action in order to flag
      * the ultimate outcome of the conversation to the caller.
      */
+    int comm_player_idx = -1;
+    int comm_other_idx  = -1;
+
+    if (comm_player) {
+        comm_player_idx = exostate.get_player_idx(comm_player);
+    }
+
+    if (comm_other) {
+        comm_other_idx = exostate.get_player_idx(comm_other);
+    }
+
     bool proceed = false;
     bool abort = false;
 
@@ -1408,6 +1458,35 @@ void CommPanelDrawer::comm_process_responses() {
                 case 2:
                     comm_send(DIA_S_CommentCompensationAccept);
                     break;
+            }
+            break;
+        case DIA_R_CPU_OfferElaborate:
+            if (opt >= 0) {
+                int army = comm_player->get_fleet().freight.army_size();
+                bool agg = ((comm_player->get_flag(0) == AI_Hi) && onein(3)) || onein(10);
+                if (agg && army > 0) {
+                    comm_send(DIA_S_CPU_ProposeAllianceAggressively);
+                } else {
+                    // FIXME: Test each of the 3 in a random order
+                    AllianceType &t = comm_ctx.alliance_type;
+                    while (1) {
+                        switch (rand() % 3) {
+                            case 0:
+                                t = ALLY_Trade;
+                                break;
+                            case 1:
+                                t = ALLY_NonAttack;
+                                break;
+                            case 2:
+                                t = ALLY_War;
+                                break;
+                        }
+                        if (!exostate.has_alliance(comm_player_idx, comm_other_idx, t)) {
+                            break;
+                        }
+                    }
+                    comm_send(DIA_S_CPU_ProposeAlliance);
+                }
             }
             break;
         default:

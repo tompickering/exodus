@@ -244,6 +244,13 @@ ExodusMode GalaxyMap::update(float delta) {
                         return ephstate.get_appropriate_mode();
                     }
                 }
+
+                if (comm_is_open()) {
+                    if (comm_update(delta) == CA_None) {
+                        break;
+                    }
+                }
+
                 ExodusMode next_mode = month_pass_update();
                 mp_state.month_pass_time += delta;
                 if (mp_state.mp_stage == MP_None) {
@@ -306,6 +313,11 @@ void GalaxyMap::next_mpai_stage() {
     mp_state.mpai_stage = (MonthPassAIStage)((int)mp_state.mpai_stage + 1);
     Player *p = exostate.get_active_player();
     L.debug("[%s] MPAI stage %d", p->get_full_name(), mp_state.mpai_stage);
+    // Reset all mpai-stage state tracking
+    mp_state.mpai_player_idx = 0;
+    mp_state.mpai_star_idx = 0;
+    mp_state.mpai_planet_idx = 0;
+    mp_state.mpai_substage = 0;
 }
 
 void GalaxyMap::next_mpp_stage() {
@@ -321,6 +333,14 @@ void GalaxyMap::month_pass_start() {
     mp_state.month_pass_time = 0;
     mp_state.mpai_stage = (MonthPassAIStage)0;
     mp_state.mpp_stage = (MonthPassPlanetStage)0;
+
+    mp_state.mp_player_idx = 0;
+    mp_state.mp_star_idx = 0;
+    mp_state.mp_planet_idx = 0;
+    mp_state.mpai_player_idx = 0;
+    mp_state.mpai_star_idx = 0;
+    mp_state.mpai_planet_idx = 0;
+    mp_state.mpai_substage = 0;
 
     if (mp_state.mp_stage != MP_None) {
         L.fatal("We started a month-pass whilst one was still in progress");
@@ -607,6 +627,7 @@ ExodusMode GalaxyMap::month_pass_update() {
 
 ExodusMode GalaxyMap::month_pass_ai_update() {
     Player *player = exostate.get_active_player();
+    int player_idx = exostate.get_player_idx(player);
 
     if (mp_state.mpai_stage == MPAI_Return) {
         // TODO
@@ -633,7 +654,107 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     }
 
     if (mp_state.mpai_stage == MPAI_Alliances) {
-        // TODO
+        bool resume = false;
+
+        if (mp_state.mpai_substage == 3) {
+            // TODO: Respond to lunar battle report
+            ephstate.clear_ephemeral_state();
+            resume = true;
+        }
+
+        if (mp_state.mpai_substage == 2) {
+            switch (comm_action_check()) {
+                case CA_Abort:
+                    comm_close();
+                    mp_state.mpai_substage = 0;
+                    resume = true;
+                    break;
+                case CA_Attack:
+                    // TODO - this is placeholder
+                    comm_close();
+                    mp_state.mpai_substage = 3;
+                    ephstate.set_ephemeral_state(EPH_LunarBattlePrep);
+                    ephstate.lunar_battle.aggressor_type = AGG_Player;
+                    return ephstate.get_appropriate_mode();
+                default:
+                    L.fatal("Unexpected comm action on CPU alliance offer: %d");
+            }
+        }
+
+        if (mp_state.mpai_substage == 1) {
+            // Arrival cutscene finished
+            comm_open(DIA_S_CPU_Offer);
+            mp_state.mpai_substage = 2;
+            return ExodusMode::MODE_None;
+        }
+
+        if (!player->get_location().in_flight()) {
+            int r = 20;
+            if (exostate.count_alliances(player_idx) <= 2) {
+                switch (player->get_flag(2)) {
+                    case AI_Hi:
+                        r = 4;
+                        break;
+                    case AI_Md:
+                        r = 6;
+                        break;
+                    case AI_Lo:
+                        r = 10;
+                        break;
+                }
+            }
+            if (resume || onein(r)) {
+                // PROCalliances
+                // Can cast - AI never visit the guild
+                Star *s = (Star*)exostate.loc2tgt(player->get_location().get_target());
+                int &i = mp_state.mpai_planet_idx;
+                for (; i < STAR_MAX_PLANETS; ++i) {
+                    Planet *p = s->get_planet(i);
+                    if (!(p && p->exists() && p->is_owned())) {
+                        continue;
+                    }
+
+                    exostate.set_active_planet(mp_state.mp_planet_idx);
+
+                    int owner_idx = p->get_owner();
+                    if (owner_idx == player_idx) {
+                        continue;
+                    }
+                    Player *owner = exostate.get_player(owner_idx);
+
+                    if (player->is_hostile_to(owner_idx)) {
+                        continue;
+                    }
+
+                    if (owner->is_human()) {
+                        if (!onein(10)) {
+                            continue;
+                        }
+                        if (exostate.has_all_alliances(player_idx, owner_idx)) {
+                            continue;
+                        }
+                        if (owner->get_reputation() <= 0) {
+                            continue;
+                        }
+                        mp_state.mpai_substage = 1;
+                        // When we resume, we'll want to start with the next planet
+                        mp_state.mpai_planet_idx++;
+                        return ExodusMode::MODE_Arrive;
+                    } else {
+                        if (!onein(16)) {
+                            continue;
+                        }
+                        if (exostate.is_allied(player_idx, owner_idx)) {
+                            continue;
+                        }
+                        if (player->get_reputation() <= 0) {
+                            continue;
+                        }
+                        exostate.set_all_alliances(player_idx, owner_idx);
+                    }
+                }
+            }
+        }
         next_mpai_stage();
     }
 

@@ -24,6 +24,7 @@ enum CommAction {
     CA_StartProduction,
     CA_PlanAttack,
     CA_Trade,
+    CA_Attack,
 };
 
 enum CommImg {
@@ -69,6 +70,10 @@ enum CommSend {
     DIA_S_CommentInsult,
     DIA_S_CommentThreaten,
     DIA_S_PlanAttack,
+    // For these, CPU is talking to us - so CPU is comm_player and human is comm_other
+    DIA_S_CPU_Offer,
+    DIA_S_CPU_ProposeAlliance,
+    DIA_S_CPU_ProposeAllianceAggressively,
 };
 
 // These are from the perspective of the *player*
@@ -94,6 +99,8 @@ enum CommRecv {
     DIA_R_OfferAllianceMoneyResponse,
     DIA_R_CommentListen,
     DIA_R_CommentRequestCompensation,
+    // For these, CPU is talking to us - so CPU is comm_player and human is comm_other
+    DIA_R_CPU_OfferElaborate,
 };
 
 typedef struct {
@@ -113,6 +120,7 @@ class CommPanelDrawer {
         void comm_ensure_closed();
         bool comm_is_open();
         CommContext comm_ctx;
+        CommAction comm_action_check();
     private:
         bool _comm_is_open;
 
