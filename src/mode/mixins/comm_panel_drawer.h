@@ -104,6 +104,7 @@ enum CommRecv {
     DIA_R_CPU_OfferElaborate,
     DIA_R_CPU_ProposeAlliance,
     DIA_R_CPU_ProposeAllianceMoney,
+    DIA_R_CPU_ProposeAllianceAggressively,
 };
 
 typedef struct {

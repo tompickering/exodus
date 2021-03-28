@@ -659,6 +659,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
         if (mp_state.mpai_substage == 3) {
             // TODO: Respond to lunar battle report
             ephstate.clear_ephemeral_state();
+            mp_state.mpai_substage = 0;
             resume = true;
         }
 
@@ -670,11 +671,11 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     resume = true;
                     break;
                 case CA_Attack:
-                    // TODO - this is placeholder
                     comm_close();
                     mp_state.mpai_substage = 3;
                     ephstate.set_ephemeral_state(EPH_LunarBattlePrep);
                     ephstate.lunar_battle.aggressor_type = AGG_Player;
+                    ephstate.lunar_battle.aggressor_idx = player_idx;
                     return ephstate.get_appropriate_mode();
                 default:
                     L.fatal("Unexpected comm action on CPU alliance offer: %d");

@@ -1141,8 +1141,10 @@ void CommPanelDrawer::comm_send(CommSend input) {
         case DIA_S_CPU_ProposeAllianceAggressively:
             comm_prepare(4);
             comm_set_speech("Become my ally or I attack.");
-            // TODO - this is placeholder
-            comm_recv(DIA_R_Close);
+            comm_set_text(0, "Do not risk a war.");
+            comm_set_text(1, "I... have to accept this.");
+            comm_text_interactive_mask = 0x3;
+            comm_recv(DIA_R_CPU_ProposeAllianceAggressively);
             break;
         case DIA_S_CPU_AllianceQuery:
             comm_prepare(4);
@@ -1547,6 +1549,17 @@ void CommPanelDrawer::comm_process_responses() {
                     break;
                 case 1:
                     // I am not interested
+                    comm_report_action = CA_Abort;
+                    break;
+            }
+            break;
+        case DIA_R_CPU_ProposeAllianceAggressively:
+            switch (opt) {
+                case 0:
+                    comm_report_action = CA_Attack;
+                    break;
+                case 1:
+                    exostate.set_all_alliances(comm_player_idx, comm_other_idx);
                     comm_report_action = CA_Abort;
                     break;
             }
