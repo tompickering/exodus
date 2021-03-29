@@ -1015,8 +1015,38 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 }
             }
             if (!p->get_location().in_flight() && (p->get_tactic() == 8 || p->get_tactic() == 2)) {
-                // TODO: PROCe_tact2
+                // PROCe_tact2
                 L.debug("[%s] PROCe_tact2", player->get_full_name());
+                int star_idx = player->get_location().get_target();
+                int planet_idx = player->get_location().get_planet_target();
+                Star *star = &stars[star_idx];
+                Planet *planet = star->get_planet(planet_idx);
+                if (planet && planet->exists() && planet->get_owner() == player_idx) {
+                    int planet_inf, planet_gli, planet_art;
+                    planet->get_army(planet_inf, planet_gli, planet_art);
+                    for (int i = 0; i < 3 && player->get_freight_capacity() > 0; ++i) {
+                        switch (i) {
+                            case 0:
+                                planet->adjust_army(0, 0, player->transfer_art(planet_art/3));
+                                break;
+                            case 1:
+                                planet->adjust_army(0, player->transfer_gli(planet_gli/3), 0);
+                                break;
+                            case 2:
+                                planet->adjust_army(player->transfer_inf(planet_inf/3), 0, 0);
+                                break;
+                        }
+                    }
+
+                    int n = exostate.get_n_planets(player);
+                    if ((n > 1 && onein(2)) || (n == 1 && onein(5))) {
+                        player->prev_tactic();
+                    } else {
+                        player->next_tactic();
+                    }
+                } else {
+                    player->set_tactic(-1);
+                }
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 9) {
                 // TODO: PROCe_tact3
