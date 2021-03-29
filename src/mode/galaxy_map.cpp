@@ -577,7 +577,19 @@ ExodusMode GalaxyMap::month_pass_update() {
     }
 
     if (mp_state.mp_stage == MP_UpdateAlienFly) {
-        // TODO
+        for (int i = 0; i < N_PLAYERS; ++i) {
+            Player *p = exostate.get_player(i);
+            if (p && p->is_participating() && (!p->is_human())) {
+                if (p->get_location().in_flight()) {
+                    if (!p->get_location().advance()) {
+                        L.warn("CPU players shouldn't take >1 month to reach destination");
+                    }
+                    if (p->get_tactic() > 0) {
+                        p->next_tactic();
+                    }
+                }
+            }
+        }
         next_mp_stage();
     }
 
