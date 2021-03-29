@@ -498,6 +498,27 @@ int ExodusState::get_n_planets(Player* player) {
     return count;
 }
 
+/*
+ * TODO: This serves as firstplanet() from orig, but orig only resets
+ * the flag to 0 in PROCcheck_alive - whereas we always return an
+ * up-to-date value - which means our behaviour might * deviate during
+ * month pass.
+ */
+bool ExodusState::owns_a_planet(Player* player) {
+    Galaxy *gal = get_galaxy();
+    int n_stars;
+    Star *stars = gal->get_stars(n_stars);
+    for (int i = 0; i < n_stars; ++i) {
+        for (int j = 0; j < STAR_MAX_PLANETS; ++j) {
+            Planet *p = stars[i].get_planet(j);
+            if (p && p->exists() && p->is_owned() && get_player(p->get_owner()) == player) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 bool ExodusState::active_player_local() {
     Player *player = get_active_player();
     if (player->get_location().in_flight())
