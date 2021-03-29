@@ -1438,6 +1438,10 @@ void Planet::adjust_army(int inf, int gli, int art) {
     if (army_art > max) army_art = max;
 }
 
+bool Planet::army_full() {
+    return get_army_size() >= 3*get_resource_cap();
+}
+
 void Planet::adjust_reserves(int adj_min, int adj_fd, int adj_plu) {
     reserves_min += adj_min;
     reserves_food += adj_fd;

@@ -215,6 +215,7 @@ class Planet {
         int get_army_size();
         int get_army_size_weighted();
         void adjust_army(int, int, int);
+        bool army_full();
         void adjust_reserves(int, int, int);
         int get_reserves_min();
         int get_reserves_food();
