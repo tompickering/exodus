@@ -602,6 +602,25 @@ void ExodusState::unset_alliances(int a, int b) {
     set_alliances(a, b, 0);
 }
 
+int ExodusState::get_total_net_income(int player_idx) {
+    int total = 0;
+    Galaxy *gal = get_galaxy();
+    int n_stars;
+    Star *stars = gal->get_stars(n_stars);
+    for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
+        Star *s = &stars[star_idx];
+        for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
+            Planet *p = s->get_planet(planet_idx);
+            if (p && p->exists() && !p->is_owned()) {
+                if (p->get_owner() == player_idx) {
+                    total += p->get_net_income();
+                }
+            }
+        }
+    }
+    return total;
+}
+
 int ExodusState::count_alliances(int a) {
     int count = 0;
     for (int b = 0; b < N_PLAYERS; ++b) {

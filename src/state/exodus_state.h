@@ -101,6 +101,7 @@ class ExodusState {
         void set_random_hostility(Player&);
         bool first_city_done;
         bool first_spaceport_done;
+        int get_total_net_income(int);
         bool is_allied(int, int);
         bool has_alliance(int, int, AllianceType);
         bool has_all_alliances(int, int);
