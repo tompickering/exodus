@@ -1141,8 +1141,25 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 }
             }
             if (p->get_tactic() == 22) {
-                // TODO: PROCe_tact9
+                // PROCe_tact9
                 L.debug("[%s] PROCe_tact9", player->get_full_name());
+                bool other_owned_planets = false;
+                for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
+                    Star *s = &stars[star_idx];
+                    for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
+                        Planet *p = s->get_planet(planet_idx);
+                        if (p && p->exists() && p->is_owned() && p->get_owner() != player_idx) {
+                            other_owned_planets = true;
+                            break;
+                        }
+                    }
+                    if (other_owned_planets) {
+                        break;
+                    }
+                }
+                if (!other_owned_planets) {
+                    player->set_tactic(0);
+                }
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 22) {
                 // TODO: PROCe_tact10
