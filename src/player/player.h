@@ -39,6 +39,9 @@ typedef struct {
     int infantry;
     int gliders;
     int artillery;
+    int size() const {
+        return minerals + food + plutonium + robots + army_size();
+    }
     int army_size() const {
         return infantry + gliders + artillery;
     }
@@ -168,6 +171,8 @@ class Player {
         OfficerQuality get_officer(Officer);
         void set_officer(Officer, OfficerQuality);
         ArtificialPlanetPhase ap_phase;
+
+        int get_freight_capacity();
 
         // AI
         AIFlag get_flag(int);

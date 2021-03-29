@@ -436,6 +436,10 @@ void Player::set_officer(Officer off, OfficerQuality off_q) {
     officers[off] = off_q;
 }
 
+int Player::get_freight_capacity() {
+    return fleet.transporters - fleet.freight.size();
+}
+
 AIFlag Player::get_flag(int idx) {
     if (idx >= 9) {
         L.fatal("Tried to access AI flag > maximum (%d)", idx);
