@@ -1065,8 +1065,33 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 L.debug("[%s] PROCe_tact6", player->get_full_name());
             }
             if (p->get_tactic() == 20) {
-                // TODO: PROCe_tact7
+                // PROCe_tact7
                 L.debug("[%s] PROCe_tact7", player->get_full_name());
+                int resources = 0;
+                int most_resources_star = -1;
+                int most_resources_planet = -1;
+                for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
+                    Star *s = &stars[star_idx];
+                    for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
+                        Planet *p = s->get_planet(planet_idx);
+                        if (p && p->exists() && p->get_owner() == player_idx) {
+                            if (p->get_total_reserves() > resources) {
+                                resources = p->get_total_reserves();
+                                most_resources_star = star_idx;
+                                most_resources_planet = planet_idx;
+                            }
+                        }
+                    }
+                }
+                if (resources > 3) {
+                    player->get_location().set_target(most_resources_star, 1);
+                    player->get_location().set_planet_target(most_resources_planet);
+                    if (!player->get_location().in_flight()) {
+                        player->next_tactic();
+                    }
+                } else {
+                    player->set_tactic(0);
+                }
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 21) {
                 // TODO: PROCe_tact8
