@@ -1106,8 +1106,39 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 }
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 21) {
-                // TODO: PROCe_tact8
+                // PROCe_tact8
                 L.debug("[%s] PROCe_tact8", player->get_full_name());
+                int star_idx = player->get_location().get_target();
+                int planet_idx = player->get_location().get_planet_target();
+                Star *star = &stars[star_idx];
+                Planet *planet = star->get_planet(planet_idx);
+                if (planet && planet->exists() && planet->get_owner() == player_idx) {
+                    int planet_min = planet->get_reserves_min();
+                    int planet_fd = planet->get_reserves_food();
+                    int planet_plu = planet->get_reserves_plu();
+                    for (int i = 0; i < 3 && player->get_freight_capacity() > 0; ++i) {
+                        switch (i) {
+                            case 0:
+                                planet->adjust_reserves(player->transfer_min(planet_min/2), 0, 0);
+                                break;
+                            case 1:
+                                planet->adjust_reserves(0, player->transfer_fd(planet_fd/2), 0);
+                                break;
+                            case 2:
+                                planet->adjust_reserves(0, 0, player->transfer_plu(planet_plu/2));
+                                break;
+                        }
+                    }
+
+                    int n = exostate.get_n_planets(player);
+                    if ((n > 1 && onein(2)) || (n == 1)) {
+                        player->next_tactic();
+                    } else {
+                        player->prev_tactic();
+                    }
+                } else {
+                    player->prev_tactic();
+                }
             }
             if (p->get_tactic() == 22) {
                 // TODO: PROCe_tact9
