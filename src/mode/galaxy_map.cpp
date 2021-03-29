@@ -974,7 +974,44 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 p->set_tactic(7);
             }
             if (p->get_tactic() == 7 || p->get_tactic() == 1) {
-                // TODO: PROCe_tact1
+                // PROCe_tact1
+                player->get_location().unset_target();
+                int quality = 0;
+                for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
+                    Star *s = &stars[star_idx];
+                    for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
+                        Planet *p = s->get_planet(planet_idx);
+                        if (p && p->exists() && p->is_owned() && p->get_owner() == player_idx) {
+                            int army = p->get_army_size();
+                            if (army > quality) {
+                                quality = army;
+                                player->get_location().set_target(star_idx, 1);
+                                player->get_location().set_planet_target(planet_idx);
+                            }
+                        }
+                    }
+                }
+                if (player->get_location().in_flight()) {
+                    if (player->has_invention(INV_OrbitalMassThrust) && onein(2)) {
+                        player->next_tactic();
+                        player->get_location().complete();
+                    }
+                } else {
+                    player->next_tactic();
+                }
+                if (player->get_tactic() == 1) {
+                    int star_idx = player->get_location().get_target();
+                    int planet_idx = player->get_location().get_planet_target();
+                    Star *star = &stars[star_idx];
+                    Planet *planet = star->get_planet(planet_idx);
+                    if (!(planet && planet->exists())) {
+                        L.error("No planet in PROCe_tact1: %s %d", star->name, planet_idx);
+                    }
+                    if (planet->get_army_size() < 4) {
+                        player->set_tactic(0);
+                        player->get_location().complete();
+                    }
+                }
             }
             if (!p->get_location().in_flight() && (p->get_tactic() == 8 || p->get_tactic() == 2)) {
                 // TODO: PROCe_tact2
