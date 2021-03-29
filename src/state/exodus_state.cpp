@@ -611,7 +611,7 @@ int ExodusState::get_total_net_income(int player_idx) {
         Star *s = &stars[star_idx];
         for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
             Planet *p = s->get_planet(planet_idx);
-            if (p && p->exists() && !p->is_owned()) {
+            if (p && p->exists() && p->is_owned()) {
                 if (p->get_owner() == player_idx) {
                     total += p->get_net_income();
                 }
