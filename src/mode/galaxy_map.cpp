@@ -629,6 +629,10 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     Player *player = exostate.get_active_player();
     int player_idx = exostate.get_player_idx(player);
 
+    Galaxy *gal = exostate.get_galaxy();
+    int n_stars;
+    Star *stars = gal->get_stars(n_stars);
+
     if (mp_state.mpai_stage == MPAI_Return) {
         // TODO
         next_mpai_stage();
@@ -831,7 +835,125 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     }
 
     if (mp_state.mpai_stage == MPAI_SwitchTactics) {
-        // TODO
+        // PROCet_newtact
+        if (player->get_tactic() == 0 && onein(3)) {
+            int r = RND(6);
+            int t = 0;
+            switch (player->get_flag(0)) {
+                case AI_Hi:
+                    if (r < 4) {
+                        t = 1;
+                    } else if (r == 4) {
+                        t = 3;
+                    } else {
+                        t = 2;
+                    }
+                    break;
+                case AI_Md:
+                    t = RND(3);
+                case AI_Lo:
+                    r = RND(8);
+                    if (r < 5) {
+                        t = 2;
+                    } else if (r < 8) {
+                        t = 3;
+                    } else {
+                        t = 1;
+                    }
+                    break;
+            }
+
+            int m = exostate.get_orig_month();
+            if (t == 2 && m < 12) {
+                t = 0;
+            }
+
+            if (t == 1 && m < 40 && (!onein(3))) {
+                t = 0;
+            }
+
+            if (m > 110 && onein(3)) {
+                t = 1;
+            }
+
+            if (player->can_afford(2001)) {
+                t = 2;
+            }
+
+            if (t == 3) {
+                player->set_tactic(20);
+            }
+
+            bool afford = player->can_afford(130);
+            if (t == 2) {
+                if (afford || exostate.get_total_net_income(player_idx) >= 9) {
+                    int m = exostate.get_orig_month();
+                    if (player->can_afford(m > 30 ? 31 : 61)) {
+                        player->set_tactic(6);
+                        // TODO: TS=0 TP=0
+                    } else {
+                        player->set_tactic(20);
+                    }
+                } else {
+                    player->set_tactic(20);
+                }
+            }
+
+            if (t == 1) {
+                player->set_tactic(1);
+                // TODO: TS=0 TP=0
+            }
+
+            int army = player->get_fleet().freight.army_size();
+            if (army > 0) {
+                bool done = false;
+                for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
+                    Star *s = &stars[star_idx];
+                    for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
+                        Planet *p = s->get_planet(planet_idx);
+                        if (p && p->exists() && p->is_owned()) {
+                            if (p->get_owner() == player_idx) {
+                                continue;
+                            }
+                            if (p->get_army_size() > 0) {
+                                continue;
+                            }
+                        }
+                        player->set_tactic(4);
+                        // TODO: TS, TP
+                        done = true;
+                        break;
+                    }
+                    if (done) {
+                        break;
+                    }
+                }
+            }
+
+            if (!exostate.owns_a_planet(player)) {
+                player->set_tactic(9);
+            }
+
+            if (player->get_tactic() == 6) {
+                bool ok = false;
+                for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
+                    Star *s = &stars[star_idx];
+                    for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
+                        Planet *p = s->get_planet(planet_idx);
+                        if (p && p->exists() && !p->is_owned()) {
+                            ok = true;
+                            break;
+                        }
+                    }
+                    if (ok) {
+                        break;
+                    }
+                }
+                if (!ok) {
+                    player->set_tactic(1);
+                }
+            }
+        }
         next_mpai_stage();
     }
 
