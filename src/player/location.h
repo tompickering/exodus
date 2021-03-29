@@ -3,6 +3,9 @@
 
 #include <cstdint>
 
+// TARGET_NONE is unique to CPU players and used as a flag in AI tactics
+extern const int TARGET_NONE;
+
 // Location of a player's fleet
 class PlayerLocation {
     public:
@@ -15,6 +18,8 @@ class PlayerLocation {
         void set_planet_target(int);
         int get_planet_target();
         bool has_visited(int);
+        void unset_target();
+        bool is_target_set();
     private:
         int target;            // -1=guild, 0+=star index - Orig: TS
         int planet_target;     // I think only used for CPU lords - Orig: TP

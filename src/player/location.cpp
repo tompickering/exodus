@@ -1,5 +1,7 @@
 #include "location.h"
 
+const int TARGET_NONE = -2;
+
 PlayerLocation::PlayerLocation() {
     months_to_arrive = 0;
     target = -1;
@@ -51,4 +53,12 @@ bool PlayerLocation::has_visited(int query_target) {
     if (query_target < 0)
         return true;
     return (bool)(visited & ((uint64_t)1 << query_target));
+}
+
+void PlayerLocation::unset_target() {
+    target = TARGET_NONE;
+}
+
+bool PlayerLocation::is_target_set() {
+    return target != TARGET_NONE;
 }
