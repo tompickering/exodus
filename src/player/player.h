@@ -203,6 +203,9 @@ class Player {
         int get_hostile_to();
         void set_hostile_to(int);
         void clear_hostility();
+        void clear_ai_attack();
+        void get_ai_attack(int&, int&);
+        void set_ai_attack(int, int);
     private:
         Race race;
         Gender gender;
@@ -232,6 +235,8 @@ class Player {
         AIFlag ai_flags[9];
         int ai_tactic;
         int ai_hostile_to;
+        int ai_attack_star;   // Orig: lordvar(), lower 8 bits
+        int ai_attack_planet; // Orig: lordvar(), upper 8 bits
 
     // The ExodusState sets up the player data during game init.
     friend class ExodusState;

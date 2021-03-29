@@ -141,6 +141,7 @@ void ExodusState::init(GameConfig config) {
         L.debug("Assigned %d MC to CPU player %d", players[i].mc, i);
 
         players[i].fleet.transporters += bonus_mult * 100;
+        players[i].clear_ai_attack();
     }
 
     // PLAYER INIT: Everyone (not overridable)

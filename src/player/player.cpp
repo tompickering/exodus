@@ -36,6 +36,7 @@ Player::Player() {
     guild_member = false;
     ai_tactic = 0;
     clear_hostility();
+    clear_ai_attack();
 
     set_tax(30);
 
@@ -523,4 +524,19 @@ void Player::set_hostile_to(int p) {
 
 void Player::clear_hostility() {
     set_hostile_to(-1);
+}
+
+void Player::clear_ai_attack() {
+    ai_attack_star = -1;
+    ai_attack_planet = -1;
+}
+
+void Player::get_ai_attack(int& s, int& p) {
+    s = ai_attack_star;
+    p = ai_attack_planet;
+}
+
+void Player::set_ai_attack(int s, int p) {
+    ai_attack_star = s;
+    ai_attack_planet = p;
 }
