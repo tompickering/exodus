@@ -837,6 +837,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     if (mp_state.mpai_stage == MPAI_SwitchTactics) {
         // PROCet_newtact
         if (player->get_tactic() == 0 && onein(3)) {
+            L.debug("[%s] TACTIC CURRENT: %d", player->get_full_name(), player->get_tactic());
             int r = RND(6);
             int t = 0;
             switch (player->get_flag(0)) {
@@ -890,7 +891,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     int m = exostate.get_orig_month();
                     if (player->can_afford(m > 30 ? 31 : 61)) {
                         player->set_tactic(6);
-                        // TODO: TS=0 TP=0
+                        player->get_location().unset_target();
                     } else {
                         player->set_tactic(20);
                     }
@@ -901,7 +902,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
             if (t == 1) {
                 player->set_tactic(1);
-                // TODO: TS=0 TP=0
+                player->get_location().unset_target();
             }
 
             int army = player->get_fleet().freight.army_size();
@@ -920,7 +921,9 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                             }
                         }
                         player->set_tactic(4);
-                        // TODO: TS, TP
+                        // TODO: Fairly certain CPU journeys are always 1 month, but check
+                        player->get_location().set_target(star_idx, 1);
+                        player->get_location().set_planet_target(planet_idx);
                         done = true;
                         break;
                     }
@@ -953,6 +956,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     player->set_tactic(1);
                 }
             }
+            L.debug("[%s] TACTIC NEW: %d", player->get_full_name(), player->get_tactic());
         }
         next_mpai_stage();
     }

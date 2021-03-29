@@ -263,8 +263,8 @@ void ExodusState::init_cpu_lords() {
         // TODO: PROCstart_the_lords sets 'firstplanet' here
         // Check the meaning and a suitable representation
 
-        // TODO: PROCstart_the_lords sets TS and TP to 0 here
-        // What are the semantics of this?
+        // Only CPU lords ever have an 'unset' target...
+        players[i].get_location().unset_target();
     }
 }
 
