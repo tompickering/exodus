@@ -975,6 +975,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
             }
             if (p->get_tactic() == 7 || p->get_tactic() == 1) {
                 // PROCe_tact1
+                L.debug("[%s] PROCe_tact1", player->get_full_name());
                 player->get_location().unset_target();
                 int quality = 0;
                 for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
@@ -1015,36 +1016,47 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
             }
             if (!p->get_location().in_flight() && (p->get_tactic() == 8 || p->get_tactic() == 2)) {
                 // TODO: PROCe_tact2
+                L.debug("[%s] PROCe_tact2", player->get_full_name());
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 9) {
                 // TODO: PROCe_tact3
+                L.debug("[%s] PROCe_tact3", player->get_full_name());
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 3) {
                 // TODO: PROCe_tact4
+                L.debug("[%s] PROCe_tact4", player->get_full_name());
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 10) {
                 // TODO: PROCe_tact5
+                L.debug("[%s] PROCe_tact5", player->get_full_name());
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 5) {
                 // TODO: PROCe_tact6
+                L.debug("[%s] PROCe_tact6", player->get_full_name());
             }
             if (p->get_tactic() == 20) {
                 // TODO: PROCe_tact7
+                L.debug("[%s] PROCe_tact7", player->get_full_name());
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 21) {
                 // TODO: PROCe_tact8
+                L.debug("[%s] PROCe_tact8", player->get_full_name());
             }
             if (p->get_tactic() == 22) {
                 // TODO: PROCe_tact9
+                L.debug("[%s] PROCe_tact9", player->get_full_name());
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 22) {
                 // TODO: PROCe_tact10
+                L.debug("[%s] PROCe_tact10", player->get_full_name());
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 23) {
                 // TODO: PROCe_tact11
+                L.debug("[%s] PROCe_tact11", player->get_full_name());
             }
             if (p->get_tactic() == 0) {
                 // TODO: PROCe_tact12
+                L.debug("[%s] PROCe_tact12", player->get_full_name());
             }
         }
         next_mpai_stage();
