@@ -604,6 +604,10 @@ bool ExodusState::has_alliance(int a, int b, AllianceType t) {
     return (get_alliances(a, b) & (1<<(int)t)) > 0;
 }
 
+bool ExodusState::has_only_alliance(int a, int b, AllianceType t) {
+    return (get_alliances(a, b) == (1<<(int)t));
+}
+
 bool ExodusState::has_all_alliances(int a, int b) {
     return get_alliances(a, b) == 0x7;
 }

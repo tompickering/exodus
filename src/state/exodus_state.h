@@ -105,6 +105,7 @@ class ExodusState {
         int get_total_net_income(int);
         bool is_allied(int, int);
         bool has_alliance(int, int, AllianceType);
+        bool has_only_alliance(int, int, AllianceType);
         bool has_all_alliances(int, int);
         void set_alliance(int, int, AllianceType);
         void set_all_alliances(int, int);
