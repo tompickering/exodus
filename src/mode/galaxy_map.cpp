@@ -842,7 +842,45 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     }
 
     if (mp_state.mpai_stage == MPAI_CheckArmy) {
-        // TODO
+        if (exostate.owns_a_planet(player)) {
+            int biggest_army = 0;
+            for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
+                Star *s = &stars[star_idx];
+                for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
+                    Planet *p = s->get_planet(planet_idx);
+                    if (!(p && p->exists())) {
+                        continue;
+                    }
+                    if (p->get_owner() == player_idx) {
+                        if (p->army_full() && player->get_tactic() == 0) {
+                            player->set_tactic(1);
+                        }
+                        int army_sz = p->get_army_size();
+                        if (army_sz > biggest_army) {
+                            biggest_army = army_sz;
+                        }
+                    } else if (p->is_owned()) {
+                        if (!onein(5)) {
+                            continue;
+                        }
+                        int t = player->get_tactic();
+                        if (!(t == 0 || t == 1)) {
+                            continue;
+                        }
+                        if (exostate.get_orig_month() <= 9) {
+                            continue;
+                        }
+                        if (exostate.has_alliance(p->get_owner(), player_idx, ALLY_War)) {
+                            continue;
+                        }
+                        if (biggest_army/3 >= p->get_army_size()) {
+                            player->set_tactic(1);
+                            player->set_ai_attack(star_idx, planet_idx);
+                        }
+                    }
+                }
+            }
+        }
         next_mpai_stage();
     }
 
