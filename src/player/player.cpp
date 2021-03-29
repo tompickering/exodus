@@ -440,6 +440,48 @@ int Player::get_freight_capacity() {
     return fleet.transporters - fleet.freight.size();
 }
 
+int Player::transfer_min(int n) {
+    return transfer(n, &fleet.freight.minerals);
+}
+int Player::transfer_fd(int n) {
+    return transfer(n, &fleet.freight.food);
+}
+int Player::transfer_plu(int n) {
+    return transfer(n, &fleet.freight.plutonium);
+}
+int Player::transfer_robots(int n) {
+    return transfer(n, &fleet.freight.robots);
+}
+int Player::transfer_inf(int n) {
+    return transfer(n, &fleet.freight.infantry);
+}
+int Player::transfer_gli(int n) {
+    return transfer(n, &fleet.freight.gliders);
+}
+int Player::transfer_art(int n) {
+    return transfer(n, &fleet.freight.artillery);
+}
+
+int Player::transfer(int n, int* val) {
+    int capacity = get_freight_capacity();
+    int actual = 0;
+    if (n > 0) {
+        if (n <= capacity) {
+            actual = n;
+        } else {
+            actual = capacity;
+        }
+    } else if (n < 0) {
+        if ((-n) <= (*val)) {
+            actual = n;
+        } else {
+            actual = -(*val);
+        }
+    }
+    (*val) += actual;
+    return -actual;
+}
+
 AIFlag Player::get_flag(int idx) {
     if (idx >= 9) {
         L.fatal("Tried to access AI flag > maximum (%d)", idx);

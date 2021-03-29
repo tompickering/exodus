@@ -174,6 +174,25 @@ class Player {
 
         int get_freight_capacity();
 
+        /*
+         * The transfer_* functions should be used to adjust freight,
+         * as they will ensure that bounds are always respenced.
+         * When loading (+ve n), the function will load as much as possible,
+         * returning the -ve total number actually loaded.
+         * When unloading (-ve n), the function will unload as much as possible,
+         * returning the +ve total number actually unloaded.
+         *
+         * The signs are such that they can be used by the caller to adjust
+         * the source quantity.
+         */
+        int transfer_min(int);
+        int transfer_fd(int);
+        int transfer_plu(int);
+        int transfer_robots(int);
+        int transfer_inf(int);
+        int transfer_gli(int);
+        int transfer_art(int);
+
         // AI
         AIFlag get_flag(int);
         int get_tactic();
@@ -206,6 +225,8 @@ class Player {
         bool guild_member;
         int tax;  // Orig: t%
         OfficerQuality officers[OFF_MAX];  // Orig: Ps%
+
+        int transfer(int, int*);
 
         // AI
         AIFlag ai_flags[9];
