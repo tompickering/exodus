@@ -1162,8 +1162,49 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 }
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 22) {
-                // TODO: PROCe_tact10
+                // PROCe_tact10
                 L.debug("[%s] PROCe_tact10", player->get_full_name());
+                // FIXME: PROCe_tact9 proves there exists a planet to find, but this is horrible...
+                int a = 0;
+                while (a == 0) {
+                    for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
+                        Star *s = &stars[star_idx];
+                        for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
+                            Planet *p = s->get_planet(planet_idx);
+                            if (p && p->exists() && p->is_owned() && p->get_owner() != player_idx) {
+                                int owner_idx = p->get_owner();
+                                Player *owner = exostate.get_player(owner_idx);
+                                if (exostate.has_alliance(player_idx, owner_idx, ALLY_Trade)) {
+                                    a = 2;
+                                }
+                                if (!(player->is_hostile_to(owner_idx) || owner->is_hostile_to(player_idx))) {
+                                    // Weird that orig clobbers a=2 here... was this intentional?
+                                    a = 1;
+                                } else {
+                                    if (onein(40)) {
+                                        a = 1;
+                                    }
+                                }
+                                if (a == 1 && (!onein(10))) {
+                                    a = 0;
+                                }
+
+                                if (a > 0) {
+                                    player->get_location().set_target(star_idx, 1);
+                                    player->get_location().set_planet_target(planet_idx);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (player->get_location().in_flight()) {
+                    if (player->has_invention(INV_OrbitalMassThrust) && onein(2)) {
+                        player->next_tactic();
+                        player->get_location().complete();
+                    }
+                } else {
+                    player->next_tactic();
+                }
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 23) {
                 // TODO: PROCe_tact11
