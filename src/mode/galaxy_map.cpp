@@ -962,7 +962,54 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     }
 
     if (mp_state.mpai_stage == MPAI_ExecTactics) {
-        // TODO
+        Player *p = player;
+        if (p->get_tactic() > 0) {
+            if (p->get_tactic() == 6) {
+                p->set_tax(0);
+            }
+            if (p->get_tactic() != 6 && exostate.get_orig_month() > 25) {
+                p->init_tax();
+            }
+            if (p->get_tactic() == 6 && p->can_afford(191)) {
+                p->set_tactic(7);
+            }
+            if (p->get_tactic() == 7 || p->get_tactic() == 1) {
+                // TODO: PROCe_tact1
+            }
+            if (!p->get_location().in_flight() && (p->get_tactic() == 8 || p->get_tactic() == 2)) {
+                // TODO: PROCe_tact2
+            }
+            if (!p->get_location().in_flight() && p->get_tactic() == 9) {
+                // TODO: PROCe_tact3
+            }
+            if (!p->get_location().in_flight() && p->get_tactic() == 3) {
+                // TODO: PROCe_tact4
+            }
+            if (!p->get_location().in_flight() && p->get_tactic() == 10) {
+                // TODO: PROCe_tact5
+            }
+            if (!p->get_location().in_flight() && p->get_tactic() == 5) {
+                // TODO: PROCe_tact6
+            }
+            if (p->get_tactic() == 20) {
+                // TODO: PROCe_tact7
+            }
+            if (!p->get_location().in_flight() && p->get_tactic() == 21) {
+                // TODO: PROCe_tact8
+            }
+            if (p->get_tactic() == 22) {
+                // TODO: PROCe_tact9
+            }
+            if (!p->get_location().in_flight() && p->get_tactic() == 22) {
+                // TODO: PROCe_tact10
+            }
+            if (!p->get_location().in_flight() && p->get_tactic() == 23) {
+                // TODO: PROCe_tact11
+            }
+            if (p->get_tactic() == 0) {
+                // TODO: PROCe_tact12
+            }
+        }
         next_mpai_stage();
     }
 
