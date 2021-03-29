@@ -21,6 +21,12 @@ bool PlayerLocation::advance() {
     return just_arrived;
 }
 
+void PlayerLocation::complete() {
+    while (in_flight()) {
+        advance();
+    }
+}
+
 bool PlayerLocation::in_flight() {
     return months_to_arrive > 0;
 }
