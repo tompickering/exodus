@@ -1057,7 +1057,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         player->next_tactic();
                     }
                 } else {
-                    player->set_tactic(-1);
+                    player->prev_tactic();
                 }
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 9) {
