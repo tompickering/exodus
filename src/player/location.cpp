@@ -38,8 +38,10 @@ void PlayerLocation::set(int nt) {
 }
 
 void PlayerLocation::set_target(int nt, int m) {
-    target = nt;
-    months_to_arrive = m;
+    if (target != nt) {
+        target = nt;
+        months_to_arrive = m;
+    }
 }
 
 int PlayerLocation::get_target() {
