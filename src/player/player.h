@@ -173,6 +173,8 @@ class Player {
         AIFlag get_flag(int);
         int get_tactic();
         void set_tactic(int);
+        void next_tactic();
+        void prev_tactic();
         bool is_hostile_to(int);
         int get_hostile_to();
         void set_hostile_to(int);

@@ -451,6 +451,17 @@ void Player::set_tactic(int tactic) {
     ai_tactic = tactic;
 }
 
+void Player::next_tactic() {
+    ai_tactic++;
+}
+
+void Player::prev_tactic() {
+    ai_tactic--;
+    if (ai_tactic < 0) {
+        L.warn("[%s] AI tactic set to %d", get_full_name(), ai_tactic);
+    }
+}
+
 bool Player::is_hostile_to(int p) {
     return p == ai_hostile_to;
 }
