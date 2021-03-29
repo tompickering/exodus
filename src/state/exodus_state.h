@@ -113,7 +113,7 @@ class ExodusState {
         int count_alliances(int);
     private:
         GalaxySize size;
-        int n_players;
+        int n_human_players;
         int month;
         int active_player;
         int active_star;

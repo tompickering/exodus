@@ -34,7 +34,7 @@ ExodusState::ExodusState() {
 void ExodusState::init(GameConfig config) {
     galaxy_finalised = false;
     size = config.size;
-    n_players = config.n_players;
+    n_human_players = config.n_players;
     month = 1;
     active_player = 0;
     active_star = 0;
@@ -43,7 +43,7 @@ void ExodusState::init(GameConfig config) {
     first_spaceport_done = false;
     int i;
 
-    for (i = 0; i < n_players; ++i) {
+    for (i = 0; i < n_human_players; ++i) {
         memcpy(&players[i], &config.players[i], sizeof(Player));
     }
 
@@ -81,7 +81,7 @@ void ExodusState::init(GameConfig config) {
     }
 
     // PLAYER INIT: Human
-    for (i = 0; i < n_players; ++i) {
+    for (i = 0; i < n_human_players; ++i) {
         players[i].init_race(RACE_Human);
         players[i]._intro_seen = false;
         players[i].fleet_marker_idx = i;
@@ -174,8 +174,8 @@ void ExodusState::init(GameConfig config) {
     enemy_start = config.enemy_start;
     L.debug("ExodusState init");
     L.debug("      Size: %d", size);
-    L.debug("   Players: %d", n_players);
-    for (int i = 0; i < n_players; ++i) {
+    L.debug("   Players: %d", n_human_players);
+    for (int i = 0; i < n_human_players; ++i) {
         Player *inf = &players[i];
         L.debug("       %s %s : Flag %d", inf->title, inf->name, inf->flag_idx);
     }
@@ -188,7 +188,7 @@ void ExodusState::init_cpu_lords() {
     int n_stars;
     Star *stars = gal->get_stars(n_stars);
 
-    for (int i = n_players; i < N_PLAYERS; ++i) {
+    for (int i = n_human_players; i < N_PLAYERS; ++i) {
         // Assign initial planet to CPU lords. Orig: PROCstart_the_lords
         // We follow the original's logic of iterating over stars in the
         // same order for each lord, which affects the probability of
@@ -218,7 +218,7 @@ void ExodusState::init_cpu_lords() {
                             L.debug("Checking existing ownership");
                             // TODO: Can we just check planet->is_owned() at this point?
                             bool ok = true;
-                            for (int other_idx = n_players; other_idx < i; other_idx++) {
+                            for (int other_idx = n_human_players; other_idx < i; other_idx++) {
                                 Player *other = &players[other_idx];
                                 FlyTarget *other_ts = loc2tgt(other->get_location().get_target());
                                 int other_tp = other->get_location().get_planet_target();
@@ -292,7 +292,7 @@ Galaxy* ExodusState::get_galaxy() {
 }
 
 int ExodusState::get_n_human_players() {
-    return n_players;
+    return n_human_players;
 }
 
 int ExodusState::get_month() {
