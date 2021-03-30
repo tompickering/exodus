@@ -1103,8 +1103,148 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 L.debug("[%s] PROCe_tact3", player->get_full_name());
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 3) {
-                // TODO: PROCe_tact4
+                // PROCe_tact4
                 L.debug("[%s] PROCe_tact4", player->get_full_name());
+                int star_idx;
+                int planet_idx;
+                player->get_ai_attack(star_idx, planet_idx);
+                bool stop = false;
+                if (star_idx >= 0 && planet_idx >= 0) {
+                    Planet *p = stars[star_idx].get_planet(planet_idx);
+                    if (p && p->exists()) {
+                        player->get_location().set_target(star_idx, 1);
+                        player->get_location().set_planet_target(planet_idx);
+                    }
+                    player->clear_ai_attack();
+                    if (p->is_owned() && p->get_owner() != player_idx) {
+                        player->next_tactic();
+                        if (!player->get_location().in_flight()) {
+                            player->set_tactic(5);
+                            stop = true;
+                        }
+                    }
+                }
+                if (!stop) {
+                    int strongdef = 0;
+                    int weakdef = 10000;
+                    bool nodef = false;
+                    int mostcities = 0;
+                    int strong_star = -1;      int strong_planet = -1;
+                    int weak_star = -1;        int weak_planet = -1;
+                    int nodef_star = -1;       int nodef_planet = -1;
+                    int mostcities_star = -1;  int mostcities_planet = -1;
+                    const Freight &f = player->get_fleet().freight;
+                    int army_size = f.infantry + f.gliders + 2*f.artillery;
+                    bool ok = false;
+                    for (int j = 0; j < 2; ++j) {
+                        for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
+                            Star *s = &stars[star_idx];
+                            for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
+                                Planet *p = s->get_planet(planet_idx);
+                                if (!(p && p->exists() && p->is_owned())) {
+                                    continue;
+                                }
+                                int owner = p->get_owner();
+                                if (owner == player_idx) {
+                                    continue;
+                                }
+                                // We prioritise attacks on the player we're hostile to
+                                if (j == 0 && !player->is_hostile_to(owner)) {
+                                    continue;
+                                }
+                                int p_inf, p_gli, p_art;
+                                p->get_army(p_inf, p_gli, p_art);
+                                int p_army_size = p_inf + p_gli + 2*p_art;
+
+                                /*
+                                 * FIXME: Lunar bases are ignored in the planet's army size,
+                                 * but it seems like they should factor in heavily!
+                                 * OTOH maybe this would interfere with strong_star/strong_planet
+                                 */
+                                if (3*p_army_size >= 2*army_size) {
+                                    continue;
+                                }
+
+                                ok = true;
+
+                                /*
+                                 * FIXME: Strange that orig doesn't like alliance combinations here!
+                                 * I suspect this may not have been intentional, and may reflect
+                                 * and earlier design in which multiple alliances weren't possible.
+                                 */
+                                AIFlag f = player->get_flag(1);
+                                if (f == AI_Hi || (f == AI_Md && onein(2))) {
+                                    if (exostate.has_only_alliance(player_idx, owner, ALLY_NonAttack)) {
+                                        ok = false;
+                                    }
+                                    if (exostate.has_only_alliance(player_idx, owner, ALLY_War)) {
+                                        ok = false;
+                                    }
+                                }
+
+                                if (ok) {
+                                    if (p_army_size < weakdef && onein(2)) {
+                                        weakdef = p_army_size;
+                                        weak_star = star_idx;
+                                        weak_planet = planet_idx;
+                                    }
+                                    if (p_army_size > strongdef && onein(2)) {
+                                        strongdef = p_army_size;
+                                        strong_star = star_idx;
+                                        strong_planet = planet_idx;
+                                    }
+                                    if (p_army_size == 0) {
+                                        nodef = true;
+                                        nodef_star = star_idx;
+                                        nodef_planet = planet_idx;
+                                    }
+                                    int cities = p->get_n_cities();
+                                    if (cities > mostcities && onein(2)) {
+                                        mostcities = cities;
+                                        mostcities_star = star_idx;
+                                        mostcities_planet = planet_idx;
+                                    }
+                                }
+                            }
+                        }
+                        if (weak_star >= 0 && weak_planet >= 0) {
+                            break;
+                        }
+                    }
+
+                    if (weak_star == -1 && strong_star == -1 && mostcities_star == -1) {
+                        ok = false;
+                    }
+
+                    if (ok) {
+                        if (weak_star >= 0 && weak_planet >= 0) {
+                            player->get_location().set_target(weak_star, 1);
+                            player->get_location().set_planet_target(weak_planet);
+                        }
+                        if (nodef) {
+                            player->get_location().set_target(nodef_star, 1);
+                            player->get_location().set_planet_target(nodef_planet);
+                        }
+                        if (onein(3) || weak_star == -1) {
+                            if (mostcities_star >= 0 && mostcities_planet >= 0) {
+                                player->get_location().set_target(mostcities_star, 1);
+                                player->get_location().set_planet_target(mostcities_planet);
+                            }
+                        }
+                        if (onein(3) || weak_star == -1) {
+                            if (strong_star >= 0 && strong_planet >= 0) {
+                                player->get_location().set_target(strong_star, 1);
+                                player->get_location().set_planet_target(strong_planet);
+                            }
+                        }
+                        player->next_tactic();
+                        if (!player->get_location().in_flight()) {
+                            player->set_tactic(5);
+                        }
+                    } else {
+                        player->set_tactic(onein(5) ? 0 : 1);
+                    }
+                }
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 10) {
                 // TODO: PROCe_tact5
