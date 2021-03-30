@@ -1395,13 +1395,11 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 if (!(planet && planet->exists())) {
                     L.warn("[%s] Invalid planet in PROCe_tact11", player->get_full_name());
                     player->set_tactic(22);
-                    next_mpai_stage();
                     return ExodusMode::MODE_None;
                 }
 
                 if (!(planet->is_owned())) {
                     player->set_tactic(22);
-                    next_mpai_stage();
                     return ExodusMode::MODE_None;
                 }
 
