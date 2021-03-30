@@ -1385,8 +1385,103 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 }
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 23) {
-                // TODO: PROCe_tact11
+                // PROCe_tact11
                 L.debug("[%s] PROCe_tact11", player->get_full_name());
+                int star_idx = player->get_location().get_target();
+                int planet_idx = player->get_location().get_planet_target();
+                Star *star = &stars[star_idx];
+                Planet *planet = star->get_planet(planet_idx);
+
+                if (!(planet && planet->exists())) {
+                    L.warn("[%s] Invalid planet in PROCe_tact11", player->get_full_name());
+                    player->set_tactic(22);
+                    next_mpai_stage();
+                    return ExodusMode::MODE_None;
+                }
+
+                if (!(planet->is_owned())) {
+                    player->set_tactic(22);
+                    next_mpai_stage();
+                    return ExodusMode::MODE_None;
+                }
+
+                int owner_idx = planet->get_owner();
+                Player *owner = exostate.get_player(owner_idx);
+
+                if (mp_state.mpai_substage == 0) {
+                    if (owner->is_human()) {
+                        mp_state.mpai_substage = 1;
+                        return ExodusMode::MODE_Arrive;
+                    } else {
+                        mp_state.mpai_substage = 2;
+                    }
+                }
+
+                if (mp_state.mpai_substage == 1) {
+                    mp_state.mpai_substage = 2;
+                    comm_open(DIA_S_CPU_Trade);
+                    return ExodusMode::MODE_None;
+                }
+
+                if (mp_state.mpai_substage == 2) {
+                    mp_state.mpai_substage = 0;
+                    bool proceed = false;
+
+                    if (owner->is_human()) {
+                        switch (comm_action_check()) {
+                            case CA_Proceed:
+                                comm_close();
+                                proceed = true;
+                                break;
+                            case CA_Abort:
+                                comm_close();
+                                break;
+                            default:
+                                L.fatal("Unexpected comm action on CPU trade offer: %d");
+                        }
+                    } else {
+                        proceed = true;
+                    }
+
+                    if (proceed) {
+                        int a, b, c, n;
+                        switch (planet->initiate_trade(player_idx)) {
+                            case TRADE_Good:
+                                a=4; b=1; c=3; n=20;
+                                break;
+                            case TRADE_Fair:
+                                a=3; b=1; c=2; n=10;
+                                break;
+                            case TRADE_Bad:
+                                a=3; b=1; c=1; n=30;
+                                break;
+                            default:
+                                L.warn("[%s] Invalid trade in PROCe_tact11", player->get_full_name());
+                                player->set_tactic(22);
+                                return ExodusMode::MODE_None;
+                        }
+
+                        if (!owner->is_human()) {
+                            if (!exostate.has_alliance(player_idx, owner_idx, ALLY_Trade)) {
+                                // FIXME: Orig allows CPU to pay price they can't afford (-ve MC) here
+                                if (!player->attempt_spend(n)) {
+                                    L.warn("[%s] Preventing trade that was not affordable");
+                                    player->set_tactic(22);
+                                    return ExodusMode::MODE_None;
+                                }
+                            }
+                        }
+
+                        const Freight &f = player->get_fleet().freight;
+                        player->give_mc(a*player->transfer_min(-f.minerals));
+                        player->give_mc(b*player->transfer_fd(-f.food));
+                        player->give_mc(c*player->transfer_plu(-f.plutonium));
+                        player->set_tactic(0);
+                        // TODO: PROClordbuy
+                    } else {
+                        player->set_tactic(22);
+                    }
+                }
             }
             if (p->get_tactic() == 0) {
                 // TODO: PROCe_tact12

@@ -541,6 +541,11 @@ void CommPanelDrawer::comm_init(CommSend input) {
                 }
             }
             break;
+        case DIA_S_CPU_Trade:
+            comm_set_img_caption_upper(comm_player->get_full_name());
+            comm_set_img_caption_lower("RACE: %s", comm_player->get_race_str());
+            comm_set_race(comm_player->get_race());
+            break;
         case DIA_S_CPU_Offer:
             comm_set_img_caption_upper(comm_player->get_full_name());
             comm_set_img_caption_lower("RACE: %s", comm_player->get_race_str());
@@ -1110,6 +1115,15 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_recv(DIA_R_Close);
             }
             break;
+        case DIA_S_CPU_Trade:
+            // TODO - placeholder
+            comm_prepare(4);
+            comm_set_speech("lemme trade");
+            comm_set_text(0, "k.");
+            comm_set_text(1, "narp.");
+            comm_text_interactive_mask = 0x3;
+            comm_recv(DIA_R_CPU_TradeResponse);
+            break;
         case DIA_S_CPU_Offer:
             comm_prepare(4);
             comm_set_speech("I have an interesting offer.");
@@ -1486,6 +1500,12 @@ void CommPanelDrawer::comm_process_responses() {
                 case 2:
                     comm_send(DIA_S_CommentCompensationAccept);
                     break;
+            }
+            break;
+        case DIA_R_CPU_TradeResponse:
+            // TODO - placeholder
+            if (clicked) {
+                comm_report_action = CA_Proceed;
             }
             break;
         case DIA_R_CPU_OfferElaborate:
