@@ -92,6 +92,7 @@ class ExodusState {
         int get_player_idx(Player*);
         int get_n_active_players();
         Player* get_random_active_player();
+        int get_random_star_idx();
         int get_n_owned_planets();
         PlanetInfo get_random_owned_planet_info();
         int get_n_planets(Player*);

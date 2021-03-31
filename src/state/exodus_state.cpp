@@ -441,6 +441,12 @@ Player* ExodusState::get_random_active_player() {
     return nullptr;
 }
 
+Player* ExodusState::get_random_star_idx() {
+    int n_stars;
+    gal->get_stars(n_stars);
+    return rand() % n_stars;
+}
+
 int ExodusState::get_n_owned_planets() {
     int n_owned_planets = 0;
     Galaxy *gal = get_galaxy();
