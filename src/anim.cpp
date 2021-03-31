@@ -25,6 +25,10 @@ const char* Anim::frame(int frame) {
 }
 
 const char* Anim::interp(float interp) {
+    return frames[interp_frame(interp)];
+}
+
+int Anim::interp_frame(float interp) {
     if (interp < 0) {
         L.warn("Anim interp < 0: %f", interp);
         interp = 0;
@@ -45,7 +49,7 @@ const char* Anim::interp(float interp) {
         idx = 0;
     }
 
-    return frames[idx];
+    return idx;
 }
 
 bool Anim::is_static() {

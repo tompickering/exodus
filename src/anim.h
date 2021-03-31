@@ -9,6 +9,7 @@ class Anim {
         Anim(int, ...);
         const char* frame(int);
         const char* interp(float);
+        int interp_frame(float);
         bool is_static();
         int get_n_frames();
     private:
