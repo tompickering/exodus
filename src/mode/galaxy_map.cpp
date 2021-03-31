@@ -1126,8 +1126,114 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 }
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 9) {
-                // TODO: PROCe_tact3
+                // PROCe_tact3
                 L.debug("[%s] PROCe_tact3", player->get_full_name());
+                int set_star = -1;
+                int set_planet = -1;
+                for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
+                    Star *s = &stars[star_idx];
+                    for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
+                        Planet *p = s->get_planet(planet_idx);
+                        if (!(p && p->exists()) || p->is_owned()) {
+                            continue;
+                        }
+                        bool ok = true;
+                        for (int i = 0; i < N_PLAYERS; ++i) {
+                            Player *pl = exostate.get_player(i);
+                            if (!(pl && pl->is_participating() && pl != player)) {
+                                continue;
+                            }
+                            int ts = pl->get_location().get_target();
+                            int tp = pl->get_location().get_planet_target();
+                            if (ts == star_idx && tp == planet_idx) {
+                                ok = false;
+                                break;
+                            }
+                        }
+                        if (ok) {
+                            set_star = star_idx;
+                            set_planet = planet_idx;
+                            break;
+                        }
+                    }
+                    if (set_star >= 0 && set_planet >= 0) {
+                        break;
+                    }
+                }
+
+                if (set_star >= 0 && set_planet >= 0) {
+                    bool found = false;
+                    // Orig repeats forever - we cancel eventually and use the one we already faound
+                    for (int attempts = 0; attempts < 1000; ++attempts) {
+                        int quality = 0;
+                        for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
+                            Star *s = &stars[star_idx];
+                            for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
+                                Planet *p = s->get_planet(planet_idx);
+                                if (!(p && p->exists()) || p->is_owned()) {
+                                    continue;
+                                }
+
+                                int a = 0;
+                                PlanetClass cls = p->get_class();
+                                if (cls == Forest)  a = 4;
+                                if (cls == Desert)  a = 2;
+                                if (cls == Volcano) a = 1;
+                                if (cls == Rock)    a = 3;
+                                if (cls == Ice)     a = 2;
+                                if (cls == Terra)   a = 4;
+                                // Orig doesn't check artificial planets - we'll just skip these
+                                if (a == 0) {
+                                    continue;
+                                }
+
+                                if (a > quality && onein(7)) {
+                                    bool ok = true;
+                                    for (int i = 0; i < N_PLAYERS; ++i) {
+                                        Player *pl = exostate.get_player(i);
+                                        if (!(pl && pl->is_participating() && pl != player)) {
+                                            continue;
+                                        }
+                                        int ts = pl->get_location().get_target();
+                                        int tp = pl->get_location().get_planet_target();
+                                        if (ts == star_idx && tp == planet_idx) {
+                                            ok = false;
+                                            break;
+                                        }
+                                    }
+                                    if (ok) {
+                                        set_star = star_idx;
+                                        set_planet = planet_idx;
+                                        found = true;
+                                        break;
+                                    } else {
+                                        quality = 0;
+                                    }
+                                }
+                            }
+                            if (found) {
+                                break;
+                            }
+                        }
+                        if (found) {
+                            break;
+                        }
+                    }
+
+                    player->get_location().set_target(set_star, 1);
+                    player->get_location().set_planet_target(set_planet);
+
+                    if (player->get_location().in_flight()) {
+                        if (player->has_invention(INV_OrbitalMassThrust) && onein(2)) {
+                            player->next_tactic();
+                            player->get_location().complete();
+                        }
+                    } else {
+                        player->set_tactic(10);
+                    }
+                } else {
+                    player->set_tactic(3);
+                }
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 3) {
                 // PROCe_tact4
