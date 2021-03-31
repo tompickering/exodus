@@ -2279,11 +2279,13 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mp_state.mpp_stage == MPP_Trade) {
-        if (p->count_stones(STONE_Trade)) {
-            TradeReport rpt = p->monthly_trade();
-            report.add_line("Trading Centre sold:");
-            report.add_line("Mi: %d / Fd: %d / Pl: %d => %d MC",
-                             rpt.mi,  rpt.fd,  rpt.pl, rpt.mc);
+        if (owner) {
+            if (p->count_stones(STONE_Trade)) {
+                TradeReport rpt = p->monthly_trade();
+                report.add_line("Trading Centre sold:");
+                report.add_line("Mi: %d / Fd: %d / Pl: %d => %d MC",
+                                 rpt.mi,  rpt.fd,  rpt.pl, rpt.mc);
+            }
         }
         next_mpp_stage();
     }
