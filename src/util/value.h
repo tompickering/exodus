@@ -10,4 +10,7 @@ int min(int, int);
 int max(int, int);
 int clamp(int, int, int);
 
+float lerp(float, float, float);
+int ilerp(int, int, float);
+
 #endif

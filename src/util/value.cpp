@@ -33,3 +33,11 @@ int max(int a, int b) {
 int clamp(int a, int minimum, int maximum) {
     return min(max(a, minimum), maximum);
 }
+
+float lerp(float a, float b, float i) {
+    return a + (b - a)*i;
+}
+
+int ilerp(int a, int b, float i) {
+    return (int)lerp((float)a, (float)b, i);
+}
