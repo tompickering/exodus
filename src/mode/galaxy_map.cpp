@@ -1421,8 +1421,102 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 player->get_location().unset_target();
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 5) {
-                // TODO: PROCe_tact6
+                // PROCe_tact6
                 L.debug("[%s] PROCe_tact6", player->get_full_name());
+                int star_idx = player->get_location().get_target();
+                int planet_idx = player->get_location().get_planet_target();
+                Star *s = &stars[star_idx];
+                Planet *p = s->get_planet(planet_idx);
+
+                // TODO: Things in this function from PROCenemyattack
+
+                // Resolve to attack a planet
+                if (mp_state.mpai_substage == 0) {
+                    if (p && p->exists() && p->is_owned() && p->get_owner() != player_idx) {
+                        // FIXME: Factor in lunar base here?
+                        int p_army = p->get_army_size();
+                        int army = player->get_fleet().freight.army_size();
+                        if (p_army > army) {
+                            // FIXME: I think this is pointless - orig sets back to 0 afterwards anyway
+                            player->set_tactic(1);
+                            mp_state.mpai_substage = 10;
+                        } else {
+                            // TODO: Orig bails if planet is aritificial and lord has artificial world
+                            mp_state.mpai_substage = 1;
+                        }
+                    } else {
+                        mp_state.mpai_substage = 10;
+                    }
+                }
+
+                // Attack a planet
+                if (mp_state.mpai_substage == 1) {
+                    exostate.set_active_flytarget(s);
+                    exostate.set_active_planet(planet_idx);
+                    int owner_idx = p->get_owner();
+                    Player *owner = exostate.get_player(owner_idx);
+                    if (owner->is_human()) {
+                        mp_state.mpai_substage = 2;
+                        return ExodusMode::MODE_Arrive;
+                    } else {
+                        mp_state.mpai_substage = 4;
+                    }
+                }
+
+                // Attacking human - arrived, opening comms
+                if (mp_state.mpai_substage == 2) {
+                    mp_state.mpai_substage = 3;
+                    comm_open(DIA_S_CPU_Attack);
+                    return ExodusMode::MODE_None;
+                }
+
+                // Attacking human - resolving comms
+                if (mp_state.mpai_substage == 3) {
+                    switch (comm_action_check()) {
+                        case CA_Abort:
+                            comm_close();
+                            mp_state.mpai_substage = 10;
+                            break;
+                        case CA_Attack:
+                            comm_close();
+                            mp_state.mpai_substage = 5;
+                            break;
+                        default:
+                            L.fatal("Unexpected comm action on CPU attack: %d");
+                    }
+                }
+
+                // Attacking CPU, requesting support from war allies
+                if (mp_state.mpai_substage == 4) {
+                    // TODO
+                    mp_state.mpai_substage = 5;
+                }
+
+                // Launching attack
+                if (mp_state.mpai_substage == 5) {
+                    mp_state.mpai_substage = 6;
+                    ephstate.set_ephemeral_state(EPH_LunarBattlePrep);
+                    ephstate.lunar_battle.aggressor_type = AGG_Player;
+                    ephstate.lunar_battle.aggressor_idx = player_idx;
+                    return ephstate.get_appropriate_mode();
+                }
+
+                // Handle outcome of battle
+                if (mp_state.mpai_substage == 6) {
+                    // TODO: Respond to lunar battle report
+                    ephstate.clear_ephemeral_state();
+                    // TODO: If CPU planet + won + in a region player has explored, bulletin
+                    // TODO: News item
+                    // TODO: Freight adjustment of units
+                    // TODO: If won, some artificial planet logic
+                    mp_state.mpai_substage = 10;
+                }
+
+                // Always end with this
+                if (mp_state.mpai_substage == 10) {
+                    player->set_tactic(0);
+                    player->get_location().unset_target();
+                }
             }
             if (p->get_tactic() == 20) {
                 // PROCe_tact7
