@@ -63,6 +63,7 @@ bool PlayerLocation::has_visited(int query_target) {
     return (bool)(visited & ((uint64_t)1 << query_target));
 }
 
+// FIXME: This is broken for CPU lords as it loses orbit information!
 void PlayerLocation::unset_target() {
     target = TARGET_NONE;
 }
