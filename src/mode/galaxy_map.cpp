@@ -1414,7 +1414,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         // PROCenemytactics call
                         ai_planet_update(p);
                     } else {
-                        L.warn("[%s] Prevented planet claim due to funds");
+                        L.warn("[%s] Prevented planet claim due to funds", player->get_full_name());
                     }
                 }
                 player->set_tactic(0);
