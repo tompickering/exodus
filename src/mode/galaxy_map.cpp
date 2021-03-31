@@ -759,7 +759,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     }
 
                     exostate.set_active_flytarget(s);
-                    exostate.set_active_planet(mp_state.mp_planet_idx);
+                    exostate.set_active_planet(i);
 
                     int owner_idx = p->get_owner();
                     if (owner_idx == player_idx) {
