@@ -7,13 +7,19 @@
 
 #include "assetpaths.h"
 
-static const float SPACEPORT_TIME = 3.f;
+static const float SPACEPORT_TIME = 2.5f;
 static const float HANGAR_TIME = 3.f;
 
 enum ID {
+    SPACEPORT_SHIP,
     END,
 };
 
+static Anim anim_hangar(19,
+                    IMG_LP1_LAND2,  IMG_LP1_LAND3,  IMG_LP1_LAND4,  IMG_LP1_LAND5,
+    IMG_LP1_LAND6,  IMG_LP1_LAND7,  IMG_LP1_LAND8,  IMG_LP1_LAND9,  IMG_LP1_LAND10,
+    IMG_LP1_LAND11, IMG_LP1_LAND12, IMG_LP1_LAND13, IMG_LP1_LAND14, IMG_LP1_LAND15,
+    IMG_LP1_LAND16, IMG_LP1_LAND17, IMG_LP1_LAND18, IMG_LP1_LAND19, IMG_LP1_LAND20);
 
 Arrive::Arrive() : ModeBase("Arrive"), PanelDrawer(PNL_Galaxy), FrameDrawer() {
     time = 0;
@@ -80,11 +86,19 @@ ExodusMode Arrive::update(float delta) {
     switch (stage) {
         case ARR_Spaceport:
             {
-                interp = min(time / SPACEPORT_TIME, 1);
+                interp = time / SPACEPORT_TIME;
+                if (interp > 1) interp = 1;
 
                 if (interp < 1) {
+                    int x = RES_X / 2;
+                    int y = ilerp(80, 130, interp);
+                    float sc = lerp(.8f, .5f, interp);
+                    draw_manager.draw(
+                        id(ID::SPACEPORT_SHIP),
+                        IMG_AP1_APPROACH,
+                        {x, y, .5f, .5f, sc, sc});
                 } else {
-                    // TODO: Remove ship sprite
+                    draw_manager.draw(id(ID::SPACEPORT_SHIP), nullptr);
                     base_draw(IMG_LORD_ARRIVE);
                     time = 0;
                     stage = ARR_Hangar;
@@ -93,8 +107,14 @@ ExodusMode Arrive::update(float delta) {
             break;
         case ARR_Hangar:
             {
-                interp = min(time / HANGAR_TIME, 1);
+                interp = time / HANGAR_TIME;
+                if (interp > 1) interp = 1;
+
                 if (interp < 1) {
+                    int f = anim_hangar.interp_frame(interp);
+                    draw_manager.draw(
+                        anim_hangar.frame(f),
+                        {260, 272, 0, 1, 1, 1});
                 } else {
                     return ExodusMode::MODE_Pop;
                 }
