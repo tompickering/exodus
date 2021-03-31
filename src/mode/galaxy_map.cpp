@@ -1380,8 +1380,45 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 }
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 10) {
-                // TODO: PROCe_tact5
+                // PROCe_tact5
                 L.debug("[%s] PROCe_tact5", player->get_full_name());
+                int star_idx = player->get_location().get_target();
+                int planet_idx = player->get_location().get_planet_target();
+                Star *s = &stars[star_idx];
+                Planet *p = s->get_planet(planet_idx);
+                if (p && p->exists() && !p->is_owned()) {
+                    // TODO: Orig doesn't check affordability here, allowing -ve MC
+                    if (player->attempt_spend(190)) {
+                        p->set_owner(player_idx);
+                        // FIXME: Set to 0 properly...
+                        p->adjust_unrest(-99);
+                        p->prepare_for_cpu_lord();
+                        if (!p->is_named()) {
+                            // TODO: Ensure unique name here. Orig suffixes ' 2', ' 3' etc
+                            const char* name_suggest = p->get_name_suggestion();
+                            p->set_name(name_suggest);
+                        }
+                        int cap = p->get_resource_cap();
+                        int p_inf, p_gli, p_art;
+                        p->get_army(p_inf, p_gli, p_art);
+                        // Fill planet army from freight as much as possible without exceeding limit
+                        p->adjust_army(
+                            player->transfer_inf(-(cap - p_inf)),
+                            player->transfer_gli(-(cap - p_gli)),
+                            player->transfer_art(-(cap - p_art)));
+
+                        // TODO: Orig writes a news item here with PROCnpmessage
+
+                        player->set_tactic(0);
+
+                        // PROCenemytactics call
+                        ai_planet_update(p);
+                    } else {
+                        L.warn("[%s] Prevented planet claim due to funds");
+                    }
+                }
+                player->set_tactic(0);
+                player->get_location().unset_target();
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 5) {
                 // TODO: PROCe_tact6
