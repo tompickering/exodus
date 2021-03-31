@@ -18,7 +18,20 @@ class Arrive : ModeBase, PanelDrawer, FrameDrawer {
         virtual void enter() override;
         virtual ExodusMode update(float) override;
     private:
+        enum Stage {
+            ARR_Spaceport,
+            ARR_Hangar,
+        };
+
+        Stage stage;
+
+        Player *player;
+        Planet *planet;
+        Player *owner;
+
         float time;
+
+        void base_draw(const char*);
 };
 
 #endif

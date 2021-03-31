@@ -3,7 +3,12 @@
 #include "galaxy/flytarget.h"
 
 #include "anim.h"
+#include "util/value.h"
+
 #include "assetpaths.h"
+
+static const float SPACEPORT_TIME = 3.f;
+static const float HANGAR_TIME = 3.f;
 
 enum ID {
     END,
@@ -12,23 +17,29 @@ enum ID {
 
 Arrive::Arrive() : ModeBase("Arrive"), PanelDrawer(PNL_Galaxy), FrameDrawer() {
     time = 0;
+    stage = ARR_Spaceport;
 }
 
 void Arrive::enter() {
     ModeBase::enter(ID::END);
     time = 0;
-    Player *player = exostate.get_active_player();
-    FlyTarget *tgt = exostate.loc2tgt(player->get_location().get_target());
-    Planet *planet = exostate.get_active_planet();
+    stage = ARR_Spaceport;
+    player = exostate.get_active_player();
+    planet = exostate.get_active_planet();
 
     if (!(planet && planet->exists() && planet->is_owned())) {
         L.fatal("Entered arrival mode for invalid planet");
     }
 
-    Player *owner = exostate.get_player(planet->get_owner());
+    owner = exostate.get_player(planet->get_owner());
 
-    // TODO: Set proper image
-    draw_manager.draw(planet->sprites()->map_bg);
+    base_draw(planet->sprites()->spaceport);
+}
+
+void Arrive::base_draw(const char* bg) {
+    FlyTarget *tgt = exostate.loc2tgt(player->get_location().get_target());
+
+    draw_manager.draw(bg);
 
     frame_draw();
 
@@ -49,7 +60,7 @@ void Arrive::enter() {
     draw_manager.draw_text(
         text,
         Justify::Left,
-        10, 200,
+        10, 380,
         COL_TEXT);
 
     draw_manager.save_background();
@@ -64,11 +75,32 @@ ExodusMode Arrive::update(float delta) {
 
     time += delta;
 
-    if (time > 2) {
-        return ExodusMode::MODE_Pop;
-    }
+    float interp;
 
-    frame_draw();
+    switch (stage) {
+        case ARR_Spaceport:
+            {
+                interp = min(time / SPACEPORT_TIME, 1);
+
+                if (interp < 1) {
+                } else {
+                    // TODO: Remove ship sprite
+                    base_draw(IMG_LORD_ARRIVE);
+                    time = 0;
+                    stage = ARR_Hangar;
+                }
+            }
+            break;
+        case ARR_Hangar:
+            {
+                interp = min(time / HANGAR_TIME, 1);
+                if (interp < 1) {
+                } else {
+                    return ExodusMode::MODE_Pop;
+                }
+            }
+            break;
+    }
 
     return ExodusMode::MODE_None;
 }
