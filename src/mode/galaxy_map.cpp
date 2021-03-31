@@ -1433,7 +1433,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 int owner_idx = planet->get_owner();
                 Player *owner = exostate.get_player(owner_idx);
 
-                exostate.set_active_flytarget(star_idx);
+                exostate.set_active_flytarget(star);
                 exostate.set_active_planet(planet_idx);
 
                 if (mp_state.mpai_substage == 0) {
