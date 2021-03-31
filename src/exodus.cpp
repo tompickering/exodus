@@ -77,6 +77,10 @@ bool Exodus::init() {
         L.error("Audio subsystem failed to initialise - game will not feature sound");
     }
 
+#ifdef DBG
+    exodebug.init();
+#endif
+
     return ok;
 }
 
@@ -228,6 +232,10 @@ int Exodus::run(int argc, char** argv) {
 
         if (input_manager.consume(Input::K_F1)) {
             exodebug.add_mc(1000);
+        }
+
+        if (input_manager.consume(Input::K_F2)) {
+            exodebug.show_player_markers = !exodebug.show_player_markers;
         }
 
         if (input_manager.consume(Input::K_F8)) {

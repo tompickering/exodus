@@ -17,11 +17,11 @@
 #include "galaxy/star.h"
 #include "galaxy/planet.h"
 
-#include "exodus_debug.h"
-
 #define MAX_HUMAN_PLAYERS    5
 
 #define N_PLAYERS 15
+
+#include "exodus_debug.h"
 
 extern const char* flags[];
 

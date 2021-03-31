@@ -7,6 +7,10 @@
 
 #define BLINK_TIME 0.5
 
+#ifdef DBG
+extern ExodusDebug exodebug;
+#endif
+
 enum ID {
     SELECTED,
     FLEET_MARKER,
@@ -151,6 +155,29 @@ ExodusMode GalaxyMap::update(float delta) {
                     id(ID::FLEET_MARKER),
                     marker_icon,
                     {draw_x - 10, draw_y + 10, 0.5, 0.5, 1, 1});
+
+#ifdef DBG
+                if (exodebug.show_player_markers) {
+                    char text[3];
+                    for (int i = 0; i < N_PLAYERS; ++i) {
+                        Player *p = exostate.get_player(i);
+                        FlyTarget *fleet_pos = exostate.loc2tgt(p->get_location().get_target());
+                        get_draw_position(fleet_pos, draw_x, draw_y);
+                        snprintf(text, sizeof(text), "%d", i);
+                        RGB col = {0, 0xFF, 0};
+                        if (p->get_location().in_flight()) {
+                            col = {0xFF, 0, 0};
+                        }
+                        draw_manager.draw_text(
+                            exodebug.player_markers[i],
+                            Font::Large,
+                            text,
+                            Justify::Left,
+                            draw_x - 10, draw_y - 10,
+                            col);
+                    };
+                }
+#endif
             }
 
             click = draw_manager.query_click(id_panel);
