@@ -1490,7 +1490,8 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                             if (!exostate.has_alliance(player_idx, owner_idx, ALLY_Trade)) {
                                 // FIXME: Orig allows CPU to pay price they can't afford (-ve MC) here
                                 if (!player->attempt_spend(n)) {
-                                    L.warn("[%s] Preventing trade that was not affordable");
+                                    L.warn("[%s] Preventing trade that was not affordable",
+                                            player->get_full_name());
                                     player->set_tactic(22);
                                     return ExodusMode::MODE_None;
                                 }
