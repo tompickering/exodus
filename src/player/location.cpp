@@ -1,9 +1,8 @@
 #include "location.h"
 
-const int TARGET_NONE = -2;
-
 PlayerLocation::PlayerLocation() {
     months_to_arrive = 0;
+    location = -1;
     target = -1;
     planet_target = 0;
     just_arrived = false;
@@ -15,8 +14,11 @@ bool PlayerLocation::advance() {
     if (months_to_arrive > 0) {
         just_arrived = (--months_to_arrive == 0);
     }
-    if (just_arrived && target >= 0) {
-        visited |= (uint64_t)1 << target;
+    if (just_arrived) {
+        location = target;
+        if (target >= 0) {
+            visited |= (uint64_t)1 << target;
+        }
     }
     return just_arrived;
 }
@@ -29,6 +31,10 @@ void PlayerLocation::complete() {
 
 bool PlayerLocation::in_flight() {
     return months_to_arrive > 0;
+}
+
+int PlayerLocation::get() {
+    return location;
 }
 
 void PlayerLocation::set(int nt) {
@@ -63,11 +69,11 @@ bool PlayerLocation::has_visited(int query_target) {
     return (bool)(visited & ((uint64_t)1 << query_target));
 }
 
-// FIXME: This is broken for CPU lords as it loses orbit information!
 void PlayerLocation::unset_target() {
-    target = TARGET_NONE;
+    target = location;
+    months_to_arrive = 0;
 }
 
 bool PlayerLocation::is_target_set() {
-    return target != TARGET_NONE;
+    return target != location;
 }

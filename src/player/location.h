@@ -13,6 +13,7 @@ class PlayerLocation {
         bool advance();
         void complete();
         bool in_flight();
+        int get();
         void set(int);
         void set_target(int, int);
         int get_target();
@@ -22,6 +23,7 @@ class PlayerLocation {
         void unset_target();
         bool is_target_set();
     private:
+        int location;
         int target;            // -1=guild, 0+=star index - Orig: TS
         int planet_target;     // I think only used for CPU lords - Orig: TP
         int months_to_arrive;  // 'In flight' if > 0

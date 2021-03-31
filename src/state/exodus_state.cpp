@@ -233,8 +233,6 @@ void ExodusState::init_cpu_lords() {
                                 quality = planet_quality;
                                 chosen_star = s;
                                 chosen_planet_idx = planet_idx;
-                                players[i].location.set(tgt2loc(chosen_star));
-                                players[i].location.set_planet_target(chosen_planet_idx);
                                 initial_planet_selected = true;
                                 // N.B. we don't break here - we continue iterating
                                 // over stars, and are liable to change our mind if
@@ -264,7 +262,7 @@ void ExodusState::init_cpu_lords() {
         // TODO: PROCstart_the_lords sets 'firstplanet' here
         // Check the meaning and a suitable representation
 
-        // Only CPU lords ever have an 'unset' target...
+        players[i].get_location().set(get_random_star_idx());
         players[i].get_location().unset_target();
     }
 }
@@ -441,7 +439,8 @@ Player* ExodusState::get_random_active_player() {
     return nullptr;
 }
 
-Player* ExodusState::get_random_star_idx() {
+int ExodusState::get_random_star_idx() {
+    Galaxy *gal = get_galaxy();
     int n_stars;
     gal->get_stars(n_stars);
     return rand() % n_stars;
