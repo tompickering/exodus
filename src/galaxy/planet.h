@@ -90,6 +90,7 @@ typedef struct {
     const char *map_bg;
     const char *surf;
     const char *bulletin_bg;
+    const char *spaceport;
 } PlanetSpriteSet;
 
 typedef struct {
