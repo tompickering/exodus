@@ -1588,15 +1588,18 @@ void CommPanelDrawer::comm_process_responses() {
         case DIA_R_CPU_AttackResponse:
             switch (opt) {
                 case 0:
+                    exostate.unset_alliances(comm_player, comm_other);
                     comm_report_action = CA_Attack;
                     break;
                 case 1:
                     comm_send(DIA_S_CPU_AttackPayOff);
                     break;
                 case 2:
+                    exostate.unset_alliances(comm_player, comm_other);
                     comm_report_action = CA_Attack;
                     break;
                 case 3:
+                    exostate.unset_alliances(comm_player, comm_other);
                     comm_report_action = CA_Attack;
                     break;
             }
@@ -1645,6 +1648,7 @@ void CommPanelDrawer::comm_process_responses() {
             break;
         case DIA_R_CPU_AttackPayOffReject:
             if (clicked) {
+                exostate.unset_alliances(comm_player, comm_other);
                 comm_report_action = CA_Attack;
             }
             break;
