@@ -308,6 +308,8 @@ void MenuDrawer::menu_specific_update() {
                         if (!planet->advance_construction_phase()) {
                             L.fatal("get_planet_under_construction() returned non-advanceable planet");
                         }
+                        // TODO: On completion, the planet should actually appear the following month,
+                        // and this should trigger a bulletin (+ news article?)
                     } else {
                         L.error("Should not have offered unaffordable option");
                     }

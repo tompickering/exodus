@@ -287,20 +287,48 @@ void Planet::init() {
         // Default for enemy lords; players may override
         set_name("Genesis");
         lunar_base = true;
-        army_funding = 2;
         diameter = 12000;
         airdef_guns = 10;
         minerals = 0;
         sim = 2;
         pspeed = 10;
 
-        // TODO: PROCdowp sets SIc (city count) to 1
-        // Not reflected here because we want to compute city count from surface data
-        // Should this planet get a default city somehow?
-        // I believe the line assigning surf%(8,8)=5 is the city placement...
-        // Why does SIna (n agruculture zones) get set to 6?
+        army_inf = 15;
+        army_gli = 15;
+        army_art = 15;
 
-        // TODO: Surface init for Artificial worlds
+        // TODO: Why does SIna (n agruculture zones) get set to 6?
+
+        int sz = get_size_blocks();
+        for (int j = 1; j < sz-1; ++j) {
+            for (int i = 1; i < sz-1; ++i) {
+                int r = RND(6);
+                if (r == 1) {
+                    set_stone(i, j, STONE_NaturalLarge);
+                }
+                if (r > 1) {
+                    set_stone(i, j, STONE_NaturalSmall);
+                }
+                if (r == 2 && onein(3)) {
+                    set_stone(i, j, STONE_NaturalAnim);
+                }
+                if (r > 3) {
+                    set_stone(i, j, STONE_Clear);
+                }
+            }
+        }
+        set_stone(10, 3, STONE_Agri);
+        set_stone(10, 4, STONE_Agri);
+        set_stone( 9, 3, STONE_Agri);
+        set_stone( 9, 4, STONE_Agri);
+        set_stone( 6, 7, STONE_City);
+        set_stone( 7, 7, STONE_Base);
+        set_stone( 5, 7, STONE_Base);
+        set_stone( 6, 6, STONE_Base);
+        set_stone( 6, 8, STONE_Base);
+        set_stone( 2, 4, STONE_Gli);
+
+        army_funding = 2;
     }
 
     // Shouldn't be necessary but makes sense

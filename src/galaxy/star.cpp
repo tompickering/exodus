@@ -60,6 +60,7 @@ Planet* Star::construct_artificial_world(int player_idx, const char* name) {
 
     L.debug("CONSTRUCTING ARTIFICIAL WORLD");
 
+    // TODO: On completion, world should not appear until following month
     new(outer) Planet(Artificial);
     outer->set_owner(player_idx);
     if (name) {
