@@ -84,6 +84,23 @@ bool Planet::exists() {
     return _exists;
 }
 
+int Planet::get_construction_phase() {
+    return construction_phase;
+}
+
+bool Planet::advance_construction_phase() {
+    if (get_class() != Artificial) {
+        return false;
+    }
+    if (construction_phase < 3) {
+        if (construction_phase++ >= 3) {
+            _exists = true;
+        }
+        return true;
+    }
+    return false;
+}
+
 int Planet::get_quality() {
     if (!exists() || is_owned()) {
         return 0;
@@ -178,9 +195,19 @@ const char* Planet::get_name_suggestion() {
 void Planet::init() {
     int r;
 
-    _exists = true;
     name[0] = '\0';
-    moon_cls = (MoonClass)(rand() % 3);
+
+    construction_phase = 0;
+
+    if (cls == Artificial) {
+        _exists = false;
+        construction_phase = 1;
+        moon_cls = MOON_Ice;
+    } else {
+        _exists = true;
+        moon_cls = (MoonClass)(rand() % 3);
+    }
+
     owner = -1;
     traded = 0;
     taxes_collected = false;

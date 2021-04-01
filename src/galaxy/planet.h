@@ -123,6 +123,8 @@ class Planet {
         Planet();
         Planet(PlanetClass);
         bool exists();
+        int get_construction_phase();
+        bool advance_construction_phase();
         int get_quality();
         PlanetClass get_class();
         const char* get_class_str();
@@ -241,6 +243,8 @@ class Planet {
         MoonClass moon_cls;    // Determines battle background. Orig was random each time.
         char name[PLANET_MAX_NAME + 1];
         Stone surf[MAX_STONES];
+
+        int construction_phase;
 
         int pspeed;            // Orig: pspeed
         int diameter;          // Orig: SId.
