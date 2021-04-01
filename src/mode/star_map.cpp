@@ -140,10 +140,8 @@ ExodusMode StarMap::update(float delta) {
                     stage = SM_Idle;
                     break;
                 case CA_GoodsTransfer:
-                    // TODO
                     comm_close();
-                    stage = SM_Idle;
-                    break;
+                    return ExodusMode::MODE_PlanetTransfer;
                 case CA_StartProduction:
                     // TODO
                     comm_close();

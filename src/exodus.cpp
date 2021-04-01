@@ -26,6 +26,7 @@
 #include "mode/planet_map.h"
 #include "mode/planet_status.h"
 #include "mode/planet_colonise.h"
+#include "mode/planet_transfer.h"
 #include "mode/lunar_battle_prep.h"
 #include "mode/lunar_battle.h"
 #include "mode/trade.h"
@@ -119,6 +120,7 @@ int Exodus::run(int argc, char** argv) {
     PlanetMap mode_planetmap;
     PlanetStatus mode_planetstatus;
     PlanetColonise mode_planetcolonise;
+    PlanetTransfer mode_planettransfer;
     LunarBattlePrep mode_lunarbattleprep;
     LunarBattle mode_lunarbattle;
     Trade mode_trade;
@@ -137,6 +139,7 @@ int Exodus::run(int argc, char** argv) {
     mode_map[MODE_PlanetMap] = (ModeBase*) &mode_planetmap;
     mode_map[MODE_PlanetStatus] = (ModeBase*) &mode_planetstatus;
     mode_map[MODE_PlanetColonise] = (ModeBase*) &mode_planetcolonise;
+    mode_map[MODE_PlanetTransfer] = (ModeBase*) &mode_planettransfer;
     mode_map[MODE_LunarBattlePrep] = (ModeBase*) &mode_lunarbattleprep;
     mode_map[MODE_LunarBattle] = (ModeBase*) &mode_lunarbattle;
     mode_map[MODE_Trade] = (ModeBase*) &mode_trade;
