@@ -94,6 +94,7 @@ class ExodusState {
         Player* get_random_active_player();
         int get_random_star_idx();
         int get_n_owned_planets();
+        Planet* get_planet_under_construction(int);
         PlanetInfo get_random_owned_planet_info();
         int get_n_planets(Player*);
         bool owns_a_planet(Player*);

@@ -463,6 +463,23 @@ int ExodusState::get_n_owned_planets() {
     return n_owned_planets;
 }
 
+Planet* ExodusState::get_planet_under_construction(int player_idx) {
+    Galaxy *gal = get_galaxy();
+    int n_stars;
+    Star *stars = gal->get_stars(n_stars);
+    for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
+        Star *s = &stars[star_idx];
+        for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
+            Planet *p = s->get_planet(planet_idx);
+            if (p && !p->exists() && p->get_construction_phase() > 0 && p->get_owner() == player_idx) {
+                return p;
+            }
+        }
+    }
+
+    return nullptr;
+}
+
 PlanetInfo ExodusState::get_random_owned_planet_info() {
     PlanetInfo info;
     int n_owned_planets = get_n_owned_planets();
