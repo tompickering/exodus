@@ -1167,6 +1167,37 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_text_interactive_mask = 0x7;
             comm_recv(DIA_R_CPU_AttackAllyProceed);
             break;
+        case DIA_S_CPU_AttackPayOff:
+            comm_prepare(4);
+            comm_set_speech("I will listen.");
+            comm_ctx.mc = comm_other->get_mc() / 2;
+            comm_set_text(0, "I offer %dMC.", comm_ctx.mc);
+            comm_show_adj(true);
+            comm_recv(DIA_R_CPU_AttackPayOffListen);
+            break;
+        case DIA_S_CPU_AttackPayOffOffer:
+            {
+                comm_prepare(1);
+                bool accept = false;
+                if (comm_ctx.mc > (int)((float)exostate.get_orig_month()*2.5f)) {
+                    accept = true;
+                }
+                if (comm_ctx.mc < 15) {
+                    accept = false;
+                }
+                if (comm_player->get_flag(0) == AI_Hi) {
+                    accept = false;
+                }
+                if (accept && comm_other->attempt_spend(comm_ctx.mc)) {
+                    comm_set_speech("I accept this.");
+                    // FIXME: Orig doesn't increment lord's credits here
+                    comm_recv(DIA_R_Close);
+                } else {
+                    comm_set_speech("I do not want your money...");
+                    comm_recv(DIA_R_CPU_AttackPayOffReject);
+                }
+            }
+            break;
         case DIA_S_CPU_Trade:
             // TODO - placeholder
             comm_prepare(4);
@@ -1560,9 +1591,7 @@ void CommPanelDrawer::comm_process_responses() {
                     comm_report_action = CA_Attack;
                     break;
                 case 1:
-                    // TODO
-                    //comm_send(DIA_S_CPU_AttackPayOff);
-                    comm_report_action = CA_Attack; // TODO: placeholder
+                    comm_send(DIA_S_CPU_AttackPayOff);
                     break;
                 case 2:
                     comm_report_action = CA_Attack;
@@ -1593,6 +1622,30 @@ void CommPanelDrawer::comm_process_responses() {
                 case 2:
                     comm_report_action = CA_Attack;
                     break;
+            }
+            break;
+        case DIA_R_CPU_AttackPayOffListen:
+            {
+                SpriteClick adjclick = draw_manager.query_click(id_comm_adj);
+                if (adjclick.id) {
+                    // FIXME: Can we hold a button to make this go faster? Or
+                    //        alternatively allow keyboard input?
+                    if (adjclick.x < 0.5f) {
+                        comm_ctx.mc = max(comm_ctx.mc - 1, 0);
+                    } else {
+                        comm_ctx.mc = min(comm_ctx.mc + 1, comm_other->get_mc());
+                    }
+                    comm_set_text(0, "I offer %dMC.", comm_ctx.mc);
+                }
+
+                if (draw_manager.query_click(id_comm_adj_ok).id) {
+                    comm_send(DIA_S_CPU_AttackPayOffOffer);
+                }
+            }
+            break;
+        case DIA_R_CPU_AttackPayOffReject:
+            if (clicked) {
+                comm_report_action = CA_Attack;
             }
             break;
         case DIA_R_CPU_TradeResponse:
