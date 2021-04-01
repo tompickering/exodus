@@ -201,7 +201,7 @@ ExodusMode StarMap::update(float delta) {
 
 void StarMap::draw_planets(float delta) {
     for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
-        Planet *planet = star->get_planet(i);
+        Planet *planet = star->get_planet_nocheck(i);
         if (planet && planet->exists()) {
             bool active = planet == exostate.get_active_planet();
             int draw_x = 140 + i*95;
@@ -261,6 +261,20 @@ void StarMap::draw_planets(float delta) {
             }
 
             // TODO: Fleet markers
+        } else if (planet && planet->get_construction_phase() > 0) {
+            int draw_x = 140 + i*95;
+            int draw_y = (RES_Y / 2) - 30 + ((i % 2) == 0 ? -30 : 30);
+            const char *img = IMG_PP1_CONST;
+            if (planet->get_construction_phase() > 1) {
+                img = IMG_PP2_CONST;
+            }
+            draw_manager.draw(
+                id(ID::PLANET1 + i),
+                img,
+                {draw_x,
+                 draw_y,
+                 .5f, .5f,
+                 .5f, .5f});
         }
     }
 }
