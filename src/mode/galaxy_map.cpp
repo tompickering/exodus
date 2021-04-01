@@ -310,12 +310,57 @@ ExodusMode GalaxyMap::update(float delta) {
                     case MA_EquipShip:
                         menu_close();
                         return ExodusMode::MODE_ShipEquip;
+                    case MA_BuildArtificialWorld:
+                        menu_close();
+                        selected_ft = nullptr;
+                        draw_manager.draw(id(ID::SELECTED), nullptr);
+                        selected_ft_blink = 0;
+                        stage = GM_ArtificialWorldStarSelect;
+                        break;
                     default:
                         break;
                 }
             } else {
                 stage = GM_Idle;
             }
+            break;
+        case GM_ArtificialWorldStarSelect:
+            {
+                Galaxy *gal = exostate.get_galaxy();
+
+                ft = get_clicked_flytarget();
+
+                if (ft && (ft != gal->get_guild())) {
+                    exostate.set_active_flytarget(ft);
+                    if (ft == selected_ft) {
+                        Star *s = (Star*) ft;
+                        int player_idx = exostate.get_active_player_idx();
+                        if (s->construct_artificial_world(player_idx, nullptr)) {
+                            stage = GM_Idle;
+                            break;
+                        }
+                    }
+                }
+
+                if (ft && ft != selected_ft) {
+                    draw_manager.draw(id(ID::SELECTED), nullptr);
+                    selected_ft = ft;
+                    selected_ft_blink = BLINK_TIME;
+                }
+
+                if (selected_ft && selected_ft_blink >= BLINK_TIME) {
+                    get_draw_position(selected_ft, draw_x, draw_y);
+                    draw_manager.draw(
+                            id(ID::SELECTED),
+                            IMG_TS1_MK1,
+                            {draw_x, draw_y, 0.5, 0.5, 1, 1});
+                } else {
+                    draw_manager.draw(id(ID::SELECTED), nullptr);
+                }
+
+                // TODO: Draw "SELECT A STAR" in the panel
+            }
+            break;
         default:
             break;
     }

@@ -22,6 +22,8 @@ const int MENU_FLAG_BG_H = 56 + MENU_BORDER*2;
 const int MENU_BG_X = MENU_X + MENU_BORDER;
 const int MENU_BG_Y = MENU_Y + MENU_BORDER;
 
+static const int ART_COST = 1000;
+
 MenuDrawer::MenuDrawer() {
     _menu_is_open = false;
 }
@@ -184,10 +186,9 @@ void MenuDrawer::menu_set_opt(int idx, const char* in_text, ...) {
 
 void MenuDrawer::menu_open_specific_mode() {
     Player *p = exostate.get_active_player();
-    int art_cost = 1000;
     bool art_ok = true;
 
-    if (!p->can_afford(art_cost)) art_ok = false;
+    if (!p->can_afford(ART_COST)) art_ok = false;
     if (!p->has_invention(INV_OrbitalMassConstruction)) art_ok = false;
     // TODO: Also check that the player doesn't have an artificial planet
     // (or rather, whatever pphase != 3 implies).
@@ -202,9 +203,9 @@ void MenuDrawer::menu_open_specific_mode() {
             // TODO: Hotkey
             menu_set_opt(5, "Equip Starship (E)");
             if (art_ok) {
-                menu_set_opt(6, "Build Artificial Planet (%dMC)", art_cost);
+                menu_set_opt(6, "Build Artificial Planet (%dMC)", ART_COST);
             } else {
-                menu_set_txt(6, COL_TEXT_GREYED, "Build Artificial Planet (%dMC)", art_cost);
+                menu_set_txt(6, COL_TEXT_GREYED, "Build Artificial Planet (%dMC)", ART_COST);
             }
             menu_set_opt(8, "Wait One Month (Spc)");
             // TODO: Hotkey
@@ -283,6 +284,7 @@ void MenuDrawer::menu_open_specific_mode() {
 
 void MenuDrawer::menu_specific_update() {
     Player *p = exostate.get_active_player();
+    int player_idx = exostate.get_player_idx(p);
 
     switch(menu_mode) {
         case MM_Ctrl:
@@ -297,6 +299,31 @@ void MenuDrawer::menu_specific_update() {
                 menu_action = MA_EquipShip;
             }
             // 6: Build Artificial Planet
+            if (draw_manager.query_click(id_menu_lines[6]).id) {
+                Planet *planet = exostate.get_planet_under_construction(player_idx);
+                if (planet) {
+                    // TODO: Dialogue here
+                    L.debug("Advancing artificial planet");
+                    if (p->attempt_spend(ART_COST)) {
+                        if (!planet->advance_construction_phase()) {
+                            L.fatal("get_planet_under_construction() returned non-advanceable planet");
+                        }
+                    } else {
+                        L.error("Should not have offered unaffordable option");
+                    }
+                    menu_action = MA_Close;
+                } else {
+                    // TODO: Check if player can build world (viable star, been visited, not too many etc)
+                    // TODO: Dialogue here
+                    L.debug("Constructing artificial planet");
+                    if (p->attempt_spend(ART_COST)) {
+                        menu_action = MA_BuildArtificialWorld;
+                    } else {
+                        L.error("Should not have offered unaffordable option");
+                        menu_action = MA_Close;
+                    }
+                }
+            }
             // 8: Wait One Month
             // 10: Show Distances
             // 11: Save Game

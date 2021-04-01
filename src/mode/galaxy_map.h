@@ -157,6 +157,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
             GM_MonthPassing,
             GM_MP_FirstCity,
             GM_Menu,
+            GM_ArtificialWorldStarSelect,
         };
 
         Stage stage;

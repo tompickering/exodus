@@ -470,7 +470,7 @@ Planet* ExodusState::get_planet_under_construction(int player_idx) {
     for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
         Star *s = &stars[star_idx];
         for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
-            Planet *p = s->get_planet(planet_idx);
+            Planet *p = s->get_planet_nocheck(planet_idx);
             if (p && !p->exists() && p->get_construction_phase() > 0 && p->get_owner() == player_idx) {
                 return p;
             }

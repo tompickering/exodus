@@ -24,15 +24,21 @@ Planet* Star::next_planet_slot() {
 }
 
 Planet* Star::get_planet(int idx) {
+    Planet *p = get_planet_nocheck(idx);
+
+    if (p->exists()) {
+        return p;
+    }
+
+    return nullptr;
+}
+
+Planet* Star::get_planet_nocheck(int idx) {
     if (idx < 0 || idx >= STAR_MAX_PLANETS) {
         L.fatal("Attempt to index invalid planet index %d at %s", idx, name);
     }
 
-    if (planets[idx].exists()) {
-        return &planets[idx];
-    }
-
-    return nullptr;
+    return &planets[idx];
 }
 
 bool Star::artificial_world_viable() {
@@ -46,9 +52,14 @@ bool Star::artificial_world_viable() {
 
 Planet* Star::construct_artificial_world(int player_idx, const char* name) {
     Planet *outer = &planets[STAR_MAX_PLANETS - 1];
-    if (outer->exists() || outer->get_construction_phase() > 0) {
+
+    if (!artificial_world_viable()) {
+        L.debug("Not a viable star for construction");
         return nullptr;
     }
+
+    L.debug("CONSTRUCTING ARTIFICIAL WORLD");
+
     new(outer) Planet(Artificial);
     outer->set_owner(player_idx);
     if (name) {
@@ -57,5 +68,6 @@ Planet* Star::construct_artificial_world(int player_idx, const char* name) {
         // TODO: Check this is unique for CPU lords?
         outer->set_name("Genesis");
     }
+
     return outer;
 }

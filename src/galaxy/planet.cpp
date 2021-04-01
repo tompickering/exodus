@@ -93,7 +93,7 @@ bool Planet::advance_construction_phase() {
         return false;
     }
     if (construction_phase < 3) {
-        if (construction_phase++ >= 3) {
+        if (++construction_phase >= 3) {
             _exists = true;
         }
         return true;
