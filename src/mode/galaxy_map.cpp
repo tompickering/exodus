@@ -306,6 +306,7 @@ ExodusMode GalaxyMap::update(float delta) {
                     case MA_Close:
                         menu_close();
                         stage = GM_Idle;
+                        break;
                     case MA_EquipShip:
                         menu_close();
                         return ExodusMode::MODE_ShipEquip;
