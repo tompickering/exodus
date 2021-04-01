@@ -34,3 +34,19 @@ Planet* Star::get_planet(int idx) {
 
     return nullptr;
 }
+
+Planet* Star::construct_artificial_world(int player_idx, const char* name) {
+    Planet *outer = &planets[STAR_MAX_PLANETS - 1];
+    if (outer->exists() || outer->get_construction_phase() > 0) {
+        return nullptr;
+    }
+    new(outer) Planet(Artificial);
+    outer->set_owner(player_idx);
+    if (name) {
+        outer->set_name(name);
+    } else {
+        // TODO: Check this is unique for CPU lords?
+        outer->set_name("Genesis");
+    }
+    return outer;
+}
