@@ -1210,8 +1210,45 @@ void CommPanelDrawer::comm_send(CommSend input) {
             break;
         case DIA_S_CPU_TradeRequestFee:
             {
-                // TODO
-                comm_recv(DIA_R_Close); // placeholder
+                if (exostate.has_alliance(comm_player_idx, comm_other_idx, ALLY_Trade)) {
+                    comm_prepare(1);
+                    comm_set_speech("I will not trade then.");
+                    comm_recv(DIA_R_Close);
+                } else {
+                    comm_prepare(4);
+                    comm_set_speech("I will listen.");
+                    comm_ctx.mc = 10;
+                    comm_set_text(0, "I want %dMC.", comm_ctx.mc);
+                    comm_show_adj(true);
+                    comm_recv(DIA_R_CPU_TradeFeeListen);
+                }
+            }
+            break;
+        case DIA_S_CPU_TradeFeeOffer:
+            {
+                bool accept = false;
+                if (comm_ctx.mc <= 10 && comm_player->can_afford(10)) {
+                    accept = true;
+                }
+                if (comm_ctx.mc >= 20 && comm_player->can_afford(comm_ctx.mc) && onein(3)) {
+                    accept = true;
+                }
+                if (comm_ctx.mc >= 30) {
+                    accept = false;
+                }
+                if (comm_ctx.mc >= 15 && onein(4)) {
+                    accept = false;
+                }
+
+                comm_prepare(1);
+                if (accept && comm_player->attempt_spend(comm_ctx.mc)) {
+                    comm_other->give_mc(comm_ctx.mc);
+                    comm_set_speech("I accept this.");
+                } else {
+                    comm_set_speech("I will not trade then.");
+                }
+
+                comm_recv(DIA_R_Close);
             }
             break;
         case DIA_S_CPU_TradeInsult:
@@ -1702,6 +1739,25 @@ void CommPanelDrawer::comm_process_responses() {
                 case 3:
                     comm_send(DIA_S_CPU_TradeInsult);
                     break;
+            }
+            break;
+        case DIA_R_CPU_TradeFeeListen:
+            {
+                SpriteClick adjclick = draw_manager.query_click(id_comm_adj);
+                if (adjclick.id) {
+                    // FIXME: Can we hold a button to make this go faster? Or
+                    //        alternatively allow keyboard input?
+                    if (adjclick.x < 0.5f) {
+                        comm_ctx.mc = max(comm_ctx.mc - 1, 0);
+                    } else {
+                        comm_ctx.mc = max(comm_ctx.mc + 1, comm_ctx.mc);
+                    }
+                    comm_set_text(0, "I want %dMC.", comm_ctx.mc);
+                }
+
+                if (draw_manager.query_click(id_comm_adj_ok).id) {
+                    comm_send(DIA_S_CPU_TradeFeeOffer);
+                }
             }
             break;
         case DIA_R_CPU_TradeInsultResponse:
