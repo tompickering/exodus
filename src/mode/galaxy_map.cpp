@@ -1740,7 +1740,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
                     if (owner->is_human()) {
                         switch (comm_action_check()) {
-                            case CA_Proceed:
+                            case CA_Trade:
                                 comm_close();
                                 proceed = true;
                                 break;

@@ -1199,13 +1199,49 @@ void CommPanelDrawer::comm_send(CommSend input) {
             }
             break;
         case DIA_S_CPU_Trade:
-            // TODO - placeholder
             comm_prepare(4);
-            comm_set_speech("lemme trade");
-            comm_set_text(0, "k.");
-            comm_set_text(1, "narp.");
-            comm_text_interactive_mask = 0x3;
+            comm_set_speech("I wish to trade.");
+            comm_set_text(0, "You will have to pay some MC...");
+            comm_set_text(1, "I do not want you to trade.");
+            comm_set_text(2, "You may trade.");
+            comm_set_text(3, "We do not trade with %s.", comm_player->get_race_str());
+            comm_text_interactive_mask = 0xF;
             comm_recv(DIA_R_CPU_TradeResponse);
+            break;
+        case DIA_S_CPU_TradeRequestFee:
+            {
+                // TODO
+                comm_recv(DIA_R_Close); // placeholder
+            }
+            break;
+        case DIA_S_CPU_TradeInsult:
+            {
+                comm_prepare(4);
+                exostate.unset_alliances(comm_player_idx, comm_other_idx);
+                int r = rand() % 3;
+                if (r == 2 && comm_player->get_flag(0) == AI_Hi) {
+                    r = 0;
+                }
+
+                if (r < 2) {
+                    if (r == 0) {
+                        comm_set_speech("Do not enrage me.");
+                        comm_set_text(0, "I am not afraid of you.");
+                        comm_set_text(1, "Why should I do so?");
+                        comm_text_interactive_mask = 0x3;
+                        comm_recv(DIA_R_CPU_TradeInsultResponse);
+                    } else {
+                        comm_set_speech("Curb your tongue!");
+                        comm_set_text(0, "Why should I do so?");
+                        comm_set_text(1, "I do not want you to trade.");
+                        comm_text_interactive_mask = 0x3;
+                        comm_recv(DIA_R_CPU_TradeInsultResponse);
+                    }
+                } else {
+                    comm_set_speech("So I'm going to leave.");
+                    comm_recv(DIA_R_Close);
+                }
+            }
             break;
         case DIA_S_CPU_Offer:
             comm_prepare(4);
@@ -1588,18 +1624,18 @@ void CommPanelDrawer::comm_process_responses() {
         case DIA_R_CPU_AttackResponse:
             switch (opt) {
                 case 0:
-                    exostate.unset_alliances(comm_player, comm_other);
+                    exostate.unset_alliances(comm_player_idx, comm_other_idx);
                     comm_report_action = CA_Attack;
                     break;
                 case 1:
                     comm_send(DIA_S_CPU_AttackPayOff);
                     break;
                 case 2:
-                    exostate.unset_alliances(comm_player, comm_other);
+                    exostate.unset_alliances(comm_player_idx, comm_other_idx);
                     comm_report_action = CA_Attack;
                     break;
                 case 3:
-                    exostate.unset_alliances(comm_player, comm_other);
+                    exostate.unset_alliances(comm_player_idx, comm_other_idx);
                     comm_report_action = CA_Attack;
                     break;
             }
@@ -1648,14 +1684,34 @@ void CommPanelDrawer::comm_process_responses() {
             break;
         case DIA_R_CPU_AttackPayOffReject:
             if (clicked) {
-                exostate.unset_alliances(comm_player, comm_other);
+                exostate.unset_alliances(comm_player_idx, comm_other_idx);
                 comm_report_action = CA_Attack;
             }
             break;
         case DIA_R_CPU_TradeResponse:
-            // TODO - placeholder
-            if (clicked) {
-                comm_report_action = CA_Proceed;
+            switch (opt) {
+                case 0:
+                    comm_send(DIA_S_CPU_TradeRequestFee);
+                    break;
+                case 1:
+                    comm_report_action = CA_Abort;
+                    break;
+                case 2:
+                    comm_report_action = CA_Trade;
+                    break;
+                case 3:
+                    comm_send(DIA_S_CPU_TradeInsult);
+                    break;
+            }
+            break;
+        case DIA_R_CPU_TradeInsultResponse:
+            switch (opt) {
+                case 0:
+                    comm_report_action = CA_Abort;
+                    break;
+                case 1:
+                    comm_report_action = CA_Abort;
+                    break;
             }
             break;
         case DIA_R_CPU_OfferElaborate:
