@@ -35,6 +35,15 @@ Planet* Star::get_planet(int idx) {
     return nullptr;
 }
 
+bool Star::artificial_world_viable() {
+    Planet *outer = &planets[STAR_MAX_PLANETS - 1];
+    if (outer->exists() || outer->get_construction_phase() > 0) {
+        return false;
+    }
+    // FIXME: Should also return false if any artificial worlds are being moved here
+    return true;
+}
+
 Planet* Star::construct_artificial_world(int player_idx, const char* name) {
     Planet *outer = &planets[STAR_MAX_PLANETS - 1];
     if (outer->exists() || outer->get_construction_phase() > 0) {
