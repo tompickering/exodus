@@ -72,6 +72,7 @@ enum CommSend {
     DIA_S_PlanAttack,
     // For these, CPU is talking to us - so CPU is comm_player and human is comm_other
     DIA_S_CPU_Attack,
+    DIA_S_CPU_AttackAlly,
     DIA_S_CPU_Trade,
     DIA_S_CPU_Offer,
     DIA_S_CPU_ProposeAlliance,
@@ -104,6 +105,8 @@ enum CommRecv {
     DIA_R_CommentRequestCompensation,
     // For these, CPU is talking to us - so CPU is comm_player and human is comm_other
     DIA_R_CPU_AttackResponse,
+    DIA_R_CPU_AttackResponseAllied,
+    DIA_R_CPU_AttackAllyProceed,
     DIA_R_CPU_TradeResponse,
     DIA_R_CPU_OfferElaborate,
     DIA_R_CPU_ProposeAlliance,

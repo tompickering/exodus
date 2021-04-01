@@ -1121,13 +1121,51 @@ void CommPanelDrawer::comm_send(CommSend input) {
             }
             break;
         case DIA_S_CPU_Attack:
-            // TODO - placeholder
+            {
+                comm_prepare(4);
+                comm_set_speech("Let us not talk. I want %s.", comm_planet->get_name());
+
+                bool ally = false;
+                if (exostate.has_alliance(comm_player_idx, comm_other_idx, ALLY_NonAttack)) {
+                    ally = true;
+                }
+                if (exostate.has_alliance(comm_player_idx, comm_other_idx, ALLY_War)) {
+                    ally = true;
+                }
+                if (ally) {
+                    comm_set_text(0, "But we have an ALLIANCE!");
+                    comm_set_text(1, "Aren't you my ALLY?");
+                    comm_text_interactive_mask = 0x3;
+                    comm_recv(DIA_R_CPU_AttackResponseAllied);
+                } else {
+                    comm_set_text(0, "We are not afraid!");
+                    comm_set_text(1, "I offer money if you leave.");
+                    if (!comm_other->can_afford(1)) {
+                        comm_text_disabled_mask = 0x2;
+                    }
+                    comm_set_text(2, "Do not risk a war.");
+                    comm_set_text(3, "Let us both live in peace.");
+                    comm_text_interactive_mask = 0xF;
+                    comm_recv(DIA_R_CPU_AttackResponse);
+                }
+            }
+            break;
+        case DIA_S_CPU_AttackAlly:
             comm_prepare(4);
-            comm_set_speech("imma attack");
-            comm_set_text(0, "oh noes...");
-            comm_set_text(1, "whatevs.");
-            comm_text_interactive_mask = 0x3;
-            comm_recv(DIA_R_CPU_AttackResponse);
+            if (onein(2)) {
+                comm_set_speech("What? I cannot remember!");
+            } else {
+                comm_set_speech("I herewith quit the alliance.");
+            }
+
+            exostate.unset_alliances(comm_player_idx, comm_other_idx);
+            comm_player->adjust_reputation(-1);
+
+            comm_set_text(0, "You will pay for this.");
+            comm_set_text(1, "The humans are not afraid!");
+            comm_set_text(2, "%s bastard.", comm_player->get_race_str());
+            comm_text_interactive_mask = 0x7;
+            comm_recv(DIA_R_CPU_AttackAllyProceed);
             break;
         case DIA_S_CPU_Trade:
             // TODO - placeholder
@@ -1517,9 +1555,44 @@ void CommPanelDrawer::comm_process_responses() {
             }
             break;
         case DIA_R_CPU_AttackResponse:
-            // TODO - placeholder
-            if (clicked) {
-                comm_report_action = CA_Attack;
+            switch (opt) {
+                case 0:
+                    comm_report_action = CA_Attack;
+                    break;
+                case 1:
+                    // TODO
+                    //comm_send(DIA_S_CPU_AttackPayOff);
+                    comm_report_action = CA_Attack; // TODO: placeholder
+                    break;
+                case 2:
+                    comm_report_action = CA_Attack;
+                    break;
+                case 3:
+                    comm_report_action = CA_Attack;
+                    break;
+            }
+            break;
+        case DIA_R_CPU_AttackResponseAllied:
+            switch (opt) {
+                case 0:
+                    comm_send(DIA_S_CPU_AttackAlly);
+                    break;
+                case 1:
+                    comm_send(DIA_S_CPU_AttackAlly);
+                    break;
+            }
+            break;
+        case DIA_R_CPU_AttackAllyProceed:
+            switch (opt) {
+                case 0:
+                    comm_report_action = CA_Attack;
+                    break;
+                case 1:
+                    comm_report_action = CA_Attack;
+                    break;
+                case 2:
+                    comm_report_action = CA_Attack;
+                    break;
             }
             break;
         case DIA_R_CPU_TradeResponse:
