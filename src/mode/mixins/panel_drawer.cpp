@@ -167,6 +167,10 @@ void PanelDrawer::update_panel_info_ft(DrawTarget tgt, Player* player, FlyTarget
                     drawing = p && p->exists();
                 }
 
+                if (drawing && !(p && p->exists())) {
+                    drawing = false;
+                }
+
                 if (drawing) {
                     draw_manager.draw(
                         id_planet_icons[STAR_MAX_PLANETS - 1 - planets_drawn],
