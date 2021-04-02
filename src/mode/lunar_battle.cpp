@@ -1545,8 +1545,8 @@ bool LunarBattle::set_target_unit() {
     int range = infinite_range() ? BG_WIDTH : active_unit->fire_range;
     BattleUnit *au = active_unit;
     if (active_unit->defending) {
-        rng_start_x = au->x + range;
-        rng_end_x   = au->can_shoot_behind ? (au->x - range - 1) : (au->x - 1);
+        rng_start_x = au->can_shoot_behind ? au->x + range : au->x;
+        rng_end_x   = au->x - range - 1;
         rng_start_y = au->y + range;
         rng_end_y   = au->y - range - 1;
         rng_step = -1;
