@@ -143,10 +143,8 @@ ExodusMode StarMap::update(float delta) {
                     comm_close();
                     return ExodusMode::MODE_PlanetTransfer;
                 case CA_StartProduction:
-                    // TODO
                     comm_close();
-                    stage = SM_Idle;
-                    return ephstate.get_appropriate_mode();
+                    return ExodusMode::MODE_FleetProduction;
                 default:
                     L.fatal("Unexpected comm action in SM_PlanetComm: %d", (int)action);
             }

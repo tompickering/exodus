@@ -185,6 +185,7 @@ class Planet {
         int get_unrest(int);
         int get_airdef_guns();
         int get_robots();
+        void adjust_airdef_guns(int);
         void adjust_robots(int);
         void prepare_for_cpu_lord(); // Orig: PROCgivestation
         void adjust_unrest(int);

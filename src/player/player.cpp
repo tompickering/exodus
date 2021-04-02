@@ -388,6 +388,10 @@ const Fleet& Player::get_fleet() {
     return fleet;
 }
 
+Fleet& Player::get_fleet_nonconst() {
+    return fleet;
+}
+
 void Player::init_tax() {
     tax = 30;
     if (race != RACE_Human) {

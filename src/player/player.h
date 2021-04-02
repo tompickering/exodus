@@ -164,6 +164,7 @@ class Player {
         const char* get_invention_str(Invention);
         const char* get_invention_type_str(Invention);
         const Fleet& get_fleet();
+        Fleet& get_fleet_nonconst();
         void init_tax();
         int get_tax();
         void set_tax(int);

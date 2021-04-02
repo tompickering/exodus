@@ -810,6 +810,14 @@ int Planet::get_robots() {
     return robots;
 }
 
+// TODO: Are airdef guns subject to resource cap?
+void Planet::adjust_airdef_guns(int adj) {
+    airdef_guns = max(airdef_guns + adj, 0);
+    if (airdef_guns > get_resource_cap()) {
+        airdef_guns = get_resource_cap();
+    }
+}
+
 void Planet::adjust_robots(int adj) {
     robots = max(robots + adj, 0);
     if (robots > get_resource_cap()) {

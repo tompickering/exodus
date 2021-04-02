@@ -30,6 +30,7 @@
 #include "mode/lunar_battle_prep.h"
 #include "mode/lunar_battle.h"
 #include "mode/trade.h"
+#include "mode/fleet_production.h"
 #include "mode/ship_equip.h"
 #include "mode/arrive.h"
 
@@ -124,6 +125,7 @@ int Exodus::run(int argc, char** argv) {
     LunarBattlePrep mode_lunarbattleprep;
     LunarBattle mode_lunarbattle;
     Trade mode_trade;
+    FleetProduction mode_fleetproduction;
     ShipEquip mode_shipequip;
     Arrive mode_arrive;
     mode_map[MODE_Intro] = (ModeBase*) &mode_intro;
@@ -143,6 +145,7 @@ int Exodus::run(int argc, char** argv) {
     mode_map[MODE_LunarBattlePrep] = (ModeBase*) &mode_lunarbattleprep;
     mode_map[MODE_LunarBattle] = (ModeBase*) &mode_lunarbattle;
     mode_map[MODE_Trade] = (ModeBase*) &mode_trade;
+    mode_map[MODE_FleetProduction] = (ModeBase*) &mode_fleetproduction;
     mode_map[MODE_ShipEquip] = (ModeBase*) &mode_shipequip;
     mode_map[MODE_Arrive] = (ModeBase*) &mode_arrive;
 
