@@ -204,7 +204,7 @@ ExodusMode ShipEquip::update(float delta) {
 
     for (int i = 0; i < 7; ++i) {
         int y = 80 + 40*i;
-        char val[12];
+        char val[13];
         snprintf(val, 12, "%d", rows[i].produce);
         val[12] = '\0';
         draw_manager.draw_text(
