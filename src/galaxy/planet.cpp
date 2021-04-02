@@ -810,6 +810,13 @@ int Planet::get_robots() {
     return robots;
 }
 
+void Planet::adjust_robots(int adj) {
+    robots = max(robots + adj, 0);
+    if (robots > get_resource_cap()) {
+        robots = get_resource_cap();
+    }
+}
+
 bool Planet::is_owned() {
     if (owner <0) return false;
 
