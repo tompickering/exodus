@@ -104,6 +104,11 @@ void LunarBattle::enter() {
         aggressor = exostate.get_player(b.aggressor_idx);
     }
 
+    LunarBattleReport &rpt = ephstate.lunar_battle_report;
+    // TODO: Populate these
+    rpt.aggressor_units_lost = 0;
+    rpt.defender_units_lost = 0;
+
     n_units = 0;
     unit_moving = false;
     move_interp = 0;
@@ -268,13 +273,12 @@ ExodusMode LunarBattle::update(float delta) {
 
     switch (stage) {
         case LB_Auto:
-            // TODO: Auto - in the meantime just fake result!
-            // We should return with a result immediately
-            rpt.aggressor_units_lost = 11;
-            rpt.defender_units_lost = 7;
-            rpt.aggressor_won = (bool)(rand() % 2);
-            ephstate.set_ephemeral_state(EPH_LunarBattleReport);
-            return ephstate.get_appropriate_mode();
+            {
+                auto_run();
+                L.debug("Auto battle: %s WON", rpt.aggressor_won ? "AGG" : "DEF");
+                ephstate.set_ephemeral_state(EPH_LunarBattleReport);
+                return ephstate.get_appropriate_mode();
+            }
         case LB_Placement:
             {
                 for (int i = 0; i < 4; ++i) {
@@ -760,6 +764,211 @@ ExodusMode LunarBattle::update(float delta) {
     }
 
     return ExodusMode::MODE_None;
+}
+
+// PROCb_calc
+void LunarBattle::auto_run() {
+    LunarBattleParams &b = ephstate.lunar_battle;
+    LunarBattleReport &rpt = ephstate.lunar_battle_report;
+
+    Planet *p = exostate.get_active_planet();
+    auto_base = p->has_lunar_base() ? 12 : 0;
+
+    bool resolved = false;
+    int iter = 0;
+    while (!resolved) {
+        L.debug("Auto battle: Iteration %d", iter++);
+
+        int &a_inf = b.aggressor_inf;
+        int &a_gli = b.aggressor_gli;
+        int &a_art = b.aggressor_art;
+        int &d_inf = b.defender_inf;
+        int &d_gli = b.defender_gli;
+        int &d_art = b.defender_art;
+        int ra = a_inf + a_gli + a_art;
+        // FIXME: Orig doesn't include bs (auto_base) here - should we?
+        int rd = d_inf + d_gli + d_art;
+
+        int more = 0;
+        int round = 0;
+        bool agg_more = false;
+
+        if (ra > rd) {
+            more = ra - rd;
+            round = ra - more;
+            agg_more = true;  // Orig: which=1
+        } else {
+            more = rd - ra;
+            round = rd - more;
+            agg_more = false; // Orig: which=2
+        }
+
+        ra = a_inf + a_gli + a_art;
+        rd = d_inf + d_gli + d_art + auto_base;
+
+        for (int phase = 0; phase < round; ++phase) {
+            if (ra > 0) {
+                auto_act(true);
+                ra = a_inf + a_gli + a_art;
+                rd = d_inf + d_gli + d_art + auto_base;
+            }
+            if (rd > 0) {
+                auto_act(false);
+                ra = a_inf + a_gli + a_art;
+                rd = d_inf + d_gli + d_art + auto_base;
+            }
+        }
+
+        for (int phase = 0; phase < more; ++phase) {
+            if (agg_more) {
+                if (ra > 0) {
+                    auto_act(true);
+                    ra = a_inf + a_gli + a_art;
+                    rd = d_inf + d_gli + d_art + auto_base;
+                }
+            } else {
+                if (rd > 0) {
+                    auto_act(false);
+                    ra = a_inf + a_gli + a_art;
+                    rd = d_inf + d_gli + d_art + auto_base;
+                }
+            }
+        }
+
+        if (rd <= 0) {
+            rpt.aggressor_won = true;
+            resolved = true;
+        } else if (ra <= 0) {
+            rpt.aggressor_won = false;
+            resolved = true;
+        }
+    }
+}
+
+// PROCbc_act
+void LunarBattle::auto_act(bool agg) {
+    LunarBattleParams &b = ephstate.lunar_battle;
+    int base = 0;
+    int &a_inf = b.aggressor_inf;
+    int &a_gli = b.aggressor_gli;
+    int &a_art = b.aggressor_art;
+    int &d_inf = b.defender_inf;
+    int &d_gli = b.defender_gli;
+    int &d_art = b.defender_art;
+    int &mines = b.defender_mines;
+    int i, g, a;
+
+    if (agg) {
+        base = 0;
+        i = a_inf;
+        g = a_gli;
+        a = a_art;
+    } else {
+        base = auto_base;
+        i = d_inf;
+        g = d_gli;
+        a = d_art;
+    }
+
+    // Proportion
+    int prop = i+g+a+base;
+    int r = prop > 1 ? RND(prop) : 1;
+    int an = 0;
+    if (r <= i) an = 1;
+    if (r <= i+g && an == 0) an = 2;
+    if (r <= i+g+a && an == 0) an = 3;
+    if (r > i+g+a) an = 4;
+
+    if (an == 2 && agg && mines>0 && onein(20)) {
+        /*
+         * Mines unaltered - however it only destroys 1 unit as
+         * opposed to 1 stack, so perhaps this is balanced.
+         */
+        a_gli--;
+        an = 0;
+    }
+
+    if (an == 1 && onein(4)) an = 0;
+    if (an == 2 && onein(5)) an = 0;
+    if (an == 3 && onein(7)) an = 0;
+
+    if (an > 0) {
+        int power = an;
+        if (agg && b.aggressor_type == AGG_Rebels) {
+            power = 1;
+        }
+        // TODO: Officer power bonuses: power += generalAT-2 or generalDF-2
+
+        power = min(power, 4);
+        power = max(power, 0);
+
+        if ((agg && b.aggressor_type == AGG_Aliens) || onein(6-power)) {
+            auto_kill(agg);
+        }
+    }
+}
+
+// PROCbc_kill
+void LunarBattle::auto_kill(bool agg) {
+    LunarBattleParams &b = ephstate.lunar_battle;
+    int kbase = 0;
+    int &a_inf = b.aggressor_inf;
+    int &a_gli = b.aggressor_gli;
+    int &a_art = b.aggressor_art;
+    int &d_inf = b.defender_inf;
+    int &d_gli = b.defender_gli;
+    int &d_art = b.defender_art;
+    int ki, kg, ka;
+
+    if (agg) {
+        kbase = auto_base;
+        ki = d_inf;
+        kg = d_gli;
+        ka = d_art;
+    } else {
+        kbase = 0;
+        ki = a_inf;
+        kg = a_gli;
+        ka = a_art;
+    }
+
+    if (ki+kg+ka+kbase <= 0) {
+        // No opposing units left to attack
+        return;
+    }
+
+    // Proportion
+    int kprop = ki+kg+ka+kbase;
+
+    int r = (kprop > 1 ? RND(kprop) : 1);
+
+    int kan = 0;
+
+    if (r <= ki) kan = 1;
+    if (r <= ki+kg && kan == 0) kan = 2;
+    if (r <= ki+kg+ka && kan == 0) kan = 3;
+    if (r > ki+kg+ka) kan = 4;
+
+    int *tgt = nullptr;
+
+    if (agg) {
+        if (kan == 1) tgt = &d_inf;
+        if (kan == 2) tgt = &d_gli;
+        if (kan == 3) tgt = &d_art;
+        if (kan == 4) tgt = &auto_base;
+    } else {
+        if (kan == 1) tgt = &a_inf;
+        if (kan == 2) tgt = &a_gli;
+        if (kan == 3) tgt = &a_art;
+    }
+
+    if (tgt) {
+        if (*tgt > 0) {
+            (*tgt)--;
+        } else {
+            L.error("Invalid target in auto battle: %s %d", agg?"AGG":"DEF", kan);
+        }
+    }
 }
 
 void LunarBattle::place_cover() {

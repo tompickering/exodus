@@ -123,6 +123,11 @@ class LunarBattle : ModeBase, CommPanelDrawer {
 
         Player *aggressor;
 
+        int auto_base;
+        void auto_run();
+        void auto_act(bool);
+        void auto_kill(bool);
+
         bool manual_placement;
         bool placement_def;
         int placement_item;
