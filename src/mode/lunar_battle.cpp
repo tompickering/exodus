@@ -108,9 +108,23 @@ void LunarBattle::enter() {
     }
 
     LunarBattleReport &rpt = ephstate.lunar_battle_report;
-    // TODO: Populate these
-    rpt.aggressor_units_lost = 0;
-    rpt.defender_units_lost = 0;
+    rpt.clear();
+    rpt.agg_init.inf = b.aggressor_inf;
+    rpt.agg_init.gli = b.aggressor_gli;
+    rpt.agg_init.art = b.aggressor_art;
+    rpt.def_init.inf = b.defender_inf;
+    rpt.def_init.gli = b.defender_gli;
+    rpt.def_init.art = b.defender_art;
+    rpt.agg_surf.inf = b.aggressor_inf;
+    rpt.agg_surf.gli = b.aggressor_gli;
+    rpt.agg_surf.art = b.aggressor_art;
+    rpt.def_surf.inf = b.defender_inf;
+    rpt.def_surf.gli = b.defender_gli;
+    rpt.def_surf.art = b.defender_art;
+    if (p->has_lunar_base()) {
+        rpt.def_init.base = LUNAR_BASE_GUN_HP*4;
+        rpt.def_surf.base = LUNAR_BASE_GUN_HP*4;
+    }
 
     n_units = 0;
     unit_moving = false;
@@ -681,11 +695,53 @@ ExodusMode LunarBattle::update(float delta) {
                 exp_interp -= delta * EXP_RATE;
                 if (exp_interp < 0) {
                     exp_interp = 0;
+
+                    UnitCount *uc_lost = nullptr;
+                    UnitCount *uc_surf = nullptr;
+                    if (target_unit->defending) {
+                        uc_lost = &rpt.def_lost;
+                        uc_surf = &rpt.def_surf;
+                    } else {
+                        uc_lost = &rpt.agg_lost;
+                        uc_surf = &rpt.agg_surf;
+                    }
+
+                    int lost_scrap = 0;
+                    int surf_scrap = 0;
+
+                    int *lost_tracker = &lost_scrap;
+                    int *surf_tracker = &surf_scrap;
+
+                    switch (target_unit->type) {
+                        case UNIT_Inf:
+                            lost_tracker = &uc_lost->inf;
+                            surf_tracker = &uc_surf->inf;
+                            break;
+                        case UNIT_Gli:
+                            lost_tracker = &uc_lost->gli;
+                            surf_tracker = &uc_surf->gli;
+                            break;
+                        case UNIT_Art:
+                            lost_tracker = &uc_lost->art;
+                            surf_tracker = &uc_surf->art;
+                            break;
+                        case UNIT_LBGun:
+                            lost_tracker = &uc_lost->base;
+                            surf_tracker = &uc_surf->base;
+                            break;
+                        default:
+                            break;
+                    }
+
                     if (mine_damage) {
+                        (*lost_tracker) += target_unit->hp;
+                        (*surf_tracker) -= target_unit->hp;
                         damage_to_apply = 0;
                         target_unit->hp = 0;
                     } else {
                         --damage_to_apply;
+                        (*lost_tracker) += target_unit->hp > 0 ? 1 : 0;
+                        (*surf_tracker) -= target_unit->hp > 0 ? 1 : 0;
                         target_unit->hp = max(0, target_unit->hp - 1);
                     }
                 }
@@ -719,6 +775,8 @@ ExodusMode LunarBattle::update(float delta) {
             if (target_unit->type == UNIT_LBCtl && target_unit->hp <= 0) {
                 for (int i = 0; i < n_units; ++i) {
                     if (units[i].type == UNIT_LBGun) {
+                        rpt.def_lost.base += units[i].hp;
+                        rpt.def_surf.base -= units[i].hp;
                         units[i].hp = 0;
                     }
                 }
@@ -775,8 +833,13 @@ void LunarBattle::auto_run() {
     LunarBattleReport &rpt = ephstate.lunar_battle_report;
 
     Planet *p = exostate.get_active_planet();
-    // FIXME: Should this be 12 or 24? Base constitutes 4*LUNAR_BASE_GUN_HP = 4*6 = 24 units
+    /*
+     * FIXME: Should this be 12 or 24?
+     * Base constitutes 4*LUNAR_BASE_GUN_HP = 4*6 = 24 units
+     * For now, I'm going to adjust rpt.def_init to suggest that we only used 12 units...
+     */
     auto_base = p->has_lunar_base() ? 12 : 0;
+    rpt.def_init.base = 12;
 
     bool resolved = false;
     int iter = 0;
@@ -852,6 +915,8 @@ void LunarBattle::auto_run() {
 // PROCbc_act
 void LunarBattle::auto_act(bool agg) {
     LunarBattleParams &b = ephstate.lunar_battle;
+    LunarBattleReport &rpt = ephstate.lunar_battle_report;
+
     int base = 0;
     int &a_inf = b.aggressor_inf;
     int &a_gli = b.aggressor_gli;
@@ -890,6 +955,8 @@ void LunarBattle::auto_act(bool agg) {
          */
         a_gli--;
         an = 0;
+        rpt.agg_lost.gli++;
+        rpt.agg_surf.gli--;
     }
 
     if (an == 1 && onein(4)) an = 0;
@@ -915,6 +982,8 @@ void LunarBattle::auto_act(bool agg) {
 // PROCbc_kill
 void LunarBattle::auto_kill(bool agg) {
     LunarBattleParams &b = ephstate.lunar_battle;
+    LunarBattleReport &rpt = ephstate.lunar_battle_report;
+
     int kbase = 0;
     int &a_inf = b.aggressor_inf;
     int &a_gli = b.aggressor_gli;
@@ -955,20 +1024,56 @@ void LunarBattle::auto_kill(bool agg) {
 
     int *tgt = nullptr;
 
+    int lost_scrap = 0;
+    int surf_scrap = 0;
+
+    int *lost_tracker = &lost_scrap;
+    int *surf_tracker = &surf_scrap;
+
     if (agg) {
-        if (kan == 1) tgt = &d_inf;
-        if (kan == 2) tgt = &d_gli;
-        if (kan == 3) tgt = &d_art;
-        if (kan == 4) tgt = &auto_base;
+        if (kan == 1) {
+            tgt = &d_inf;
+            lost_tracker = &rpt.def_lost.inf;
+            surf_tracker = &rpt.def_surf.inf;
+        }
+        if (kan == 2) {
+            tgt = &d_gli;
+            lost_tracker = &rpt.def_lost.gli;
+            surf_tracker = &rpt.def_surf.gli;
+        }
+        if (kan == 3) {
+            tgt = &d_art;
+            lost_tracker = &rpt.def_lost.art;
+            surf_tracker = &rpt.def_surf.art;
+        }
+        if (kan == 4) {
+            tgt = &auto_base;
+            lost_tracker = &rpt.def_lost.base;
+            surf_tracker = &rpt.def_surf.base;
+        }
     } else {
-        if (kan == 1) tgt = &a_inf;
-        if (kan == 2) tgt = &a_gli;
-        if (kan == 3) tgt = &a_art;
+        if (kan == 1) {
+            tgt = &a_inf;
+            lost_tracker = &rpt.agg_lost.inf;
+            surf_tracker = &rpt.agg_surf.inf;
+        }
+        if (kan == 2) {
+            tgt = &a_gli;
+            lost_tracker = &rpt.agg_lost.gli;
+            surf_tracker = &rpt.agg_surf.gli;
+        }
+        if (kan == 3) {
+            tgt = &a_art;
+            lost_tracker = &rpt.agg_lost.art;
+            surf_tracker = &rpt.agg_surf.art;
+        }
     }
 
     if (tgt) {
         if (*tgt > 0) {
             (*tgt)--;
+            (*lost_tracker)++;
+            (*surf_tracker)--;
         } else {
             L.error("Invalid target in auto battle: %s %d", agg?"AGG":"DEF", kan);
         }

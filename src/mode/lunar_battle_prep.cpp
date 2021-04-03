@@ -718,6 +718,7 @@ int LunarBattlePrep::get_agg_total() {
 
 int LunarBattlePrep::get_def_total() {
     LunarBattleParams &b = ephstate.lunar_battle;
+    // FIXME: Include lunar base guns here? (4*LUNAR_BASE_GUN_HP)
     return b.defender_inf  + b.defender_gli  + b.defender_art;
 }
 

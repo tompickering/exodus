@@ -41,9 +41,34 @@ typedef struct {
 } LunarBattleParams;
 
 typedef struct {
-    int aggressor_units_lost;
-    int defender_units_lost;
+    int inf;
+    int gli;
+    int art;
+    int base;
+    void clear() {
+        inf = 0;
+        gli = 0;
+        art = 0;
+        base = 0;
+    }
+} UnitCount;
+
+typedef struct {
     bool aggressor_won;
+    UnitCount agg_init; // \ Units that were taken into battle.
+    UnitCount def_init; // /
+    UnitCount agg_lost; // \ Units that were destroyed in battle.
+    UnitCount def_lost; // /
+    UnitCount agg_surf; // \ Units that are still on the surface and
+    UnitCount def_surf; // / may need to be moved to planet or fleet.
+    void clear() {
+        agg_init.clear();
+        def_init.clear();
+        agg_lost.clear();
+        def_lost.clear();
+        agg_surf.clear();
+        def_surf.clear();
+    }
 } LunarBattleReport;
 
 enum DestructionType {
