@@ -38,16 +38,46 @@ void LunarBattlePrep::enter() {
     stage_started = false;
     pause = 0;
 
+    LunarBattleParams &b = ephstate.lunar_battle;
+    LunarBattleReport &rpt = ephstate.lunar_battle_report;
+
+    Planet *p = exostate.get_active_planet();
+
     if (ephstate.get_ephemeral_state() == EPH_LunarBattleReport) {
         // LunarBattlePrep does NOT clear ephemeral state - that's the
         // responsibility of whatever invoked LunarBattlePrep.
+        L.info("--- BATTLE REPORT ---");
+        const char *inv = "";
+        switch (b.aggressor_type) {
+            case AGG_Rebels:
+                inv = "Rebels";
+                break;
+            case AGG_Aliens:
+                inv = "Aliens";
+                break;
+            case AGG_Player:
+                {
+                    Player *p_agg = exostate.get_player(b.aggressor_idx);
+                    inv = p_agg->get_full_name();
+                }
+                break;
+        }
+
+        Player *owner = exostate.get_player(p->get_owner());
+        L.info("%s ATTACKING %s (%s)", inv, p->get_name(), owner->get_full_name());
+        L.info("");
+        L.info("AGG INIT: %d %d %d", rpt.agg_init.inf, rpt.agg_init.gli, rpt.agg_init.art);
+        L.info("DEF INIT: %d %d %d", rpt.def_init.inf, rpt.def_init.gli, rpt.def_init.art);
+        L.info("AGG LOST: %d %d %d", rpt.agg_lost.inf, rpt.agg_lost.gli, rpt.agg_lost.art);
+        L.info("DEF LOST: %d %d %d", rpt.def_lost.inf, rpt.def_lost.gli, rpt.def_lost.art);
+        L.info("AGG SURF: %d %d %d", rpt.agg_surf.inf, rpt.agg_surf.gli, rpt.agg_surf.art);
+        L.info("DEF SURF: %d %d %d", rpt.def_surf.inf, rpt.def_surf.gli, rpt.def_surf.art);
+        L.info("");
+        L.info("WON: %s", rpt.aggressor_won ? "AGG" : "DEF");
+        L.info("---------------------");
         set_stage(LBP_Conclude);
         return;
     }
-
-    LunarBattleParams &b = ephstate.lunar_battle;
-
-    Planet *p = exostate.get_active_planet();
 
     if (!p) {
         L.fatal("Entered lunar battle prep with no active planet");
