@@ -726,6 +726,7 @@ void Planet::validate_army_funding() {
 
 void Planet::discard_excess_resources() {
     int lim = get_resource_cap();
+    int rlim = get_robot_cap();
     int d[8]; for (int i = 0; i < 8; ++i) d[i] = 0;
 
     if (reserves_food > lim) {
@@ -756,9 +757,9 @@ void Planet::discard_excess_resources() {
         d[6] = airdef_guns - lim;
         airdef_guns = lim;
     }
-    if (robots > lim) {
-        d[7] = robots - lim;
-        robots = lim;
+    if (robots > rlim) {
+        d[7] = robots - rlim;
+        robots = rlim;
     }
 
     int total = 0;
@@ -810,7 +811,6 @@ int Planet::get_robots() {
     return robots;
 }
 
-// TODO: Are airdef guns subject to resource cap?
 void Planet::adjust_airdef_guns(int adj) {
     airdef_guns = max(airdef_guns + adj, 0);
     if (airdef_guns > get_resource_cap()) {
@@ -820,8 +820,8 @@ void Planet::adjust_airdef_guns(int adj) {
 
 void Planet::adjust_robots(int adj) {
     robots = max(robots + adj, 0);
-    if (robots > get_resource_cap()) {
-        robots = get_resource_cap();
+    if (robots > get_robot_cap()) {
+        robots = get_robot_cap();
     }
 }
 
@@ -1472,6 +1472,10 @@ int Planet::get_resource_cap() {
     return (diameter / 200);
 }
 
+int Planet::get_robot_cap() {
+    return (diameter / 100);
+}
+
 void Planet::update_unrest_history() {
     for (int i = N_UNREST - 1; i > 0; --i) {
         unrest[i] = unrest[i - 1];
@@ -2058,7 +2062,7 @@ void Planet::ai_update() {
                 {
                     int r = RND(3);
                     // TODO: PROCeta11 skips MC check here
-                    // TODO: Should we check we're within resource limits here?!
+                    // TODO: Should we check we're within resource limits here?! (Note get_robot_cap())
                     // These robots might be scrapped on discard_excess_resources()!
                     if (owner->attempt_spend(r * COST_ROBOT)) {
                         robots += r;

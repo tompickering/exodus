@@ -213,6 +213,7 @@ class Planet {
         void mine();
         void perish_food();
         int get_resource_cap();
+        int get_robot_cap();
         void update_unrest_history();
         const char* get_moon_bg();
         bool has_army();

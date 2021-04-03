@@ -23,44 +23,40 @@ void FleetProduction::enter() {
     draw_manager.save_background();
     draw_manager.show_cursor(true);
 
-    // TODO: Check max on fleet here
-    int p_cap = planet->get_resource_cap();
-
     rows[0].img = IMG_FL1_TR1;
     rows[0].name = "Scouts";
     rows[0].own = fleet.scouts;
-    rows[0].max = 0;
+    rows[0].max = 10000;
     rows[0].cost = 10;
 
     rows[1].img = IMG_FL1_TR2;
     rows[1].name = "Transporters";
     rows[1].own = fleet.transporters;
-    rows[1].max = 0;
+    rows[1].max = 10000;
     rows[1].cost = 15;
 
     rows[2].img = IMG_FL1_TR3;
     rows[2].name = "Warships";
     rows[2].own = fleet.warships;
-    rows[2].max = 0;
+    rows[2].max = 10000;
     rows[2].cost = 20;
 
     rows[3].img = IMG_FL1_TR4;
     rows[3].name = "Bombers";
     rows[3].own = fleet.bombers;
-    rows[3].max = 0;
+    rows[3].max = 10000;
     rows[3].cost = 25;
 
-    // TODO: Are airdef guns subject to resource cap?
     rows[4].img = IMG_FL1_TR6;
     rows[4].name = "AirDef guns";
     rows[4].own = planet->get_airdef_guns();
-    rows[4].max = p_cap;
+    rows[4].max = planet->get_resource_cap();
     rows[4].cost = COST_AIRDEF;
 
     rows[5].img = IMG_FL1_TR7;
     rows[5].name = "Robots";
     rows[5].own = planet->get_robots();
-    rows[5].max = p_cap;
+    rows[5].max = planet->get_robot_cap();
     rows[5].cost = COST_ROBOT;
 
     for (int i = 0; i < 6; ++i) {
