@@ -30,6 +30,9 @@ const char* STR_LBCtl  = "Base, Control";
 const char* STR_Tele   = "Rescue Beam";
 const char* STR_Mine   = "Mine";
 
+static const int LUNAR_BASE_GUN_HP =  6;
+static const int LUNAR_BASE_CTL_HP = 10;
+
 enum ID {
     PANEL,
     PANEL_PATTERN,
@@ -772,6 +775,7 @@ void LunarBattle::auto_run() {
     LunarBattleReport &rpt = ephstate.lunar_battle_report;
 
     Planet *p = exostate.get_active_planet();
+    // FIXME: Should this be 12 or 24? Base constitutes 4*LUNAR_BASE_GUN_HP = 4*6 = 24 units
     auto_base = p->has_lunar_base() ? 12 : 0;
 
     bool resolved = false;
@@ -2095,7 +2099,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             move = 0;
             fire_range = 100;
             fire_power = 4;
-            hp = 6;
+            hp = LUNAR_BASE_GUN_HP;
             defending = true;
             idle = IMG_GF4_21;
             walk = IMG_GF4_21;
@@ -2106,7 +2110,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             name = STR_LBCtl;
             move = 0;
             fire_range = 0;
-            hp = 10;
+            hp = LUNAR_BASE_CTL_HP;
             defending = true;
             can_act = false;
             idle = IMG_GF4_20;
