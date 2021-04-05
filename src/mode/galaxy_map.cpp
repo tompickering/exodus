@@ -1097,8 +1097,12 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 p->set_tactic(7);
             }
             if (p->get_tactic() == 7 || p->get_tactic() == 1) {
-                // PROCe_tact1
-                L.debug("[%s] PROCe_tact1", player->get_full_name());
+                /*
+                 * PROCe_tact1
+                 *
+                 * Travel to the planet owned by us with the largest army
+                 */
+                L.debug("[%s] PROCe_tact1 : FLEET -> LARGE ARMY", player->get_full_name());
                 player->get_location().unset_target();
                 int quality = 0;
                 for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
@@ -1138,8 +1142,12 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 }
             }
             if (!p->get_location().in_flight() && (p->get_tactic() == 8 || p->get_tactic() == 2)) {
-                // PROCe_tact2
-                L.debug("[%s] PROCe_tact2", player->get_full_name());
+                /*
+                 * PROCe_tact2
+                 *
+                 * Transfer some battle units from our target planet to our fleet
+                 */
+                L.debug("[%s] PROCe_tact2 : BATTLE UNITS -> FLEET", player->get_full_name());
                 int star_idx = player->get_location().get_target();
                 int planet_idx = player->get_location().get_planet_target();
                 Star *star = &stars[star_idx];
@@ -1172,8 +1180,12 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 }
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 9) {
-                // PROCe_tact3
-                L.debug("[%s] PROCe_tact3", player->get_full_name());
+                /*
+                 * PROCe_tact3
+                 *
+                 * Travel to a nice-looking unowned planet to claim
+                 */
+                L.debug("[%s] PROCe_tact3 : FIND PLANET TO CLAIM", player->get_full_name());
                 int set_star = -1;
                 int set_planet = -1;
                 for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
@@ -1282,8 +1294,12 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 }
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 3) {
-                // PROCe_tact4
-                L.debug("[%s] PROCe_tact4", player->get_full_name());
+                /*
+                 * PROCe_tact4
+                 *
+                 * Select a planet to attack and travel there (weakest, or most cities, or strongest)
+                 */
+                L.debug("[%s] PROCe_tact4 : FIND PLANET TO ATTACK", player->get_full_name());
                 int star_idx;
                 int planet_idx;
                 player->get_ai_attack(star_idx, planet_idx);
@@ -1426,8 +1442,12 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 }
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 10) {
-                // PROCe_tact5
-                L.debug("[%s] PROCe_tact5", player->get_full_name());
+                /*
+                 * PROCe_tact5
+                 *
+                 * Claim target planet
+                 */
+                L.debug("[%s] PROCe_tact5 : CLAIM PLANET", player->get_full_name());
                 int star_idx = player->get_location().get_target();
                 int planet_idx = player->get_location().get_planet_target();
                 Star *s = &stars[star_idx];
@@ -1467,8 +1487,12 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 player->get_location().unset_target();
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 5) {
-                // PROCe_tact6
-                L.debug("[%s] PROCe_tact6", player->get_full_name());
+                /*
+                 * PROCe_tact6
+                 *
+                 * Launch an attack (or bail out)
+                 */
+                L.debug("[%s] PROCe_tact6 : CONFIRM/LAUNCH ATTACK", player->get_full_name());
                 int star_idx = player->get_location().get_target();
                 int planet_idx = player->get_location().get_planet_target();
                 Star *s = &stars[star_idx];
@@ -1565,8 +1589,12 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 }
             }
             if (p->get_tactic() == 20) {
-                // PROCe_tact7
-                L.debug("[%s] PROCe_tact7", player->get_full_name());
+                /*
+                 * PROCe_tact7
+                 *
+                 * Travel to the planet owned by us with the most resources
+                 */
+                L.debug("[%s] PROCe_tact7 : FLEET -> MOST RESOURCES", player->get_full_name());
                 int resources = 0;
                 int most_resources_star = -1;
                 int most_resources_planet = -1;
@@ -1594,8 +1622,12 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 }
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 21) {
-                // PROCe_tact8
-                L.debug("[%s] PROCe_tact8", player->get_full_name());
+                /*
+                 * PROCe_tact8
+                 *
+                 * Transfer resources from the target planet to our fleet
+                 */
+                L.debug("[%s] PROCe_tact8 : RESOURCES -> FLEET", player->get_full_name());
                 int star_idx = player->get_location().get_target();
                 int planet_idx = player->get_location().get_planet_target();
                 Star *star = &stars[star_idx];
@@ -1629,8 +1661,12 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 }
             }
             if (p->get_tactic() == 22) {
-                // PROCe_tact9
-                L.debug("[%s] PROCe_tact9", player->get_full_name());
+                /*
+                 * PROCe_tact9
+                 *
+                 * Check if enemy-owned planets exist
+                 */
+                L.debug("[%s] PROCe_tact9 : CHECK ENEMY-OWNED PLANETS", player->get_full_name());
                 bool other_owned_planets = false;
                 for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
                     Star *s = &stars[star_idx];
@@ -1650,8 +1686,12 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 }
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 22) {
-                // PROCe_tact10
-                L.debug("[%s] PROCe_tact10", player->get_full_name());
+                /*
+                 * PROCe_tact10
+                 *
+                 * Travel to an enemy-owned planet with the intention of trading
+                 */
+                L.debug("[%s] PROCe_tact10 : FIND PLANET TO TRADE WITH", player->get_full_name());
                 // FIXME: PROCe_tact9 proves there exists a planet to find, but this is horrible...
                 int a = 0;
                 while (a == 0) {
@@ -1695,8 +1735,12 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 }
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 23) {
-                // PROCe_tact11
-                L.debug("[%s] PROCe_tact11", player->get_full_name());
+                /*
+                 * PROCe_tact11
+                 *
+                 * Request trade with target planet
+                 */
+                L.debug("[%s] PROCe_tact11 : REQUEST TRADE", player->get_full_name());
                 int star_idx = player->get_location().get_target();
                 int planet_idx = player->get_location().get_planet_target();
                 Star *star = &stars[star_idx];
@@ -1796,8 +1840,12 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 }
             }
             if (p->get_tactic() == 0) {
-                // PROCe_tact12
-                L.debug("[%s] PROCe_tact12", player->get_full_name());
+                /*
+                 * PROCe_tact12
+                 *
+                 * Travel to the planet owned by us with the largest army
+                 */
+                L.debug("[%s] PROCe_tact12 : FLEET -> LARGE ARMY", player->get_full_name());
                 int quality = 0;
                 for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
                     Star *s = &stars[star_idx];
