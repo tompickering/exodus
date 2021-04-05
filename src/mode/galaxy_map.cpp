@@ -1115,11 +1115,13 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                                 quality = army;
                                 player->get_location().set_target(star_idx, 1);
                                 player->get_location().set_planet_target(planet_idx);
+                                L.debug("[%s] PROCe_tact1 : Targeting %s", player->get_full_name(), p->get_name());
                             }
                         }
                     }
                 }
                 if (player->get_location().in_flight()) {
+                    L.debug("[%s] PROCe_tact1 : Travelling", player->get_full_name());
                     if (player->has_invention(INV_OrbitalMassThrust) && onein(2)) {
                         player->next_tactic();
                         player->get_location().complete();
@@ -1140,6 +1142,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         player->get_location().complete();
                     }
                 }
+                L.debug("[%s] PROCe_tact1 END", player->get_full_name());
             }
             if (!p->get_location().in_flight() && (p->get_tactic() == 8 || p->get_tactic() == 2)) {
                 /*
@@ -1152,9 +1155,13 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 int planet_idx = player->get_location().get_planet_target();
                 Star *star = &stars[star_idx];
                 Planet *planet = star->get_planet(planet_idx);
+                const Freight& f = player->get_fleet().freight;
                 if (planet && planet->exists() && planet->get_owner() == player_idx) {
                     int planet_inf, planet_gli, planet_art;
                     planet->get_army(planet_inf, planet_gli, planet_art);
+                    L.debug("[%s] PROCe_tact2 : PLANET %d/%d/%d", player->get_full_name(), planet_inf, planet_gli, planet_art);
+                    L.debug("[%s] PROCe_tact2 : FLEET %d/%d/%d", player->get_full_name(), f.infantry, f.gliders, f.artillery);
+                    L.debug("[%s] PROCe_tact2 : Transferring...", player->get_full_name());
                     for (int i = 0; i < 3 && player->get_freight_capacity() > 0; ++i) {
                         switch (i) {
                             case 0:
@@ -1169,6 +1176,10 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         }
                     }
 
+                    planet->get_army(planet_inf, planet_gli, planet_art);
+                    L.debug("[%s] PROCe_tact2 : PLANET %d/%d/%d", player->get_full_name(), planet_inf, planet_gli, planet_art);
+                    L.debug("[%s] PROCe_tact2 : FLEET %d/%d/%d", player->get_full_name(), f.infantry, f.gliders, f.artillery);
+
                     int n = exostate.get_n_planets(player);
                     if ((n > 1 && onein(2)) || (n == 1 && onein(5))) {
                         player->prev_tactic();
@@ -1178,6 +1189,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 } else {
                     player->prev_tactic();
                 }
+                L.debug("[%s] PROCe_tact2 END", player->get_full_name());
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 9) {
                 /*
@@ -1292,6 +1304,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 } else {
                     player->set_tactic(3);
                 }
+                L.debug("[%s] PROCe_tact3 END", player->get_full_name());
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 3) {
                 /*
@@ -1413,20 +1426,24 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
                     if (ok) {
                         if (weak_star >= 0 && weak_planet >= 0) {
+                            L.debug("[%s] PROCe_tact4 : TARGET WEAK", player->get_full_name());
                             player->get_location().set_target(weak_star, 1);
                             player->get_location().set_planet_target(weak_planet);
                         }
                         if (nodef) {
+                            L.debug("[%s] PROCe_tact4 : TARGET NODEF", player->get_full_name());
                             player->get_location().set_target(nodef_star, 1);
                             player->get_location().set_planet_target(nodef_planet);
                         }
                         if (onein(3) || weak_star == -1) {
+                            L.debug("[%s] PROCe_tact4 : TARGET MOSTCITIES", player->get_full_name());
                             if (mostcities_star >= 0 && mostcities_planet >= 0) {
                                 player->get_location().set_target(mostcities_star, 1);
                                 player->get_location().set_planet_target(mostcities_planet);
                             }
                         }
                         if (onein(3) || weak_star == -1) {
+                            L.debug("[%s] PROCe_tact4 : TARGET STRONG", player->get_full_name());
                             if (strong_star >= 0 && strong_planet >= 0) {
                                 player->get_location().set_target(strong_star, 1);
                                 player->get_location().set_planet_target(strong_planet);
@@ -1440,6 +1457,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         player->set_tactic(onein(5) ? 0 : 1);
                     }
                 }
+                L.debug("[%s] PROCe_tact4 END", player->get_full_name());
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 10) {
                 /*
@@ -1475,6 +1493,8 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
                         // TODO: Orig writes a news item here with PROCnpmessage
 
+                        L.debug("[%s] PROCe_tact5 : CLAIMED %s AT %s", player->get_full_name(), p->get_name(), s->name);
+
                         player->set_tactic(0);
 
                         // PROCenemytactics call
@@ -1485,6 +1505,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 }
                 player->set_tactic(0);
                 player->get_location().unset_target();
+                L.debug("[%s] PROCe_tact5 END", player->get_full_name());
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 5) {
                 /*
@@ -1521,6 +1542,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
                 // Attack a planet
                 if (mp_state.mpai_substage == 1) {
+                    L.debug("[%s] PROCe_tact6 : ANNOUNCING ATTACK ON %s AT %s ", player->get_full_name(), p->get_name(), s->name);
                     exostate.set_active_flytarget(s);
                     exostate.set_active_planet(planet_idx);
                     int owner_idx = p->get_owner();
@@ -1564,6 +1586,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
                 // Launching attack
                 if (mp_state.mpai_substage == 5) {
+                    L.debug("[%s] PROCe_tact6 : LAUNCHING ATTACK ON %s AT %s ", player->get_full_name(), p->get_name(), s->name);
                     mp_state.mpai_substage = 6;
                     ephstate.set_ephemeral_state(EPH_LunarBattlePrep);
                     ephstate.lunar_battle.aggressor_type = AGG_Player;
@@ -1587,6 +1610,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     player->set_tactic(0);
                     player->get_location().unset_target();
                 }
+                L.debug("[%s] PROCe_tact6 END", player->get_full_name());
             }
             if (p->get_tactic() == 20) {
                 /*
@@ -1607,6 +1631,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                                 resources = p->get_total_reserves();
                                 most_resources_star = star_idx;
                                 most_resources_planet = planet_idx;
+                                L.debug("[%s] PROCe_tact7 : Targeting", player->get_full_name(), p->get_name());
                             }
                         }
                     }
@@ -1620,6 +1645,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 } else {
                     player->set_tactic(0);
                 }
+                L.debug("[%s] PROCe_tact7 END", player->get_full_name());
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 21) {
                 /*
@@ -1633,6 +1659,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 Star *star = &stars[star_idx];
                 Planet *planet = star->get_planet(planet_idx);
                 if (planet && planet->exists() && planet->get_owner() == player_idx) {
+                    L.debug("[%s] PROCe_tact8 : Transferring...", player->get_full_name());
                     int planet_min = planet->get_reserves_min();
                     int planet_fd = planet->get_reserves_food();
                     int planet_plu = planet->get_reserves_plu();
@@ -1659,6 +1686,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 } else {
                     player->prev_tactic();
                 }
+                L.debug("[%s] PROCe_tact8 END", player->get_full_name());
             }
             if (p->get_tactic() == 22) {
                 /*
@@ -1673,6 +1701,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
                         Planet *p = s->get_planet(planet_idx);
                         if (p && p->exists() && p->is_owned() && p->get_owner() != player_idx) {
+                            L.debug("[%s] PROCe_tact9 : YES", player->get_full_name());
                             other_owned_planets = true;
                             break;
                         }
@@ -1682,8 +1711,10 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     }
                 }
                 if (!other_owned_planets) {
+                    L.debug("[%s] PROCe_tact9 : NO", player->get_full_name());
                     player->set_tactic(0);
                 }
+                L.debug("[%s] PROCe_tact9 END", player->get_full_name());
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 22) {
                 /*
@@ -1720,12 +1751,14 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                                 if (a > 0) {
                                     player->get_location().set_target(star_idx, 1);
                                     player->get_location().set_planet_target(planet_idx);
+                                L.debug("[%s] PROCe_tact10 : TARGETING %s at %s", player->get_full_name(), p->get_name(), s->name);
                                 }
                             }
                         }
                     }
                 }
                 if (player->get_location().in_flight()) {
+                    L.debug("[%s] PROCe_tact10 : Travelling", player->get_full_name());
                     if (player->has_invention(INV_OrbitalMassThrust) && onein(2)) {
                         player->next_tactic();
                         player->get_location().complete();
@@ -1733,6 +1766,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 } else {
                     player->next_tactic();
                 }
+                L.debug("[%s] PROCe_tact10 END", player->get_full_name());
             }
             if (!p->get_location().in_flight() && p->get_tactic() == 23) {
                 /*
@@ -1799,6 +1833,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     }
 
                     if (proceed) {
+                        L.debug("[%s] PROCe_tact11 : INITIATING TRADE", player->get_full_name());
                         int a, b, c, n;
                         switch (planet->initiate_trade(player_idx)) {
                             case TRADE_Good:
@@ -1838,6 +1873,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         player->set_tactic(22);
                     }
                 }
+                L.debug("[%s] PROCe_tact11 END", player->get_full_name());
             }
             if (p->get_tactic() == 0) {
                 /*
@@ -1857,10 +1893,12 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                                 quality = army;
                                 player->get_location().set_target(star_idx, 1);
                                 player->get_location().set_planet_target(planet_idx);
+                                L.debug("[%s] PROCe_tact12 : TARGETING %s AT %s", player->get_full_name(), p->get_name(), s->name);
                             }
                         }
                     }
                 }
+                L.debug("[%s] PROCe_tact12 END", player->get_full_name());
             }
         }
         next_mpai_stage();

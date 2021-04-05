@@ -499,18 +499,19 @@ int Player::get_tactic() {
 }
 
 void Player::set_tactic(int tactic) {
+    L.debug("[%s] TACTIC %d -> %d", get_full_name(), ai_tactic, tactic);
+    if (ai_tactic < 0) {
+        L.warn("[%s] AI tactic set to %d", get_full_name(), ai_tactic);
+    }
     ai_tactic = tactic;
 }
 
 void Player::next_tactic() {
-    ai_tactic++;
+    set_tactic(ai_tactic+1);
 }
 
 void Player::prev_tactic() {
-    ai_tactic--;
-    if (ai_tactic < 0) {
-        L.warn("[%s] AI tactic set to %d", get_full_name(), ai_tactic);
-    }
+    set_tactic(ai_tactic-1);
 }
 
 bool Player::is_hostile_to(int p) {
