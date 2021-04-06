@@ -11,6 +11,7 @@ class ExodusDebug {
     public:
         void init();
         void add_mc(int);
+        void add_units(int);
         bool show_player_markers;
         SprID player_markers[N_PLAYERS];
 };

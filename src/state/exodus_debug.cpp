@@ -23,3 +23,12 @@ void ExodusDebug::add_mc(int mc) {
         p->give_mc(mc);
     }
 }
+
+void ExodusDebug::add_units(int n) {
+    Player* p = exostate.get_active_player();
+    if (p) {
+        p->transfer_inf(n);
+        p->transfer_gli(n);
+        p->transfer_art(n);
+    }
+}
