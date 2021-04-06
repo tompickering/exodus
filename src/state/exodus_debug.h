@@ -13,6 +13,7 @@ class ExodusDebug {
         void add_mc(int);
         void add_units(int);
         bool show_player_markers;
+        bool full_visibility;
         SprID player_markers[N_PLAYERS];
 };
 

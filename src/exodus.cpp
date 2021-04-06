@@ -248,6 +248,10 @@ int Exodus::run(int argc, char** argv) {
             exodebug.add_units(10);
         }
 
+        if (input_manager.consume(Input::K_F4)) {
+            exodebug.full_visibility = !exodebug.full_visibility;
+        }
+
         if (input_manager.consume(Input::K_F8)) {
             save_manager.save(8);
         }

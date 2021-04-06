@@ -1,5 +1,10 @@
 #include "location.h"
 
+#ifdef DBG
+#include "state/exodus_debug.h"
+extern ExodusDebug exodebug;
+#endif
+
 PlayerLocation::PlayerLocation() {
     months_to_arrive = 0;
     location = -1;
@@ -63,6 +68,10 @@ int PlayerLocation::get_planet_target() {
 }
 
 bool PlayerLocation::has_visited(int query_target) {
+#ifdef DBG
+    if (exodebug.full_visibility)
+        return true;
+#endif
     // Guild (-1) is always true
     if (query_target < 0)
         return true;
