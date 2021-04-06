@@ -666,6 +666,12 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_set_speech("What are your orders?");
             comm_set_text(0, "Activate a goods transfer.");
             comm_set_text(1, "Start Fleet/AirDef production.");
+            if (comm_player->get_location().in_flight()) {
+                comm_text_disabled_mask |= 0x3;
+            }
+            if (comm_player->get_location().get_target() != exostate.get_active_star_idx()) {
+                comm_text_disabled_mask |= 0x3;
+            }
             if (!comm_planet->has_spaceport()) {
                 comm_text_disabled_mask |= 0x3;
             }
