@@ -140,7 +140,7 @@ void ExodusState::init(GameConfig config) {
         players[i].mc = 300 + RND(5)*50 + bonus_mult*150;
         L.debug("Assigned %d MC to CPU player %d", players[i].mc, i);
 
-        players[i].fleet.transporters += bonus_mult * 100;
+        players[i].fleet.transporters = 50 + bonus_mult * 100;
         players[i].clear_ai_attack();
     }
 
