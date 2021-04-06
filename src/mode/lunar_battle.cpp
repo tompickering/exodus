@@ -503,6 +503,11 @@ ExodusMode LunarBattle::update(float delta) {
                         comm_close();
                         stage = LB_SelectUnit;
                         break;
+                    case CA_CallOffAttack:
+                        comm_close();
+                        rpt.aggressor_won = false;
+                        stage = LB_Won;
+                        break;
                     default:
                         L.error("Unexpected AI comm action in battle: %d", (int)action);
                         comm_close();

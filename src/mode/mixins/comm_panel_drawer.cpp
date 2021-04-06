@@ -1384,10 +1384,36 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_recv(DIA_R_Close);
             break;
         case DIA_S_B_CPU_OpenCommsDefender:
-            // TODO (placeholder)
+            comm_prepare(4);
+            comm_ctx.mc = 100;
+            comm_set_speech("I offer you %dMC if you leave.", comm_ctx.mc);
+            comm_set_text(0, "Forget that.");
+            comm_set_text(1, "That is not enough.");
+            comm_set_text(2, "I think I will accept this.");
+            comm_text_interactive_mask = 0x7;
+            comm_recv(DIA_R_B_CPU_CommsDefender);
+            break;
+        case DIA_S_B_CPU_CommsDefenderReject:
             comm_prepare(1);
-            comm_set_speech("go way");
+            comm_set_speech("Do not make me angry.");
             comm_recv(DIA_R_Close);
+            break;
+        case DIA_S_B_CPU_CommsDefenderRequestMore:
+            comm_prepare(1);
+            comm_set_speech("So let us fight...");
+            comm_recv(DIA_R_Close);
+            break;
+        case DIA_S_B_CPU_CommsDefenderAccept:
+            if (!comm_other->attempt_spend(comm_ctx.mc)) {
+                L.error("Can't afford payoff of %dMC - setting to 0", comm_ctx.mc);
+                if (comm_player->get_mc() > 0) {
+                    comm_player->attempt_spend(comm_player->get_mc());
+                }
+            }
+            comm_player->give_mc(comm_ctx.mc);
+            comm_prepare(1);
+            comm_set_speech("You are a worthy enemy.");
+            comm_recv(DIA_R_B_CPU_CommsDefenderAcceptResponse);
             break;
         case DIA_S_B_CPU_OpenCommsRebels:
             // TODO (placeholder)
@@ -1906,6 +1932,24 @@ void CommPanelDrawer::comm_process_responses() {
         case DIA_R_B_CPU_CommsAttacker:
             if (opt >= 0) {
                 comm_send(DIA_S_B_CPU_CommsAttackerResponse);
+            }
+            break;
+        case DIA_R_B_CPU_CommsDefender:
+            switch (opt) {
+                case 0:
+                    comm_send(DIA_S_B_CPU_CommsDefenderReject);
+                    break;
+                case 1:
+                    comm_send(DIA_S_B_CPU_CommsDefenderRequestMore);
+                    break;
+                case 2:
+                    comm_send(DIA_S_B_CPU_CommsDefenderAccept);
+                    break;
+            }
+            break;
+        case DIA_R_B_CPU_CommsDefenderAcceptResponse:
+            if (clicked) {
+                comm_report_action = CA_CallOffAttack;
             }
             break;
         default:

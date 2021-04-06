@@ -25,6 +25,7 @@ enum CommAction {
     CA_PlanAttack,
     CA_Trade,
     CA_Attack,
+    CA_CallOffAttack,
 };
 
 enum CommImg {
@@ -87,6 +88,9 @@ enum CommSend {
     DIA_S_B_CPU_OpenCommsAttacker,
     DIA_S_B_CPU_CommsAttackerResponse,
     DIA_S_B_CPU_OpenCommsDefender,
+    DIA_S_B_CPU_CommsDefenderReject,
+    DIA_S_B_CPU_CommsDefenderRequestMore,
+    DIA_S_B_CPU_CommsDefenderAccept,
     DIA_S_B_CPU_OpenCommsRebels,
 };
 
@@ -128,6 +132,8 @@ enum CommRecv {
     DIA_R_CPU_ProposeAllianceAggressively,
     // Battle comms
     DIA_R_B_CPU_CommsAttacker,
+    DIA_R_B_CPU_CommsDefender,
+    DIA_R_B_CPU_CommsDefenderAcceptResponse,
 };
 
 typedef struct {
