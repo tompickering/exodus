@@ -53,6 +53,11 @@ enum ID {
     CURSOR,
     EXPLOSION,
     HIGHLIGHT,
+    TELE0,
+    TELE1,
+    TELE2,
+    TELELIGHTS,
+    TELESTAR,
     END,
 };
 
@@ -134,6 +139,7 @@ void LunarBattle::enter() {
     fire_time = 0;
     n_cover = 0;
     n_mines = 0;
+    n_tele = 0;
 
     cursor_x = -1;
     cursor_y = -1;
@@ -144,6 +150,9 @@ void LunarBattle::enter() {
     mine_beeps = 0;
     mine_damage = false;
     active_mine = nullptr;
+
+    tele_timer = 0;
+    active_tele = nullptr;
 
     use_alt_aliens = (bool)(rand() % 2);
 
@@ -360,7 +369,10 @@ ExodusMode LunarBattle::update(float delta) {
                                         mines[n_mines].spr_id = draw_manager.new_sprite_id();
                                         n_mines++;
                                     } else {
-                                        // TODO: Teleporters
+                                        tele[n_tele].x = cursor_x;
+                                        tele[n_tele].y = cursor_y;
+                                        tele[n_tele].spr_id = draw_manager.new_sprite_id();
+                                        n_tele++;
                                     }
                                     to_place_msc--;
                                 }
@@ -500,6 +512,17 @@ ExodusMode LunarBattle::update(float delta) {
                     }
                 }
 
+                // If we're an attacking unit, check if we're on a teleporter
+                if (!active_unit->defending) {
+                    for (int i = 0; i < n_tele; ++i) {
+                        if (tele[i].x == active_unit->x && tele[i].y == active_unit->y) {
+                            active_tele = &tele[i];
+                            stage = LB_Tele;
+                            return ExodusMode::MODE_None;
+                        }
+                    }
+                }
+
                 break;
             }
 
@@ -600,6 +623,42 @@ ExodusMode LunarBattle::update(float delta) {
                 active_mine = nullptr;
 
                 stage = LB_Damage;
+            }
+            break;
+        case LB_Tele:
+            {
+                if (!active_unit) {
+                    L.fatal("Entered LB_Tele mode with no active unit");
+                }
+                if (!active_tele) {
+                    L.fatal("Entered LB_Tele mode with no active tele");
+                }
+
+                if (!aggressor) {
+                    L.warn("Entered LB_Tele with a non-player aggressor");
+                    stage = LB_CheckWon;
+                    break;
+                }
+
+                switch (active_unit->type) {
+                    case UNIT_Inf:
+                        rpt.agg_surf.inf -= active_unit->hp;
+                        aggressor->transfer_inf(active_unit->hp);
+                        break;
+                    case UNIT_Gli:
+                        rpt.agg_surf.gli -= active_unit->hp;
+                        aggressor->transfer_gli(active_unit->hp);
+                        break;
+                    default:
+                        L.warn("Invalid unit for tele: %d", (int)active_unit->type);
+                        break;
+                }
+
+                active_unit->hp = 0;
+                active_unit->teleported = true;
+                draw_manager.draw(active_unit->spr_id, nullptr);
+
+                stage = LB_CheckWon;
             }
             break;
         case LB_Fire:
@@ -921,6 +980,7 @@ void LunarBattle::auto_act(bool agg) {
     int &a_inf = b.aggressor_inf;
     int &a_gli = b.aggressor_gli;
     int &a_art = b.aggressor_art;
+    // Teleporters never used in auto battles
     int &d_inf = b.defender_inf;
     int &d_gli = b.defender_gli;
     int &d_art = b.defender_art;
@@ -1232,6 +1292,35 @@ void LunarBattle::place_units(bool def) {
             }
         }
     }
+
+    // Place aggressor teleporters
+    // FIXME: It looks like orig places these for non-player aggressors - should we?
+    if (!def) {
+        for (int i = 0; i < b.aggressor_tele; ++i) {
+            for (int attempts = 0; attempts < 10000; ++attempts) {
+                int tele_x = RND(6) - 1;
+                int tele_y = RND(11) - 1;
+                bool is_suitable = valid_placement(tele_x, tele_y);
+                if (is_suitable) {
+                    for (int j = 0; j < n_cover; ++j) {
+                        if (cover[j].x == tele_x && cover[j].y == tele_y) {
+                            is_suitable = false;
+                            break;
+                        }
+                    }
+                }
+                if (is_suitable) {
+                    // Place tele
+                    tele[n_tele].x = tele_x;
+                    tele[n_tele].y = tele_y;
+                    tele[n_tele].spr_id = draw_manager.new_sprite_id();
+                    n_tele++;
+                    L.debug("Placed tele at %d %d", tele_x, tele_y);
+                    break;
+                }
+            }
+        }
+    }
 }
 
 void LunarBattle::place_unit(BattleUnit u) {
@@ -1270,6 +1359,15 @@ void LunarBattle::draw_units() {
         }
     }
 
+    for (int i = 0; i < n_tele; ++i) {
+        draw_manager.draw(
+            tele[i].spr_id,
+            IMG_GF1_25,
+            {SURF_X + tele[i].x * BLK_SZ,
+             SURF_Y + tele[i].y * BLK_SZ,
+             0, 0, 1, 1});
+    }
+
     for (int pass = 0; pass < 2; ++pass) {
         bool draw_dead = pass == 0;
         for (int i = 0; i < n_units; ++i) {
@@ -1283,6 +1381,8 @@ void LunarBattle::draw_units() {
             if (draw_dead && units[i].hp > 0)
                 continue;
             if (!draw_dead && units[i].hp <= 0)
+                continue;
+            if (units[i].teleported)
                 continue;
 
             if (!units[i].spr_id_set) {
@@ -1973,6 +2073,11 @@ bool LunarBattle::valid_placement(int x, int y) {
             return false;
         }
     }
+    for (int j = 0; j < n_tele; ++j) {
+        if (tele[j].x == x && tele[j].y == y) {
+            return false;
+        }
+    }
     return true;
 }
 
@@ -2128,6 +2233,7 @@ BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     shoot_sfx = nullptr;
     can_shoot_behind = true;
     turn_taken = false;
+    teleported = false;
     spr_id_set = false;
 }
 
@@ -2139,6 +2245,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
     tgt_y = y;
 
     turn_taken = false;
+    teleported = false;
 
     switch (type) {
         case UNIT_Inf:

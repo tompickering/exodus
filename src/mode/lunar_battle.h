@@ -11,6 +11,7 @@
 #define COVER_MAX 10
 // FIXME: Unify with mines_available values in lunar_battle_prep.cpp
 #define MINES_MAX 12
+#define TELE_MAX 3
 #define BATTLE_UNITS_MAX 176    // Battlefield is 16x11
 
 extern ExodusState exostate;
@@ -68,6 +69,7 @@ class BattleUnit {
         int moves_remaining;
         int shots_remaining;
         bool turn_taken;
+        bool teleported;
         const char* idle;
         const char* walk;
         const char* fire;
@@ -97,6 +99,14 @@ class Mine {
         SprID spr_id;
 };
 
+class Teleporter {
+    public:
+        Teleporter() : x(0), y(0) {}
+        int x;
+        int y;
+        SprID spr_id;
+};
+
 class LunarBattle : ModeBase, CommPanelDrawer {
     public:
         LunarBattle();
@@ -112,6 +122,7 @@ class LunarBattle : ModeBase, CommPanelDrawer {
             LB_SelectUnit,
             LB_Move,
             LB_Mine,
+            LB_Tele,
             LB_Fire,
             LB_CalcDamage,
             LB_Damage,
@@ -143,6 +154,9 @@ class LunarBattle : ModeBase, CommPanelDrawer {
 
         int n_mines;
         Mine mines[MINES_MAX];
+
+        int n_tele;
+        Teleporter tele[TELE_MAX];
 
         int n_units;
         BattleUnit units[BATTLE_UNITS_MAX];
@@ -208,6 +222,9 @@ class LunarBattle : ModeBase, CommPanelDrawer {
         int mine_beeps;
         bool mine_damage;
         Mine *active_mine;
+
+        float tele_timer;
+        Teleporter *active_tele;
 };
 
 #endif
