@@ -1361,9 +1361,26 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_recv(DIA_R_CPU_ProposeAllianceMoney);
             break;
         case DIA_S_B_CPU_OpenCommsAttacker:
-            // TODO (placeholder)
+            comm_prepare(4);
+            if (onein(2)) {
+                comm_set_speech("Do you call THIS a defense?");
+                comm_set_text(0, "Indeed, I do so.");
+                comm_set_text(1, "I wanted peace.");
+                comm_set_text(2, "Go to hell.");
+                comm_set_text(3, "You will pay for this.");
+            } else {
+                comm_set_speech("The victory is mine.");
+                comm_set_text(0, "You will pay for this.");
+                comm_set_text(1, "We will see.");
+                comm_set_text(2, "Fight, bloody bastard.");
+                comm_set_text(3, "It's not the time for joking.");
+            }
+            comm_text_interactive_mask = 0xF;
+            comm_recv(DIA_R_B_CPU_CommsAttacker);
+            break;
+        case DIA_S_B_CPU_CommsAttackerResponse:
             comm_prepare(1);
-            comm_set_speech("can haz planet?");
+            comm_set_speech("So let us fight...");
             comm_recv(DIA_R_Close);
             break;
         case DIA_S_B_CPU_OpenCommsDefender:
@@ -1884,6 +1901,11 @@ void CommPanelDrawer::comm_process_responses() {
                     exostate.set_all_alliances(comm_player_idx, comm_other_idx);
                     comm_report_action = CA_Abort;
                     break;
+            }
+            break;
+        case DIA_R_B_CPU_CommsAttacker:
+            if (opt >= 0) {
+                comm_send(DIA_S_B_CPU_CommsAttackerResponse);
             }
             break;
         default:

@@ -85,6 +85,7 @@ enum CommSend {
     DIA_S_CPU_AllianceQuery,
     // Battle comms
     DIA_S_B_CPU_OpenCommsAttacker,
+    DIA_S_B_CPU_CommsAttackerResponse,
     DIA_S_B_CPU_OpenCommsDefender,
     DIA_S_B_CPU_OpenCommsRebels,
 };
@@ -125,6 +126,8 @@ enum CommRecv {
     DIA_R_CPU_ProposeAlliance,
     DIA_R_CPU_ProposeAllianceMoney,
     DIA_R_CPU_ProposeAllianceAggressively,
+    // Battle comms
+    DIA_R_B_CPU_CommsAttacker,
 };
 
 typedef struct {
