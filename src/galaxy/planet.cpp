@@ -1519,6 +1519,12 @@ void Planet::adjust_army(int inf, int gli, int art) {
     if (army_art > max) army_art = max;
 }
 
+void Planet::clear_army() {
+    army_inf = 0;
+    army_gli = 0;
+    army_art = 0;
+}
+
 bool Planet::army_full() {
     return get_army_size() >= 3*get_resource_cap();
 }

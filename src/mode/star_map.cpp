@@ -183,6 +183,7 @@ ExodusMode StarMap::update(float delta) {
                     comm_close();
                     ephstate.set_ephemeral_state(EPH_LunarBattlePrep);
                     ephstate.lunar_battle.aggressor_type = AGG_Player;
+                    ephstate.lunar_battle.aggressor_idx = player_idx;
                     return ephstate.get_appropriate_mode();
                 default:
                     L.fatal("Unexpected comm action in SM_PlanAttack: %d", (int)action);

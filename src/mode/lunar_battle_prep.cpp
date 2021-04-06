@@ -123,6 +123,7 @@ void LunarBattlePrep::enter() {
 
     // Get numbers of defending units
     p->get_army(b.defender_inf, b.defender_gli, b.defender_art);
+    p->clear_army();
 
     int m = exostate.get_orig_month();
 
@@ -175,9 +176,12 @@ void LunarBattlePrep::enter() {
 
     switch (b.aggressor_type) {
         case AGG_Player:
-            b.aggressor_inf = aggressor->get_fleet().freight.infantry;
-            b.aggressor_gli = aggressor->get_fleet().freight.gliders;
-            b.aggressor_art = aggressor->get_fleet().freight.artillery;
+            {
+                const Freight &f = aggressor->get_fleet().freight;
+                b.aggressor_inf = aggressor->transfer_inf(-f.infantry);
+                b.aggressor_gli = aggressor->transfer_gli(-f.gliders);
+                b.aggressor_art = aggressor->transfer_art(-f.artillery);
+            }
             break;
         case AGG_Rebels:
             // TODO
@@ -699,12 +703,47 @@ ExodusMode LunarBattlePrep::update(float delta) {
             ephstate.set_ephemeral_state(EPH_LunarBattle);
             return ephstate.get_appropriate_mode();
         case LBP_Conclude:
-            // If this is an auto-battle involving a human, we have a
-            // results sequence to present. Otherwise, pop immediately.
-            if (b.auto_battle && b.human_battle) {
-                set_stage(LBP_AutoBattleConclude);
-            } else {
-                return ExodusMode::MODE_Pop;
+            {
+                // Handle battle outcome
+                LunarBattleReport &rpt = ephstate.lunar_battle_report;
+
+                Planet *p = exostate.get_active_planet();
+                int cap = p->get_resource_cap();
+
+                // Station surviving defending units back on the planet
+                p->adjust_army(rpt.def_surf.inf, rpt.def_surf.gli, rpt.def_surf.art);
+
+                if (b.aggressor_type == AGG_Player) {
+                    Player *agg = exostate.get_player(b.aggressor_idx);
+                    int i = rpt.agg_surf.inf;
+                    int g = rpt.agg_surf.gli;
+                    int a = rpt.agg_surf.art;
+
+                    if (rpt.aggressor_won) {
+                        // Transfer planet
+                        p->set_owner(b.aggressor_idx);
+
+                        // Of the units still on the surface, station as many as possible
+                        if (a > cap) a += agg->transfer_art(a - cap);
+                        if (g > cap) g += agg->transfer_gli(g - cap);
+                        if (i > cap) i += agg->transfer_inf(i - cap);
+                        p->clear_army();
+                        p->adjust_army(i, g, a);
+                    } else {
+                        // Transfer any surviving units back to the fleet
+                        agg->transfer_art(a);
+                        agg->transfer_gli(g);
+                        agg->transfer_inf(i);
+                    }
+                }
+
+                // If this is an auto-battle involving a human, we have a
+                // results sequence to present. Otherwise, pop immediately.
+                if (b.auto_battle && b.human_battle) {
+                    set_stage(LBP_AutoBattleConclude);
+                } else {
+                    return ExodusMode::MODE_Pop;
+                }
             }
             break;
         case LBP_AutoBattleConclude:
