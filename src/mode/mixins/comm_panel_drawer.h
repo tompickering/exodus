@@ -83,6 +83,10 @@ enum CommSend {
     DIA_S_CPU_ProposeAlliance,
     DIA_S_CPU_ProposeAllianceAggressively,
     DIA_S_CPU_AllianceQuery,
+    // Battle comms
+    DIA_S_B_CPU_OpenCommsAttacker,
+    DIA_S_B_CPU_OpenCommsDefender,
+    DIA_S_B_CPU_OpenCommsRebels,
 };
 
 // These are from the perspective of the *player*

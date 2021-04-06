@@ -556,6 +556,22 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img_caption_lower("RACE: %s", comm_player->get_race_str());
             comm_set_race(comm_player->get_race());
             break;
+        case DIA_S_B_CPU_OpenCommsAttacker:
+            comm_set_img_caption_upper(comm_player->get_full_name());
+            comm_set_img_caption_lower("RACE: %s", comm_player->get_race_str());
+            comm_set_race(comm_player->get_race());
+            break;
+        case DIA_S_B_CPU_OpenCommsDefender:
+            comm_set_img_caption_upper(comm_other->get_full_name());
+            comm_set_img_caption_lower("RACE: %s", comm_other->get_race_str());
+            comm_set_race(comm_other->get_race());
+            break;
+        case DIA_S_B_CPU_OpenCommsRebels:
+            // TODO: Check this is correct
+            comm_set_img_caption_upper("REBELS");
+            comm_set_img_caption_lower("REBELS");
+            comm_set_img(CI_Rebels);
+            break;
         default:
             L.warn("Unhandled comm input on init: %d", (int)input);
     }
@@ -1343,6 +1359,24 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_set_text(1, "I am not interested.");
             comm_text_interactive_mask = 0x3;
             comm_recv(DIA_R_CPU_ProposeAllianceMoney);
+            break;
+        case DIA_S_B_CPU_OpenCommsAttacker:
+            // TODO (placeholder)
+            comm_prepare(1);
+            comm_set_speech("can haz planet?");
+            comm_recv(DIA_R_Close);
+            break;
+        case DIA_S_B_CPU_OpenCommsDefender:
+            // TODO (placeholder)
+            comm_prepare(1);
+            comm_set_speech("go way");
+            comm_recv(DIA_R_Close);
+            break;
+        case DIA_S_B_CPU_OpenCommsRebels:
+            // TODO (placeholder)
+            comm_prepare(1);
+            comm_set_speech("o hai");
+            comm_recv(DIA_R_Close);
             break;
         default:
             L.warn("Unhandled comm input on send: %d", (int)input);

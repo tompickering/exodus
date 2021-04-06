@@ -292,6 +292,8 @@ ExodusMode LunarBattle::update(float delta) {
     Planet *p = exostate.get_active_planet();
     Player *defender = exostate.get_player(p->get_owner());
 
+    bool defending = !(aggressor && aggressor->is_human());
+
     if (defender_turn) {
         human_turn = defender->is_human();
     } else {
@@ -468,6 +470,45 @@ ExodusMode LunarBattle::update(float delta) {
                 defender_turn = (bool)(owner && owner->is_human());
                 reset_round();
                 stage = LB_SelectUnit;
+            }
+            break;
+        case LB_CommHuman:
+            {
+                CommAction action = comm_update(delta);
+                switch (action) {
+                    case CA_None:
+                        return ExodusMode::MODE_None;
+                    case CA_Abort:
+                        comm_close();
+                        // TODO: Need to revert back to whichever stage we were in previously!
+                        stage = LB_SelectUnit;
+                        break;
+                    default:
+                        L.error("Unexpected human comm action in battle: %d", (int)action);
+                        comm_close();
+                        // TODO: Need to revert back to whichever stage we were in previously!
+                        stage = LB_SelectUnit;
+                        break;
+                }
+            }
+            break;
+        case LB_CommAI:
+            {
+                comm_update(delta);
+                CommAction action = comm_update(delta);
+                switch (action) {
+                    case CA_None:
+                        return ExodusMode::MODE_None;
+                    case CA_Abort:
+                        comm_close();
+                        stage = LB_SelectUnit;
+                        break;
+                    default:
+                        L.error("Unexpected AI comm action in battle: %d", (int)action);
+                        comm_close();
+                        stage = LB_SelectUnit;
+                        break;
+                }
             }
             break;
         case LB_SelectUnit:
@@ -921,7 +962,79 @@ ExodusMode LunarBattle::update(float delta) {
                     // TODO: Populate rest of report
                     stage = LB_Won;
                 } else {
+                    // Do this by default, if we don't decide to open comms
                     stage = LB_SelectUnit;
+
+                    // If human turn has just ended, see if AI wants to open comms
+                    if (human_turn) {
+                        if (onein(40)) {
+                            if (b.aggressor_type == AGG_Player) {
+                                // If CPU is attacking us, only some lords will open comms
+                                if (defending && aggressor->get_flag(0) == AI_Hi && aggressor->get_flag(4) == AI_Hi) {
+                                    comm_open(DIA_S_B_CPU_OpenCommsAttacker);
+                                    stage = LB_CommAI;
+                                    // Skip battle drawing etc
+                                    return ExodusMode::MODE_None;
+                                }
+                                // If we are attacking, open comms if >=100MC, strong attack force and defender's only planet
+                                if (!defending && defender->can_afford(100)) {
+                                    int aat = 0;
+                                    int adf = 0;
+                                    for (int i = 0; i < n_units; ++i) {
+                                        int hp = max(0, units[i].hp);
+                                        if (units[i].defending) {
+                                            switch (units[i].type) {
+                                                case UNIT_Inf:
+                                                    adf += hp;
+                                                    break;
+                                                case UNIT_Gli:
+                                                    adf += 2*hp;
+                                                    break;
+                                                case UNIT_Art:
+                                                    adf += 3*hp;
+                                                    break;
+                                                case UNIT_LBGun:
+                                                    adf += 4*hp;
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                        } else {
+                                            switch (units[i].type) {
+                                                case UNIT_Inf:
+                                                    aat += hp;
+                                                    break;
+                                                case UNIT_Gli:
+                                                    aat += 2*hp;
+                                                    break;
+                                                case UNIT_Art:
+                                                    aat += 3*hp;
+                                                    break;
+                                                case UNIT_LBGun:
+                                                    L.warn("Attacker shouldn't have LBGuns");
+                                                    aat += 4*hp;
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                        }
+                                    }
+
+                                    if ((aat*2 > adf*3) && (exostate.get_n_planets(defender) == 1)) {
+                                        comm_open(DIA_S_B_CPU_OpenCommsDefender);
+                                        stage = LB_CommAI;
+                                        // Skip battle drawing etc
+                                        return ExodusMode::MODE_None;
+                                    }
+                                }
+                            } else if (b.aggressor_type == AGG_Rebels) {
+                                comm_open(DIA_S_B_CPU_OpenCommsRebels);
+                                stage = LB_CommAI;
+                                // Skip battle drawing etc
+                                return ExodusMode::MODE_None;
+                            }
+                        }
+                    }
                 }
             }
             break;

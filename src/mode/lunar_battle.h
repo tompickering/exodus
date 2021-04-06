@@ -119,6 +119,8 @@ class LunarBattle : ModeBase, CommPanelDrawer {
             LB_Placement,
             LB_PlacementEnd,
             LB_StartBattle,
+            LB_CommHuman,
+            LB_CommAI,
             LB_SelectUnit,
             LB_Move,
             LB_Mine,
