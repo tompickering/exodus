@@ -153,6 +153,7 @@ void LunarBattle::enter() {
 
     tele_timer = 0;
     active_tele = nullptr;
+    tele_done = false;
 
     use_alt_aliens = (bool)(rand() % 2);
 
@@ -517,6 +518,8 @@ ExodusMode LunarBattle::update(float delta) {
                     for (int i = 0; i < n_tele; ++i) {
                         if (tele[i].x == active_unit->x && tele[i].y == active_unit->y) {
                             active_tele = &tele[i];
+                            tele_timer = 0;
+                            tele_done = false;
                             stage = LB_Tele;
                             return ExodusMode::MODE_None;
                         }
@@ -634,31 +637,87 @@ ExodusMode LunarBattle::update(float delta) {
                     L.fatal("Entered LB_Tele mode with no active tele");
                 }
 
-                if (!aggressor) {
-                    L.warn("Entered LB_Tele with a non-player aggressor");
+                if (!tele_done && tele_timer > .5f) {
+                    switch (active_unit->type) {
+                        case UNIT_Inf:
+                            rpt.agg_surf.inf -= active_unit->hp;
+                            if (aggressor) {
+                                aggressor->transfer_inf(active_unit->hp);
+                            }
+                            break;
+                        case UNIT_Gli:
+                            rpt.agg_surf.gli -= active_unit->hp;
+                            if (aggressor) {
+                                aggressor->transfer_gli(active_unit->hp);
+                            }
+                            break;
+                        default:
+                            L.warn("Invalid unit for tele: %d", (int)active_unit->type);
+                            break;
+                    }
+
+                    active_unit->hp = 0;
+                    active_unit->teleported = true;
+                    draw_manager.draw(active_unit->spr_id, nullptr);
+
+                    tele_done = true;
+                }
+
+                draw_manager.draw(
+                    id(ID::TELELIGHTS),
+                    IMG_GF4_25_2,
+                    {SURF_X + active_tele->x * BLK_SZ,
+                     SURF_Y + active_tele->y * BLK_SZ,
+                     0, 0, 1, 1});
+
+                draw_manager.draw(
+                    id(ID::TELE0),
+                    IMG_GF4_BEAM1,
+                    {SURF_X + active_tele->x * BLK_SZ,
+                     SURF_Y + active_tele->y * BLK_SZ,
+                     0, 0, 1, 1});
+
+                if (tele_timer > .2f && tele_timer < .8f) {
+                    draw_manager.draw(
+                        id(ID::TELE1),
+                        IMG_GF4_BEAM2,
+                        {SURF_X + active_tele->x * BLK_SZ,
+                         SURF_Y + active_tele->y * BLK_SZ,
+                         0, 0, 1, 1});
+                } else {
+                    draw_manager.draw(id(ID::TELE1), nullptr);
+                }
+
+                if (tele_timer > .4f && tele_timer < .6f) {
+                    draw_manager.draw(
+                        id(ID::TELE2),
+                        IMG_GF4_BEAM3,
+                        {SURF_X + active_tele->x * BLK_SZ,
+                         SURF_Y + active_tele->y * BLK_SZ,
+                         0, 0, 1, 1});
+                    draw_manager.draw(
+                        id(ID::TELESTAR),
+                        IMG_GF4_BEAM4,
+                        {SURF_X + active_tele->x * BLK_SZ,
+                         SURF_Y + active_tele->y * BLK_SZ,
+                         0, 0, 1, 1});
+                } else {
+                    draw_manager.draw(id(ID::TELE2), nullptr);
+                    draw_manager.draw(id(ID::TELESTAR), nullptr);
+                }
+
+                tele_timer += delta * 1.4f;
+
+                if (tele_timer < 1) {
+                    return ExodusMode::MODE_None;
+                } else {
+                    draw_manager.draw(id(ID::TELE0), nullptr);
+                    draw_manager.draw(id(ID::TELE1), nullptr);
+                    draw_manager.draw(id(ID::TELE2), nullptr);
+                    draw_manager.draw(id(ID::TELESTAR), nullptr);
+                    draw_manager.draw(id(ID::TELELIGHTS), nullptr);
                     stage = LB_CheckWon;
-                    break;
                 }
-
-                switch (active_unit->type) {
-                    case UNIT_Inf:
-                        rpt.agg_surf.inf -= active_unit->hp;
-                        aggressor->transfer_inf(active_unit->hp);
-                        break;
-                    case UNIT_Gli:
-                        rpt.agg_surf.gli -= active_unit->hp;
-                        aggressor->transfer_gli(active_unit->hp);
-                        break;
-                    default:
-                        L.warn("Invalid unit for tele: %d", (int)active_unit->type);
-                        break;
-                }
-
-                active_unit->hp = 0;
-                active_unit->teleported = true;
-                draw_manager.draw(active_unit->spr_id, nullptr);
-
-                stage = LB_CheckWon;
             }
             break;
         case LB_Fire:

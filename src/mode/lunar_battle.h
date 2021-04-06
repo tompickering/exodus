@@ -225,6 +225,7 @@ class LunarBattle : ModeBase, CommPanelDrawer {
 
         float tele_timer;
         Teleporter *active_tele;
+        bool tele_done;
 };
 
 #endif
