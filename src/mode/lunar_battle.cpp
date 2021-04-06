@@ -1781,8 +1781,21 @@ bool LunarBattle::ai_can_move_to(BattleUnit *u, int x, int y) {
         return false;
     }
 
-    // TODO: If it's a teleporter, return false
-    // TODO: If it's a mine, return false if we're defending
+    // TODO: AI never use their own teleporters - is this correct?
+    for (int i = 0; i < n_tele; ++i) {
+        if (tele[i].x == x && tele[i].y == y) {
+            return false;
+        }
+    }
+
+    // If it's a mine, return false if we're defending
+    if (u->defending) {
+        for (int i = 0; i < n_mines; ++i) {
+            if (mines[i].x == x && mines[i].y == y) {
+                return false;
+            }
+        }
+    }
 
     return true;
 }
