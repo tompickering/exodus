@@ -5,7 +5,7 @@
 
 namespace Log {
 
-    enum Level {DEBUG, INFO, WARN, ERROR, FATAL};
+    enum Level {VERBOSE, DEBUG, INFO, WARN, ERROR, FATAL};
 
     class Logger {
         public:
@@ -13,6 +13,7 @@ namespace Log {
             Logger(Log::Level);
             ~Logger();
             void log(Log::Level, const char* fnt, ...);
+            void verb(const char* fmt, ...);
             void debug(const char* fmt, ...);
             void info(const char* fmt, ...);
             void warn(const char* fmt, ...);

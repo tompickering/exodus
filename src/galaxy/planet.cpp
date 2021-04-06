@@ -334,7 +334,7 @@ void Planet::init() {
     // Shouldn't be necessary but makes sense
     month_reset();
 
-    L.info("Generated type %d planet", (int)cls);
+    L.verb("Generated type %d planet", (int)cls);
 }
 
 int Planet::get_diameter() {
@@ -467,7 +467,7 @@ int Planet::get_owner() {
 }
 
 void Planet::set_owner(int new_owner) {
-    L.info("Planet owner: %d -> %d", owner, new_owner);
+    L.info("[%s] owner: %d -> %d", is_named() ? get_name() : "NEW PLANET", owner, new_owner);
     owner = new_owner;
 }
 
@@ -1903,7 +1903,7 @@ void Planet::ai_update() {
             action = 7;
         }
 
-        L.debug("[%s] BUILD TACTIC: %d", owner->get_full_name(), action);
+        L.verb("[%s] BUILD TACTIC: %d", owner->get_full_name(), action);
 
         stop = stop || action == 0;
 
@@ -2207,7 +2207,7 @@ bool Planet::_ai_place_random(Stone to_place) {
     int x; int y;
     bool found = find_random_buildable_stone(x, y);
     if (found) {
-        L.debug("%s: AI placing stone randomly at (%d, %d)", get_name(), x, y);
+        L.verb("%s: AI placing stone randomly at (%d, %d)", get_name(), x, y);
         set_stone(x, y, to_place);
         return true;
     }
@@ -2218,7 +2218,7 @@ bool Planet::_ai_place_tactical(Stone to_place, Stone target_neighbour) {
     int x; int y;
     bool found = find_random_buildable_stone_next_to_8(target_neighbour, x, y);
     if (found) {
-        L.debug("%s: AI placing stone %d tactically at (%d, %d)", get_name(), (int)to_place, x, y);
+        L.verb("%s: AI placing stone %d tactically at (%d, %d)", get_name(), (int)to_place, x, y);
         set_stone(x, y, to_place);
         return true;
     }

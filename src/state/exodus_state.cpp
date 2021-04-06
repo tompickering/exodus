@@ -198,16 +198,16 @@ void ExodusState::init_cpu_lords() {
         bool initial_planet_selected = false;
         Star *chosen_star = nullptr;
         int chosen_planet_idx = 0;
-        L.debug("Choosing initial planet for CPU lord %d", i);
+        L.verb("Choosing initial planet for CPU lord %d", i);
         while(!initial_planet_selected) {
             int quality = 0;
             for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
-                L.debug("Considering star %d", star_idx);
+                L.verb("Considering star %d", star_idx);
                 Star *s = &stars[star_idx];
                 for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
                     Planet *p = s->get_planet(planet_idx);
                     if (p && p->exists() && !p->is_owned()) {
-                        L.debug("Considering planet %d", planet_idx);
+                        L.verb("Considering planet %d", planet_idx);
                         int planet_quality = 0;
                         if (p->get_class() == Forest)  planet_quality = 4;
                         if (p->get_class() == Desert)  planet_quality = 2;
@@ -216,7 +216,7 @@ void ExodusState::init_cpu_lords() {
                         if (p->get_class() == Ice)     planet_quality = 2;
                         if (p->get_class() == Terra)   planet_quality = 5;
                         if (planet_quality > quality && RND(7) != 1) {
-                            L.debug("Checking existing ownership");
+                            L.verb("Checking existing ownership");
                             // TODO: Can we just check planet->is_owned() at this point?
                             bool ok = true;
                             for (int other_idx = n_human_players; other_idx < i; other_idx++) {
@@ -229,7 +229,7 @@ void ExodusState::init_cpu_lords() {
                                 }
                             }
                             if (ok) {
-                                L.debug("Updated planet candidate!");
+                                L.verb("Updated planet candidate!");
                                 quality = planet_quality;
                                 chosen_star = s;
                                 chosen_planet_idx = planet_idx;
@@ -238,7 +238,7 @@ void ExodusState::init_cpu_lords() {
                                 // over stars, and are liable to change our mind if
                                 // we find a better offer!
                             } else {
-                                L.debug("Can't choose this planet");
+                                L.verb("Can't choose this planet");
                             }
                         }
                     }
@@ -326,7 +326,7 @@ Player* ExodusState::set_active_player(int idx) {
         L.fatal("Attempt to set invalid player active %d", idx);
     }
 
-    L.debug("ACTIVE PLAYER: %d -> %d", active_player, idx);
+    L.verb("ACTIVE PLAYER: %d -> %d", active_player, idx);
     active_player = idx;
     return get_active_player();
 }
@@ -360,7 +360,7 @@ FlyTarget* ExodusState::get_active_flytarget() {
 }
 
 void ExodusState::set_active_flytarget(FlyTarget* new_target) {
-    L.debug("Active target: %s", new_target->name);
+    L.verb("Active target: %s", new_target->name);
     active_planet = -1;
 
     if (new_target == get_galaxy()->get_guild()) {
@@ -379,7 +379,7 @@ void ExodusState::set_active_flytarget(FlyTarget* new_target) {
 }
 
 void ExodusState::set_active_planet(int new_planet) {
-    L.debug("Active planet: %d", new_planet);
+    L.verb("Active planet: %d", new_planet);
     active_planet = new_planet;
 }
 

@@ -375,7 +375,7 @@ void GalaxyMap::exit() {
 
 void GalaxyMap::next_mp_stage() {
     mp_state.mp_stage = (MonthPassStage)((int)mp_state.mp_stage + 1);
-    L.debug("MP stage %d", mp_state.mp_stage);
+    L.verb("MP stage %d", mp_state.mp_stage);
     // Reset all mp-stage state tracking
     mp_state.mp_player_idx = 0;
     mp_state.mp_star_idx = 0;
@@ -385,7 +385,7 @@ void GalaxyMap::next_mp_stage() {
 void GalaxyMap::next_mpai_stage() {
     mp_state.mpai_stage = (MonthPassAIStage)((int)mp_state.mpai_stage + 1);
     Player *p = exostate.get_active_player();
-    L.debug("[%s] MPAI stage %d", p->get_full_name(), mp_state.mpai_stage);
+    L.verb("[%s] MPAI stage %d", p->get_full_name(), mp_state.mpai_stage);
     // Reset all mpai-stage state tracking
     mp_state.mpai_player_idx = 0;
     mp_state.mpai_star_idx = 0;
@@ -397,12 +397,12 @@ void GalaxyMap::next_mpp_stage() {
     mp_state.mpp_stage = (MonthPassPlanetStage)((int)mp_state.mpp_stage + 1);
     Star *s = exostate.get_active_star();
     Planet *p = exostate.get_active_planet();
-    L.debug("[%s/%s] MPP stage %d", s->name, p->get_name(), mp_state.mpp_stage);
+    L.verb("[%s/%s] MPP stage %d", s->name, p->get_name(), mp_state.mpp_stage);
 
 }
 
 void GalaxyMap::month_pass_start() {
-    L.info("Month passing...");
+    L.info("-------- MONTH PASSING --------");
     mp_state.month_pass_time = 0;
     mp_state.mpai_stage = (MonthPassAIStage)0;
     mp_state.mpp_stage = (MonthPassPlanetStage)0;
@@ -441,7 +441,7 @@ void GalaxyMap::month_pass_end() {
     mp_state.mpai_stage = (MonthPassAIStage)0;
     mp_state.mpp_stage = (MonthPassPlanetStage)0;
 
-    L.info("Month passed");
+    L.info("-------- MONTH PASSED --------");
 
     Player *p;
 

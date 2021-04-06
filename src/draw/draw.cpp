@@ -44,7 +44,7 @@ void DrawManager::update(float delta, MousePos new_mouse_pos, MousePos new_click
     if (clicked_this_frame) {
         float up_x, up_y;
         get_upscale(up_x, up_y);
-        L.debug("Click: %d, %d", (int)((float)click_pos.x / up_x), (int)((float)click_pos.y / up_y));
+        L.verb("Click: %d, %d", (int)((float)click_pos.x / up_x), (int)((float)click_pos.y / up_y));
     }
     if (draw_cursor && click_pos.x >= 0 && click_pos.y >= 0) {
         for (std::vector<DrawnSprite>::size_type i = 0; i < drawn_spr_info.size(); ++i) {
@@ -85,7 +85,7 @@ void DrawManager::update(float delta, MousePos new_mouse_pos, MousePos new_click
     prev_mouseover_selectable_text_id = mouseover_selectable_text_id;
 
     if (sprite_click.id != ID_NONE) {
-        L.debug("CLICK: %d: %f, %f", sprite_click.id, sprite_click.x, sprite_click.y);
+        L.verb("CLICK: %d: %f, %f", sprite_click.id, sprite_click.x, sprite_click.y);
     }
 }
 
@@ -203,7 +203,7 @@ SprID DrawManager::new_sprite_id() {
         L.warn("Sprite ID wrapping");
         next_id = ID_NONE + 1;
     }
-    //L.debug("Allocating SprID %d", next_id);
+    //L.verb("Allocating SprID %d", next_id);
     return next_id++;
 }
 

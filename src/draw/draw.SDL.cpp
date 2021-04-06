@@ -122,7 +122,7 @@ SDL_Surface* DrawManagerSDL::load_normalised_image(const char* path) {
     normalised = SDL_ConvertSurfaceFormat(load_surf, SDL_PIXELFORMAT_RGBA8888, 0);
     SDL_FreeSurface(load_surf);
     if (normalised) {
-        L.debug("Loaded %s", img_path);
+        L.verb("Loaded %s", img_path);
     } else {
         L.warn("Could not load %s", img_path);
     }
@@ -279,14 +279,14 @@ void DrawManagerSDL::clear(DrawTarget tgt) {
 }
 
 void DrawManagerSDL::save_background() {
-    L.debug("Saving background");
+    L.verb("Saving background");
     if (SDL_BlitSurface(surf, nullptr, background, nullptr)) {
         L.warn("Background blit failed");
     }
 }
 
 void DrawManagerSDL::save_background(DrawArea area) {
-    L.debug("Saving background at %d %d (%dx%d)", area.x, area.y, area.w, area.h);
+    L.verb("Saving background at %d %d (%dx%d)", area.x, area.y, area.w, area.h);
 
     area.x *= UPSCALE_X;
     area.y *= UPSCALE_Y;

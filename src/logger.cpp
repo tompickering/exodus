@@ -34,6 +34,9 @@ namespace Log {
             case DEBUG:
                 printf("DEBUG : ");
                 break;
+            case VERBOSE:
+                printf("VERBOSE : ");
+                break;
         }
 
         vprintf(fmt, args);
@@ -44,6 +47,15 @@ namespace Log {
         va_list args;
         va_start(args, fmt);
         vlog(lev, fmt, args);
+        va_end(args);
+    }
+
+    void Logger::verb(const char* fmt, ...) {
+        if (level > VERBOSE)
+            return;
+        va_list args;
+        va_start(args, fmt);
+        vlog(Level::VERBOSE, fmt, args);
         va_end(args);
     }
 
