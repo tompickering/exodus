@@ -55,6 +55,7 @@ typedef struct {
 
 typedef struct {
     bool aggressor_won;
+    bool rebel_peace;
     UnitCount agg_init; // \ Units that were taken into battle.
     UnitCount def_init; // /
     UnitCount agg_lost; // \ Units that were destroyed in battle.
@@ -62,6 +63,7 @@ typedef struct {
     UnitCount agg_surf; // \ Units that are still on the surface and
     UnitCount def_surf; // / may need to be moved to planet or fleet.
     void clear() {
+        rebel_peace = false;
         agg_init.clear();
         def_init.clear();
         agg_lost.clear();

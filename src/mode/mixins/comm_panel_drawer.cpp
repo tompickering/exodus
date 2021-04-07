@@ -1458,10 +1458,101 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_recv(DIA_R_B_CPU_CommsDefenderAcceptResponse);
             break;
         case DIA_S_B_CPU_OpenCommsRebels:
-            // TODO (placeholder)
+            comm_prepare(4);
+            switch (RND(4)) {
+                case 1:
+                    comm_set_speech("We want freedom!");
+                    break;
+                case 2:
+                    comm_set_speech("We want a better life!");
+                    break;
+                case 3:
+                    comm_set_speech("Revolution! Revolution!");
+                    break;
+                case 4:
+                    comm_set_speech("Against the tyranny!");
+                    break;
+            }
+            comm_set_text(0, "We will find a compromise.");
+            comm_set_text(1, "You will get a better life.");
+            comm_set_text(2, "The revolution is useless!");
+            comm_set_text(3, "You dare? Die, unworthy!");
+            comm_text_interactive_mask = 0xF;
+            comm_recv(DIA_R_B_CPU_RebelComms);
+            break;
+        case DIA_S_B_CPU_RebelsOfferCompromise:
             comm_prepare(1);
-            comm_set_speech("o hai");
+            comm_set_speech("We do not want compromises!");
             comm_recv(DIA_R_Close);
+            break;
+        case DIA_S_B_CPU_RebelsOfferBetterLife:
+            comm_prepare(4);
+            comm_set_speech("What do you offer?");
+            comm_set_text(0, "I will build new cities.");
+            comm_set_text(1, "I will build parks.");
+            comm_set_text(2, "I will improve the laws.");
+            comm_set_text(3, "I will pay for improvements.");
+            if (!comm_other->can_afford(1)) {
+                comm_text_disabled_mask |= 0x8;
+            }
+            comm_recv(DIA_R_B_CPU_RebelsListen);
+            break;
+        case DIA_S_B_CPU_RebelsOfferNothing:
+            comm_prepare(1);
+            switch (RND(4)) {
+                case 1:
+                    comm_set_speech("We want freedom!");
+                    break;
+                case 2:
+                    comm_set_speech("We want a better life!");
+                    break;
+                case 3:
+                    comm_set_speech("Revolution! Revolution!");
+                    break;
+                case 4:
+                    comm_set_speech("Against the tyranny!");
+                    break;
+            }
+            comm_recv(DIA_R_Close);
+            break;
+        case DIA_S_B_CPU_RebelsProposeNoMC:
+            comm_prepare(1);
+            if (onein(2)) {
+                comm_set_speech("These are just words!");
+            } else {
+                comm_set_speech("We do not believe that!");
+            }
+            comm_recv(DIA_R_Close);
+            break;
+        case DIA_S_B_CPU_RebelsProposeMC:
+            comm_prepare(1);
+            comm_ctx.mc = comm_planet->get_n_cities()*5;
+            comm_set_speech("We want %dMC!", comm_ctx.mc);
+            comm_ctx.mc2 = max(comm_other->get_mc()/2, 1);
+            comm_set_text(0, "I offer %dMC.", comm_ctx.mc2);
+            comm_show_adj(true);
+            comm_recv(DIA_R_B_CPU_RebelsDemandMC);
+            break;
+        case DIA_S_B_CPU_RebelsMCOffer:
+            {
+                comm_prepare(1);
+
+                bool ok = true;
+                if (comm_ctx.mc2 < (comm_ctx.mc-(comm_ctx.mc/4))) {
+                    ok = false;
+                }
+                if (!comm_other->attempt_spend(comm_ctx.mc2)) {
+                    L.error("Offered more MC to rebels than we could afford");
+                    ok = false;
+                }
+                if (ok) {
+                    comm_set_speech("We accept this.");
+                    comm_recv(DIA_R_B_CPU_RebelsAcceptOffer);
+                } else {
+                    comm_set_speech("That is not enough!");
+                    comm_recv(DIA_R_Close);
+                }
+            }
             break;
         default:
             L.warn("Unhandled comm input on send: %d", (int)input);
@@ -1993,6 +2084,60 @@ void CommPanelDrawer::comm_process_responses() {
             if (clicked) {
                 comm_report_action = CA_CallOffAttack;
             }
+            break;
+        case DIA_R_B_CPU_RebelComms:
+            switch (opt) {
+                case 0:
+                    comm_send(DIA_S_B_CPU_RebelsOfferCompromise);
+                    break;
+                case 1:
+                    comm_send(DIA_S_B_CPU_RebelsOfferBetterLife);
+                    break;
+                case 2:
+                    comm_send(DIA_S_B_CPU_RebelsOfferNothing);
+                    break;
+                case 3:
+                    comm_send(DIA_S_B_CPU_RebelsOfferNothing);
+                    break;
+            }
+            break;
+        case DIA_R_B_CPU_RebelsListen:
+            switch (opt) {
+                case 0:
+                    comm_send(DIA_S_B_CPU_RebelsProposeNoMC);
+                    break;
+                case 1:
+                    comm_send(DIA_S_B_CPU_RebelsProposeNoMC);
+                    break;
+                case 2:
+                    comm_send(DIA_S_B_CPU_RebelsProposeNoMC);
+                    break;
+                case 3:
+                    comm_send(DIA_S_B_CPU_RebelsProposeMC);
+                    break;
+            }
+            break;
+        case DIA_R_B_CPU_RebelsDemandMC:
+            {
+                SpriteClick adjclick = draw_manager.query_click(id_comm_adj);
+                if (adjclick.id) {
+                    // FIXME: Can we hold a button to make this go faster? Or
+                    //        alternatively allow keyboard input?
+                    if (adjclick.x < 0.5f) {
+                        comm_ctx.mc2 = max(comm_ctx.mc2 - 1, 0);
+                    } else {
+                        comm_ctx.mc2 = min(comm_ctx.mc2 + 1, comm_other->get_mc());
+                    }
+                    comm_set_text(0, "I offer %dMC.", comm_ctx.mc);
+                }
+
+                if (draw_manager.query_click(id_comm_adj_ok).id) {
+                    comm_send(DIA_S_B_CPU_RebelsMCOffer);
+                }
+            }
+            break;
+        case DIA_R_B_CPU_RebelsAcceptOffer:
+            comm_report_action = CA_CallOffAttack;
             break;
         default:
             break;

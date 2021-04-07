@@ -485,6 +485,14 @@ ExodusMode LunarBattle::update(float delta) {
                         stage = button_prev_stage;
                         comm_ctx.battle_first_comms = false;
                         break;
+                    case CA_CallOffAttack:
+                        comm_close();
+                        rpt.aggressor_won = false;
+                        if (b.aggressor_type == AGG_Rebels) {
+                            rpt.rebel_peace = true;
+                        }
+                        stage = LB_Won;
+                        break;
                     default:
                         L.error("Unexpected human comm action in battle: %d", (int)action);
                         comm_close();
@@ -508,6 +516,9 @@ ExodusMode LunarBattle::update(float delta) {
                     case CA_CallOffAttack:
                         comm_close();
                         rpt.aggressor_won = false;
+                        if (b.aggressor_type == AGG_Rebels) {
+                            rpt.rebel_peace = true;
+                        }
                         stage = LB_Won;
                         break;
                     default:
@@ -1943,8 +1954,9 @@ LunarBattle::Stage LunarBattle::update_buttons() {
                 comm_open(defending ? DIA_S_B_OpenCommsDefender : DIA_S_B_OpenCommsAttacker);
                 return LB_CommHuman;
             case AGG_Rebels:
-                // TODO (same comms as when rebels contact us)
-                break;
+                // (Same comms as when rebels contact us)
+                comm_open(DIA_S_B_CPU_OpenCommsRebels);
+                return LB_CommHuman;
             default:
                 break;
         }

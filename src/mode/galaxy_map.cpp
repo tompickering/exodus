@@ -2326,9 +2326,8 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             } else {
                 bulletin_set_next_text("The rebels did not succeed. The planet");
                 bulletin_set_next_text("remains in %s's hand.", owner->get_full_name());
-                // TODO: Set rebelpeace correctly here
-                bool rebelpeace = false;
-                if (!rebelpeace && onein(2)) {
+                if (!rpt.rebel_peace && onein(2)) {
+                    bulletin_set_next_text("");
                     bulletin_set_next_text("Rebels have attacked the depots!");
                     if (owner->has_invention(INV_IndustryGuard)) {
                         bulletin_set_next_text("The Industry Guard Computers prevented");

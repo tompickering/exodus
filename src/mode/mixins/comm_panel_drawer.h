@@ -94,6 +94,12 @@ enum CommSend {
     DIA_S_B_CPU_CommsDefenderRequestMore,
     DIA_S_B_CPU_CommsDefenderAccept,
     DIA_S_B_CPU_OpenCommsRebels,
+    DIA_S_B_CPU_RebelsOfferCompromise,
+    DIA_S_B_CPU_RebelsOfferBetterLife,
+    DIA_S_B_CPU_RebelsOfferNothing,
+    DIA_S_B_CPU_RebelsProposeNoMC,
+    DIA_S_B_CPU_RebelsProposeMC,
+    DIA_S_B_CPU_RebelsMCOffer,
 };
 
 // These are from the perspective of the *player*
@@ -136,6 +142,10 @@ enum CommRecv {
     DIA_R_B_CPU_CommsAttacker,
     DIA_R_B_CPU_CommsDefender,
     DIA_R_B_CPU_CommsDefenderAcceptResponse,
+    DIA_R_B_CPU_RebelComms,
+    DIA_R_B_CPU_RebelsListen,
+    DIA_R_B_CPU_RebelsDemandMC,
+    DIA_R_B_CPU_RebelsAcceptOffer,
 };
 
 typedef struct {
