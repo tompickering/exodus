@@ -96,6 +96,7 @@ enum MonthPassPlanetStage {
     MPP_DiscoverSpecies,
     MPP_CityEpidemic,
     MPP_RebelAttack,
+    MPP_RebelAttackResult,
     MPP_LawsIncreaseUnrest,
     MPP_ParksReduceUnrest,
     MPP_ClearRadiation,

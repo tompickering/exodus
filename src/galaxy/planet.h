@@ -188,6 +188,7 @@ class Planet {
         void adjust_airdef_guns(int);
         void adjust_robots(int);
         void prepare_for_cpu_lord(); // Orig: PROCgivestation
+        void reset_unrest();
         void adjust_unrest(int);
         void surfchange();
         void change_class(PlanetClass);

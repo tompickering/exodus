@@ -184,7 +184,10 @@ void LunarBattlePrep::enter() {
             }
             break;
         case AGG_Rebels:
-            // TODO
+            b.aggressor_inf = RND(10*p->get_n_cities());
+            if (p->get_army_size() > b.aggressor_inf*3) {
+                b.aggressor_inf *= 2;
+            }
             break;
         case AGG_Aliens:
             b.aggressor_inf = RND(m/2);
@@ -735,6 +738,13 @@ ExodusMode LunarBattlePrep::update(float delta) {
                         agg->transfer_gli(g);
                         agg->transfer_inf(i);
                     }
+                }
+
+                if (b.aggressor_type == AGG_Rebels && rpt.aggressor_won) {
+                    int i = rpt.agg_surf.inf;
+                    p->reset_unrest();
+                    p->clear_army();
+                    p->adjust_army(max(0, i), 0, 0);
                 }
 
                 // If this is an auto-battle involving a human, we have a

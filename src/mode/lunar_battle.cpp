@@ -706,6 +706,9 @@ ExodusMode LunarBattle::update(float delta) {
                                 aggressor->transfer_gli(active_unit->hp);
                             }
                             break;
+                        case UNIT_Rebel:
+                            rpt.agg_surf.inf -= active_unit->hp;
+                            break;
                         default:
                             L.warn("Invalid unit for tele: %d", (int)active_unit->type);
                             break;
@@ -909,6 +912,10 @@ ExodusMode LunarBattle::update(float delta) {
                         case UNIT_LBGun:
                             lost_tracker = &uc_lost->base;
                             surf_tracker = &uc_surf->base;
+                            break;
+                        case UNIT_Rebel:
+                            lost_tracker = &uc_lost->inf;
+                            surf_tracker = &uc_surf->inf;
                             break;
                         default:
                             break;

@@ -1119,6 +1119,10 @@ void Planet::prepare_for_cpu_lord() {
     }
 }
 
+void Planet::reset_unrest() {
+    unrest[0] = 0;
+}
+
 void Planet::adjust_unrest(int adjustment) {
     unrest[0] += adjustment;
     if (unrest[0] < 0) unrest[0] = 0;

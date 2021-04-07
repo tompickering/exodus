@@ -2243,10 +2243,113 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
+    if (mp_state.mpp_stage == MPP_RebelAttack) {
+        int cities = p->get_n_cities();
+        if (cities > 0 && exostate.get_orig_month() > 2) {
+            if (p->get_class() != Artificial && p->get_unrest() > 9) {
+                int robots = p->get_robots();
+                if ((robots < cities*3) || onein(4)) {
+                    p->adjust_unrest(-3);
+                    // TODO: PROCdonotice, music
+                    bulletin_start_new(false);
+                    bulletin_set_bg(p->sprites()->bulletin_bg);
+                    bulletin_set_active_player_flag();
+                    bulletin_write_planet_info(s, p);
+                    bulletin_set_next_text("REVOLUTION AT %s", tmp_caps(p->get_name()));
+                    bulletin_set_next_text("");
+                    bulletin_set_next_text("The population of %s has sent", p->get_name());
+                    bulletin_set_next_text("rebel warriors into a lunar battle");
+                    bulletin_set_next_text("in order to depose %s.", owner->get_full_name());
+
+                    ephstate.set_ephemeral_state(EPH_LunarBattlePrep);
+                    ephstate.lunar_battle.aggressor_type = AGG_Rebels;
+                    do_lunar_battle = true;
+
+                    next_mpp_stage();
+                    return ExodusMode::MODE_None;
+                }
+            }
+        }
+        next_mpp_stage();
+    }
+
     // Can cause the owner to change - we should return to ensure
     // that the 'owner' variable is updated when we resume processing.
-    if (mp_state.mpp_stage == MPP_RebelAttack) {
-        // TODO
+    if (mp_state.mpp_stage == MPP_RebelAttackResult) {
+        if (ephstate.get_ephemeral_state() == EPH_LunarBattleReport) {
+            LunarBattleReport &rpt = ephstate.lunar_battle_report;
+            ephstate.clear_ephemeral_state();
+            bulletin_start_new(true);
+            bulletin_set_bg(p->sprites()->bulletin_bg);
+            bulletin_set_active_player_flag();
+            bulletin_write_planet_info(s, p);
+
+            Player *new_owner = nullptr;
+            int new_owner_idx = -1;
+            int attempts = 0;
+            while (attempts < 500 && !new_owner) {
+                attempts++;
+                int idx = rand() % N_PLAYERS;
+                Player *pl = exostate.get_player(idx);
+                if (!pl)
+                    continue;
+                if (pl == owner)
+                    continue;
+                if (!pl->is_participating())
+                    continue;
+                // Orig enforces has_visited (SunE), but will get stuck if no candidates
+                int star_idx = exostate.get_active_star_idx();
+                if (attempts < 250 && !pl->get_location().has_visited(star_idx))
+                    continue;
+                new_owner_idx = idx;
+                new_owner = pl;
+                break;
+            }
+
+            bulletin_set_next_text("The revolution of %s", p->get_name());
+            bulletin_set_next_text("");
+            if (rpt.aggressor_won) {
+                bulletin_set_next_text("The rebels have succeeded. So the");
+                bulletin_set_next_text("planet needs a new leader. The people");
+                if (new_owner && new_owner_idx >= 0) {
+                    const char *new_owner_name = new_owner->get_full_name();
+                    bulletin_set_next_text("have chosen %s to rule it!", new_owner_name);
+                    p->set_owner(new_owner_idx);
+                } else {
+                    // Orig doesn't do this, but we can't find a new owner!
+                    bulletin_set_next_text("have chosen to establish a republic!");
+                    p->unset_owner();
+                    // Don't keep processing this planet now there's no owner
+                    mp_state.mpp_stage = MPP_End;
+                    return ExodusMode::MODE_None;
+                }
+            } else {
+                bulletin_set_next_text("The rebels did not succeed. The planet");
+                bulletin_set_next_text("remains in %s's hand.", owner->get_full_name());
+                // TODO: Set rebelpeace correctly here
+                bool rebelpeace = false;
+                if (!rebelpeace && onein(2)) {
+                    bulletin_set_next_text("Rebels have attacked the depots!");
+                    if (owner->has_invention(INV_IndustryGuard)) {
+                        bulletin_set_next_text("The Industry Guard Computers prevented");
+                        bulletin_set_next_text("any damage.");
+                    } else {
+                        bulletin_set_next_text("Food, minerals or plutonium might have");
+                        bulletin_set_next_text("been stolen.");
+                        int mn = p->get_reserves_min();
+                        int fd = p->get_reserves_food();
+                        int pl = p->get_reserves_plu();
+                        int mn_lost = mn <= 0 ? 0 : RND(mn);
+                        int fd_lost = fd <= 0 ? 0 : RND(fd);
+                        int pl_lost = pl <= 0 ? 0 : RND(pl);
+                        p->adjust_reserves(-mn_lost, -fd_lost, -pl_lost);
+                        p->adjust_unrest(1);
+                    }
+                }
+            }
+            next_mpp_stage();
+            return ExodusMode::MODE_None;
+        }
         next_mpp_stage();
     }
 
