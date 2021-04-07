@@ -144,6 +144,7 @@ typedef struct {
     AllianceType alliance_type;
     int alliance_prob;
     bool may_proceed;
+    bool battle_first_comms;
 } CommContext;
 
 class CommPanelDrawer {

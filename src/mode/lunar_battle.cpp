@@ -168,6 +168,8 @@ void LunarBattle::enter() {
     to_place_art = 0;
     to_place_msc = 0;
 
+    comm_ctx.battle_first_comms = true;
+
     if (b.auto_battle) {
         stage = LB_Auto;
     } else {
@@ -481,11 +483,13 @@ ExodusMode LunarBattle::update(float delta) {
                     case CA_Abort:
                         comm_close();
                         stage = button_prev_stage;
+                        comm_ctx.battle_first_comms = false;
                         break;
                     default:
                         L.error("Unexpected human comm action in battle: %d", (int)action);
                         comm_close();
                         stage = button_prev_stage;
+                        comm_ctx.battle_first_comms = false;
                         break;
                 }
             }
@@ -1912,6 +1916,8 @@ void LunarBattle::update_panel_battle() {
 }
 
 LunarBattle::Stage LunarBattle::update_buttons() {
+    LunarBattleParams &b = ephstate.lunar_battle;
+
     button_prev_stage = stage;
 
     bool defending = !(aggressor && aggressor->is_human());
@@ -1925,8 +1931,16 @@ LunarBattle::Stage LunarBattle::update_buttons() {
     }
 
     if (draw_manager.query_click(id(ID::BTN_TALK)).id) {
-        comm_open(defending ? DIA_S_B_OpenCommsDefender : DIA_S_B_OpenCommsAttacker);
-        return LB_CommHuman;
+        switch (b.aggressor_type) {
+            case AGG_Player:
+                comm_open(defending ? DIA_S_B_OpenCommsDefender : DIA_S_B_OpenCommsAttacker);
+                return LB_CommHuman;
+            case AGG_Rebels:
+                // TODO (same comms as when rebels contact us)
+                break;
+            default:
+                break;
+        }
     }
 
     if (draw_manager.query_click(id(ID::BTN_QUIT)).id) {

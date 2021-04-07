@@ -1371,15 +1371,35 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_recv(DIA_R_CPU_ProposeAllianceMoney);
             break;
         case DIA_S_B_OpenCommsAttacker:
+            comm_prepare(4);
+            if (comm_ctx.battle_first_comms) {
+                comm_set_speech("What do you want, %s?", comm_player->get_name());
+            } else {
+                comm_set_speech("You again, %s?", comm_player->get_name());
+            }
+            comm_ctx.mc = 100;
+            comm_set_text(0, "Pay %dMC and I will leave.", comm_ctx.mc);
+            comm_set_text(1, "Do you call THIS a defense?");
+            comm_set_text(2, "The victory is mine.");
+            comm_set_text(3, "Never mind...");
+            comm_text_interactive_mask = 0xF;
             // TODO (placeholder)
-            comm_prepare(1);
-            comm_set_speech("get off my land");
             comm_recv(DIA_R_Close);
             break;
         case DIA_S_B_OpenCommsDefender:
+            comm_prepare(4);
+            if (comm_ctx.battle_first_comms) {
+                comm_set_speech("What do you want, %s?", comm_player->get_name());
+            } else {
+                comm_set_speech("You again, %s?", comm_player->get_name());
+            }
+            comm_set_text(0, "I offer money if you retreat.");
+            comm_ctx.mc = 20;
+            comm_set_text(1, "Pay %dMC and you may retreat.", comm_ctx.mc);
+            comm_set_text(2, "You will lose this battle.");
+            comm_set_text(3, "Never mind...");
+            comm_text_interactive_mask = 0xF;
             // TODO (placeholder)
-            comm_prepare(1);
-            comm_set_speech("trolololol");
             comm_recv(DIA_R_Close);
             break;
         case DIA_S_B_CPU_OpenCommsAttacker:
