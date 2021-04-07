@@ -1331,21 +1331,78 @@ void PlanetMap::draw_frame_pl() {
 }
 
 void PlanetMap::draw_frame_unrest() {
-    // TODO
     draw_frame(436, 306);
 
-    int start_x = RES_X/2 - 436/2;
-    int end_x = RES_X/2 + 436/2;
-    int top_y = RES_Y/2-306/2;
-    int scale_y = 306/10;;
-    int x0 = start_x;
+    const int graph_w = 300;
+    const int graph_h = 200;
+    const int graph_x = RES_X/2 - graph_w/2;
+    const int graph_y = RES_Y/2 - graph_h/2 - 30;
+
+    draw_manager.draw_text(
+        "Information about the people",
+        Justify::Left,
+        108, 90,
+        COL_TEXT2
+    );
+
+    draw_manager.draw_text(
+        Font::Tiny,
+        "HAPPY",
+        Justify::Left,
+        108, 124,
+        {0x90, 0x90, 0x90});
+    draw_manager.draw_text(
+        Font::Tiny,
+        "UNHAPPY",
+        Justify::Left,
+        108, 222,
+        {0x90, 0x90, 0x90});
+    draw_manager.draw_text(
+        Font::Tiny,
+        "ANGRY",
+        Justify::Left,
+        108, 320,
+        {0x90, 0x90, 0x90});
+
+    // TODO: Graph draw needs cleaning up
+
+    for (int y = 0; y <= 4; y++) {
+        draw_manager.fill({graph_x, graph_y+y*(graph_h/4), graph_w, 2}, {0x40, 0x40, 0x40});
+    }
+    for (int x = 0; x < N_UNREST; x++) {
+        draw_manager.fill({graph_x+x*(graph_w/(N_UNREST-1)), graph_y, 2, graph_h}, {0x90, 0x90, 0x90});
+    }
+
+    int prog = 0;
+    for (int i = 0; i < 5; ++i) {
+        prog += planet->get_unrest(i);
+    }
+    prog /= 5;
+
+    const char *prog_str = nullptr;
+    if (prog > planet->get_unrest()) {
+        prog_str = "Prognosis: positive";
+    } else if (prog < planet->get_unrest()) {
+        prog_str = "Prognosis: negative";
+    } else {
+        prog_str = "Prognosis: no change";
+    }
+
+    draw_manager.draw_text(
+        prog_str,
+        Justify::Left,
+        108, 360,
+        COL_TEXT2);
+
+    int scale_y = graph_h/10;;
+    int x0 = graph_x;
     for (int m = N_UNREST-1; m > 0; --m) {
-        int x1 = x0 + (end_x-start_x)/(N_UNREST-1);
+        int x1 = (int)((float)x0 + (float)graph_w/(float)(N_UNREST-1) + .5f);
         int data0 = min(10, planet->get_unrest(m));
         int data1 = min(10, planet->get_unrest(m-1));
-        int y0 = top_y + data0*scale_y;
-        int y1 = top_y + data1*scale_y;
-        for (int dx = x0; dx < x1; dx++) {
+        int y0 = graph_y + data0*scale_y;
+        int y1 = graph_y + data1*scale_y;
+        for (int dx = x0; dx <= x1; dx++) {
             float prop = (float)(dx-x0)/(float)(x1-x0);
             int y = y0 + (int)(((float)(y1-y0))*prop);
             draw_manager.fill({dx,y,1,4}, COL_TEXT2);
