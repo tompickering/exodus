@@ -4,6 +4,7 @@
 #include <cmath>
 
 #include "galaxy/planet.h"
+#include "util/value.h"
 
 #include "assetpaths.h"
 
@@ -1340,8 +1341,8 @@ void PlanetMap::draw_frame_unrest() {
     int x0 = start_x;
     for (int m = N_UNREST-1; m > 0; --m) {
         int x1 = x0 + (end_x-start_x)/(N_UNREST-1);
-        int data0 = planet->get_unrest(m);
-        int data1 = planet->get_unrest(m-1);
+        int data0 = min(10, planet->get_unrest(m));
+        int data1 = min(10, planet->get_unrest(m-1));
         int y0 = top_y + data0*scale_y;
         int y1 = top_y + data1*scale_y;
         for (int dx = x0; dx < x1; dx++) {
