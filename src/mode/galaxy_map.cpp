@@ -523,6 +523,8 @@ ExodusMode GalaxyMap::month_pass_update() {
     }
 
     if (mp_state.mp_stage == MP_SunExpansion) {
+        // PROCsunexpand
+        // FIXME: Ensure stars are drawn correctly when the bulletin is closed
         for (; mp_state.mp_star_idx < n_stars; ++mp_state.mp_star_idx) {
             exostate.set_active_flytarget(&stars[mp_state.mp_star_idx]);
             Star *s = exostate.get_active_star();
