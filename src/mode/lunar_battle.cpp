@@ -625,7 +625,6 @@ ExodusMode LunarBattle::update(float delta) {
                         move_dir = DIR_None;
                     }
                 } else {
-                    // TODO: AI movement - for now just stick with the random choice
                     move_dir = ai_decide_move_direction();
 
                     if (move_dir == DIR_None) {
@@ -964,7 +963,6 @@ ExodusMode LunarBattle::update(float delta) {
 
                 if (agg_units == 0 || def_units == 0) {
                     rpt.aggressor_won = def_units == 0;
-                    // TODO: Populate rest of report
                     stage = LB_Won;
                 } else {
                     // Do this by default, if we don't decide to open comms
@@ -1692,7 +1690,6 @@ void LunarBattle::update_cursor() {
 }
 
 void LunarBattle::update_panel() {
-    // TODO: Determine appropriate mode
     LBPanelMode target_mode = (stage == LB_Placement || stage == LB_PlacementEnd)
                               ? LBPM_Placement
                               : LBPM_Battle;
@@ -1888,7 +1885,6 @@ void LunarBattle::update_panel_battle() {
                 }
             }
 
-            // TODO: Conditional based on cover
             if (is_in_cover(draw_unit)) {
                 draw_manager.draw(
                     IMG_GF4_COVER,
