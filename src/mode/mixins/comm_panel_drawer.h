@@ -85,6 +85,8 @@ enum CommSend {
     DIA_S_CPU_ProposeAllianceAggressively,
     DIA_S_CPU_AllianceQuery,
     // Battle comms
+    DIA_S_B_OpenCommsAttacker,
+    DIA_S_B_OpenCommsDefender,
     DIA_S_B_CPU_OpenCommsAttacker,
     DIA_S_B_CPU_CommsAttackerResponse,
     DIA_S_B_CPU_OpenCommsDefender,

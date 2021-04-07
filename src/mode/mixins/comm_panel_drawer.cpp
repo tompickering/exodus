@@ -556,6 +556,16 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img_caption_lower("RACE: %s", comm_player->get_race_str());
             comm_set_race(comm_player->get_race());
             break;
+        case DIA_S_B_OpenCommsAttacker:
+            comm_set_img_caption_upper(comm_other->get_full_name());
+            comm_set_img_caption_lower("RACE: %s", comm_other->get_race_str());
+            comm_set_race(comm_other->get_race());
+            break;
+        case DIA_S_B_OpenCommsDefender:
+            comm_set_img_caption_upper(comm_player->get_full_name());
+            comm_set_img_caption_lower("RACE: %s", comm_player->get_race_str());
+            comm_set_race(comm_player->get_race());
+            break;
         case DIA_S_B_CPU_OpenCommsAttacker:
             comm_set_img_caption_upper(comm_player->get_full_name());
             comm_set_img_caption_lower("RACE: %s", comm_player->get_race_str());
@@ -1359,6 +1369,18 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_set_text(1, "I am not interested.");
             comm_text_interactive_mask = 0x3;
             comm_recv(DIA_R_CPU_ProposeAllianceMoney);
+            break;
+        case DIA_S_B_OpenCommsAttacker:
+            // TODO (placeholder)
+            comm_prepare(1);
+            comm_set_speech("get off my land");
+            comm_recv(DIA_R_Close);
+            break;
+        case DIA_S_B_OpenCommsDefender:
+            // TODO (placeholder)
+            comm_prepare(1);
+            comm_set_speech("trolololol");
+            comm_recv(DIA_R_Close);
             break;
         case DIA_S_B_CPU_OpenCommsAttacker:
             comm_prepare(4);

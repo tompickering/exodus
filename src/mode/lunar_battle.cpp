@@ -480,14 +480,12 @@ ExodusMode LunarBattle::update(float delta) {
                         return ExodusMode::MODE_None;
                     case CA_Abort:
                         comm_close();
-                        // TODO: Need to revert back to whichever stage we were in previously!
-                        stage = LB_SelectUnit;
+                        stage = button_prev_stage;
                         break;
                     default:
                         L.error("Unexpected human comm action in battle: %d", (int)action);
                         comm_close();
-                        // TODO: Need to revert back to whichever stage we were in previously!
-                        stage = LB_SelectUnit;
+                        stage = button_prev_stage;
                         break;
                 }
             }
@@ -534,6 +532,14 @@ ExodusMode LunarBattle::update(float delta) {
             // Give chance to update human_player
             return ExodusMode::MODE_None;
         case LB_Move:
+            // Handle button clicks that require a stage change
+            if (human_turn) {
+                stage = update_buttons();
+                if (stage != LB_Move) {
+                    return ExodusMode::MODE_None;
+                }
+            }
+
             if (active_unit->moves_remaining <= 0) {
                 stage = LB_Fire;
                 break;
@@ -766,6 +772,14 @@ ExodusMode LunarBattle::update(float delta) {
             }
             break;
         case LB_Fire:
+            // Handle button clicks that require a stage change
+            if (human_turn) {
+                stage = update_buttons();
+                if (stage != LB_Fire) {
+                    return ExodusMode::MODE_None;
+                }
+            }
+
             if (shot_interp > 0) {
                 shot_interp -= delta * active_unit->fire_rate;
                 if (shot_interp < 0) {
@@ -1895,6 +1909,31 @@ void LunarBattle::update_panel_battle() {
     }
 
     draw_manager.draw(id(ID::PANEL_UNIT), panel_spr, {177, 17, 0, 0, 1, 1});
+}
+
+LunarBattle::Stage LunarBattle::update_buttons() {
+    button_prev_stage = stage;
+
+    bool defending = !(aggressor && aggressor->is_human());
+
+    if (draw_manager.query_click(id(ID::BTN_INFO)).id) {
+        // TODO
+    }
+
+    if (draw_manager.query_click(id(ID::BTN_SPEED)).id) {
+        // TODO
+    }
+
+    if (draw_manager.query_click(id(ID::BTN_TALK)).id) {
+        comm_open(defending ? DIA_S_B_OpenCommsDefender : DIA_S_B_OpenCommsAttacker);
+        return LB_CommHuman;
+    }
+
+    if (draw_manager.query_click(id(ID::BTN_QUIT)).id) {
+        // TODO
+    }
+
+    return stage;
 }
 
 // 4 bits - UDLR
