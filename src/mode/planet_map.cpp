@@ -1332,6 +1332,25 @@ void PlanetMap::draw_frame_pl() {
 void PlanetMap::draw_frame_unrest() {
     // TODO
     draw_frame(436, 306);
+
+    int start_x = RES_X/2 - 436/2;
+    int end_x = RES_X/2 + 436/2;
+    int top_y = RES_Y/2-306/2;
+    int scale_y = 306/10;;
+    int x0 = start_x;
+    for (int m = N_UNREST-1; m > 0; --m) {
+        int x1 = x0 + (end_x-start_x)/(N_UNREST-1);
+        int data0 = planet->get_unrest(m);
+        int data1 = planet->get_unrest(m-1);
+        int y0 = top_y + data0*scale_y;
+        int y1 = top_y + data1*scale_y;
+        for (int dx = x0; dx < x1; dx++) {
+            float prop = (float)(dx-x0)/(float)(x1-x0);
+            int y = y0 + (int)(((float)(y1-y0))*prop);
+            draw_manager.fill({dx,y,1,4}, COL_TEXT2);
+        }
+        x0 = x1;
+    }
 }
 
 void PlanetMap::draw_frame_help(Tool t) {
