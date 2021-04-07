@@ -523,7 +523,72 @@ ExodusMode GalaxyMap::month_pass_update() {
     }
 
     if (mp_state.mp_stage == MP_SunExpansion) {
-        // TODO - PROCsunexpand
+        for (; mp_state.mp_star_idx < n_stars; ++mp_state.mp_star_idx) {
+            exostate.set_active_flytarget(&stars[mp_state.mp_star_idx]);
+            Star *s = exostate.get_active_star();
+
+            Planet *fst = s->get_planet(0);
+            Planet *snd = s->get_planet(1);
+
+            StarSize sz = s->get_size();
+
+            if ((int)(s->get_size()) > (int)STAR_Huge || onein(2000)) {
+                sz = s->expand();
+            }
+
+            // TODO: Bulletin data from fillarray files SN1-SN4
+
+            if ((int)sz > (int)STAR_Huge) {
+                if ((int)sz < (int)STAR_Dwarf) {
+                    bulletin_start_new(false);
+                    bulletin_set_bg(IMG_ME4_MENU);
+                    bulletin_set_flag(IMG_TS1_FLAG16);
+                    bulletin_set_next_text("SUN %s IS EXPANDING", tmp_caps(s->name));
+                }
+            }
+
+            switch (sz) {
+                case STAR_Expand1:
+                    if (fst && fst->exists()) fst->change_class(Desert);
+                    break;
+                case STAR_Expand2:
+                    if (fst && fst->exists()) fst->change_class(Volcano);
+                    if (snd && snd->exists()) snd->change_class(Desert);
+                    break;
+                case STAR_Expand3:
+                    if (fst && fst->exists()) fst->destroy();
+                    if (snd && snd->exists()) snd->change_class(Volcano);
+                    break;
+                case STAR_Expand4:
+                    bulletin_start_new(false);
+                    bulletin_set_bg(IMG_ME4_MENU);
+                    bulletin_set_flag(IMG_TS1_FLAG16);
+                    bulletin_set_next_text("SUN %s HAS COLLAPSED", tmp_caps(s->name));
+                    for (int i = 0; i < 3; ++i) {
+                        Planet *pl = s->get_planet(i);
+                        if (pl && pl->exists()) {
+                            pl->destroy();
+                        }
+                    }
+                    for (int i = 3; i < 5; ++i) {
+                        Planet *pl = s->get_planet(i);
+                        if (pl && pl->exists() && pl->get_class() != Artificial) {
+                            pl->change_class(Ice);
+                        }
+                    }
+                    // TODO: Orig moves any players here to the guild
+                    // TODO: Orig moves star if no planets
+                    break;
+                default:
+                    break;
+            }
+
+            if (bulletin_is_open()) {
+                // Ensure we start with the next star when we resume
+                ++mp_state.mp_star_idx;
+                return ExodusMode::MODE_None;
+            }
+        }
         next_mp_stage();
     }
 

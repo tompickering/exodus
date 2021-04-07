@@ -123,6 +123,7 @@ class Planet {
         Planet();
         Planet(PlanetClass);
         bool exists();
+        void destroy();
         int get_construction_phase();
         bool advance_construction_phase();
         int get_quality();

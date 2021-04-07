@@ -72,3 +72,10 @@ Planet* Star::construct_artificial_world(int player_idx, const char* name) {
 
     return outer;
 }
+
+StarSize Star::expand() {
+    if ((int)size < (int)STAR_Dwarf) {
+        size = (StarSize)((int)(size+1));
+    }
+    return size;
+}

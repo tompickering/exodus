@@ -84,6 +84,11 @@ bool Planet::exists() {
     return _exists;
 }
 
+void Planet::destroy() {
+    L.info("PLANET DESTROYED");
+    _exists = false;
+}
+
 int Planet::get_construction_phase() {
     return construction_phase;
 }

@@ -11,6 +11,11 @@ enum StarSize {
     STAR_Medium,
     STAR_Large,
     STAR_Huge,
+    STAR_Expand1,
+    STAR_Expand2,
+    STAR_Expand3,
+    STAR_Expand4,
+    STAR_Dwarf,
 };
 
 class Star : public FlyTarget {
@@ -23,6 +28,7 @@ class Star : public FlyTarget {
         Planet* get_planet_nocheck(int);
         bool artificial_world_viable();
         Planet* construct_artificial_world(int, const char*);
+        StarSize expand();
     private:
         StarSize size;
         int n_planets;
