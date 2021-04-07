@@ -2311,16 +2311,18 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             if (rpt.aggressor_won) {
                 bulletin_set_next_text("The rebels have succeeded. So the");
                 bulletin_set_next_text("planet needs a new leader. The people");
-                if (new_owner && new_owner_idx >= 0) {
+                if (false) {
                     const char *new_owner_name = new_owner->get_full_name();
                     bulletin_set_next_text("have chosen %s to rule it!", new_owner_name);
                     p->set_owner(new_owner_idx);
                 } else {
                     // Orig doesn't do this, but we can't find a new owner!
                     bulletin_set_next_text("have chosen to establish a republic!");
-                    p->unset_owner();
-                    // Don't keep processing this planet now there's no owner
-                    mp_state.mpp_stage = MPP_End;
+                    p->disown();
+                    // If there's no owner, jump ahead to after MPP_LosePlanetControl
+                    // These are the steps that could previously happen with no owner
+                    mp_state.mpp_stage = MPP_LosePlanetControl;
+                    next_mpp_stage();
                     return ExodusMode::MODE_None;
                 }
             } else {
