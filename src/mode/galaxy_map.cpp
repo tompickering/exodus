@@ -23,6 +23,7 @@ GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer(), PanelDrawer(PNL_
     stage = GM_SwapIn;
     selected_ft = nullptr;
     selected_ft_blink = 0;
+    first_spaceport_time = 0;
 
     mp_state.mp_stage = MP_None;
     mp_state.mpai_stage = (MonthPassAIStage)0;
@@ -30,6 +31,7 @@ GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer(), PanelDrawer(PNL_
     mp_state.month_pass_time = 0;
 
     do_first_city = false;
+    do_first_spaceport = false;
     do_meteor = false;
     do_meltdown = false;
     do_lunar_battle = false;
@@ -278,6 +280,23 @@ ExodusMode GalaxyMap::update(float delta) {
                     }
                 }
 
+                if (do_first_spaceport){
+                    Planet *p = exostate.get_active_planet();
+                    do_first_spaceport = false;
+                    bulletin_ensure_closed();
+                    DrawArea a = {0, 0, RES_X, 404};
+                    draw_manager.set_source_region(id(ID::FRAMED_IMG), &a);
+                    draw_manager.draw(
+                        id(ID::FRAMED_IMG),
+                        p->sprites()->spaceport,
+                        {5, 7, 0, 0, 1, 1});
+                    draw_manager.set_source_region(id(ID::FRAMED_IMG), nullptr);
+                    frame_draw();
+                    first_spaceport_time = 0;
+                    stage = GM_MP_FirstSpaceport;
+                    return ExodusMode::MODE_None;
+                }
+
                 ExodusMode next_mode = month_pass_update();
                 mp_state.month_pass_time += delta;
                 if (mp_state.mp_stage == MP_None) {
@@ -291,6 +310,16 @@ ExodusMode GalaxyMap::update(float delta) {
                 return next_mode;
             }
         case GM_MP_FirstCity:
+            if (draw_manager.clicked()) {
+                draw_manager.draw(
+                    id(ID::FRAMED_IMG),
+                    nullptr);
+                frame_remove();
+                stage = GM_MonthPassing;
+            }
+            break;
+        case GM_MP_FirstSpaceport:
+            // TODO: Animations
             if (draw_manager.clicked()) {
                 draw_manager.draw(
                     id(ID::FRAMED_IMG),
@@ -2029,7 +2058,11 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 && p->count_stones(STONE_Port1) > 0
                 && p->count_stones(STONE_Port2) > 0) {
                 exostate.first_spaceport_done = true;
-                // TODO
+                // TODO - Music...
+                exostate.first_spaceport_done = true;
+                do_first_spaceport = true;
+                next_mpp_stage();
+                return ExodusMode::MODE_None;
             }
         }
         next_mpp_stage();

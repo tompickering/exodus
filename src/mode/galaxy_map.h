@@ -157,6 +157,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
             GM_FlyConfirm,
             GM_MonthPassing,
             GM_MP_FirstCity,
+            GM_MP_FirstSpaceport,
             GM_Menu,
             GM_ArtificialWorldStarSelect,
         };
@@ -164,6 +165,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
         Stage stage;
         FlyTarget *selected_ft;
         float selected_ft_blink;
+        float first_spaceport_time;
 
         MPState mp_state;
         ExodusMode month_pass_update();
@@ -180,6 +182,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
         void reset_planet_report();
 
         bool do_first_city;
+        bool do_first_spaceport;
         bool do_meteor;
         bool do_meltdown;
         bool do_lunar_battle;
