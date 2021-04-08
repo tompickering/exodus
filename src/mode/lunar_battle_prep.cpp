@@ -190,7 +190,7 @@ void LunarBattlePrep::enter() {
             }
             break;
         case AGG_Aliens:
-            b.aggressor_inf = RND(m/2);
+            b.aggressor_inf = RND(max(m/2, 1));
             b.aggressor_art = RND(m);
             break;
     }
