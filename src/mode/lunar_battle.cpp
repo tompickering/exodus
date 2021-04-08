@@ -155,7 +155,7 @@ void LunarBattle::enter() {
     active_tele = nullptr;
     tele_done = false;
 
-    use_alt_aliens = (bool)(rand() % 2);
+    BattleUnit::use_alt_aliens = (bool)(rand() % 2);
 
     human_turn = true;
 
@@ -2468,6 +2468,8 @@ bool LunarBattle::is_in_cover(BattleUnit* u) {
     return false;
 }
 
+bool BattleUnit::use_alt_aliens = false;
+
 BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     name = STR_None;
     x = 0;
@@ -2609,8 +2611,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             is_alien = true;
             defending = false;
             can_use_cover = true;
-            // TODO: Alt aliens
-            if (true) {
+            if (use_alt_aliens) {
                 idle = IMG_AL1_1;
                 walk = IMG_AL1_1_2;
                 fire = IMG_AL1_13;
@@ -2630,8 +2631,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             is_alien = true;
             can_shoot_behind = false;
             defending = false;
-            // TODO: Alt aliens
-            if (true) {
+            if (use_alt_aliens) {
                 idle = IMG_AL1_3;
                 walk = IMG_AL1_3;
                 fire = IMG_AL1_15;

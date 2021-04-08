@@ -78,6 +78,8 @@ class BattleUnit {
         const char* shoot_sfx;
         SprID spr_id;
         bool spr_id_set;
+
+        static bool use_alt_aliens;
 };
 
 class Cover {
@@ -176,8 +178,6 @@ class LunarBattle : ModeBase, CommPanelDrawer {
         int cursor_y;
         int cursor_prev_x;
         int cursor_prev_y;
-
-        bool use_alt_aliens;
 
         void place_cover();
         void place_units(bool);
