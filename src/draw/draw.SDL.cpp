@@ -429,6 +429,12 @@ void DrawManagerSDL::repair_dirty_area(SprID id) {
                             if (src_area) {
                                 entire_src_rect = {src_area->x, src_area->y, src_area->w, src_area->h};
                             } else {
+                                /*
+                                 * FIXME: This doesn't work for scaled sprites.
+                                 * spr->w and spr->h are the size that the sprite
+                                 * occupies on screen post-scaling, and are therefore
+                                 * not the correct value to select the source region.
+                                 */
                                 entire_src_rect = {0, 0, spr->w, spr->h};
                             }
 
