@@ -17,6 +17,9 @@ enum ID {
     MONTH_PASSING,
     FRAMED_IMG,
     SPACEPORT2,
+    SPACEPORT_SHIP0,
+    SPACEPORT_SHIP1,
+    SPACEPORT_SHIP2,
     END,
 };
 
@@ -291,7 +294,6 @@ ExodusMode GalaxyMap::update(float delta) {
                         id(ID::FRAMED_IMG),
                         p->sprites()->spaceport,
                         {5, 7, 0, 0, 1, 1});
-                    draw_manager.set_source_region(id(ID::FRAMED_IMG), nullptr);
                     char t[PLANET_MAX_NAME + 32];
                     snprintf(t, sizeof(t), "%s has built a space harbour!", p->get_name());
                     draw_manager.draw_text(
@@ -328,6 +330,7 @@ ExodusMode GalaxyMap::update(float delta) {
             break;
         case GM_MP_FirstSpaceport:
             if (!first_spaceport_update(delta)) {
+                draw_manager.set_source_region(id(ID::FRAMED_IMG), nullptr);
                 draw_manager.draw(
                     id(ID::FRAMED_IMG),
                     nullptr);
@@ -425,7 +428,48 @@ bool GalaxyMap::first_spaceport_update(float delta) {
     if (cls == Terra)      { y = 111; ys = 2.f; }
     if (cls == Artificial)   y = 153;
 
-    // TODO: Ship animations
+    // Ship animations
+
+    float t = first_spaceport_time;
+
+    if (cls == Forest) {
+        // TODO
+    }
+
+    if (cls == Desert) {
+        // TODO
+    }
+
+    if (cls == Volcano) {
+        // TODO
+    }
+
+    if (cls == Rock) {
+        int ship0_x = 800 - fmod(t+20,40)*20;
+        int ship1_x = -100 + fmod(t+20,44)*18;
+        draw_manager.draw(
+            id(ID::SPACEPORT_SHIP0),
+            IMG_HS3_S1,
+            {ship0_x, 160,
+             .5f, .5f, 2, 2});
+        draw_manager.draw(
+            id(ID::SPACEPORT_SHIP1),
+            IMG_HS3_G1,
+            {ship1_x, 208,
+             .5f, .5f, 2, 2});
+    }
+
+    if (cls == Ice) {
+        // TODO
+    }
+
+    if (cls == Terra) {
+        // TODO
+    }
+
+    if (cls == Artificial) {
+        // TODO
+    }
 
     draw_manager.draw(
         p->sprites()->spaceport2,
