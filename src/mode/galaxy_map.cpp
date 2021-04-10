@@ -441,7 +441,26 @@ bool GalaxyMap::first_spaceport_update(float delta) {
     }
 
     if (cls == Volcano) {
-        // TODO
+        int ship0_x = 350 - fmod(t+2,30)*13;
+        draw_manager.draw(
+            id(ID::SPACEPORT_SHIP0),
+            IMG_HS2_S,
+            {ship0_x, 148,
+             .5f, .5f, 2, 2});
+
+        static Anim ship1_anim(10,
+            IMG_HS2_C1, IMG_HS2_C2, IMG_HS2_C3, IMG_HS2_C4, IMG_HS2_C5,
+            IMG_HS2_C6, IMG_HS2_C7, IMG_HS2_C8, IMG_HS2_C9, IMG_HS2_C10);
+
+        float tb = fmod(t,30);
+        int ship1_x = 470 + (tb<8 ? 0 : fmod(t-8,30)*80);
+        int ship1_y = 156 - tb*4;
+        float interp = tb<7.5 ? 0 : fmin(1,tb-7.5);
+        draw_manager.draw(
+            id(ID::SPACEPORT_SHIP1),
+            ship1_anim.interp(interp),
+            {ship1_x, ship1_y,
+             .5f, .5f, 2, 2});
     }
 
     if (cls == Rock) {
