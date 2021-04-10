@@ -16,6 +16,7 @@ enum ID {
     FLEET_MARKER,
     MONTH_PASSING,
     FRAMED_IMG,
+    SPACEPORT2,
     END,
 };
 
@@ -280,7 +281,7 @@ ExodusMode GalaxyMap::update(float delta) {
                     }
                 }
 
-                if (do_first_spaceport){
+                if (do_first_spaceport) {
                     Planet *p = exostate.get_active_planet();
                     do_first_spaceport = false;
                     bulletin_ensure_closed();
@@ -291,6 +292,13 @@ ExodusMode GalaxyMap::update(float delta) {
                         p->sprites()->spaceport,
                         {5, 7, 0, 0, 1, 1});
                     draw_manager.set_source_region(id(ID::FRAMED_IMG), nullptr);
+                    char t[PLANET_MAX_NAME + 32];
+                    snprintf(t, sizeof(t), "%s has built a space harbour!", p->get_name());
+                    draw_manager.draw_text(
+                        t,
+                        Justify::Left,
+                        12, 378,
+                        COL_TEXT2);
                     frame_draw();
                     first_spaceport_time = 0;
                     stage = GM_MP_FirstSpaceport;
@@ -319,8 +327,7 @@ ExodusMode GalaxyMap::update(float delta) {
             }
             break;
         case GM_MP_FirstSpaceport:
-            // TODO: Animations
-            if (draw_manager.clicked()) {
+            if (!first_spaceport_update(delta)) {
                 draw_manager.draw(
                     id(ID::FRAMED_IMG),
                     nullptr);
@@ -400,6 +407,32 @@ ExodusMode GalaxyMap::update(float delta) {
 void GalaxyMap::exit() {
     comm_ensure_closed();
     ModeBase::exit();
+}
+
+bool GalaxyMap::first_spaceport_update(float delta) {
+    // TODO: Animations
+
+    Planet *p = exostate.get_active_planet();
+
+    // FIXME: Using SPACEPORT2 here causes draw corruption - bug in scaled sprite repair
+    if (fmod(first_spaceport_time, 2) < 1) {
+        //L.error("ON");
+        draw_manager.draw(
+            //id(ID::SPACEPORT2),
+            p->sprites()->spaceport2,
+            {5, 151, 0, 0, 2, 1.f});
+    } else {
+        //L.error("OFF");
+        //draw_manager.draw(id(ID::SPACEPORT2), nullptr);
+    }
+
+    first_spaceport_time += delta;
+
+    if (draw_manager.clicked()) {
+        return false;
+    }
+
+    return true;
 }
 
 void GalaxyMap::next_mp_stage() {

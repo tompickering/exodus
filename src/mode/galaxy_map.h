@@ -167,6 +167,8 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
         float selected_ft_blink;
         float first_spaceport_time;
 
+        bool first_spaceport_update(float);
+
         MPState mp_state;
         ExodusMode month_pass_update();
         ExodusMode month_pass_ai_update();
