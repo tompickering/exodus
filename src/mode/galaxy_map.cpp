@@ -410,21 +410,28 @@ void GalaxyMap::exit() {
 }
 
 bool GalaxyMap::first_spaceport_update(float delta) {
-    // TODO: Animations
-
     Planet *p = exostate.get_active_planet();
+    PlanetClass cls = p->get_class();
 
-    // FIXME: Using SPACEPORT2 here causes draw corruption - bug in scaled sprite repair
-    if (fmod(first_spaceport_time, 2) < 1) {
-        //L.error("ON");
-        draw_manager.draw(
-            //id(ID::SPACEPORT2),
-            p->sprites()->spaceport2,
-            {5, 151, 0, 0, 2, 1.f});
-    } else {
-        //L.error("OFF");
-        //draw_manager.draw(id(ID::SPACEPORT2), nullptr);
-    }
+    int x = 5;
+    int y = 0;
+    float ys = 1.f;
+
+    if (cls == Forest)       y = 111;
+    if (cls == Desert)       y = 151;
+    if (cls == Volcano)      y = 125;
+    if (cls == Rock)         y = 135;
+    if (cls == Ice)          y = 133;
+    if (cls == Terra)      { y = 111; ys = 2.f; }
+    if (cls == Artificial)   y = 153;
+
+    // TODO: Ship animations
+
+    draw_manager.draw(
+        p->sprites()->spaceport2,
+        {x, y, 0, 0, 2, ys});
+
+    frame_draw();
 
     first_spaceport_time += delta;
 
