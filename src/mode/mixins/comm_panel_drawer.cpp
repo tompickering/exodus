@@ -614,7 +614,14 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     comm_set_text(0, "For our flight to the star");
                     comm_set_text(1, "%s, we need %d month%s.", st->name, comm_ctx.months, pl);
                 }
-                comm_set_text(2, "A pirate attack is unlikely.");
+
+                FlyTarget *curr = exostate.loc2tgt(comm_player->get_location().get_target());
+                const char* prob_str = "unlikely";
+                if (curr->pirates == 1) prob_str = "possible";
+                if (curr->pirates == 2) prob_str = "likely";
+                if (curr->pirates >= 3) prob_str = "very likely";
+
+                comm_set_text(2, "A pirate attack is %s.", prob_str);
                 comm_set_text(4, "Do you wish to start?");
                 comm_show_buttons(true);
                 comm_recv(DIA_R_ProceedOrAbort);

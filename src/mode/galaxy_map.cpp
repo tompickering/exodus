@@ -871,7 +871,25 @@ ExodusMode GalaxyMap::month_pass_update() {
     }
 
     if (mp_state.mp_stage == MP_UpdatePirateProbabilities) {
-        // TODO SunP
+        for (; mp_state.mp_star_idx < n_stars; ++mp_state.mp_star_idx) {
+            Star *s = &stars[mp_state.mp_star_idx];
+            int n_owned = 0;
+            for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+                Planet *p = s->get_planet(i);
+                if (p && p->exists() && p->is_owned()) {
+                    n_owned++;
+                }
+                if (n_owned == 0) {
+                    s->pirates = RND(3);
+                } else if (n_owned < 3) {
+                    s->pirates = RND(2);
+                } else if (n_owned < 5) {
+                    s->pirates = 2;
+                } else {
+                    s->pirates = 3;
+                }
+            }
+        }
         next_mp_stage();
     }
 

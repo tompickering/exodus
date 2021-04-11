@@ -11,6 +11,7 @@ class FlyTarget {
         const int y;
         char name[FT_MAX_NAME + 1];
         const bool is_star;
+        int pirates; // Orig: SunP
 };
 
 #endif
