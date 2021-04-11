@@ -434,7 +434,19 @@ bool GalaxyMap::first_spaceport_update(float delta) {
     float t = first_spaceport_time;
 
     if (cls == Forest) {
-        // TODO
+        // TODO: Placeholder - check what this looks like in orig
+        int ship0_x = 800 - fmod(t+20,40)*20;
+        draw_manager.draw(
+            id(ID::SPACEPORT_SHIP0),
+            IMG_HS3_S1,
+            {ship0_x, 160,
+             .5f, .5f, 2, 2});
+        int ship1_x = -100 + fmod(t+20,44)*18;
+        draw_manager.draw(
+            id(ID::SPACEPORT_SHIP1),
+            IMG_HS3_G1,
+            {ship1_x, 130,
+             .5f, .5f, 2, 2});
     }
 
     if (cls == Desert) {
@@ -532,15 +544,52 @@ bool GalaxyMap::first_spaceport_update(float delta) {
     }
 
     if (cls == Ice) {
-        // TODO
+        // TODO: Placeholder - check what this looks like in orig
+        int ship0_x = 800 - fmod(t+20,40)*20;
+        draw_manager.draw(
+            id(ID::SPACEPORT_SHIP0),
+            IMG_HS3_S1,
+            {ship0_x, 160,
+             .5f, .5f, 2, 2});
+        int ship1_x = -100 + fmod(t+20,44)*18;
+        draw_manager.draw(
+            id(ID::SPACEPORT_SHIP1),
+            IMG_HS3_G1,
+            {ship1_x, 208,
+             .5f, .5f, 2, 2});
     }
 
     if (cls == Terra) {
-        // TODO
+        // TODO: Placeholder - check what this looks like in orig
+        int ship0_x = 800 - fmod(t+20,40)*20;
+        draw_manager.draw(
+            id(ID::SPACEPORT_SHIP0),
+            IMG_HS3_S1,
+            {ship0_x, 160,
+             .5f, .5f, 2, 2});
+        int ship1_x = -100 + fmod(t+20,44)*18;
+        draw_manager.draw(
+            id(ID::SPACEPORT_SHIP1),
+            IMG_HS3_G1,
+            {ship1_x, 208,
+             .5f, .5f, 2, 2});
     }
 
     if (cls == Artificial) {
-        // TODO
+        // TODO: Placeholder - check what this looks like in orig
+        // (I don't think this should even be possible!)
+        int ship0_x = 800 - fmod(t+20,40)*20;
+        draw_manager.draw(
+            id(ID::SPACEPORT_SHIP0),
+            IMG_HS3_S1,
+            {ship0_x, 160,
+             .5f, .5f, 2, 2});
+        int ship1_x = -100 + fmod(t+20,44)*18;
+        draw_manager.draw(
+            id(ID::SPACEPORT_SHIP1),
+            IMG_HS3_G1,
+            {ship1_x, 208,
+             .5f, .5f, 2, 2});
     }
 
     draw_manager.draw(
