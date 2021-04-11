@@ -22,6 +22,7 @@ class PlayerLocation {
         bool has_visited(int);
         void unset_target();
         bool is_target_set();
+        int nopirates;
     private:
         int location;
         int target;            // -1=guild, 0+=star index - Orig: TS

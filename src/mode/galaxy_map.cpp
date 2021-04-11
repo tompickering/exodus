@@ -56,7 +56,11 @@ void GalaxyMap::enter() {
         draw_manager.pixelswap_start(&galaxy_panel_area);
     }
 
-    if (mp_state.mp_stage == MP_None) {
+
+    if (ephstate.get_ephemeral_state() == EPH_ResumeFly) {
+        ephstate.clear_ephemeral_state();
+        stage = GM_Fly;
+    } else if (mp_state.mp_stage == MP_None) {
         stage = GM_SwapIn;
     } else {
         stage = GM_MonthPassing;
@@ -235,13 +239,40 @@ ExodusMode GalaxyMap::update(float delta) {
         case GM_FlyConfirm:
             action = comm_update(delta);
             if (action == CA_Proceed) {
-                player->get_location().set_target(comm_ctx.location, comm_ctx.months);
-                return ExodusMode::MODE_Fly;
+                ephstate.fly_plan.loc = comm_ctx.location;
+                ephstate.fly_plan.months = comm_ctx.months;
+                // Decide if pirate attack happens
+                if (exostate.get_orig_month() < 7) {
+                    player->nopirates = 0;
+                }
+                FlyTarget *loc = exostate.loc2tgt(player->get_location().get_target());
+                if (loc != gal->get_guild()) {
+                    int r = 2;
+                    if (loc->pirates == 0) {
+                        r = 4;
+                    } else if (loc->pirates == 1) {
+                        r = 3;
+                    }
+                    if ((exostate.get_orig_month() > 5 && onein(r)) || (player->nopirates > 5)) {
+                        // Alien encounter
+                        L.info("ALIEN ENCOUNTER");
+                        loc->pirates = 0;
+                        // TODO: Return alien encounter mode
+                        //return ExodusMode::MODE_AlienVessel;
+                    } else {
+                        player->nopirates++;
+                    }
+                }
+                stage = GM_Fly;
+                break;
             } else if (action == CA_Abort) {
                 comm_close();
                 stage = GM_Idle;
             }
             break;
+        case GM_Fly:
+            player->get_location().set_target(ephstate.fly_plan.loc, ephstate.fly_plan.months);
+            return ExodusMode::MODE_Fly;
         case GM_MonthPassing:
             {
                 update_panel_info_player(TGT_Primary, exostate.get_player(0));

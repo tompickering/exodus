@@ -34,6 +34,7 @@ Player::Player() {
     reputation = 3;
     inventions = 0;
     guild_member = false;
+    nopirates = 0;
     ai_tactic = 0;
     clear_hostility();
     clear_ai_attack();

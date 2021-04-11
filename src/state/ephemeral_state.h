@@ -93,6 +93,11 @@ typedef struct {
     int cost;
 } Research;
 
+typedef struct {
+    int loc;
+    int months;
+} FlyPlan;
+
 enum EphState {
     EPH_None,
     EPH_LunarBattlePrep,
@@ -100,6 +105,7 @@ enum EphState {
     EPH_LunarBattleReport,
     EPH_Destruction,
     EPH_ResearchCheck,
+    EPH_ResumeFly,
 };
 
 class EphemeralState {
@@ -114,6 +120,7 @@ class EphemeralState {
         LunarBattleReport lunar_battle_report;
         PlanetDestruction destruction;
         Research research;
+        FlyPlan fly_plan;
     private:
         EphState eph_state;
 

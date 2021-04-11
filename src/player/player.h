@@ -171,6 +171,7 @@ class Player {
         void adjust_tax(int);
         OfficerQuality get_officer(Officer);
         void set_officer(Officer, OfficerQuality);
+        int nopirates;
         ArtificialPlanetPhase ap_phase;
 
         int get_freight_capacity();

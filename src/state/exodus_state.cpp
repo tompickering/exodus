@@ -156,6 +156,7 @@ void ExodusState::init(GameConfig config) {
         players[i].reputation = 3;
         players[i].init_tax();
         players[i].set_tactic(0);
+        players[i].nopirates = 0;
         players[i].ap_phase = AP_None;
         set_random_hostility(players[i]);
         for (int j = 0; j < OFF_MAX; ++j) {
