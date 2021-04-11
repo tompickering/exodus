@@ -155,6 +155,8 @@ typedef struct {
     int alliance_prob;
     bool may_proceed;
     bool battle_first_comms;
+    int location;
+    int months;
 } CommContext;
 
 class CommPanelDrawer {

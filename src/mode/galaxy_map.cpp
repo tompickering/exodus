@@ -191,6 +191,9 @@ ExodusMode GalaxyMap::update(float delta) {
                 if (click.x < 0.25) {
                     // Fly
                     if (!player->get_location().in_flight() && selected_ft != exostate.loc2tgt(player->get_location().get_target())) {
+                        comm_ctx.location = exostate.tgt2loc(selected_ft);
+                        // TODO: Vary number of months
+                        comm_ctx.months = 1;
                         comm_open(DIA_S_PlanFly);
                         stage = GM_FlyConfirm;
                         return ExodusMode::MODE_None;
@@ -232,8 +235,7 @@ ExodusMode GalaxyMap::update(float delta) {
         case GM_FlyConfirm:
             action = comm_update(delta);
             if (action == CA_Proceed) {
-                // TODO: Vary number of months
-                player->get_location().set_target(exostate.tgt2loc(selected_ft), 1);
+                player->get_location().set_target(comm_ctx.location, comm_ctx.months);
                 return ExodusMode::MODE_Fly;
             } else if (action == CA_Abort) {
                 comm_close();

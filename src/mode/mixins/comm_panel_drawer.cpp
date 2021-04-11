@@ -601,16 +601,24 @@ void CommPanelDrawer::comm_send(CommSend input) {
 
     switch (input) {
         case DIA_S_PlanFly:
-            comm_prepare(6);
-            // TODO: Need way to pass star / space guild
-            comm_set_text(0, "For our flight to the space");
-            comm_set_text(1, "guild, we need X months.");
-            //comm_set_text(0, "For our flight to the star");
-            //comm_set_text(1, "XXX, we need X months.");
-            comm_set_text(2, "A pirate attack is unlikely.");
-            comm_set_text(4, "Do you wish to start?");
-            comm_show_buttons(true);
-            comm_recv(DIA_R_ProceedOrAbort);
+            {
+                comm_prepare(6);
+                Galaxy *gal = exostate.get_galaxy();
+                FlyTarget *loc = exostate.loc2tgt(comm_ctx.location);
+                const char *pl = (comm_ctx.months==1)?"":"s";
+                if (loc == gal->get_guild()) {
+                    comm_set_text(0, "For our flight to the space");
+                    comm_set_text(1, "guild, we need %d month%s.", comm_ctx.months, pl);
+                } else {
+                    Star *st = (Star*)loc;
+                    comm_set_text(0, "For our flight to the star");
+                    comm_set_text(1, "%s, we need %d month%s.", st->name, comm_ctx.months, pl);
+                }
+                comm_set_text(2, "A pirate attack is unlikely.");
+                comm_set_text(4, "Do you wish to start?");
+                comm_show_buttons(true);
+                comm_recv(DIA_R_ProceedOrAbort);
+            }
             break;
         case DIA_S_PlanSettle:
             if (!comm_player->can_afford(comm_planet->get_settlement_cost())) {
