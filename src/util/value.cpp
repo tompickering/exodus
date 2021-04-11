@@ -1,5 +1,7 @@
 #include "value.h"
 
+#include <cmath>
+
 bool between(float val, float lower, float upper) {
     return (val >= lower && val <= upper);
 }
@@ -32,6 +34,10 @@ int max(int a, int b) {
 
 int clamp(int a, int minimum, int maximum) {
     return min(max(a, minimum), maximum);
+}
+
+float fclamp(float a, float minimum, float maximum) {
+    return fmin(fmax(a, minimum), maximum);
 }
 
 float lerp(float a, float b, float i) {

@@ -429,6 +429,7 @@ bool GalaxyMap::first_spaceport_update(float delta) {
     if (cls == Artificial)   y = 153;
 
     // Ship animations
+    // TODO: Polish (smoother anims etc)
 
     float t = first_spaceport_time;
 
@@ -437,7 +438,59 @@ bool GalaxyMap::first_spaceport_update(float delta) {
     }
 
     if (cls == Desert) {
-        // TODO
+        float tb;
+
+        static Anim ship0_anim(23,
+            IMG_HS1_F1,  IMG_HS1_F2,  IMG_HS1_F3,  IMG_HS1_F4,
+            IMG_HS1_F5,  IMG_HS1_F5,  IMG_HS1_F5,  IMG_HS1_F5,
+            IMG_HS1_F5,  IMG_HS1_F5,  IMG_HS1_F5,  IMG_HS1_F5,
+            IMG_HS1_F5,  IMG_HS1_F5,  IMG_HS1_F5,  IMG_HS1_F5,
+            IMG_HS1_F6,  IMG_HS1_F7,  IMG_HS1_F8,  IMG_HS1_F9,
+            IMG_HS1_F10, IMG_HS1_F11, nullptr);
+
+        tb = fmod(t+12,14);
+        int ship0_x = 310;// - (tb<5.9 ? 0 : (tb-5.9)*30);
+        int ship0_y = 260 - tb*14;
+        float interp = tb<3.5 ? 0 : fmin(1,(tb-3.5)*.3f);
+        draw_manager.draw(
+            id(ID::SPACEPORT_SHIP0),
+            ship0_anim.interp(interp),
+            {ship0_x, ship0_y,
+             .5f, .5f, 2, 2});
+
+        static Anim ship1_anim(9,
+            IMG_HS1_P8, IMG_HS1_P7, IMG_HS1_P6, IMG_HS1_P5,
+            IMG_HS1_P4, IMG_HS1_P3, IMG_HS1_P2, IMG_HS1_P1,
+            IMG_HS1_P0);
+
+        tb = fmod(t,20);
+        float ship1_x_interp = fclamp((tb-4)/16.f, 0, 1);
+        float ship1_y_interp = fclamp(tb/4.f, 0, 1);
+        int ship1_x = 276 - ship1_x_interp*400.f;
+        int ship1_y = 270 - ship1_y_interp*76.f;
+        interp = fclamp((tb-3)/3, 0, 1);
+        draw_manager.draw(
+            id(ID::SPACEPORT_SHIP1),
+            ship1_anim.interp(interp),
+            {ship1_x, ship1_y,
+             .5f, .5f, 2, 2});
+
+        static Anim ship2_anim(9,
+            IMG_HS1_S0, IMG_HS1_S1, IMG_HS1_S2, IMG_HS1_S3,
+            IMG_HS1_S4, IMG_HS1_S5, IMG_HS1_S6, IMG_HS1_S7,
+            IMG_HS1_S8);
+
+        tb = fmod(t,20);
+        float ship2_x_interp = fclamp(tb/16, 0, 1);
+        float ship2_y_interp = fclamp((tb-16.f)/4.f, 0, 1);
+        int ship2_x = -160 + ship2_x_interp*400.f;
+        int ship2_y = 230 + ship2_y_interp*36.f;
+        interp = fclamp((tb-15.5)/3, 0, 1);
+        draw_manager.draw(
+            id(ID::SPACEPORT_SHIP2),
+            ship2_anim.interp(interp),
+            {ship2_x, ship2_y,
+             .5f, .5f, 2, 2});
     }
 
     if (cls == Volcano) {
