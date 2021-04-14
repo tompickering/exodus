@@ -59,6 +59,7 @@ class AlienVessel : ModeBase, PanelDrawer, FrameDrawer {
         int enemy_scouts;
 
         float approach;
+        bool comm_started;
         bool comm_done;
         float comm_timer;
         int comm_line;

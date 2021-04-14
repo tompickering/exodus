@@ -36,6 +36,7 @@ AlienVessel::AlienVessel() : ModeBase("AlienVessel"), PanelDrawer(PNL_Galaxy), F
     enemy_cargo = 0;
     enemy_scouts = 0;
 
+    comm_started = false;
     comm_done = false;
     comm_timer = 0.f;
     comm_line = 0;
@@ -49,12 +50,12 @@ void AlienVessel::enter() {
 
     for (int i = 0; i < MAX_COMM_LINES; ++i) {
         comm_ids[i] = draw_manager.new_sprite_id();
-        comm_text[i] = "";
     }
 
     stage = AV_Approach;
 
     approach = 0;
+    comm_started = false;
     comm_done = false;
     comm_timer = 0.f;
     comm_line = 0;
@@ -280,23 +281,27 @@ ExodusMode AlienVessel::update(float delta) {
             break;
         case AV_Comm:
             {
-                clear_overlay();
+                if (!comm_started) {
+                    clear_overlay();
 
-                if (!will_respond) {
-                    comm_done = true;
-                    draw_manager.draw_text(
-                        id(ID::COMM_RESULT),
-                        "The ship does not respond.",
-                        Justify::Left,
-                        20, 20,
-                        COL_TEXT);
-                } else {
-                    draw_manager.draw_text(
-                        id(ID::COMM_RESULT),
-                        "The ship answers:",
-                        Justify::Left,
-                        20, 20,
-                        COL_TEXT);
+                    if (!will_respond) {
+                        comm_done = true;
+                        draw_manager.draw_text(
+                            id(ID::COMM_RESULT),
+                            "The ship does not respond.",
+                            Justify::Left,
+                            20, 20,
+                            COL_TEXT);
+                    } else {
+                        draw_manager.draw_text(
+                            id(ID::COMM_RESULT),
+                            "The ship answers:",
+                            Justify::Left,
+                            20, 20,
+                            COL_TEXT);
+                    }
+
+                    comm_started = true;
                 }
 
                 if (comm_done) {
@@ -304,7 +309,16 @@ ExodusMode AlienVessel::update(float delta) {
                     break;
                 }
 
-                // TODO
+                // TODO - Gradual speech
+                for (int i = 0; i < MAX_COMM_LINES; ++i) {
+                    draw_manager.draw_text(
+                        comm_ids[i],
+                        comm_text[i],
+                        Justify::Left,
+                        20, 60 + 20*i,
+                        COL_TEXT2);
+                }
+
                 comm_done = true;
             }
             break;
@@ -403,11 +417,65 @@ void AlienVessel::clear_overlay() {
     draw_manager.draw(id(ID::SHIP_ID1), nullptr);
     draw_manager.draw(id(ID::SHIP_ID2), nullptr);
     draw_manager.draw(id(ID::NORADAR), nullptr);
+    draw_manager.draw(id(ID::COMM_RESULT), nullptr);
     for (int i = 0; i < MAX_COMM_LINES; ++i) {
         draw_manager.draw(comm_ids[i], nullptr);
     }
 }
 
 void AlienVessel::set_comm_text() {
-    // TODO
+    for (int i = 0; i < MAX_COMM_LINES; ++i) {
+        comm_text[i] = "";
+    }
+
+    switch (type) {
+        case VESSEL_NoID:
+            // This isn't actually used, but left in from original for fun
+            comm_text[0] = "Mylord!";
+            comm_text[1] = "We have come to rob your Mega Credits";
+            comm_text[2] = "and borrow some of your pretty transport ships!";
+            comm_text[3] = "So prepare for a little fight!";
+            break;
+        case VESSEL_GuildPatrol:
+            comm_text[0] = "This is a Space Guild Patrol Flight.";
+            comm_text[1] = "Have a nice day, space fleet.";
+            break;
+        case VESSEL_Trading:
+            // TODO: Use player referece
+            comm_text[0] = "Mylord!";
+            comm_text[1] = "We are very sorry to disturb your flight.";
+            comm_text[2] = "You shall move on with our best wishes!";
+            break;
+        case VESSEL_TradingConvoy:
+            comm_text[0] = "Our trading convoy would be glad if you let us pass.";
+            break;
+        case VESSEL_Travelling:
+            comm_text[0] = "Hello space fleet!";
+            comm_text[1] = "This is a private travelling shuttle of InterSpace Inc.";
+            comm_text[2] = "It is fully licensed and carries no prohibited cargo.";
+            comm_text[3] = "We would be glad if you allowed us to continue our flight.";
+            break;
+        case VESSEL_Science:
+            comm_text[0] = "This is an independent scientific ship.";
+            comm_text[1] = "Please continue your flight; we will not interfere.";
+            break;
+        case VESSEL_Mining:
+            // TODO: Use player reference
+            comm_text[0] = "What do you want, Mylord?";
+            comm_text[2] = "This mining vessel is on a registered flight.";
+            comm_text[3] = "I hope you do not complain if we move on.";
+            break;
+        case VESSEL_Religious:
+            comm_text[0] = "PRAISE THE ALMIGHTY!";
+            comm_text[2] = "There is a FORCE that has created this WONDERFUL";
+            comm_text[3] = "universe! It is our MISSION to serve this mighty";
+            comm_text[4] = "being! So we are missionaries with the task to convince";
+            comm_text[5] = "ALL LIVING CREATURES to BELIEVE in the Almighty!";
+            comm_text[7] = "SO HELP US! Be our fellow on the PATH OF GLORY,";
+            comm_text[8] = "be our friend and our ally on the WAY OF HAPPINESS!";
+            comm_text[9] = "Praise the Almighty!";
+            break;
+        case VESSEL_Unknown:
+            break;
+    }
 }
