@@ -23,6 +23,8 @@ class AlienVessel : ModeBase, PanelDrawer, FrameDrawer {
             AV_Approach,
             AV_Idle,
             AV_Comm,
+            AV_Attack,
+            AV_Surrender,
             AV_Exit,
         };
 
@@ -44,8 +46,19 @@ class AlienVessel : ModeBase, PanelDrawer, FrameDrawer {
 
         const char *ship_img;
         const char *ship_name;
+        bool will_respond;
+        bool will_hail;
+        bool will_attack;
+        bool will_surrender;
+
+        int enemy_ships;
+        int enemy_cargo;
+        int enemy_scouts;
 
         float approach;
+        bool comm_done;
+        float comm_timer;
+        int comm_line;
 };
 
 #endif
