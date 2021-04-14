@@ -317,8 +317,12 @@ ExodusMode AlienVessel::update(float delta) {
                     break;
                 }
 
-                // TODO - Launch battle with enemy_ships, enemy_cargo, enemy_scouts
-                stage = AV_Exit;
+                // Launch battle
+                SpaceBattleParams &b = ephstate.space_battle;
+                b.enemy_ships = enemy_ships;
+                b.enemy_cargo = enemy_cargo;
+                b.enemy_scouts = enemy_scouts;
+                return ExodusMode::MODE_SpaceBattle;
             }
         case AV_Surrender:
             {

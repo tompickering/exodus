@@ -73,6 +73,12 @@ typedef struct {
     }
 } LunarBattleReport;
 
+typedef struct {
+    int enemy_ships;
+    int enemy_cargo;
+    int enemy_scouts;
+} SpaceBattleParams;
+
 enum DestructionType {
     DESTROY_NStones,
     DESTROY_NRandom,
@@ -118,6 +124,7 @@ class EphemeralState {
 
         LunarBattleParams lunar_battle;
         LunarBattleReport lunar_battle_report;
+        SpaceBattleParams space_battle;
         PlanetDestruction destruction;
         Research research;
         FlyPlan fly_plan;

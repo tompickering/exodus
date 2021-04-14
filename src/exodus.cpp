@@ -34,6 +34,7 @@
 #include "mode/ship_equip.h"
 #include "mode/arrive.h"
 #include "mode/alien_vessel.h"
+#include "mode/space_battle.h"
 
 #include <cstdlib>
 #include <csignal>
@@ -130,6 +131,7 @@ int Exodus::run(int argc, char** argv) {
     ShipEquip mode_shipequip;
     Arrive mode_arrive;
     AlienVessel mode_alienvessel;
+    SpaceBattle mode_spacebattle;
     mode_map[MODE_Intro] = (ModeBase*) &mode_intro;
     mode_map[MODE_Menu] = (ModeBase*) &mode_menu;
     mode_map[MODE_GalaxyGen] = (ModeBase*) &mode_galaxygen;
@@ -151,6 +153,7 @@ int Exodus::run(int argc, char** argv) {
     mode_map[MODE_ShipEquip] = (ModeBase*) &mode_shipequip;
     mode_map[MODE_Arrive] = (ModeBase*) &mode_arrive;
     mode_map[MODE_AlienVessel] = (ModeBase*) &mode_alienvessel;
+    mode_map[MODE_SpaceBattle] = (ModeBase*) &mode_spacebattle;
 
     push_mode(MODE_Intro);
 
