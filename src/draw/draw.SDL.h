@@ -48,6 +48,7 @@ class DrawManagerSDL : public DrawManager {
         virtual void draw_text(const char*, Justify, int, int, RGB) override;
         virtual void draw_text(const char*, Justify, int, int, RGB, RGB) override;
         virtual void draw_text(Font, const char*, Justify, int, int, RGB) override;
+        virtual void draw_text(Font, SprID, const char*, Justify, int, int, RGB) override;
         virtual void draw_text(Font, const char*, Justify, int, int, RGB, RGB) override;
         virtual void draw_text(SprID, const char*, Justify, int, int, RGB) override;
         virtual void draw_text(SprID, Font, const char*, Justify, int, int, RGB) override;

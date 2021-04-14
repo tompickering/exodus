@@ -160,6 +160,7 @@ class DrawManager {
         virtual void draw_text(const char*, Justify, int, int, RGB) = 0;
         virtual void draw_text(const char*, Justify, int, int, RGB, RGB) = 0;
         virtual void draw_text(Font, const char*, Justify, int, int, RGB) = 0;
+        virtual void draw_text(Font, SprID, const char*, Justify, int, int, RGB) = 0;
         virtual void draw_text(Font, const char*, Justify, int, int, RGB, RGB) = 0;
         virtual void draw_text(SprID, const char*, Justify, int, int, RGB) = 0;
         virtual void draw_text(SprID, Font, const char*, Justify, int, int, RGB) = 0;

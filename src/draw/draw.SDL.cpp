@@ -641,6 +641,10 @@ void DrawManagerSDL::draw_text(Font font, const char* text, Justify jst, int x, 
     draw_text(DrawTarget::TGT_Primary, ID_NONE, font, text, jst, x, y, &rgb, nullptr);
 }
 
+void DrawManagerSDL::draw_text(Font font, SprID id, const char* text, Justify jst, int x, int y, RGB rgb) {
+    draw_text(DrawTarget::TGT_Primary, id, font, text, jst, x, y, &rgb, nullptr);
+}
+
 void DrawManagerSDL::draw_text(Font font, const char* text, Justify jst, int x, int y, RGB rgb, RGB bg_rgb) {
     draw_text(DrawTarget::TGT_Primary, ID_NONE, font, text, jst, x, y, &rgb, &bg_rgb);
 }
