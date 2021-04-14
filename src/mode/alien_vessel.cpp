@@ -46,6 +46,11 @@ void AlienVessel::enter() {
     Player *player = exostate.get_active_player();
     FlyTarget *tgt = exostate.get_active_flytarget();
 
+    for (int i = 0; i < MAX_COMM_LINES; ++i) {
+        comm_ids[i] = draw_manager.new_sprite_id();
+        comm_text[i] = "";
+    }
+
     stage = AV_Approach;
 
     approach = 0;
@@ -130,6 +135,8 @@ void AlienVessel::enter() {
             break;
     }
 
+    set_comm_text();
+
     draw_manager.draw(
         id(ID::BACKGROUND),
         IMG_VS0_VPIC,
@@ -155,6 +162,12 @@ void AlienVessel::enter() {
     update_panel_info_ft(TGT_Primary, player, tgt);
 
     draw_manager.show_cursor(true);
+}
+
+void AlienVessel::exit() {
+    for (int i = 0; i < MAX_COMM_LINES; ++i) {
+        draw_manager.release_sprite_id(comm_ids[i]);
+    }
 }
 
 ExodusMode AlienVessel::update(float delta) {
@@ -265,16 +278,7 @@ ExodusMode AlienVessel::update(float delta) {
             break;
         case AV_Comm:
             {
-                draw_manager.draw(id(ID::INTRO_0), nullptr);
-                draw_manager.draw(id(ID::INTRO_1), nullptr);
-                draw_manager.draw(id(ID::CORNER_TL), nullptr);
-                draw_manager.draw(id(ID::CORNER_TR), nullptr);
-                draw_manager.draw(id(ID::CORNER_BL), nullptr);
-                draw_manager.draw(id(ID::CORNER_BR), nullptr);
-                draw_manager.draw(id(ID::SHIP_ID0), nullptr);
-                draw_manager.draw(id(ID::SHIP_ID1), nullptr);
-                draw_manager.draw(id(ID::SHIP_ID2), nullptr);
-                draw_manager.draw(id(ID::NORADAR), nullptr);
+                clear_overlay();
 
                 if (!will_respond) {
                     comm_done = true;
@@ -342,4 +346,24 @@ ExodusMode AlienVessel::update(float delta) {
     frame_draw();
 
     return ExodusMode::MODE_None;
+}
+
+void AlienVessel::clear_overlay() {
+    draw_manager.draw(id(ID::INTRO_0), nullptr);
+    draw_manager.draw(id(ID::INTRO_1), nullptr);
+    draw_manager.draw(id(ID::CORNER_TL), nullptr);
+    draw_manager.draw(id(ID::CORNER_TR), nullptr);
+    draw_manager.draw(id(ID::CORNER_BL), nullptr);
+    draw_manager.draw(id(ID::CORNER_BR), nullptr);
+    draw_manager.draw(id(ID::SHIP_ID0), nullptr);
+    draw_manager.draw(id(ID::SHIP_ID1), nullptr);
+    draw_manager.draw(id(ID::SHIP_ID2), nullptr);
+    draw_manager.draw(id(ID::NORADAR), nullptr);
+    for (int i = 0; i < MAX_COMM_LINES; ++i) {
+        draw_manager.draw(comm_ids[i], nullptr);
+    }
+}
+
+void AlienVessel::set_comm_text() {
+    // TODO
 }

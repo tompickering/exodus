@@ -10,6 +10,8 @@
 #include "mixins/frame_drawer.h"
 #include "mixins/panel_drawer.h"
 
+#define MAX_COMM_LINES 10
+
 extern ExodusState exostate;
 extern EphemeralState ephstate;
 
@@ -17,6 +19,7 @@ class AlienVessel : ModeBase, PanelDrawer, FrameDrawer {
     public:
         AlienVessel();
         virtual void enter() override;
+        virtual void exit() override;
         virtual ExodusMode update(float) override;
     private:
         enum Stage {
@@ -59,6 +62,12 @@ class AlienVessel : ModeBase, PanelDrawer, FrameDrawer {
         bool comm_done;
         float comm_timer;
         int comm_line;
+
+        SprID comm_ids[MAX_COMM_LINES];
+        const char *comm_text[MAX_COMM_LINES];
+
+        void clear_overlay();
+        void set_comm_text();
 };
 
 #endif
