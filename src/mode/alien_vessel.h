@@ -43,6 +43,7 @@ class AlienVessel : ModeBase, PanelDrawer, FrameDrawer {
         VesselType type;
 
         const char *ship_img;
+        const char *ship_name;
 
         float approach;
 };
