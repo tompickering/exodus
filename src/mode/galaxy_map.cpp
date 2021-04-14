@@ -257,8 +257,7 @@ ExodusMode GalaxyMap::update(float delta) {
                         // Alien encounter
                         L.info("ALIEN ENCOUNTER");
                         loc->pirates = 0;
-                        // TODO: Return alien encounter mode
-                        //return ExodusMode::MODE_AlienVessel;
+                        return ExodusMode::MODE_AlienVessel;
                     } else {
                         player->nopirates++;
                     }

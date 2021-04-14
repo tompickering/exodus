@@ -32,6 +32,7 @@ enum ExodusMode {
     MODE_FleetProduction,
     MODE_ShipEquip,
     MODE_Arrive,
+    MODE_AlienVessel,
 };
 
 class ModeBase;
