@@ -296,9 +296,16 @@ void Exodus::push_mode(ExodusMode new_mode) {
 }
 
 void Exodus::pop_mode() {
-    if (mode_stack_head <= 1)
-        L.fatal("Attempt to pop from empty mode stack");
-    set_mode(mode_stack[--mode_stack_head - 1]);
+    if (mode->should_push_to_stack()) {
+        if (mode_stack_head <= 1)
+            L.fatal("Attempt to pop from empty mode stack");
+        set_mode(mode_stack[--mode_stack_head - 1]);
+    } else {
+        if (mode_stack_head < 1)
+            L.fatal("Attempt to pop from empty mode stack");
+        // The current mode isn't actually on the stack - just restore top
+        set_mode(mode_stack[mode_stack_head - 1]);
+    }
 }
 
 void Exodus::reset_mode_stack() {
