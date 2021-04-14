@@ -265,6 +265,17 @@ ExodusMode AlienVessel::update(float delta) {
             break;
         case AV_Comm:
             {
+                draw_manager.draw(id(ID::INTRO_0), nullptr);
+                draw_manager.draw(id(ID::INTRO_1), nullptr);
+                draw_manager.draw(id(ID::CORNER_TL), nullptr);
+                draw_manager.draw(id(ID::CORNER_TR), nullptr);
+                draw_manager.draw(id(ID::CORNER_BL), nullptr);
+                draw_manager.draw(id(ID::CORNER_BR), nullptr);
+                draw_manager.draw(id(ID::SHIP_ID0), nullptr);
+                draw_manager.draw(id(ID::SHIP_ID1), nullptr);
+                draw_manager.draw(id(ID::SHIP_ID2), nullptr);
+                draw_manager.draw(id(ID::NORADAR), nullptr);
+
                 if (!will_respond) {
                     comm_done = true;
                     draw_manager.draw_text(
@@ -286,17 +297,6 @@ ExodusMode AlienVessel::update(float delta) {
                     stage = AV_Idle;
                     break;
                 }
-
-                draw_manager.draw(id(ID::INTRO_0), nullptr);
-                draw_manager.draw(id(ID::INTRO_1), nullptr);
-                draw_manager.draw(id(ID::CORNER_TL), nullptr);
-                draw_manager.draw(id(ID::CORNER_TR), nullptr);
-                draw_manager.draw(id(ID::CORNER_BL), nullptr);
-                draw_manager.draw(id(ID::CORNER_BR), nullptr);
-                draw_manager.draw(id(ID::SHIP_ID0), nullptr);
-                draw_manager.draw(id(ID::SHIP_ID1), nullptr);
-                draw_manager.draw(id(ID::SHIP_ID2), nullptr);
-                draw_manager.draw(id(ID::NORADAR), nullptr);
 
                 // TODO
                 comm_done = true;
@@ -324,11 +324,13 @@ ExodusMode AlienVessel::update(float delta) {
                 b.enemy_scouts = enemy_scouts;
                 return ExodusMode::MODE_SpaceBattle;
             }
+            break;
         case AV_Surrender:
             {
                 // TODO
                 stage = AV_Exit;
             }
+            break;
         case AV_Exit:
             {
                 ephstate.set_ephemeral_state(EPH_ResumeFly);
