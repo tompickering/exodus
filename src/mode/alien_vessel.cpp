@@ -39,6 +39,7 @@ AlienVessel::AlienVessel() : ModeBase("AlienVessel"), PanelDrawer(PNL_Galaxy), F
     comm_done = false;
     comm_timer = 0.f;
     comm_line = 0;
+    surrender_done = false;
 }
 
 void AlienVessel::enter() {
@@ -57,6 +58,7 @@ void AlienVessel::enter() {
     comm_done = false;
     comm_timer = 0.f;
     comm_line = 0;
+    surrender_done = false;
 
     will_respond = true;
     will_hail = false;
@@ -331,8 +333,50 @@ ExodusMode AlienVessel::update(float delta) {
             break;
         case AV_Surrender:
             {
-                // TODO
-                stage = AV_Exit;
+                if (!surrender_done) {
+                    clear_overlay();
+                    draw_manager.draw_text(
+                        "Your enemy is not armed.",
+                        Justify::Left,
+                        20, 20,
+                        COL_TEXT);
+
+                    Fleet &f = player->get_fleet_nonconst();
+
+                    const char *cap_str = "";
+
+                    // FIXME: Do we care about maxima here?
+                    if (type == VESSEL_Trading) {
+                        f.transporters++;
+                        cap_str = "You have capptured a transporter ship.";
+                        switch (rand() % 3) {
+                            case 0:
+                                player->transfer_min(1);
+                                break;
+                            case 1:
+                                player->transfer_fd(1);
+                                break;
+                            case 2:
+                                player->transfer_plu(1);
+                                break;
+                        }
+                    } else {
+                        cap_str = "You have capptured a scout ship.";
+                        f.scouts++;
+                    }
+
+                    draw_manager.draw_text(
+                        cap_str,
+                        Justify::Left,
+                        20, 40,
+                        COL_TEXT);
+
+                    surrender_done = true;
+                }
+
+                if (draw_manager.clicked()) {
+                    stage = AV_Exit;
+                }
             }
             break;
         case AV_Exit:

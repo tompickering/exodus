@@ -62,6 +62,7 @@ class AlienVessel : ModeBase, PanelDrawer, FrameDrawer {
         bool comm_done;
         float comm_timer;
         int comm_line;
+        bool surrender_done;
 
         SprID comm_ids[MAX_COMM_LINES];
         const char *comm_text[MAX_COMM_LINES];
