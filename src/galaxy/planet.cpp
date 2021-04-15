@@ -1258,7 +1258,7 @@ bool Planet::laws_cause_unrest() {
     // ...but I've just copied PROCcal_plan here.
     uint16_t _laws = laws & 0xFFF8;
     bool ok = (_laws == 0xC8 || _laws == 0xD8 || _laws == 0x80 || _laws == 0x90
-            || _laws == 0xA0 || _laws == 0xB0 || _laws == 0x32 || _laws == 0x30);
+            || _laws == 0xA0 || _laws == 0xB0 || _laws == 0x20 || _laws == 0x30);
     if (has_law(LAW_FreeSpeech) ^ has_law(LAW_AllowSystemEnemies)) ok = false;
     if (has_law(LAW_CivilianWeapons)) ok = false;
     return !ok;
