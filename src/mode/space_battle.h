@@ -21,6 +21,7 @@ enum BattleShipType {
     SHIP_Warship,
     SHIP_Bomber,
     SHIP_Scout,
+    SHIP_Transporter,
 };
 
 enum BattleShipAction {
@@ -30,7 +31,6 @@ enum BattleShipAction {
 };
 
 struct BattleShip {
-    void init(BattleShipType, bool, int, int, int);
     void init(BattleShipType, bool, int, int, int, int);
     void cleanup();
 
@@ -46,8 +46,10 @@ struct BattleShip {
     int target;
     const char *spr;
     const char *spr_sel;
+    const char *spr_label;
 
     SprID spr_id;
+    SprID spr_id_label;
 };
 
 class SpaceBattle : ModeBase {
@@ -56,6 +58,9 @@ class SpaceBattle : ModeBase {
         virtual void enter() override;
         virtual ExodusMode update(float) override;
     private:
+        BattleShip* place(BattleShipType, bool, int);
+        BattleShip* place(BattleShipType, bool, int, int);
+        void distribute(BattleShipType, bool, int, int, int);
         void prepare();
         void draw();
 
@@ -68,6 +73,7 @@ class SpaceBattle : ModeBase {
         Stage stage;
 
         BattleShip ships[MAX_SHIPS];
+        BattleShip *next_ship;
         int selected;
 };
 
