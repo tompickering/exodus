@@ -47,6 +47,7 @@ struct BattleShip {
     int shield_max;
     BattleShipAction action;
     BattleShip* target;
+    bool draw_hit;
     const char *spr;
     const char *spr_sel;
     const char *spr_label;
@@ -87,6 +88,7 @@ class SpaceBattle : ModeBase {
         void ships_act();
         void update_rockets();
         void update_mouse();
+        void do_attack(BattleShip*);
         void draw();
         BattleShip* find_ship(BattleShipType, bool);
         Rocket* spawn_rocket(BattleShip*, float, float);

@@ -2,6 +2,8 @@
 
 #include <math.h>
 
+#include "util/value.h"
+
 #include "assetpaths.h"
 
 enum ID {
@@ -220,7 +222,7 @@ void SpaceBattle::prepare() {
 void SpaceBattle::draw() {
     // Draw ships
     for (int i = 0; i < MAX_SHIPS; ++i) {
-        const BattleShip& s = ships[i];
+        BattleShip& s = ships[i];
 
         if (!s.exists) {
             continue;
@@ -234,17 +236,19 @@ void SpaceBattle::draw() {
         int draw_y = (int)(s.y / 2.f);
 
         bool sel = false;
-        if (ships[i].enemy) {
-            sel = (selected && selected->target == &ships[i]);
+        if (s.enemy) {
+            sel = (selected && selected->target == &s);
         } else {
-            sel = (selected == &ships[i]);
+            sel = (selected == &s);
         }
 
         draw_manager.draw(
             s.spr_id,
-            sel ? s.spr_sel : s.spr,
+            s.draw_hit ? IMG_RD1_HIT : (sel ? s.spr_sel : s.spr),
             {draw_x, draw_y,
              .5f, .5f, 1, 1});
+
+        s.draw_hit = false;
 
         draw_manager.draw(
             s.spr_id_label,
@@ -446,23 +450,105 @@ void SpaceBattle::ships_act() {
                 // FIXME: Copying orig, but what's going on here?
                 s->hp = 10;
                 for (int i = 0; i < player->get_starship().laser_guns; ++i) {
-                    // TODO: PROCattack
+                    do_attack(s);
                 }
                 if (player->get_starship().missile_launchers > 0) {
                     if (onein(10)) {
                         player->get_starship().missile_launchers--;
                         for (int j = 0; j < 3; ++j) {
-                            // TODO: PROCattack
+                            do_attack(s);
                         }
                     }
                 }
             } else {
-                // TODO: PROCattack
+                do_attack(s);
             }
         } else if (s->action == BSA_Report) {
             // TODO: PROCr_report
         }
     }
+}
+
+void SpaceBattle::do_attack(BattleShip* s) {
+    // PROCr_attack
+    BattleShip *t = s->target;
+
+    if (!(s && t && t->exists)) {
+        return;
+    }
+
+    if (t->hp <= 0) {
+        s->target = nullptr;
+        return;
+    }
+
+    int hits = 0;
+
+    for (int i = 0; i < s->hp; ++i) {
+        int r = (s->action == BSA_AttackFast) ? 160 : 200;
+        if (t->action == BSA_AttackFast) {
+            r -= 40;
+        }
+        if (s->type == SHIP_Bomber) {
+            r += 100;
+        }
+        if (onein(r)) {
+            hits++;
+        }
+    }
+
+    if (hits == 0) {
+        return;
+    }
+
+    // PROCr_hit
+
+    if (t->type == SHIP_Starship) {
+        if (s->shield <= 0) {
+            // TODO: kill / fail1 fail2 fail3
+        }
+        // PROCr_hitstsh
+        int intern = 0;
+
+        s->shield -= 1;
+        if (s->shield < 0) {
+            intern = -s->shield;
+            s->shield = 0;
+        }
+
+        if (intern > 0) {
+            for (int i = 0; i < intern; ++i) {
+                int r = RND(10);
+                int *d;
+                if (r <= 7) {
+                    d = &player->get_starship().pct_damage_struct;
+                    *d = min((*d)+4, 100);
+                } else if (r <= 9) {
+                    d = &player->get_starship().pct_damage_thrust;
+                    *d = min((*d)+4, 100);
+                } else {
+                    d = &player->get_starship().pct_damage_comms;
+                    *d = min((*d)+6, 100);
+                    // TODO: bfinish=2 when comms destroyed
+                }
+            }
+        }
+
+        // TODO: Orig had a half-implemented screen wobble here - maybe experiment with that
+    } else {
+        t->hp = max(t->hp - hits, 0);
+        if (t->hp <= 0) {
+            s->target = nullptr;
+            if (selected->target == t) {
+                selected->target = nullptr;
+            }
+            // TODO: Is there any sort of explosion effect on death?
+            t->cleanup();
+        }
+    }
+
+    t->draw_hit = true;
+    // TODO: Hit SFX at the end of PROCr_hit
 }
 
 void SpaceBattle::update_battle() {
@@ -566,6 +652,7 @@ void BattleShip::init(BattleShipType _type, bool _enemy, float _x, float _y, int
     shield_max = _shield;
     shield = shield_max;
     target = nullptr;
+    draw_hit = false;
 
     spr_id = draw_manager.new_sprite_id();
     spr_id_label = draw_manager.new_sprite_id();
