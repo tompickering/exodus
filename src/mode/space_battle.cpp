@@ -216,7 +216,7 @@ void SpaceBattle::prepare() {
     distribute(SHIP_Bomber, false, f.bombers, 10, 3);
     distribute(SHIP_Scout, false, f.scouts, 10, 5);
     if (f.transporters) {
-        place(SHIP_Transporter, true, f.transporters);
+        place(SHIP_Transporter, false, f.transporters);
     }
 }
 
