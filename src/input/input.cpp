@@ -7,6 +7,8 @@ InputManager::InputManager() {
     mouse_pos.y = -1;
     click_pos.x = -1;
     click_pos.y = -1;
+    click_pos_r.x = -1;
+    click_pos_r.y = -1;
     text[INPUT_MAX_TEXT] = '\0';
 }
 
@@ -55,6 +57,14 @@ MousePos InputManager::read_click() {
     result = click_pos;
     click_pos.x = -1;
     click_pos.y = -1;
+    return result;
+}
+
+MousePos InputManager::read_click_r() {
+    MousePos result;
+    result = click_pos_r;
+    click_pos_r.x = -1;
+    click_pos_r.y = -1;
     return result;
 }
 

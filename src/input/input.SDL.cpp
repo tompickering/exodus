@@ -59,6 +59,8 @@ bool InputManagerSDL::update() {
             }
         } else if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT) {
             SDL_GetMouseState(&click_pos.x, &click_pos.y);
+        } else if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_RIGHT) {
+            SDL_GetMouseState(&click_pos_r.x, &click_pos_r.y);
         } else if (e.type == SDL_TEXTINPUT) {
             if (!SDL_IsTextInputActive())
                 continue;

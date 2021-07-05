@@ -24,7 +24,7 @@ DrawManager::DrawManager() {
     mouseover_selectable_text_id = ID_NONE;
 }
 
-void DrawManager::update(float delta, MousePos new_mouse_pos, MousePos new_click_pos) {
+void DrawManager::update(float delta, MousePos new_mouse_pos, MousePos new_click_pos, MousePos new_click_pos_r) {
     if (pixelswap_active()) {
         pixelswap_time += delta;
     }
@@ -40,13 +40,14 @@ void DrawManager::update(float delta, MousePos new_mouse_pos, MousePos new_click
     sprite_click.id = ID_NONE;
     mouse_pos = new_mouse_pos;
     click_pos = new_click_pos;
+    click_pos_r = new_click_pos_r;
     clicked_this_frame = (click_pos.x >= 0 && click_pos.y >= 0);
     if (clicked_this_frame) {
         float up_x, up_y;
         get_upscale(up_x, up_y);
         L.verb("Click: %d, %d", (int)((float)click_pos.x / up_x), (int)((float)click_pos.y / up_y));
     }
-    if (draw_cursor && click_pos.x >= 0 && click_pos.y >= 0) {
+    if (draw_cursor && clicked_this_frame) {
         for (std::vector<DrawnSprite>::size_type i = 0; i < drawn_spr_info.size(); ++i) {
             area = &(drawn_spr_info[i].area);
             if (area->w == 0 || area->h == 0)
@@ -94,13 +95,23 @@ SpriteClick DrawManager::get_clicked_sprite() {
 }
 
 SpriteClick DrawManager::query_click(SprID query) {
+    return query_click(query, false);
+}
+
+SpriteClick DrawManager::query_click_r(SprID query) {
+    return query_click(query, true);
+}
+
+SpriteClick DrawManager::query_click(SprID query, bool right) {
     DrawArea *area = nullptr;
     SpriteClick res;
     res.id = ID_NONE;
 
+    const MousePos &clk_pos = right ? click_pos_r : click_pos;
+
     if (!draw_cursor)
         return res;
-    if (click_pos.x < 0 || click_pos.y < 0)
+    if (clk_pos.x < 0 || clk_pos.y < 0)
         return res;
 
     for (std::vector<DrawnSprite>::size_type i = 0; i < drawn_spr_info.size(); ++i) {
@@ -109,8 +120,8 @@ SpriteClick DrawManager::query_click(SprID query) {
         area = &(drawn_spr_info[i].area);
         if (area->w == 0 || area->h == 0)
             continue;
-        float spr_x = (float)(click_pos.x - area->x) / (float)area->w;
-        float spr_y = (float)(click_pos.y - area->y) / (float)area->h;
+        float spr_x = (float)(clk_pos.x - area->x) / (float)area->w;
+        float spr_y = (float)(clk_pos.y - area->y) / (float)area->h;
         if (   spr_x >= 0 && spr_x <= 1
             && spr_y >= 0 && spr_y <= 1) {
             res.id = drawn_spr_info[i].id;
@@ -155,6 +166,7 @@ SpriteClick DrawManager::query_mouseover(SprID query) {
 
 void DrawManager::consume_click() {
     click_pos = {-1, -1};
+    click_pos_r = {-1, -1};
     clicked_this_frame = false;
 }
 

@@ -161,6 +161,7 @@ int Exodus::run(int argc, char** argv) {
 
     MousePos mouse_pos = {-1, -1};
     MousePos click_pos = {-1, -1};
+    MousePos click_pos_r = {-1, -1};
 
 #ifdef DBG
     for (int i = 0; i < argc; ++i) {
@@ -216,7 +217,7 @@ int Exodus::run(int argc, char** argv) {
          * again).
          */
         if (mode_updated_since_enter) {
-            draw_manager.update(delta_time, mouse_pos, click_pos);
+            draw_manager.update(delta_time, mouse_pos, click_pos, click_pos_r);
             game_timer.sleep_until(frame_start + MIN_FRAME_DELTA);
         }
 
@@ -230,6 +231,7 @@ int Exodus::run(int argc, char** argv) {
 
         mouse_pos = input_manager.get_mouse_pos();
         click_pos = input_manager.read_click();
+        click_pos_r = input_manager.read_click_r();
 
         delta_time = game_timer.get_delta() - frame_start;
 

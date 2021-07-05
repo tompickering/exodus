@@ -39,6 +39,7 @@ class InputManager {
         bool consume(Input);
         MousePos get_mouse_pos();
         MousePos read_click();
+        MousePos read_click_r();
         const char* get_input_text(int);
         virtual unsigned int read_numbers() = 0;
         virtual bool is_num_held(unsigned char) = 0;
@@ -52,6 +53,7 @@ class InputManager {
         bool enter;
         MousePos mouse_pos;
         MousePos click_pos;
+        MousePos click_pos_r;
         virtual bool update() = 0;
         uint32_t input[1 + K_END / 32];
         char text[INPUT_MAX_TEXT + 1];

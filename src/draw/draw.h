@@ -124,7 +124,7 @@ class DrawManager {
         DrawManager();
         virtual bool init() = 0;
         virtual void load_resources() = 0;
-        virtual void update(float, MousePos, MousePos);
+        virtual void update(float, MousePos, MousePos, MousePos);
         virtual void save_background() = 0;
         virtual void save_background(DrawArea) = 0;
         virtual void restore_background(DrawArea) = 0;
@@ -179,6 +179,7 @@ class DrawManager {
         virtual void show_cursor(bool);
         virtual SpriteClick get_clicked_sprite();
         virtual SpriteClick query_click(SprID);
+        virtual SpriteClick query_click_r(SprID);
         virtual SpriteClick query_mouseover(SprID);
         virtual void consume_click();
         virtual bool mouse_over(SprID);
@@ -190,6 +191,7 @@ class DrawManager {
         virtual void set_selectable(SprID);
         virtual void unset_selectable(SprID);
     protected:
+        virtual SpriteClick query_click(SprID, bool);
         map<const char*, void*> sprite_data;
         virtual void* get_sprite_data(const char*) = 0;
         virtual void adjust_selectable_text_col(SprID, RGB&);
@@ -208,6 +210,7 @@ class DrawManager {
     private:
         MousePos mouse_pos;
         MousePos click_pos;
+        MousePos click_pos_r;
         SpriteClick sprite_click;
         SprID prev_mouseover_selectable_text_id;
         SprID mouseover_selectable_text_id;
