@@ -24,6 +24,9 @@ void SpaceBattle::enter() {
 
     draw_manager.show_cursor(true);
 
+    starship = nullptr;
+
+    auto_battle = false;
     frame_time_elapsed = 0;
 
     SpaceBattleParams &b = ephstate.space_battle;
@@ -196,7 +199,7 @@ void SpaceBattle::prepare() {
     next_ship = &ships[0];
 
     int shields = p->get_starship().shield_generators;
-    place(SHIP_Starship, false, 1, shields*5);
+    starship = place(SHIP_Starship, false, 1, shields*5);
 
     distribute(SHIP_Warship, true, b.enemy_ships, 10, 4);
     distribute(SHIP_Scout, true, b.enemy_scouts, 5, 2);
@@ -295,6 +298,64 @@ void SpaceBattle::update_mouse() {
     }
 }
 
+void SpaceBattle::ships_think() {
+    for (int i = 0; i < MAX_SHIPS; ++i) {
+        BattleShip *s = &ships[i];
+        if (!s->exists) {
+            continue;
+        }
+
+        if (s->hp <= 0) {
+            continue;
+        }
+
+        if (!auto_battle && !s->enemy) {
+            continue;
+        }
+
+        if (s->target) {
+            // Unset invalid targets
+            if (!(s->target->exists && s->target->hp > 0)) {
+                s->target = nullptr;
+            }
+        }
+
+        // If we don't have a target, pick a new one
+        if (!s->target) {
+            if (s->enemy) {
+                // Enemy target selection
+                int r = RND(5);
+                if (r < 3) {
+                    s->target = find_ship(SHIP_Warship, !s->enemy);
+                    if (!s->target) s->target = starship;
+                } else if (r == 3) {
+                    s->target = find_ship(SHIP_Bomber, !s->enemy);
+                    if (!s->target) s->target = starship;
+                } else if (r == 4) {
+                    s->target = starship;
+                } else {
+                    if (onein(3)) {
+                        s->target = find_ship(SHIP_Transporter, !s->enemy);
+                    } else {
+                        s->target = find_ship(SHIP_Scout, !s->enemy);
+                    }
+                }
+            } else {
+                // Player target selection
+                s->target = find_ship(SHIP_Warship, !s->enemy);
+            }
+        }
+
+        if (s->action == BSA_AttackSlow && onein(50)) {
+            s->action = BSA_AttackFast;
+        }
+
+        if (s->action == BSA_AttackFast && onein(50)) {
+            s->action = BSA_AttackSlow;
+        }
+    }
+}
+
 void SpaceBattle::update_ships() {
     for (int i = 0; i < MAX_SHIPS; ++i) {
         BattleShip *s = &ships[i];
@@ -351,6 +412,7 @@ void SpaceBattle::update_rockets() {
 }
 
 void SpaceBattle::update_battle() {
+    ships_think();
     update_ships();
     update_rockets();
 }
@@ -404,6 +466,20 @@ ExodusMode SpaceBattle::update(float delta) {
     draw();
 
     return ExodusMode::MODE_None;
+}
+
+BattleShip* SpaceBattle::find_ship(BattleShipType type, bool enemy) {
+    for (int i = 0; i < MAX_SHIPS; ++i) {
+        if (!(ships[i].exists && ships[i].hp > 0)) {
+            continue;
+        }
+
+        if (ships[i].type == type && ships[i].enemy == enemy) {
+            return &ships[i];
+        }
+    }
+
+    return nullptr;
 }
 
 Rocket* SpaceBattle::spawn_rocket(BattleShip* ship, float dx, float dy) {

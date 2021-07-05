@@ -83,9 +83,11 @@ class SpaceBattle : ModeBase {
         void prepare();
         void update_battle();
         void update_ships();
+        void ships_think();
         void update_rockets();
         void update_mouse();
         void draw();
+        BattleShip* find_ship(BattleShipType, bool);
         Rocket* spawn_rocket(BattleShip*, float, float);
 
         enum Stage {
@@ -100,9 +102,11 @@ class SpaceBattle : ModeBase {
         BattleShip ships[MAX_SHIPS];
         BattleShip *next_ship;
         BattleShip *selected;
+        BattleShip *starship;
 
         Rocket rockets[MAX_ROCKETS];
 
+        bool auto_battle;
         float frame_time_elapsed;
 };
 
