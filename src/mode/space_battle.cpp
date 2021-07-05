@@ -397,6 +397,11 @@ void SpaceBattle::update_ships() {
         if (fire) {
             spawn_rocket(s, dx*4, dy*4);
         }
+
+        // Restore shields
+        if (s->shield < s->shield_max && onein(30)) {
+            s->shield++;
+        }
     }
 
     // TODO: Extra starship rockets based on launchers
