@@ -249,8 +249,6 @@ void SpaceBattle::draw() {
             {draw_x, draw_y,
              .5f, .5f, 1, 1});
 
-        s.draw_hit = false;
-
         draw_manager.draw(
             s.spr_id_label,
             s.spr_label,
@@ -557,6 +555,10 @@ void SpaceBattle::do_attack(BattleShip* s) {
 }
 
 void SpaceBattle::update_battle() {
+    for (int i = 0; i < MAX_SHIPS; ++i) {
+        ships[i].draw_hit = false;
+    }
+
     ships_think();
     update_ships();
     update_rockets();
