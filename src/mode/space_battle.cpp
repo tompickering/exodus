@@ -524,12 +524,15 @@ void SpaceBattle::do_attack(BattleShip* s) {
                 if (r <= 7) {
                     d = &player->get_starship().pct_damage_struct;
                     *d = min((*d)+4, 100);
+                    L.info("STARSHIP STRUCTURE: %d%%", 100-(*d));
                 } else if (r <= 9) {
                     d = &player->get_starship().pct_damage_thrust;
                     *d = min((*d)+4, 100);
+                    L.info("STARSHIP THRUSTERS: %d%%", 100-(*d));
                 } else {
                     d = &player->get_starship().pct_damage_comms;
                     *d = min((*d)+6, 100);
+                    L.info("STARSHIP COMMS: %d%%", 100-(*d));
                     // TODO: bfinish=2 when comms destroyed
                 }
             }
@@ -537,6 +540,7 @@ void SpaceBattle::do_attack(BattleShip* s) {
 
         // TODO: Orig had a half-implemented screen wobble here - maybe experiment with that
     } else {
+        L.info("%s ship type %d HP: %d->%d", t->enemy?"CPU":"Human", (int)t->type, t->hp, t->hp - hits);
         t->hp = max(t->hp - hits, 0);
         if (t->hp <= 0) {
             s->target = nullptr;
