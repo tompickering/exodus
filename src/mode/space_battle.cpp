@@ -183,7 +183,7 @@ void SpaceBattle::distribute(BattleShipType type, bool enemy, int n_ships, int s
 }
 
 void SpaceBattle::prepare() {
-    Player *p = exostate.get_active_player();
+    player = exostate.get_active_player();
     SpaceBattleParams &b = ephstate.space_battle;
 
     selected = nullptr;
@@ -198,7 +198,7 @@ void SpaceBattle::prepare() {
 
     next_ship = &ships[0];
 
-    int shields = p->get_starship().shield_generators;
+    int shields = player->get_starship().shield_generators;
     starship = place(SHIP_Starship, false, 1, shields*5);
 
     distribute(SHIP_Warship, true, b.enemy_ships, 10, 4);
@@ -207,7 +207,7 @@ void SpaceBattle::prepare() {
         place(SHIP_Transporter, true, b.enemy_cargo);
     }
 
-    const Fleet &f = p->get_fleet();
+    const Fleet &f = player->get_fleet();
 
     distribute(SHIP_Warship, false, f.warships, 10, 4);
     distribute(SHIP_Bomber, false, f.bombers, 10, 3);
@@ -402,9 +402,19 @@ void SpaceBattle::update_ships() {
         if (s->shield < s->shield_max && onein(30)) {
             s->shield++;
         }
-    }
 
-    // TODO: Extra starship rockets based on launchers
+        if (s->type == SHIP_Starship) {
+            if (s->target && s->target->exists && s->target->hp > 0) {
+                // FIXME: Orig does this outside of the loop - and ends up using the wrong dx / dy! We'll fix this...
+                // FIXME: This is true to orig, but shouldn't this be missile_launchers...?
+                for (int i = 0; i < player->get_starship().laser_guns; ++i) {
+                    if (onein(15)) {
+                        spawn_rocket(s, dx*4, dy*4);
+                    }
+                }
+            }
+        }
+    }
 }
 
 void SpaceBattle::update_rockets() {

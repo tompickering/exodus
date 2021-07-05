@@ -103,6 +103,7 @@ class SpaceBattle : ModeBase {
         BattleShip *next_ship;
         BattleShip *selected;
         BattleShip *starship;
+        Player *player;
 
         Rocket rockets[MAX_ROCKETS];
 
