@@ -84,6 +84,7 @@ class SpaceBattle : ModeBase {
         void update_battle();
         void update_ships();
         void ships_think();
+        void ships_act();
         void update_rockets();
         void update_mouse();
         void draw();

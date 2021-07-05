@@ -426,10 +426,50 @@ void SpaceBattle::update_rockets() {
     }
 }
 
+void SpaceBattle::ships_act() {
+    for (int i = 0; i < MAX_SHIPS; ++i) {
+        BattleShip *s = &ships[i];
+
+        if (!(s->exists && s->hp > 0)) {
+            continue;
+        }
+
+        if (s->action == BSA_AttackSlow || s->action == BSA_AttackFast) {
+            // PROCr_doattack
+            BattleShip *t = s->target;
+
+            if (!t) {
+                continue;
+            }
+
+            if (s->type == SHIP_Starship) {
+                // FIXME: Copying orig, but what's going on here?
+                s->hp = 10;
+                for (int i = 0; i < player->get_starship().laser_guns; ++i) {
+                    // TODO: PROCattack
+                }
+                if (player->get_starship().missile_launchers > 0) {
+                    if (onein(10)) {
+                        player->get_starship().missile_launchers--;
+                        for (int j = 0; j < 3; ++j) {
+                            // TODO: PROCattack
+                        }
+                    }
+                }
+            } else {
+                // TODO: PROCattack
+            }
+        } else if (s->action == BSA_Report) {
+            // TODO: PROCr_report
+        }
+    }
+}
+
 void SpaceBattle::update_battle() {
     ships_think();
     update_ships();
     update_rockets();
+    ships_act();
 }
 
 ExodusMode SpaceBattle::update(float delta) {
