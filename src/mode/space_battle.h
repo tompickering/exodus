@@ -43,7 +43,7 @@ struct BattleShip {
     int shield;
     int shield_max;
     BattleShipAction action;
-    int target;
+    BattleShip* target;
     const char *spr;
     const char *spr_sel;
     const char *spr_label;
@@ -62,11 +62,14 @@ class SpaceBattle : ModeBase {
         BattleShip* place(BattleShipType, bool, int, int);
         void distribute(BattleShipType, bool, int, int, int);
         void prepare();
+        void update_battle();
+        void update_mouse();
         void draw();
 
         enum Stage {
             SB_Setup,
             SB_Battle,
+            SB_Wait,
             SB_Exit,
         };
 
@@ -74,7 +77,8 @@ class SpaceBattle : ModeBase {
 
         BattleShip ships[MAX_SHIPS];
         BattleShip *next_ship;
-        int selected;
+        BattleShip *selected;
+        float frame_time_elapsed;
 };
 
 #endif

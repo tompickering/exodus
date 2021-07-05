@@ -22,6 +22,8 @@ void SpaceBattle::enter() {
 
     draw_manager.show_cursor(true);
 
+    frame_time_elapsed = 0;
+
     SpaceBattleParams &b = ephstate.space_battle;
     L.debug("STARTING BATTLE - ENEMY SHIPS: %d", b.enemy_ships + b.enemy_scouts + b.enemy_cargo);
 }
@@ -176,7 +178,7 @@ void SpaceBattle::prepare() {
     Player *p = exostate.get_active_player();
     SpaceBattleParams &b = ephstate.space_battle;
 
-    selected = -1;
+    selected = nullptr;
 
     for (int i = 0; i < MAX_SHIPS; ++i) {
         ships[i].exists = false;
@@ -209,13 +211,24 @@ void SpaceBattle::draw() {
             continue;
         }
 
+        if (ships[i].hp <= 0) {
+            continue;
+        }
+
         const BattleShip& s = ships[i];
         int draw_x = s.x / 2;
         int draw_y = s.y / 2;
 
+        bool sel = false;
+        if (ships[i].enemy) {
+            sel = (selected && selected->target == &ships[i]);
+        } else {
+            sel = (selected == &ships[i]);
+        }
+
         draw_manager.draw(
             s.spr_id,
-            selected == i ? s.spr_sel : s.spr,
+            sel ? s.spr_sel : s.spr,
             {draw_x, draw_y,
              .5f, .5f, 1, 1});
 
@@ -225,6 +238,34 @@ void SpaceBattle::draw() {
             {draw_x + 24, draw_y - 10,
              .5f, .5f, 1, 1});
     }
+}
+
+void SpaceBattle::update_mouse() {
+    // TODO: PROCr_cycleaction
+    for (int i = 0; i < MAX_SHIPS; ++i) {
+        if (!ships[i].exists) {
+            continue;
+        }
+
+        if (draw_manager.query_click(ships[i].spr_id).id) {
+            if (!ships[i].enemy) {
+                selected = &ships[i];
+                L.debug("Selected ship %d", i);
+            }
+        }
+
+        if (draw_manager.query_click_r(ships[i].spr_id).id) {
+            if (ships[i].enemy) {
+                if (selected && selected->exists && selected->hp > 0) {
+                    selected->target = &ships[i];
+                    L.debug("Targeting ship %d", i);
+                }
+            }
+        }
+    }
+}
+
+void SpaceBattle::update_battle() {
 }
 
 ExodusMode SpaceBattle::update(float delta) {
@@ -238,8 +279,22 @@ ExodusMode SpaceBattle::update(float delta) {
             break;
         case SB_Battle:
             {
+                update_battle();
+                frame_time_elapsed = 0;
+                stage = SB_Wait;
+            }
+            // Fall through here - handle UI etc in SB_Wait
+        case SB_Wait:
+            {
+                update_mouse();
+
+                frame_time_elapsed += delta;
+                if (frame_time_elapsed >= 0.4) {
+                    stage = SB_Battle;
+                }
+
                 if (draw_manager.clicked()) {
-                    stage = SB_Exit;
+                    //stage = SB_Exit;
                 }
             }
             break;
@@ -269,7 +324,7 @@ void BattleShip::init(BattleShipType _type, bool _enemy, int _x, int _y, int _hp
     hp = _hp;
     shield_max = _shield;
     shield = shield_max;
-    target = -1;
+    target = nullptr;
 
     spr_id = draw_manager.new_sprite_id();
     spr_id_label = draw_manager.new_sprite_id();
