@@ -86,6 +86,7 @@ BattleShip* SpaceBattle::place(BattleShipType type, bool enemy, int hp, int shie
             case SHIP_Starship:
                 x = 640;
                 y = 512;
+                act = BSA_AttackSlow;
                 break;
             case SHIP_Warship:
                 x = 540;
