@@ -11,6 +11,8 @@
 
 #define MAX_SHIPS_PER_TYPE 5
 #define MAX_SHIPS (MAX_SHIPS_PER_TYPE * 4)
+#define MAX_ROCKETS 20
+#define ROCKET_TTL 20
 
 extern ExodusState exostate;
 extern EphemeralState ephstate;
@@ -26,19 +28,20 @@ enum BattleShipType {
 
 enum BattleShipAction {
     BSA_Idle,
-    BSA_Attack,
+    BSA_AttackSlow,
+    BSA_AttackFast,
     BSA_Report,
 };
 
 struct BattleShip {
-    void init(BattleShipType, bool, int, int, int, int);
+    void init(BattleShipType, bool, float, float, int, int);
     void cleanup();
 
     BattleShipType type;
     bool exists;
     bool enemy;
-    int x;
-    int y;
+    float x;
+    float y;
     int hp;
     int shield;
     int shield_max;
@@ -52,6 +55,22 @@ struct BattleShip {
     SprID spr_id_label;
 };
 
+struct Rocket {
+    void init(float, float, float, float);
+    void update();
+    const char* get_sprite() const;
+    void cleanup();
+
+    bool exists;
+    int ticks_alive;
+    float x;
+    float y;
+    float dx;
+    float dy;
+
+    SprID spr_id;
+};
+
 class SpaceBattle : ModeBase {
     public:
         SpaceBattle();
@@ -63,8 +82,11 @@ class SpaceBattle : ModeBase {
         void distribute(BattleShipType, bool, int, int, int);
         void prepare();
         void update_battle();
+        void update_ships();
+        void update_rockets();
         void update_mouse();
         void draw();
+        Rocket* spawn_rocket(BattleShip*, float, float);
 
         enum Stage {
             SB_Setup,
@@ -78,6 +100,9 @@ class SpaceBattle : ModeBase {
         BattleShip ships[MAX_SHIPS];
         BattleShip *next_ship;
         BattleShip *selected;
+
+        Rocket rockets[MAX_ROCKETS];
+
         float frame_time_elapsed;
 };
 
