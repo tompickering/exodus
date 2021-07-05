@@ -72,6 +72,12 @@ struct Rocket {
     SprID spr_id;
 };
 
+enum SpaceBattleResolution {
+    SBRES_None,
+    SBRES_Won,
+    SBRES_StarshipDestroyed,
+};
+
 class SpaceBattle : ModeBase {
     public:
         SpaceBattle();
@@ -112,6 +118,7 @@ class SpaceBattle : ModeBase {
 
         bool auto_battle;
         float frame_time_elapsed;
+        SpaceBattleResolution resolution;
 };
 
 #endif

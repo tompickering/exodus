@@ -30,6 +30,7 @@ void SpaceBattle::enter() {
 
     auto_battle = false;
     frame_time_elapsed = 0;
+    resolution = SBRES_None;
 
     SpaceBattleParams &b = ephstate.space_battle;
     L.debug("STARTING BATTLE - ENEMY SHIPS: %d", b.enemy_ships + b.enemy_scouts + b.enemy_cargo);
@@ -523,6 +524,9 @@ void SpaceBattle::do_attack(BattleShip* s) {
                     d = &player->get_starship().pct_damage_struct;
                     *d = min((*d)+4, 100);
                     L.info("STARSHIP STRUCTURE: %d%%", 100-(*d));
+                    if ((*d) >= 100) {
+                        resolution = SBRES_StarshipDestroyed;
+                    }
                 } else if (r <= 9) {
                     d = &player->get_starship().pct_damage_thrust;
                     *d = min((*d)+4, 100);
@@ -531,7 +535,6 @@ void SpaceBattle::do_attack(BattleShip* s) {
                     d = &player->get_starship().pct_damage_comms;
                     *d = min((*d)+6, 100);
                     L.info("STARSHIP COMMS: %d%%", 100-(*d));
-                    // TODO: bfinish=2 when comms destroyed
                 }
             }
         }
@@ -577,8 +580,36 @@ ExodusMode SpaceBattle::update(float delta) {
         case SB_Battle:
             {
                 update_battle();
+
+                if (resolution == SBRES_None) {
+                    int enemies = 0;
+                    for (int i = 0; i < MAX_SHIPS; ++i) {
+                        if (ships[i].exists && ships[i].enemy) {
+                            enemies += ships[i].hp;
+                        }
+                    }
+                    if (!enemies) {
+                        resolution = SBRES_Won;
+                    }
+                }
+
                 frame_time_elapsed = 0;
                 stage = SB_Wait;
+
+                switch (resolution) {
+                    case SBRES_None:
+                        break;
+                    case SBRES_Won:
+                        // TODO
+                        L.info("BATTLE WON");
+                        stage = SB_Exit; // Placeholder
+                        break;
+                    case SBRES_StarshipDestroyed:
+                        // TODO
+                        L.info("BATTLE LOST: Starship destroyed");
+                        stage = SB_Exit; // Placeholder
+                        break;
+                }
             }
             // Fall through here - handle UI etc in SB_Wait
         case SB_Wait:
