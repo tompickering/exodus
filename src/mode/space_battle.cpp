@@ -19,6 +19,10 @@ Anim fail_anim(FAIL_SPRITES,
                IMG_RD1_FAIL2,
                IMG_RD1_FAIL3);
 
+Anim exp_anim(11, IMG_RD1_DEAD1, IMG_RD1_DEAD2, IMG_RD1_DEAD3, IMG_RD1_DEAD4,
+                  IMG_RD1_DEAD5, IMG_RD1_DEAD6, IMG_RD1_DEAD7, IMG_RD1_DEAD8,
+                  IMG_RD1_DEAD9, IMG_RD1_DEAD10, nullptr);
+
 enum ID {
     BACKGROUND,
     FAIL_SHIP_STATS,
@@ -59,8 +63,20 @@ void SpaceBattle::enter() {
     fail_battle_readout = false;
     fail_battle_readout_this_frame = false;
 
+    for (int i = 0; i < N_EXPLOSIONS; ++i) {
+        explosions[i].spr_id = draw_manager.new_sprite_id();
+    }
+
+    do_explosions = false;
+
     SpaceBattleParams &b = ephstate.space_battle;
     L.debug("STARTING BATTLE - ENEMY SHIPS: %d", b.enemy_ships + b.enemy_scouts + b.enemy_cargo);
+}
+
+void SpaceBattle::exit() {
+    for (int i = 0; i < N_EXPLOSIONS; ++i) {
+        draw_manager.release_sprite_id(explosions[i].spr_id);
+    }
 }
 
 BattleShip* SpaceBattle::place(BattleShipType type, bool enemy, int hp) {
@@ -372,7 +388,19 @@ void SpaceBattle::draw() {
 
     if (fail_diagnostics < 0) {
         // Drop top-right ship diagnostics
-        // TODO
+        for (int i = 0; i < N_EXPLOSIONS; ++i) {
+            Explosion &exp = explosions[i];
+            const char* spr = nullptr;
+            if (do_explosions && exp.frame >= 0 && exp.frame < exp_anim.get_n_frames()) {
+                spr = exp_anim.frame(exp.frame);
+            }
+            draw_manager.draw(
+                exp.spr_id,
+                spr,
+                {exp.x, exp.y, 0, 0, 1, 1});
+        }
+
+        // TODO: health indicator
     } else {
         // System failure
         draw_manager.draw(
@@ -647,7 +675,9 @@ void SpaceBattle::do_attack(BattleShip* s) {
 
     if (t->type == SHIP_Starship) {
         if (s->shield <= 0) {
-            // TODO: kill
+            if (!do_explosions) {
+                start_explosions();
+            }
             if (fail_ship_stats < 0 && onein(20))
                 fail_ship_stats = 0;
             if (fail_diagnostics < 0 && onein(20))
@@ -705,7 +735,31 @@ void SpaceBattle::do_attack(BattleShip* s) {
     // TODO: Hit SFX at the end of PROCr_hit
 }
 
+void SpaceBattle::start_explosions() {
+    do_explosions = true;
+    explosions[0].x = 565;
+    explosions[0].y = 91;
+    explosions[0].frame = -8;
+    for (int i = 1; i < N_EXPLOSIONS; ++i) {
+        Explosion &exp = explosions[i];
+        exp.x = 552 + RND(26);
+        exp.y = 78 + RND(26);
+        exp.frame = RND(15) * -1;
+    }
+}
+
 void SpaceBattle::update_battle() {
+    if (do_explosions) {
+        bool stop_explosions = true;
+        for (int i = 0; i < N_EXPLOSIONS; ++i) {
+            Explosion &exp = explosions[i];
+            if (++exp.frame < exp_anim.get_n_frames()) {
+                stop_explosions = false;
+            }
+        }
+        do_explosions = !stop_explosions;
+    }
+
     if (fail_ship_stats >= 0) {
         fail_ship_stats = (fail_ship_stats + 1) % FAIL_SPRITES;
     }

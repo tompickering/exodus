@@ -13,6 +13,7 @@
 #define MAX_SHIPS (MAX_SHIPS_PER_TYPE * 4)
 #define MAX_ROCKETS 20
 #define ROCKET_TTL 20
+#define N_EXPLOSIONS 8
 
 extern ExodusState exostate;
 extern EphemeralState ephstate;
@@ -78,12 +79,21 @@ enum SpaceBattleResolution {
     SBRES_StarshipDestroyed,
 };
 
+struct Explosion {
+    int x;
+    int y;
+    int frame;
+    SprID spr_id;
+};
+
 class SpaceBattle : ModeBase {
     public:
         SpaceBattle();
         virtual void enter() override;
+        virtual void exit() override;
         virtual ExodusMode update(float) override;
     private:
+        Explosion explosions[N_EXPLOSIONS];
         BattleShip* place(BattleShipType, bool, int);
         BattleShip* place(BattleShipType, bool, int, int);
         void distribute(BattleShipType, bool, int, int, int);
@@ -95,6 +105,7 @@ class SpaceBattle : ModeBase {
         void update_rockets();
         void update_mouse();
         void do_attack(BattleShip*);
+        void start_explosions();
         void draw();
         BattleShip* find_ship(BattleShipType, bool);
         int count_ships(BattleShipType, bool);
@@ -129,6 +140,8 @@ class SpaceBattle : ModeBase {
         int fail_diagnostics;
         bool fail_battle_readout;
         bool fail_battle_readout_this_frame;
+
+        bool do_explosions;
 };
 
 #endif
