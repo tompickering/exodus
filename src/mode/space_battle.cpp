@@ -34,6 +34,8 @@ enum ID {
     COUNT_SCOUTS,
     COUNT_TRANSPORTS,
     COUNT_ENEMY,
+    HEALTH_INDICATOR,
+    BOW,
     END,
 };
 
@@ -401,7 +403,23 @@ void SpaceBattle::draw() {
                 {exp.x, exp.y, 0, 0, 1, 1});
         }
 
-        // TODO: health indicator
+        int dmg = player->get_starship().pct_damage_struct;
+        const char *health_spr = IMG_RD1_ST1;
+        if (dmg > 70) {
+            health_spr = IMG_RD1_ST4;
+        } else if (dmg > 50) {
+            health_spr = IMG_RD1_ST3;
+        } else if (dmg > 0) {
+            health_spr = IMG_RD1_ST2;
+        }
+        draw_manager.draw(
+            id(ID::HEALTH_INDICATOR),
+            health_spr,
+            {618, 126, 0, 0, 1, 1});
+        draw_manager.draw(
+            id(ID::BOW),
+            IMG_RD1_BOW,
+            {610, 118, 0, 0, 1, 1});
     } else {
         // System failure
         draw_manager.draw(
