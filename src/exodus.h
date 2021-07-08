@@ -34,6 +34,7 @@ enum ExodusMode {
     MODE_Arrive,
     MODE_AlienVessel,
     MODE_SpaceBattle,
+    MODE_GameOver,
 };
 
 class ModeBase;

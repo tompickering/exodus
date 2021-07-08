@@ -33,6 +33,8 @@ ExodusMode EphemeralState::get_appropriate_mode() {
             return ExodusMode::MODE_PlanetMap;
         case EPH_ResearchCheck:
             return ExodusMode::MODE_None;
+        case EPH_GameOver:
+            return ExodusMode::MODE_GameOver;
     }
 
     return ExodusMode::MODE_None;

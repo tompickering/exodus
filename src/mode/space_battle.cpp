@@ -940,8 +940,14 @@ ExodusMode SpaceBattle::update(float delta) {
 
                 if (destroyed_delay > 0 && !draw_manager.pixelswap_active()) {
                     if (draw_manager.clicked()) {
-                        // TODO: Implement game over / escape capsule
-                        stage = SB_Exit;
+                        if (player->get_starship().escape_capsule) {
+                            // TODO: Implement escape capsule
+                            stage = SB_Exit;
+                        } else {
+                            ephstate.game_over_reason = GAMEOVER_Dead;
+                            ephstate.set_ephemeral_state(EPH_GameOver);
+                            return ephstate.get_appropriate_mode();
+                        }
                     }
                 }
 

@@ -104,6 +104,12 @@ typedef struct {
     int months;
 } FlyPlan;
 
+enum GameOverReason {
+    GAMEOVER_Failed,
+    GAMEOVER_Dead,
+    GAMEOVER_AllHumansDead,
+};
+
 enum EphState {
     EPH_None,
     EPH_LunarBattlePrep,
@@ -112,6 +118,7 @@ enum EphState {
     EPH_Destruction,
     EPH_ResearchCheck,
     EPH_ResumeFly,
+    EPH_GameOver,
 };
 
 class EphemeralState {
@@ -128,6 +135,7 @@ class EphemeralState {
         PlanetDestruction destruction;
         Research research;
         FlyPlan fly_plan;
+        GameOverReason game_over_reason;
     private:
         EphState eph_state;
 
