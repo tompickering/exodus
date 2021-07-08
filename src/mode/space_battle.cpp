@@ -672,7 +672,10 @@ ExodusMode SpaceBattle::update(float delta) {
                 if (resolution == SBRES_None) {
                     int enemies = 0;
                     for (int i = 0; i < MAX_SHIPS; ++i) {
-                        if (ships[i].exists && ships[i].enemy) {
+                        if (!ships[i].exists) {
+                            continue;
+                        }
+                        if (ships[i].enemy && ships[i].type == SHIP_Warship) {
                             enemies += ships[i].hp;
                         }
                     }
