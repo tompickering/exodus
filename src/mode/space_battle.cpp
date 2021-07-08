@@ -670,16 +670,7 @@ ExodusMode SpaceBattle::update(float delta) {
                 update_battle();
 
                 if (resolution == SBRES_None) {
-                    int enemies = 0;
-                    for (int i = 0; i < MAX_SHIPS; ++i) {
-                        if (!ships[i].exists) {
-                            continue;
-                        }
-                        if (ships[i].enemy && ships[i].type == SHIP_Warship) {
-                            enemies += ships[i].hp;
-                        }
-                    }
-                    if (!enemies) {
+                    if (!find_ship(SHIP_Warship, true)) {
                         resolution = SBRES_Won;
                     }
                 }
