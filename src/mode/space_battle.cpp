@@ -25,6 +25,11 @@ enum ID {
     FAIL_DIAGNOSTICS,
     BUTTON_DETAIL,
     BUTTON_AUTO,
+    COUNT_WARSHIPS,
+    COUNT_BOMBERS,
+    COUNT_SCOUTS,
+    COUNT_TRANSPORTS,
+    COUNT_ENEMY,
     END,
 };
 
@@ -297,14 +302,79 @@ void SpaceBattle::draw() {
              .5f, .5f, 1, 1});
     }
 
-    // Draw system failure warnings
-    if (fail_ship_stats >= 0) {
+    if (fail_ship_stats < 0) {
+        // Draw top-left ship counts
+        int count_wsp = count_ships(SHIP_Warship, false);
+        int count_bmb = count_ships(SHIP_Bomber, false);
+        int count_sct = count_ships(SHIP_Scout, false);
+        int count_trn = count_ships(SHIP_Transporter, false);
+        int count_enm = count_ships(SHIP_Warship, true);
+
+        char count[4];
+        count[3] = '\0';
+
+        snprintf(count, sizeof(count), "%03d", count_wsp);
+        count[3] = '\0';
+        draw_manager.draw_text(
+            id(ID::COUNT_WARSHIPS),
+            Font::Tiny,
+            count,
+            Justify::Right,
+            104, 30,
+            COL_TEXT2);
+
+        snprintf(count, sizeof(count), "%03d", count_bmb);
+        count[3] = '\0';
+        draw_manager.draw_text(
+            id(ID::COUNT_BOMBERS),
+            Font::Tiny,
+            count,
+            Justify::Right,
+            104, 48,
+            COL_TEXT2);
+
+        snprintf(count, sizeof(count), "%03d", count_sct);
+        count[3] = '\0';
+        draw_manager.draw_text(
+            id(ID::COUNT_SCOUTS),
+            Font::Tiny,
+            count,
+            Justify::Right,
+            104, 66,
+            COL_TEXT2);
+
+        snprintf(count, sizeof(count), "%03d", count_trn);
+        count[3] = '\0';
+        draw_manager.draw_text(
+            id(ID::COUNT_TRANSPORTS),
+            Font::Tiny,
+            count,
+            Justify::Right,
+            104, 84,
+            COL_TEXT2);
+
+        snprintf(count, sizeof(count), "%03d", count_enm);
+        count[3] = '\0';
+        draw_manager.draw_text(
+            id(ID::COUNT_ENEMY),
+            Font::Tiny,
+            count,
+            Justify::Right,
+            104, 110,
+            COL_TEXT2);
+    } else {
+        // System failure
         draw_manager.draw(
             id(ID::FAIL_SHIP_STATS),
             fail_anim.frame(fail_ship_stats),
             {10, 10, 0, 0, 1, 1});
     }
-    if (fail_diagnostics >= 0) {
+
+    if (fail_diagnostics < 0) {
+        // Drop top-right ship diagnostics
+        // TODO
+    } else {
+        // System failure
         draw_manager.draw(
             id(ID::FAIL_DIAGNOSTICS),
             fail_anim.frame(fail_diagnostics),
@@ -753,6 +823,22 @@ BattleShip* SpaceBattle::find_ship(BattleShipType type, bool enemy) {
     }
 
     return nullptr;
+}
+
+int SpaceBattle::count_ships(BattleShipType type, bool enemy) {
+    int count = 0;
+
+    for (int i = 0; i < MAX_SHIPS; ++i) {
+        if (!(ships[i].exists && ships[i].hp > 0)) {
+            continue;
+        }
+
+        if (ships[i].type == type && ships[i].enemy == enemy) {
+            count += ships[i].hp;
+        }
+    }
+
+    return count;
 }
 
 Rocket* SpaceBattle::spawn_rocket(BattleShip* ship, float dx, float dy) {

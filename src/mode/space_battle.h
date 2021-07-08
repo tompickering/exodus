@@ -97,6 +97,7 @@ class SpaceBattle : ModeBase {
         void do_attack(BattleShip*);
         void draw();
         BattleShip* find_ship(BattleShipType, bool);
+        int count_ships(BattleShipType, bool);
         Rocket* spawn_rocket(BattleShip*, float, float);
 
         enum Stage {
