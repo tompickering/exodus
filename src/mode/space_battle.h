@@ -119,6 +119,11 @@ class SpaceBattle : ModeBase {
         bool auto_battle;
         float frame_time_elapsed;
         SpaceBattleResolution resolution;
+
+        int fail_ship_stats;
+        int fail_diagnostics;
+        bool fail_battle_readout;
+        bool fail_battle_readout_this_frame;
 };
 
 #endif

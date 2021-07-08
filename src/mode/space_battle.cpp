@@ -2,12 +2,22 @@
 
 #include <math.h>
 
+#include "anim.h"
 #include "util/value.h"
 
 #include "assetpaths.h"
 
+#define FAIL_SPRITES 3
+
+Anim fail_anim(FAIL_SPRITES,
+               IMG_RD1_FAIL1,
+               IMG_RD1_FAIL2,
+               IMG_RD1_FAIL3);
+
 enum ID {
     BACKGROUND,
+    FAIL_SHIP_STATS,
+    FAIL_DIAGNOSTICS,
     END,
 };
 
@@ -31,6 +41,11 @@ void SpaceBattle::enter() {
     auto_battle = false;
     frame_time_elapsed = 0;
     resolution = SBRES_None;
+
+    fail_ship_stats = -1;
+    fail_diagnostics = -1;
+    fail_battle_readout = false;
+    fail_battle_readout_this_frame = false;
 
     SpaceBattleParams &b = ephstate.space_battle;
     L.debug("STARTING BATTLE - ENEMY SHIPS: %d", b.enemy_ships + b.enemy_scouts + b.enemy_cargo);
@@ -258,7 +273,7 @@ void SpaceBattle::draw() {
     }
 
     // Draw rockets
-    // TODO: ONLY DO THIS IF dfail=0
+    // TODO: ONLY DO THIS IF dfail=0 (!fail_battle_readout_this_frame)
     for (int i = 0; i < MAX_ROCKETS; ++i) {
         const Rocket &r = rockets[i];
 
@@ -274,6 +289,20 @@ void SpaceBattle::draw() {
             r.get_sprite(),
             {draw_x, draw_y,
              .5f, .5f, 1, 1});
+    }
+
+    // Draw system failure warnings
+    if (fail_ship_stats >= 0) {
+        draw_manager.draw(
+            id(ID::FAIL_SHIP_STATS),
+            fail_anim.frame(fail_ship_stats),
+            {10, 10, 0, 0, 1, 1});
+    }
+    if (fail_diagnostics >= 0) {
+        draw_manager.draw(
+            id(ID::FAIL_DIAGNOSTICS),
+            fail_anim.frame(fail_diagnostics),
+            {RES_X - 10, 10, 1, 0, 1, 1});
     }
 }
 
@@ -505,7 +534,13 @@ void SpaceBattle::do_attack(BattleShip* s) {
 
     if (t->type == SHIP_Starship) {
         if (s->shield <= 0) {
-            // TODO: kill / fail1 fail2 fail3
+            // TODO: kill
+            if (fail_ship_stats < 0 && onein(20))
+                fail_ship_stats = 0;
+            if (fail_diagnostics < 0 && onein(20))
+                fail_diagnostics = 0;
+            if ((!fail_battle_readout) && onein(20))
+                fail_battle_readout = true;
         }
         // PROCr_hitstsh
         int intern = 0;
@@ -558,6 +593,17 @@ void SpaceBattle::do_attack(BattleShip* s) {
 }
 
 void SpaceBattle::update_battle() {
+    if (fail_ship_stats >= 0) {
+        fail_ship_stats = (fail_ship_stats + 1) % FAIL_SPRITES;
+    }
+    if (fail_diagnostics >= 0) {
+        fail_diagnostics = (fail_diagnostics + 1) % FAIL_SPRITES;
+    }
+
+    // This 'flickers' if fail_battle_readout is true
+    // TODO: Apply this
+    fail_battle_readout_this_frame = fail_battle_readout && onein(4);
+
     for (int i = 0; i < MAX_SHIPS; ++i) {
         ships[i].draw_hit = false;
     }
