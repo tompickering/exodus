@@ -117,6 +117,8 @@ class SpaceBattle : ModeBase {
             SB_Wait,
             SB_Info,
             SB_Surrender,
+            SB_Destroyed,
+            SB_DestroyedReport,
             SB_Exit,
         };
 
@@ -134,6 +136,7 @@ class SpaceBattle : ModeBase {
         bool auto_battle;
         bool full_detail;
         float frame_time_elapsed;
+        float destroyed_delay;
         SpaceBattleResolution resolution;
 
         int fail_ship_stats;

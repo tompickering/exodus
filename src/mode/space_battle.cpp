@@ -58,6 +58,7 @@ void SpaceBattle::enter() {
 
     auto_battle = false;
     frame_time_elapsed = 0;
+    destroyed_delay = 0;
     resolution = SBRES_None;
 
     fail_ship_stats = -1;
@@ -832,7 +833,8 @@ ExodusMode SpaceBattle::update(float delta) {
                     case SBRES_StarshipDestroyed:
                         // TODO
                         L.info("BATTLE LOST: Starship destroyed");
-                        stage = SB_Exit; // Placeholder
+                        draw_manager.fade_black(1.2f, 24);
+                        stage = SB_Destroyed;
                         return ExodusMode::MODE_None;
                 }
             }
@@ -861,6 +863,90 @@ ExodusMode SpaceBattle::update(float delta) {
                 // TODO
                 L.debug("Surrender button clicked");
                 stage = SB_Wait;
+            }
+            break;
+        case SB_Destroyed:
+            {
+                if (draw_manager.fade_active()) {
+                    return ExodusMode::MODE_None;
+                }
+
+                if (destroyed_delay == 0) {
+                    draw_manager.draw(IMG_INTRO_SPACE);
+                } else if (destroyed_delay > 1.2f) {
+                    destroyed_delay = 0;
+                    stage = SB_DestroyedReport;
+                    return ExodusMode::MODE_None;
+                }
+
+                destroyed_delay += delta;
+                return ExodusMode::MODE_None;
+            }
+            break;
+        case SB_DestroyedReport:
+            {
+                if (destroyed_delay == 0) {
+                    draw_manager.draw(TGT_Secondary, IMG_BG_SHIP0);
+                    draw_manager.draw_text(
+                        TGT_Secondary,
+                        Font::Large,
+                        "Your starship has been destroyed.",
+                        Justify::Left, 40, 40,
+                        COL_TEXT2);
+
+                    if (player->get_starship().escape_capsule) {
+                        draw_manager.draw_text(TGT_Secondary, Font::Default,
+                            "The escape capsule has been activated",
+                            Justify::Left, 40, 100, COL_TEXT);
+                        draw_manager.draw_text(TGT_Secondary, Font::Default,
+                            "and has saved you and your command staff.",
+                            Justify::Left, 40, 120, COL_TEXT);
+                        draw_manager.draw_text(TGT_Secondary, Font::Default,
+                            "Watching this, the pirate ships fled,",
+                            Justify::Left, 40, 180, COL_TEXT);
+                        draw_manager.draw_text(TGT_Secondary, Font::Default,
+                            "leaving your entire fleet alone.",
+                            Justify::Left, 40, 200, COL_TEXT);
+                        // TODO: Text and implementation
+                        draw_manager.draw_text(TGT_Secondary, Font::Default,
+                            "A new ship is going to be built at XXX",
+                            Justify::Left, 40, 240, COL_TEXT);
+                    } else {
+                        draw_manager.draw_text(TGT_Secondary, Font::Default,
+                            "And without an escape capsule,",
+                            Justify::Left, 40, 100, COL_TEXT);
+                        draw_manager.draw_text(TGT_Secondary, Font::Default,
+                            "you and your officers did not",
+                            Justify::Left, 40, 120, COL_TEXT);
+                        draw_manager.draw_text(TGT_Secondary, Font::Default,
+                            "survive.",
+                            Justify::Left, 40, 140, COL_TEXT);
+                        draw_manager.draw_text(TGT_Secondary, Font::Default,
+                            "Without a leader, your empire",
+                            Justify::Left, 40, 180, COL_TEXT);
+                        draw_manager.draw_text(TGT_Secondary, Font::Default,
+                            "collapses into little independent",
+                            Justify::Left, 40, 200, COL_TEXT);
+                        draw_manager.draw_text(TGT_Secondary, Font::Default,
+                            "governments which are soon taken",
+                            Justify::Left, 40, 220, COL_TEXT);
+                        draw_manager.draw_text(TGT_Secondary, Font::Default,
+                            "over by your enemies.",
+                            Justify::Left, 40, 240, COL_TEXT);
+                    }
+
+                    draw_manager.pixelswap_start();
+                }
+
+                if (destroyed_delay > 0 && !draw_manager.pixelswap_active()) {
+                    if (draw_manager.clicked()) {
+                        // TODO: Implement game over / escape capsule
+                        stage = SB_Exit;
+                    }
+                }
+
+                destroyed_delay += delta;
+                return ExodusMode::MODE_None;
             }
             break;
         case SB_Exit:
