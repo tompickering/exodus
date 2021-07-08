@@ -103,10 +103,13 @@ class SpaceBattle : ModeBase {
             SB_Setup,
             SB_Battle,
             SB_Wait,
+            SB_Info,
+            SB_Surrender,
             SB_Exit,
         };
 
         Stage stage;
+        Stage update_buttons();
 
         BattleShip ships[MAX_SHIPS];
         BattleShip *next_ship;
@@ -117,6 +120,7 @@ class SpaceBattle : ModeBase {
         Rocket rockets[MAX_ROCKETS];
 
         bool auto_battle;
+        bool full_detail;
         float frame_time_elapsed;
         SpaceBattleResolution resolution;
 

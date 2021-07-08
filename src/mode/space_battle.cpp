@@ -9,6 +9,11 @@
 
 #define FAIL_SPRITES 3
 
+static const DrawArea AREA_INFO   = {518, 400, 120, 28};
+static const DrawArea AREA_DETAIL = {518, 428, 120, 28};
+static const DrawArea AREA_AUTO   = {518, 456, 120, 28};
+static const DrawArea AREA_QUIT   = {518, 484, 120, 28};
+
 Anim fail_anim(FAIL_SPRITES,
                IMG_RD1_FAIL1,
                IMG_RD1_FAIL2,
@@ -18,6 +23,8 @@ enum ID {
     BACKGROUND,
     FAIL_SHIP_STATS,
     FAIL_DIAGNOSTICS,
+    BUTTON_DETAIL,
+    BUTTON_AUTO,
     END,
 };
 
@@ -261,19 +268,18 @@ void SpaceBattle::draw() {
 
         draw_manager.draw(
             s.spr_id,
-            s.draw_hit ? IMG_RD1_HIT : (sel ? s.spr_sel : s.spr),
+            fail_battle_readout_this_frame ? nullptr : (s.draw_hit ? IMG_RD1_HIT : (sel ? s.spr_sel : s.spr)),
             {draw_x, draw_y,
              .5f, .5f, 1, 1});
 
         draw_manager.draw(
             s.spr_id_label,
-            s.spr_label,
+            fail_battle_readout_this_frame ? nullptr : s.spr_label,
             {draw_x + 24, draw_y - 10,
              .5f, .5f, 1, 1});
     }
 
     // Draw rockets
-    // TODO: ONLY DO THIS IF dfail=0 (!fail_battle_readout_this_frame)
     for (int i = 0; i < MAX_ROCKETS; ++i) {
         const Rocket &r = rockets[i];
 
@@ -286,7 +292,7 @@ void SpaceBattle::draw() {
 
         draw_manager.draw(
             r.spr_id,
-            r.get_sprite(),
+            fail_battle_readout_this_frame ? nullptr : r.get_sprite(),
             {draw_x, draw_y,
              .5f, .5f, 1, 1});
     }
@@ -304,6 +310,16 @@ void SpaceBattle::draw() {
             fail_anim.frame(fail_diagnostics),
             {RES_X - 10, 10, 1, 0, 1, 1});
     }
+
+    // Draw buttons
+    draw_manager.draw(
+        id(ID::BUTTON_DETAIL),
+        full_detail ? IMG_RD1_F1 : nullptr,
+        {AREA_DETAIL.x, AREA_DETAIL.y, 0, 0, 1, 1});
+    draw_manager.draw(
+        id(ID::BUTTON_AUTO),
+        auto_battle ? nullptr : IMG_RD1_A1,
+        {AREA_AUTO.x, AREA_AUTO.y, 0, 0, 1, 1});
 }
 
 void SpaceBattle::update_mouse() {
@@ -329,6 +345,33 @@ void SpaceBattle::update_mouse() {
             }
         }
     }
+}
+
+SpaceBattle::Stage SpaceBattle::update_buttons() {
+    if (!draw_manager.clicked()) {
+        return stage;
+    }
+
+    if (draw_manager.mouse_in_area(AREA_INFO)) {
+        return SB_Info;
+    }
+
+    if (draw_manager.mouse_in_area(AREA_DETAIL)) {
+        // TODO: Implement this
+        full_detail = !full_detail;
+        return stage;
+    }
+
+    if (draw_manager.mouse_in_area(AREA_AUTO)) {
+        auto_battle = !auto_battle;
+        return stage;
+    }
+
+    if (draw_manager.mouse_in_area(AREA_QUIT)) {
+        return SB_Surrender;
+    }
+
+    return stage;
 }
 
 void SpaceBattle::ships_think() {
@@ -539,7 +582,7 @@ void SpaceBattle::do_attack(BattleShip* s) {
                 fail_ship_stats = 0;
             if (fail_diagnostics < 0 && onein(20))
                 fail_diagnostics = 0;
-            if ((!fail_battle_readout) && onein(20))
+            if ((!fail_battle_readout) && onein(30))
                 fail_battle_readout = true;
         }
         // PROCr_hitstsh
@@ -601,7 +644,6 @@ void SpaceBattle::update_battle() {
     }
 
     // This 'flickers' if fail_battle_readout is true
-    // TODO: Apply this
     fail_battle_readout_this_frame = fail_battle_readout && onein(4);
 
     for (int i = 0; i < MAX_SHIPS; ++i) {
@@ -666,6 +708,22 @@ ExodusMode SpaceBattle::update(float delta) {
                 if (frame_time_elapsed >= 0.4) {
                     stage = SB_Battle;
                 }
+
+                stage = update_buttons();
+            }
+            break;
+        case SB_Info:
+            {
+                // TODO
+                L.debug("Info button clicked");
+                stage = SB_Wait;
+            }
+            break;
+        case SB_Surrender:
+            {
+                // TODO
+                L.debug("Surrender button clicked");
+                stage = SB_Wait;
             }
             break;
         case SB_Exit:
