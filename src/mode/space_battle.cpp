@@ -388,6 +388,7 @@ void SpaceBattle::draw() {
 
     if (fail_diagnostics < 0) {
         // Drop top-right ship diagnostics
+        // FIXME: There can be some graphical corruption here...
         for (int i = 0; i < N_EXPLOSIONS; ++i) {
             Explosion &exp = explosions[i];
             const char* spr = nullptr;
