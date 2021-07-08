@@ -649,12 +649,12 @@ ExodusMode SpaceBattle::update(float delta) {
                         // TODO
                         L.info("BATTLE WON");
                         stage = SB_Exit; // Placeholder
-                        break;
+                        return ExodusMode::MODE_None;
                     case SBRES_StarshipDestroyed:
                         // TODO
                         L.info("BATTLE LOST: Starship destroyed");
                         stage = SB_Exit; // Placeholder
-                        break;
+                        return ExodusMode::MODE_None;
                 }
             }
             // Fall through here - handle UI etc in SB_Wait
@@ -665,10 +665,6 @@ ExodusMode SpaceBattle::update(float delta) {
                 frame_time_elapsed += delta;
                 if (frame_time_elapsed >= 0.4) {
                     stage = SB_Battle;
-                }
-
-                if (draw_manager.clicked()) {
-                    //stage = SB_Exit;
                 }
             }
             break;
