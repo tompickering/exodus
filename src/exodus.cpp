@@ -204,6 +204,12 @@ int Exodus::run(int argc, char** argv) {
             } else if (next == ExodusMode::MODE_Reload) {
                 // No stack change - just reset the current mode
                 set_mode(current_mode);
+            } else if (next == ExodusMode::MODE_Quit) {
+                running = false;
+                continue;
+            } else if (next == ExodusMode::MODE_NewGame) {
+                reset_mode_stack();
+                push_mode(MODE_Menu);
             } else {
                 if (next == ExodusMode::MODE_GalaxyMap) {
                     reset_mode_stack();

@@ -11,6 +11,8 @@ enum ExodusMode {
     MODE_None,
     MODE_Pop,
     MODE_Reload,
+    MODE_NewGame,
+    MODE_Quit,
 
     MODE_Intro,
     MODE_Menu,

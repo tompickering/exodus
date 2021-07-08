@@ -96,9 +96,7 @@ ExodusMode GameOver::update(float delta) {
         case GO_FadeOut:
             {
                 if (!draw_manager.fade_active()) {
-                    L.debug("--- %s ---", quit ? "QUIT" : "NEW GAME");
-                    // TODO: ExodusMode::MODE_Restart / MODE_Exit?
-                    return ExodusMode::MODE_None;
+                    return quit ? ExodusMode::MODE_Quit : ExodusMode::MODE_NewGame;
                 }
             }
             break;
