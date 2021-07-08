@@ -580,7 +580,7 @@ void SpaceBattle::do_attack(BattleShip* s) {
         t->hp = max(t->hp - hits, 0);
         if (t->hp <= 0) {
             s->target = nullptr;
-            if (selected->target == t) {
+            if (selected && selected->target == t) {
                 selected->target = nullptr;
             }
             // TODO: Is there any sort of explosion effect on death?
