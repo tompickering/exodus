@@ -831,7 +831,6 @@ ExodusMode SpaceBattle::update(float delta) {
                         stage = SB_Exit; // Placeholder
                         return ExodusMode::MODE_None;
                     case SBRES_StarshipDestroyed:
-                        // TODO
                         L.info("BATTLE LOST: Starship destroyed");
                         draw_manager.fade_black(1.2f, 24);
                         stage = SB_Destroyed;

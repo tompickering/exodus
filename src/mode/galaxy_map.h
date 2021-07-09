@@ -157,6 +157,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
             GM_FlyConfirm,
             GM_Fly,
             GM_MonthPassing,
+            GM_MonthPassMain,
             GM_MP_FirstCity,
             GM_MP_FirstSpaceport,
             GM_Menu,

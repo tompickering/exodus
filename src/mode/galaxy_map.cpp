@@ -274,6 +274,22 @@ ExodusMode GalaxyMap::update(float delta) {
             return ExodusMode::MODE_Fly;
         case GM_MonthPassing:
             {
+                if (exostate.final_month()) {
+                    if (ephstate.get_ephemeral_state() != EPH_GameOver) {
+                        ephstate.set_ephemeral_state(EPH_GameOver);
+                        ephstate.game_over_reason = GAMEOVER_Failed;
+                        draw_manager.fade_black(1.2f, 24);
+                    } else if (!draw_manager.fade_active()) {
+                        return ephstate.get_appropriate_mode();
+                    }
+                } else {
+                    stage = GM_MonthPassMain;
+                }
+                return ExodusMode::MODE_None;
+            }
+            break;
+        case GM_MonthPassMain:
+            {
                 update_panel_info_player(TGT_Primary, exostate.get_player(0));
 
                 if (bulletin_is_open()) {

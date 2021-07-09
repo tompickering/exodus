@@ -29,6 +29,8 @@ void GameOver::enter() {
             break;
     }
 
+    ephstate.clear_ephemeral_state();
+
     draw_manager.draw_text(
         Font::Large,
         reason,

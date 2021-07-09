@@ -314,6 +314,19 @@ void ExodusState::advance_month() {
     ++month;
 }
 
+bool ExodusState::final_month() {
+    switch (aim) {
+        case AIM_Might:
+            return month >= 200;
+        case AIM_Money:
+            return month >= 200;
+        case AIM_Civilization:
+            return month >= 350;
+    }
+
+    return false;
+}
+
 Player* ExodusState::get_active_player() {
     return get_player((int)active_player);
 }
