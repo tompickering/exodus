@@ -4,9 +4,16 @@
 
 #include "assetpaths.h"
 
-#define OPT_0 {RES_X - 95, 147, 1.0, 0.5, 1, 1}
-#define OPT_1 {95, 280, 0.0, 0.5, 1, 1}
-#define OPT_2 {RES_X - 95, 413, 1.0, 0.5, 1, 1}
+#define OPT_0_X (RES_X - 295)
+#define OPT_0_Y 97
+#define OPT_1_X 95
+#define OPT_1_Y 230
+#define OPT_2_X OPT_0_X
+#define OPT_2_Y 363
+
+#define OPT_0 {OPT_0_X, OPT_0_Y, 0, 0, 1, 1}
+#define OPT_1 {OPT_1_X, OPT_1_Y, 0, 0, 1, 1}
+#define OPT_2 {OPT_2_X, OPT_2_Y, 0, 0, 1, 1}
 
 #define TXT_0_X 95
 #define TXT_0_Y 117
@@ -145,6 +152,10 @@ ExodusMode Menu::update(float delta) {
             if (trans_state == None) {
                 draw_manager.draw(TGT_Secondary, IMG_BG_MENU0);
                 draw_manager.draw_text(TGT_Secondary, Font::Large, "Galaxy size", Justify::Left, 20, 30, COL_TEXT2);
+
+                draw_manager.fill(TGT_Secondary, {OPT_0_X-6, OPT_0_Y-6, 212, 112}, COL_BORDERS);
+                draw_manager.fill(TGT_Secondary, {OPT_1_X-6, OPT_1_Y-6, 212, 112}, COL_BORDERS);
+                draw_manager.fill(TGT_Secondary, {OPT_2_X-6, OPT_2_Y-6, 212, 112}, COL_BORDERS);
 
                 draw_manager.draw(TGT_Secondary, 
                         id(GAL_SZ_SMALL),
@@ -409,6 +420,10 @@ ExodusMode Menu::update(float delta) {
                     Justify::Left,
                     20, 30, COL_TEXT2);
 
+                draw_manager.fill({OPT_0_X-6, OPT_0_Y-6, 212, 112}, COL_BORDERS);
+                draw_manager.fill({OPT_1_X-6, OPT_1_Y-6, 212, 112}, COL_BORDERS);
+                draw_manager.fill({OPT_2_X-6, OPT_2_Y-6, 212, 112}, COL_BORDERS);
+
                 draw_manager.draw(
                         id(AIM_MIGHT),
                         IMG_STARTGR_AIM_MIGHT,
@@ -524,6 +539,10 @@ ExodusMode Menu::update(float delta) {
                     txt2_1 = diff_medium_1;
                     txt2_2 = diff_medium_2;
                 }
+
+                draw_manager.fill({OPT_0_X-6, OPT_0_Y-6, 212, 112}, COL_BORDERS);
+                draw_manager.fill({OPT_1_X-6, OPT_1_Y-6, 212, 112}, COL_BORDERS);
+                draw_manager.fill({OPT_2_X-6, OPT_2_Y-6, 212, 112}, COL_BORDERS);
 
                 draw_manager.draw(
                         id_diff_0,
