@@ -172,7 +172,7 @@ ExodusMode Menu::update(float delta) {
 
                 draw_manager.draw_text(TGT_Secondary, 
                         "Small",
-                        Justify::Left, TXT_0_X, TXT_0_Y, COL_TEXT);
+                        Justify::Left, TXT_0_X, TXT_0_Y, COL_TEXT2);
                 draw_manager.draw_text(TGT_Secondary, 
                         "Desperate fights for the",
                         Justify::Left, TXT_0_X, TXT_0_Y + 20, COL_TEXT);
@@ -182,7 +182,7 @@ ExodusMode Menu::update(float delta) {
 
                 draw_manager.draw_text(TGT_Secondary, 
                         "Medium",
-                        Justify::Right, TXT_1_X, TXT_1_Y, COL_TEXT);
+                        Justify::Right, TXT_1_X, TXT_1_Y, COL_TEXT2);
                 draw_manager.draw_text(TGT_Secondary, 
                         "Hardly enough stars to",
                         Justify::Right, TXT_1_X, TXT_1_Y + 20, COL_TEXT);
@@ -192,7 +192,7 @@ ExodusMode Menu::update(float delta) {
 
                 draw_manager.draw_text(TGT_Secondary, 
                         "Large",
-                        Justify::Left, TXT_2_X, TXT_2_Y, COL_TEXT);
+                        Justify::Left, TXT_2_X, TXT_2_Y, COL_TEXT2);
                 draw_manager.draw_text(TGT_Secondary, 
                         "Free expansion",
                         Justify::Left, TXT_2_X, TXT_2_Y + 20, COL_TEXT);
@@ -439,7 +439,7 @@ ExodusMode Menu::update(float delta) {
 
                 draw_manager.draw_text(
                         "Might",
-                        Justify::Left, TXT_0_X, TXT_0_Y, COL_TEXT);
+                        Justify::Left, TXT_0_X, TXT_0_Y, COL_TEXT2);
                 draw_manager.draw_text(
                         "Conquer the galaxy",
                         Justify::Left, TXT_0_X, TXT_0_Y + 20, COL_TEXT);
@@ -449,7 +449,7 @@ ExodusMode Menu::update(float delta) {
 
                 draw_manager.draw_text(
                         "Money",
-                        Justify::Right, TXT_1_X, TXT_1_Y, COL_TEXT);
+                        Justify::Right, TXT_1_X, TXT_1_Y, COL_TEXT2);
                 draw_manager.draw_text(
                         "Earn 1000 MC monthly",
                         Justify::Right, TXT_1_X, TXT_1_Y + 20, COL_TEXT);
@@ -459,13 +459,16 @@ ExodusMode Menu::update(float delta) {
 
                 draw_manager.draw_text(
                         "Civilization",
-                        Justify::Left, TXT_2_X, TXT_2_Y, COL_TEXT);
+                        Justify::Left, TXT_2_X, TXT_2_Y, COL_TEXT2);
                 draw_manager.draw_text(
-                        "Own 30 planets and a high",
+                        "Own 30 planets and a",
                         Justify::Left, TXT_2_X, TXT_2_Y + 20, COL_TEXT);
                 draw_manager.draw_text(
-                        "technology after 350 months.",
+                        "high technology after",
                         Justify::Left, TXT_2_X, TXT_2_Y + 40, COL_TEXT);
+                draw_manager.draw_text(
+                        "350 months.",
+                        Justify::Left, TXT_2_X, TXT_2_Y + 60, COL_TEXT);
 
                 draw_manager.save_background();
                 trans_state = Done;
@@ -561,7 +564,7 @@ ExodusMode Menu::update(float delta) {
                         txt0_0,
                         Justify::Left,
                         TXT_0_X, TXT_0_Y,
-                        COL_TEXT);
+                        COL_TEXT2);
                 draw_manager.draw_text(
                         txt0_1,
                         Justify::Left,
@@ -575,7 +578,9 @@ ExodusMode Menu::update(float delta) {
 
                 draw_manager.draw_text(
                         txt1_0,
-                        Justify::Right, TXT_1_X, TXT_1_Y, COL_TEXT);
+                        Justify::Right,
+                        TXT_1_X, TXT_1_Y,
+                        COL_TEXT2);
                 draw_manager.draw_text(
                         txt1_1,
                         Justify::Right,
@@ -591,7 +596,7 @@ ExodusMode Menu::update(float delta) {
                         txt2_0,
                         Justify::Left,
                         TXT_2_X, TXT_2_Y,
-                        COL_TEXT);
+                        COL_TEXT2);
                 draw_manager.draw_text(
                         txt2_1,
                         Justify::Left,
