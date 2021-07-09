@@ -641,6 +641,7 @@ bool GalaxyMap::first_spaceport_update(float delta) {
     }
 
     draw_manager.draw(
+        id(ID::SPACEPORT2),
         p->sprites()->spaceport2,
         {x, y, 0, 0, 2, ys});
 
@@ -649,6 +650,10 @@ bool GalaxyMap::first_spaceport_update(float delta) {
     first_spaceport_time += delta;
 
     if (draw_manager.clicked()) {
+        draw_manager.draw(id(ID::SPACEPORT2), nullptr);
+        draw_manager.draw(id(ID::SPACEPORT_SHIP0), nullptr);
+        draw_manager.draw(id(ID::SPACEPORT_SHIP1), nullptr);
+        draw_manager.draw(id(ID::SPACEPORT_SHIP2), nullptr);
         return false;
     }
 
