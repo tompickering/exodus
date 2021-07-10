@@ -29,6 +29,18 @@ typedef struct {
     int pct_damage_thrust;   // 8   |
     int pct_damage_comms;    // 9   |
     int pct_damage_struct;   // 10 -
+    void reset() {
+        shield_generators = 0;
+        laser_guns = 1;
+        missile_launchers = 0;
+        crew = 0;
+        bionic_probes = 0;
+        escape_capsule = false;
+        repair_hangar = false;
+        pct_damage_thrust = 0;
+        pct_damage_comms = 0;
+        pct_damage_struct = 0;
+    }
 } Starship;
 
 typedef struct {

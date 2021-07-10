@@ -906,9 +906,20 @@ ExodusMode SpaceBattle::update(float delta) {
                         draw_manager.draw_text(TGT_Secondary, Font::Default,
                             "leaving your entire fleet alone.",
                             Justify::Left, 40, 200, COL_TEXT);
-                        // TODO: Text and implementation
+                        /*
+                         * Orig picked an arbitrary owned planet name here, or
+                         * if none owned, printed a "non-planetary orbit" -
+                         * however testing, it seems both had the same effect
+                         * and you'd just continue your flight plan as if nothing
+                         * had changed. We retain this behaviour - but just print
+                         * "your destination" so the description at least fits
+                         * that behaviour.
+                         *
+                         * Anyway, if you have no planets and have now blown up
+                         * your starship, you have bigger problems.
+                         */
                         draw_manager.draw_text(TGT_Secondary, Font::Default,
-                            "A new ship is going to be built at XXX",
+                            "A new ship is going to be built at your destination.",
                             Justify::Left, 40, 240, COL_TEXT);
                     } else {
                         draw_manager.draw_text(TGT_Secondary, Font::Default,
@@ -940,7 +951,10 @@ ExodusMode SpaceBattle::update(float delta) {
                 if (destroyed_delay > 0 && !draw_manager.pixelswap_active()) {
                     if (draw_manager.clicked()) {
                         if (player->get_starship().escape_capsule) {
-                            // TODO: Implement escape capsule
+                            player->get_starship().reset();
+                            player->get_starship().pct_damage_thrust = 99;
+                            player->get_starship().pct_damage_comms = 99;
+                            player->get_starship().pct_damage_struct = 99;
                             stage = SB_Exit;
                         } else {
                             ephstate.game_over_reason = GAMEOVER_Dead;
