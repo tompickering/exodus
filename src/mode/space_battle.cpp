@@ -58,7 +58,7 @@ void SpaceBattle::enter() {
 
     auto_battle = false;
     frame_time_elapsed = 0;
-    destroyed_delay = 0;
+    resolution_delay = 0;
     resolution = SBRES_None;
 
     fail_ship_stats = -1;
@@ -815,7 +815,9 @@ ExodusMode SpaceBattle::update(float delta) {
 
                 if (resolution == SBRES_None) {
                     if (!find_ship(SHIP_Warship, true)) {
+                        resolution_delay = 0;
                         resolution = SBRES_Won;
+                        L.info("BATTLE WON");
                     }
                 }
 
@@ -826,14 +828,12 @@ ExodusMode SpaceBattle::update(float delta) {
                     case SBRES_None:
                         break;
                     case SBRES_Won:
-                        // TODO
-                        L.info("BATTLE WON");
-                        stage = SB_Exit; // Placeholder
+                        stage = SB_Resolved;
                         return ExodusMode::MODE_None;
                     case SBRES_StarshipDestroyed:
                         L.info("BATTLE LOST: Starship destroyed");
                         draw_manager.fade_black(1.2f, 24);
-                        stage = SB_Destroyed;
+                        stage = SB_Resolved;
                         return ExodusMode::MODE_None;
                 }
             }
@@ -864,27 +864,29 @@ ExodusMode SpaceBattle::update(float delta) {
                 stage = SB_Wait;
             }
             break;
-        case SB_Destroyed:
+        case SB_Resolved:
             {
                 if (draw_manager.fade_active()) {
                     return ExodusMode::MODE_None;
                 }
 
-                if (destroyed_delay == 0) {
-                    draw_manager.draw(IMG_INTRO_SPACE);
-                } else if (destroyed_delay > 1.2f) {
-                    destroyed_delay = 0;
-                    stage = SB_DestroyedReport;
+                if (resolution_delay == 0) {
+                    if (resolution != SBRES_Won) {
+                        draw_manager.draw(IMG_INTRO_SPACE);
+                    }
+                } else if (resolution_delay > 1.2f) {
+                    resolution_delay = 0;
+                    stage = (resolution == SBRES_Won) ? SB_Won : SB_Destroyed;
                     return ExodusMode::MODE_None;
                 }
 
-                destroyed_delay += delta;
+                resolution_delay += delta;
                 return ExodusMode::MODE_None;
             }
             break;
-        case SB_DestroyedReport:
+        case SB_Destroyed:
             {
-                if (destroyed_delay == 0) {
+                if (resolution_delay == 0) {
                     draw_manager.draw(TGT_Secondary, IMG_BG_SHIP0);
                     draw_manager.draw_text(
                         TGT_Secondary,
@@ -948,7 +950,7 @@ ExodusMode SpaceBattle::update(float delta) {
                     draw_manager.pixelswap_start();
                 }
 
-                if (destroyed_delay > 0 && !draw_manager.pixelswap_active()) {
+                if (resolution_delay > 0 && !draw_manager.pixelswap_active()) {
                     if (draw_manager.clicked()) {
                         if (player->get_starship().escape_capsule) {
                             player->get_starship().reset();
@@ -964,8 +966,14 @@ ExodusMode SpaceBattle::update(float delta) {
                     }
                 }
 
-                destroyed_delay += delta;
+                resolution_delay += delta;
                 return ExodusMode::MODE_None;
+            }
+            break;
+        case SB_Won:
+            {
+                // TODO
+                stage = SB_Exit;
             }
             break;
         case SB_Exit:
