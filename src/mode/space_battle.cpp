@@ -61,6 +61,8 @@ void SpaceBattle::enter() {
     resolution_delay = 0;
     resolution = SBRES_None;
 
+    initial_warships = 0;
+
     fail_ship_stats = -1;
     fail_diagnostics = -1;
     fail_battle_readout = false;
@@ -258,6 +260,8 @@ void SpaceBattle::prepare() {
     }
 
     const Fleet &f = player->get_fleet();
+
+    initial_warships = f.warships;
 
     distribute(SHIP_Warship, false, f.warships, 10, 4);
     distribute(SHIP_Bomber, false, f.bombers, 10, 3);
@@ -741,6 +745,32 @@ void SpaceBattle::do_attack(BattleShip* s) {
     } else {
         L.info("%s ship type %d HP: %d->%d", t->enemy?"CPU":"Human", (int)t->type, t->hp, t->hp - hits);
         t->hp = max(t->hp - hits, 0);
+
+        if (!t->enemy) {
+            int *count = nullptr;
+            switch (t->type) {
+                case SHIP_Warship:
+                    count = &player->get_fleet_nonconst().warships;
+                    break;
+                case SHIP_Bomber:
+                    count = &player->get_fleet_nonconst().bombers;
+                    break;
+                case SHIP_Scout:
+                    count = &player->get_fleet_nonconst().scouts;
+                    break;
+                case SHIP_Transporter:
+                    count = &player->get_fleet_nonconst().transporters;
+                    break;
+                default:
+                    L.error("No case to handle destruction of player ship type %d", (int)t->type);
+                    break;
+            }
+
+            if (count) {
+                *count = max(*count - hits, 0);
+            }
+        }
+
         if (t->hp <= 0) {
             s->target = nullptr;
             if (selected && selected->target == t) {
@@ -876,6 +906,7 @@ ExodusMode SpaceBattle::update(float delta) {
                     }
                 } else if (resolution_delay > 1.2f) {
                     resolution_delay = 0;
+                    // TODO: Surrender case
                     stage = (resolution == SBRES_Won) ? SB_Won : SB_Destroyed;
                     return ExodusMode::MODE_None;
                 }
@@ -904,10 +935,10 @@ ExodusMode SpaceBattle::update(float delta) {
                             Justify::Left, 40, 120, COL_TEXT);
                         draw_manager.draw_text(TGT_Secondary, Font::Default,
                             "Watching this, the pirate ships fled,",
-                            Justify::Left, 40, 180, COL_TEXT);
+                            Justify::Left, 40, 160, COL_TEXT);
                         draw_manager.draw_text(TGT_Secondary, Font::Default,
                             "leaving your entire fleet alone.",
-                            Justify::Left, 40, 200, COL_TEXT);
+                            Justify::Left, 40, 180, COL_TEXT);
                         /*
                          * Orig picked an arbitrary owned planet name here, or
                          * if none owned, printed a "non-planetary orbit" -
@@ -922,7 +953,7 @@ ExodusMode SpaceBattle::update(float delta) {
                          */
                         draw_manager.draw_text(TGT_Secondary, Font::Default,
                             "A new ship is going to be built at your destination.",
-                            Justify::Left, 40, 240, COL_TEXT);
+                            Justify::Left, 40, 220, COL_TEXT);
                     } else {
                         draw_manager.draw_text(TGT_Secondary, Font::Default,
                             "And without an escape capsule,",
@@ -972,8 +1003,126 @@ ExodusMode SpaceBattle::update(float delta) {
             break;
         case SB_Won:
             {
-                // TODO
-                stage = SB_Exit;
+                if (resolution_delay == 0) {
+                    draw_manager.draw(TGT_Secondary, IMG_BG_SHIP0);
+                    draw_manager.draw_text(
+                        TGT_Secondary,
+                        Font::Large,
+                        "The battle is over.",
+                        Justify::Left, 40, 40,
+                        COL_TEXT2);
+
+                    int y = 100;
+                    char text[64];
+                    const char *pl;
+
+
+                    int captured_scouts = count_ships(SHIP_Scout, true);
+                    int captured_transporters = count_ships(SHIP_Transporter, true);
+
+                    if (captured_scouts + captured_transporters > 0) {
+                        draw_manager.draw_text(
+                            TGT_Secondary, Font::Default,
+                            "We have captured these enemy ships:",
+                            Justify::Left, 40, y,
+                            COL_TEXT);
+                        y += 20;
+
+                        if (captured_scouts > 0) {
+                            pl = captured_scouts == 1 ? "" : "s";
+                            snprintf(text, sizeof(text), "%d scout%s.", captured_scouts, pl);
+                            draw_manager.draw_text(
+                                TGT_Secondary, Font::Default,
+                                text,
+                                Justify::Left, 40, y,
+                                COL_TEXT);
+                            player->get_fleet_nonconst().scouts += captured_scouts;
+                            y += 20;
+                        }
+
+                        if (captured_transporters > 0) {
+                            pl = captured_transporters == 1 ? "" : "s";
+                            snprintf(text, sizeof(text), "%d transporter%s.", captured_transporters, pl);
+                            draw_manager.draw_text(
+                                TGT_Secondary, Font::Default,
+                                text,
+                                Justify::Left, 40, y,
+                                COL_TEXT);
+                            player->get_fleet_nonconst().transporters += captured_transporters;
+                            y += 20;
+                        }
+
+                        y += 20;
+                    }
+
+                    const Starship &ship = player->get_starship();
+
+                    if (ship.repair_hangar) {
+                        const int &war = player->get_fleet().warships;
+                        int repaired = RND(20);
+                        // FIXME: This limit of 250 isn't imposed in fleet production etc
+                        if (war + repaired > 250) {
+                            repaired = max(250 - war, 0);
+                        }
+                        if (war + repaired > initial_warships) {
+                            repaired = max(initial_warships - war, 0);
+                        }
+                        if (repaired > 0) {
+                            player->get_fleet_nonconst().warships += repaired;
+
+                            draw_manager.draw_text(
+                                TGT_Secondary, Font::Default,
+                                "Our techs have been able to repair",
+                                Justify::Left, 40, y,
+                                COL_TEXT);
+                            y += 20;
+
+                            pl = repaired == 1 ? "" : "s";
+                            snprintf(text, sizeof(text), "%d warship%s.", repaired, pl);
+                            draw_manager.draw_text(
+                                TGT_Secondary, Font::Default,
+                                text,
+                                Justify::Left, 40, y,
+                                COL_TEXT);
+                            y += 40;
+                        }
+                    }
+
+                    draw_manager.draw_text(
+                        TGT_Secondary, Font::Default,
+                        "The condition of the starship",
+                        Justify::Left, 40, y,
+                        COL_TEXT);
+                    y += 20;
+
+                    const char *cond = "very good";
+                    if (ship.pct_damage_struct >  5) cond = "good";
+                    if (ship.pct_damage_struct > 20) cond = "acceptable";
+                    if (ship.pct_damage_struct > 50) cond = "bad";
+                    if (ship.pct_damage_struct > 70) cond = "critical";
+                    if (ship.pct_damage_struct > 85) cond = "dangerous";
+                    snprintf(text, sizeof(text), "is %s.", cond);
+
+                    draw_manager.draw_text(
+                        TGT_Secondary, Font::Default,
+                        text,
+                        Justify::Left, 40, y,
+                        COL_TEXT);
+                    y += 40;
+
+                    // TODO: Report heavily damaged things
+
+                    draw_manager.pixelswap_start();
+                }
+
+                if (resolution_delay > 0 && !draw_manager.pixelswap_active()) {
+                    if (draw_manager.clicked()) {
+                        stage = SB_Exit;
+                    }
+                }
+
+                resolution_delay += delta;
+                return ExodusMode::MODE_None;
             }
             break;
         case SB_Exit:

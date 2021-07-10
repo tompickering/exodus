@@ -107,6 +107,7 @@ class SpaceBattle : ModeBase {
         void do_attack(BattleShip*);
         void start_explosions();
         void draw();
+        int initial_warships;
         BattleShip* find_ship(BattleShipType, bool);
         int count_ships(BattleShipType, bool);
         Rocket* spawn_rocket(BattleShip*, float, float);
