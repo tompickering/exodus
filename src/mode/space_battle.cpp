@@ -1222,9 +1222,9 @@ ExodusMode SpaceBattle::update(float delta) {
                         text,
                         Justify::Left, 40, y,
                         COL_TEXT);
-                    y += 20;
+                    y += 40;
 
-                    // TODO: Starship condition as per SB_Won - but duplication
+                    y = report_starship_condition(y);
 
                     draw_manager.pixelswap_start();
                 }
@@ -1325,29 +1325,7 @@ ExodusMode SpaceBattle::update(float delta) {
                         }
                     }
 
-                    draw_manager.draw_text(
-                        TGT_Secondary, Font::Default,
-                        "The condition of the starship",
-                        Justify::Left, 40, y,
-                        COL_TEXT);
-                    y += 20;
-
-                    const char *cond = "very good";
-                    if (ship.pct_damage_struct >  5) cond = "good";
-                    if (ship.pct_damage_struct > 20) cond = "acceptable";
-                    if (ship.pct_damage_struct > 50) cond = "bad";
-                    if (ship.pct_damage_struct > 70) cond = "critical";
-                    if (ship.pct_damage_struct > 85) cond = "dangerous";
-                    snprintf(text, sizeof(text), "is %s.", cond);
-
-                    draw_manager.draw_text(
-                        TGT_Secondary, Font::Default,
-                        text,
-                        Justify::Left, 40, y,
-                        COL_TEXT);
-                    y += 40;
-
-                    // TODO: Report heavily damaged things
+                    y = report_starship_condition(y);
 
                     draw_manager.pixelswap_start();
                 }
@@ -1381,6 +1359,65 @@ ExodusMode SpaceBattle::update(float delta) {
     draw();
 
     return ExodusMode::MODE_None;
+}
+
+int SpaceBattle::report_starship_condition(int y) {
+    const Starship &ship = player->get_starship();
+    char text[64];
+
+    draw_manager.draw_text(
+        TGT_Secondary, Font::Default,
+        "The condition of the starship",
+        Justify::Left, 40, y,
+        COL_TEXT);
+    y += 20;
+
+    const char *cond = "very good";
+    if (ship.pct_damage_struct >  5) cond = "good";
+    if (ship.pct_damage_struct > 20) cond = "acceptable";
+    if (ship.pct_damage_struct > 50) cond = "bad";
+    if (ship.pct_damage_struct > 70) cond = "critical";
+    if (ship.pct_damage_struct > 85) cond = "dangerous";
+    snprintf(text, sizeof(text), "is %s.", cond);
+
+    draw_manager.draw_text(
+        TGT_Secondary, Font::Default,
+        text,
+        Justify::Left, 40, y,
+        COL_TEXT);
+    y += 40;
+
+    if (ship.pct_damage_thrust > 50) {
+        draw_manager.draw_text(
+            TGT_Secondary, Font::Default,
+            "Heavily damaged: Thrust",
+            Justify::Left, 40, y,
+            COL_TEXT);
+        y += 20;
+    }
+
+    // FIXME: Comms become dysfunctional at >50, why >70?
+    // FIXME: 'Destroyed' less bad than 'Heavily damaged'?
+    if (ship.pct_damage_comms > 70) {
+        if (ship.pct_damage_comms > 90) {
+            draw_manager.draw_text(
+                TGT_Secondary, Font::Default,
+                "Heavily damaged: Comm Systems",
+                Justify::Left, 40, y,
+                COL_TEXT);
+        } else {
+            draw_manager.draw_text(
+                TGT_Secondary, Font::Default,
+                "Destroyed: Comm Systems",
+                Justify::Left, 40, y,
+                COL_TEXT);
+        }
+        y += 20;
+    }
+
+    y += 20;
+
+    return y;
 }
 
 BattleShip* SpaceBattle::find_ship(BattleShipType type, bool enemy) {

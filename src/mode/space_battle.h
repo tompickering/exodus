@@ -112,6 +112,7 @@ class SpaceBattle : ModeBase {
         BattleShip* find_ship(BattleShipType, bool);
         int count_ships(BattleShipType, bool);
         Rocket* spawn_rocket(BattleShip*, float, float);
+        int report_starship_condition(int);
 
         enum Stage {
             SB_Setup,
