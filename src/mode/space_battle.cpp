@@ -874,7 +874,7 @@ ExodusMode SpaceBattle::update(float delta) {
                         stage = SB_Resolved;
                         return ExodusMode::MODE_None;
                     case SBRES_Surrendered:
-                        // Shouldn't need to detect here - stage is set when we press the surrender putton
+                        // Shouldn't need to detect here - stage is set when we press the surrender button
                         stage = SB_Resolved;
                         return ExodusMode::MODE_None;
                 }
@@ -1184,8 +1184,59 @@ ExodusMode SpaceBattle::update(float delta) {
             break;
         case SB_Surrendered:
             {
-                // TODO
-                return ExodusMode::MODE_Pop;
+                if (resolution_delay == 0) {
+                    draw_manager.draw(TGT_Secondary, IMG_BG_SHIP0);
+                    draw_manager.draw_text(
+                        TGT_Secondary,
+                        Font::Large,
+                        "The starship has been boarded.",
+                        Justify::Left, 40, 40,
+                        COL_TEXT2);
+
+                    int mc = player->get_mc();
+                    // FIXME: Maybe a force_spend() call or zero_funds()?
+                    if (!player->attempt_spend(mc)) {
+                        L.error("We should have been able to spend the MC we have");
+                    }
+
+                    Fleet &fl = player->get_fleet_nonconst();
+                    int stolen_transporters = min(RND(7), fl.transporters);
+                    fl.transporters = max(0, fl.transporters - stolen_transporters);
+
+                    int y = 100;
+                    char text[64];
+                    const char *pl;
+
+                    snprintf(text, sizeof(text), "The enemy took %dMC", mc);
+                    draw_manager.draw_text(
+                        TGT_Secondary, Font::Default,
+                        text,
+                        Justify::Left, 40, y,
+                        COL_TEXT);
+                    y += 20;
+
+                    pl = stolen_transporters == 1 ? "" : "s";
+                    snprintf(text, sizeof(text), "and %d transporter%s.", stolen_transporters, pl);
+                    draw_manager.draw_text(
+                        TGT_Secondary, Font::Default,
+                        text,
+                        Justify::Left, 40, y,
+                        COL_TEXT);
+                    y += 20;
+
+                    // TODO: Starship condition as per SB_Won - but duplication
+
+                    draw_manager.pixelswap_start();
+                }
+
+                if (resolution_delay > 0 && !draw_manager.pixelswap_active()) {
+                    if (draw_manager.clicked()) {
+                        stage = SB_Exit;
+                    }
+                }
+
+                resolution_delay += delta;
+                return ExodusMode::MODE_None;
             }
         case SB_Won:
             {
