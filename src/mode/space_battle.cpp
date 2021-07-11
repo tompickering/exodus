@@ -42,6 +42,7 @@ enum ID {
     HEALTH_INDICATOR,
     BOW,
     PANEL,
+    SURRENDER_OPT,
     END,
 };
 
@@ -872,6 +873,10 @@ ExodusMode SpaceBattle::update(float delta) {
                         draw_manager.fade_black(1.2f, 24);
                         stage = SB_Resolved;
                         return ExodusMode::MODE_None;
+                    case SBRES_Surrendered:
+                        // Shouldn't need to detect here - stage is set when we press the surrender putton
+                        stage = SB_Resolved;
+                        return ExodusMode::MODE_None;
                 }
             }
             // Fall through here - handle UI etc in SB_Wait
@@ -1010,9 +1015,52 @@ ExodusMode SpaceBattle::update(float delta) {
             break;
         case SB_Surrender:
             {
-                // TODO
-                L.debug("Surrender button clicked");
-                stage = SB_Wait;
+                if (!panel_showing) {
+                    L.debug("Surrender button clicked");
+
+                    draw_manager.fill(
+                        id(ID::PANEL),
+                        {PANEL_X - BORDER, PANEL_Y - BORDER,
+                         PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+                        COL_BORDERS);
+                    draw_manager.fill_pattern(
+                        {PANEL_X, PANEL_Y,
+                         PANEL_W, PANEL_H});
+
+                    draw_manager.draw_text(
+                        "SURRENDER?",
+                        Justify::Centre,
+                        RES_X/2, PANEL_Y + 28,
+                        COL_TEXT);
+
+                    draw_manager.fill({PANEL_X+2, PANEL_Y+PANEL_H-46, 41, 26}, COL_BORDERS);
+                    draw_manager.fill({PANEL_X+PANEL_W-43, PANEL_Y+PANEL_H-46, 41, 26}, COL_BORDERS);
+
+                    draw_manager.draw(
+                        id(ID::SURRENDER_OPT),
+                        IMG_BR14_EXPORT,
+                        {RES_X/2, PANEL_Y+PANEL_H-20,
+                         .5f, 1, 1, 1});
+
+                    panel_showing = true;
+                }
+
+                SpriteClick clk = draw_manager.query_click(id(ID::SURRENDER_OPT));
+
+                if (clk.id) {
+                    draw_manager.draw(id(ID::SURRENDER_OPT), nullptr);
+                    draw_manager.draw(id(ID::PANEL), nullptr);
+                    panel_showing = false;
+
+                    if (clk.x < .5f) {
+                        resolution = SBRES_Surrendered;
+                        stage = SB_Resolved;
+                    } else {
+                        stage = SB_Wait;
+                    }
+                }
+
+                return ExodusMode::MODE_None;
             }
             break;
         case SB_Resolved:
@@ -1022,13 +1070,25 @@ ExodusMode SpaceBattle::update(float delta) {
                 }
 
                 if (resolution_delay == 0) {
-                    if (resolution != SBRES_Won) {
+                    if (resolution == SBRES_StarshipDestroyed) {
                         draw_manager.draw(IMG_INTRO_SPACE);
                     }
                 } else if (resolution_delay > 1.2f) {
                     resolution_delay = 0;
-                    // TODO: Surrender case
-                    stage = (resolution == SBRES_Won) ? SB_Won : SB_Destroyed;
+                    switch (resolution) {
+                        case SBRES_Won:
+                            stage = SB_Won;
+                            break;
+                        case SBRES_StarshipDestroyed:
+                            stage = SB_Destroyed;
+                            break;
+                        case SBRES_Surrendered:
+                            stage = SB_Surrendered;
+                            break;
+                        default:
+                            L.error("Unexpected resolution: %d", (int)resolution);
+                            break;
+                    }
                     return ExodusMode::MODE_None;
                 }
 
@@ -1122,6 +1182,11 @@ ExodusMode SpaceBattle::update(float delta) {
                 return ExodusMode::MODE_None;
             }
             break;
+        case SB_Surrendered:
+            {
+                // TODO
+                return ExodusMode::MODE_Pop;
+            }
         case SB_Won:
             {
                 if (resolution_delay == 0) {

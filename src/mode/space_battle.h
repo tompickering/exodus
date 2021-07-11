@@ -76,6 +76,7 @@ struct Rocket {
 enum SpaceBattleResolution {
     SBRES_None,
     SBRES_Won,
+    SBRES_Surrendered,
     SBRES_StarshipDestroyed,
 };
 
@@ -120,6 +121,7 @@ class SpaceBattle : ModeBase {
             SB_Surrender,
             SB_Resolved,
             SB_Destroyed,
+            SB_Surrendered,
             SB_Won,
             SB_Exit,
         };
