@@ -1342,6 +1342,9 @@ ExodusMode SpaceBattle::update(float delta) {
             break;
         case SB_Exit:
             {
+                // Ensure that cargo is destroyed according to any destroyed transporters
+                player->cap_freight_randomly();
+
                 for (int i = 0; i < MAX_SHIPS; ++i) {
                     ships[i].cleanup();
                 }

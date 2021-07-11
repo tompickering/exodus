@@ -446,6 +446,40 @@ int Player::get_freight_capacity() {
     return fleet.transporters - fleet.freight.size();
 }
 
+void Player::cap_freight_randomly() {
+    // FIXME: There are much more efficient ways to do this...!
+    while (fleet.freight.size() > fleet.transporters) {
+        int *c = nullptr;
+        switch (rand() % 7) {
+            case 0:
+                c = &fleet.freight.minerals;
+                break;
+            case 1:
+                c = &fleet.freight.food;
+                break;
+            case 2:
+                c = &fleet.freight.plutonium;
+                break;
+            case 3:
+                c = &fleet.freight.robots;
+                break;
+            case 4:
+                c = &fleet.freight.infantry;
+                break;
+            case 5:
+                c = &fleet.freight.gliders;
+                break;
+            case 6:
+                c = &fleet.freight.artillery;
+                break;
+        }
+
+        if (c && (*c) > 0) {
+            (*c)--;
+        }
+    }
+}
+
 int Player::transfer_min(int n) {
     return transfer(n, &fleet.freight.minerals);
 }

@@ -187,6 +187,7 @@ class Player {
         ArtificialPlanetPhase ap_phase;
 
         int get_freight_capacity();
+        void cap_freight_randomly();
 
         /*
          * The transfer_* functions should be used to adjust freight,
