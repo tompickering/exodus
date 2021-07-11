@@ -14,6 +14,11 @@ static const DrawArea AREA_DETAIL = {518, 428, 120, 28};
 static const DrawArea AREA_AUTO   = {518, 456, 120, 28};
 static const DrawArea AREA_QUIT   = {518, 484, 120, 28};
 
+static const int PANEL_W = 326;
+static const int PANEL_H = 190;
+static const int PANEL_X = RES_X/2 - PANEL_W/2;
+static const int PANEL_Y = RES_Y/2 - PANEL_H/2;
+
 Anim fail_anim(FAIL_SPRITES,
                IMG_RD1_FAIL1,
                IMG_RD1_FAIL2,
@@ -36,6 +41,7 @@ enum ID {
     COUNT_ENEMY,
     HEALTH_INDICATOR,
     BOW,
+    PANEL,
     END,
 };
 
@@ -58,6 +64,7 @@ void SpaceBattle::enter() {
 
     auto_battle = false;
     frame_time_elapsed = 0;
+    panel_showing = false;
     resolution_delay = 0;
     resolution = SBRES_None;
 
@@ -882,9 +889,123 @@ ExodusMode SpaceBattle::update(float delta) {
             break;
         case SB_Info:
             {
-                // TODO
-                L.debug("Info button clicked");
-                stage = SB_Wait;
+                if (!panel_showing) {
+                    L.debug("Info button clicked");
+
+                    draw_manager.fill(
+                        id(ID::PANEL),
+                        {PANEL_X - BORDER, PANEL_Y - BORDER,
+                         PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+                        COL_BORDERS);
+                    draw_manager.fill_pattern(
+                        {PANEL_X, PANEL_Y,
+                         PANEL_W, PANEL_H});
+
+                    const Starship& ship = player->get_starship();
+                    char text[128];
+
+                    const char* status = "INTACT";
+                    if (ship.pct_damage_struct > 0) {
+                        status = "DAMAGED";
+                    }
+                    if (ship.pct_damage_struct > 70) {
+                        status = "CRITICAL";
+                    }
+
+                    snprintf(text, sizeof(text), "Starship status: %s", status);
+
+                    draw_manager.draw_text(
+                        text,
+                        Justify::Left,
+                        PANEL_X + 4, PANEL_Y + 4,
+                        COL_TEXT2);
+
+                    snprintf(text, sizeof(text), "Shields:");
+                    draw_manager.draw_text(
+                        "Shields:",
+                        Justify::Left,
+                        PANEL_X + 4, PANEL_Y + 44,
+                        COL_TEXT);
+                    if (starship && starship->shield_max > 0) {
+                        int sh = starship->shield;
+                        int shmax = starship->shield_max;
+                        snprintf(text, sizeof(text), "%d%%", 100*sh/shmax);
+                    } else {
+                        snprintf(text, sizeof(text), "Not fitted");
+                    }
+
+                    draw_manager.draw_text(
+                        text,
+                        Justify::Left,
+                        PANEL_X + 160, PANEL_Y + 44,
+                        COL_TEXT);
+
+                    snprintf(text, sizeof(text), "%d%%", 100-ship.pct_damage_struct);
+                    draw_manager.draw_text(
+                        "Structure:",
+                        Justify::Left,
+                        PANEL_X + 4, PANEL_Y + 84,
+                        COL_TEXT);
+                    draw_manager.draw_text(
+                        text,
+                        Justify::Left,
+                        PANEL_X + 160, PANEL_Y + 84,
+                        COL_TEXT);
+
+                    snprintf(text, sizeof(text), "%d%%", 100-ship.pct_damage_thrust);
+                    draw_manager.draw_text(
+                        "Thrust:",
+                        Justify::Left,
+                        PANEL_X + 4, PANEL_Y + 104,
+                        COL_TEXT);
+                    draw_manager.draw_text(
+                        text,
+                        Justify::Left,
+                        PANEL_X + 160, PANEL_Y + 104,
+                        COL_TEXT);
+
+                    snprintf(text, sizeof(text), "%d%%", 100-ship.pct_damage_comms);
+                    draw_manager.draw_text(
+                        "Comm Systems:",
+                        Justify::Left,
+                        PANEL_X + 4, PANEL_Y + 124,
+                        COL_TEXT);
+                    draw_manager.draw_text(
+                        text,
+                        Justify::Left,
+                        PANEL_X + 160, PANEL_Y + 124,
+                        COL_TEXT);
+
+                    int ca = 40;
+                    ca += count_ships(SHIP_Warship, false) * 5;
+                    ca += count_ships(SHIP_Bomber, false) * 2;
+                    int cb = max(1, count_ships(SHIP_Warship, true) * 5);
+                    float ratio;
+                    if (ca > cb) {
+                        ratio = ((int)(((float)ca/(float)cb)*100))/100.f;
+                        snprintf(text, sizeof(text), "Winning chances are %.2f : 1", ratio);
+                    } else {
+                        ratio = ((int)(((float)cb/(float)ca)*100))/100.f;
+                        snprintf(text, sizeof(text), "Winning chances are 1 : %.2f", ratio);
+                    }
+
+                    draw_manager.draw_text(
+                        text,
+                        Justify::Left,
+                        PANEL_X + 4, PANEL_Y + 164,
+                        COL_TEXT);
+
+                    panel_showing = true;
+                }
+
+                if (draw_manager.clicked()) {
+                    draw_manager.draw(id(ID::PANEL), nullptr);
+                    panel_showing = false;
+                    stage = SB_Wait;
+                } else {
+                    // Skip normal draw etc
+                    return ExodusMode::MODE_None;
+                }
             }
             break;
         case SB_Surrender:

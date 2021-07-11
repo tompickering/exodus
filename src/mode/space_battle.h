@@ -137,6 +137,7 @@ class SpaceBattle : ModeBase {
 
         bool auto_battle;
         bool full_detail;
+        bool panel_showing;
         float frame_time_elapsed;
         float resolution_delay;
         SpaceBattleResolution resolution;
