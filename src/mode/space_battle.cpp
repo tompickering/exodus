@@ -705,7 +705,7 @@ void SpaceBattle::do_attack(BattleShip* s) {
     // PROCr_hit
 
     if (t->type == SHIP_Starship) {
-        if (s->shield <= 0) {
+        if (t->shield <= 0) {
             if (!do_explosions) {
                 start_explosions();
             }
@@ -719,10 +719,10 @@ void SpaceBattle::do_attack(BattleShip* s) {
         // PROCr_hitstsh
         int intern = 0;
 
-        s->shield -= 1;
-        if (s->shield < 0) {
-            intern = -s->shield;
-            s->shield = 0;
+        t->shield -= 1;
+        if (t->shield < 0) {
+            intern = -t->shield;
+            t->shield = 0;
         }
 
         if (intern > 0) {
