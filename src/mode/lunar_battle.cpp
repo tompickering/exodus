@@ -443,7 +443,6 @@ ExodusMode LunarBattle::update(float delta) {
                         PANEL_X + 4, PANEL_Y + 84,
                         COL_TEXT);
 
-                    audio_manager.fade_out(1000);
                     stage = LB_PlacementEnd;
 
                     // Skip remaining drawing etc until this is closed
@@ -468,6 +467,7 @@ ExodusMode LunarBattle::update(float delta) {
             return ExodusMode::MODE_None;
         case LB_StartBattle:
             {
+                audio_manager.fade_out(1000);
                 Player *owner = nullptr;
                 if (p->is_owned()) owner = exostate.get_player(p->get_owner());
                 defender_turn = (bool)(owner && owner->is_human());
