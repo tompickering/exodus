@@ -532,7 +532,7 @@ void CommPanelDrawer::comm_init(CommSend input) {
                     if (army_enemy > army*2) odds = "extremely bad";
                     comm_set_text(2, "The winning chances are %s.", odds);
                     if (base) {
-                        comm_set_text(4, "%s owns a lunar base.");
+                        comm_set_text(4, "%s owns a lunar base.", comm_planet->get_name());
                     } else {
                         comm_set_text(4, "No lunar base is present.");
                     }
