@@ -39,6 +39,8 @@ GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer(), PanelDrawer(PNL_
     do_meteor = false;
     do_meltdown = false;
     do_lunar_battle = false;
+
+    music = MUS_ST3_4D; // TODO: Check this - PROCbackmusic doesn't set this up
 }
 
 void GalaxyMap::enter() {
@@ -65,6 +67,32 @@ void GalaxyMap::enter() {
     } else {
         stage = GM_MonthPassing;
     }
+
+    // PROCbackmusic
+    if (exostate.get_orig_month() >= 2) {
+        music = onein(4) ? MUS_OVERVIEW : mpart2mus(17);
+        if (audio_manager.get_playing() == mpart2mus(1)) {
+            if (onein(3)) {
+                music = mpart2mus(17);
+            }
+        } else if (audio_manager.get_playing() == mpart2mus(2)) {
+                music = mpart2mus(4);
+        } else if (audio_manager.get_playing() == mpart2mus(6)) {
+                music = mpart2mus(13);
+        } else if (audio_manager.get_playing() == mpart2mus(8)) {
+                music = mpart2mus(2);
+        } else if (audio_manager.get_playing() == mpart2mus(9)) {
+                music = mpart2mus(17);
+        } else if (audio_manager.get_playing() == mpart2mus(10)) {
+                music = mpart2mus(13);
+        } else if (audio_manager.get_playing() == mpart2mus(17)) {
+            if (onein(5)) {
+                music = mpart2mus(3);
+            }
+        }
+    }
+
+    audio_manager.target_music(music);
 
     selected_ft = nullptr;
     draw_manager.show_cursor(true);

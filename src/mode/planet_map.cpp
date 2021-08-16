@@ -149,12 +149,26 @@ void PlanetMap::enter() {
         id_stones[i] = draw_manager.new_sprite_id();
     }
 
+    bool play_music = true;
+    const char* mus = mpart2mus(13);
+    int s = planet->get_unrest();
+    if (s >= 4) mus = mpart2mus(20);
+    if (s >= 8) mus = mpart2mus(21);
+
+    // MODES:
+    // 1 = normal
+    // 2 = scout / planning bomb attack
+    // 3 = bombing
+
     if (ephstate.get_ephemeral_state() == EPH_Destruction) {
+        mus = mpart2mus(8);
         draw_menu = false;
         do_animations = false;
         if (ephstate.destruction.draw) {
             draw();
             draw_stones();
+        } else {
+            play_music = false;
         }
         stage = PM_Destruction;
     } else {
@@ -162,6 +176,11 @@ void PlanetMap::enter() {
         do_animations = true;
         draw();
         stage = PM_Idle;
+    }
+
+    // TODO: Music for scouts / bomb planning (mode 2) - mpart 4
+    if (play_music) {
+        audio_manager.target_music(mus);
     }
 }
 

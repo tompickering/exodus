@@ -36,6 +36,7 @@ void GuildHQ::enter() {
     draw_manager.draw(IMG_SG2_INS1);
     draw_manager.save_background();
     draw_manager.show_cursor(true);
+    audio_manager.target_music(MUS_GUILD);
     guildbot_active = false;
     guildbot_interp = 0.f;
     eyes_loop = 0;

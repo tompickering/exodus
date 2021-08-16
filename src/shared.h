@@ -6,6 +6,7 @@
 
 #include "logger.h"
 #include "platform.h"
+#include "assetpaths.h"
 
 #include "exodus.h"
 

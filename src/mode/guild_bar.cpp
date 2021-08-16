@@ -47,6 +47,7 @@ void GuildBar::enter() {
     draw_manager.draw(IMG_SG3_DUST);
     draw_manager.save_background();
     draw_manager.show_cursor(true);
+    audio_manager.target_music(MUS_CELEBRATE);
     talk_loop = 0.f;
     light_loop = 0.f;
     stage = GB_Idle;

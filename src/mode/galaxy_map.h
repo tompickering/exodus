@@ -165,6 +165,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
         };
 
         Stage stage;
+        const char* music;
         FlyTarget *selected_ft;
         float selected_ft_blink;
         float first_spaceport_time;

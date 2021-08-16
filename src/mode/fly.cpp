@@ -167,6 +167,10 @@ void Fly::enter() {
             COL_TEXT);
     }
 
+    if (!arriving) {
+        audio_manager.target_music(MUS_OVERWORLD);
+    }
+
     draw_manager.save_background();
     current_thrust = 0;
     warp_stage = 0;

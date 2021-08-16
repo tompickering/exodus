@@ -443,6 +443,7 @@ ExodusMode LunarBattle::update(float delta) {
                         PANEL_X + 4, PANEL_Y + 84,
                         COL_TEXT);
 
+                    audio_manager.fade_out(1000);
                     stage = LB_PlacementEnd;
 
                     // Skip remaining drawing etc until this is closed
