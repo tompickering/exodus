@@ -2071,3 +2071,51 @@ const char *ASSETS_IMG[] = {
 
     "",
 };
+
+const char* mpart2mus(int mpart) {
+    switch (mpart) {
+        case 1:
+            return MUS_OVERVIEW;
+        case 2:
+            return MUS_ST3_A;
+        case 3:
+            return MUS_ST3_F;
+        case 4:
+            return MUS_BATTLE_PREP;
+        case 5:
+            return MUS_BATTLE_WON;
+        case 6:
+            return MUS_TRADE;
+        case 7:
+            return MUS_ST3_27;
+        case 8:
+            return MUS_INVASION;
+        case 9:
+            return MUS_BATTLE_LOST;
+        case 10:
+            return MUS_ACHIEVEMENT;
+        case 11:
+            return MUS_MINIGAME;
+        case 12:
+            return MUS_GAMESTART;
+        case 13:
+            return MUS_OVERWORLD;
+        case 14:
+            return MUS_ALIENSHIP;
+        case 15:
+            return MUS_ST3_42;
+        case 16:
+            return MUS_BATTLEWAIT;
+        case 17:
+            return MUS_ST3_4D;
+        case 18:
+            return MUS_CELEBRATE;
+        case 19:
+            return MUS_GUILD;
+        case 20:
+            return MUS_OVERWORLD_ANGRY;
+        case 21:
+            return MUS_ST3_58;
+    }
+    return nullptr;
+}

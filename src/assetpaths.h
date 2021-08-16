@@ -6,6 +6,9 @@
 // Includes file extensions (e.g. .png).
 #define ASSET_PATH_LEN_MAX 512
 
+// Helper function to convert orig's mpart number to a music track
+const char* mpart2mus(int);
+
 extern const char *FONT_AUDIOWIDE;
 
 extern const char *SFX_SHOT;
