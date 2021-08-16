@@ -78,6 +78,8 @@ void AudioManagerSDL::target_music(const char* track) {
 void AudioManagerSDL::play_sfx(const char* sfx) {
     if (!enabled)
         return;
+    if (!sfx)
+        return;
     L.debug("Playing SFX: %s", sfx);
     Mix_PlayChannel(-1, (Mix_Chunk*)sfx_data[sfx], 0);
 }
