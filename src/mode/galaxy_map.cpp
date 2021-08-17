@@ -383,6 +383,8 @@ ExodusMode GalaxyMap::update(float delta) {
                     return ExodusMode::MODE_None;
                 }
 
+                audio_manager.target_music(music);
+
                 ExodusMode next_mode = month_pass_update();
                 mp_state.month_pass_time += delta;
                 if (mp_state.mp_stage == MP_None) {
@@ -2325,7 +2327,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     if (mp_state.mpp_stage == MPP_FirstCity) {
         if (owner && !exostate.first_city_done) {
             if (owner->is_human() && p->count_stones(STONE_City) > 0) {
-                // TODO - Music...
+                audio_manager.target_music(mpart2mus(10));
                 exostate.first_city_done = true;
                 bulletin_start_new(false);
                 bulletin_set_flag(IMG_TS1_FLAG16);
@@ -2356,8 +2358,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 && p->count_stones(STONE_Port0) > 0
                 && p->count_stones(STONE_Port1) > 0
                 && p->count_stones(STONE_Port2) > 0) {
-                exostate.first_spaceport_done = true;
-                // TODO - Music...
+                audio_manager.target_music(mpart2mus(10));
                 exostate.first_spaceport_done = true;
                 do_first_spaceport = true;
                 next_mpp_stage();

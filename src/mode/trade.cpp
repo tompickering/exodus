@@ -43,6 +43,8 @@ void Trade::enter() {
     draw_manager.save_background();
     draw_manager.show_cursor(true);
 
+    audio_manager.target_music(mpart2mus(6));
+
     active_row = 0;
     sell = false;
 

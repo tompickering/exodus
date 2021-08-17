@@ -70,6 +70,15 @@ void AlienVessel::enter() {
     enemy_cargo = 0;
     enemy_scouts = 0;
 
+    int musidx = rand() % 3;
+    if (musidx == 0) {
+        audio_manager.target_music(mpart2mus(4));
+    } else if (musidx == 1) {
+        audio_manager.target_music(mpart2mus(14));
+    } else {
+        audio_manager.target_music(mpart2mus(16));
+    }
+
     int r = RND(23);
 
          if (r <  4) type = VESSEL_NoID;

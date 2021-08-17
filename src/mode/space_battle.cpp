@@ -45,6 +45,8 @@ SpaceBattle::SpaceBattle() : ModeBase("SpaceBattle") {
 void SpaceBattle::enter() {
     ModeBase::enter(ID::END);
 
+    audio_manager.fade_out(1000);
+
     draw_manager.draw(
         id(ID::BACKGROUND),
         IMG_RADAR,
