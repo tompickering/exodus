@@ -65,10 +65,10 @@ void AudioManagerSDL::target_music(const char* track) {
         return;
     }
 
-    L.debug("Targetting music: %s", track);
     if (track == target_track) {
-        L.debug("Track already playing: %s", track);
+        L.verb("Track already playing: %s", track);
     } else {
+        L.debug("Targetting music: %s", track);
         target_track = track;
         Mix_PlayMusic((Mix_Music*)music_data[target_track], -1);
         playing_track = target_track;
