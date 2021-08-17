@@ -754,7 +754,8 @@ void SpaceBattle::do_attack(BattleShip* s) {
     }
 
     t->draw_hit = true;
-    // TODO: Hit SFX at the end of PROCr_hit
+
+    audio_manager.play_sfx(SFX_EXPLOSION);
 }
 
 void SpaceBattle::start_explosions() {
@@ -800,6 +801,9 @@ void SpaceBattle::update_battle() {
     update_ships();
     update_rockets();
     ships_act();
+
+    if (onein(4)) audio_manager.play_sfx(SFX_GLIDE_LOW);
+    if (onein(10)) audio_manager.play_sfx(SFX_SHOT);
 }
 
 ExodusMode SpaceBattle::update(float delta) {
