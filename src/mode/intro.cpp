@@ -131,6 +131,7 @@ enum ID {
     TTL_JK,
     TTL_PRESENTS,
     TTL_EXODUS,
+    TEXT,
 
     END,
 };
@@ -472,12 +473,12 @@ ExodusMode Intro::update(float delta) {
                 }
 
                 draw_manager.draw_text(
+                        id(ID::TEXT),
                         intro_text[text_idx],
                         Justify::Centre,
                         RES_X / 2,
                         RES_Y - 26,
-                        {brightness, brightness, brightness},
-                        {0, 0, 0});
+                        {brightness, brightness, brightness});
 
 
                 released_keys = prev_nums_held & ~nums_held;
@@ -511,12 +512,12 @@ ExodusMode Intro::update(float delta) {
                     -MAX_TEXT_TIME / 2 , text_time);
 
                 draw_manager.draw_text(
+                        id(ID::TEXT),
                         intro_text[text_idx],
                         Justify::Centre,
                         RES_X / 2,
                         RES_Y - 26,
-                        {brightness, brightness, brightness},
-                        {0, 0, 0});
+                        {brightness, brightness, brightness});
                 return ExodusMode::MODE_None;
             } else {
                 interactive_sequence_completed = true;
@@ -824,12 +825,12 @@ void Intro::next_stage() {
 void Intro::draw_text() {
     unsigned char brightness = determine_text_brightness(0, text_time);
     draw_manager.draw_text(
+            id(ID::TEXT),
             intro_text[text_idx],
             Justify::Centre,
             RES_X / 2,
             RES_Y - 26,
-            {brightness, brightness, brightness},
-            {0, 0, 0});
+            {brightness, brightness, brightness});
 }
 
 /*
