@@ -68,6 +68,7 @@ float SHOT_START           = 1.55f;
 float SHOT_FRAME           = 0.08f;
 
 float GUARD_FRAME          = 0.25f;
+float GUARD_SHOT_PAUSE     = 0.8f;
 
 float DOOR_PX_PER_SEC      = 14.f;
 
@@ -434,6 +435,11 @@ ExodusMode Intro::update(float delta) {
                 next_stage(); return ExodusMode::MODE_None;
             }
 
+            break;
+        case GuardShotPause:
+            if (time > GUARD_SHOT_PAUSE) {
+                next_stage(); return ExodusMode::MODE_None;
+            }
             break;
         case Keypad:
             if (!stage_started) {
