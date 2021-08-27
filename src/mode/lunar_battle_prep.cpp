@@ -214,7 +214,7 @@ void LunarBattlePrep::enter() {
     if (b.human_battle) {
         draw_manager.draw(IMG_BATTLE_PREP);
         draw_manager.save_background();
-        // TODO: Music
+        audio_manager.target_music(mpart2mus(16));
         set_stage(LBP_InitialPause);
     }
 
@@ -763,7 +763,8 @@ ExodusMode LunarBattlePrep::update(float delta) {
                 draw_manager.show_cursor(true);
                 LunarBattleReport &rpt = ephstate.lunar_battle_report;
                 bool won = (defending ^ rpt.aggressor_won);
-                // TODO: Music
+
+                audio_manager.target_music(mpart2mus(won ? 5 : 9));
 
                 draw_panel();
 

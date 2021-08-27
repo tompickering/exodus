@@ -68,6 +68,7 @@ float SHOT_START           = 1.55f;
 float SHOT_FRAME           = 0.08f;
 
 float GUARD_FRAME          = 0.25f;
+float GUARD_SHOT_PAUSE     = 0.8f;
 
 float DOOR_PX_PER_SEC      = 14.f;
 
@@ -130,6 +131,7 @@ enum ID {
     TTL_JK,
     TTL_PRESENTS,
     TTL_EXODUS,
+    TEXT,
 
     END,
 };
@@ -394,12 +396,12 @@ ExodusMode Intro::update(float delta) {
 
             if (time > SHOT_START) {
                 if (time < SHOT_START + SHOT_FRAME) {
-                    ONCE(oid_shot_1) draw_manager.draw(id(ID::SHOT), IMG_INTRO_FI1_SHOT1, {280, 144, 0, 0, 2.0, 2.0});
+                    ONCE(oid_shot_1) draw_manager.draw(id(ID::SHOT), IMG_INTRO_FI1_SHOT1, {272, 146, 0, 0, 2.0, 2.0});
                     ONCE(oid_shot_fire) draw_manager.draw(id(ID::SHOOT), IMG_INTRO_FI1_FIRE6, {332, 84, 0, 0, 1.0, 1.0});
                 } else if (time < SHOT_START + SHOT_FRAME * 2) {
-                    ONCE(oid_shot_2) draw_manager.draw(id(ID::SHOT), IMG_INTRO_FI1_SHOT2, {204, 155, 0, 0, 2.0, 2.0});
+                    ONCE(oid_shot_2) draw_manager.draw(id(ID::SHOT), IMG_INTRO_FI1_SHOT2, {204, 156, 0, 0, 2.0, 2.0});
                 } else if (time < SHOT_START + SHOT_FRAME * 3) {
-                    ONCE(oid_shot_3) draw_manager.draw(id(ID::SHOT), IMG_INTRO_FI1_SHOT3, {136, 162, 0, 0, 2.0, 2.0});
+                    ONCE(oid_shot_3) draw_manager.draw(id(ID::SHOT), IMG_INTRO_FI1_SHOT3, {136, 164, 0, 0, 2.0, 2.0});
                 } else if (time < SHOT_START + SHOT_FRAME * 4) {
                     ONCE(oid_shot_4) draw_manager.draw(id(ID::SHOT), IMG_INTRO_FI1_SHOT4, {68, 172, 0, 0, 2.0, 2.0});
                 } else if (time < SHOT_START + SHOT_FRAME * 5) {
@@ -435,6 +437,11 @@ ExodusMode Intro::update(float delta) {
             }
 
             break;
+        case GuardShotPause:
+            if (time > GUARD_SHOT_PAUSE) {
+                next_stage(); return ExodusMode::MODE_None;
+            }
+            break;
         case Keypad:
             if (!stage_started) {
                 draw_manager.draw(id(ID::KEYPAD), IMG_INTRO_KEYPAD);
@@ -466,12 +473,12 @@ ExodusMode Intro::update(float delta) {
                 }
 
                 draw_manager.draw_text(
+                        id(ID::TEXT),
                         intro_text[text_idx],
                         Justify::Centre,
                         RES_X / 2,
                         RES_Y - 26,
-                        {brightness, brightness, brightness},
-                        {0, 0, 0});
+                        {brightness, brightness, brightness});
 
 
                 released_keys = prev_nums_held & ~nums_held;
@@ -505,12 +512,12 @@ ExodusMode Intro::update(float delta) {
                     -MAX_TEXT_TIME / 2 , text_time);
 
                 draw_manager.draw_text(
+                        id(ID::TEXT),
                         intro_text[text_idx],
                         Justify::Centre,
                         RES_X / 2,
                         RES_Y - 26,
-                        {brightness, brightness, brightness},
-                        {0, 0, 0});
+                        {brightness, brightness, brightness});
                 return ExodusMode::MODE_None;
             } else {
                 interactive_sequence_completed = true;
@@ -818,12 +825,12 @@ void Intro::next_stage() {
 void Intro::draw_text() {
     unsigned char brightness = determine_text_brightness(0, text_time);
     draw_manager.draw_text(
+            id(ID::TEXT),
             intro_text[text_idx],
             Justify::Centre,
             RES_X / 2,
             RES_Y - 26,
-            {brightness, brightness, brightness},
-            {0, 0, 0});
+            {brightness, brightness, brightness});
 }
 
 /*

@@ -14,6 +14,8 @@ void PlanetColonise::enter() {
         L.fatal("Entered PlanetColonise mode with invalid planet!");
     }
 
+    audio_manager.target_music(MUS_ACHIEVEMENT);
+
     stage = PlanetOverview;
 }
 

@@ -467,6 +467,7 @@ ExodusMode LunarBattle::update(float delta) {
             return ExodusMode::MODE_None;
         case LB_StartBattle:
             {
+                audio_manager.fade_out(1000);
                 Player *owner = nullptr;
                 if (p->is_owned()) owner = exostate.get_player(p->get_owner());
                 defender_turn = (bool)(owner && owner->is_human());
@@ -658,7 +659,11 @@ ExodusMode LunarBattle::update(float delta) {
                     active_unit->do_move(move_dir);
                     unit_moving = true;
                     move_interp = 0;
-                    // TODO: move SFX
+                    int r = rand() % 3;
+                    const char* sfx = active_unit->move0_sfx;
+                    if (r == 1) sfx = active_unit->move1_sfx;
+                    if (r == 2) sfx = active_unit->move2_sfx;
+                    audio_manager.play_sfx(sfx);
                 }
             }
             break;
@@ -671,7 +676,7 @@ ExodusMode LunarBattle::update(float delta) {
                 if (mine_timer > .05f) {
                     // Final 'beep' is silent
                     if (mine_beeps < 4) {
-                        // TODO: Beep
+                        audio_manager.play_sfx(SFX_BEEP);
                     }
                     mine_timer = 0;
                     mine_beeps++;
@@ -836,7 +841,7 @@ ExodusMode LunarBattle::update(float delta) {
                 if (target_unit) {
                     active_unit->shots_remaining--;
                     shot_interp = 1;
-                    // TODO: SFX
+                    audio_manager.play_sfx(active_unit->shot_sfx);
                 } else {
                     if (!human_turn || !check_viable_targets()) {
                         // No valid targets - give up
@@ -947,8 +952,8 @@ ExodusMode LunarBattle::update(float delta) {
                 break;
             } else if (damage_to_apply > 0) {
                 exp_interp = 1;
-                // TODO: Explosion SFX
-                // Louder if mine_damage?
+                // TODO: Louder if mine_damage?
+                audio_manager.play_sfx(SFX_EXPLOSION);
                 break;
             }
 
@@ -2480,6 +2485,10 @@ BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     fire_range = 0;
     fire_rate = 4.f;
     fire_power = 0;
+    shot_sfx = SFX_SHOT;
+    move0_sfx = SFX_WALK0;
+    move1_sfx = SFX_WALK1;
+    move2_sfx = SFX_WALK2;
     moves_remaining = 0;
     shots_remaining = 0;
     can_act = true;
@@ -2514,7 +2523,6 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             fire_range = 3;
             fire_power = 1;
             can_use_cover = true;
-            // TODO: SFX
             if (defending) {
                 idle = IMG_GF4_4;
                 walk = IMG_GF4_4_2;
@@ -2532,7 +2540,9 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             move = 4;
             fire_range = 4;
             fire_power = 2;
-            // TODO: SFX
+            move0_sfx = SFX_GLIDE_LOW;
+            move1_sfx = SFX_GLIDE_MED;
+            move2_sfx = SFX_GLIDE_HIGH;
             // TODO: Glider crashing sprite
             if (defending) {
                 // Blue
@@ -2553,6 +2563,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             move = 0;
             fire_range = 7;
             fire_power = 3;
+            shot_sfx = SFX_HEAVYSHOT;
             can_shoot_behind = false;
             if (defending) {
                 idle = IMG_GF4_6;
@@ -2571,6 +2582,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             move = 0;
             fire_range = 100;
             fire_power = 4;
+            shot_sfx = SFX_HEAVYSHOT;
             hp = LUNAR_BASE_GUN_HP;
             defending = true;
             idle = IMG_GF4_21;
@@ -2628,6 +2640,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             move = 0;
             fire_range = 7;
             fire_power = 3;
+            shot_sfx = SFX_HEAVYSHOT; // TODO: Check this
             is_alien = true;
             can_shoot_behind = false;
             defending = false;

@@ -28,6 +28,7 @@ void GuildExterior::enter() {
     draw_manager.draw(IMG_SG1_GUILD);
     draw_manager.save_background();
     draw_manager.show_cursor(true);
+    audio_manager.target_music(MUS_GUILD);
     blink_cycle = 0;
     ufo0_x = 180.f;
     ufo0_y = 180.f;

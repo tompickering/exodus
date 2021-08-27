@@ -15,8 +15,8 @@ bool AudioManagerSDL::init() {
         return false;
     }
 
-    target_track = "";
-    playing_track = "";
+    target_track = nullptr;
+    playing_track = nullptr;
 
     enabled = true;
     return true;
@@ -58,14 +58,27 @@ void AudioManagerSDL::load_resources() {
 void AudioManagerSDL::target_music(const char* track) {
     if (!enabled)
         return;
-    L.debug("Targetting music: %s", track);
-    target_track = track;
-    Mix_PlayMusic((Mix_Music*)music_data[target_track], -1);
-    playing_track = target_track;
+
+    if (!track) {
+        L.debug("Stopping music: %s", track);
+        Mix_PauseMusic();
+        return;
+    }
+
+    if (track == target_track) {
+        L.verb("Track already playing: %s", track);
+    } else {
+        L.debug("Targetting music: %s", track);
+        target_track = track;
+        Mix_PlayMusic((Mix_Music*)music_data[target_track], -1);
+        playing_track = target_track;
+    }
 }
 
 void AudioManagerSDL::play_sfx(const char* sfx) {
     if (!enabled)
+        return;
+    if (!sfx)
         return;
     L.debug("Playing SFX: %s", sfx);
     Mix_PlayChannel(-1, (Mix_Chunk*)sfx_data[sfx], 0);

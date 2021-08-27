@@ -61,6 +61,9 @@ void GalaxyIntro::enter() {
         {420, 50, 0, 0, 2.4, 2.4});
     DrawArea area = {0, 0, RES_X, PNL_TOP};
     draw_manager.pixelswap_start(&area);
+
+    audio_manager.target_music(MUS_GAMESTART);
+
     time = 0;
 }
 

@@ -24,6 +24,7 @@ class Intro : ModeBase {
             Guard,
             Shoot,
             GuardShot,
+            GuardShotPause,
             Keypad,
             Success,
             DepartShuttle,

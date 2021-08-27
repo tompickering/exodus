@@ -39,6 +39,8 @@ GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer(), PanelDrawer(PNL_
     do_meteor = false;
     do_meltdown = false;
     do_lunar_battle = false;
+
+    music = MUS_ST3_4D; // TODO: Check this - PROCbackmusic doesn't set this up
 }
 
 void GalaxyMap::enter() {
@@ -65,6 +67,32 @@ void GalaxyMap::enter() {
     } else {
         stage = GM_MonthPassing;
     }
+
+    // PROCbackmusic
+    if (exostate.get_orig_month() >= 2) {
+        music = onein(4) ? MUS_OVERVIEW : mpart2mus(17);
+        if (audio_manager.get_playing() == mpart2mus(1)) {
+            if (onein(3)) {
+                music = mpart2mus(17);
+            }
+        } else if (audio_manager.get_playing() == mpart2mus(2)) {
+                music = mpart2mus(4);
+        } else if (audio_manager.get_playing() == mpart2mus(6)) {
+                music = mpart2mus(13);
+        } else if (audio_manager.get_playing() == mpart2mus(8)) {
+                music = mpart2mus(2);
+        } else if (audio_manager.get_playing() == mpart2mus(9)) {
+                music = mpart2mus(17);
+        } else if (audio_manager.get_playing() == mpart2mus(10)) {
+                music = mpart2mus(13);
+        } else if (audio_manager.get_playing() == mpart2mus(17)) {
+            if (onein(5)) {
+                music = mpart2mus(3);
+            }
+        }
+    }
+
+    audio_manager.target_music(music);
 
     selected_ft = nullptr;
     draw_manager.show_cursor(true);
@@ -354,6 +382,8 @@ ExodusMode GalaxyMap::update(float delta) {
                     stage = GM_MP_FirstSpaceport;
                     return ExodusMode::MODE_None;
                 }
+
+                audio_manager.target_music(music);
 
                 ExodusMode next_mode = month_pass_update();
                 mp_state.month_pass_time += delta;
@@ -2302,7 +2332,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     if (mp_state.mpp_stage == MPP_FirstCity) {
         if (owner && !exostate.first_city_done) {
             if (owner->is_human() && p->count_stones(STONE_City) > 0) {
-                // TODO - Music...
+                audio_manager.target_music(mpart2mus(10));
                 exostate.first_city_done = true;
                 bulletin_start_new(false);
                 bulletin_set_flag(IMG_TS1_FLAG16);
@@ -2333,8 +2363,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 && p->count_stones(STONE_Port0) > 0
                 && p->count_stones(STONE_Port1) > 0
                 && p->count_stones(STONE_Port2) > 0) {
-                exostate.first_spaceport_done = true;
-                // TODO - Music...
+                audio_manager.target_music(mpart2mus(10));
                 exostate.first_spaceport_done = true;
                 do_first_spaceport = true;
                 next_mpp_stage();
