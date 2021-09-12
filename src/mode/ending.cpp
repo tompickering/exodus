@@ -6,7 +6,13 @@
 #include "shared.h"
 
 #define INITIAL_DELAY 3
-#define ZOOM_SPEED .2f
+#define SPACE_SCROLL_SPEED 3
+#define HALL_ZOOM_SPEED 1.4f
+#define HALL_DOOR_Y 234
+#define HALL_DOOR_DELAY .2f
+#define HALL_DOOR_SPEED 10
+#define HALL_END 6
+#define WELCOME_TIME 6
 
 Anim anim_star(
     11,
@@ -25,21 +31,45 @@ Anim anim_star(
 
 
 enum ID {
+    INTRO_SPACE0,
+    INTRO_SPACE1,
     HALL,
+    HALL_DOOR_L,
+    HALL_DOOR_R,
     END,
 };
 
 Ending::Ending() : ModeBase("Ending") {
     stackable = false;
+    time = 0;
 }
 
 void Ending::enter() {
     ModeBase::enter(ID::END);
 
-    draw_manager.draw(IMG_INTRO_SPACE);
-    draw_manager.save_background();
+    set_stage(Intro);
 
     draw_manager.draw(
+        id(ID::INTRO_SPACE0),
+        IMG_INTRO_SPACE,
+        {(int)(time*SPACE_SCROLL_SPEED), 0, 0, 0, 1, 1});
+    draw_manager.draw(
+        id(ID::INTRO_SPACE1),
+        IMG_INTRO_SPACE,
+        {(int)(time*SPACE_SCROLL_SPEED), 0, 1, 0, 1, 1});
+
+    draw_manager.draw(
+        id(ID::HALL_DOOR_L),
+        IMG_EN1_DOOR1,
+        {RES_X/2, HALL_DOOR_Y,
+         1, .5, 1, 1});
+    draw_manager.draw(
+        id(ID::HALL_DOOR_R),
+        IMG_EN1_DOOR2,
+        {RES_X/2, HALL_DOOR_Y,
+         0, .5, 1, 1});
+    draw_manager.draw(
+        id(ID::HALL),
         IMG_EN1_HALL,
         {RES_X/2, RES_Y/2,
          .5, .5, 1, 1});
@@ -59,11 +89,62 @@ ExodusMode Ending::update(float dt) {
             break;
         case ZoomAndDoors:
             {
-                float sz = 1 + (time * ZOOM_SPEED);
                 draw_manager.draw(
+                    id(ID::INTRO_SPACE0),
+                    IMG_INTRO_SPACE,
+                    {(int)(time*SPACE_SCROLL_SPEED), 0, 0, 0, 1, 1});
+                draw_manager.draw(
+                    id(ID::INTRO_SPACE1),
+                    IMG_INTRO_SPACE,
+                    {(int)(time*SPACE_SCROLL_SPEED), 0, 1, 0, 1, 1});
+
+                float sz = 1 + (time * HALL_ZOOM_SPEED);
+
+                int y_off = time * 24;
+
+                int door_off = 0;
+
+                if (time > HALL_DOOR_DELAY) {
+                    door_off = (time - HALL_DOOR_DELAY) * HALL_DOOR_SPEED * sz;
+                }
+
+                draw_manager.draw(
+                    id(ID::HALL_DOOR_L),
+                    IMG_EN1_DOOR1,
+                    {RES_X/2 - door_off, HALL_DOOR_Y,
+                     1, .5, sz, sz});
+                draw_manager.draw(
+                    id(ID::HALL_DOOR_R),
+                    IMG_EN1_DOOR2,
+                    {RES_X/2 + door_off, HALL_DOOR_Y,
+                     0, .5, sz, sz});
+                draw_manager.draw(
+                    id(ID::HALL),
                     IMG_EN1_HALL,
-                    {RES_X/2, RES_Y/2,
+                    {RES_X/2, RES_Y/2 + y_off,
                      .5, .5, sz, sz});
+
+                if (time > HALL_END) {
+                    draw_manager.draw(IMG_EN1_WELCOME, {RES_X/2, RES_Y/2, .5f, .5f, 1, 1});
+                }
+
+                if (time > HALL_END + WELCOME_TIME) {
+                    set_stage(WelcomeFade);
+                    draw_manager.fade_black(1.2f, 24);
+                }
+            }
+            break;
+        case WelcomeFade:
+            {
+                if (!draw_manager.fade_active()) {
+                    set_stage(InitialText);
+                }
+            }
+            break;
+        case InitialText:
+            {
+                // TODO:
+                return ExodusMode::MODE_Menu;
             }
             break;
         default:

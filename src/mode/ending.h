@@ -14,7 +14,7 @@ class Ending : ModeBase {
         enum Stage {
             Intro,
             ZoomAndDoors,
-            Welcome,
+            WelcomeFade,
             InitialText,
             BadDeeds,
             GoodDeeds,
