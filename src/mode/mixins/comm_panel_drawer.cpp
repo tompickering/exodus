@@ -585,6 +585,8 @@ void CommPanelDrawer::comm_init(CommSend input) {
         default:
             L.warn("Unhandled comm input on init: %d", (int)input);
     }
+
+    comm_planet_name_confirm_time = -1;
 }
 
 void CommPanelDrawer::comm_send(CommSend input) {
@@ -701,6 +703,23 @@ void CommPanelDrawer::comm_send(CommSend input) {
             input_manager.start_text_input();
             input_manager.set_input_text(comm_planet->get_name_suggestion());
             comm_recv(DIA_R_SettleNamePlanet);
+            break;
+        case DIA_S_NamePlanetConfirm:
+            {
+                if (comm_planet_name_confirm_time == comm_time) {
+                    const char *name = input_manager.get_input_text(PLANET_MAX_NAME);
+                    comm_set_text(2, name);
+                    if (comm_player->attempt_spend(comm_planet->get_settlement_cost())) {
+                        comm_planet->set_name(name);
+                        comm_planet->set_owner(exostate.get_player_idx(comm_player));
+                        comm_set_text(4, "%s is now yours.", name);
+                        comm_recv(DIA_R_SettleNamePlanetProceed);
+                    } else {
+                        comm_report_action = CA_Abort;
+                        L.error("Cannot afford planet - but should have checked sooner!");
+                    }
+                }
+            }
             break;
         case DIA_S_PlanetComm:
             comm_prepare(4);
@@ -1661,18 +1680,17 @@ void CommPanelDrawer::comm_process_responses() {
                 const char *name = input_manager.get_input_text(PLANET_MAX_NAME);
                 comm_set_text(2, name);
                 if (input_manager.consume(K_Enter) && strnlen(name, 1)) {
-                    if (comm_player->attempt_spend(comm_planet->get_settlement_cost())) {
-                        comm_planet->set_name(name);
-                        comm_planet->set_owner(exostate.get_player_idx(comm_player));
-                        comm_report_action = CA_Proceed;
-                    } else {
-                        comm_report_action = CA_Abort;
-                        L.error("Cannot afford planet - but should have checked sooner!");
-                    }
+                    comm_planet_name_confirm_time = comm_time;
+                    comm_send(DIA_S_NamePlanetConfirm);
                 }
-
             }
             break;
+        case DIA_R_SettleNamePlanetProceed:
+            {
+                if ((comm_time - comm_planet_name_confirm_time) > 1.6f) {
+                    comm_report_action = CA_Proceed;
+                }
+            }
         case DIA_R_AwaitingOrders:
             switch (opt) {
                 case 0:

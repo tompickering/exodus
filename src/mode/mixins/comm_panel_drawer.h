@@ -48,6 +48,7 @@ enum CommSend {
     DIA_S_PlanFly,
     DIA_S_PlanSettle,
     DIA_S_NamePlanet,
+    DIA_S_NamePlanetConfirm,
     DIA_S_PlanetComm,
     DIA_S_HailPlanet,
     DIA_S_Attack,
@@ -111,6 +112,7 @@ enum CommRecv {
     DIA_R_SettleCannotAfford,
     DIA_R_SettlePlanetInfo,
     DIA_R_SettleNamePlanet,
+    DIA_R_SettleNamePlanetProceed,
     DIA_R_AwaitingOrders,
     DIA_R_Greeting,
     DIA_R_AttackAlly,
@@ -238,6 +240,8 @@ class CommPanelDrawer {
         void comm_send(CommSend);
         void comm_recv(CommRecv);
         void comm_process_responses();
+
+        float comm_planet_name_confirm_time;
 };
 
 #endif

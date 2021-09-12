@@ -124,10 +124,16 @@ ExodusMode StarMap::update(float delta) {
         case SM_PlanSettle:
             action = comm_update(delta);
             if (action == CA_Proceed) {
-                return ExodusMode::MODE_PlanetColonise;
+                draw_manager.fade_black(1.2f, 24);
+                stage = SM_PlanSettleFade;
             } else if (action == CA_Abort) {
                 comm_close();
                 stage = SM_Idle;
+            }
+            break;
+        case SM_PlanSettleFade:
+            if (!draw_manager.fade_active()) {
+                return ExodusMode::MODE_PlanetColonise;
             }
             break;
         case SM_PlanetComm:
