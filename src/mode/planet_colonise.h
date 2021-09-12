@@ -15,7 +15,10 @@ class PlanetColonise : ModeBase {
         float time;
 
         enum Stage {
-            PlanetOverview,
+            PlanetOverview0,
+            PlanetOverview1,
+            Pixelswap,
+            LaunchingText,
             Doors,
             Shuttle,
         };
