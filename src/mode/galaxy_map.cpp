@@ -94,7 +94,8 @@ void GalaxyMap::enter() {
 
     audio_manager.target_music(music);
 
-    selected_ft = nullptr;
+    // Leave selected_ft as-is
+
     draw_manager.show_cursor(true);
 }
 
@@ -302,6 +303,9 @@ ExodusMode GalaxyMap::update(float delta) {
             return ExodusMode::MODE_Fly;
         case GM_MonthPassing:
             {
+                update_panel_info_player(TGT_Primary, exostate.get_player(0));
+                update_panel_info_ft(TGT_Primary, exostate.get_player(0), selected_ft);
+
                 if (exostate.final_month()) {
                     if (ephstate.get_ephemeral_state() != EPH_GameOver) {
                         ephstate.set_ephemeral_state(EPH_GameOver);
@@ -319,6 +323,7 @@ ExodusMode GalaxyMap::update(float delta) {
         case GM_MonthPassMain:
             {
                 update_panel_info_player(TGT_Primary, exostate.get_player(0));
+                update_panel_info_ft(TGT_Primary, exostate.get_player(0), selected_ft);
 
                 if (bulletin_is_open()) {
                     bulletin_update(delta);

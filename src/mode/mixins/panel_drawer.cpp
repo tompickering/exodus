@@ -142,16 +142,32 @@ void PanelDrawer::update_panel_info_player(DrawTarget tgt, Player* player) {
 void PanelDrawer::update_panel_info_ft(DrawTarget tgt, Player* player, FlyTarget* ft) {
     Galaxy *gal = exostate.get_galaxy();
 
-    char ft_desc[41];
-    bool is_guild = ft == gal->get_guild();
-    snprintf(ft_desc, 40, "This is the %s%s.", is_guild ? "" : "star ", ft->name);
+    char ft_desc[42];
+    ft_desc[0] = '\0';
+
+    if (ft) {
+        bool is_guild = ft == gal->get_guild();
+        snprintf(ft_desc, sizeof(ft_desc), "This is the %s%s.", is_guild ? "" : "star ", ft->name);
+    }
 
     for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
         draw_manager.draw(id_planet_icons[i], nullptr);
         draw_manager.draw(id_marker_icons[i], nullptr);
     }
 
+    if (!(player && ft)) {
+        draw_manager.draw(
+            id_qm,
+            nullptr);
+        for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+            draw_manager.draw(id_marker_icons[i], nullptr);
+        }
+        // TODO: Clear fleet markers, when implemented
+        return;
+    }
+
     // Draw '?' or star details
+    // TODO: Fleet markers
     if (player->get_location().has_visited(exostate.tgt2loc(ft))) {
         draw_manager.draw(
             id_qm,
