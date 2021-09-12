@@ -36,6 +36,7 @@ enum ID {
     HALL,
     HALL_DOOR_L,
     HALL_DOOR_R,
+    STAR,
     END,
 };
 
@@ -144,6 +145,26 @@ ExodusMode Ending::update(float dt) {
         case InitialText:
             {
                 // TODO:
+                set_stage(Outro);
+            }
+            break;
+        case Outro:
+            {
+                float interp = fclamp(time / 80, 0, 1);
+                float back_y = RES_Y - (interp*RES_Y);
+                draw_manager.draw(IMG_EN2_SCAPE, {0, back_y, 0, (1-interp), 1, 1});
+
+                if (interp > 0.53) {
+                    float star_interp = fclamp((interp - 0.53)*80, 0, 1);
+                    draw_manager.draw(
+                        id(ID::STAR),
+                        anim_star.interp(star_interp),
+                        {400, 70, 0, 1, 1, 1});
+                }
+            }
+            break;
+        case ForNow:
+            {
                 return ExodusMode::MODE_Menu;
             }
             break;
