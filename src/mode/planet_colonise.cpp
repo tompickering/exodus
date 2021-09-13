@@ -62,8 +62,6 @@ void PlanetColonise::enter() {
          .5, .5, 1, 1});
     draw_manager.save_background();
 
-    // TODO: Music
-
     stage = PlanetOverview0;
 }
 
