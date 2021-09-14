@@ -16,10 +16,13 @@ class Ending : ModeBase {
             ZoomAndDoors,
             WelcomeFade,
             StarsFadeIn0,
-            InitialText,
+            Text0,
             BadDeeds,
             GoodDeeds,
-            FutureText,
+            DeedsFade,
+            StarsFadeIn1,
+            Text1,
+            FadeText1,
             Outro,
             TheEndDelay,
             TheEnd,
@@ -29,6 +32,10 @@ class Ending : ModeBase {
 
         Stage stage;
 
+        int text_faded_in;
+        int text_faded_out;
+
+        bool update_text(const char*[], int);
         void set_stage(Stage);
 };
 

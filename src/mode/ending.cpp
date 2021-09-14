@@ -16,6 +16,10 @@
 
 #define TEXT_ENTRIES_0 6
 #define TEXT_ENTRIES_1 2
+#define TEXT_FADE_TIME .4f
+#define TEXT_SHOW_TIME 4.0f
+#define TEXT_DELAY 2.2f
+#define TEXT_TIME ((TEXT_FADE_TIME)*2 + (TEXT_SHOW_TIME) + (TEXT_DELAY))
 
 #define OUTRO_TIME 105
 #define OUTRO_TEXT_ENTRIES 9
@@ -121,7 +125,7 @@ void Ending::enter() {
 
     audio_manager.target_music(MUS_ST2_E);
 
-    stage = Intro;
+    set_stage(Intro);
 }
 
 ExodusMode Ending::update(float dt) {
@@ -131,6 +135,7 @@ ExodusMode Ending::update(float dt) {
             {
                 if (time > INITIAL_DELAY) {
                     set_stage(ZoomAndDoors);
+                    return ExodusMode::MODE_None;
                 }
             }
             break;
@@ -179,6 +184,7 @@ ExodusMode Ending::update(float dt) {
                     set_stage(WelcomeFade);
                     draw_manager.fade_black(1.2f, 24);
                     audio_manager.fade_out(1);
+                    return ExodusMode::MODE_None;
                 }
             }
             break;
@@ -189,18 +195,80 @@ ExodusMode Ending::update(float dt) {
                     draw_manager.draw(TGT_Secondary, IMG_EN1_STARS);
                     draw_manager.fade_start(1.2f, 24);
                     set_stage(StarsFadeIn0);
+                    return ExodusMode::MODE_None;
                 }
             }
             break;
         case StarsFadeIn0:
             {
-                set_stage(InitialText);
+                if (!draw_manager.fade_active()) {
+                    set_stage(Text0);
+                    return ExodusMode::MODE_None;
+                }
             }
             break;
-        case InitialText:
+        case Text0:
             {
-                // TODO:
-                set_stage(Outro);
+                if (!update_text(end_text_0, TEXT_ENTRIES_0)) {
+                    draw_manager.draw(TGT_Secondary, IMG_BG_MENU1);
+                    draw_manager.pixelswap_start();
+                    set_stage(BadDeeds);
+                    return ExodusMode::MODE_None;
+                }
+            }
+            break;
+        case BadDeeds:
+            {
+                if (!draw_manager.pixelswap_active()) {
+                    draw_manager.draw(TGT_Secondary, IMG_BG_MENU1);
+                    draw_manager.pixelswap_start();
+                    set_stage(GoodDeeds);
+                    return ExodusMode::MODE_None;
+                }
+            }
+            break;
+        case GoodDeeds:
+            {
+                if (!draw_manager.pixelswap_active()) {
+                    draw_manager.fade_black(1.2f, 24);
+                    set_stage(DeedsFade);
+                    return ExodusMode::MODE_None;
+                }
+            }
+            break;
+        case DeedsFade:
+            {
+                if (!draw_manager.fade_active()) {
+                    draw_manager.draw(TGT_Secondary, IMG_EN1_STARS);
+                    draw_manager.fade_start(1.2f, 24);
+                    set_stage(StarsFadeIn1);
+                    return ExodusMode::MODE_None;
+                }
+            }
+            break;
+        case StarsFadeIn1:
+            {
+                if (!draw_manager.fade_active()) {
+                    set_stage(Text1);
+                    return ExodusMode::MODE_None;
+                }
+            }
+            break;
+        case Text1:
+            {
+                if (!update_text(end_text_1, TEXT_ENTRIES_1)) {
+                    draw_manager.fade_black(1.2f, 24);
+                    set_stage(FadeText1);
+                    return ExodusMode::MODE_None;
+                }
+            }
+            break;
+        case FadeText1:
+            {
+                if (!draw_manager.fade_active()) {
+                    set_stage(Outro);
+                    return ExodusMode::MODE_None;
+                }
             }
             break;
         case Outro:
@@ -251,6 +319,7 @@ ExodusMode Ending::update(float dt) {
 
                 if (interp >= 1) {
                     set_stage(TheEndDelay);
+                    return ExodusMode::MODE_None;
                 }
             }
             break;
@@ -273,7 +342,9 @@ ExodusMode Ending::update(float dt) {
 
                 if (time > THEEND_TIME) {
                     draw_manager.fade_black(1.2f, 24);
+                    audio_manager.fade_out(1);
                     set_stage(FadeEnd);
+                    return ExodusMode::MODE_None;
                 }
             }
             break;
@@ -281,6 +352,7 @@ ExodusMode Ending::update(float dt) {
             {
                 if (!draw_manager.fade_active() && time > 2) {
                     set_stage(ForNow);
+                    return ExodusMode::MODE_None;
                 }
             }
             break;
@@ -299,7 +371,45 @@ ExodusMode Ending::update(float dt) {
     return ExodusMode::MODE_None;
 }
 
+bool Ending::update_text(const char* text[], int entries) {
+    int text_idx = (int)(time / TEXT_TIME);
+    if (text_idx >= entries) {
+        return false;
+    }
+
+    if (draw_manager.fade_active()) {
+        return true;
+    }
+
+    float i = time;
+    while (i > TEXT_TIME) {
+        i -= TEXT_TIME;
+    }
+    if (text_faded_in < text_idx && i < TEXT_FADE_TIME) {
+        draw_manager.draw(TGT_Secondary, IMG_EN1_STARS);
+        draw_manager.draw_text(
+            TGT_Secondary,
+            Font::Large,
+            text[text_idx],
+            Justify::Centre,
+            RES_X/2, RES_Y/2 - 20,
+            COL_TEXT_SPEECH);
+        draw_manager.fade_start(TEXT_FADE_TIME, 24);
+        text_faded_in = text_idx;
+    }
+    if (text_faded_out < text_idx && i > TEXT_FADE_TIME + TEXT_SHOW_TIME) {
+        draw_manager.draw(TGT_Secondary, IMG_EN1_STARS);
+        draw_manager.fade_start(TEXT_FADE_TIME, 24);
+        text_faded_out = text_idx;
+    }
+
+    return true;
+}
+
 void Ending::set_stage(Stage new_stage) {
     stage = new_stage;
     time = 0;
+    text_faded_in = -1;
+    text_faded_out = -1;
+
 }
