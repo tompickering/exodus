@@ -769,6 +769,7 @@ void DrawManagerSDL::fill(SprID id, DrawArea area, RGB col) {
         (int)((float)area.y * UPSCALE_Y),
         (int)((float)area.w * UPSCALE_X),
         (int)((float)area.h * UPSCALE_Y)};
+    repair_dirty_area(id);
     DrawnSprite *drawn_info = update_dirty_area(id, transformed_area);
     if (!drawn_info) {
         L.fatal("Could not attain draw info for fill");
