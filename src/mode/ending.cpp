@@ -27,8 +27,8 @@
 #define OUTRO_TEXT_LEN (OUTRO_TEXT_PROP / OUTRO_TEXT_ENTRIES)
 #define OUTRO_TEXT_DIV .4f
 #define STAR_PROP .585f
-#define STAR_SPEED 32
-#define STAR_X 400
+#define STAR_SPEED 38
+#define STAR_X 410
 #define STAR_Y 140
 
 #define THEEND_DELAY 2
@@ -183,7 +183,7 @@ ExodusMode Ending::update(float dt) {
                 if (time > HALL_END + WELCOME_TIME) {
                     set_stage(WelcomeFade);
                     draw_manager.fade_black(1.2f, 24);
-                    audio_manager.fade_out(1);
+                    audio_manager.fade_out(1000);
                     return ExodusMode::MODE_None;
                 }
             }
@@ -274,17 +274,11 @@ ExodusMode Ending::update(float dt) {
         case Outro:
             {
                 float interp = fclamp(time / OUTRO_TIME, 0, 1);
-                /*
-                x.95 here because the image needs to be lowered slightly
-                below its height to obscure the summit of the mountain.
-                */
-                float back_y = RES_Y - (interp*RES_Y*.95f);
-                float anchor_y = (1-interp);
                 draw_manager.draw(
                     id(ID::OUTRO_BACKGROUND),
                     IMG_EN2_SCAPE,
-                    {0, (int)back_y,
-                    0, anchor_y, 1, 1});
+                    {0, RES_Y + (int)(interp*946.f),
+                     0, 1, 1, 1});
 
                 // Outro text
                 bool text_wanted = false;
@@ -342,7 +336,7 @@ ExodusMode Ending::update(float dt) {
 
                 if (time > THEEND_TIME) {
                     draw_manager.fade_black(1.2f, 24);
-                    audio_manager.fade_out(1);
+                    audio_manager.fade_out(1000);
                     set_stage(FadeEnd);
                     return ExodusMode::MODE_None;
                 }
