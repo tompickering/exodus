@@ -1210,8 +1210,8 @@ void Planet::month_reset() {
 
 void Planet::randomise_trade_quality() {
     int r = RND(5);
-    trade = TRADE_Bad;
-    if (r == 1) trade = TRADE_Fair;
+    trade = TRADE_Fair;
+    if (r == 1) trade = TRADE_Bad;
     if (r == 2) trade = TRADE_Good;
     L.debug("%s: Trade is now %d", name, (int)trade);
 }
