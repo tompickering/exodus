@@ -136,6 +136,8 @@ class EphemeralState {
         Research research;
         FlyPlan fly_plan;
         GameOverReason game_over_reason;
+
+        const char* default_music;
     private:
         EphState eph_state;
 

@@ -39,8 +39,6 @@ GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer(), PanelDrawer(PNL_
     do_meteor = false;
     do_meltdown = false;
     do_lunar_battle = false;
-
-    music = MUS_ST3_4D; // TODO: Check this - PROCbackmusic doesn't set this up
 }
 
 void GalaxyMap::enter() {
@@ -70,29 +68,29 @@ void GalaxyMap::enter() {
 
     // PROCbackmusic
     if (exostate.get_orig_month() >= 2) {
-        music = onein(4) ? MUS_OVERVIEW : mpart2mus(17);
+        ephstate.default_music = onein(4) ? MUS_OVERVIEW : mpart2mus(17);
         if (audio_manager.get_playing() == mpart2mus(1)) {
             if (onein(3)) {
-                music = mpart2mus(17);
+                ephstate.default_music = mpart2mus(17);
             }
         } else if (audio_manager.get_playing() == mpart2mus(2)) {
-                music = mpart2mus(4);
+                ephstate.default_music = mpart2mus(4);
         } else if (audio_manager.get_playing() == mpart2mus(6)) {
-                music = mpart2mus(13);
+                ephstate.default_music = mpart2mus(13);
         } else if (audio_manager.get_playing() == mpart2mus(8)) {
-                music = mpart2mus(2);
+                ephstate.default_music = mpart2mus(2);
         } else if (audio_manager.get_playing() == mpart2mus(9)) {
-                music = mpart2mus(17);
+                ephstate.default_music = mpart2mus(17);
         } else if (audio_manager.get_playing() == mpart2mus(10)) {
-                music = mpart2mus(13);
+                ephstate.default_music = mpart2mus(13);
         } else if (audio_manager.get_playing() == mpart2mus(17)) {
             if (onein(5)) {
-                music = mpart2mus(3);
+                ephstate.default_music = mpart2mus(3);
             }
         }
     }
 
-    audio_manager.target_music(music);
+    audio_manager.target_music(ephstate.default_music);
 
     // Leave selected_ft as-is
 
@@ -389,7 +387,7 @@ ExodusMode GalaxyMap::update(float delta) {
                     return ExodusMode::MODE_None;
                 }
 
-                audio_manager.target_music(music);
+                audio_manager.target_music(ephstate.default_music);
 
                 ExodusMode next_mode = month_pass_update();
                 mp_state.month_pass_time += delta;

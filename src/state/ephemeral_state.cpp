@@ -2,6 +2,7 @@
 
 EphemeralState::EphemeralState() {
     clear_ephemeral_state();
+    default_music = MUS_ST3_4D; // TODO: Check this - PROCbackmusic doesn't set this up
 }
 
 EphState EphemeralState::get_ephemeral_state() {

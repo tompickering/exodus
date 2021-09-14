@@ -53,6 +53,8 @@ void StarMap::enter() {
         draw_manager.fade_start(1.f, 12);
     }
 
+    audio_manager.target_music(ephstate.default_music);
+
     stage = SM_Idle;
 }
 
