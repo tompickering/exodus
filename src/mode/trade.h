@@ -14,6 +14,7 @@ struct TradeRow {
     int freight;
     SprID id_stock;
     SprID id_freight;
+    SprID id_unavailable;
 };
 
 class Trade : ModeBase {
@@ -23,9 +24,22 @@ class Trade : ModeBase {
         virtual void exit() override;
         virtual ExodusMode update(float) override;
     private:
+
+        enum Stage {
+            Overview,
+            Info,
+            DoTrade,
+        };
+
+        Stage stage;
+
         int active_row;
         TradeRow rows[8];
         bool sell;
+
+        int get_cost(TradeQuality, int);
+        int get_buy(TradeQuality, int);
+        void draw_stock_freight();
 };
 
 #endif
