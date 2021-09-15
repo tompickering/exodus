@@ -33,11 +33,15 @@ class Trade : ModeBase {
 
         Stage stage;
 
+        TradeQuality quality;
         int active_row;
         TradeRow rows[8];
         bool sell;
         int bought;
         int sold;
+
+        bool food_needed;
+        bool arms_offered;
 
         int get_cost(TradeQuality, int);
         int get_buy(TradeQuality, int);

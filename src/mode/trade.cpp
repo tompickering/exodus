@@ -20,11 +20,19 @@ static const int cost_data[3][8] = {
 
 // FIXME: This is the orig data - but are the 'bad' values supposed to be better than 'good' and 'fair' in some case?!
 // The only asset that can be profitable from trading alone is plutonium (buy for 2, sell for 3)
+// Unless you buy food for 1MC whilst the planet is meeting consumption, then sell it back for 2MC when it isn't
 static const int buy_data[3][8] = {
     {4, 1, 3, 2, 3, 4, 7,  8},
     {3, 1, 2, 1, 2, 3, 8, 10},
     {3, 1, 1, 3, 4, 5, 6,  9}
 };
+
+static const char* OFFICER_NOT_INFORMED = "I am not informed...";
+static const char* OFFER_REGULAR = "A regular offer.";
+static const char* OFFER_NO_GOOD = "Not a good offer."; // Orig: No good offer
+static const char* OFFER_GOOD = "A very good offer";
+static const char* OFFER_FOOD_NEEDED = "The planet needs food.";
+static const char* OFFER_NO_ARMS = "Arms are not offered.";
 
 enum ID {
     ACTIVE_T,
@@ -66,10 +74,10 @@ void Trade::enter() {
     }
 
     int player_idx = exostate.get_player_idx(p0);
-    TradeQuality quality = p->initiate_trade(player_idx);
+    quality = p->initiate_trade(player_idx);
 
-    //const Fleet &fleet = p->get_fleet();
-    //const Freight &freight = p->get_freight();
+    food_needed = (p->get_n_agri() < p->get_food_consumption());
+    arms_offered = exostate.is_allied(p0idx, p1idx);
 
     ModeBase::enter(ID::END);
     draw_manager.draw(p->sprites()->map_bg);
@@ -125,18 +133,17 @@ void Trade::enter() {
         rows[i].buy = get_buy(quality, i);
         rows[i].id_stock = draw_manager.new_sprite_id();
         rows[i].id_freight = draw_manager.new_sprite_id();
-        // TODO: Implement this
         rows[i].id_unavailable = draw_manager.new_sprite_id();
     }
 
-    if (!exostate.is_allied(p0idx, p1idx)) {
+    if (!arms_offered) {
         for (int i = 3; i < 8; ++i) {
             rows[i].stock = 0;
         }
     }
 
     // If the planet food production < consumption, higher cost and better sell value
-    if (p->get_n_agri() < p->get_food_consumption()) {
+    if (food_needed) {
         rows[1].cost += 2;
         rows[1].buy += 1;
     }
@@ -237,6 +244,18 @@ ExodusMode Trade::update(float delta) {
             {
                 draw_stock_freight();
 
+                for (int i = 0; i < 8; ++i) {
+                    int y = 80 + 40*i - 4;
+                    if (rows[i].stock <= 0) {
+                        draw_manager.draw(
+                            rows[i].id_unavailable,
+                            IMG_TD2_TR0,
+                            {20, y, 0, 0, 1, 1});
+                    } else {
+                        draw_manager.draw(rows[i].id_unavailable, nullptr);
+                    }
+                }
+
                 draw_manager.fill(id(ID::ACTIVE_T), {92, 86+40*active_row, ACTIVE_W, 2}, {255, 0, 0});
                 draw_manager.fill(id(ID::ACTIVE_B), {92, 86+40*active_row+ACTIVE_H-2, ACTIVE_W, 2}, {255, 0, 0});
                 draw_manager.fill(id(ID::ACTIVE_L), {92, 86+40*active_row, 2, ACTIVE_H}, {255, 0, 0});
@@ -323,15 +342,24 @@ ExodusMode Trade::update(float delta) {
                             Justify::Left,
                             PANEL_X + 4, PANEL_Y + 144,
                             COL_TEXT2);
-                        // TODO ("I am not informed..." etc)
+
+                        const char* officer_opinion = OFFICER_NOT_INFORMED;
+                        if (p->get_officer(OFF_Counsellor) > OFFQ_Poor) {
+                            officer_opinion = OFFER_REGULAR;
+                            if (quality == TRADE_Bad) officer_opinion = OFFER_NO_GOOD;
+                            if (quality == TRADE_Good) officer_opinion = OFFER_GOOD;
+                        }
+                        if (active_row == 1 && food_needed) {
+                            officer_opinion = OFFER_FOOD_NEEDED;
+                        }
+                        if (active_row >= 3 && (!arms_offered)) {
+                            officer_opinion = OFFER_NO_ARMS;
+                        }
                         draw_manager.draw_text(
-                            "<TODO>",
+                            officer_opinion,
                             Justify::Left,
                             PANEL_X + 4, PANEL_Y + 164,
                             COL_TEXT2);
-
-                        // TODO: Things from PROCbuyinfo
-                        // "The planet needs food" / "Arms are not offered"
                     } else if (clk.x < .5f) {
                         start_trade(false);
                         stage = DoTrade;
@@ -603,7 +631,7 @@ void Trade::adjust_trade(bool inc) {
 
 void Trade::adjust_freight(int row, bool inc) {
     Player *p = exostate.get_active_player();
-    Fleet fleet = p->get_fleet_nonconst();
+    Fleet &fleet = p->get_fleet_nonconst();
     int off = inc ? 1 : -1;
     bool ok = false;
     if (row == 0) ok = p->transfer_min(off) != 0;
@@ -615,7 +643,7 @@ void Trade::adjust_freight(int row, bool inc) {
     if (row == 6) ok = p->transfer_robots(off) != 0;
     if (row == 7) {
         if (inc || fleet.transporters > 0) {
-            fleet.transporters++;
+            fleet.transporters += off;
             ok = true;
         }
     }
