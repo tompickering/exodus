@@ -124,7 +124,7 @@ ExodusMode GalaxyMap::update(float delta) {
             // Otherwise causes an annoying flicker e.g. at the end of Fly...
             return update(0);
         case GM_Idle:
-            return ExodusMode::MODE_Ending;
+            //return ExodusMode::MODE_Ending;
             if (player->get_race() == RACE_Human && !player->intro_seen()) {
                 exostate.set_active_flytarget(gal->get_guild());
                 return ExodusMode::MODE_GalaxyIntro;

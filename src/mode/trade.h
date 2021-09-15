@@ -36,6 +36,8 @@ class Trade : ModeBase {
         int active_row;
         TradeRow rows[8];
         bool sell;
+        int bought;
+        int sold;
 
         int get_cost(TradeQuality, int);
         int get_buy(TradeQuality, int);
@@ -44,6 +46,8 @@ class Trade : ModeBase {
         void open_panel();
         void close_panel();
         void start_trade(bool);
+        void adjust_trade(bool);
+        void adjust_freight(int, bool);
 };
 
 #endif

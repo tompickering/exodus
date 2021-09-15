@@ -19,6 +19,7 @@ static const int cost_data[3][8] = {
 };
 
 // FIXME: This is the orig data - but are the 'bad' values supposed to be better than 'good' and 'fair' in some case?!
+// The only asset that can be profitable from trading alone is plutonium (buy for 2, sell for 3)
 static const int buy_data[3][8] = {
     {4, 1, 3, 2, 3, 4, 7,  8},
     {3, 1, 2, 1, 2, 3, 8, 10},
@@ -36,6 +37,10 @@ enum ID {
     PANEL,
     PANEL_PATTERN,
     TRADE_PANEL,
+    TRADE_STOCK,
+    TRADE_PRICE,
+    TRADE_FREIGHT,
+    TRADE_MC,
     END,
 };
 
@@ -324,6 +329,9 @@ ExodusMode Trade::update(float delta) {
                             Justify::Left,
                             PANEL_X + 4, PANEL_Y + 164,
                             COL_TEXT2);
+
+                        // TODO: Things from PROCbuyinfo
+                        // "The planet needs food" / "Arms are not offered"
                     } else if (clk.x < .5f) {
                         start_trade(false);
                         stage = DoTrade;
@@ -354,16 +362,50 @@ ExodusMode Trade::update(float delta) {
             break;
         case DoTrade:
             {
-                // TODO
+                TradeRow &r = rows[active_row];
+                char val[16];
+                snprintf(val, sizeof(val), "%d", r.stock);
+                draw_manager.draw_text(
+                    id(ID::TRADE_STOCK),
+                    val,
+                    Justify::Left,
+                    PANEL_X + 120, PANEL_Y + 15,
+                    COL_TEXT2);
+                snprintf(val, sizeof(val), "%d", sell ? r.buy : r.cost);
+                draw_manager.draw_text(
+                    id(ID::TRADE_PRICE),
+                    val,
+                    Justify::Left,
+                    PANEL_X + 120, PANEL_Y + 45,
+                    COL_TEXT2);
+
+                snprintf(val, sizeof(val), "%d", get_freight(active_row));
+                draw_manager.draw_text(
+                    id(ID::TRADE_FREIGHT),
+                    val,
+                    Justify::Left,
+                    PANEL_X + 120, PANEL_Y + 105,
+                    COL_TEXT_BAD);
+                snprintf(val, sizeof(val), "%d", p->get_mc());
+                draw_manager.draw_text(
+                    id(ID::TRADE_MC),
+                    val,
+                    Justify::Left,
+                    PANEL_X + 120, PANEL_Y + 135,
+                    COL_TEXT_BAD);
+
                 SpriteClick clk = draw_manager.query_click(id(ID::TRADE_PANEL));
                 if (clk.id) {
                     if (clk.x > .64f) {
                         if (clk.y > .86f) {
                             draw_manager.draw(id(ID::TRADE_PANEL), nullptr);
                             close_panel();
+                            // TODO: trace% if we sold anything illegal etc (end of PROCbuysell)
+                            // TODO: PROClordbuy - allows planet owner to purchase goods
                             stage = Overview;
                         } else if (clk.y > .7f) {
                             bool inc = clk.x > .82f;
+                            adjust_trade(inc);
                         }
                     }
                 }
@@ -462,5 +504,123 @@ void Trade::start_trade(bool _sell) {
         PANEL_X+258, PANEL_Y+10,
         COL_TEXT);
 
-    // TODO
+    draw_manager.draw_text(
+        "Available:",
+        Justify::Left,
+        PANEL_X + 4, PANEL_Y + 15,
+        COL_TEXT);
+    draw_manager.draw_text(
+        "Price:",
+        Justify::Left,
+        PANEL_X + 4, PANEL_Y + 45,
+        COL_TEXT);
+
+    draw_manager.draw_text(
+        "Freight:",
+        Justify::Left,
+        PANEL_X + 4, PANEL_Y + 105,
+        COL_TEXT);
+    draw_manager.draw_text(
+        "MCredits:",
+        Justify::Left,
+        PANEL_X + 4, PANEL_Y + 135,
+        COL_TEXT);
+
+    draw_manager.refresh_sprite_id(id(ID::TRADE_STOCK));
+    draw_manager.refresh_sprite_id(id(ID::TRADE_PRICE));
+    draw_manager.refresh_sprite_id(id(ID::TRADE_FREIGHT));
+    draw_manager.refresh_sprite_id(id(ID::TRADE_MC));
+
+    bought = 0;
+    sold = 0;
+}
+
+void Trade::adjust_trade(bool inc) {
+    Player *p = exostate.get_active_player();
+    TradeRow &r = rows[active_row];
+
+    int price = sell ? r.buy : r.cost;
+    bool transp = (active_row == 7);
+
+    if (sell) {
+        if (!inc && (sold == 0)) {
+            // Can't reduce sold amount past 0
+            return;
+        }
+        if (inc && !get_freight(active_row)) {
+            // We have none to sell
+            return;
+        }
+        if (inc && transp && (p->get_freight_capacity() <= 0)) {
+            // We have no empty transporters to sell
+            return;
+        }
+
+        if (inc) {
+            p->give_mc(price);
+            sold++;
+            r.stock++;
+            adjust_freight(active_row, false);
+        } else {
+            if (p->attempt_spend(price))
+            {
+                r.stock--;
+                sold--;
+                adjust_freight(active_row, true);
+            } else {
+                L.error("We should be able to afford to return goods we just sold");
+            }
+        }
+    } else {
+        if (!inc && (bought == 0)) {
+            // Can't reduce bought amount past 0
+            return;
+        }
+        if (inc && r.stock <= 0) {
+            // There are none to buy
+            return;
+        }
+        if (inc && !transp && (p->get_freight_capacity() <= 0)) {
+            // We don't have room for these goods
+            return;
+        }
+
+        if (inc) {
+            if (p->attempt_spend(price))
+            {
+                r.stock--;
+                bought++;
+                adjust_freight(active_row, true);
+            }
+        } else {
+            p->give_mc(price);
+            r.stock++;
+            bought--;
+            adjust_freight(active_row, false);
+        }
+    }
+}
+
+void Trade::adjust_freight(int row, bool inc) {
+    Player *p = exostate.get_active_player();
+    Fleet fleet = p->get_fleet_nonconst();
+    int off = inc ? 1 : -1;
+    bool ok = false;
+    if (row == 0) ok = p->transfer_min(off) != 0;
+    if (row == 1) ok = p->transfer_fd(off) != 0;
+    if (row == 2) ok = p->transfer_plu(off) != 0;
+    if (row == 3) ok = p->transfer_inf(off) != 0;
+    if (row == 4) ok = p->transfer_gli(off) != 0;
+    if (row == 5) ok = p->transfer_art(off) != 0;
+    if (row == 6) ok = p->transfer_robots(off) != 0;
+    if (row == 7) {
+        if (inc || fleet.transporters > 0) {
+            fleet.transporters++;
+            ok = true;
+        }
+    }
+
+    if (!ok) {
+        L.fatal("Could not adjust freight");
+    }
 }
