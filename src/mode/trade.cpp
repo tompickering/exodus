@@ -5,8 +5,8 @@
 #define ACTIVE_H 30
 #define ACTIVE_W 500
 
-static const int PANEL_W = 288;
-static const int PANEL_H = 190;
+static const int PANEL_W = 328;
+static const int PANEL_H = 200;
 static const int PANEL_X = RES_X/2 - PANEL_W/2;
 static const int PANEL_Y = 150;
 
@@ -35,6 +35,7 @@ enum ID {
     BUTTON_BAR,
     PANEL,
     PANEL_PATTERN,
+    TRADE_PANEL,
     END,
 };
 
@@ -261,7 +262,7 @@ ExodusMode Trade::update(float delta) {
                         open_panel();
                         stage = Info;
                         TradeRow &r = rows[active_row];
-                        draw_manager.draw(r.icon, {PANEL_X+215, PANEL_Y+80, .5f, .5f, 1, 1});
+                        draw_manager.draw(r.icon, {PANEL_X+235, PANEL_Y+80, .5f, .5f, 1, 1});
                         draw_manager.draw_text(
                             r.name,
                             Justify::Left,
@@ -324,11 +325,11 @@ ExodusMode Trade::update(float delta) {
                             PANEL_X + 4, PANEL_Y + 164,
                             COL_TEXT2);
                     } else if (clk.x < .5f) {
-                        sell = false;
-                        // TODO: Open trade panel
+                        start_trade(false);
+                        stage = DoTrade;
                     } else if (clk.x < .75f) {
-                        sell = true;
-                        // TODO: Open trade panel
+                        start_trade(true);
+                        stage = DoTrade;
                     } else {
                         return ExodusMode::MODE_Pop;
                     }
@@ -354,7 +355,18 @@ ExodusMode Trade::update(float delta) {
         case DoTrade:
             {
                 // TODO
-                stage = Overview;
+                SpriteClick clk = draw_manager.query_click(id(ID::TRADE_PANEL));
+                if (clk.id) {
+                    if (clk.x > .64f) {
+                        if (clk.y > .86f) {
+                            draw_manager.draw(id(ID::TRADE_PANEL), nullptr);
+                            close_panel();
+                            stage = Overview;
+                        } else if (clk.y > .7f) {
+                            bool inc = clk.x > .82f;
+                        }
+                    }
+                }
             }
             break;
     }
@@ -430,4 +442,25 @@ void Trade::open_panel() {
 void Trade::close_panel() {
     draw_manager.draw(id(ID::PANEL_PATTERN), nullptr);
     draw_manager.draw(id(ID::PANEL), nullptr);
+}
+
+void Trade::start_trade(bool _sell) {
+    sell = _sell;
+
+    TradeRow &r = rows[active_row];
+
+    open_panel();
+    draw_manager.draw(
+        id(ID::TRADE_PANEL),
+        IMG_TD1_TRADEBACK,
+        {PANEL_X, PANEL_Y, 0, 0, 1, 1});
+    draw_manager.draw(r.icon, {PANEL_X+264, PANEL_Y+84, .5f, .5f, 1, 1});
+
+    draw_manager.draw_text(
+        sell ? "Sell" : "Buy",
+        Justify::Centre,
+        PANEL_X+258, PANEL_Y+10,
+        COL_TEXT);
+
+    // TODO
 }

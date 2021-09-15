@@ -43,6 +43,7 @@ class Trade : ModeBase {
         void draw_stock_freight();
         void open_panel();
         void close_panel();
+        void start_trade(bool);
 };
 
 #endif
