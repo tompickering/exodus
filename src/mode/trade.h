@@ -8,10 +8,10 @@
 struct TradeRow {
     const char* img;
     const char* name;
+    const char* icon;
     int cost;
     int buy;
     int stock;
-    int freight;
     SprID id_stock;
     SprID id_freight;
     SprID id_unavailable;
@@ -39,7 +39,10 @@ class Trade : ModeBase {
 
         int get_cost(TradeQuality, int);
         int get_buy(TradeQuality, int);
+        int get_freight(int);
         void draw_stock_freight();
+        void open_panel();
+        void close_panel();
 };
 
 #endif
