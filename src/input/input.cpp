@@ -108,10 +108,8 @@ void InputManager::backspace() {
 }
 
 void InputManager::enable_repeating_clicks(bool enable) {
+    clear_click_held_state();
     repeating_clicks = enable;
-    if (!repeating_clicks) {
-        clear_click_held_state();
-    }
 }
 
 void InputManager::clear_click_held_state() {
