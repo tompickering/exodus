@@ -968,6 +968,7 @@ ExodusMode LunarBattle::update(float delta) {
                             L.error("Unit has no sprite ID on refresh");
                         }
                         draw_manager.refresh_sprite_id(units[i].spr_id);
+                        draw_manager.refresh_sprite_id(units[i].fire_spr_id);
                     }
                 }
                 // But leave the cursor and explosion on top
@@ -1624,9 +1625,10 @@ void LunarBattle::draw_units() {
                 if (fmod(move_interp, 0.4) < 0.2) spr = units[i].walk;
             }
 
+            bool draw_fire = false;
             if (&units[i] == active_unit) {
                 if (shot_interp > 0.5f) {
-                    spr = units[i].fire;
+                    draw_fire = true;
                 }
             }
 
@@ -1634,18 +1636,28 @@ void LunarBattle::draw_units() {
                 spr = units[i].dead;
             }
 
+            int dx = draw_x;
+            float anchor_x = 0;
             if (units[i].defending) {
+                dx = draw_x + BLK_SZ;
+                anchor_x = 1;
+            }
+
+            draw_manager.draw(
+                units[i].spr_id,
+                spr,
+                {dx, draw_y,
+                 anchor_x, 0, 1, 1});
+
+            // Draw the firing sprite on top of the idle sprite
+            if (draw_fire) {
                 draw_manager.draw(
-                    units[i].spr_id,
-                    spr,
-                    {draw_x + BLK_SZ, draw_y,
-                     1, 0, 1, 1});
+                    units[i].fire_spr_id,
+                    units[i].fire,
+                    {dx, draw_y,
+                     anchor_x, 0, 1, 1});
             } else {
-                draw_manager.draw(
-                    units[i].spr_id,
-                    spr,
-                    {draw_x, draw_y,
-                     0, 0, 1, 1});
+                draw_manager.draw(units[i].fire_spr_id, nullptr);
             }
 
             if (human_turn && stage == LB_Fire && active_unit == &units[i]) {
@@ -2660,6 +2672,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
     }
 
     spr_id = draw_manager.new_sprite_id();
+    fire_spr_id = draw_manager.new_sprite_id();
     spr_id_set = true;
 
     return *this;
@@ -2677,6 +2690,7 @@ BattleUnit& BattleUnit::init(int _x, int _y, int _hp, bool _def) {
 
 void BattleUnit::release_spr_id() {
     if (spr_id_set) {
+        draw_manager.release_sprite_id(fire_spr_id);
         draw_manager.release_sprite_id(spr_id);
         spr_id_set = false;
     }

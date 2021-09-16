@@ -81,6 +81,7 @@ class BattleUnit {
         const char* move_sfx;
         const char* shoot_sfx;
         SprID spr_id;
+        SprID fire_spr_id;
         bool spr_id_set;
 
         static bool use_alt_aliens;
