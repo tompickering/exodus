@@ -10,6 +10,7 @@ InputManager::InputManager() {
     click_pos_r.x = -1;
     click_pos_r.y = -1;
     text[INPUT_MAX_TEXT] = '\0';
+    click_held = false;
 }
 
 bool InputManager::consume(Input input) {
@@ -87,4 +88,12 @@ void InputManager::backspace() {
     }
 
     if (i > 0) text[i-1] = '\0';
+}
+
+bool InputManager::is_click_held() {
+    return click_held;
+}
+
+void InputManager::clear_click_held_state() {
+    click_held = false;
 }

@@ -59,6 +59,12 @@ bool InputManagerSDL::update() {
             }
         } else if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT) {
             SDL_GetMouseState(&click_pos.x, &click_pos.y);
+            click_held = true;
+        } else if (e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT) {
+            SDL_GetMouseState(&click_pos.x, &click_pos.y);
+            click_held = false;
+        } else if (e.type == SDL_MOUSEMOTION) {
+            click_held = false;
         } else if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_RIGHT) {
             SDL_GetMouseState(&click_pos_r.x, &click_pos_r.y);
         } else if (e.type == SDL_TEXTINPUT) {

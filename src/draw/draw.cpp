@@ -22,9 +22,18 @@ DrawManager::DrawManager() {
     clicked_this_frame = false;
     prev_mouseover_selectable_text_id = ID_NONE;
     mouseover_selectable_text_id = ID_NONE;
+    click_held_time = 0;
+    last_click_pos = {-1, -1};
+    repeating_clicks = false;
 }
 
-void DrawManager::update(float delta, MousePos new_mouse_pos, MousePos new_click_pos, MousePos new_click_pos_r) {
+void DrawManager::update(float delta, MousePos new_mouse_pos, MousePos new_click_pos, MousePos new_click_pos_r, bool click_held) {
+    if (click_held) {
+        click_held_time += delta;
+    } else {
+        click_held_time = 0;
+    }
+
     if (pixelswap_active()) {
         pixelswap_time += delta;
     }
@@ -41,10 +50,21 @@ void DrawManager::update(float delta, MousePos new_mouse_pos, MousePos new_click
     mouse_pos = new_mouse_pos;
     click_pos = new_click_pos;
     click_pos_r = new_click_pos_r;
+
     clicked_this_frame = (click_pos.x >= 0 && click_pos.y >= 0);
+
+    if (repeating_clicks) {
+        // Holding mouse button simulates clicks
+        if (!clicked_this_frame && click_held_time > CLICK_REPEAT_DELAY) {
+            click_pos = last_click_pos;
+            clicked_this_frame = true;
+        }
+    }
+
     if (clicked_this_frame) {
         float up_x, up_y;
         get_upscale(up_x, up_y);
+        last_click_pos = click_pos;
         L.verb("Click: %d, %d", (int)((float)click_pos.x / up_x), (int)((float)click_pos.y / up_y));
     }
     if (draw_cursor && clicked_this_frame) {
@@ -347,4 +367,8 @@ void DrawManager::adjust_selectable_text_col(SprID id, RGB& rgb) {
     if (id && id == mouseover_selectable_text_id) {
         rgb = text_pulse_col(mouseover_selectable_text_time);
     }
+}
+
+void DrawManager::enable_repeating_clicks(bool enable) {
+    repeating_clicks = enable;
 }

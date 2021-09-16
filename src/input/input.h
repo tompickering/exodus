@@ -47,6 +47,8 @@ class InputManager {
         virtual void stop_text_input() = 0;
         void set_input_text(const char*);
         void backspace();
+        bool is_click_held();
+        void clear_click_held_state();
     protected:
         bool space;
         bool escape;
@@ -57,6 +59,7 @@ class InputManager {
         virtual bool update() = 0;
         uint32_t input[1 + K_END / 32];
         char text[INPUT_MAX_TEXT + 1];
+        bool click_held;
     private:
         bool _read(Input input, bool reset);
 };
