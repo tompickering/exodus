@@ -77,12 +77,14 @@ class BattleUnit {
         const char* idle;
         const char* walk;
         const char* fire;
+        const char* dying;
         const char* dead;
         const char* move_sfx;
         const char* shoot_sfx;
         SprID spr_id;
         SprID fire_spr_id;
         bool spr_id_set;
+        float dying_timer;
 
         static bool use_alt_aliens;
 };

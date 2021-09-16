@@ -33,6 +33,8 @@ const char* STR_Mine   = "Mine";
 static const int LUNAR_BASE_GUN_HP =  6;
 static const int LUNAR_BASE_CTL_HP = 10;
 
+static const float DYING_TIME = .1f;
+
 enum ID {
     PANEL,
     PANEL_PATTERN,
@@ -300,6 +302,15 @@ ExodusMode LunarBattle::update(float delta) {
         human_turn = defender->is_human();
     } else {
         human_turn = (bool)(aggressor && aggressor->is_human());
+    }
+
+    for (int i = 0; i < BATTLE_UNITS_MAX; ++i) {
+        if (units[i].dying_timer > 0) {
+            units[i].dying_timer -= delta;
+            if (units[i].dying_timer < 0) {
+                units[i].dying_timer = 0;
+            }
+        }
     }
 
     switch (stage) {
@@ -957,10 +968,14 @@ ExodusMode LunarBattle::update(float delta) {
                 break;
             }
 
-            // Ensure that dead units are at the bottom of the draw stack,
-            // but this one is moved to the top of the dead pile.
-            // (Move this back to the top, then all live ones)
             if (target_unit->hp <= 0) {
+                L.info("Unit dead");
+
+                target_unit->dying_timer = DYING_TIME;
+
+                // Ensure that dead units are at the bottom of the draw stack,
+                // but this one is moved to the top of the dead pile.
+                // (Move this back to the top, then all live ones)
                 draw_manager.refresh_sprite_id(target_unit->spr_id);
                 for (int i = 0; i < n_units; ++i) {
                     if (units[i].hp > 0) {
@@ -1634,6 +1649,9 @@ void LunarBattle::draw_units() {
 
             if (units[i].hp <= 0) {
                 spr = units[i].dead;
+                if ((units[i].dying_timer) > 0 && units[i].dying) {
+                    spr = units[i].dying;
+                }
             }
 
             int dx = draw_x;
@@ -2510,6 +2528,7 @@ BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     idle = nullptr;
     walk = nullptr;
     fire = nullptr;
+    dying = nullptr;
     dead = nullptr;
     move_sfx = nullptr;
     shoot_sfx = nullptr;
@@ -2517,6 +2536,7 @@ BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     turn_taken = false;
     teleported = false;
     spr_id_set = false;
+    dying_timer = 0;
 }
 
 BattleUnit& BattleUnit::init(int _x, int _y) {
@@ -2528,6 +2548,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
 
     turn_taken = false;
     teleported = false;
+    dying_timer = 0;
 
     switch (type) {
         case UNIT_Inf:
@@ -2556,18 +2577,19 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             move0_sfx = SFX_GLIDE_LOW;
             move1_sfx = SFX_GLIDE_MED;
             move2_sfx = SFX_GLIDE_HIGH;
-            // TODO: Glider crashing sprite
             if (defending) {
                 // Blue
                 idle = IMG_GF4_5;
                 walk = IMG_GF4_5;
                 fire = IMG_GF4_17;
+                dying = IMG_GF4_27;
                 dead = IMG_GF4_11;
             } else {
                 // Green
                 idle = IMG_GF4_2;
                 walk = IMG_GF4_2;
                 fire = IMG_GF4_14;
+                dying = IMG_GF4_26;
                 dead = IMG_GF4_8;
             }
             break;
