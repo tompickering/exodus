@@ -5,6 +5,8 @@
 
 #include "shared.h"
 
+#define CLICK_REPEAT_DELAY .2f
+
 enum Input {
     K_Space,
     K_Escape,
@@ -47,7 +49,7 @@ class InputManager {
         virtual void stop_text_input() = 0;
         void set_input_text(const char*);
         void backspace();
-        bool is_click_held();
+        void enable_repeating_clicks(bool);
         void clear_click_held_state();
     protected:
         bool space;
@@ -55,13 +57,16 @@ class InputManager {
         bool enter;
         MousePos mouse_pos;
         MousePos click_pos;
+        MousePos last_click_pos;
         MousePos click_pos_r;
-        virtual bool update() = 0;
+        virtual bool update(float);
         uint32_t input[1 + K_END / 32];
         char text[INPUT_MAX_TEXT + 1];
         bool click_held;
+        float click_held_time;
     private:
         bool _read(Input input, bool reset);
+        bool repeating_clicks;
 };
 
 #ifdef SDL

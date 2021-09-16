@@ -30,7 +30,11 @@ int sdl_input_key[] = {
     SDLK_F12,
 };
 
-bool InputManagerSDL::update() {
+bool InputManagerSDL::update(float delta) {
+    if (!InputManager::update(delta)) {
+        return false;
+    }
+
     SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
 
     SDL_Event e;
@@ -59,12 +63,13 @@ bool InputManagerSDL::update() {
             }
         } else if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT) {
             SDL_GetMouseState(&click_pos.x, &click_pos.y);
+            last_click_pos = click_pos;
             click_held = true;
         } else if (e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT) {
             SDL_GetMouseState(&click_pos.x, &click_pos.y);
-            click_held = false;
+            clear_click_held_state();
         } else if (e.type == SDL_MOUSEMOTION) {
-            click_held = false;
+            clear_click_held_state();
         } else if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_RIGHT) {
             SDL_GetMouseState(&click_pos_r.x, &click_pos_r.y);
         } else if (e.type == SDL_TEXTINPUT) {

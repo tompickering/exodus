@@ -5,7 +5,7 @@
 
 class InputManagerSDL : public InputManager {
     public:
-        virtual bool update() override;
+        virtual bool update(float) override;
         virtual unsigned int read_numbers() override;
         virtual bool is_num_held(unsigned char) override;
         virtual void start_text_input() override;

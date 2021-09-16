@@ -13,6 +13,23 @@ InputManager::InputManager() {
     click_held = false;
 }
 
+bool InputManager::update(float delta) {
+    if (click_held) {
+        click_held_time += delta;
+    } else {
+        click_held_time = 0;
+    }
+
+    if (repeating_clicks) {
+        // Holding mouse button simulates clicks
+        if (click_held_time > CLICK_REPEAT_DELAY) {
+            click_pos = last_click_pos;
+        }
+    }
+
+    return true;
+}
+
 bool InputManager::consume(Input input) {
     return _read(input, true);
 }
@@ -90,10 +107,14 @@ void InputManager::backspace() {
     if (i > 0) text[i-1] = '\0';
 }
 
-bool InputManager::is_click_held() {
-    return click_held;
+void InputManager::enable_repeating_clicks(bool enable) {
+    repeating_clicks = enable;
+    if (!repeating_clicks) {
+        clear_click_held_state();
+    }
 }
 
 void InputManager::clear_click_held_state() {
     click_held = false;
+    last_click_pos = {-1, -1};
 }

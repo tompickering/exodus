@@ -229,12 +229,11 @@ int Exodus::run(int argc, char** argv) {
          * again).
          */
         if (mode_updated_since_enter) {
-            bool click_held = input_manager.is_click_held();
-            draw_manager.update(delta_time, mouse_pos, click_pos, click_pos_r, click_held);
+            draw_manager.update(delta_time, mouse_pos, click_pos, click_pos_r);
             game_timer.sleep_until(frame_start + MIN_FRAME_DELTA);
         }
 
-        if (!input_manager.update()) {
+        if (!input_manager.update(delta_time)) {
             running = false;
         }
 
@@ -299,9 +298,8 @@ void Exodus::set_mode(ExodusMode new_mode) {
     current_mode = new_mode;
     // Ensure that input state is reset before entering a new mode
     draw_manager.consume_click();
-    input_manager.clear_click_held_state();
-    // Repeating clicks disableed by default
-    draw_manager.enable_repeating_clicks(false);
+    // Repeating clicks disabled by default
+    input_manager.enable_repeating_clicks(false);
     draw_manager.clear_sprite_ids();
     mode->enter();
     mode_updated_since_enter = false;

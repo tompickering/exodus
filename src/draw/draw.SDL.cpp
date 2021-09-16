@@ -159,11 +159,11 @@ void DrawManagerSDL::load_resources() {
     }
 }
 
-void DrawManagerSDL::update(float delta, MousePos mouse_pos, MousePos new_click_pos, MousePos new_click_pos_r, bool click_held) {
+void DrawManagerSDL::update(float delta, MousePos mouse_pos, MousePos new_click_pos, MousePos new_click_pos_r) {
     SDL_Rect ca;
     SDL_Rect ca0;
 
-    DrawManager::update(delta, mouse_pos, new_click_pos, new_click_pos_r, click_held);
+    DrawManager::update(delta, mouse_pos, new_click_pos, new_click_pos_r);
     if (pixelswap_active()) {
         pixelswap_update();
     }

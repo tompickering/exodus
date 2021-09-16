@@ -15,8 +15,6 @@
 
 #define PIXELSWAP_STEP_TIME 0.03
 
-#define CLICK_REPEAT_DELAY .5f
-
 using std::map;
 using std::vector;
 
@@ -128,7 +126,7 @@ class DrawManager {
         DrawManager();
         virtual bool init() = 0;
         virtual void load_resources() = 0;
-        virtual void update(float, MousePos, MousePos, MousePos, bool);
+        virtual void update(float, MousePos, MousePos, MousePos);
         virtual void save_background() = 0;
         virtual void save_background(DrawArea) = 0;
         virtual void restore_background(DrawArea) = 0;
@@ -194,7 +192,6 @@ class DrawManager {
         virtual void get_upscale(float&, float&);
         virtual void set_selectable(SprID);
         virtual void unset_selectable(SprID);
-        virtual void enable_repeating_clicks(bool);
     protected:
         virtual SpriteClick query_click(SprID, bool);
         map<const char*, void*> sprite_data;
@@ -215,7 +212,6 @@ class DrawManager {
     private:
         MousePos mouse_pos;
         MousePos click_pos;
-        MousePos last_click_pos;
         MousePos click_pos_r;
         SpriteClick sprite_click;
         SprID prev_mouseover_selectable_text_id;
@@ -223,8 +219,6 @@ class DrawManager {
         float mouseover_selectable_text_time;
         vector<SprID> selectable_text_ids;
         virtual RGB text_pulse_col(float);
-        float click_held_time;
-        bool repeating_clicks;
 };
 
 #ifdef SDL
