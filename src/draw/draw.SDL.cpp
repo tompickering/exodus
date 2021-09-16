@@ -245,7 +245,7 @@ void DrawManagerSDL::update(float delta, MousePos mouse_pos, MousePos new_click_
 }
 
 void DrawManagerSDL::pixelswap_update() {
-    if (pixelswap_time > 0.01) {
+    if (pixelswap_time > PIXELSWAP_STEP_TIME) {
         if (!pixelswap_stage || !--pixelswap_stage) {
             return;
         }

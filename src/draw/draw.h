@@ -13,6 +13,8 @@
 #define RES_X 640
 #define RES_Y 512
 
+#define PIXELSWAP_STEP_TIME 0.03
+
 using std::map;
 using std::vector;
 
