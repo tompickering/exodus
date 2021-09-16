@@ -1689,6 +1689,7 @@ void LunarBattle::update_cursor() {
     if (human_turn && unit_moving) {
         cursor_x = -1;
         cursor_y = -1;
+        draw_manager.draw(id(ID::CURSOR), nullptr);
         return;
     }
 
