@@ -227,6 +227,8 @@ void Trade::enter() {
         id(ID::BUTTON_BAR),
         IMG_BR2_EXPORT,
         {20, 460, 0, 0, 1, 1});
+
+    input_manager.enable_repeating_clicks(true);
 }
 
 void Trade::exit() {
