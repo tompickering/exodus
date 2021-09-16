@@ -5,8 +5,6 @@
 
 #include "shared.h"
 
-#define CLICK_REPEAT_DELAY .2f
-
 enum Input {
     K_Space,
     K_Escape,
@@ -64,6 +62,7 @@ class InputManager {
         char text[INPUT_MAX_TEXT + 1];
         bool click_held;
         float click_held_time;
+        float click_repeat_timeout;
     private:
         bool _read(Input input, bool reset);
         bool repeating_clicks;

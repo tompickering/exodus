@@ -2,6 +2,9 @@
 
 #include <cstring>
 
+#define CLICK_REPEAT_DELAY .4f
+#define CLICK_REPEAT_INTERVAL .05f
+
 InputManager::InputManager() {
     mouse_pos.x = -1;
     mouse_pos.y = -1;
@@ -10,7 +13,7 @@ InputManager::InputManager() {
     click_pos_r.x = -1;
     click_pos_r.y = -1;
     text[INPUT_MAX_TEXT] = '\0';
-    click_held = false;
+    enable_repeating_clicks(false);
 }
 
 bool InputManager::update(float delta) {
@@ -18,12 +21,18 @@ bool InputManager::update(float delta) {
         click_held_time += delta;
     } else {
         click_held_time = 0;
+        click_repeat_timeout = 0;
     }
 
     if (repeating_clicks) {
         // Holding mouse button simulates clicks
         if (click_held_time > CLICK_REPEAT_DELAY) {
-            click_pos = last_click_pos;
+            if (click_repeat_timeout <= 0) {
+                click_pos = last_click_pos;
+                click_repeat_timeout = CLICK_REPEAT_INTERVAL;
+            } else {
+                click_repeat_timeout -= delta;
+            }
         }
     }
 
@@ -110,9 +119,12 @@ void InputManager::backspace() {
 void InputManager::enable_repeating_clicks(bool enable) {
     clear_click_held_state();
     repeating_clicks = enable;
+    L.verb("Repeating clicks %sABLED", repeating_clicks?"EN":"DIS");
 }
 
 void InputManager::clear_click_held_state() {
     click_held = false;
     last_click_pos = {-1, -1};
+    click_held_time = 0;
+    click_repeat_timeout = 0;
 }

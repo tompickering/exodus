@@ -66,7 +66,6 @@ bool InputManagerSDL::update(float delta) {
             last_click_pos = click_pos;
             click_held = true;
         } else if (e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT) {
-            SDL_GetMouseState(&click_pos.x, &click_pos.y);
             clear_click_held_state();
         } else if (e.type == SDL_MOUSEMOTION) {
             clear_click_held_state();
