@@ -14,12 +14,16 @@ class GuildHQ : ModeBase {
         enum Stage {
             HQ_Idle,
             HQ_Guildbot,
+            HQ_ClaimGuildmaster,
+            HQ_GuildmasterClaimed,
+            HQ_FadeToEnding,
         };
 
         Stage stage;
         bool guildbot_active;
         float guildbot_interp;
         float eyes_loop;
+        float ending_delay;
 };
 
 #endif

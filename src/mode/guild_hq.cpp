@@ -13,6 +13,8 @@ static const int PANEL_Y = 40;
 static const int PANEL_W = 332;
 static const int PANEL_H = 318;
 
+static const float ENDING_DELAY = 2.f;
+
 enum ID {
     BOT,
     EYES,
@@ -40,6 +42,7 @@ void GuildHQ::enter() {
     guildbot_active = false;
     guildbot_interp = 0.f;
     eyes_loop = 0;
+    ending_delay = 0;
     stage = HQ_Idle;
     draw_manager.set_selectable(id(ID::BOT_MISSIONINFO));
     draw_manager.set_selectable(id(ID::BOT_SGJOIN));
@@ -76,7 +79,7 @@ ExodusMode GuildHQ::update(float delta) {
             {0, 192, 0, 0, 1, 1});
     } else {
         draw_manager.draw(id(ID::BOT), nullptr);
-        if (eyes_loop > 5.4) {
+        if ((stage != HQ_GuildmasterClaimed) && (stage != HQ_FadeToEnding) &&  eyes_loop > 5.4) {
             draw_manager.draw(id(ID::EYES),     IMG_SG2_EYES,  {185, 234, 0.5, 0.5, 1, 1});
             draw_manager.draw(id(ID::EYES_REF), IMG_SG2_EYES2, {182, 448, 0.5, 0.5, 1, 1});
         } else {
@@ -106,6 +109,87 @@ ExodusMode GuildHQ::update(float delta) {
                     Justify::Left,
                     10, RES_Y - 30,
                     COL_TEXT2);
+                if (click) {
+                    draw_manager.fill(
+                        id(ID::PANEL),
+                        {PANEL_X - BORDER, PANEL_Y - BORDER,
+                         PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+                        COL_BORDERS);
+                    draw_manager.fill_pattern(
+                        id(ID::PANEL_PATTERN),
+                        {PANEL_X, PANEL_Y,
+                         PANEL_W, PANEL_H});
+
+                    draw_manager.draw_text(
+                        "Become Guildmaster",
+                        Justify::Left,
+                        PANEL_X + 4, PANEL_Y + 4,
+                        COL_TEXT2);
+
+                    // TODO: Check mission completion (exostate function)
+                    bool worthy = false;
+                    bool member = player->is_guild_member();
+                    // TODO: Check whether we have outstanding violations
+                    bool punish = false;
+                    int line = 60;
+
+                    stage = HQ_ClaimGuildmaster;
+
+                    if (worthy) {
+                        bool claim = true;
+                        draw_manager.draw_text(
+                            "You are worthy.",
+                            Justify::Left,
+                            PANEL_X + 4, PANEL_Y + 4 + line,
+                            COL_TEXT);
+                        line += 40;
+                        if (!member) {
+                            claim = false;
+                            draw_manager.draw_text(
+                                "But you are no Guild member.",
+                                Justify::Left,
+                                PANEL_X + 4, PANEL_Y + 4 + line,
+                                COL_TEXT);
+                            line += 40;
+                        }
+                        if (punish) {
+                            claim = false;
+                            draw_manager.draw_text(
+                                "Please watch your reputation!",
+                                Justify::Left,
+                                PANEL_X + 4, PANEL_Y + 4 + line,
+                                COL_TEXT);
+                        }
+
+                        // TODO: "But you have cheated" / chcount - sets 'claim' false
+
+                        if (claim) {
+                            stage = HQ_GuildmasterClaimed;
+                        }
+                    } else {
+                        draw_manager.draw_text(
+                            "You are not worthy yet.",
+                            Justify::Left,
+                            PANEL_X + 4, PANEL_Y + 4 + line,
+                            COL_TEXT);
+                        line += 40;
+                        if (!member) {
+                            draw_manager.draw_text(
+                                "And you are no Guild member.",
+                                Justify::Left,
+                                PANEL_X + 4, PANEL_Y + 4 + line,
+                                COL_TEXT);
+                            line += 40;
+                        }
+                        if (punish) {
+                            draw_manager.draw_text(
+                                "Please watch your reputation!",
+                                Justify::Left,
+                                PANEL_X + 4, PANEL_Y + 4 + line,
+                                COL_TEXT);
+                        }
+                    }
+                }
             } else if (draw_manager.mouse_in_area(AREA_EXIT)) {
                 draw_manager.draw_text(
                     id(ID::TEXT),
@@ -191,6 +275,26 @@ ExodusMode GuildHQ::update(float delta) {
                 stage = HQ_Idle;
             }
 
+            break;
+        case HQ_ClaimGuildmaster:
+            if (draw_manager.clicked()) {
+                draw_manager.draw(id(ID::PANEL_PATTERN), nullptr);
+                draw_manager.draw(id(ID::PANEL), nullptr);
+                stage = HQ_Idle;
+            }
+            break;
+        case HQ_GuildmasterClaimed:
+            if (ending_delay > ENDING_DELAY) {
+                draw_manager.fade_black(1.2f, 24);
+                audio_manager.fade_out(1000);
+                stage = HQ_FadeToEnding;
+            }
+            ending_delay += delta;
+            break;
+        case HQ_FadeToEnding:
+            if (!draw_manager.fade_active()) {
+                return ExodusMode::MODE_Ending;
+            }
             break;
     }
 
