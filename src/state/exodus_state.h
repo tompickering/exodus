@@ -77,6 +77,7 @@ class ExodusState {
         int get_orig_month();
         void advance_month();
         bool final_month();
+        bool mission_complete();
         Player* get_active_player();
         int get_active_player_idx();
         Player* set_active_player(int);

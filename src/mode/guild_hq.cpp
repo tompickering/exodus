@@ -126,8 +126,7 @@ ExodusMode GuildHQ::update(float delta) {
                         PANEL_X + 4, PANEL_Y + 4,
                         COL_TEXT2);
 
-                    // TODO: Check mission completion (exostate function)
-                    bool worthy = false;
+                    bool worthy = exostate.mission_complete();
                     bool member = player->is_guild_member();
                     // TODO: Check whether we have outstanding violations
                     bool punish = false;

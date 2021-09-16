@@ -319,6 +319,73 @@ bool ExodusState::final_month() {
     return false;
 }
 
+bool ExodusState::mission_complete() {
+    Player *player = get_active_player();
+    int player_idx = get_player_idx(player);
+
+    Galaxy *gal = get_galaxy();
+    int n_stars;
+    Star *stars = gal->get_stars(n_stars);
+
+    switch (aim) {
+        case AIM_Might:
+            {
+                for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
+                    Star *s = &stars[star_idx];
+                    for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
+                        Planet *p = s->get_planet(planet_idx);
+                        if (p && p->exists() && p->is_owned()) {
+                            if (p->get_owner() != player_idx) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            break;
+        case AIM_Money:
+            {
+                // FIXME: We should really exclude army funding here
+                if (get_total_net_income(player_idx) < 1000) {
+                    return false;
+                }
+            }
+            break;
+        case AIM_Civilization:
+            {
+                // TODO: Actually let players know what the requirements are!
+
+                if (!player->has_all_inventions()) {
+                    return false;
+                }
+
+                bool artificial_owned = false;
+                int n_planets = 0;
+
+                for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
+                    Star *s = &stars[star_idx];
+                    for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
+                        Planet *p = s->get_planet(planet_idx);
+                        if (p && p->exists() && p->is_owned()) {
+                            if (p->get_owner() == player_idx) {
+                                n_planets++;
+                                if (p->get_class() == Artificial) {
+                                    artificial_owned = true;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if ((n_planets < 30) || (!artificial_owned)) {
+                    return false;
+                }
+            }
+            break;
+    }
+    return true;
+}
+
 Player* ExodusState::get_active_player() {
     return get_player((int)active_player);
 }
