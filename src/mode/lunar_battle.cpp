@@ -1100,9 +1100,16 @@ ExodusMode LunarBattle::update(float delta) {
             break;
         case LB_Won:
             L.debug("BATTLE WINNER: %s", rpt.aggressor_won ? "AGG" : "DEF");
-            // TODO: Display result, music etc until click
             ephstate.set_ephemeral_state(EPH_LunarBattleReport);
-            return ephstate.get_appropriate_mode();
+            batrpt_draw();
+            stage = LB_CloseOnClick;
+            return ExodusMode::MODE_None;
+        case LB_CloseOnClick:
+            if (draw_manager.clicked()) {
+                return ephstate.get_appropriate_mode();
+            }
+            // Skip drawing / cursor updating etc
+            return ExodusMode::MODE_None;
     }
 
     update_panel();

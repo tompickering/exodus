@@ -771,21 +771,8 @@ ExodusMode LunarBattlePrep::update(float delta) {
         case LBP_AutoBattleConclude:
             if (!stage_started) {
                 stage_started = true;
-
                 draw_manager.show_cursor(true);
-                LunarBattleReport &rpt = ephstate.lunar_battle_report;
-                bool won = (defending ^ rpt.aggressor_won);
-
-                audio_manager.target_music(mpart2mus(won ? 5 : 9));
-
-                draw_panel();
-
-                // TODO
-                draw_manager.draw_text(
-                    won ? "WON" : "LOST",
-                    Justify::Left,
-                    PANEL_X + 4, PANEL_Y + 4,
-                    COL_TEXT);
+                batrpt_draw();
                 break;
             }
 

@@ -3,6 +3,7 @@
 
 #include "mode_base.h"
 #include "mixins/comm_panel_drawer.h"
+#include "mixins/battle_report.h"
 
 #include "draw/draw.h"
 
@@ -116,7 +117,7 @@ class Teleporter {
         SprID spr_id;
 };
 
-class LunarBattle : ModeBase, CommPanelDrawer {
+class LunarBattle : ModeBase, CommPanelDrawer, BattleReport {
     public:
         LunarBattle();
         virtual void enter() override;
@@ -139,6 +140,7 @@ class LunarBattle : ModeBase, CommPanelDrawer {
             LB_Damage,
             LB_CheckWon,
             LB_Won,
+            LB_CloseOnClick,
         };
 
         Stage stage;

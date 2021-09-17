@@ -7,9 +7,11 @@
 
 #include "state/exodus_state.h"
 
+#include "mixins/battle_report.h"
+
 extern ExodusState exostate;
 
-class LunarBattlePrep : ModeBase {
+class LunarBattlePrep : ModeBase, BattleReport {
     public:
         LunarBattlePrep();
         virtual void enter() override;
