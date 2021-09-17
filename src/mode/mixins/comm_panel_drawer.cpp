@@ -1849,12 +1849,20 @@ void CommPanelDrawer::comm_process_responses() {
                     break;
                 case 1:
                     comm_ctx.alliance_prob = 3;
-                    // TODO: Adjustments to prob
                     comm_send(DIA_S_OfferAllianceResponse);
                     break;
                 case 2:
                     comm_ctx.alliance_prob = 5;
-                    // TODO: Adjustments to prob
+                    {
+                        int player_ttl = (int)comm_player->get_guild_title();
+                        int other_ttl = (int)comm_other->get_guild_title();
+                        if (player_ttl > other_ttl) {
+                            comm_ctx.alliance_prob = 1;
+                        }
+                        if (comm_other->get_flag(1) == AI_Hi) {
+                            comm_ctx.alliance_prob = 2;
+                        }
+                    }
                     comm_send(DIA_S_OfferAllianceResponse);
                     break;
             }
