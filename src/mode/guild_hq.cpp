@@ -250,6 +250,30 @@ ExodusMode GuildHQ::update(float delta) {
                 PANEL_X + 4, PANEL_Y + 220,
                 COL_TEXT);
 
+            if (draw_manager.query_click(id(ID::BOT_SGQUIT)).id) {
+                clear_bot_options();
+                draw_panel();
+                draw_manager.draw_text(
+                    "Quit membership",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 4,
+                    COL_TEXT2);
+                // Orig was "Are you willing to leave..." but that seemed a bit strange
+                draw_manager.draw_text(
+                    "Do you intend to leave the",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 44,
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    "Space Guild?",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 64,
+                    COL_TEXT);
+
+                draw_choice();
+                stage = HQ_GuildbotQuitMembership;
+            }
+
             if (draw_manager.query_click(id(ID::BOT_SGJOIN)).id) {
                 clear_bot_options();
                 draw_panel();
@@ -277,8 +301,8 @@ ExodusMode GuildHQ::update(float delta) {
                 const char* text0 = "Guild Membership costs 5000";
                 const char* text1 = "Mega Credits.";
                 if (player->can_afford(5000)) {
-                    char* text0 = "Are you willing to pay 5000";
-                    char* text1 = "Mega Credits?";
+                    text0 = "Are you willing to pay 5000";
+                    text1 = "Mega Credits?";
                 }
                 draw_manager.draw_text(
                     text0,
@@ -291,15 +315,7 @@ ExodusMode GuildHQ::update(float delta) {
                     PANEL_X + 4, PANEL_Y + 144,
                     COL_TEXT);
 
-                draw_manager.fill(
-                    {PANEL_X + 242, PANEL_Y + PANEL_H - 30, 86, 26},
-                    COL_BORDERS);
-                draw_manager.draw(
-                    id(ID::MEMBER_CHOICE),
-                    IMG_BR1_EXPORT,
-                    {PANEL_X + 4, PANEL_Y + PANEL_H - 4,
-                     0, 1, 1, 1});
-
+                draw_choice();
                 stage = HQ_GuildbotBecomeMember;
             }
 
@@ -356,6 +372,32 @@ ExodusMode GuildHQ::update(float delta) {
                 }
             }
             break;
+        case HQ_GuildbotQuitMembership:
+            {
+                SpriteClick click = draw_manager.query_click(id(ID::MEMBER_CHOICE));
+                if (click.id) {
+                    if (click.x < .5f) {
+                        // Proceed
+                        player->set_guild_member(false);
+                        char text[12 + MAX_PLAYER_NAME];
+                        snprintf(text, sizeof(text), "Goodbye, %s.", player->get_name());
+                        draw_manager.draw_text(
+                            text,
+                            Justify::Left,
+                            PANEL_X + 4, PANEL_Y + 104,
+                            COL_TEXT);
+                    } else {
+                        draw_manager.draw_text(
+                            "A good decision.",
+                            Justify::Left,
+                            PANEL_X + 4, PANEL_Y + 104,
+                            COL_TEXT);
+                    }
+
+                    stage = HQ_GuildbotCloseOnClick;
+                }
+            }
+            break;
         case HQ_GuildbotCloseOnClick:
             {
                 if (draw_manager.clicked()) {
@@ -398,6 +440,17 @@ void GuildHQ::draw_panel() {
         id(ID::PANEL_PATTERN),
         {PANEL_X, PANEL_Y,
          PANEL_W, PANEL_H});
+}
+
+void GuildHQ::draw_choice() {
+    draw_manager.fill(
+        {PANEL_X + 242, PANEL_Y + PANEL_H - 30, 86, 26},
+        COL_BORDERS);
+    draw_manager.draw(
+        id(ID::MEMBER_CHOICE),
+        IMG_BR1_EXPORT,
+        {PANEL_X + 4, PANEL_Y + PANEL_H - 4,
+         0, 1, 1, 1});
 }
 
 void GuildHQ::clear_bot_options() {
