@@ -14,6 +14,8 @@ class GuildHQ : ModeBase {
         enum Stage {
             HQ_Idle,
             HQ_Guildbot,
+            HQ_GuildbotBecomeMember,
+            HQ_GuildbotCloseOnClick,
             HQ_ClaimGuildmaster,
             HQ_GuildmasterClaimed,
             HQ_FadeToEnding,
@@ -24,6 +26,10 @@ class GuildHQ : ModeBase {
         float guildbot_interp;
         float eyes_loop;
         float ending_delay;
+
+        void draw_panel();
+        void clear_bot_options();
+        void close_bot_panel();
 };
 
 #endif

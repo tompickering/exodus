@@ -153,6 +153,7 @@ class Player {
         bool is_alive();
         bool is_participating();
         bool is_guild_member();
+        void set_guild_member(bool);
         int get_mc();
         int get_flag_idx();
         void set_flag_idx(int);

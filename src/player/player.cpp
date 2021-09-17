@@ -177,6 +177,10 @@ bool Player::is_guild_member() {
     return guild_member;
 }
 
+void Player::set_guild_member(bool member) {
+    guild_member = member;
+}
+
 int Player::get_flag_idx() {
     return flag_idx;
 }

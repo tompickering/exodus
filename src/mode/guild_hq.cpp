@@ -15,6 +15,9 @@ static const int PANEL_H = 318;
 
 static const float ENDING_DELAY = 2.f;
 
+static const char* GUILD_RULE_0 = "General protection by the Guild.";
+static const char* GUILD_RULE_1 = "No attacking Guild members.";
+
 enum ID {
     BOT,
     EYES,
@@ -27,6 +30,7 @@ enum ID {
     BOT_SGQUIT,
     BOT_REP,
     BOT_QUIT,
+    MEMBER_CHOICE,
     END,
 };
 
@@ -110,15 +114,7 @@ ExodusMode GuildHQ::update(float delta) {
                     10, RES_Y - 30,
                     COL_TEXT2);
                 if (click) {
-                    draw_manager.fill(
-                        id(ID::PANEL),
-                        {PANEL_X - BORDER, PANEL_Y - BORDER,
-                         PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
-                        COL_BORDERS);
-                    draw_manager.fill_pattern(
-                        id(ID::PANEL_PATTERN),
-                        {PANEL_X, PANEL_Y,
-                         PANEL_W, PANEL_H});
+                    draw_panel();
 
                     draw_manager.draw_text(
                         "Become Guildmaster",
@@ -205,15 +201,7 @@ ExodusMode GuildHQ::update(float delta) {
 
             if (guildbot_interp == 1) {
                 stage = HQ_Guildbot;
-                draw_manager.fill(
-                    id(ID::PANEL),
-                    {PANEL_X - BORDER, PANEL_Y - BORDER,
-                     PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
-                    COL_BORDERS);
-                draw_manager.fill_pattern(
-                    id(ID::PANEL_PATTERN),
-                    {PANEL_X, PANEL_Y,
-                     PANEL_W, PANEL_H});
+                draw_panel();
                 draw_manager.draw_text(
                     "Welcome to the Space Guild.",
                     Justify::Left,
@@ -262,18 +250,118 @@ ExodusMode GuildHQ::update(float delta) {
                 PANEL_X + 4, PANEL_Y + 220,
                 COL_TEXT);
 
-            if (draw_manager.query_click(id(ID::BOT_QUIT)).id) {
-                draw_manager.draw(id(ID::PANEL_PATTERN), nullptr);
-                draw_manager.draw(id(ID::PANEL), nullptr);
-                draw_manager.draw(id(ID::BOT_MISSIONINFO), nullptr);
-                draw_manager.draw(id(ID::BOT_SGQUIT), nullptr);
-                draw_manager.draw(id(ID::BOT_SGJOIN), nullptr);
-                draw_manager.draw(id(ID::BOT_REP), nullptr);
-                draw_manager.draw(id(ID::BOT_QUIT), nullptr);
-                guildbot_active = false;
-                stage = HQ_Idle;
+            if (draw_manager.query_click(id(ID::BOT_SGJOIN)).id) {
+                clear_bot_options();
+                draw_panel();
+                draw_manager.draw_text(
+                    "Membership",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 4,
+                    COL_TEXT2);
+                draw_manager.draw_text(
+                    "Being a Guild member means:",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 44,
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    GUILD_RULE_0,
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 64,
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    GUILD_RULE_1,
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 84,
+                    COL_TEXT);
+                // FIXME: Don't hard-code guild cost
+                const char* text0 = "Guild Membership costs 5000";
+                const char* text1 = "Mega Credits.";
+                if (player->can_afford(5000)) {
+                    char* text0 = "Are you willing to pay 5000";
+                    char* text1 = "Mega Credits?";
+                }
+                draw_manager.draw_text(
+                    text0,
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 124,
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    text1,
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 144,
+                    COL_TEXT);
+
+                draw_manager.fill(
+                    {PANEL_X + 242, PANEL_Y + PANEL_H - 30, 86, 26},
+                    COL_BORDERS);
+                draw_manager.draw(
+                    id(ID::MEMBER_CHOICE),
+                    IMG_BR1_EXPORT,
+                    {PANEL_X + 4, PANEL_Y + PANEL_H - 4,
+                     0, 1, 1, 1});
+
+                stage = HQ_GuildbotBecomeMember;
             }
 
+            if (draw_manager.query_click(id(ID::BOT_QUIT)).id) {
+                close_bot_panel();
+            }
+
+            break;
+        case HQ_GuildbotBecomeMember:
+            {
+                SpriteClick click = draw_manager.query_click(id(ID::MEMBER_CHOICE));
+                if (click.id) {
+                    if (click.x < .5f) {
+                        // FIXME: Don't hard-code guild cost
+                        if (player->attempt_spend(5000)) {
+                            player->set_guild_member(true);
+                            draw_panel();
+                            draw_manager.draw_text(
+                                "Membership",
+                                Justify::Left,
+                                PANEL_X + 4, PANEL_Y + 4,
+                                COL_TEXT2);
+                            draw_manager.draw_text(
+                                "You are now a Guild Member.",
+                                Justify::Left,
+                                PANEL_X + 4, PANEL_Y + 44,
+                                COL_TEXT);
+                            draw_manager.draw_text(
+                                "This means:",
+                                Justify::Left,
+                                PANEL_X + 4, PANEL_Y + 84,
+                                COL_TEXT);
+                            draw_manager.draw_text(
+                                GUILD_RULE_0,
+                                Justify::Left,
+                                PANEL_X + 4, PANEL_Y + 124,
+                                COL_TEXT);
+                            draw_manager.draw_text(
+                                GUILD_RULE_1,
+                                Justify::Left,
+                                PANEL_X + 4, PANEL_Y + 164,
+                                COL_TEXT);
+                        } else {
+                            draw_manager.draw_text(
+                                "Your money is insufficient.",
+                                Justify::Left,
+                                PANEL_X + 4, PANEL_Y + 184,
+                                COL_TEXT);
+                        }
+                        stage = HQ_GuildbotCloseOnClick;
+                    } else {
+                        close_bot_panel();
+                    }
+                }
+            }
+            break;
+        case HQ_GuildbotCloseOnClick:
+            {
+                if (draw_manager.clicked()) {
+                    close_bot_panel();
+                }
+            }
             break;
         case HQ_ClaimGuildmaster:
             if (draw_manager.clicked()) {
@@ -298,4 +386,33 @@ ExodusMode GuildHQ::update(float delta) {
     }
 
     return ExodusMode::MODE_None;
+}
+
+void GuildHQ::draw_panel() {
+    draw_manager.fill(
+        id(ID::PANEL),
+        {PANEL_X - BORDER, PANEL_Y - BORDER,
+         PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+        COL_BORDERS);
+    draw_manager.fill_pattern(
+        id(ID::PANEL_PATTERN),
+        {PANEL_X, PANEL_Y,
+         PANEL_W, PANEL_H});
+}
+
+void GuildHQ::clear_bot_options() {
+    draw_manager.draw(id(ID::BOT_MISSIONINFO), nullptr);
+    draw_manager.draw(id(ID::BOT_SGQUIT), nullptr);
+    draw_manager.draw(id(ID::BOT_SGJOIN), nullptr);
+    draw_manager.draw(id(ID::BOT_REP), nullptr);
+    draw_manager.draw(id(ID::BOT_QUIT), nullptr);
+    draw_manager.draw(id(ID::MEMBER_CHOICE), nullptr);
+}
+
+void GuildHQ::close_bot_panel() {
+    clear_bot_options();
+    draw_manager.draw(id(ID::PANEL_PATTERN), nullptr);
+    draw_manager.draw(id(ID::PANEL), nullptr);
+    guildbot_active = false;
+    stage = HQ_Idle;
 }
