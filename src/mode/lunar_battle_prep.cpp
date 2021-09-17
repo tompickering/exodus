@@ -144,6 +144,9 @@ void LunarBattlePrep::enter() {
     b.defender_mines = 0;
 
     int r = RND(mines_available);
+    // Orig was 'if attacker is human', but for multiplayer, we don't want
+    // the defending player to have mines bought for them - so this should
+    // only happen if the defender is a CPU.
     if (!owner->is_human()) {
         if (owner->can_afford(3) && onein(3)) {
             int to_purchase = 0;
@@ -164,6 +167,15 @@ void LunarBattlePrep::enter() {
                 }
             } while (RND(30) != 1);
         }
+    }
+    // TODO: Check this condition. Orig was 'If attacker is human'.
+    // I think the idea is if attacker is not human, then defender is human,
+    // and therefore will have received guild support in LBP_GuildSupport.
+    // This doesn't account for multiplayer however, where the ACTIVE player
+    // is the aggressor - the defending player doesn't get LBP_GuildSupport.
+    // Criterion should probably be owner is CPU OR owner is human but not active.
+    // Even then, they should probably get the +10 artillery if human.
+    if (!owner->is_human()) {
         if (owner->is_guild_member()) {
             b.defender_inf += 5;
             b.defender_gli += 5;
