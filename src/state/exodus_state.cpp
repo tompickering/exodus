@@ -144,6 +144,7 @@ void ExodusState::init(GameConfig config) {
             "%s %s",
             players[i].title,
             players[i].name);
+        players[i].guild_title = GUILDTITLE_None;
         players[i].dead = false;
         players[i].reputation = 3;
         players[i].init_tax();

@@ -28,6 +28,7 @@ const char* get_alien_name(Race race, int idx) {
 }
 
 Player::Player() {
+    guild_title = GUILDTITLE_None;
     dead = false;
     participating_in_game = false;
     _intro_seen = false;
@@ -179,6 +180,31 @@ bool Player::is_guild_member() {
 
 void Player::set_guild_member(bool member) {
     guild_member = member;
+}
+
+GuildTitle Player::get_guild_title() {
+    return guild_title;
+}
+
+const char* Player::get_guild_title_str() {
+    GuildTitle t = get_guild_title();
+    if (t == GUILDTITLE_Warrior)   return "The Warrior";
+    if (t == GUILDTITLE_Strong)    return "The Strong";
+    if (t == GUILDTITLE_Conqueror) return "The Conqueror";
+    if (t == GUILDTITLE_Mighty)    return "The Mighty";
+    if (t == GUILDTITLE_Great)     return "The Great";
+    if (t == GUILDTITLE_Warlord)   return "The Warlord";
+    if (t == GUILDTITLE_Emperor)   return "The Emperor";
+    return "";
+}
+
+void Player::set_guild_title(GuildTitle newtitle) {
+    if ((int)newtitle >= GUILDTITLE_MAX) {
+        L.error("Can't set invalid title %d", (int)newtitle);
+        newtitle = GUILDTITLE_Emperor;
+    }
+    guild_title = newtitle;
+    L.info("%s: SET TITLE %d", get_full_name(), (int)guild_title);
 }
 
 int Player::get_flag_idx() {

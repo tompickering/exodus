@@ -1083,7 +1083,41 @@ ExodusMode GalaxyMap::month_pass_update() {
     }
 
     if (mp_state.mp_stage == MP_GuildCommendations) {
-        // TODO - PROCnewtitle
+        Galaxy *gal = exostate.get_galaxy();
+        int n_stars;
+        Star *stars = gal->get_stars(n_stars);
+        int ab = n_stars / 20;
+        for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
+            Player *p = exostate.set_active_player(mp_state.mp_player_idx);
+            if (p && p->is_participating() && p->is_human()) {
+                GuildTitle title = p->get_guild_title();
+                int title_int = (int)title;
+                int planets = exostate.get_n_planets(p);
+                int ac = planets / ab;
+                if (ac < 8) {
+                    if (ac > title_int) {
+                        // New title
+                        GuildTitle new_title = (GuildTitle)ac;
+                        p->set_guild_title(new_title);
+                        const char* name = p->get_full_name();
+                        const char* title_str = p->get_guild_title_str();
+                        // TODO: Music
+                        bulletin_start_new(false);
+                        bulletin_set_bg(IMG_ME6_MENU);
+                        // TODO: Check flag used here
+                        bulletin_set_flag(IMG_TS1_FLAG16);
+                        bulletin_set_text_col(COL_TEXT3);
+                        // TODO: Centre aligmnent on these?
+                        bulletin_set_next_text("NEW TITLE FOR LORD");
+                        bulletin_set_next_text("");
+                        bulletin_set_next_text("You now own the title");
+                        bulletin_set_next_text("%s \"%s\"", name, title_str);
+                        // TODO: Rest of text
+                        return ExodusMode::MODE_None;
+                    }
+                }
+            }
+        }
         next_mp_stage();
     }
 

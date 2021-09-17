@@ -10,6 +10,18 @@
 #define MAX_PLAYER_REFERENCE 12
 #define MAX_PLAYER_FULLNAME MAX_PLAYER_TITLE + 1 + MAX_PLAYER_NAME
 
+enum GuildTitle {
+    GUILDTITLE_None,
+    GUILDTITLE_Warrior,
+    GUILDTITLE_Strong,
+    GUILDTITLE_Conqueror,
+    GUILDTITLE_Mighty,
+    GUILDTITLE_Great,
+    GUILDTITLE_Warlord,
+    GUILDTITLE_Emperor,
+    GUILDTITLE_MAX,
+};
+
 enum Race {
     RACE_Human,
     RACE_Yokon,
@@ -154,6 +166,9 @@ class Player {
         bool is_participating();
         bool is_guild_member();
         void set_guild_member(bool);
+        GuildTitle get_guild_title();
+        const char* get_guild_title_str();
+        void set_guild_title(GuildTitle);
         int get_mc();
         int get_flag_idx();
         void set_flag_idx(int);
@@ -229,6 +244,7 @@ class Player {
         char title[MAX_PLAYER_TITLE + 1];
         char ref[MAX_PLAYER_REFERENCE + 1];
         char full_name[MAX_PLAYER_FULLNAME + 1];
+        GuildTitle guild_title;
         bool dead;
         bool participating_in_game;
         int flag_idx;
