@@ -3,7 +3,9 @@
 #include <cstring>
 
 #define CLICK_REPEAT_DELAY .4f
+#define CLICK_REPEAT_DELAY2 1.2f
 #define CLICK_REPEAT_INTERVAL .05f
+#define CLICK_REPEAT_INTERVAL2 .01f
 
 InputManager::InputManager() {
     mouse_pos.x = -1;
@@ -29,7 +31,11 @@ bool InputManager::update(float delta) {
         if (click_held_time > CLICK_REPEAT_DELAY) {
             if (click_repeat_timeout <= 0) {
                 click_pos = last_click_pos;
-                click_repeat_timeout = CLICK_REPEAT_INTERVAL;
+                if (click_held_time > CLICK_REPEAT_DELAY2) {
+                    click_repeat_timeout = CLICK_REPEAT_INTERVAL2;
+                } else {
+                    click_repeat_timeout = CLICK_REPEAT_INTERVAL;
+                }
             } else {
                 click_repeat_timeout -= delta;
             }
