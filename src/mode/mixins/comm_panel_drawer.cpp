@@ -1028,6 +1028,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_ctx.mc = comm_player->get_mc() / 2;
             comm_set_text(0, "I offer %dMC.", comm_ctx.mc);
             comm_show_adj(true);
+            input_manager.enable_repeating_clicks(true);
             comm_recv(DIA_R_OfferAllianceMoneyResponse);
             break;
         case DIA_S_OfferAllianceResponse:
@@ -1239,6 +1240,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_ctx.mc = comm_other->get_mc() / 2;
             comm_set_text(0, "I offer %dMC.", comm_ctx.mc);
             comm_show_adj(true);
+            input_manager.enable_repeating_clicks(true);
             comm_recv(DIA_R_CPU_AttackPayOffListen);
             break;
         case DIA_S_CPU_AttackPayOffOffer:
@@ -1286,6 +1288,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     comm_ctx.mc = 10;
                     comm_set_text(0, "I want %dMC.", comm_ctx.mc);
                     comm_show_adj(true);
+                    input_manager.enable_repeating_clicks(true);
                     comm_recv(DIA_R_CPU_TradeFeeListen);
                 }
             }
@@ -1565,6 +1568,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_ctx.mc2 = max(comm_other->get_mc()/2, 1);
             comm_set_text(0, "I offer %dMC.", comm_ctx.mc2);
             comm_show_adj(true);
+            input_manager.enable_repeating_clicks(true);
             comm_recv(DIA_R_B_CPU_RebelsDemandMC);
             break;
         case DIA_S_B_CPU_RebelsMCOffer:
@@ -1856,8 +1860,6 @@ void CommPanelDrawer::comm_process_responses() {
             {
                 SpriteClick adjclick = draw_manager.query_click(id_comm_adj);
                 if (adjclick.id) {
-                    // FIXME: Can we hold a button to make this go faster? Or
-                    //        alternatively allow keyboard input?
                     if (adjclick.x < 0.5f) {
                         comm_ctx.mc = max(comm_ctx.mc - 1, 0);
                     } else {
@@ -1867,6 +1869,7 @@ void CommPanelDrawer::comm_process_responses() {
                 }
 
                 if (draw_manager.query_click(id_comm_adj_ok).id) {
+                    input_manager.enable_repeating_clicks(false);
                     if (comm_ctx.mc >= 5 && comm_ctx.mc >= exostate.get_orig_month()/2) {
                         comm_ctx.alliance_prob -= 2;
                     }
@@ -1953,8 +1956,6 @@ void CommPanelDrawer::comm_process_responses() {
             {
                 SpriteClick adjclick = draw_manager.query_click(id_comm_adj);
                 if (adjclick.id) {
-                    // FIXME: Can we hold a button to make this go faster? Or
-                    //        alternatively allow keyboard input?
                     if (adjclick.x < 0.5f) {
                         comm_ctx.mc = max(comm_ctx.mc - 1, 0);
                     } else {
@@ -1964,6 +1965,7 @@ void CommPanelDrawer::comm_process_responses() {
                 }
 
                 if (draw_manager.query_click(id_comm_adj_ok).id) {
+                    input_manager.enable_repeating_clicks(false);
                     comm_send(DIA_S_CPU_AttackPayOffOffer);
                 }
             }
@@ -1994,8 +1996,6 @@ void CommPanelDrawer::comm_process_responses() {
             {
                 SpriteClick adjclick = draw_manager.query_click(id_comm_adj);
                 if (adjclick.id) {
-                    // FIXME: Can we hold a button to make this go faster? Or
-                    //        alternatively allow keyboard input?
                     if (adjclick.x < 0.5f) {
                         comm_ctx.mc = max(comm_ctx.mc - 1, 0);
                     } else {
@@ -2005,6 +2005,7 @@ void CommPanelDrawer::comm_process_responses() {
                 }
 
                 if (draw_manager.query_click(id_comm_adj_ok).id) {
+                    input_manager.enable_repeating_clicks(false);
                     comm_send(DIA_S_CPU_TradeFeeOffer);
                 }
             }
@@ -2154,8 +2155,6 @@ void CommPanelDrawer::comm_process_responses() {
             {
                 SpriteClick adjclick = draw_manager.query_click(id_comm_adj);
                 if (adjclick.id) {
-                    // FIXME: Can we hold a button to make this go faster? Or
-                    //        alternatively allow keyboard input?
                     if (adjclick.x < 0.5f) {
                         comm_ctx.mc2 = max(comm_ctx.mc2 - 1, 0);
                     } else {
@@ -2165,6 +2164,7 @@ void CommPanelDrawer::comm_process_responses() {
                 }
 
                 if (draw_manager.query_click(id_comm_adj_ok).id) {
+                    input_manager.enable_repeating_clicks(false);
                     comm_send(DIA_S_B_CPU_RebelsMCOffer);
                 }
             }
