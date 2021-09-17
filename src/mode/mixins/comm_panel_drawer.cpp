@@ -1033,7 +1033,10 @@ void CommPanelDrawer::comm_send(CommSend input) {
             break;
         case DIA_S_OfferAllianceResponse:
             comm_prepare(1);
-            // TODO: IF firstplanet(1)=0 I=99 (I being comm_ctx.alliance_prob)
+            // Alliance very unlikely if we don't have a planet
+            if (exostate.get_n_planets(comm_player) <= 0) {
+                comm_ctx.alliance_prob = 99;
+            }
             // TODO: Multiplayer - 'verhalten'
             if (onein(max(comm_ctx.alliance_prob, 1))) {
                 if (!comm_player->attempt_spend(comm_ctx.mc)) {
