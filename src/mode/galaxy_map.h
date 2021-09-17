@@ -190,6 +190,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
         bool do_meteor;
         bool do_meltdown;
         bool do_lunar_battle;
+        GuildTitle do_guild_title;
 };
 
 #endif

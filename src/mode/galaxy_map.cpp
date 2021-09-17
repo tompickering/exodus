@@ -39,6 +39,7 @@ GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer(), PanelDrawer(PNL_
     do_meteor = false;
     do_meltdown = false;
     do_lunar_battle = false;
+    do_guild_title = GUILDTITLE_None;
 }
 
 void GalaxyMap::enter() {
@@ -355,6 +356,63 @@ ExodusMode GalaxyMap::update(float delta) {
                         ephstate.research.done = bulletin_was_yesno_yes();
                         bulletin_ensure_closed();
                         return ephstate.get_appropriate_mode();
+                    } else if (do_guild_title != GUILDTITLE_None) {
+                        bulletin_ensure_closed();
+                        bulletin_start_new(false);
+                        bulletin_set_bg(IMG_ME6_MENU);
+                        bulletin_set_flag(IMG_TS1_FLAG16);
+                        bulletin_set_text_col(COL_TEXT3);
+                        bulletin_set_next_text("MESSAGE FROM SPACE GUILD");
+                        bulletin_set_next_text("");
+
+                        switch (do_guild_title) {
+                            case GUILDTITLE_Warrior:
+                                bulletin_set_next_text("We are watching your advancements with");
+                                bulletin_set_next_text("interest.");
+                                break;
+                            case GUILDTITLE_Strong:
+                                bulletin_set_next_text("You are making remarkable advancements.");
+                                bulletin_set_next_text("The Space Guild is impressed.");
+                                bulletin_set_next_text("Maybe you are the right candidate for");
+                                bulletin_set_next_text("the Guildmaster position.");
+                                break;
+                            case GUILDTITLE_Conqueror:
+                                bulletin_set_next_text("You have grown strong. This is a sign");
+                                bulletin_set_next_text("that you are a skilful sovereign.");
+                                bulletin_set_next_text("If you continue your way like this,");
+                                bulletin_set_next_text("we are looking forward to seeing you");
+                                bulletin_set_next_text("at the Guildmaster position.");
+                                break;
+                            case GUILDTITLE_Mighty:
+                                bulletin_set_next_text("We are still watching your steps with");
+                                bulletin_set_next_text("interest. We know that you will");
+                                bulletin_set_next_text("finally achieve what you are heading");
+                                bulletin_set_next_text("for.");
+                                break;
+                            case GUILDTITLE_Great:
+                                bulletin_set_next_text("Go on like this, and we will stand");
+                                bulletin_set_next_text("by your side.");
+                                break;
+                            case GUILDTITLE_Warlord:
+                                bulletin_set_next_text("We are waiting for the final steps");
+                                bulletin_set_next_text("to be made.");
+                                break;
+                            case GUILDTITLE_Emperor:
+                                bulletin_set_next_text("We are waiting for you.");
+                                break;
+                            default:
+                                break;
+                        }
+
+                        // TODO
+                        if (false) {
+                            bulletin_set_next_text("");
+                            bulletin_set_next_text("But please note that you have violated");
+                            bulletin_set_next_text("the Space Guild Rules.");
+                        }
+
+                        do_guild_title = GUILDTITLE_None;
+                        return ExodusMode::MODE_None;
                     }
                 }
 
@@ -1094,7 +1152,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                 int title_int = (int)title;
                 int planets = exostate.get_n_planets(p);
                 int ac = planets / ab;
-                if (ac < 8) {
+                if (ac < (int)GUILDTITLE_MAX) {
                     if (ac > title_int) {
                         // New title
                         GuildTitle new_title = (GuildTitle)ac;
@@ -1103,16 +1161,60 @@ ExodusMode GalaxyMap::month_pass_update() {
                         const char* title_str = p->get_guild_title_str();
                         // TODO: Music
                         bulletin_start_new(false);
-                        bulletin_set_bg(IMG_ME6_MENU);
-                        // TODO: Check flag used here
                         bulletin_set_flag(IMG_TS1_FLAG16);
                         bulletin_set_text_col(COL_TEXT3);
-                        // TODO: Centre aligmnent on these?
-                        bulletin_set_next_text("NEW TITLE FOR LORD");
+                        bulletin_set_next_text("NEW TITLE FOR %s", tmp_caps(p->get_full_name()));
                         bulletin_set_next_text("");
                         bulletin_set_next_text("You now own the title");
                         bulletin_set_next_text("%s \"%s\"", name, title_str);
-                        // TODO: Rest of text
+                        bulletin_set_next_text("");
+                        switch (new_title) {
+                            case GUILDTITLE_Warrior:
+                                bulletin_set_next_text("This title shows that you are able to");
+                                bulletin_set_next_text("rule even more than just a single planet.");
+                                bulletin_set_next_text("But your enemies see your actions as a");
+                                bulletin_set_next_text("forthcoming danger.");
+                                break;
+                            case GUILDTITLE_Strong:
+                                bulletin_set_next_text("With your growing number of planets,");
+                                bulletin_set_next_text("there also seem to be more and more");
+                                bulletin_set_next_text("enemies.");
+                                bulletin_set_next_text("Now is the time to build a strong");
+                                bulletin_set_next_text("and powerful empire.");
+                                break;
+                            case GUILDTITLE_Conqueror:
+                                bulletin_set_next_text("Not many lords have claimed this title");
+                                bulletin_set_next_text("yet. It shows your power and your skill.");
+                                bulletin_set_next_text("But this must not be all you are able");
+                                bulletin_set_next_text("to achieve. You have to become even");
+                                bulletin_set_next_text("stronger.");
+                                break;
+                            case GUILDTITLE_Mighty:
+                                bulletin_set_next_text("Now you are a strong and powerful lord.");
+                                bulletin_set_next_text("There are not many with the same power");
+                                bulletin_set_next_text("in this galaxy. But can you fulfil your");
+                                bulletin_set_next_text("mission?");
+                                bulletin_set_next_text("It is up to you.");
+                                break;
+                            case GUILDTITLE_Great:
+                                bulletin_set_next_text("The time has come.");
+                                bulletin_set_next_text("You are closer to your aim than you");
+                                bulletin_set_next_text("have ever been. But you have not");
+                                bulletin_set_next_text("reached it yet.");
+                                bulletin_set_next_text("Good luck.");
+                                break;
+                            case GUILDTITLE_Warlord:
+                                bulletin_set_next_text("Go on.");
+                                bulletin_set_next_text("You alone can do it.");
+                                break;
+                            case GUILDTITLE_Emperor:
+                                bulletin_set_next_text("The future is in your hand.");
+                                break;
+                            default:
+                                break;
+                        }
+
+                        do_guild_title = new_title;
                         return ExodusMode::MODE_None;
                     }
                 }
