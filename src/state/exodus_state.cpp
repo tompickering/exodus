@@ -288,6 +288,10 @@ int ExodusState::get_n_human_players() {
     return n_human_players;
 }
 
+bool ExodusState::multiplayer() {
+    return get_n_human_players() > 1;
+}
+
 int ExodusState::get_month() {
     return month;
 }
@@ -301,6 +305,10 @@ int ExodusState::get_orig_month() {
      * it's using the same month measure, so provide an interface.
      */
     return get_month() - 1;
+}
+
+Aim ExodusState::get_aim() {
+    return aim;
 }
 
 void ExodusState::advance_month() {

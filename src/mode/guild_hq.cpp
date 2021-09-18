@@ -4,6 +4,8 @@
 
 #include "assetpaths.h"
 
+#define DESC_SIZE 13
+
 static const DrawArea AREA_BOT  = {100, 200, 120, 120};
 static const DrawArea AREA_DOOR = {200, 200, 120, 120};
 static const DrawArea AREA_EXIT = {RES_X - 120, 0, 120, RES_Y};
@@ -17,6 +19,70 @@ static const float ENDING_DELAY = 2.f;
 
 static const char* GUILD_RULE_0 = "General protection by the Guild.";
 static const char* GUILD_RULE_1 = "No attacking Guild members.";
+
+static const char* DESC_AIM_MULTIPLAYER[DESC_SIZE] = {
+    "To be worthy of the",
+    "Guildmaster position, all human",
+    "lords must be defeated.",
+    "",
+    "Your only mission is to",
+    "survive longer than all your",
+    "human opponents.",
+    "",
+    "Only then will you be worthy",
+    "to receive the Guildmaster",
+    "position",
+    "",
+    "",
+};
+
+static const char* DESC_AIM_MIGHT[DESC_SIZE] = {
+    "To be worthy of the",
+    "Guildmaster position, you must",
+    "have annihilated all alien lords.",
+    "",
+    "That is, you have to conquer all",
+    "inhabited planets and finally",
+    "become the only existing lord in",
+    "this galaxy.",
+    "",
+    "No-one else will be worthy then",
+    "to become the new Guildmaster.",
+    "",
+    "",
+};
+
+static const char* DESC_AIM_MONEY[DESC_SIZE] = {
+    "To be worthy of the",
+    "Guildmaster position, you must",
+    "earn a monthly tax sum of",
+    "1000 Mega Credits.",
+    "",
+    "Your financial power will make",
+    "you the only one being worthy",
+    "to become the new",
+    "Guildmaster.",
+    "",
+    "",
+    "",
+    "",
+};
+
+static const char* DESC_AIM_CIV[DESC_SIZE] = {
+    "To be worthy of the",
+    "Guildmaster position, you must",
+    "rule a gigantic empire of at",
+    "least 30 planets.",
+    "",
+    "Further, you must own all",
+    "possible inventions and at",
+    "least one artificial planet.",
+    "",
+    "Ruling such a great empire,",
+    "you will be the only one being",
+    "worthy to become the new",
+    "Guildmaster."
+};
 
 enum ID {
     BOT,
@@ -249,6 +315,43 @@ ExodusMode GuildHQ::update(float delta) {
                 Justify::Left,
                 PANEL_X + 4, PANEL_Y + 220,
                 COL_TEXT);
+
+            if (draw_manager.query_click(id(ID::BOT_MISSIONINFO)).id) {
+                clear_bot_options();
+                draw_panel();
+                draw_manager.draw_text(
+                    "Information",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 4,
+                    COL_TEXT2);
+
+                const char** desc = &DESC_AIM_MIGHT[0];
+                if (exostate.multiplayer()) {
+                    desc = &DESC_AIM_MULTIPLAYER[0];
+                } else {
+                    switch (exostate.get_aim()) {
+                        case AIM_Might:
+                            desc = &DESC_AIM_MIGHT[0];
+                            break;
+                        case AIM_Money:
+                            desc = &DESC_AIM_MONEY[0];
+                            break;
+                        case AIM_Civilization:
+                            desc = &DESC_AIM_CIV[0];
+                            break;
+                    }
+                }
+
+                for (int i = 0; i < DESC_SIZE; ++i) {
+                    draw_manager.draw_text(
+                        desc[i],
+                        Justify::Left,
+                        PANEL_X + 4, PANEL_Y + 44 + i*20,
+                        COL_TEXT);
+                }
+
+                stage = HQ_GuildbotCloseOnClick;
+            }
 
             if (draw_manager.query_click(id(ID::BOT_SGQUIT)).id) {
                 clear_bot_options();

@@ -73,8 +73,10 @@ class ExodusState {
         void init_cpu_lords();
         Galaxy* get_galaxy();
         int get_n_human_players();
+        bool multiplayer();
         int get_month();
         int get_orig_month();
+        Aim get_aim();
         void advance_month();
         bool final_month();
         bool mission_complete();
