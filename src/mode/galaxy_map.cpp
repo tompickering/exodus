@@ -1169,8 +1169,8 @@ ExodusMode GalaxyMap::month_pass_update() {
     if (mp_state.mp_stage == MP_GuildCommendations) {
         Galaxy *gal = exostate.get_galaxy();
         int n_stars;
-        Star *stars = gal->get_stars(n_stars);
-        int ab = n_stars / 20;
+        gal->get_stars(n_stars);
+        int ab = 2 + (n_stars / 20);
         for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
             Player *p = exostate.set_active_player(mp_state.mp_player_idx);
             if (p && p->is_participating() && p->is_human()) {
