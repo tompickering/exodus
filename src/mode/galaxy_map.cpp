@@ -1013,6 +1013,32 @@ ExodusMode GalaxyMap::month_pass_update() {
         next_mp_stage();
     }
 
+    // TODO: Orig calls PROCfillstatus (counsellor messages and month report)
+    // in between PROCenemytactics and PROCeta - is it OK to run it after both instead?
+
+    if (mp_state.mp_stage == MP_NoPlanetsCounsellor) {
+        if (comm_is_open()) {
+            comm_ensure_closed();
+        } else {
+            Player *player = exostate.get_player(0);
+            if (!exostate.multiplayer() && (exostate.get_n_planets(player) <= 0)) {
+                int m = exostate.get_orig_month();
+                // TODO: Orig thresholds here are 7 and 5 - not 5 and 3 - but these values
+                // get the same behaviour. Check that other month thresholds are OK.
+                if (m < 5) {
+                    comm_open(m < 3 ? DIA_S_FirstPlanetAdvice : DIA_S_FirstPlanetAdviceUrgent);
+                    return ExodusMode::MODE_None;
+                }
+            }
+        }
+        next_mp_stage();
+    }
+
+    if (mp_state.mp_stage == MP_EndOfMonthReport) {
+        // TODO
+        next_mp_stage();
+    }
+
     if (mp_state.mp_stage == MP_UpdatePirateProbabilities) {
         for (; mp_state.mp_star_idx < n_stars; ++mp_state.mp_star_idx) {
             Star *s = &stars[mp_state.mp_star_idx];

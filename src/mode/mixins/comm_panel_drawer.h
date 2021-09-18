@@ -72,6 +72,8 @@ enum CommSend {
     DIA_S_CommentInsult,
     DIA_S_CommentThreaten,
     DIA_S_PlanAttack,
+    DIA_S_FirstPlanetAdvice,
+    DIA_S_FirstPlanetAdviceUrgent,
     // For these, CPU is talking to us - so CPU is comm_player and human is comm_other
     DIA_S_CPU_Attack,
     DIA_S_CPU_AttackAlly,

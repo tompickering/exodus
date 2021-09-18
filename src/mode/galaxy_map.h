@@ -47,6 +47,8 @@ enum MonthPassStage {
     MP_EnemyTactics,
     MP_ArtificialWorldNews,
     MP_EnemyActions,
+    MP_NoPlanetsCounsellor,
+    MP_EndOfMonthReport,
     MP_UpdatePirateProbabilities,
     MP_PlanetBackgroundUpdate,
     MP_PlanetMainUpdate, // PROCcal_plan - comprised of MonthPassPlanetStages

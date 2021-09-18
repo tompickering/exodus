@@ -541,6 +541,16 @@ void CommPanelDrawer::comm_init(CommSend input) {
                 }
             }
             break;
+        case DIA_S_FirstPlanetAdvice:
+            comm_set_title("Message from counsellor");
+            comm_set_img(CI_HumanThoughtful);
+            comm_set_img_caption("COUNSELLOR");
+            break;
+        case DIA_S_FirstPlanetAdviceUrgent:
+            comm_set_title("Message from counsellor");
+            comm_set_img(CI_HumanThoughtful);
+            comm_set_img_caption("COUNSELLOR");
+            break;
         case DIA_S_CPU_Attack:
             comm_set_img_caption_upper(comm_player->get_full_name());
             comm_set_img_caption_lower("RACE: %s", comm_player->get_race_str());
@@ -1187,6 +1197,26 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_show_buttons(true);
                 comm_recv(DIA_R_ProceedOrAbort);
             } else {
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_FirstPlanetAdvice:
+            {
+                comm_prepare(6);
+                comm_set_text(0, "The first thing we should do now");
+                comm_set_text(1, "is to find a new home for our");
+                comm_set_text(2, "settlers.");
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_FirstPlanetAdviceUrgent:
+            {
+                comm_prepare(6);
+                comm_set_text(0, "Our settlers need a new planet.");
+                comm_set_text(1, "The longer we are waiting, the");
+                comm_set_text(2, "stronger our opponents are");
+                comm_set_text(3, "getting.");
+                comm_set_text(4, "We should act now.");
                 comm_recv(DIA_R_Close);
             }
             break;
