@@ -192,6 +192,7 @@ class DrawManager {
         virtual void get_upscale(float&, float&);
         virtual void set_selectable(SprID);
         virtual void unset_selectable(SprID);
+        virtual void cancel_transitions() = 0;
     protected:
         virtual SpriteClick query_click(SprID, bool);
         map<const char*, void*> sprite_data;

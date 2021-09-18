@@ -870,4 +870,9 @@ void DrawManagerSDL::get_upscale(float& up_x, float& up_y) {
     up_x = UPSCALE_X; up_y = UPSCALE_Y;
 }
 
+void DrawManagerSDL::cancel_transitions() {
+    pixelswap_stage = 0;
+    fade_stages = 0;
+}
+
 #endif

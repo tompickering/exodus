@@ -301,6 +301,7 @@ void Exodus::set_mode(ExodusMode new_mode) {
     // Repeating clicks disabled by default
     input_manager.enable_repeating_clicks(false);
     draw_manager.clear_sprite_ids();
+    draw_manager.cancel_transitions();
     mode->enter();
     mode_updated_since_enter = false;
 }
