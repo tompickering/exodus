@@ -131,6 +131,7 @@ enum ID {
     TTL_JK,
     TTL_PRESENTS,
     TTL_EXODUS,
+    TTL_COLOFSPACE,
     TEXT,
 
     END,
@@ -783,7 +784,12 @@ ExodusMode Intro::update(float delta) {
                     nchars = 25;
                 char subttl[] = "THE COLONIZATION OF SPACE";
                 subttl[nchars] = '\0';
-                draw_manager.draw_text(subttl, Justify::Left, 180, 320, COL_TEXT);
+                draw_manager.draw_text(
+                    id(ID::TTL_COLOFSPACE),
+                    subttl,
+                    Justify::Left,
+                    178, 320,
+                    COL_TEXT);
             }
 
             if (time > TTL_FADEOUT_START) {

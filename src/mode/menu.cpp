@@ -31,6 +31,7 @@ enum ID {
     NPLAYER_LR,
     NPLAYER_OK,
     NPLAYER_TXT,
+    PLAYER_NAME,
     FLAG_0,
     FLAG_1,
     FLAG_2,
@@ -320,6 +321,7 @@ ExodusMode Menu::update(float delta) {
                 const char* input_name = input_manager.get_input_text(MAX_PLAYER_NAME);
 
                 draw_manager.draw_text(
+                        id(ID::PLAYER_NAME),
                         input_name,
                         Justify::Left,
                         265, 238,
