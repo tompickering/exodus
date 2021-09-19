@@ -20,11 +20,17 @@ enum ID {
     SPACEPORT_SHIP0,
     SPACEPORT_SHIP1,
     SPACEPORT_SHIP2,
-    MONTHREPORT_0,
-    MONTHREPORT_1,
-    MONTHREPORT_2,
-    MONTHREPORT_3,
-    MONTHREPORT_4,
+    MONTHREPORT_HEADING,
+    MONTHREPORT_00,
+    MONTHREPORT_01,
+    MONTHREPORT_10,
+    MONTHREPORT_11,
+    MONTHREPORT_20,
+    MONTHREPORT_21,
+    MONTHREPORT_30,
+    MONTHREPORT_31,
+    MONTHREPORT_40,
+    MONTHREPORT_41,
     END,
 };
 
@@ -3314,6 +3320,7 @@ void GalaxyMap::open_month_report() {
     const int w = 440;
     const int h = 56;
     const int x = RES_X/2 - w/2;
+    const int lw = 120;
 
     // TODO: Complete this
     for (int i = 0; i < 5; ++i) {
@@ -3321,17 +3328,38 @@ void GalaxyMap::open_month_report() {
         const int real_h = (h+2+2*b);
         const int base_y = (PNL_TOP-(real_h*5))/2;
         const int y = base_y + i*real_h - (i==0?4:0);
-        SprID box_id = id(ID::MONTHREPORT_0 + i);
-        draw_manager.fill(box_id, {x-b, y-b, w+b*2, h+b*2}, COL_BORDERS);
-        draw_manager.fill_pattern({x, y, w, h});
+        if (i == 0) {
+            SprID box_id = id(ID::MONTHREPORT_HEADING);
+            draw_manager.fill(box_id, {x-b, y-b, w+b*2, h+b*2}, COL_BORDERS);
+            draw_manager.fill_pattern({x, y, w, h});
+
+            char heading[32];
+            snprintf(heading, sizeof(heading), "STATUS REPORT: MONTH %d", exostate.get_month());
+            draw_manager.draw_text(heading, Justify::Centre, x+w/2, y+16, COL_TEXT);
+        } else {
+            SprID box_id_l = id(ID::MONTHREPORT_00 + 2*(i-1));
+            SprID box_id_r = id(ID::MONTHREPORT_00 + 2*(i-1) + 1);
+            draw_manager.fill(box_id_l, {x-b, y-b, lw+b*2, h+b*2}, COL_BORDERS);
+            draw_manager.fill_pattern({x, y, lw, h});
+
+            const char* section = "Diplomacy";
+            if (i == 2) section = "Army";
+            if (i == 3) section = "Science";
+            if (i == 4) section = "Population";
+            draw_manager.draw_text(section, Justify::Left, x+4, y+16, COL_TEXT);
+
+            const int rx = x+lw+b*2+2;
+            const int rw = w-lw-2-2*b;
+            draw_manager.fill(box_id_r, {rx-b, y-b, rw+2*b, h+b*2}, COL_BORDERS);
+            draw_manager.fill_pattern({rx, y, rw, h});
+        }
     }
 }
 
 void GalaxyMap::close_month_report() {
     month_report_open = false;
 
-    for (int i = 0; i < 5; ++i) {
-        SprID box_id = id(ID::MONTHREPORT_0 + i);
-        draw_manager.draw(box_id, nullptr);
+    for (int _id = (int)ID::MONTHREPORT_HEADING; _id <= (int)MONTHREPORT_41; ++_id) {
+        draw_manager.draw(id((ID)_id), nullptr);
     }
 }
