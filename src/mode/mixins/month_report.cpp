@@ -217,6 +217,133 @@ void MonthReport::monthreport_open() {
                     break;
                 case 4:
                     {
+                        int n_planets = 0;
+                        int total_unrest = 0;
+                        Planet *riot_planet = nullptr;
+                        for (PlanetIterator piter(player_idx); !piter.complete(); ++piter) {
+                            n_planets++;
+                            int unrest = piter.get()->get_unrest();
+                            total_unrest += unrest;
+                            if (unrest > 8) {
+                                riot_planet = piter.get();
+                            }
+                        }
+
+                        const char *t0 = "";
+                        const char *t1 = "";
+
+                        if (riot_planet) {
+                            snprintf(text, sizeof(text), "%s!", riot_planet->get_name());
+                            t0 = "There are riots at planet";
+                            t1 = text;
+                        } else {
+                            int avg_unrest = 3;
+                            if (n_planets > 0) avg_unrest = total_unrest/n_planets;
+
+                            if (avg_unrest > 7) {
+                                switch (rand() % 3) {
+                                    case 0:
+                                        t0 = "The people have destroyed";
+                                        snprintf(text, sizeof(text), "a %s monument!", player->get_name());
+                                        t1 = text;
+                                        break;
+                                    case 1:
+                                        t0 = "The people are angry.";
+                                        t1 = "Your reputation is bad.";
+                                        break;
+                                    case 2:
+                                        t0 = "Voices can be heard";
+                                        t1 = "that demand revolution.";
+                                        break;
+                                }
+                            } else if (avg_unrest > 5) {
+                                switch (rand() % 5) {
+                                    case 0:
+                                        t0 = "The people have destroyed";
+                                        snprintf(text, sizeof(text), "a %s monument!", player->get_name());
+                                        t1 = text;
+                                        break;
+                                    case 1:
+                                        t0 = "The people are unhappy.";
+                                        t1 = "They demand a better life.";
+                                        break;
+                                    case 2:
+                                        t0 = "You seem to have enemies";
+                                        t1 = "amongst your people.";
+                                        break;
+                                    case 3:
+                                        t0 = "Many people are not";
+                                        t1 = "content any more.";
+                                        break;
+                                    case 4:
+                                        t0 = "Your public image is not";
+                                        t1 = "very good.";
+                                        break;
+                                }
+                            } else if (avg_unrest >= 2) {
+                                switch (rand() % 5) {
+                                    case 0:
+                                        t0 = "Most people are content.";
+                                        t1 = "The fewest are complaining.";
+                                        break;
+                                    case 1:
+                                        t0 = "You are known as a";
+                                        t1 = "fair sovereign.";
+                                        break;
+                                    case 2:
+                                        t0 = "Many of your people are";
+                                        t1 = "content.";
+                                        break;
+                                    case 3:
+                                        t0 = "The press emphasizes your";
+                                        t1 = "well-liked sides.";
+                                        break;
+                                    case 4:
+                                        t0 = "You are an appreciated";
+                                        // Orig was 'lord'
+                                        snprintf(text, sizeof(text), "%s.", player->get_title());
+                                        t1 = text;
+                                        break;
+                                }
+                            } else {
+                                switch (rand() % 5) {
+                                    case 0:
+                                        t0 = "The people have built";
+                                        snprintf(text, sizeof(text), "a %s monument!", player->get_name());
+                                        t1 = text;
+                                        break;
+                                    case 1:
+                                        t0 = "The press is full of";
+                                        t1 = "compliments.";
+                                        break;
+                                    case 2:
+                                        t0 = "The people are happy.";
+                                        // Orig was 'lord'
+                                        snprintf(text, sizeof(text), "They adore their %s.", player->get_title());
+                                        t1 = text;
+                                        break;
+                                    case 3:
+                                        t0 = "You are the idol of";
+                                        t1 = "your nation.";
+                                        break;
+                                    case 4:
+                                        t0 = "The people have a high";
+                                        t1 = "opinion of you.";
+                                        break;
+                                }
+                            }
+                        }
+
+                        draw_manager.draw_text(
+                            t0,
+                            Justify::Left,
+                            rx+4, y+4,
+                            COL_TEXT);
+                        draw_manager.draw_text(
+                            t1,
+                            Justify::Left,
+                            rx+4, y+24,
+                            COL_TEXT);
                     }
                     break;
             }
