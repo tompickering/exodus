@@ -294,7 +294,7 @@ bool DrawManager::clicked() {
 int DrawManager::right(SprID id) {
     DrawArea *area = get_drawn_area(id);
     if (!area) {
-        L.warn("Attemmpt to get position to the right of an unknown sprite ID");
+        L.warn("Attempt to get position to the right of an unknown sprite ID");
         return 0;
     }
 
