@@ -20,6 +20,11 @@ enum ID {
     SPACEPORT_SHIP0,
     SPACEPORT_SHIP1,
     SPACEPORT_SHIP2,
+    MONTHREPORT_0,
+    MONTHREPORT_1,
+    MONTHREPORT_2,
+    MONTHREPORT_3,
+    MONTHREPORT_4,
     END,
 };
 
@@ -40,6 +45,7 @@ GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer(), PanelDrawer(PNL_
     do_meltdown = false;
     do_lunar_battle = false;
     do_guild_title = GUILDTITLE_None;
+    month_report_open = false;
 }
 
 void GalaxyMap::enter() {
@@ -1035,7 +1041,19 @@ ExodusMode GalaxyMap::month_pass_update() {
     }
 
     if (mp_state.mp_stage == MP_EndOfMonthReport) {
-        // TODO
+        if (month_report_open) {
+            if (draw_manager.clicked()) {
+                close_month_report();
+            } else {
+                return ExodusMode::MODE_None;
+            }
+        } else {
+            Player *player = exostate.get_player(0);
+            if (!exostate.multiplayer() && (exostate.get_n_planets(player) > 0)) {
+                open_month_report();
+                return ExodusMode::MODE_None;
+            }
+        }
         next_mp_stage();
     }
 
@@ -3288,4 +3306,32 @@ void GalaxyMap::ai_planet_update(Planet* p) {
 
 void GalaxyMap::reset_planet_report() {
     report.items = 0;
+}
+
+void GalaxyMap::open_month_report() {
+    month_report_open = true;
+
+    const int w = 440;
+    const int h = 56;
+    const int x = RES_X/2 - w/2;
+
+    // TODO: Complete this
+    for (int i = 0; i < 5; ++i) {
+        const int b = BORDER;
+        const int real_h = (h+2+2*b);
+        const int base_y = (PNL_TOP-(real_h*5))/2;
+        const int y = base_y + i*real_h - (i==0?4:0);
+        SprID box_id = id(ID::MONTHREPORT_0 + i);
+        draw_manager.fill(box_id, {x-b, y-b, w+b*2, h+b*2}, COL_BORDERS);
+        draw_manager.fill_pattern({x, y, w, h});
+    }
+}
+
+void GalaxyMap::close_month_report() {
+    month_report_open = false;
+
+    for (int i = 0; i < 5; ++i) {
+        SprID box_id = id(ID::MONTHREPORT_0 + i);
+        draw_manager.draw(box_id, nullptr);
+    }
 }
