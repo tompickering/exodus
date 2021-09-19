@@ -175,6 +175,44 @@ void MonthReport::monthreport_open() {
                     break;
                 case 3:
                     {
+                        int n_invs = 0;
+                        for (int i = 0; i < (int)INV_MAX; ++i) {
+                            if (player->has_invention((Invention)i)) {
+                                n_invs++;
+                            }
+                        }
+
+                        const char* t0 = "The scientists are working";
+                        const char* t1 = "on a new invention.";
+                        if (n_invs == (int)INV_MAX) {
+                            t0 = "The scientists are very";
+                            t1 = "content and not very busy.";
+                        } else if (player->get_tax() < 5) {
+                            t0 = "The scientists have no";
+                            t1 = "money for further projects.";
+                        } else {
+                            switch (rand() % 3) {
+                                case 0:
+                                    t0 = "We are making remarkable";
+                                    t1 = "advancements!";
+                                    break;
+                                case 1:
+                                    t0 = "We are making interesting";
+                                    t1 = "advancements.";
+                                    break;
+                            }
+                        }
+
+                        draw_manager.draw_text(
+                            t0,
+                            Justify::Left,
+                            rx+4, y+4,
+                            COL_TEXT);
+                        draw_manager.draw_text(
+                            t1,
+                            Justify::Left,
+                            rx+4, y+24,
+                            COL_TEXT);
                     }
                     break;
                 case 4:
