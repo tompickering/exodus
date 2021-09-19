@@ -551,6 +551,16 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img(CI_HumanThoughtful);
             comm_set_img_caption("COUNSELLOR");
             break;
+        case DIA_S_NoScouts:
+            comm_set_title("Message from counsellor");
+            comm_set_img(CI_HumanThoughtful);
+            comm_set_img_caption("COUNSELLOR");
+            break;
+        case DIA_S_NoBombers:
+            comm_set_title("Message from counsellor");
+            comm_set_img(CI_HumanThoughtful);
+            comm_set_img_caption("COUNSELLOR");
+            break;
         case DIA_S_CPU_Attack:
             comm_set_img_caption_upper(comm_player->get_full_name());
             comm_set_img_caption_lower("RACE: %s", comm_player->get_race_str());
@@ -1217,6 +1227,24 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_set_text(2, "stronger our opponents are");
                 comm_set_text(3, "getting.");
                 comm_set_text(4, "We should act now.");
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_NoScouts:
+            {
+                comm_prepare(6);
+                comm_set_text(0, "We do not have any scout");
+                comm_set_text(1, "ships, so a scout flight is");
+                comm_set_text(2, "impossible.");
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_NoBombers:
+            {
+                comm_prepare(6);
+                comm_set_text(0, "We do not have any aerospace");
+                comm_set_text(1, "bombers, so a bomb attack is");
+                comm_set_text(2, "impossible.");
                 comm_recv(DIA_R_Close);
             }
             break;

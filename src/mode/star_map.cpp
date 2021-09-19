@@ -176,9 +176,58 @@ ExodusMode StarMap::update(float delta) {
             break;
         case SM_Fleet:
             {
+                if (comm_is_open()) {
+                    action = comm_update(delta);
+                    if (action == CA_Abort) {
+                        comm_close();
+                    }
+                    return ExodusMode::MODE_None;
+                }
+
                 update_fleet_menu();
 
-                // TODO
+                const Fleet &fleet = player->get_fleet();
+
+                if (draw_manager.query_click(id(ID::FLEET_SCOUT)).id) {
+                    if (fleet.scouts <= 0) {
+                        comm_open(DIA_S_NoScouts);
+                        return ExodusMode::MODE_None;
+                    } else {
+                        // TODO
+                    }
+                }
+
+                if (draw_manager.query_click(id(ID::FLEET_COVERED_SCOUT)).id) {
+                    if (fleet.scouts <= 0) {
+                        comm_open(DIA_S_NoScouts);
+                        return ExodusMode::MODE_None;
+                    } else {
+                        // TODO
+                    }
+                }
+
+                bool bmb = false;
+                bool bmb_guns = false;
+                Stone s0 = STONE_END;
+                Stone s1 = STONE_END;
+                Stone s2 = STONE_END;
+                if (draw_manager.query_click(id(ID::FLEET_BMB_CULT)).id)   { bmb=true; s0=STONE_Agri; }
+                if (draw_manager.query_click(id(ID::FLEET_BMB_MINE)).id)   { bmb=true; s0=STONE_Mine; }
+                if (draw_manager.query_click(id(ID::FLEET_BMB_PLU)).id)    { bmb=true; s0=STONE_Plu; }
+                if (draw_manager.query_click(id(ID::FLEET_BMB_CITY)).id)   { bmb=true; s0=STONE_City; }
+                if (draw_manager.query_click(id(ID::FLEET_BMB_ARMY)).id)   { bmb=true; s0=STONE_Inf;   s1=STONE_Gli;   s2=STONE_Art; }
+                if (draw_manager.query_click(id(ID::FLEET_BMB_PORT)).id)   { bmb=true; s0=STONE_Port0; s1=STONE_Port1; s2=STONE_Port2; }
+                if (draw_manager.query_click(id(ID::FLEET_BMB_TRADE)).id)  { bmb=true; s0=STONE_Trade; }
+                if (draw_manager.query_click(id(ID::FLEET_BMB_AIRDEF)).id) { bmb=true; bmb_guns=true; }
+
+                if (bmb) {
+                    if (fleet.bombers <= 0) {
+                        comm_open(DIA_S_NoBombers);
+                        return ExodusMode::MODE_None;
+                    } else {
+                        // TODO
+                    }
+                }
 
                 if (draw_manager.query_click(id(ID::FLEET_EXIT)).id) {
                     for (ID _id = FLEET_SCOUT; _id <= FLEET_EXIT; _id = (ID)((int)_id + 1)) {
