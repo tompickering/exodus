@@ -23,14 +23,16 @@ Star* StarIterator::get() {
     return &s[idx];
 }
 
-PlanetIterator::PlanetIterator() : Iterator() {
-    owner = -1;
-    end = STAR_MAX_PLANETS;
+PlanetIterator::PlanetIterator() : PlanetIterator(-1) {
 }
 
 PlanetIterator::PlanetIterator(int o) : Iterator() {
     owner = o;
     end = STAR_MAX_PLANETS;
+
+    if (!valid()) {
+        ++(*this);
+    }
 }
 
 void PlanetIterator::operator++() {
@@ -59,4 +61,15 @@ Planet* PlanetIterator::get() {
     if (complete()) return nullptr;
     Star *s = star_iter.get();
     return s->get_planet(idx);
+}
+
+bool PlanetIterator::valid() {
+    Planet *p = get();
+    if (!(p && p->exists())) {
+        return false;
+    }
+    if (owner >= 0 && !(p->get_owner() == owner)) {
+        return false;
+    }
+    return true;
 }

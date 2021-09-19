@@ -33,6 +33,7 @@ class PlanetIterator : public Iterator {
     private:
         StarIterator star_iter;
         int owner;
+        bool valid();
 };
 
 #endif
