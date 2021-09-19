@@ -8,6 +8,7 @@
 #include "mixins/bulletin_drawer.h"
 #include "mixins/frame_drawer.h"
 #include "mixins/menu_drawer.h"
+#include "mixins/month_report.h"
 
 #include "platform.h"
 #include "draw/draw.h"
@@ -144,7 +145,7 @@ typedef struct {
     int mpai_substage;
 } MPState;
 
-class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, BulletinDrawer, FrameDrawer, MenuDrawer {
+class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, BulletinDrawer, FrameDrawer, MenuDrawer, MonthReport {
     public:
         GalaxyMap();
         virtual void enter() override;
@@ -193,10 +194,6 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
         bool do_meltdown;
         bool do_lunar_battle;
         GuildTitle do_guild_title;
-        bool month_report_open;
-
-        void open_month_report();
-        void close_month_report();
 };
 
 #endif
