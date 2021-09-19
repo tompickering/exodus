@@ -16,10 +16,12 @@ class StarMap : ModeBase, PanelDrawer, CommPanelDrawer {
     public:
         StarMap();
         virtual void enter() override;
+        virtual void exit() override;
         virtual ExodusMode update(float) override;
     private:
         enum Stage {
             SM_Idle,
+            SM_Fleet,
             SM_PlanSettle,
             SM_PlanSettleFade,
             SM_PlanetComm,
@@ -35,6 +37,7 @@ class StarMap : ModeBase, PanelDrawer, CommPanelDrawer {
 
         bool select_planet(int);
         void set_fleet_button(bool);
+        void update_fleet_menu();
 };
 
 #endif

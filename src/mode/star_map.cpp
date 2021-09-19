@@ -8,6 +8,11 @@
 
 const float PLANET_ROTATE_SPD = .1f;
 
+const int FLEET_PANEL_W = 240;
+const int FLEET_PANEL_H = 308;
+const int FLEET_PANEL_X = RES_X/2 - FLEET_PANEL_W/2;
+const int FLEET_PANEL_Y = RES_Y/2 - FLEET_PANEL_H/2 - 40;
+
 enum ID {
     PLANET1,
     PLANET2,
@@ -15,6 +20,21 @@ enum ID {
     PLANET4,
     PLANET5,
     FLEET_BUTTON,
+    FLEET_PANEL,
+    FLEET_PANEL_PATTERN,
+    FLEET_HEAD_SCOUT,
+    FLEET_HEAD_BMB,
+    FLEET_SCOUT,
+    FLEET_COVERED_SCOUT,
+    FLEET_BMB_CULT,
+    FLEET_BMB_MINE,
+    FLEET_BMB_PLU,
+    FLEET_BMB_CITY,
+    FLEET_BMB_ARMY,
+    FLEET_BMB_PORT,
+    FLEET_BMB_TRADE,
+    FLEET_BMB_AIRDEF,
+    FLEET_EXIT,
     END,
 };
 
@@ -58,6 +78,14 @@ void StarMap::enter() {
     stage = SM_Idle;
 }
 
+void StarMap::exit() {
+    for (ID _id = FLEET_SCOUT; _id <= FLEET_EXIT; _id = (ID)((int)_id + 1)) {
+        draw_manager.unset_selectable(id(_id));
+    }
+
+    ModeBase::exit();
+}
+
 ExodusMode StarMap::update(float delta) {
     SpriteClick click;
     CommAction action;
@@ -86,9 +114,32 @@ ExodusMode StarMap::update(float delta) {
             click = draw_manager.query_click(id_panel);
             if (click.id) {
                 if (click.x < 0.25) {
-                    // Map
-                    if (exostate.get_active_planet()) {
-                        return ExodusMode::MODE_PlanetMap;
+                    // Fleet / Map
+                    if (planet) {
+                        if (planet->get_owner() == player_idx) {
+                            return ExodusMode::MODE_PlanetMap;
+                        } else {
+                            bool owned = planet->is_owned();
+
+                            draw_manager.fill(
+                                id(ID::FLEET_PANEL),
+                                {FLEET_PANEL_X-BORDER, FLEET_PANEL_Y-BORDER,
+                                FLEET_PANEL_W+2*BORDER, FLEET_PANEL_H+2*BORDER},
+                                COL_BORDERS);
+
+                            draw_manager.fill_pattern(
+                                id(ID::FLEET_PANEL_PATTERN),
+                                {FLEET_PANEL_X, FLEET_PANEL_Y, FLEET_PANEL_W, FLEET_PANEL_H});
+
+                            for (ID _id = FLEET_SCOUT; _id <= FLEET_EXIT; _id = (ID)((int)_id + 1)) {
+                                if (owned || _id < FLEET_BMB_CULT || _id > FLEET_BMB_AIRDEF) {
+                                    draw_manager.set_selectable(id(_id));
+                                }
+                            }
+
+                            stage = SM_Fleet;
+                            return ExodusMode::MODE_None;
+                        }
                     }
                 } else if (click.x < 0.5) {
                     // Info
@@ -120,6 +171,25 @@ ExodusMode StarMap::update(float delta) {
                     // Back
                     draw_manager.fade_black(1.2f, 24);
                     stage = SM_Back2Gal;
+                }
+            }
+            break;
+        case SM_Fleet:
+            {
+                update_fleet_menu();
+
+                // TODO
+
+                if (draw_manager.query_click(id(ID::FLEET_EXIT)).id) {
+                    for (ID _id = FLEET_SCOUT; _id <= FLEET_EXIT; _id = (ID)((int)_id + 1)) {
+                        draw_manager.unset_selectable(id(_id));
+                    }
+                    for (ID _id = FLEET_SCOUT; _id <= FLEET_EXIT; _id = (ID)((int)_id + 1)) {
+                        draw_manager.draw(id(_id), nullptr);
+                        draw_manager.draw(id(ID::FLEET_PANEL_PATTERN), nullptr);
+                        draw_manager.draw(id(ID::FLEET_PANEL), nullptr);
+                    }
+                    stage = SM_Idle;
                 }
             }
             break;
@@ -304,4 +374,95 @@ void StarMap::set_fleet_button(bool on) {
         on ? IMG_TS2_M2_1 : IMG_TS2_M2_2,
         {206, RES_Y - 6,
          0, 1, 1, 1});
+}
+
+void StarMap::update_fleet_menu() {
+    Planet *planet = exostate.get_active_planet();
+    bool owned = planet->is_owned();
+
+    draw_manager.draw_text(
+        id(ID::FLEET_HEAD_SCOUT),
+        "Scout flights:",
+        Justify::Left,
+        FLEET_PANEL_X+4, FLEET_PANEL_Y+4,
+        COL_TEXT2);
+    draw_manager.draw_text(
+        id(ID::FLEET_SCOUT),
+        "Scout flight",
+        Justify::Left,
+        FLEET_PANEL_X+4, FLEET_PANEL_Y+24,
+        COL_TEXT);
+    draw_manager.draw_text(
+        id(ID::FLEET_COVERED_SCOUT),
+        "Covered scout flight",
+        Justify::Left,
+        FLEET_PANEL_X+4, FLEET_PANEL_Y+44,
+        COL_TEXT);
+
+    RGB col = COL_TEXT;
+    if (!owned) {
+        col = COL_TEXT_GREYED;
+    }
+
+    draw_manager.draw_text(
+        id(ID::FLEET_HEAD_BMB),
+        "Bomber attack:",
+        Justify::Left,
+        FLEET_PANEL_X+4, FLEET_PANEL_Y+84,
+        COL_TEXT2);
+    draw_manager.draw_text(
+        id(ID::FLEET_BMB_CULT),
+        "Cultivated area",
+        Justify::Left,
+        FLEET_PANEL_X+4, FLEET_PANEL_Y+104,
+        col);
+    draw_manager.draw_text(
+        id(ID::FLEET_BMB_MINE),
+        "Mining",
+        Justify::Left,
+        FLEET_PANEL_X+4, FLEET_PANEL_Y+124,
+        col);
+    draw_manager.draw_text(
+        id(ID::FLEET_BMB_PLU),
+        "Plutonium production",
+        Justify::Left,
+        FLEET_PANEL_X+4, FLEET_PANEL_Y+144,
+        col);
+    draw_manager.draw_text(
+        id(ID::FLEET_BMB_CITY),
+        "Cities",
+        Justify::Left,
+        FLEET_PANEL_X+4, FLEET_PANEL_Y+164,
+        col);
+    draw_manager.draw_text(
+        id(ID::FLEET_BMB_ARMY),
+        "Army production",
+        Justify::Left,
+        FLEET_PANEL_X+4, FLEET_PANEL_Y+184,
+        col);
+    draw_manager.draw_text(
+        id(ID::FLEET_BMB_PORT),
+        "Spaceport",
+        Justify::Left,
+        FLEET_PANEL_X+4, FLEET_PANEL_Y+204,
+        col);
+    draw_manager.draw_text(
+        id(ID::FLEET_BMB_TRADE),
+        "Trading Centre",
+        Justify::Left,
+        FLEET_PANEL_X+4, FLEET_PANEL_Y+224,
+        col);
+    draw_manager.draw_text(
+        id(ID::FLEET_BMB_AIRDEF),
+        "AirDef Guns",
+        Justify::Left,
+        FLEET_PANEL_X+4, FLEET_PANEL_Y+244,
+        col);
+
+    draw_manager.draw_text(
+        id(ID::FLEET_EXIT),
+        "Exit",
+        Justify::Left,
+        FLEET_PANEL_X+4, FLEET_PANEL_Y+284,
+        COL_TEXT);
 }
