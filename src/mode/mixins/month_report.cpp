@@ -127,7 +127,7 @@ void MonthReport::monthreport_open() {
                     break;
                 case 2:
                     {
-                        if (false && player->get_officer(OFF_Counsellor) == OFFQ_Poor) {
+                        if (player->get_officer(OFF_Counsellor) == OFFQ_Poor) {
                             draw_manager.draw_text(
                                 "Your counsellor is not",
                                 Justify::Left,
