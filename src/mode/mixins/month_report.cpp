@@ -3,6 +3,8 @@
 #include "state/exodus_state.h"
 #include "draw/draw.h"
 
+#include "util/iter.h"
+
 #define NUM_MONTHREPORT_IDS 11
 
 extern ExodusState exostate;
@@ -35,8 +37,8 @@ void MonthReport::monthreport_open() {
     const int lw = 120;
 
     // FIXME: Should probably have a 'get_primary_player()' function or similar
-    Player *p = exostate.get_player(0);
-    int p_idx = exostate.get_player_idx(p);
+    Player *player = exostate.get_player(0);
+    int player_idx = exostate.get_player_idx(player);
 
     // TODO: Complete this
     for (int row = 0; row < 5; ++row) {
@@ -78,16 +80,16 @@ void MonthReport::monthreport_open() {
                         int enemies = 0;
                         for (int i = 0; i < N_PLAYERS; ++i) {
                             Player *other = exostate.get_player(i);
-                            if (other == p) {
+                            if (other == player) {
                                 continue;
                             }
                             if (!other->is_participating()) {
                                 continue;
                             }
-                            if (exostate.is_allied(p_idx, i)) {
+                            if (exostate.is_allied(player_idx, i)) {
                                 ++allies;
                             }
-                            if (other->is_hostile_to(p_idx)) {
+                            if (other->is_hostile_to(player_idx)) {
                                 ++enemies;
                             }
                         }
@@ -125,6 +127,50 @@ void MonthReport::monthreport_open() {
                     break;
                 case 2:
                     {
+                        if (false && player->get_officer(OFF_Counsellor) == OFFQ_Poor) {
+                            draw_manager.draw_text(
+                                "Your counsellor is not",
+                                Justify::Left,
+                                rx+4, y+4,
+                                COL_TEXT);
+                            draw_manager.draw_text(
+                                "qualified in this area.",
+                                Justify::Left,
+                                rx+4, y+24,
+                                COL_TEXT);
+                        } else {
+                            bool ok = true;
+                            int n_planets = 0;
+                            for (PlanetIterator piter(player_idx); !piter.complete(); ++piter) {
+                                n_planets++;
+                                // TODO: Check month value here - easy to check against
+                                // other uses in PROCfillstatus
+                                if (piter.get()->get_army_size() < exostate.get_orig_month()) {
+                                    ok = false;
+                                }
+                            }
+                            if (ok) {
+                                draw_manager.draw_text(
+                                    "We seem to have enough",
+                                    Justify::Left,
+                                    rx+4, y+4,
+                                    COL_TEXT);
+                            } else {
+                                draw_manager.draw_text(
+                                    "There is insufficient",
+                                    Justify::Left,
+                                    rx+4, y+4,
+                                    COL_TEXT);
+                            }
+
+                            snprintf(text, sizeof(text), "defence at our planet%s.", n_planets==1?"":"s");
+
+                            draw_manager.draw_text(
+                                text,
+                                Justify::Left,
+                                rx+4, y+24,
+                                COL_TEXT);
+                        }
                     }
                     break;
                 case 3:
