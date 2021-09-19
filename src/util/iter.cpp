@@ -45,11 +45,10 @@ void PlanetIterator::operator++() {
             ++star_iter;
             idx = 0;
         }
-        Planet *p = get();
-        if (!p) continue;
-        if (!p->exists()) continue;
-        if (owner >= 0 && p->get_owner() != owner) continue;
-        break;
+
+        if (valid()) {
+            break;
+        }
     }
 }
 
