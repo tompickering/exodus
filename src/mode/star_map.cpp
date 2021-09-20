@@ -60,11 +60,13 @@ void StarMap::enter() {
     draw_manager.save_background();
     draw_manager.show_cursor(true);
 
+    bool planet_set = false;
     Planet *active_planet = exostate.get_active_planet();
     if (active_planet && active_planet->exists()) {
         // Ensures fleet button is updated etc
-        select_planet(exostate.get_active_planet_idx());
-    } else {
+        planet_set = select_planet(exostate.get_active_planet_idx());
+    }
+    if (!planet_set) {
         for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
             if (select_planet(i))
                 break;
