@@ -22,6 +22,8 @@ void ShipEquip::enter() {
     draw_manager.save_background();
     draw_manager.show_cursor(true);
 
+    input_manager.enable_repeating_clicks(true);
+
     rows[0].img = IMG_EQ1_TR1;
     rows[0].name = "Shield Generator";
     rows[0].own = s.shield_generators;
