@@ -206,6 +206,7 @@ class Planet {
         void this_month_prevent_attacks_by(int);
         void set_law(Law, bool);
         bool has_law(Law);
+        void toggle_law(Law);
         bool laws_cause_unrest();
         void clear_radiation();
         void produce_food();

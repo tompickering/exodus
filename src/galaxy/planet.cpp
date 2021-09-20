@@ -1246,11 +1246,19 @@ void Planet::this_month_prevent_attacks_by(int player_idx) {
 }
 
 void Planet::set_law(Law law, bool legal) {
-    laws |= (1 << (int)law);
+    if (legal) {
+        laws |= (1 << (int)law);
+    } else {
+        laws &= ~(1 << (int)law);
+    }
 }
 
 bool Planet::has_law(Law law) {
     return (bool)(laws & (1 << (int)law));
+}
+
+void Planet::toggle_law(Law law) {
+    set_law(law, !has_law(law));
 }
 
 bool Planet::laws_cause_unrest() {

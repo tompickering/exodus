@@ -513,7 +513,20 @@ ExodusMode PlanetMap::update(float delta) {
                     COL_TEXT);
 
                 if (draw_manager.query_click(id(ID::LAW_JUSTICE)).id) {
-                    // TODO
+                    clear_law_ids();
+                    draw_law_panel();
+                    draw_manager.draw_text(
+                        Font::Large,
+                        "The Law",
+                        Justify::Centre,
+                        RES_X/2, LAW_Y+4,
+                        COL_TEXT2);
+                    stage = PM_LawJustice;
+                    // FIXME: We have to do this becaome of the update(0)
+                    //        Might be nicer to return e.g. ExodusMode::Redo,
+                    //        which would handle this
+                    draw_manager.consume_click();
+                    return update(0);
                 }
 
                 if (draw_manager.query_click(id(ID::LAW_TRADE)).id) {
@@ -532,6 +545,112 @@ ExodusMode PlanetMap::update(float delta) {
 
                 if (draw_manager.query_click(id(ID::LAW_EXIT)).id) {
                     close_law_panel();
+                }
+            }
+            break;
+        case PM_LawJustice:
+            {
+                int y = LAW_Y+44;
+                int ysp = 26;
+                // TODO: Use weird symbol instead of *
+                draw_manager.draw_text(
+                    id(ID::LAW_FREESPEECH),
+                    "*1 Freedom of Speech",
+                    Justify::Left,
+                    LAW_X+20, y,
+                    COL_TEXT);
+                draw_manager.draw(
+                    planet->has_law(LAW_FreeSpeech)?IMG_SU1_ALLOW1:IMG_SU1_ALLOW0,
+                    {LAW_X+LAW_W-20, y+1,
+                     1, 0, 1, 1});
+                y += ysp;
+                draw_manager.draw_text(
+                    id(ID::LAW_PRIVATEINDUSTRY),
+                    "*2 Private Industry",
+                    Justify::Left,
+                    LAW_X+20, y,
+                    COL_TEXT);
+                draw_manager.draw(
+                    planet->has_law(LAW_PrivateIndustry)?IMG_SU1_ALLOW1:IMG_SU1_ALLOW0,
+                    {LAW_X+LAW_W-20, y+1,
+                     1, 0, 1, 1});
+                y += ysp;
+                draw_manager.draw_text(
+                    id(ID::LAW_DRUGS),
+                    "*3 Drug Legalisation",
+                    Justify::Left,
+                    LAW_X+20, y,
+                    COL_TEXT);
+                draw_manager.draw(
+                    planet->has_law(LAW_DrugLegalisation)?IMG_SU1_ALLOW1:IMG_SU1_ALLOW0,
+                    {LAW_X+LAW_W-20, y+1,
+                     1, 0, 1, 1});
+                y += ysp;
+                draw_manager.draw_text(
+                    id(ID::LAW_SYSENEMIES),
+                    "*4 Allow System Enemies",
+                    Justify::Left,
+                    LAW_X+20, y,
+                    COL_TEXT);
+                draw_manager.draw(
+                    planet->has_law(LAW_AllowSystemEnemies)?IMG_SU1_ALLOW1:IMG_SU1_ALLOW0,
+                    {LAW_X+LAW_W-20, y+1,
+                     1, 0, 1, 1});
+                y += ysp;
+                draw_manager.draw_text(
+                    id(ID::LAW_RELIGION),
+                    "*5 Different Religions",
+                    Justify::Left,
+                    LAW_X+20, y,
+                    COL_TEXT);
+                draw_manager.draw(
+                    planet->has_law(LAW_DifferentReligions)?IMG_SU1_ALLOW1:IMG_SU1_ALLOW0,
+                    {LAW_X+LAW_W-20, y+1,
+                     1, 0, 1, 1});
+                y += ysp;
+                draw_manager.draw_text(
+                    id(ID::LAW_CIVARMS),
+                    "*6 Weapons for Civilians",
+                    Justify::Left,
+                    LAW_X+20, y,
+                    COL_TEXT);
+                draw_manager.draw(
+                    planet->has_law(LAW_CivilianWeapons)?IMG_SU1_ALLOW1:IMG_SU1_ALLOW0,
+                    {LAW_X+LAW_W-20, y+1,
+                     1, 0, 1, 1});
+
+                if (draw_manager.query_click(id(ID::LAW_FREESPEECH)).id) {
+                    planet->toggle_law(LAW_FreeSpeech);
+                }
+                if (draw_manager.query_click(id(ID::LAW_PRIVATEINDUSTRY)).id) {
+                    planet->toggle_law(LAW_PrivateIndustry);
+                }
+                if (draw_manager.query_click(id(ID::LAW_DRUGS)).id) {
+                    planet->toggle_law(LAW_DrugLegalisation);
+                }
+                if (draw_manager.query_click(id(ID::LAW_SYSENEMIES)).id) {
+                    planet->toggle_law(LAW_AllowSystemEnemies);
+                }
+                if (draw_manager.query_click(id(ID::LAW_RELIGION)).id) {
+                    planet->toggle_law(LAW_DifferentReligions);
+                }
+                if (draw_manager.query_click(id(ID::LAW_CIVARMS)).id) {
+                    planet->toggle_law(LAW_CivilianWeapons);
+                }
+
+                draw_manager.draw_text(
+                    id(ID::LAW_EXIT),
+                    "Exit",
+                    Justify::Left,
+                    LAW_X+20, LAW_Y+204,
+                    COL_TEXT);
+
+                if (draw_manager.query_click(id(ID::LAW_EXIT)).id) {
+                    draw_manager.consume_click();
+                    clear_law_ids();
+                    open_law_panel();
+                    stage = PM_Law;
+                    return update(0);
                 }
             }
             break;

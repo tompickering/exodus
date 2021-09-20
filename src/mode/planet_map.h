@@ -61,6 +61,7 @@ class PlanetMap : ModeBase {
             PM_Destruction,
             PM_Frame,
             PM_Law,
+            PM_LawJustice,
         };
 
         Stage stage;
