@@ -33,6 +33,10 @@ BulletinDrawer::BulletinDrawer() {
 }
 
 void BulletinDrawer::bulletin_start_new(bool transition) {
+    for (int i = 0; i < bulletin_text_idx; ++i) {
+        draw_manager.draw(id_bulletin_text[i], nullptr);
+    }
+
     if (!bulletin_is_open())
         bulletin_open();
 
