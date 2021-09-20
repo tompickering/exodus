@@ -200,6 +200,11 @@ int Exodus::run(int argc, char** argv) {
         ExodusMode next = mode->update(mode_updated_since_enter ? delta_time : 0);
         mode_updated_since_enter = true;
 
+        while (next == ExodusMode::MODE_Redo) {
+            draw_manager.consume_click();
+            next = mode->update(0);
+        }
+
         // Handle any mode transitions returned following update
         if (next != ExodusMode::MODE_None) {
             if (next == ExodusMode::MODE_Pop) {

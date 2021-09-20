@@ -522,11 +522,7 @@ ExodusMode PlanetMap::update(float delta) {
                         RES_X/2, LAW_Y+4,
                         COL_TEXT2);
                     stage = PM_LawJustice;
-                    // FIXME: We have to do this becaome of the update(0)
-                    //        Might be nicer to return e.g. ExodusMode::Redo,
-                    //        which would handle this
-                    draw_manager.consume_click();
-                    return update(0);
+                    return ExodusMode::MODE_Redo;
                 }
 
                 if (draw_manager.query_click(id(ID::LAW_TRADE)).id) {
@@ -650,7 +646,7 @@ ExodusMode PlanetMap::update(float delta) {
                     clear_law_ids();
                     open_law_panel();
                     stage = PM_Law;
-                    return update(0);
+                    return ExodusMode::MODE_Redo;
                 }
             }
             break;
