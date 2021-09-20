@@ -60,6 +60,7 @@ class PlanetMap : ModeBase {
             PM_Scout,
             PM_Destruction,
             PM_Frame,
+            PM_Law,
         };
 
         Stage stage;
@@ -120,6 +121,11 @@ class PlanetMap : ModeBase {
         void draw_frame_help(Tool);
         void draw_frame(int, int);
         void close_frame();
+
+        void open_law_panel();
+        void close_law_panel();
+        void draw_law_panel();
+        void clear_law_ids();
 
         SprID id_stones[MAX_STONES];
 };

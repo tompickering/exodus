@@ -17,6 +17,11 @@ using std::map;
 #define EXPLOSION_RATE 1.0
 #define TARGETING_RATE 0.6
 
+const int LAW_W = 300;
+const int LAW_H = 240;
+const int LAW_X = RES_X/2 - LAW_W/2;
+const int LAW_Y = RES_Y/2 - LAW_H/2;
+
 const float ANIM_RATE = 0.5f;
 
 enum ID {
@@ -40,6 +45,25 @@ enum ID {
     TARGET,
     EXPLOSION,
     FRAME,
+    LAW_PANEL,
+    LAW_PATTERN,
+    LAW_JUSTICE,
+    LAW_TRADE,
+    LAW_TAXES,
+    LAW_FESTIVAL,
+    LAW_FREESPEECH,
+    LAW_PRIVATEINDUSTRY,
+    LAW_DRUGS,
+    LAW_SYSENEMIES,
+    LAW_RELIGION,
+    LAW_CIVARMS,
+    LAW_SELLMIN,
+    LAW_SELLFD,
+    LAW_SELLPLU,
+    LAW_TAXYESNO,
+    LAW_FESTSM,
+    LAW_FESTLG,
+    LAW_EXIT,
     END,
 };
 
@@ -190,11 +214,18 @@ void PlanetMap::enter() {
     if (play_music) {
         audio_manager.target_music(mus);
     }
+
+    for (ID i = LAW_JUSTICE; i <= LAW_EXIT; i = (ID)((int)i+1)) {
+        draw_manager.set_selectable(id(i));
+    }
 }
 
 void PlanetMap::exit() {
     for (int i = 0; i < MAX_STONES; ++i) {
         draw_manager.release_sprite_id(id_stones[i]);
+    }
+    for (ID i = LAW_JUSTICE; i <= LAW_EXIT; i = (ID)((int)i+1)) {
+        draw_manager.unset_selectable(id(i));
     }
 }
 
@@ -381,8 +412,8 @@ ExodusMode PlanetMap::update(float delta) {
                         }
                     }
                 } else {
-                    // TODO: Law
-                    L.debug("Law clicked");
+                    open_law_panel();
+                    return ExodusMode::MODE_None;
                 }
             }
 
@@ -446,6 +477,62 @@ ExodusMode PlanetMap::update(float delta) {
                 close_frame();
                 set_tool(active_tool);
                 stage = PM_Idle;
+            }
+            break;
+        case PM_Law:
+            {
+                draw_manager.draw_text(
+                    id(ID::LAW_JUSTICE),
+                    "Justice",
+                    Justify::Left,
+                    LAW_X + 20, LAW_Y+44,
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    id(ID::LAW_TRADE),
+                    "Trading Centre Rules",
+                    Justify::Left,
+                    LAW_X + 20, LAW_Y+84,
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    id(ID::LAW_TAXES),
+                    "Additional Taxes",
+                    Justify::Left,
+                    LAW_X + 20, LAW_Y+124,
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    id(ID::LAW_FESTIVAL),
+                    "Public Festival",
+                    Justify::Left,
+                    LAW_X + 20, LAW_Y+164,
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    id(ID::LAW_EXIT),
+                    "Exit",
+                    Justify::Left,
+                    LAW_X + 20, LAW_Y+204,
+                    COL_TEXT);
+
+                if (draw_manager.query_click(id(ID::LAW_JUSTICE)).id) {
+                    // TODO
+                }
+
+                if (draw_manager.query_click(id(ID::LAW_TRADE)).id) {
+                    // TODO
+                }
+
+                if (draw_manager.query_click(id(ID::LAW_TAXES)).id) {
+                    // TODO
+                }
+
+                if (draw_manager.query_click(id(ID::LAW_FESTIVAL)).id) {
+                    // TODO
+                    clear_law_ids();
+                    draw_law_panel();
+                }
+
+                if (draw_manager.query_click(id(ID::LAW_EXIT)).id) {
+                    close_law_panel();
+                }
             }
             break;
     }
@@ -1455,4 +1542,39 @@ void PlanetMap::draw_frame_unrest() {
 void PlanetMap::draw_frame_help(Tool t) {
     // TODO
     draw_frame(436, 306);
+}
+
+void PlanetMap::open_law_panel() {
+    draw_law_panel();
+    draw_manager.draw_text(
+        "LAW AND ORGANIZATION",
+        Justify::Centre,
+        RES_X/2, LAW_Y+4,
+        COL_TEXT2);
+    stage = PM_Law;
+}
+
+void PlanetMap::close_law_panel() {
+    clear_law_ids();
+    draw_manager.draw(id(ID::LAW_PATTERN), nullptr);
+    draw_manager.draw(id(ID::LAW_PANEL), nullptr);
+    stage = PM_Idle;
+}
+
+void PlanetMap::draw_law_panel() {
+    draw_manager.fill(
+        id(ID::LAW_PANEL),
+        {LAW_X - BORDER, LAW_Y - BORDER,
+         LAW_W + 2*BORDER, LAW_H + 2*BORDER},
+         COL_BORDERS);
+    // TODO: Use alternate pattern here
+    draw_manager.fill_pattern(
+        id(ID::LAW_PATTERN),
+        {LAW_X, LAW_Y, LAW_W, LAW_H});
+}
+
+void PlanetMap::clear_law_ids() {
+    for (ID i = LAW_JUSTICE; i <= LAW_EXIT; i = (ID)((int)i+1)) {
+        draw_manager.draw(id(i), nullptr);
+    }
 }
