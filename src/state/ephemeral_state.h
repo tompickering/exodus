@@ -119,6 +119,7 @@ enum EphState {
     EPH_Destruction,
     EPH_ResearchCheck,
     EPH_ResumeFly,
+    EPH_Festival,
     EPH_GameOver,
 };
 

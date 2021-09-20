@@ -34,6 +34,11 @@ ExodusMode EphemeralState::get_appropriate_mode() {
             return ExodusMode::MODE_PlanetMap;
         case EPH_ResearchCheck:
             return ExodusMode::MODE_None;
+        case EPH_Festival:
+            // FIXME: This assumes exiting planet map will open
+            // StarMap. Ideally we would specify StarMap here, but
+            // we need to find another way to trigger a mode stack pop.
+            return ExodusMode::MODE_Pop;
         case EPH_GameOver:
             return ExodusMode::MODE_GameOver;
     }

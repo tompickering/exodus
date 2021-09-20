@@ -63,6 +63,7 @@ class PlanetMap : ModeBase {
             PM_Law,
             PM_LawJustice,
             PM_LawFestival,
+            PM_LawFestivalConfirm,
         };
 
         Stage stage;

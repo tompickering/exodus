@@ -37,6 +37,7 @@ enum ID {
     FLEET_BMB_AIRDEF,
     FLEET_EXIT,
     FLEET_MISSIONBG,
+    FESTIVAL,
     END,
 };
 
@@ -45,7 +46,7 @@ StarMap::StarMap() : ModeBase("StarMap"), PanelDrawer(PNL_Star), CommPanelDrawer
     for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
         planet_progress[i] = 0;
     }
-
+    festival_delay = 0;
 }
 
 void StarMap::enter() {
@@ -72,6 +73,8 @@ void StarMap::enter() {
                 break;
         }
     }
+
+    festival_delay = 0;
 
     if (tgt != TGT_Primary) {
         draw_manager.fade_start(1.f, 12);
@@ -108,7 +111,7 @@ ExodusMode StarMap::update(float delta) {
     Planet *planet = exostate.get_active_planet();
     int player_idx = exostate.get_active_player_idx();
 
-    switch(stage) {
+    switch (stage) {
         case SM_Idle:
             draw_planets(delta);
 
@@ -119,6 +122,12 @@ ExodusMode StarMap::update(float delta) {
                 if (draw_manager.query_click(id(ID::PLANET1 + i)).id) {
                     select_planet(i);
                 }
+            }
+
+            if (ephstate.get_ephemeral_state() == EPH_Festival) {
+                ephstate.clear_ephemeral_state();
+                stage = SM_FestivalDelay;
+                return ExodusMode::MODE_None;
             }
 
             click = draw_manager.query_click(id_panel);
@@ -451,6 +460,40 @@ ExodusMode StarMap::update(float delta) {
                     return ephstate.get_appropriate_mode();
                 default:
                     L.fatal("Unexpected comm action in SM_PlanAttack: %d", (int)action);
+            }
+            break;
+        case SM_FestivalDelay:
+            {
+                if (festival_delay > .8f) {
+                    festival_delay = 0;
+                    draw_manager.draw(
+                        id(ID::FESTIVAL),
+                        IMG_CT4_EXPORT,
+                        {5, 7, 0, 0, 1, 1});
+                    frame_draw();
+                    char text[24 + PLANET_MAX_NAME];
+                    snprintf(text, sizeof(text), "The celebrations of %s", planet->get_name());
+                    draw_manager.draw_text(
+                        text,
+                        Justify::Centre,
+                        RES_X/2, 10,
+                        COL_TEXT2);
+                    audio_manager.target_music(MUS_CELEBRATE);
+                    stage = SM_Festival;
+                    return ExodusMode::MODE_None;
+                }
+
+                festival_delay += delta;
+            }
+            break;
+        case SM_Festival:
+            {
+                if (draw_manager.clicked()) {
+                    draw_manager.draw(id(ID::FESTIVAL), nullptr);
+                    frame_remove();
+                    audio_manager.target_music(ephstate.default_music);
+                    stage = SM_Idle;
+                }
             }
             break;
         case SM_Back2Gal:

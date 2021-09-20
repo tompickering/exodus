@@ -4,6 +4,7 @@
 #include "mode_base.h"
 #include "mixins/panel_drawer.h"
 #include "mixins/comm_panel_drawer.h"
+#include "mixins/frame_drawer.h"
 
 #include "draw/draw.h"
 
@@ -12,7 +13,7 @@
 
 extern ExodusState exostate;
 
-class StarMap : ModeBase, PanelDrawer, CommPanelDrawer {
+class StarMap : ModeBase, PanelDrawer, CommPanelDrawer, FrameDrawer {
     public:
         StarMap();
         virtual void enter() override;
@@ -28,6 +29,8 @@ class StarMap : ModeBase, PanelDrawer, CommPanelDrawer {
             SM_PlanetComm,
             SM_EnemyComm,
             SM_PlanAttack,
+            SM_FestivalDelay,
+            SM_Festival,
             SM_Back2Gal,
         };
 
@@ -39,6 +42,8 @@ class StarMap : ModeBase, PanelDrawer, CommPanelDrawer {
         bool select_planet(int);
         void set_fleet_button(bool);
         void update_fleet_menu();
+
+        float festival_delay;
 };
 
 #endif

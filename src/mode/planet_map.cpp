@@ -418,6 +418,9 @@ ExodusMode PlanetMap::update(float delta) {
             }
 
             if (draw_manager.query_click(id(ID::EXIT)).id) {
+                if (ephstate.get_ephemeral_state() == EPH_Festival) {
+                    return ephstate.get_appropriate_mode();
+                }
                 return ExodusMode::MODE_Pop;
             }
 
@@ -534,9 +537,25 @@ ExodusMode PlanetMap::update(float delta) {
                 }
 
                 if (draw_manager.query_click(id(ID::LAW_FESTIVAL)).id) {
-                    // TODO
                     clear_law_ids();
                     draw_law_panel();
+                    draw_manager.draw_text(
+                        "PUBLIC FESTIVAL",
+                        Justify::Centre,
+                        RES_X/2, LAW_Y+4,
+                        COL_TEXT2);
+                    draw_manager.draw_text(
+                        "How shall the festival",
+                        Justify::Left,
+                        LAW_X+4, LAW_Y+44,
+                        COL_TEXT);
+                    draw_manager.draw_text(
+                        "be planned?",
+                        Justify::Left,
+                        LAW_X+4, LAW_Y+64,
+                        COL_TEXT);
+                    stage = PM_LawFestival;
+                    return ExodusMode::MODE_Redo;
                 }
 
                 if (draw_manager.query_click(id(ID::LAW_EXIT)).id) {
@@ -642,11 +661,86 @@ ExodusMode PlanetMap::update(float delta) {
                     COL_TEXT);
 
                 if (draw_manager.query_click(id(ID::LAW_EXIT)).id) {
-                    draw_manager.consume_click();
                     clear_law_ids();
                     open_law_panel();
                     stage = PM_Law;
                     return ExodusMode::MODE_Redo;
+                }
+            }
+            break;
+        case PM_LawFestival:
+            {
+                // TODO: Grey these out if not affordable
+                draw_manager.draw_text(
+                    id(ID::LAW_FESTSM),
+                    "Small festival (20 MC)",
+                    Justify::Left,
+                    LAW_X+20, LAW_Y+100,
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    id(ID::LAW_FESTLG),
+                    "Big festival (100 MC)",
+                    Justify::Left,
+                    LAW_X+20, LAW_Y+140,
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    id(ID::LAW_EXIT),
+                    "Exit",
+                    Justify::Left,
+                    LAW_X+20, LAW_Y+204,
+                    COL_TEXT);
+
+                bool festival = false;
+
+                if (draw_manager.query_click(id(ID::LAW_FESTSM)).id) {
+                    if (player->attempt_spend(20)) {
+                        festival = true;
+                        planet->adjust_unrest(-1);
+                    }
+                }
+
+                if (draw_manager.query_click(id(ID::LAW_FESTLG)).id) {
+                    if (player->attempt_spend(100)) {
+                        festival = true;
+                        // FIXME: Orig allows multiple festivals per
+                        // planet per month - this option makes no
+                        // sense unless that is restricted!
+                        planet->adjust_unrest(-2);
+                    }
+                }
+
+                if (festival) {
+                    ephstate.set_ephemeral_state(EPH_Festival);
+                    clear_law_ids();
+                    draw_law_panel();
+                    draw_manager.draw_text(
+                        "The celebrations will",
+                        Justify::Centre,
+                        RES_X/2, LAW_Y+80,
+                        COL_TEXT);
+                    draw_manager.draw_text(
+                        "soon begin.",
+                        Justify::Centre,
+                        RES_X/2, LAW_Y+100,
+                        COL_TEXT);
+                    stage = PM_LawFestivalConfirm;
+                    return ExodusMode::MODE_Redo;
+                }
+
+                if (draw_manager.query_click(id(ID::LAW_EXIT)).id) {
+                    clear_law_ids();
+                    open_law_panel();
+                    stage = PM_Law;
+                    return ExodusMode::MODE_Redo;
+                }
+            }
+            break;
+        case PM_LawFestivalConfirm:
+            {
+                if (draw_manager.clicked()) {
+                    close_law_panel();
+                    stage = PM_Idle;
+                    return ExodusMode::MODE_None;
                 }
             }
             break;
