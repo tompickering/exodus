@@ -160,7 +160,15 @@ void PlanetMap::enter() {
     // 2 = scout / planning bomb attack
     // 3 = bombing
 
-    if (ephstate.get_ephemeral_state() == EPH_Destruction) {
+    if (ephstate.get_ephemeral_state() == EPH_ScoutPlanet) {
+        mus = mpart2mus(4);
+        draw_menu = false;
+        do_animations = false;
+        draw();
+        draw_stones();
+        // TODO: Draw class and population (Destruction missing this as well?)
+        stage = PM_Scout;
+    } else if (ephstate.get_ephemeral_state() == EPH_Destruction) {
         mus = mpart2mus(8);
         draw_menu = false;
         do_animations = false;
@@ -194,7 +202,13 @@ void PlanetMap::draw() {
     draw_manager.draw(planet->sprites()->map_bg);
 
     char title[15 + PLANET_MAX_NAME];
-    snprintf(title, 14 + PLANET_MAX_NAME, "The planet %s", planet->get_name());
+
+    if (planet->is_named()) {
+        snprintf(title, sizeof(title), "The planet %s", planet->get_name());
+    } else {
+        snprintf(title, sizeof(title), "Unexplored planet");
+    }
+
     draw_manager.draw_text(
         title,
         Justify::Left,
@@ -419,6 +433,14 @@ ExodusMode PlanetMap::update(float delta) {
             break;
         case PM_Destruction:
             return update_destruction(delta);
+        case PM_Scout:
+            {
+                if (draw_manager.clicked()) {
+                    ephstate.clear_ephemeral_state();
+                    return ExodusMode::MODE_Pop;
+                }
+            }
+            break;
         case PM_Frame:
             if (draw_manager.clicked()) {
                 close_frame();

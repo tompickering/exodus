@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include "galaxy/star.h"
+#include "util/value.h"
 
 #include "assetpaths.h"
 
@@ -35,6 +36,7 @@ enum ID {
     FLEET_BMB_TRADE,
     FLEET_BMB_AIRDEF,
     FLEET_EXIT,
+    FLEET_MISSIONBG,
     END,
 };
 
@@ -73,12 +75,16 @@ void StarMap::enter() {
         draw_manager.fade_start(1.f, 12);
     }
 
+    DrawArea a = {FLEET_PANEL_X, FLEET_PANEL_Y, FLEET_PANEL_W, FLEET_PANEL_H};
+    draw_manager.set_source_region(id(ID::FLEET_MISSIONBG), &a);
+
     audio_manager.target_music(ephstate.default_music);
 
     stage = SM_Idle;
 }
 
 void StarMap::exit() {
+    draw_manager.set_source_region(id(ID::FLEET_MISSIONBG), nullptr);
     for (ID _id = FLEET_SCOUT; _id <= FLEET_EXIT; _id = (ID)((int)_id + 1)) {
         draw_manager.unset_selectable(id(_id));
     }
@@ -186,23 +192,131 @@ ExodusMode StarMap::update(float delta) {
 
                 update_fleet_menu();
 
-                const Fleet &fleet = player->get_fleet();
+                Fleet &fleet = player->get_fleet_nonconst();
+                const char* mission_bg = planet->sprites()->landscape;
+
+                bool owned = planet->is_owned();
+
+                bool scout = false;
+                bool scout_covered = false;
 
                 if (draw_manager.query_click(id(ID::FLEET_SCOUT)).id) {
-                    if (fleet.scouts <= 0) {
-                        comm_open(DIA_S_NoScouts);
-                        return ExodusMode::MODE_None;
-                    } else {
-                        // TODO
-                    }
+                    scout = true;
+                    scout_covered = false;
                 }
 
                 if (draw_manager.query_click(id(ID::FLEET_COVERED_SCOUT)).id) {
+                    scout = true;
+                    scout_covered = true;
+                }
+
+                if (scout) {
                     if (fleet.scouts <= 0) {
                         comm_open(DIA_S_NoScouts);
                         return ExodusMode::MODE_None;
                     } else {
-                        // TODO
+                        if (!owned) {
+                            ephstate.set_ephemeral_state(EPH_ScoutPlanet);
+                            return ExodusMode::MODE_PlanetMap;
+                        }
+
+                        int owner = planet->get_owner();
+                        exostate.unset_alliances(player_idx, owner);
+
+                        int guns = planet->get_airdef_guns();
+                        int def = 0;
+                        for (int i = 0; i < guns; ++i) {
+                            if (onein(4)) ++def;
+                        }
+
+                        L.debug("%d guns provide %d defence", guns, def);
+
+                        int scouts_killed = 0;
+                        int bombers_killed = 0;
+
+                        int att = 0;
+                        if (scout_covered) {
+                            for (int i = 0; i < fleet.bombers; ++i) {
+                                if (onein(25)) ++att;
+                            }
+
+                            int d = def/2;
+                            scouts_killed = min(d, 20);
+                            scouts_killed = min(scouts_killed, fleet.scouts);
+                            bombers_killed = min(fleet.bombers, d);
+                            att = min(att, guns);
+                        } else {
+                            scouts_killed = min(def, fleet.scouts);
+                        }
+
+                        planet->adjust_airdef_guns(-att);
+                        fleet.scouts = max(fleet.scouts - scouts_killed, 0);
+                        fleet.bombers = max(fleet.bombers - bombers_killed, 0);
+
+                        draw_manager.draw(
+                            id(ID::FLEET_MISSIONBG),
+                            mission_bg,
+                            {FLEET_PANEL_X, FLEET_PANEL_Y,
+                             0, 0, 1, 1});
+
+                        draw_manager.draw_text(
+                            "SCOUT FLIGHT",
+                            Justify::Left,
+                            FLEET_PANEL_X+4, FLEET_PANEL_Y+4,
+                            COL_TEXT2);
+
+                        draw_manager.draw_text(
+                            "The AirDef guns have",
+                            Justify::Left,
+                            FLEET_PANEL_X+4, FLEET_PANEL_Y+44,
+                            COL_TEXT);
+
+                        char text[64];
+
+                        snprintf(text, sizeof(text), "hit %d scouts.", scouts_killed);
+                        draw_manager.draw_text(
+                            text,
+                            Justify::Left,
+                            FLEET_PANEL_X+4, FLEET_PANEL_Y+64,
+                            COL_TEXT);
+
+                        if (scout_covered) {
+                            snprintf(text, sizeof(text), "%d bombers have hit", att);
+                            draw_manager.draw_text(
+                                text,
+                                Justify::Left,
+                                FLEET_PANEL_X+4, FLEET_PANEL_Y+104,
+                                COL_TEXT);
+                            draw_manager.draw_text(
+                                "a target.",
+                                Justify::Left,
+                                FLEET_PANEL_X+4, FLEET_PANEL_Y+124,
+                                COL_TEXT);
+                            snprintf(text, sizeof(text), "%d bombers have been", bombers_killed);
+                            draw_manager.draw_text(
+                                text,
+                                Justify::Left,
+                                FLEET_PANEL_X+4, FLEET_PANEL_Y+164,
+                                COL_TEXT);
+                            draw_manager.draw_text(
+                                "destroyed.",
+                                Justify::Left,
+                                FLEET_PANEL_X+4, FLEET_PANEL_Y+184,
+                                COL_TEXT);
+                        }
+
+                        const char* t = "No scouts survived.";
+                        if (fleet.scouts > 0) {
+                            t = "Visual data to follow.";
+                        }
+                        draw_manager.draw_text(
+                            t,
+                            Justify::Left,
+                            FLEET_PANEL_X+4, FLEET_PANEL_Y+224,
+                            COL_TEXT);
+
+                        stage = SM_MissionScout;
+                        return ExodusMode::MODE_None;
                     }
                 }
 
@@ -239,6 +353,21 @@ ExodusMode StarMap::update(float delta) {
                         draw_manager.draw(id(ID::FLEET_PANEL), nullptr);
                     }
                     stage = SM_Idle;
+                }
+            }
+            break;
+        case SM_MissionScout:
+            {
+                if (draw_manager.clicked()) {
+                    const Fleet &fleet = player->get_fleet();
+                    if (fleet.scouts) {
+                        ephstate.set_ephemeral_state(EPH_ScoutPlanet);
+                        return ExodusMode::MODE_PlanetMap;
+                    } else {
+                        draw_manager.draw(id(ID::FLEET_MISSIONBG), nullptr);
+                        stage = SM_Fleet;
+                        return ExodusMode::MODE_None;
+                    }
                 }
             }
             break;

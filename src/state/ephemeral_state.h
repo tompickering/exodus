@@ -115,6 +115,7 @@ enum EphState {
     EPH_LunarBattlePrep,
     EPH_LunarBattle,
     EPH_LunarBattleReport,
+    EPH_ScoutPlanet,
     EPH_Destruction,
     EPH_ResearchCheck,
     EPH_ResumeFly,

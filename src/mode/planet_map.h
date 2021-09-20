@@ -57,6 +57,7 @@ class PlanetMap : ModeBase {
         enum Stage {
             PM_Idle,
             PM_Construct,
+            PM_Scout,
             PM_Destruction,
             PM_Frame,
         };

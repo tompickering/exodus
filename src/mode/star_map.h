@@ -22,6 +22,7 @@ class StarMap : ModeBase, PanelDrawer, CommPanelDrawer {
         enum Stage {
             SM_Idle,
             SM_Fleet,
+            SM_MissionScout,
             SM_PlanSettle,
             SM_PlanSettleFade,
             SM_PlanetComm,
