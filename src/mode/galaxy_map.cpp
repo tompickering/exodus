@@ -240,14 +240,32 @@ ExodusMode GalaxyMap::update(float delta) {
                 } else {
                     // Zoom
                     if (player->get_location().has_visited(exostate.tgt2loc(selected_ft))) {
-                        exostate.set_active_flytarget(selected_ft);
-                        exostate.set_active_planet(-1);
-                        draw_manager.show_cursor(false);
-                        draw_manager.fade_black(1.2f, 24);
-                        if (selected_ft == gal->get_guild()) {
-                            stage = GM_Zoom2Guild;
-                        } else {
-                            stage = GM_Zoom2Star;
+                        bool ok = true;
+                        FlyTarget *guild = exostate.get_galaxy()->get_guild();
+                        if (selected_ft == guild) {
+                            if (player->get_location().in_flight()) {
+                                L.debug("Can't zoom to guild - in flight");
+                                ok = false;
+                            }
+                            if (ok) {
+                                int loc = player->get_location().get_target();
+                                FlyTarget *tgt = exostate.loc2tgt(loc);
+                                if (tgt != guild) {
+                                    L.debug("Can't zoom to guild - elsewhere");
+                                    ok = false;
+                                }
+                            }
+                        }
+                        if (ok) {
+                            exostate.set_active_flytarget(selected_ft);
+                            exostate.set_active_planet(-1);
+                            draw_manager.show_cursor(false);
+                            draw_manager.fade_black(1.2f, 24);
+                            if (selected_ft == gal->get_guild()) {
+                                stage = GM_Zoom2Guild;
+                            } else {
+                                stage = GM_Zoom2Star;
+                            }
                         }
                     } else {
                         L.debug("Can't zoom - not visited");
