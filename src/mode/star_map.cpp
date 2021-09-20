@@ -214,6 +214,10 @@ ExodusMode StarMap::update(float delta) {
                     if (fleet.scouts <= 0) {
                         comm_open(DIA_S_NoScouts);
                         return ExodusMode::MODE_None;
+                    } else if (scout_covered && fleet.bombers <= 0) {
+                        // This dialogue not present in orig
+                        comm_open(DIA_S_NoCoverBombers);
+                        return ExodusMode::MODE_None;
                     } else {
                         if (!owned) {
                             ephstate.set_ephemeral_state(EPH_ScoutPlanet);

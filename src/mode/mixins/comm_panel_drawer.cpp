@@ -556,6 +556,11 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img(CI_HumanThoughtful);
             comm_set_img_caption("COUNSELLOR");
             break;
+        case DIA_S_NoCoverBombers:
+            comm_set_title("Message from counsellor");
+            comm_set_img(CI_HumanThoughtful);
+            comm_set_img_caption("COUNSELLOR");
+            break;
         case DIA_S_NoBombers:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_HumanThoughtful);
@@ -1236,6 +1241,14 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_set_text(0, "We do not have any scout");
                 comm_set_text(1, "ships, so a scout flight is");
                 comm_set_text(2, "impossible.");
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_NoCoverBombers:
+            {
+                comm_prepare(6);
+                comm_set_text(0, "We do not have any bombers");
+                comm_set_text(1, "to cover our scout ships.");
                 comm_recv(DIA_R_Close);
             }
             break;
