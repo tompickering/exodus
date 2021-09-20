@@ -89,6 +89,8 @@ void StarMap::exit() {
         draw_manager.unset_selectable(id(_id));
     }
 
+    comm_ensure_closed();
+
     ModeBase::exit();
 }
 
