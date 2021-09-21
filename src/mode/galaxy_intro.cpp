@@ -50,15 +50,12 @@ void GalaxyIntro::enter() {
     ModeBase::enter(ID::END);
     draw_manager.draw(
         TGT_Secondary,
-        IMG_STARTGR_FL6_STARS);
-    draw_manager.draw(
-        TGT_Secondary,
-        IMG_SG1_GUILD,
-        {340, 50, 1, 0, 1, 1});
-    draw_manager.draw(
-        TGT_Secondary,
-        IMG_SHIP_FLIPPED,
-        {420, 50, 0, 0, 2.4, 2.4});
+        IMG_CT2_EXPORT,
+        {7, 7, 0, 0, 1, 1});
+    draw_manager.fill(TGT_Secondary, {0, 0, RES_X, 7}, COL_BORDERS);
+    draw_manager.fill(TGT_Secondary, {0, 403, RES_X, 7}, COL_BORDERS);
+    draw_manager.fill(TGT_Secondary, {0, 0, 7, 403}, COL_BORDERS);
+    draw_manager.fill(TGT_Secondary, {RES_X-7, 0, 7, 403}, COL_BORDERS);
     DrawArea area = {0, 0, RES_X, PNL_TOP};
     draw_manager.pixelswap_start(&area);
 
@@ -68,7 +65,7 @@ void GalaxyIntro::enter() {
 }
 
 const int INDENT_X = RES_X / 2;
-const int INDENT_Y = 80;
+const int INDENT_Y = 60;
 const int SEP_Y = 20;
 
 ExodusMode GalaxyIntro::update(float delta) {
