@@ -30,6 +30,8 @@ BulletinDrawer::BulletinDrawer() {
     bulletin_is_yesno = false;
     bulletin_yesno_was_yes = false;
     _bulletin_is_open = false;
+
+    bulletin_bg_preserve = nullptr;
 }
 
 void BulletinDrawer::bulletin_start_new(bool transition) {
@@ -45,6 +47,11 @@ void BulletinDrawer::bulletin_start_new(bool transition) {
     bulletin_transition = transition ? 0 : 1;
 
     bulletin_set_bg(nullptr);
+
+    if (!transition) {
+        bulletin_bg_preserve = nullptr;
+    }
+
     bulletin_set_active_player_flag();
 }
 
@@ -151,8 +158,11 @@ void BulletinDrawer::bulletin_open() {
     id_bulletin_panel = draw_manager.new_sprite_id();
     id_bulletin_black = draw_manager.new_sprite_id();
     id_bulletin_bg = draw_manager.new_sprite_id();
+    id_bulletin_bg_preserve = draw_manager.new_sprite_id();
     id_bulletin_bg_scan = draw_manager.new_sprite_id();
     id_bulletin_yesno = draw_manager.new_sprite_id();
+
+    bulletin_bg_preserve = nullptr;
 
     for (int i = 0; i < BULLETIN_LINES; ++i) {
         id_bulletin_text[i] = draw_manager.new_sprite_id();
@@ -212,6 +222,7 @@ void BulletinDrawer::bulletin_close() {
     draw_manager.draw(id_bulletin_header_l, nullptr);
     draw_manager.draw(id_bulletin_header_r, nullptr);
     draw_manager.draw(id_bulletin_bg, nullptr);
+    draw_manager.draw(id_bulletin_bg_preserve, nullptr);
     draw_manager.draw(id_bulletin_bg_scan, nullptr);
 
     draw_manager.release_sprite_id(id_bulletin_header_flag);
@@ -220,6 +231,7 @@ void BulletinDrawer::bulletin_close() {
     draw_manager.release_sprite_id(id_bulletin_panel);
     draw_manager.release_sprite_id(id_bulletin_black);
     draw_manager.release_sprite_id(id_bulletin_bg);
+    draw_manager.release_sprite_id(id_bulletin_bg_preserve);
     draw_manager.release_sprite_id(id_bulletin_bg_scan);
     draw_manager.release_sprite_id(id_bulletin_yesno);
 
@@ -282,8 +294,43 @@ void BulletinDrawer::bulletin_set_yesno() {
 
 void BulletinDrawer::bulletin_update_bg() {
     int h = 306;
-    if (bulletin_transition < 1) h = (int)(306.f * bulletin_transition);
+    if (bulletin_transition < 1) {
+        h = (int)(306.f * bulletin_transition);
+    } else {
+        bulletin_bg_preserve = bulletin_bg;
+    }
+
     if (bulletin_bg) {
+        if (bulletin_bg_preserve && bulletin_transition < 1) {
+            /* FIXME
+             * Without removing bulletin_bg, there is a flicker
+             * to black before each next bulletin starts. This
+             * is because when bulletin_bg is first drawn for
+             * the next bulletin, its source region is small
+             * but the draw repairs the larger area that it
+             * occupied on the previous bulletin - where the
+             * preserved bg has now been drawn - and as it's
+             * 'below' the preserved background, this doesn't
+             * get restored.
+             *
+             * We're in an awkward situation whereby the
+             * background and preseved background are alternately
+             * to be displayed on top of one another. The proper
+             * solution would likely be to have repairs also restore
+             * sprites above their previous location - however
+             * we work around the issue here by removing the
+             * bulletin background - thereby getting the repair
+             * out of the way - before drawing the preserved
+             * background.
+             */
+            draw_manager.draw(id_bulletin_bg, nullptr);
+            draw_manager.draw(
+                id_bulletin_bg_preserve,
+                bulletin_bg_preserve,
+                {BULLETIN_BG_X,
+                 BULLETIN_BG_Y,
+                 0, 0, 1, 1});
+        }
         DrawArea a = {0, 0, 436, h};
         draw_manager.set_source_region(
             id_bulletin_bg,

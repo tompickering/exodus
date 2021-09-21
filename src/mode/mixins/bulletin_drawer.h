@@ -43,6 +43,7 @@ class BulletinDrawer {
         char bulletin_text[BULLETIN_LINES][BULLETIN_MAX_TEXT];
         RGB bulletin_text_col[BULLETIN_LINES];
         const char* bulletin_bg;
+        const char* bulletin_bg_preserve;
 
         SprID id_bulletin_header_flag;
         SprID id_bulletin_header_l;
@@ -50,6 +51,7 @@ class BulletinDrawer {
         SprID id_bulletin_panel;
         SprID id_bulletin_black;
         SprID id_bulletin_bg;
+        SprID id_bulletin_bg_preserve;
         SprID id_bulletin_bg_scan;
         SprID id_bulletin_text[BULLETIN_LINES];
         SprID id_bulletin_yesno;
