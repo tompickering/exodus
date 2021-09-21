@@ -538,7 +538,30 @@ ExodusMode PlanetMap::update(float delta) {
                 }
 
                 if (draw_manager.query_click(id(ID::LAW_TRADE)).id) {
-                    // TODO
+                    clear_law_ids();
+                    draw_law_panel();
+                    draw_manager.draw_text(
+                        "TRADING CENTRE RULES",
+                        Justify::Centre,
+                        RES_X/2, LAW_Y+4,
+                        COL_TEXT2);
+                    draw_manager.draw_text(
+                        "Which goods do you allow",
+                        Justify::Left,
+                        LAW_X+4, LAW_Y+44,
+                        COL_TEXT);
+                    draw_manager.draw_text(
+                        "to be sold by trading",
+                        Justify::Left,
+                        LAW_X+4, LAW_Y+64,
+                        COL_TEXT);
+                    draw_manager.draw_text(
+                        "centres?",
+                        Justify::Left,
+                        LAW_X+4, LAW_Y+84,
+                        COL_TEXT);
+                    stage = PM_LawTrade;
+                    return ExodusMode::MODE_Redo;
                 }
 
                 if (can_tax && draw_manager.query_click(id(ID::LAW_TAXES)).id) {
@@ -709,6 +732,67 @@ ExodusMode PlanetMap::update(float delta) {
                 }
             }
             break;
+        case PM_LawTrade:
+            {
+                int y = LAW_Y + 124;
+                draw_manager.draw_text(
+                    id(ID::LAW_SELLMIN),
+                    "Sell Minerals",
+                    Justify::Left,
+                    LAW_X+20, y,
+                    COL_TEXT);
+                draw_manager.draw(
+                    planet->has_law(LAW_TradeMinerals)?IMG_SU1_ALLOW1:IMG_SU1_ALLOW0,
+                    {LAW_X+LAW_W-20, y+1,
+                     1, 0, 1, 1});
+                y += 20;
+                draw_manager.draw_text(
+                    id(ID::LAW_SELLFD),
+                    "Sell Food",
+                    Justify::Left,
+                    LAW_X+20, y,
+                    COL_TEXT);
+                draw_manager.draw(
+                    planet->has_law(LAW_TradeFood)?IMG_SU1_ALLOW1:IMG_SU1_ALLOW0,
+                    {LAW_X+LAW_W-20, y+1,
+                     1, 0, 1, 1});
+                y += 20;
+                draw_manager.draw_text(
+                    id(ID::LAW_SELLPLU),
+                    "Sell Plutonium (illegal)",
+                    Justify::Left,
+                    LAW_X+20, y,
+                    COL_TEXT);
+                draw_manager.draw(
+                    planet->has_law(LAW_TradePlutonium)?IMG_SU1_ALLOW1:IMG_SU1_ALLOW0,
+                    {LAW_X+LAW_W-20, y+1,
+                     1, 0, 1, 1});
+
+                if (draw_manager.query_click(id(ID::LAW_SELLMIN)).id) {
+                    planet->toggle_law(LAW_TradeMinerals);
+                }
+                if (draw_manager.query_click(id(ID::LAW_SELLFD)).id) {
+                    planet->toggle_law(LAW_TradeFood);
+                }
+                if (draw_manager.query_click(id(ID::LAW_SELLPLU)).id) {
+                    planet->toggle_law(LAW_TradePlutonium);
+                }
+
+                draw_manager.draw_text(
+                    id(ID::LAW_EXIT),
+                    "Exit",
+                    Justify::Left,
+                    LAW_X+20, LAW_Y+204,
+                    COL_TEXT);
+
+                if (draw_manager.query_click(id(ID::LAW_EXIT)).id) {
+                    clear_law_ids();
+                    open_law_panel();
+                    stage = PM_Law;
+                    return ExodusMode::MODE_Redo;
+                }
+            }
+            break;
         case PM_LawTaxes:
             {
                 SpriteClick clk = draw_manager.query_click(id(ID::LAW_TAXYESNO));
@@ -723,19 +807,34 @@ ExodusMode PlanetMap::update(float delta) {
             break;
         case PM_LawFestival:
             {
-                // TODO: Grey these out if not affordable
+                RGB col_sm = COL_TEXT;
+                RGB col_lg = COL_TEXT;
+
+                draw_manager.set_selectable(id(ID::LAW_FESTSM));
+                draw_manager.set_selectable(id(ID::LAW_FESTLG));
+
+                if (!player->can_afford(20)) {
+                    col_sm = COL_TEXT_GREYED;
+                    col_lg = COL_TEXT_GREYED;
+                    draw_manager.unset_selectable(id(ID::LAW_FESTSM));
+                    draw_manager.unset_selectable(id(ID::LAW_FESTLG));
+                } else if (!player->can_afford(100)) {
+                    col_lg = COL_TEXT_GREYED;
+                    draw_manager.unset_selectable(id(ID::LAW_FESTLG));
+                }
+
                 draw_manager.draw_text(
                     id(ID::LAW_FESTSM),
                     "Small festival (20 MC)",
                     Justify::Left,
                     LAW_X+20, LAW_Y+100,
-                    COL_TEXT);
+                    col_sm);
                 draw_manager.draw_text(
                     id(ID::LAW_FESTLG),
                     "Big festival (100 MC)",
                     Justify::Left,
                     LAW_X+20, LAW_Y+140,
-                    COL_TEXT);
+                    col_lg);
                 draw_manager.draw_text(
                     id(ID::LAW_EXIT),
                     "Exit",
