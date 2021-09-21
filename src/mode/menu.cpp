@@ -32,6 +32,8 @@ enum ID {
     NPLAYER_OK,
     NPLAYER_TXT,
     PLAYER_NAME,
+    PLAYER_TITLE,
+    PLAYER_REF,
     GENDER_MALE,
     GENDER_FEMALE,
     GENDER_OTHER,
@@ -401,21 +403,112 @@ ExodusMode Menu::update(float delta) {
 
                 if (draw_manager.query_click(id(ID::GENDER_OTHER)).id) {
                     config.players[current_player].set_gender(GENDER_Other);
-                    set_stage(Title);
+                    set_stage(CustomTitle);
                 }
             }
             break;
-        case Title:
+        case CustomTitle:
             if (trans_state == None) {
-                // TODO: Custom title, reference
+                draw_manager.show_cursor(false);
+                draw_manager.draw(IMG_BG_MENU0);
+
+                draw_manager.draw_text(
+                    "(E.g. 'Lord', 'Lady'...)",
+                    Justify::Centre,
+                    RES_X/2, 90,
+                    COL_TEXT);
+
+                draw_manager.fill(
+                    {264-BORDER, 134-BORDER, 232+2*BORDER, 28+2*BORDER},
+                    COL_BORDERS);
+                draw_manager.fill({264, 134, 232, 28}, {0, 0, 0});
+
+                draw_manager.draw_text(
+                        "Title:",
+                        Justify::Right,
+                        255, 138,
+                        COL_TEXT2);
+
                 draw_manager.save_background();
-                draw_manager.show_cursor(true);
-                config.players[current_player].set_title("<TITLE>");
-                config.players[current_player].set_ref("<REFERENCE>");
+                input_manager.start_text_input();
+
                 trans_state = Done;
             }
 
-            set_stage(Flag);
+            if (input_manager.consume(K_Backspace)) {
+                input_manager.backspace();
+                draw_manager.fill(
+                    {264-BORDER, 134-BORDER, 232+2*BORDER, 28+2*BORDER},
+                    COL_BORDERS);
+                draw_manager.fill({264, 134, 232, 28}, {0, 0, 0});
+            }
+
+            {
+                const char* input_title = input_manager.get_input_text(MAX_PLAYER_TITLE);
+
+                draw_manager.draw_text(
+                        id(ID::PLAYER_TITLE),
+                        input_title,
+                        Justify::Left,
+                        270, 138,
+                        COL_TEXT);
+
+                if (input_manager.consume(K_Enter) && strnlen(input_title, 1)) {
+                    config.players[current_player].set_title(input_title);
+                    set_stage(CustomRef);
+                }
+            }
+            break;
+        case CustomRef:
+            if (trans_state == None) {
+                draw_manager.show_cursor(false);
+
+                draw_manager.draw_text(
+                    "(E.g. 'Milord', 'Milady'...)",
+                    Justify::Centre,
+                    RES_X/2, 190,
+                    COL_TEXT);
+
+                draw_manager.fill(
+                    {264-BORDER, 234-BORDER, 232+2*BORDER, 28+2*BORDER},
+                    COL_BORDERS);
+                draw_manager.fill({264, 234, 232, 28}, {0, 0, 0});
+
+                draw_manager.draw_text(
+                        "Reference:",
+                        Justify::Right,
+                        255, 238,
+                        COL_TEXT2);
+
+                draw_manager.save_background();
+                input_manager.start_text_input();
+
+                trans_state = Done;
+            }
+
+            if (input_manager.consume(K_Backspace)) {
+                input_manager.backspace();
+                draw_manager.fill(
+                    {264-BORDER, 234-BORDER, 232+2*BORDER, 28+2*BORDER},
+                    COL_BORDERS);
+                draw_manager.fill({264, 234, 232, 28}, {0, 0, 0});
+            }
+
+            {
+                const char* input_ref = input_manager.get_input_text(MAX_PLAYER_REFERENCE);
+
+                draw_manager.draw_text(
+                        id(ID::PLAYER_REF),
+                        input_ref,
+                        Justify::Left,
+                        270, 238,
+                        COL_TEXT);
+
+                if (input_manager.consume(K_Enter) && strnlen(input_ref, 1)) {
+                    config.players[current_player].set_ref(input_ref);
+                    set_stage(Welcome);
+                }
+            }
             break;
         case Welcome:
             {
