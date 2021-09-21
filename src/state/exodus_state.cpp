@@ -386,7 +386,8 @@ bool ExodusState::mission_complete() {
                     }
                 }
 
-                if ((n_planets < 30) || (!artificial_owned)) {
+                int lim = min(30, get_n_planets());
+                if ((n_planets < lim) || (!artificial_owned)) {
                     return false;
                 }
             }
@@ -585,6 +586,22 @@ PlanetInfo ExodusState::get_random_owned_planet_info() {
     }
     L.fatal("Couldn't find owned planet which we checked exists");
     return info;
+}
+
+int ExodusState::get_n_planets() {
+    Galaxy *gal = get_galaxy();
+    int n_stars;
+    Star *stars = gal->get_stars(n_stars);
+    int count = 0;
+    for (int i = 0; i < n_stars; ++i) {
+        for (int j = 0; j < STAR_MAX_PLANETS; ++j) {
+            Planet *p = stars[i].get_planet(j);
+            if (p && p->exists()) {
+                ++count;
+            }
+        }
+    }
+    return count;
 }
 
 int ExodusState::get_n_planets(Player* player) {

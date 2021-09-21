@@ -100,6 +100,7 @@ class ExodusState {
         int get_n_owned_planets();
         Planet* get_planet_under_construction(int);
         PlanetInfo get_random_owned_planet_info();
+        int get_n_planets();
         int get_n_planets(Player*);
         bool owns_a_planet(Player*);
         bool active_player_local(); // Is the active player at the active flytarget?
