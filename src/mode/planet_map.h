@@ -62,6 +62,7 @@ class PlanetMap : ModeBase {
             PM_Frame,
             PM_Law,
             PM_LawJustice,
+            PM_LawTaxes,
             PM_LawFestival,
             PM_LawFestivalConfirm,
         };

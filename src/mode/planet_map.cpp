@@ -484,6 +484,15 @@ ExodusMode PlanetMap::update(float delta) {
             break;
         case PM_Law:
             {
+                bool can_tax = planet->can_collect_taxes();
+                RGB tax_col = COL_TEXT;
+                if (can_tax) {
+                    draw_manager.set_selectable(id(ID::LAW_TAXES));
+                } else {
+                    draw_manager.unset_selectable(id(ID::LAW_TAXES));
+                    tax_col = COL_TEXT_GREYED;
+                }
+
                 draw_manager.draw_text(
                     id(ID::LAW_JUSTICE),
                     "Justice",
@@ -501,7 +510,7 @@ ExodusMode PlanetMap::update(float delta) {
                     "Additional Taxes",
                     Justify::Left,
                     LAW_X + 20, LAW_Y+124,
-                    COL_TEXT);
+                    tax_col);
                 draw_manager.draw_text(
                     id(ID::LAW_FESTIVAL),
                     "Public Festival",
@@ -532,8 +541,40 @@ ExodusMode PlanetMap::update(float delta) {
                     // TODO
                 }
 
-                if (draw_manager.query_click(id(ID::LAW_TAXES)).id) {
-                    // TODO
+                if (can_tax && draw_manager.query_click(id(ID::LAW_TAXES)).id) {
+                    clear_law_ids();
+                    draw_law_panel();
+                    draw_manager.draw_text(
+                        "ADDITIONAL TAXES",
+                        Justify::Centre,
+                        RES_X/2, LAW_Y+4,
+                        COL_TEXT2);
+                    char text[32];
+                    snprintf(text, sizeof(text), "Amount: %dMC", planet->get_tax_amount());
+                    draw_manager.draw_text(
+                        text,
+                        Justify::Left,
+                        LAW_X+20, LAW_Y+44,
+                        COL_TEXT);
+                    draw_manager.draw_text(
+                        "Shall we really collect",
+                        Justify::Left,
+                        LAW_X+20, LAW_Y+84,
+                        COL_TEXT);
+                    draw_manager.draw_text(
+                        "additional taxes?",
+                        Justify::Left,
+                        LAW_X+20, LAW_Y+104,
+                        COL_TEXT);
+                    draw_manager.fill({LAW_X+2, LAW_Y+LAW_H-28, 28, 26}, COL_BORDERS);
+                    draw_manager.fill({LAW_X+LAW_W-30, LAW_Y+LAW_H-28, 28, 26}, COL_BORDERS);
+                    draw_manager.draw(
+                        id(ID::LAW_TAXYESNO),
+                        IMG_BR14_EXPORT,
+                        {RES_X/2, LAW_Y+LAW_H-2,
+                         .5f, 1, 1, 1});
+                    stage = PM_LawTaxes;
+                    return ExodusMode::MODE_Redo;
                 }
 
                 if (draw_manager.query_click(id(ID::LAW_FESTIVAL)).id) {
@@ -665,6 +706,18 @@ ExodusMode PlanetMap::update(float delta) {
                     open_law_panel();
                     stage = PM_Law;
                     return ExodusMode::MODE_Redo;
+                }
+            }
+            break;
+        case PM_LawTaxes:
+            {
+                SpriteClick clk = draw_manager.query_click(id(ID::LAW_TAXYESNO));
+                if (clk.id) {
+                    if (clk.x < .5f) {
+                        planet->collect_taxes();
+                    }
+                    close_law_panel();
+                    stage = PM_Idle;
                 }
             }
             break;
