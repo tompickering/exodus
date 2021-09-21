@@ -230,14 +230,15 @@ ExodusMode Menu::update(float delta) {
                 draw_manager.draw(
                     id(ID::NPLAYER_LR),
                     IMG_BR11_LR,
-                    {255, 250, 1.0, 0.5, 1, 1}
-                    );
+                    {255, 250, 1.0, 0.5, 1, 1});
                 draw_manager.draw(
                     id(ID::NPLAYER_OK),
                     IMG_BR11_OK,
-                    {305, 250, 0, 0.5, 1, 1}
-                    );
-                draw_manager.fill_pattern({260, 230, 40, 40});
+                    {305, 250, 0, 0.5, 1, 1});
+                draw_manager.fill(
+                    {264-BORDER, 234-BORDER, 32+2*BORDER, 32+2*BORDER},
+                    COL_BORDERS);
+                draw_manager.fill_pattern({264, 234, 32, 32});
                 draw_manager.save_background();
                 trans_state = Done;
             }
@@ -298,7 +299,10 @@ ExodusMode Menu::update(float delta) {
                 draw_manager.draw_text(
                     txt, Justify::Centre, RES_X/2, 90, COL_TEXT);
 
-                draw_manager.fill({260, 230, 240, 36}, {0, 0, 0});
+                draw_manager.fill(
+                    {264-BORDER, 234-BORDER, 232+2*BORDER, 28+2*BORDER},
+                    COL_BORDERS);
+                draw_manager.fill({264, 234, 232, 28}, {0, 0, 0});
 
                 draw_manager.draw_text(
                         "Name:",
@@ -314,7 +318,10 @@ ExodusMode Menu::update(float delta) {
 
             if (input_manager.consume(K_Backspace)) {
                 input_manager.backspace();
-                draw_manager.fill({260, 230, 240, 36}, {0, 0, 0});
+                draw_manager.fill(
+                    {264-BORDER, 234-BORDER, 232+2*BORDER, 28+2*BORDER},
+                    COL_BORDERS);
+                draw_manager.fill({264, 234, 232, 28}, {0, 0, 0});
             }
 
             {
@@ -324,7 +331,7 @@ ExodusMode Menu::update(float delta) {
                         id(ID::PLAYER_NAME),
                         input_name,
                         Justify::Left,
-                        265, 238,
+                        270, 238,
                         COL_TEXT);
 
                 if (input_manager.consume(K_Enter) && strnlen(input_name, 1)) {
