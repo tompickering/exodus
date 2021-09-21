@@ -3,6 +3,8 @@
 #include <cstdio>
 #include <cstring>
 
+#include "util/value.h"
+
 #include "assetpaths.h"
 #include "shared.h"
 
