@@ -27,12 +27,12 @@ static const int buy_data[3][8] = {
     {3, 1, 1, 3, 4, 5, 6,  9}
 };
 
-static const char* OFFICER_NOT_INFORMED = "I am not informed...";
-static const char* OFFER_REGULAR = "A regular offer.";
-static const char* OFFER_NO_GOOD = "Not a good offer."; // Orig: No good offer
-static const char* OFFER_GOOD = "A very good offer";
-static const char* OFFER_FOOD_NEEDED = "The planet needs food.";
-static const char* OFFER_NO_ARMS = "Arms are not offered.";
+static const char* OFFICER_NOT_INFORMED = "\"I am not informed...\"";
+static const char* OFFER_REGULAR = "\"A regular offer.\"";
+static const char* OFFER_NO_GOOD = "\"Not a good offer.\""; // Orig: No good offer
+static const char* OFFER_GOOD = "\"A very good offer.\"";
+static const char* OFFER_FOOD_NEEDED = "\"The planet needs food.\"";
+static const char* OFFER_NO_ARMS = "\"Arms are not offered.\"";
 
 enum ID {
     ACTIVE_T,
