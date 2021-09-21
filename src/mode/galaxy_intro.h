@@ -15,6 +15,7 @@ class GalaxyIntro : ModeBase {
         virtual void enter() override;
         virtual ExodusMode update(float) override;
     private:
+        char title_text[64];
         float time;
 };
 

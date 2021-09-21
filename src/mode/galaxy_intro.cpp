@@ -20,7 +20,7 @@ static const char* text[] = {
     "We have chosen you because you have",
     "proved your skills before.",
     "",
-    "We will call you <TITLE> as it is usual",
+    "We will call you '%s' as it is usual",
     "in this galaxy.",
 };
 
@@ -61,6 +61,9 @@ void GalaxyIntro::enter() {
 
     audio_manager.target_music(MUS_GAMESTART);
 
+    Player *player = exostate.get_active_player();
+    snprintf(title_text, sizeof(title_text), text[12], player->get_title());
+
     time = 0;
 }
 
@@ -94,10 +97,20 @@ ExodusMode GalaxyIntro::update(float delta) {
 
     unsigned char grey;
     if (this_text_idx <= n_lines) {
+        const char* this_text = text[this_text_idx];
+        if (this_text_idx == 12) {
+            this_text = (const char*)(&title_text);
+        }
+
         if (this_text_idx > 0) {
+            int last_text_idx = this_text_idx - 1;
+            const char* last_text = text[last_text_idx];
+            if (last_text_idx == 12) {
+                last_text = (const char*)(&title_text);
+            }
             draw_manager.draw_text(
-                id(ID::TEXT0 + this_text_idx - 1),
-                text[this_text_idx - 1],
+                id(ID::TEXT0 + last_text_idx),
+                last_text,
                 Justify::Centre,
                 INDENT_X,
                 INDENT_Y + (this_text_idx - 1) * SEP_Y,
@@ -107,7 +120,7 @@ ExodusMode GalaxyIntro::update(float delta) {
         grey = (char)(this_text_interp * 0xD0);
         draw_manager.draw_text(
             id(ID::TEXT0 + this_text_idx),
-            text[this_text_idx],
+            this_text,
             Justify::Centre,
             INDENT_X,
             INDENT_Y + this_text_idx * SEP_Y,
