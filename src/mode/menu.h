@@ -18,6 +18,8 @@ class Menu : ModeBase {
             Size,
             NPlayers,
             Name,
+            Gender,
+            Welcome,
             Title,
             Flag,
             Aim,
@@ -35,6 +37,8 @@ class Menu : ModeBase {
         Stage stage;
         TransitionState trans_state;
         unsigned char current_player;
+
+        float timer;
 
         void set_stage(Stage);
 

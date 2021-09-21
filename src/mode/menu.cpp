@@ -32,6 +32,9 @@ enum ID {
     NPLAYER_OK,
     NPLAYER_TXT,
     PLAYER_NAME,
+    GENDER_MALE,
+    GENDER_FEMALE,
+    GENDER_OTHER,
     FLAG_0,
     FLAG_1,
     FLAG_2,
@@ -344,9 +347,7 @@ ExodusMode Menu::update(float delta) {
                     }
                     if (!duplicate) {
                         config.players[current_player].set_name(input_name);
-                        // TODO: Set gender
-                        config.players[current_player].set_gender(GENDER_Other);
-                        set_stage(Title);
+                        set_stage(Gender);
                     } else {
                         L.info("Not allowing duplicate name");
                     }
@@ -354,8 +355,59 @@ ExodusMode Menu::update(float delta) {
             }
 
             break;
+        case Gender:
+            {
+                if (timer == 0) {
+                    draw_manager.show_cursor(true);
+
+                    draw_manager.draw_text(
+                        "You are...",
+                        Justify::Centre,
+                        RES_X/2, 300,
+                        COL_TEXT);
+
+                    draw_manager.draw(
+                        id(ID::GENDER_MALE),
+                        IMG_BR13_MALE,
+                        {RES_X/3, 340,
+                         1, .5, 1, 1});
+                    draw_manager.draw(
+                        id(ID::GENDER_FEMALE),
+                        IMG_BR13_FEMALE,
+                        {RES_X/2, 340,
+                         .5, .5, 1, 1});
+                    draw_manager.draw(
+                        id(ID::GENDER_OTHER),
+                        IMG_BUTTON_OTHER,
+                        {2*RES_X/3, 340,
+                         0, .5, 1, 1});
+                }
+
+                timer += delta;
+
+                if (draw_manager.query_click(id(ID::GENDER_MALE)).id) {
+                    config.players[current_player].set_gender(GENDER_Male);
+                    config.players[current_player].set_title("Lord");
+                    config.players[current_player].set_ref("Milord");
+                    set_stage(Welcome);
+                }
+
+                if (draw_manager.query_click(id(ID::GENDER_FEMALE)).id) {
+                    config.players[current_player].set_gender(GENDER_Female);
+                    config.players[current_player].set_title("Lady");
+                    config.players[current_player].set_ref("Milady");
+                    set_stage(Welcome);
+                }
+
+                if (draw_manager.query_click(id(ID::GENDER_OTHER)).id) {
+                    config.players[current_player].set_gender(GENDER_Other);
+                    set_stage(Title);
+                }
+            }
+            break;
         case Title:
             if (trans_state == None) {
+                // TODO: Custom title, reference
                 draw_manager.save_background();
                 draw_manager.show_cursor(true);
                 config.players[current_player].set_title("<TITLE>");
@@ -364,6 +416,26 @@ ExodusMode Menu::update(float delta) {
             }
 
             set_stage(Flag);
+            break;
+        case Welcome:
+            {
+                if (timer == 0) {
+                    char t[12 + MAX_PLAYER_REFERENCE];
+                    snprintf(t, sizeof(t), "Welcome, %s.",
+                             config.players[current_player].get_ref());
+                    draw_manager.draw_text(
+                        t,
+                        Justify::Centre,
+                        RES_X/2, 370,
+                        COL_TEXT);
+                }
+
+                if (timer > 1.4) {
+                    set_stage(Flag);
+                }
+
+                timer += delta;
+            }
             break;
         case Flag:
             if (trans_state == None) {
@@ -738,4 +810,5 @@ void Menu::set_stage(Stage new_stage) {
     trans_state = None;
     stage = new_stage;
     draw_manager.clear_sprite_ids();
+    timer = 0;
 }
