@@ -24,6 +24,7 @@ class StarMap : ModeBase, PanelDrawer, CommPanelDrawer, FrameDrawer {
             SM_Idle,
             SM_Fleet,
             SM_MissionScout,
+            SM_MissionBomb,
             SM_PlanSettle,
             SM_PlanSettleFade,
             SM_PlanetComm,

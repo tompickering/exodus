@@ -324,7 +324,7 @@ ExodusMode StarMap::update(float delta) {
 
                         const char* t = "No scouts survived.";
                         if (fleet.scouts > 0) {
-                            t = "Visual data to follow.";
+                            t = "Visual data follows.";
                         }
                         draw_manager.draw_text(
                             t,
@@ -339,16 +339,18 @@ ExodusMode StarMap::update(float delta) {
 
                 bool bmb = false;
                 bool bmb_guns = false;
-                Stone s0 = STONE_END;
-                Stone s1 = STONE_END;
-                Stone s2 = STONE_END;
-                if (draw_manager.query_click(id(ID::FLEET_BMB_CULT)).id)   { bmb=true; s0=STONE_Agri; }
-                if (draw_manager.query_click(id(ID::FLEET_BMB_MINE)).id)   { bmb=true; s0=STONE_Mine; }
-                if (draw_manager.query_click(id(ID::FLEET_BMB_PLU)).id)    { bmb=true; s0=STONE_Plu; }
-                if (draw_manager.query_click(id(ID::FLEET_BMB_CITY)).id)   { bmb=true; s0=STONE_City; }
-                if (draw_manager.query_click(id(ID::FLEET_BMB_ARMY)).id)   { bmb=true; s0=STONE_Inf;   s1=STONE_Gli;   s2=STONE_Art; }
-                if (draw_manager.query_click(id(ID::FLEET_BMB_PORT)).id)   { bmb=true; s0=STONE_Port0; s1=STONE_Port1; s2=STONE_Port2; }
-                if (draw_manager.query_click(id(ID::FLEET_BMB_TRADE)).id)  { bmb=true; s0=STONE_Trade; }
+                StoneSet tgt;
+                if (draw_manager.query_click(id(ID::FLEET_BMB_CULT)).id)   { bmb=true; tgt.add(STONE_Agri); }
+                if (draw_manager.query_click(id(ID::FLEET_BMB_MINE)).id)   { bmb=true; tgt.add(STONE_Mine); }
+                if (draw_manager.query_click(id(ID::FLEET_BMB_PLU)).id)    { bmb=true; tgt.add(STONE_Plu); }
+                if (draw_manager.query_click(id(ID::FLEET_BMB_CITY)).id)   { bmb=true; tgt.add(STONE_City); }
+                if (draw_manager.query_click(id(ID::FLEET_BMB_ARMY)).id)   { bmb=true; tgt.add(STONE_Inf);
+                                                                                       tgt.add(STONE_Gli);
+                                                                                       tgt.add(STONE_Art); }
+                if (draw_manager.query_click(id(ID::FLEET_BMB_PORT)).id)   { bmb=true; tgt.add(STONE_Port0);
+                                                                                       tgt.add(STONE_Port1);
+                                                                                       tgt.add(STONE_Port2); }
+                if (draw_manager.query_click(id(ID::FLEET_BMB_TRADE)).id)  { bmb=true; tgt.add(STONE_Trade); }
                 if (draw_manager.query_click(id(ID::FLEET_BMB_AIRDEF)).id) { bmb=true; bmb_guns=true; }
 
                 if (bmb) {
@@ -356,7 +358,60 @@ ExodusMode StarMap::update(float delta) {
                         comm_open(DIA_S_NoBombers);
                         return ExodusMode::MODE_None;
                     } else {
-                        // TODO
+                        // TODO: Handle bomb_guns
+                        int bombers_killed = 0;
+                        int att = planet->plan_bomb(fleet.bombers, tgt, bombers_killed);
+
+                        planet->adjust_airdef_guns(-att);
+                        fleet.bombers = max(fleet.bombers - bombers_killed, 0);
+
+                        draw_manager.draw(
+                            id(ID::FLEET_MISSIONBG),
+                            mission_bg,
+                            {FLEET_PANEL_X, FLEET_PANEL_Y,
+                             0, 0, 1, 1});
+
+                        draw_manager.draw_text(
+                            "The attack has begun.",
+                            Justify::Left,
+                            FLEET_PANEL_X+4, FLEET_PANEL_Y+4,
+                            COL_TEXT2);
+
+                        draw_manager.draw_text(
+                            "The AirDef guns have",
+                            Justify::Left,
+                            FLEET_PANEL_X+4, FLEET_PANEL_Y+44,
+                            COL_TEXT);
+
+                        char text[64];
+
+                        snprintf(text, sizeof(text), "hit %d bombers.", bombers_killed);
+                        draw_manager.draw_text(
+                            text,
+                            Justify::Left,
+                            FLEET_PANEL_X+4, FLEET_PANEL_Y+64,
+                            COL_TEXT);
+
+                        snprintf(text, sizeof(text), "%d bombers have hit", att);
+                        draw_manager.draw_text(
+                            text,
+                            Justify::Left,
+                            FLEET_PANEL_X+4, FLEET_PANEL_Y+104,
+                            COL_TEXT);
+                        draw_manager.draw_text(
+                            "a target.",
+                            Justify::Left,
+                            FLEET_PANEL_X+4, FLEET_PANEL_Y+124,
+                            COL_TEXT);
+
+                        draw_manager.draw_text(
+                            "Visual data follows.",
+                            Justify::Left,
+                            FLEET_PANEL_X+4, FLEET_PANEL_Y+224,
+                            COL_TEXT);
+
+                        stage = SM_MissionBomb;
+                        return ExodusMode::MODE_None;
                     }
                 }
 
@@ -385,6 +440,17 @@ ExodusMode StarMap::update(float delta) {
                         stage = SM_Fleet;
                         return ExodusMode::MODE_None;
                     }
+                }
+            }
+            break;
+        case SM_MissionBomb:
+            {
+                if (draw_manager.clicked()) {
+                    // TODO: Actual destruction
+                    //ephstate.set_ephemeral_state(EPH_Destruction);
+                    draw_manager.draw(id(ID::FLEET_MISSIONBG), nullptr);
+                    stage = SM_Fleet;
+                    return ExodusMode::MODE_None;
                 }
             }
             break;

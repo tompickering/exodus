@@ -681,6 +681,42 @@ int Planet::count_stones(Stone st) {
     return count;
 }
 
+int Planet::count_stones(StoneSet sset) {
+    int count = 0;
+    sset.start_iter();
+    for (Stone s = sset.get_stone(); s != STONE_END; s = sset.get_stone()) {
+        count += count_stones(s);
+    }
+    return count;
+}
+
+/*
+ * Take a number of bombers and set of stones which are targets
+ * Return number of targets which can be hit
+ * Set destroyed to the number of bombers which would be destroyed in doing so
+ */
+int Planet::plan_bomb(int bombers, StoneSet sset, int& destroyed) {
+    adjust_airdef_guns(1);
+    destroyed = get_destroyed_bombers(bombers, false);
+
+    int max_hits = count_stones(sset);
+    int hits = 0;
+
+    for (int i = 0; i < bombers; ++i) {
+        if (onein(6)) ++hits;
+    }
+
+    return min(hits, max_hits);
+}
+
+int Planet::get_destroyed_bombers(int bombers, bool bomb_airdef) {
+    int destroyed = 0;
+    for (int i = 0; i < get_airdef_guns(); ++i) {
+        if (onein(bomb_airdef ? 3 : 4)) ++destroyed;
+    }
+    return min(destroyed, bombers);
+}
+
 int Planet::get_food_production() {
     return count_stones(STONE_Agri);
 }

@@ -59,6 +59,28 @@ enum Stone : uint8_t {
     STONE_END           = 30,
 };
 
+class StoneSet {
+    public:
+        StoneSet() : stones(0), iter((Stone)0) {add(STONE_END);}
+        void add(Stone s) {stones|=(1<<(int)s);}
+        void remove(Stone s) {stones&=~(1<<(int)s);}
+        bool has(Stone s) {return (bool)(stones&(1<<(int)s));}
+        void start_iter() {iter=(Stone)0;}
+        Stone get_stone() {
+            while (iter<STONE_END) {
+                Stone st = iter;
+                iter=(Stone)((int)iter+1);
+                if (has(st)) {
+                    return st;
+                }
+            }
+            return STONE_END;
+        }
+    private:
+        uint32_t stones;
+        Stone iter;
+};
+
 enum TradeQuality {
     TRADE_None,
     TRADE_Bad,
@@ -170,6 +192,9 @@ class Planet {
         bool next_to_4(int, int, Stone);
         bool next_to_8(int, int, Stone);
         int count_stones(Stone);
+        int count_stones(StoneSet);
+        int plan_bomb(int, StoneSet, int&);
+        int get_destroyed_bombers(int, bool);
         int get_food_production();
         int get_food_consumption();
         bool food_prod_sufficient();
