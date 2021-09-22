@@ -386,8 +386,26 @@ ExodusMode PlanetMap::update(float delta) {
                     int block_x = (int)(0.9999f * click.x * blocks);
                     int block_y = (int)(0.9999f * click.y * blocks);
                     Stone existing = planet->get_stone(block_x, block_y);
-                    if (active_tool == TOOL_Clear || (can_build_on(existing))) {
+                    bool ok = can_build_on(existing);
+                    if (active_tool == TOOL_Clear) {
+                        // Can clear anything except radiation
+                        ok = existing != STONE_Radiation;
+                    }
+                    if (ok) {
                         if (player->attempt_spend(tool2cost(active_tool))) {
+                            if (active_tool == TOOL_Clear) {
+                                // Clearing cities increases unrest
+                                if (existing == STONE_City) {
+                                    planet->adjust_unrest(3);
+                                    // TODO: trace%
+                                }
+                                // Clearing villages increases unrest
+                                if (existing == STONE_Village) {
+                                    planet->adjust_unrest(2);
+                                    // TODO: trace%
+                                }
+                            }
+
                             clear_surf(block_x, block_y);
                             construct_stone = tool2stone(active_tool);
                             construct_anim = get_construct_anim(construct_stone);
