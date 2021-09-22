@@ -358,11 +358,13 @@ ExodusMode StarMap::update(float delta) {
                         comm_open(DIA_S_NoBombers);
                         return ExodusMode::MODE_None;
                     } else {
-                        // TODO: Handle bomb_guns
                         int bombers_killed = 0;
-                        int att = planet->plan_bomb(fleet.bombers, tgt, bombers_killed);
+                        int att = planet->plan_bomb(fleet.bombers, tgt, bombers_killed, bmb_guns);
 
-                        planet->adjust_airdef_guns(-att);
+                        if (bmb_guns) {
+                            planet->adjust_airdef_guns(-att);
+                        }
+
                         fleet.bombers = max(fleet.bombers - bombers_killed, 0);
 
                         draw_manager.draw(

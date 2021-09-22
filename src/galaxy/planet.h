@@ -195,7 +195,7 @@ class Planet {
         bool next_to_8(int, int, Stone);
         int count_stones(Stone);
         int count_stones(StoneSet);
-        int plan_bomb(int, StoneSet, int&);
+        int plan_bomb(int, StoneSet, int&, bool);
         int get_destroyed_bombers(int, bool);
         int get_food_production();
         int get_food_consumption();

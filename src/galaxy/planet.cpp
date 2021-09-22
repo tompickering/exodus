@@ -724,10 +724,10 @@ int Planet::count_stones(StoneSet st_set) {
  * Return number of targets which can be hit
  * Set destroyed to the number of bombers which would be destroyed in doing so
  */
-int Planet::plan_bomb(int bombers, StoneSet sset, int& destroyed) {
-    destroyed = get_destroyed_bombers(bombers, false);
+int Planet::plan_bomb(int bombers, StoneSet sset, int& destroyed, bool bomb_airdef) {
+    destroyed = get_destroyed_bombers(bombers, bomb_airdef);
 
-    int max_hits = count_stones(sset);
+    int max_hits = bomb_airdef ? get_airdef_guns() : count_stones(sset);
     int hits = 0;
 
     for (int i = 0; i < bombers; ++i) {
