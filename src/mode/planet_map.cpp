@@ -202,6 +202,21 @@ void PlanetMap::enter() {
         } else {
             play_music = false;
         }
+
+        PlanetDestruction &d = ephstate.destruction;
+        if (planet->is_owned() && d.destroyer_idx >= 0) {
+            int owner_idx = planet->get_owner();
+            exostate.unset_alliances(planet->get_owner(), d.destroyer_idx);
+            Player *owner = exostate.get_player(owner_idx);
+            if (!owner->is_human() && (owner->get_flag(0) != AI_Lo)) {
+                owner->set_hostile_to(d.destroyer_idx);
+            }
+        }
+
+        if ((d.type == DESTROY_NStones) && d.tgt_stones.has(STONE_City)) {
+            planet->adjust_unrest(2);
+        }
+
         stage = PM_Destruction;
     } else {
         draw_menu = true;
@@ -1548,9 +1563,8 @@ ExodusMode PlanetMap::update_destruction(float delta) {
                         exploding_stone = planet->get_random_point(explode_x, explode_y);
                         break;
                     case DESTROY_NStones:
-                        exploding_stone = d.tgt_stone;
-                        if (!planet->find_random_stone(d.tgt_stone, explode_x, explode_y)) {
-                            L.info("Run out of bombing targets for stone %d", d.tgt_stone);
+                        if (!planet->find_random_stone(d.tgt_stones, exploding_stone, explode_x, explode_y)) {
+                            L.info("Run out of bombing targets for stone %d", exploding_stone);
                             destruction_done = true;
                         }
                         break;

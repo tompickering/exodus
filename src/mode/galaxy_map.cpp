@@ -2675,10 +2675,12 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
                 ephstate.set_ephemeral_state(EPH_Destruction);
                 ephstate.destruction.type = DESTROY_NRandom;
+                ephstate.destruction.tgt_stones.reset();
                 ephstate.destruction.n_strikes = RND(7) + 1; // 2-8 hits
                 ephstate.destruction.enable_explosions = true;
                 ephstate.destruction.irradiated = false;
                 ephstate.destruction.show_target = false;
+                ephstate.destruction.destroyer_idx = -1;
                 ephstate.destruction.draw = exostate.get_active_player()->is_human();
                 do_meteor = true;
 
@@ -2989,11 +2991,13 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 bulletin_set_next_text("has contaminated %s.", p->get_name());
                 ephstate.set_ephemeral_state(EPH_Destruction);
                 ephstate.destruction.type = DESTROY_NStones;
-                ephstate.destruction.tgt_stone = STONE_Plu;
+                ephstate.destruction.tgt_stones.reset();
+                ephstate.destruction.tgt_stones.add(STONE_Plu);
                 ephstate.destruction.n_strikes = 1;
                 ephstate.destruction.enable_explosions = true;
                 ephstate.destruction.irradiated = true;
                 ephstate.destruction.show_target = true;
+                ephstate.destruction.destroyer_idx = -1;
                 ephstate.destruction.draw = exostate.get_active_player()->is_human();
                 do_meltdown = true;
                 next_mpp_stage();

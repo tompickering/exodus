@@ -410,6 +410,17 @@ ExodusMode StarMap::update(float delta) {
                             FLEET_PANEL_X+4, FLEET_PANEL_Y+224,
                             COL_TEXT);
 
+                        // TODO: Do we proceed if all bombers killed?
+                        ephstate.set_ephemeral_state(EPH_Destruction);
+                        ephstate.destruction.type = DESTROY_NStones;
+                        ephstate.destruction.tgt_stones = tgt;
+                        ephstate.destruction.n_strikes = att;
+                        ephstate.destruction.enable_explosions = true;
+                        ephstate.destruction.irradiated = false;
+                        ephstate.destruction.show_target = att<3;
+                        ephstate.destruction.destroyer_idx = player_idx;
+                        ephstate.destruction.draw = true;
+
                         stage = SM_MissionBomb;
                         return ExodusMode::MODE_None;
                     }
@@ -446,11 +457,7 @@ ExodusMode StarMap::update(float delta) {
         case SM_MissionBomb:
             {
                 if (draw_manager.clicked()) {
-                    // TODO: Actual destruction
-                    //ephstate.set_ephemeral_state(EPH_Destruction);
-                    draw_manager.draw(id(ID::FLEET_MISSIONBG), nullptr);
-                    stage = SM_Fleet;
-                    return ExodusMode::MODE_None;
+                    return ephstate.get_appropriate_mode();
                 }
             }
             break;

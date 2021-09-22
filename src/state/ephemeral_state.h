@@ -86,12 +86,15 @@ enum DestructionType {
 
 typedef struct {
     DestructionType type;
-    Stone tgt_stone;
+    StoneSet tgt_stones;
     int n_strikes;
     bool enable_explosions;
     bool draw;
     bool irradiated;
     bool show_target;
+    // If -1 then blameless destruction (meteor etc)
+    // If >=0 then this player's attacking
+    int destroyer_idx;
 } PlanetDestruction;
 
 typedef struct {

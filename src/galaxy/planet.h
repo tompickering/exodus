@@ -61,7 +61,8 @@ enum Stone : uint8_t {
 
 class StoneSet {
     public:
-        StoneSet() : stones(0), iter((Stone)0) {add(STONE_END);}
+        StoneSet() {reset();}
+        void reset() {stones=0; iter=(Stone)0; add(STONE_END);};
         void add(Stone s) {stones|=(1<<(int)s);}
         void remove(Stone s) {stones&=~(1<<(int)s);}
         bool has(Stone s) {return (bool)(stones&(1<<(int)s));}
@@ -187,6 +188,7 @@ class Planet {
         bool has_stone(Stone);
         Stone get_random_point(int&, int&);
         bool find_random_stone(Stone, int&, int&);
+        bool find_random_stone(StoneSet, Stone&, int&, int&);
         bool find_random_buildable_stone(int&, int&);
         bool find_random_buildable_stone_next_to_8(Stone, int&, int&);
         bool next_to_4(int, int, Stone);

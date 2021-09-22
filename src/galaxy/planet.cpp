@@ -551,6 +551,35 @@ bool Planet::find_random_stone(Stone st, int& x, int& y) {
     return false;
 }
 
+bool Planet::find_random_stone(StoneSet st_set, Stone& res, int& x, int& y) {
+    int count = count_stones(st_set);
+    if (!count)
+        return false;
+    int idx = (rand() % count);
+    int sz = get_size_blocks();
+    st_set.start_iter();
+    // FIXME: It would be good to deduplicate this with the other find_random_stone()
+    // (perhaps abstract a find_nth_stone())
+    // FIXME: We'd ideally only iterate planet stones once (this could be the outer loop)
+    for (Stone st = st_set.get_stone(); st != STONE_END; st = st_set.get_stone()) {
+        for (int j = 0; j < sz; ++j) {
+            for (int i = 0; i < sz; ++i) {
+                if (get_stone(i, j) == st) {
+                    if (idx == 0) {
+                        res = st; x = i; y = j;
+                        return true;
+                    } else {
+                        --idx;
+                    }
+                }
+            }
+        }
+    }
+
+    L.fatal("Could not find nth stone in set when we verified at least n exist");
+    return false;
+}
+
 bool Planet::find_random_buildable_stone(int& x, int& y) {
     int count = count_stones(STONE_Clear) + count_stones(STONE_NaturalSmall);
     if (!count)
@@ -681,10 +710,10 @@ int Planet::count_stones(Stone st) {
     return count;
 }
 
-int Planet::count_stones(StoneSet sset) {
+int Planet::count_stones(StoneSet st_set) {
     int count = 0;
-    sset.start_iter();
-    for (Stone s = sset.get_stone(); s != STONE_END; s = sset.get_stone()) {
+    st_set.start_iter();
+    for (Stone s = st_set.get_stone(); s != STONE_END; s = st_set.get_stone()) {
         count += count_stones(s);
     }
     return count;
