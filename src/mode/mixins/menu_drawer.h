@@ -77,7 +77,7 @@ class MenuDrawer {
         void menu_set_txt(int, RGB, const char*, ...);
         void menu_set_opt(int, const char*, ...);
         void menu_open_specific_mode();
-        void menu_specific_update();
+        bool menu_specific_update();
 };
 
 #endif

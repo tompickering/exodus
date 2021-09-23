@@ -255,19 +255,25 @@ int MenuDrawer::menu_get_y(int row) {
 }
 
 void MenuDrawer::menu_update(float delta) {
-    menu_action = MA_None;
+    while (true) {
+        menu_action = MA_None;
 
-    for (int i = 0; i < MENU_LINES; ++i) {
-        draw_manager.draw_text(
-            id_menu_lines[i],
-            menu_text[i],
-            Justify::Left,
-            MENU_TEXT_X,
-            menu_get_y(i),
-            menu_text_col[i]);
+        for (int i = 0; i < MENU_LINES; ++i) {
+            draw_manager.draw_text(
+                id_menu_lines[i],
+                menu_text[i],
+                Justify::Left,
+                MENU_TEXT_X,
+                menu_get_y(i),
+                menu_text_col[i]);
+        }
+
+        if (!menu_specific_update()) {
+            break;
+        } else {
+            draw_manager.consume_click();
+        }
     }
-
-    menu_specific_update();
 }
 
 const char* MenuDrawer::menu_get_bg() {
@@ -466,7 +472,8 @@ void MenuDrawer::menu_open_specific_mode() {
     }
 }
 
-void MenuDrawer::menu_specific_update() {
+// Return true if there was a user interaction and we need to redraw
+bool MenuDrawer::menu_specific_update() {
     Player *p = exostate.get_active_player();
     int player_idx = exostate.get_player_idx(p);
 
@@ -475,12 +482,12 @@ void MenuDrawer::menu_specific_update() {
             // 2: Change Officers & Taxes
             if (draw_manager.query_click(id_menu_lines[2]).id) {
                 menu_open(MM_OfficersAndTaxes);
-                return;
+                return true;
             }
             // 3: Secret Service
             if (draw_manager.query_click(id_menu_lines[3]).id) {
                 menu_open(MM_SecretService);
-                return;
+                return true;
             }
             // 4: Set / Replace Star Markers
             // 5: Equip Starship
@@ -521,7 +528,7 @@ void MenuDrawer::menu_specific_update() {
             if (draw_manager.query_click(id_menu_lines[11]).id) {
                 // Re-open save menu to refresh metadata
                 menu_open(MM_Save);
-                return;
+                return true;
             }
             // 12: Quit Game
             // 14: Exit Menu
@@ -622,13 +629,13 @@ void MenuDrawer::menu_specific_update() {
                         menu_new_officer = (Officer)i;
                         menu_new_officer_quality = OFFQ_Poor;
                         menu_open(MM_NewOfficer);
-                        return;
+                        return true;
                     }
                 }
 
                 if (draw_manager.query_click(id_menu_lines[14]).id) {
                     menu_open(MM_Ctrl);
-                    return;
+                    return true;
                 }
             }
             break;
@@ -653,16 +660,14 @@ void MenuDrawer::menu_specific_update() {
                     if (clk.x < .33f) {
                         // TODO: Take
                     } else if (clk.x < .66f) {
-                        // TODO: Next
-                        // FIXME: Annoying flicker when clicking this
                         OfficerQuality q = menu_new_officer_quality;
                         q = (OfficerQuality)(((int)q + 1) % (int)OFFQ_MAX);
                         menu_new_officer_quality = q;
                         menu_open(MM_NewOfficer);
-                        return;
+                        return true;
                     } else {
-                        menu_open(MM_Ctrl);
-                        return;
+                        menu_open(MM_OfficersAndTaxes);
+                        return true;
                     }
                 }
             }
@@ -675,7 +680,7 @@ void MenuDrawer::menu_specific_update() {
             // 14: Exit Menu
             if (draw_manager.query_click(id_menu_lines[14]).id) {
                 menu_open(MM_Ctrl);
-                return;
+                return true;
             }
             break;
         case MM_StarMarker:
@@ -689,12 +694,12 @@ void MenuDrawer::menu_specific_update() {
                 if (draw_manager.query_click(id_menu_lines[i+2]).id) {
                     save_manager.save(i);
                     menu_open(MM_Save);
-                    return;
+                    return true;
                 }
             }
             if (draw_manager.query_click(id_menu_lines[14]).id) {
                 menu_open(MM_Ctrl);
-                return;
+                return true;
             }
             break;
         case MM_Stat:
@@ -731,4 +736,6 @@ void MenuDrawer::menu_specific_update() {
     }
 
     first_update = false;
+
+    return false;
 }
