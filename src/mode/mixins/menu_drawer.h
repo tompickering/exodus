@@ -57,11 +57,17 @@ class MenuDrawer {
         SprID id_menu_header_r;
         SprID id_menu_panel;
         SprID id_menu_bg;
+        SprID id_menu_sci;
+        SprID id_menu_tax;
+        SprID id_menu_scimore;
+        SprID id_menu_taxmore;
         char menu_text[MENU_LINES][MENU_MAX_TEXT];
         RGB menu_text_col[MENU_LINES];
         bool _menu_is_open;
         MenuAction menu_action;
 
+        bool first_update;
+        int menu_get_y(int);
         const char* menu_get_bg();
         void menu_set_txt(int, RGB, const char*, ...);
         void menu_set_opt(int, const char*, ...);

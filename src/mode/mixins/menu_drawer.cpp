@@ -2,12 +2,14 @@
 
 #include "state/exodus_state.h"
 #include "save/save.h"
+#include "input/input.h"
 
 #include "shared.h"
 #include "assetpaths.h"
 
 extern ExodusState exostate;
 extern SAVEMANAGER save_manager;
+extern INPUTMANAGER input_manager;
 
 const int MENU_BORDER = 6;
 const int MENU_W = 436 + (MENU_BORDER) * 2;
@@ -52,6 +54,10 @@ void MenuDrawer::menu_open(MenuMode mode) {
         id_menu_header_r       = draw_manager.new_sprite_id();
         id_menu_panel          = draw_manager.new_sprite_id();
         id_menu_bg             = draw_manager.new_sprite_id();
+        id_menu_sci            = draw_manager.new_sprite_id();
+        id_menu_tax            = draw_manager.new_sprite_id();
+        id_menu_scimore        = draw_manager.new_sprite_id();
+        id_menu_taxmore        = draw_manager.new_sprite_id();
 
         for (int i = 0; i < MENU_LINES; ++i) {
             id_menu_lines[i] = draw_manager.new_sprite_id();
@@ -99,6 +105,8 @@ void MenuDrawer::menu_open(MenuMode mode) {
          MENU_Y + MENU_BORDER,
          0, 0, 1, 1});
 
+    input_manager.enable_repeating_clicks(false);
+
     menu_open_specific_mode();
 
     _menu_is_open = true;
@@ -112,6 +120,10 @@ void MenuDrawer::menu_close() {
         draw_manager.release_sprite_id(id_menu_lines[i]);
     }
 
+    draw_manager.draw(id_menu_sci, nullptr);
+    draw_manager.draw(id_menu_tax, nullptr);
+    draw_manager.draw(id_menu_scimore, nullptr);
+    draw_manager.draw(id_menu_taxmore, nullptr);
     draw_manager.draw(id_menu_header_flag_bg, nullptr);
     draw_manager.draw(id_menu_header_flag, nullptr);
     draw_manager.draw(id_menu_header_l, nullptr);
@@ -125,8 +137,18 @@ void MenuDrawer::menu_close() {
     draw_manager.release_sprite_id(id_menu_header_r);
     draw_manager.release_sprite_id(id_menu_panel);
     draw_manager.release_sprite_id(id_menu_bg);
+    draw_manager.release_sprite_id(id_menu_sci);
+    draw_manager.release_sprite_id(id_menu_tax);
+    draw_manager.release_sprite_id(id_menu_scimore);
+    draw_manager.release_sprite_id(id_menu_taxmore);
+
+    input_manager.enable_repeating_clicks(false);
 
     _menu_is_open = false;
+}
+
+int MenuDrawer::menu_get_y(int row) {
+    return MENU_Y + MENU_BORDER + 2 + row * 20;
 }
 
 void MenuDrawer::menu_update(float delta) {
@@ -138,7 +160,7 @@ void MenuDrawer::menu_update(float delta) {
             menu_text[i],
             Justify::Left,
             MENU_TEXT_X,
-            MENU_Y + MENU_BORDER + 2 + i * 20,
+            menu_get_y(i),
             menu_text_col[i]);
     }
 
@@ -187,6 +209,7 @@ void MenuDrawer::menu_set_opt(int idx, const char* in_text, ...) {
 void MenuDrawer::menu_open_specific_mode() {
     Player *p = exostate.get_active_player();
     bool art_ok = true;
+    first_update = true;
 
     if (!p->can_afford(ART_COST)) art_ok = false;
     if (!p->has_invention(INV_OrbitalMassConstruction)) art_ok = false;
@@ -216,6 +239,19 @@ void MenuDrawer::menu_open_specific_mode() {
             menu_set_opt(14, "Exit Menu");
             break;
         case MM_OfficersAndTaxes:
+            {
+                menu_set_txt(0,  COL_TEXT2, "Please select:");
+                menu_set_txt(2,  COL_TEXT,  "Science:");
+                menu_set_txt(3,  COL_TEXT,  "Taxes:");
+                menu_set_txt(6,  COL_TEXT,  "Leading Officers");
+                menu_set_txt(8,  COL_TEXT,  "Science Officer");
+                menu_set_txt(9,  COL_TEXT,  "Fleet Admiral");
+                menu_set_txt(10, COL_TEXT,  "Battle General");
+                menu_set_txt(11, COL_TEXT,  "Secret Service Leader");
+                menu_set_txt(12, COL_TEXT,  "Ship Counsellor");
+                menu_set_opt(14, "Exit");
+                input_manager.enable_repeating_clicks(true);
+            }
             break;
         case MM_NewOfficer:
             break;
@@ -289,9 +325,14 @@ void MenuDrawer::menu_specific_update() {
     switch(menu_mode) {
         case MM_Ctrl:
             // 2: Change Officers & Taxes
+            if (draw_manager.query_click(id_menu_lines[2]).id) {
+                menu_open(MM_OfficersAndTaxes);
+                return;
+            }
             // 3: Secret Service
             if (draw_manager.query_click(id_menu_lines[3]).id) {
                 menu_open(MM_SecretService);
+                return;
             }
             // 4: Set / Replace Star Markers
             // 5: Equip Starship
@@ -332,6 +373,7 @@ void MenuDrawer::menu_specific_update() {
             if (draw_manager.query_click(id_menu_lines[11]).id) {
                 // Re-open save menu to refresh metadata
                 menu_open(MM_Save);
+                return;
             }
             // 12: Quit Game
             // 14: Exit Menu
@@ -340,6 +382,61 @@ void MenuDrawer::menu_specific_update() {
             }
             break;
         case MM_OfficersAndTaxes:
+            {
+                if (first_update) {
+                    draw_manager.draw_text(
+                        id_menu_scimore,
+                        "More",
+                        Justify::Left,
+                        MENU_X+180, menu_get_y(2),
+                        COL_TEXT2);
+                    draw_manager.draw_text(
+                        id_menu_taxmore,
+                        "More",
+                        Justify::Left,
+                        MENU_X+180, menu_get_y(3),
+                        COL_TEXT2);
+                }
+
+                int t = p->get_tax();
+                bool redraw_scitax = first_update;
+                // FIXME: The Player concept of 'tax' is actually reversed
+                // from the meaning here. On Player, tax=MC reserved for sci
+                // Here, tax = MC% receive from income.
+                if (draw_manager.query_click(id_menu_taxmore).id) {
+                    redraw_scitax = true;
+                    p->set_tax(t-1);
+                }
+                if (draw_manager.query_click(id_menu_scimore).id) {
+                    redraw_scitax = true;
+                    p->set_tax(t+1);
+                }
+
+                if (redraw_scitax) {
+                    char pct[5];
+                    snprintf(pct, sizeof(pct), "%d%%", t);
+                    draw_manager.draw_text(
+                        id_menu_sci,
+                        pct,
+                        Justify::Left,
+                        MENU_X+100, menu_get_y(2),
+                        COL_TEXT);
+                    snprintf(pct, sizeof(pct), "%d%%", 100-t);
+                    draw_manager.draw_text(
+                        id_menu_tax,
+                        pct,
+                        Justify::Left,
+                        MENU_X+100, menu_get_y(3),
+                        COL_TEXT);
+                }
+
+                // TODO
+
+                if (draw_manager.query_click(id_menu_lines[14]).id) {
+                    menu_open(MM_Ctrl);
+                    return;
+                }
+            }
             break;
         case MM_NewOfficer:
             break;
@@ -351,6 +448,7 @@ void MenuDrawer::menu_specific_update() {
             // 14: Exit Menu
             if (draw_manager.query_click(id_menu_lines[14]).id) {
                 menu_open(MM_Ctrl);
+                return;
             }
             break;
         case MM_StarMarker:
@@ -364,10 +462,12 @@ void MenuDrawer::menu_specific_update() {
                 if (draw_manager.query_click(id_menu_lines[i+2]).id) {
                     save_manager.save(i);
                     menu_open(MM_Save);
+                    return;
                 }
             }
             if (draw_manager.query_click(id_menu_lines[14]).id) {
                 menu_open(MM_Ctrl);
+                return;
             }
             break;
         case MM_Stat:
@@ -402,4 +502,6 @@ void MenuDrawer::menu_specific_update() {
         case MM_Stats:
             break;
     }
+
+    first_update = false;
 }
