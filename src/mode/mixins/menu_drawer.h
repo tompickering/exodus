@@ -7,6 +7,7 @@
 
 #define MENU_LINES     15
 #define MENU_MAX_TEXT 256
+#define MENU_N_OFFICERS 5
 
 extern DRAWMANAGER draw_manager;
 
@@ -61,6 +62,7 @@ class MenuDrawer {
         SprID id_menu_tax;
         SprID id_menu_scimore;
         SprID id_menu_taxmore;
+        SprID id_menu_newoff[MENU_N_OFFICERS];
         char menu_text[MENU_LINES][MENU_MAX_TEXT];
         RGB menu_text_col[MENU_LINES];
         bool _menu_is_open;

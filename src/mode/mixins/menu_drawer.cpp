@@ -59,6 +59,10 @@ void MenuDrawer::menu_open(MenuMode mode) {
         id_menu_scimore        = draw_manager.new_sprite_id();
         id_menu_taxmore        = draw_manager.new_sprite_id();
 
+        for (int i = 0; i < MENU_N_OFFICERS; ++i) {
+            id_menu_newoff[i] = draw_manager.new_sprite_id();
+        }
+
         for (int i = 0; i < MENU_LINES; ++i) {
             id_menu_lines[i] = draw_manager.new_sprite_id();
         }
@@ -130,6 +134,11 @@ void MenuDrawer::menu_close() {
     draw_manager.draw(id_menu_header_r, nullptr);
     draw_manager.draw(id_menu_panel, nullptr);
     draw_manager.draw(id_menu_bg, nullptr);
+
+    for (int i = 0; i < MENU_N_OFFICERS; ++i) {
+        draw_manager.draw(id_menu_newoff[i], nullptr);
+        draw_manager.release_sprite_id(id_menu_newoff[i]);
+    }
 
     draw_manager.release_sprite_id(id_menu_header_flag_bg);
     draw_manager.release_sprite_id(id_menu_header_flag);
@@ -396,6 +405,38 @@ void MenuDrawer::menu_specific_update() {
                         Justify::Left,
                         MENU_X+180, menu_get_y(3),
                         COL_TEXT2);
+
+                    draw_manager.draw_text(
+                        "Rating",
+                        Justify::Centre,
+                        MENU_X+254, menu_get_y(6),
+                        COL_TEXT);
+                    draw_manager.draw_text(
+                        "Cost",
+                        Justify::Centre,
+                        MENU_X+326, menu_get_y(6),
+                        COL_TEXT);
+
+                    for (int i = 0; i < MENU_N_OFFICERS; ++i) {
+                        OfficerQuality q = p->get_officer((Officer)i);
+                        const char* s = "poor";
+                        if (q == OFFQ_Average) s = "average";
+                        if (q == OFFQ_Good) s = "good";
+                        draw_manager.draw_text(
+                            s,
+                            Justify::Centre,
+                            MENU_X+254, menu_get_y(8+i),
+                            COL_TEXT);
+
+                        // TODO: Draw cost
+
+                        draw_manager.draw_text(
+                            id_menu_newoff[i],
+                            "New",
+                            Justify::Centre,
+                            MENU_X+400, menu_get_y(8+i),
+                            COL_TEXT2);
+                    }
                 }
 
                 int t = p->get_tax();
@@ -430,7 +471,12 @@ void MenuDrawer::menu_specific_update() {
                         COL_TEXT);
                 }
 
-                // TODO
+                for (int i = 0; i < MENU_N_OFFICERS; ++i) {
+                    if (draw_manager.query_click(id_menu_newoff[i]).id) {
+                        L.debug("New officer clicked: %d", i);
+                        // TODO
+                    }
+                }
 
                 if (draw_manager.query_click(id_menu_lines[14]).id) {
                     menu_open(MM_Ctrl);
