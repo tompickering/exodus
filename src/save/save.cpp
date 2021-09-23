@@ -42,8 +42,7 @@ bool SaveManager::save(int slot) {
     meta.exists = true;
     meta.name[MAX_PLAYER_NAME] = '\0';
     meta.month = exostate.get_month();
-    // TODO: Planets count
-    meta.planets = -1;
+    meta.planets = exostate.get_n_planets(player);
 
     char data[SAVE_SIZE];
     memcpy(data, &meta, sizeof(SaveMeta));
