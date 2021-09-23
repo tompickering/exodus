@@ -461,6 +461,21 @@ OfficerQuality Player::get_officer(Officer off) {
     return officers[off];
 }
 
+int Player::get_officer_cost(Officer off) {
+    OfficerQuality q = get_officer(off);
+    if (q == OFFQ_Average) return 4;
+    if (q == OFFQ_Good) return 8;
+    return 0;
+}
+
+int Player::get_total_officer_costs(Officer off) {
+    int total = 0;
+    for (int i = 0; i < (int)OFF_MAX; ++i) {
+        total += get_officer_cost((Officer)i);
+    }
+    return total;
+}
+
 void Player::set_officer(Officer off, OfficerQuality off_q) {
     if (off >= OFF_MAX) {
         L.fatal("Setting invalid officer %d (max is %d)", off, OFF_MAX-1);

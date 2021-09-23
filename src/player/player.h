@@ -198,6 +198,8 @@ class Player {
         void set_tax(int);
         void adjust_tax(int);
         OfficerQuality get_officer(Officer);
+        int get_officer_cost(Officer);
+        int get_total_officer_costs(Officer);
         void set_officer(Officer, OfficerQuality);
         int nopirates;
         ArtificialPlanetPhase ap_phase;

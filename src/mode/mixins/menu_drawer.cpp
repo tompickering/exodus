@@ -428,7 +428,14 @@ void MenuDrawer::menu_specific_update() {
                             MENU_X+254, menu_get_y(8+i),
                             COL_TEXT);
 
-                        // TODO: Draw cost
+                        int cost = p->get_officer_cost((Officer)i);
+                        char str[10];
+                        snprintf(str, sizeof(str), "%d", cost);
+                        draw_manager.draw_text(
+                            str,
+                            Justify::Centre,
+                            MENU_X+326, menu_get_y(8+i),
+                            COL_TEXT);
 
                         draw_manager.draw_text(
                             id_menu_newoff[i],
