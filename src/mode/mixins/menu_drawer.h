@@ -63,10 +63,13 @@ class MenuDrawer {
         SprID id_menu_scimore;
         SprID id_menu_taxmore;
         SprID id_menu_newoff[MENU_N_OFFICERS];
+        SprID id_menu_newoff_opt;
         char menu_text[MENU_LINES][MENU_MAX_TEXT];
         RGB menu_text_col[MENU_LINES];
         bool _menu_is_open;
         MenuAction menu_action;
+        Officer menu_new_officer;
+        OfficerQuality menu_new_officer_quality;
 
         bool first_update;
         int menu_get_y(int);

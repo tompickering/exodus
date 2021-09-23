@@ -26,8 +26,99 @@ const int MENU_BG_Y = MENU_Y + MENU_BORDER;
 
 static const int ART_COST = 1000;
 
+static const int OFF_DESC_LINES = 5;
+
+static const char* off_desc_poor[] = {
+    "The poorly-rated officer has no special",
+    "abilities.",
+    "",
+    "However, you might choose them because",
+    "they demand no special salary.",
+};
+
+static const char* off_desc_avg_sci[] = {
+    "The scientists will work better and",
+    "faster under the leadership of this",
+    "officer.",
+    "",
+    "",
+};
+
+static const char* off_desc_good_sci[] = {
+    "The scientists will do their best to",
+    "create new inventions and make new",
+    "biological discoveries under the",
+    "leadership of this officer.",
+    "",
+};
+
+static const char* off_desc_avg_flt[] = {
+    "This admiral will train your space pilots",
+    "to be more accurate and effective",
+    "during space combat.",
+    "",
+    "",
+};
+
+static const char* off_desc_good_flt[] = {
+    "This admiral will give your space pilots",
+    "very effective training which will improve",
+    "their fighting abilities as much as",
+    "possible.",
+    "",
+};
+
+static const char* off_desc_avg_btl[] = {
+    "Your battle units will be more effective",
+    "under the control of this general.",
+    "",
+    "",
+    "",
+};
+
+static const char* off_desc_good_btl[] = {
+    "This battle general promises to give your",
+    "battle units much better accuracy in",
+    "lunar battles due to a new organisation",
+    "within the unit clusters.",
+    "",
+};
+
+static const char* off_desc_avg_sec[] = {
+    "This skilled agent will improve the skills",
+    "of your agents and terrorists so that they",
+    "can work more accurately.",
+    "He also trains his agents to be more watchful",
+    "in case of enemy terrorist attacks.",
+};
+
+static const char* off_desc_good_sec[] = {
+    "This agent will allow all of your agency",
+    "staff to work at maximum efficiency.",
+    "",
+    "",
+    "",
+};
+
+static const char* off_desc_avg_clr[] = {
+    "This counsellor's knowledge also includes",
+    "planetary defense systems and other small",
+    "details compared to a poorly-rated",
+    "counsellor.",
+    "",
+};
+
+static const char* off_desc_good_clr[] = {
+    "This counsellor's knowledge of planetary",
+    "defense systems and market prices is",
+    "unrivalled.",
+    "",
+    "",
+};
+
 MenuDrawer::MenuDrawer() {
     _menu_is_open = false;
+    menu_new_officer = (Officer)0;
 }
 
 bool MenuDrawer::menu_is_open() {
@@ -58,6 +149,7 @@ void MenuDrawer::menu_open(MenuMode mode) {
         id_menu_tax            = draw_manager.new_sprite_id();
         id_menu_scimore        = draw_manager.new_sprite_id();
         id_menu_taxmore        = draw_manager.new_sprite_id();
+        id_menu_newoff_opt     = draw_manager.new_sprite_id();
 
         for (int i = 0; i < MENU_N_OFFICERS; ++i) {
             id_menu_newoff[i] = draw_manager.new_sprite_id();
@@ -124,6 +216,7 @@ void MenuDrawer::menu_close() {
         draw_manager.release_sprite_id(id_menu_lines[i]);
     }
 
+    draw_manager.draw(id_menu_newoff_opt, nullptr);
     draw_manager.draw(id_menu_sci, nullptr);
     draw_manager.draw(id_menu_tax, nullptr);
     draw_manager.draw(id_menu_scimore, nullptr);
@@ -150,6 +243,7 @@ void MenuDrawer::menu_close() {
     draw_manager.release_sprite_id(id_menu_tax);
     draw_manager.release_sprite_id(id_menu_scimore);
     draw_manager.release_sprite_id(id_menu_taxmore);
+    draw_manager.release_sprite_id(id_menu_newoff_opt);
 
     input_manager.enable_repeating_clicks(false);
 
@@ -263,6 +357,51 @@ void MenuDrawer::menu_open_specific_mode() {
             }
             break;
         case MM_NewOfficer:
+            {
+                const char* off_str = "Science Officer";
+                const char** off_desc = &off_desc_poor[0];
+                const OfficerQuality &q = menu_new_officer_quality;
+
+                switch (menu_new_officer) {
+                    case OFF_Science:
+                        off_str = "Science Officer";
+                        if (q==OFFQ_Average) off_desc = off_desc_avg_sci;
+                        if (q==OFFQ_Good)    off_desc = off_desc_good_sci;
+                        break;
+                    case OFF_Fleet:
+                        off_str = "Fleet Admiral";
+                        if (q==OFFQ_Average) off_desc = off_desc_avg_flt;
+                        if (q==OFFQ_Good)    off_desc = off_desc_good_flt;
+                        break;
+                    case OFF_Battle:
+                        off_str = "Battle General";
+                        if (q==OFFQ_Average) off_desc = off_desc_avg_btl;
+                        if (q==OFFQ_Good)    off_desc = off_desc_good_btl;
+                        break;
+                    case OFF_Secret:
+                        off_str = "Secret Service Leader";
+                        if (q==OFFQ_Average) off_desc = off_desc_avg_sec;
+                        if (q==OFFQ_Good)    off_desc = off_desc_good_sec;
+                        break;
+                    case OFF_Counsellor:
+                        off_str = "Ship Counsellor";
+                        if (q==OFFQ_Average) off_desc = off_desc_avg_clr;
+                        if (q==OFFQ_Good)    off_desc = off_desc_good_clr;
+                        break;
+                    default:
+                        L.error("Unknown officer: %d", (int)menu_new_officer);
+                        break;
+                }
+
+                menu_set_txt(0,  COL_TEXT2, "New %s", off_str);
+                menu_set_txt(2,  COL_TEXT,  "Classification:");
+                menu_set_txt(3,  COL_TEXT,  "Engagement cost:");
+                menu_set_txt(4,  COL_TEXT,  "Monthly cost:");
+
+                for (int i = 0; i < OFF_DESC_LINES; ++i) {
+                    menu_set_txt(6+i,  COL_TEXT, off_desc[i]);
+                }
+            }
             break;
         case MM_SecretService:
             menu_set_txt(0, COL_TEXT2, "Secret Service");
@@ -480,8 +619,10 @@ void MenuDrawer::menu_specific_update() {
 
                 for (int i = 0; i < MENU_N_OFFICERS; ++i) {
                     if (draw_manager.query_click(id_menu_newoff[i]).id) {
-                        L.debug("New officer clicked: %d", i);
-                        // TODO
+                        menu_new_officer = (Officer)i;
+                        menu_new_officer_quality = OFFQ_Poor;
+                        menu_open(MM_NewOfficer);
+                        return;
                     }
                 }
 
@@ -492,6 +633,39 @@ void MenuDrawer::menu_specific_update() {
             }
             break;
         case MM_NewOfficer:
+            {
+                if (first_update) {
+                    draw_manager.draw(
+                        id_menu_newoff_opt,
+                        IMG_BR8_EXPORT,
+                        {RES_X/2, MENU_Y + MENU_H-MENU_BORDER-2,
+                         .5, 1, 1, 1});
+                    draw_manager.fill(
+                        {MENU_X+MENU_BORDER+2, MENU_Y+MENU_H-MENU_BORDER-28, 35, 26},
+                        COL_BORDERS);
+                    draw_manager.fill(
+                        {MENU_X+MENU_W-MENU_BORDER-37, MENU_Y+MENU_H-MENU_BORDER-28, 35, 26},
+                        COL_BORDERS);
+                }
+
+                SpriteClick clk = draw_manager.query_click(id_menu_newoff_opt);
+                if (clk.id) {
+                    if (clk.x < .33f) {
+                        // TODO: Take
+                    } else if (clk.x < .66f) {
+                        // TODO: Next
+                        // FIXME: Annoying flicker when clicking this
+                        OfficerQuality q = menu_new_officer_quality;
+                        q = (OfficerQuality)(((int)q + 1) % (int)OFFQ_MAX);
+                        menu_new_officer_quality = q;
+                        menu_open(MM_NewOfficer);
+                        return;
+                    } else {
+                        menu_open(MM_Ctrl);
+                        return;
+                    }
+                }
+            }
             break;
         case MM_SecretService:
             // 4: Information Services (20+ MC)
