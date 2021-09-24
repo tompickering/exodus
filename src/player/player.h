@@ -10,6 +10,13 @@
 #define MAX_PLAYER_REFERENCE 12
 #define MAX_PLAYER_FULLNAME MAX_PLAYER_TITLE + 1 + MAX_PLAYER_NAME
 
+#define OFF_COST_POOR 0
+#define OFF_COST_AVG  4
+#define OFF_COST_GOOD 8
+#define OFF_INITCOST_POOR 100
+#define OFF_INITCOST_AVG  200
+#define OFF_INITCOST_GOOD 400
+
 enum GuildTitle {
     GUILDTITLE_None,
     GUILDTITLE_Warrior,
@@ -199,6 +206,8 @@ class Player {
         void adjust_tax(int);
         OfficerQuality get_officer(Officer);
         int get_officer_cost(Officer);
+        int get_officer_cost(OfficerQuality);
+        int get_officer_initial_cost(OfficerQuality);
         int get_total_officer_costs(Officer);
         void set_officer(Officer, OfficerQuality);
         int nopirates;

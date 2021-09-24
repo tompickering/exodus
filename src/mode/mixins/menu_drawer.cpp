@@ -641,7 +641,34 @@ bool MenuDrawer::menu_specific_update() {
             break;
         case MM_NewOfficer:
             {
+                OfficerQuality q = menu_new_officer_quality;
+
                 if (first_update) {
+                    const char* q_str = "poor";
+                    if (q == OFFQ_Average) q_str = "average";
+                    if (q == OFFQ_Good) q_str = "good";
+                    draw_manager.draw_text(
+                        q_str,
+                        Justify::Left,
+                        MENU_X + 340, menu_get_y(2),
+                        COL_TEXT2);
+
+                    char cost_str[8];
+                    int cost = p->get_officer_initial_cost(q);
+                    snprintf(cost_str, sizeof(cost_str), "%d", cost);
+                    draw_manager.draw_text(
+                        cost_str,
+                        Justify::Left,
+                        MENU_X + 340, menu_get_y(3),
+                        COL_TEXT2);
+                    cost = p->get_officer_cost(q);
+                    snprintf(cost_str, sizeof(cost_str), "%d", cost);
+                    draw_manager.draw_text(
+                        cost_str,
+                        Justify::Left,
+                        MENU_X + 340, menu_get_y(4),
+                        COL_TEXT2);
+
                     draw_manager.draw(
                         id_menu_newoff_opt,
                         IMG_BR8_EXPORT,
@@ -660,7 +687,6 @@ bool MenuDrawer::menu_specific_update() {
                     if (clk.x < .33f) {
                         // TODO: Take
                     } else if (clk.x < .66f) {
-                        OfficerQuality q = menu_new_officer_quality;
                         q = (OfficerQuality)(((int)q + 1) % (int)OFFQ_MAX);
                         menu_new_officer_quality = q;
                         menu_open(MM_NewOfficer);

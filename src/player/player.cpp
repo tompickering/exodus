@@ -462,10 +462,19 @@ OfficerQuality Player::get_officer(Officer off) {
 }
 
 int Player::get_officer_cost(Officer off) {
-    OfficerQuality q = get_officer(off);
-    if (q == OFFQ_Average) return 4;
-    if (q == OFFQ_Good) return 8;
-    return 0;
+    return get_officer_cost(get_officer(off));
+}
+
+int Player::get_officer_cost(OfficerQuality q) {
+    if (q == OFFQ_Average) return OFF_COST_AVG;
+    if (q == OFFQ_Good) return OFF_COST_GOOD;
+    return OFF_COST_POOR;
+}
+
+int Player::get_officer_initial_cost(OfficerQuality q) {
+    if (q == OFFQ_Average) return OFF_INITCOST_AVG;
+    if (q == OFFQ_Good) return OFF_INITCOST_GOOD;
+    return OFF_INITCOST_POOR;
 }
 
 int Player::get_total_officer_costs(Officer off) {
