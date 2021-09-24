@@ -749,6 +749,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
         case DIA_S_PlanetComm:
             comm_prepare(4);
             comm_set_speech("What are your orders?");
+            comm_complete_speech();
             comm_set_text(0, "Activate a goods transfer.");
             comm_set_text(1, "Start Fleet/AirDef production.");
             if (comm_player->get_location().in_flight()) {
