@@ -7,6 +7,8 @@
 #include "shared.h"
 #include "assetpaths.h"
 
+#define OFF_PAY_MC 50
+
 extern ExodusState exostate;
 extern SAVEMANAGER save_manager;
 extern INPUTMANAGER input_manager;
@@ -409,6 +411,36 @@ void MenuDrawer::menu_open_specific_mode() {
                 }
             }
             break;
+        case MM_OldOfficer:
+            {
+                menu_set_txt(0, COL_TEXT, "What do you want to do with the old officer?");
+                if (p->can_afford(OFF_PAY_MC)) {
+                    menu_set_opt(2, "Pay %dMC for their work", OFF_PAY_MC);
+                } else {
+                    menu_set_txt(2, COL_TEXT_GREYED, "Pay %dMC for their work", OFF_PAY_MC);
+                }
+                menu_set_opt(3, "Dismiss");
+                menu_set_opt(4, "Kill");
+            }
+            break;
+        case MM_OldOfficerPaid:
+            {
+                menu_set_txt(0, COL_TEXT, "You have shown that you are a fair");
+                menu_set_txt(1, COL_TEXT, "and generous sovereign.");
+            }
+            break;
+        case MM_OldOfficerDismissed:
+            {
+                menu_set_txt(0, COL_TEXT, "The old officer has been dismissed without");
+                menu_set_txt(1, COL_TEXT, "any payment for their work.");
+            }
+            break;
+        case MM_OldOfficerKilled:
+            {
+                menu_set_txt(0, COL_TEXT, "The old officer has been shot.");
+                menu_set_txt(1, COL_TEXT, "Will this be good for your reputation?");
+            }
+            break;
         case MM_SecretService:
             menu_set_txt(0, COL_TEXT2, "Secret Service");
             menu_set_txt(2, COL_TEXT, "Please choose:");
@@ -642,6 +674,7 @@ bool MenuDrawer::menu_specific_update() {
         case MM_NewOfficer:
             {
                 OfficerQuality q = menu_new_officer_quality;
+                int engagement_cost = p->get_officer_initial_cost(q);
 
                 if (first_update) {
                     const char* q_str = "poor";
@@ -654,14 +687,14 @@ bool MenuDrawer::menu_specific_update() {
                         COL_TEXT2);
 
                     char cost_str[8];
-                    int cost = p->get_officer_initial_cost(q);
-                    snprintf(cost_str, sizeof(cost_str), "%d", cost);
+                    snprintf(cost_str, sizeof(cost_str), "%d", engagement_cost);
                     draw_manager.draw_text(
                         cost_str,
                         Justify::Left,
                         MENU_X + 340, menu_get_y(3),
                         COL_TEXT2);
-                    cost = p->get_officer_cost(q);
+
+                    int cost = p->get_officer_cost(q);
                     snprintf(cost_str, sizeof(cost_str), "%d", cost);
                     draw_manager.draw_text(
                         cost_str,
@@ -685,7 +718,11 @@ bool MenuDrawer::menu_specific_update() {
                 SpriteClick clk = draw_manager.query_click(id_menu_newoff_opt);
                 if (clk.id) {
                     if (clk.x < .33f) {
-                        // TODO: Take
+                        if (p->attempt_spend(engagement_cost)) {
+                            p->set_officer(menu_new_officer, menu_new_officer_quality);
+                            menu_open(MM_OldOfficer);
+                            return true;
+                        }
                     } else if (clk.x < .66f) {
                         q = (OfficerQuality)(((int)q + 1) % (int)OFFQ_MAX);
                         menu_new_officer_quality = q;
@@ -696,6 +733,36 @@ bool MenuDrawer::menu_specific_update() {
                         return true;
                     }
                 }
+            }
+            break;
+        case MM_OldOfficer:
+            {
+                if (draw_manager.query_click(id_menu_lines[2]).id) {
+                    if (p->attempt_spend(OFF_PAY_MC)) {
+                        p->adjust_reputation(1);
+                        menu_open(MM_OldOfficerPaid);
+                        return true;
+                    }
+                }
+
+                if (draw_manager.query_click(id_menu_lines[3]).id) {
+                    menu_open(MM_OldOfficerDismissed);
+                    return true;
+                }
+
+                if (draw_manager.query_click(id_menu_lines[4]).id) {
+                    p->adjust_reputation(-1);
+                    menu_open(MM_OldOfficerKilled);
+                    return true;
+                }
+            }
+            break;
+        case MM_OldOfficerPaid:
+        case MM_OldOfficerDismissed:
+        case MM_OldOfficerKilled:
+            if (draw_manager.clicked()) {
+                menu_open(MM_OfficersAndTaxes);
+                return true;
             }
             break;
         case MM_SecretService:
