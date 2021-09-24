@@ -498,6 +498,10 @@ ExodusMode GalaxyMap::update(float delta) {
             break;
         case GM_Menu:
             if (menu_is_open()) {
+                // This is a bit inelegant, but we can spend MC whilst the menu
+                // is open - and as the panel is visible, it's confusing if this
+                // isn't kept up to date.
+                update_panel_info_player(TGT_Primary, player);
                 menu_update(delta);
                 switch (menu_get_action()) {
                     case MA_Close:
