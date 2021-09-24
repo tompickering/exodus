@@ -3,6 +3,7 @@
 #include "state/exodus_state.h"
 #include "save/save.h"
 #include "input/input.h"
+#include "util/iter.h"
 
 #include "shared.h"
 #include "assetpaths.h"
@@ -746,12 +747,16 @@ bool MenuDrawer::menu_specific_update() {
                 }
 
                 if (draw_manager.query_click(id_menu_lines[3]).id) {
+                    p->adjust_reputation(-11);
                     menu_open(MM_OldOfficerDismissed);
                     return true;
                 }
 
                 if (draw_manager.query_click(id_menu_lines[4]).id) {
                     p->adjust_reputation(-1);
+                    for (PlanetIterator piter(player_idx); !piter.complete(); ++piter) {
+                        piter.get()->adjust_unrest(1);
+                    }
                     menu_open(MM_OldOfficerKilled);
                     return true;
                 }

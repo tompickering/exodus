@@ -211,6 +211,7 @@ class CommPanelDrawer {
         unsigned char comm_text_interactive_mask;
         unsigned char comm_text_disabled_mask;
         int comm_mouseover_text;
+        bool comm_exit_anim;
         Anim comm_anim;
 
         int comm_title_len;

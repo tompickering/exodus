@@ -1200,6 +1200,7 @@ void Planet::reset_unrest() {
 }
 
 void Planet::adjust_unrest(int adjustment) {
+    L.debug("%s: Unrest %d + %d", name, unrest[0], adjustment);
     unrest[0] += adjustment;
     if (unrest[0] < 0) unrest[0] = 0;
     // Can't see any ref to a maximum in the original
