@@ -46,6 +46,8 @@ CommPanelDrawer::CommPanelDrawer() {
     comm_time_since_text_mouseover = 0;
     comm_text_interactive_mask = 0;
     comm_text_disabled_mask = 0;
+    comm_exit_anim_time = 0;
+    comm_exit_anim_active = false;
     _comm_is_open = false;
 
     comm_other = nullptr;
@@ -53,10 +55,65 @@ CommPanelDrawer::CommPanelDrawer() {
 
 CommAction CommPanelDrawer::comm_update(float dt) {
     comm_time += dt;
-    comm_time_since_text_mouseover += dt;
-    comm_process_responses();
-    comm_draw_text();
+
+    if (comm_exit_anim_active) {
+        comm_exit_anim_update(dt);
+    } else {
+        comm_time_since_text_mouseover += dt;
+        comm_process_responses();
+        comm_draw_text();
+    }
+
     return comm_action_check();
+}
+
+void CommPanelDrawer::comm_exit_anim(CommAction act) {
+    comm_exit_anim_active = true;
+    comm_exit_anim_time = 0;
+    comm_exit_anim_action = act;
+}
+
+void CommPanelDrawer::comm_exit_anim_update(float dt) {
+    comm_exit_anim_active = true;
+
+    float interp = 0;
+
+    const float shrink_time = 0.3f;
+    const float line_time = 0.6f;
+
+    if (comm_exit_anim_time < shrink_time) {
+        interp = fmin(1, comm_exit_anim_time / shrink_time);
+        float sc_v = 1.f - interp;
+        float sc_h = 1.f - (interp/3.f);
+        draw_manager.draw(
+            id_comm_img,
+            comm_anim.frame(0),
+            {COMM_X + COMM_BORDER + 98,
+             COMM_Y + COMM_BORDER + 104,
+             .5f, .5f, sc_h, sc_v});
+    } else if (comm_exit_anim_time < shrink_time + line_time) {
+        interp = fmin(1, (comm_exit_anim_time-shrink_time) / line_time);
+        unsigned char r, g, b = 0;
+        r = g = max(0, 0xFF - max(0, (interp*1.4)*0xFF));
+        b = 0xFF;
+        float fade_interp = 1-interp;
+        r *= fade_interp;
+        g *= fade_interp;
+        b *= fade_interp;
+        draw_manager.fill(
+            id_comm_img,
+            {COMM_X + COMM_BORDER + 1,
+             COMM_Y + COMM_BORDER + 103,
+             194, 2},
+             {r, g, b});
+    } else if (comm_exit_anim_time > 2) {
+        comm_exit_anim_active = false;
+        comm_exit_anim_time = 0;
+        comm_report_action = comm_exit_anim_action;
+        return;
+    }
+
+    comm_exit_anim_time += dt;
 }
 
 void CommPanelDrawer::comm_complete_speech() {
@@ -232,12 +289,14 @@ void CommPanelDrawer::comm_open(CommSend input) {
 
     comm_state = DIA_R_None;
     comm_report_action = CA_None;
+    comm_exit_anim_active = false;
 
     id_comm_panel = draw_manager.new_sprite_id();
     id_comm_bg_t  = draw_manager.new_sprite_id();
     id_comm_bg_b  = draw_manager.new_sprite_id();
     id_comm_title = draw_manager.new_sprite_id();
     id_comm_img = draw_manager.new_sprite_id();
+    id_comm_img_bg = draw_manager.new_sprite_id();
     id_comm_ally_trade = draw_manager.new_sprite_id();
     id_comm_ally_nonattack = draw_manager.new_sprite_id();
     id_comm_ally_war = draw_manager.new_sprite_id();
@@ -273,6 +332,12 @@ void CommPanelDrawer::comm_open(CommSend input) {
          COMM_X + COMM_W - COMM_RCOL_X - COMM_BORDER,
          172});
 
+    draw_manager.fill(
+        id_comm_img_bg,
+        {COMM_X + COMM_BORDER + 1,
+         COMM_Y + COMM_BORDER + 1,
+         194, 206},
+         {0, 0, 0});
     draw_manager.draw(
         id_comm_img,
         comm_anim.frame(0),
@@ -384,6 +449,7 @@ void CommPanelDrawer::comm_close() {
 
     draw_manager.release_sprite_id(id_comm_title);
     draw_manager.release_sprite_id(id_comm_img);
+    draw_manager.release_sprite_id(id_comm_img_bg);
     draw_manager.release_sprite_id(id_comm_adj);
     draw_manager.release_sprite_id(id_comm_adj_ok);
     draw_manager.release_sprite_id(id_comm_ally_trade);
@@ -1783,7 +1849,7 @@ void CommPanelDrawer::comm_process_responses() {
                     comm_report_action = CA_Abort;
                     break;
                 case 3:
-                    comm_report_action = CA_Abort;
+                    comm_exit_anim(CA_Abort);
                     break;
             }
             break;

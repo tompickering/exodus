@@ -211,11 +211,16 @@ class CommPanelDrawer {
         unsigned char comm_text_interactive_mask;
         unsigned char comm_text_disabled_mask;
         int comm_mouseover_text;
-        bool comm_exit_anim;
         Anim comm_anim;
 
         int comm_title_len;
         bool comm_speech;
+
+        void comm_exit_anim(CommAction);
+        bool comm_exit_anim_active;
+        float comm_exit_anim_time;
+        CommAction comm_exit_anim_action;
+        void comm_exit_anim_update(float);
 
         void comm_complete_speech();
 
@@ -224,6 +229,7 @@ class CommPanelDrawer {
         SprID id_comm_bg_b;
         SprID id_comm_title;
         SprID id_comm_img;
+        SprID id_comm_img_bg;
         SprID id_comm_ally_trade;
         SprID id_comm_ally_nonattack;
         SprID id_comm_ally_war;
