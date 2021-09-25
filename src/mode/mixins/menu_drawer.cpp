@@ -480,7 +480,7 @@ void MenuDrawer::menu_open_specific_mode() {
                 menu_set_opt(14, "Exit Menu");
             }
             break;
-        case MM_SecInfoMCChoice:
+        case MM_PlayerChoice:
             menu_print_other_players();
             break;
         case MM_SecInfoMC:
@@ -829,7 +829,7 @@ bool MenuDrawer::menu_specific_update() {
             // 3: Amount of money
             if (draw_manager.query_click(id_menu_lines[3]).id) {
                 if (p->attempt_spend(20)) {
-                    menu_open(MM_SecInfoMCChoice);
+                    menu_open_player_select(MM_SecInfoMC);
                     return true;
                 }
             }
@@ -872,9 +872,9 @@ bool MenuDrawer::menu_specific_update() {
                 return true;
             }
             break;
-        case MM_SecInfoMCChoice:
+        case MM_PlayerChoice:
             if (menu_player_selected()) {
-                menu_open(MM_SecInfoMC);
+                menu_open(menu_player_select_mode);
                 return true;
             }
             break;
@@ -939,6 +939,11 @@ bool MenuDrawer::menu_specific_update() {
     first_update = false;
 
     return false;
+}
+
+void MenuDrawer::menu_open_player_select(MenuMode mode) {
+    menu_player_select_mode = mode;
+    menu_open(MM_PlayerChoice);
 }
 
 void MenuDrawer::menu_print_other_players() {
