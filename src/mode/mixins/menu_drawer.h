@@ -85,7 +85,7 @@ class MenuDrawer {
         // Given mode will be opened following choice,
         // with menu_selected_player set
         void menu_open_player_select(MenuMode);
-        int menu_selected_player;
+        Player* menu_selected_player;
         int menu_line_players[MENU_LINES];
         void menu_print_other_players();
         bool menu_player_selected();

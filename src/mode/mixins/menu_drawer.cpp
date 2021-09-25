@@ -484,20 +484,52 @@ void MenuDrawer::menu_open_specific_mode() {
             menu_print_other_players();
             break;
         case MM_SecInfoMC:
-            // TODO: Print information
-            menu_set_txt(0, COL_TEXT2, "INFO MC");
+            {
+                Player *pl = menu_selected_player;
+                menu_set_txt(0, COL_TEXT2, "Information about %s", pl->get_full_name());
+                menu_set_txt(2, COL_TEXT, "This is the desired information:");
+                // N.B. CPU players CAN be in debt (-ve MC)!
+                menu_set_txt(3, COL_TEXT, "%s owns %dMCredits.", pl->get_full_name(), pl->get_mc());
+            }
             break;
         case MM_SecInfoAllies:
-            // TODO: Print information
-            menu_set_txt(0, COL_TEXT2, "INFO ALLIES");
+            {
+                Player *pl = menu_selected_player;
+                menu_set_txt(0, COL_TEXT2, "The allies of %s are:", pl->get_full_name());
+                int row = 2;
+                menu_set_txt(row, COL_TEXT, "None");
+                int pl_idx = exostate.get_player_idx(pl);
+                for (int i = 0; i < N_PLAYERS; ++i) {
+                    if (i == pl_idx) continue;
+                    if (exostate.is_allied(i, pl_idx)) {
+                        Player *ally = exostate.get_player(i);
+                        menu_set_txt(row++, COL_TEXT, ally->get_full_name());
+                    }
+                }
+            }
             break;
         case MM_SecInfoPlanets:
-            // TODO: Print information
-            menu_set_txt(0, COL_TEXT2, "INFO PLANETS");
+            {
+                Player *pl = menu_selected_player;
+                menu_set_txt(0, COL_TEXT2, "Information about %s", pl->get_full_name());
+                menu_set_txt(2, COL_TEXT, "This is the desired information:");
+                int n = exostate.get_n_planets(pl);
+                menu_set_txt(3, COL_TEXT, "%s owns %d planets.", pl->get_full_name(), n);
+            }
             break;
         case MM_SecInfoInventions:
-            // TODO: Print information
-            menu_set_txt(0, COL_TEXT2, "INFO INVENTIONS");
+            {
+                Player *pl = menu_selected_player;
+                menu_set_txt(0, COL_TEXT2, "%s has the following inventions:", pl->get_full_name());
+
+                int row = 2;
+                menu_set_txt(row, COL_TEXT, "None");
+                for (Invention i = (Invention)0; i < INV_MAX; i = (Invention)((int)i+1)) {
+                    if (pl->has_invention(i)) {
+                        menu_set_txt(row++, COL_TEXT, pl->get_invention_str(i));
+                    }
+                }
+            }
             break;
         case MM_StarMarker:
             break;
@@ -982,7 +1014,7 @@ bool MenuDrawer::menu_player_selected() {
     // Skip the first row as this is text
     for (int row = 1; row < MENU_LINES; ++row) {
         if (draw_manager.query_click(id_menu_lines[row]).id) {
-            menu_selected_player = menu_line_players[row];
+            menu_selected_player = exostate.get_player(menu_line_players[row]);
             return true;
         }
     }
