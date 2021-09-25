@@ -485,7 +485,19 @@ void MenuDrawer::menu_open_specific_mode() {
             break;
         case MM_SecInfoMC:
             // TODO: Print information
-            menu_set_txt(0, COL_TEXT2, "INFO ABOUT LORD");
+            menu_set_txt(0, COL_TEXT2, "INFO MC");
+            break;
+        case MM_SecInfoAllies:
+            // TODO: Print information
+            menu_set_txt(0, COL_TEXT2, "INFO ALLIES");
+            break;
+        case MM_SecInfoPlanets:
+            // TODO: Print information
+            menu_set_txt(0, COL_TEXT2, "INFO PLANETS");
+            break;
+        case MM_SecInfoInventions:
+            // TODO: Print information
+            menu_set_txt(0, COL_TEXT2, "INFO INVENTIONS");
             break;
         case MM_StarMarker:
             break;
@@ -837,7 +849,7 @@ bool MenuDrawer::menu_specific_update() {
             // 4: Allies (20MC)
             if (draw_manager.query_click(id_menu_lines[4]).id) {
                 if (p->attempt_spend(20)) {
-                    // TODO
+                    menu_open_player_select(MM_SecInfoAllies);
                     return true;
                 }
             }
@@ -845,7 +857,7 @@ bool MenuDrawer::menu_specific_update() {
             // 5: Number of planets (20MC)
             if (draw_manager.query_click(id_menu_lines[5]).id) {
                 if (p->attempt_spend(20)) {
-                    // TODO
+                    menu_open_player_select(MM_SecInfoPlanets);
                     return true;
                 }
             }
@@ -853,7 +865,7 @@ bool MenuDrawer::menu_specific_update() {
             // 6: Inventions (50MC)
             if (draw_manager.query_click(id_menu_lines[6]).id) {
                 if (p->attempt_spend(50)) {
-                    // TODO
+                    menu_open_player_select(MM_SecInfoInventions);
                     return true;
                 }
             }
@@ -879,6 +891,9 @@ bool MenuDrawer::menu_specific_update() {
             }
             break;
         case MM_SecInfoMC:
+        case MM_SecInfoAllies:
+        case MM_SecInfoPlanets:
+        case MM_SecInfoInventions:
             if (draw_manager.clicked()) {
                 menu_open(MM_SecretService);
                 return true;
