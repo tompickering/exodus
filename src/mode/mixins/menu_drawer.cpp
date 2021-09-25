@@ -135,6 +135,7 @@ MenuAction MenuDrawer::menu_get_action() {
 void MenuDrawer::menu_open(MenuMode mode) {
     menu_mode = mode;
     menu_action = MA_None;
+    menu_clickable_rows = 0;
 
     for (int i = 0; i < MENU_LINES; ++i) {
         strncpy(menu_text[i], "", 1);
@@ -315,6 +316,7 @@ void MenuDrawer::menu_set_opt(int idx, const char* in_text, ...) {
     va_end(args);
 
     menu_text_col[idx] = COL_TEXT;
+    menu_clickable_rows |= (1<<idx);
     draw_manager.set_selectable(id_menu_lines[idx]);
 }
 
@@ -600,22 +602,22 @@ bool MenuDrawer::menu_specific_update() {
     switch(menu_mode) {
         case MM_Ctrl:
             // 2: Change Officers & Taxes
-            if (draw_manager.query_click(id_menu_lines[2]).id) {
+            if (menu_row_clicked(2)) {
                 menu_open(MM_OfficersAndTaxes);
                 return true;
             }
             // 3: Secret Service
-            if (draw_manager.query_click(id_menu_lines[3]).id) {
+            if (menu_row_clicked(3)) {
                 menu_open(MM_SecretService);
                 return true;
             }
             // 4: Set / Replace Star Markers
             // 5: Equip Starship
-            if (draw_manager.query_click(id_menu_lines[5]).id) {
+            if (menu_row_clicked(5)) {
                 menu_action = MA_EquipShip;
             }
             // 6: Build Artificial Planet
-            if (draw_manager.query_click(id_menu_lines[6]).id) {
+            if (menu_row_clicked(6)) {
                 Planet *planet = exostate.get_planet_under_construction(player_idx);
                 if (planet) {
                     // TODO: Dialogue here
@@ -645,14 +647,14 @@ bool MenuDrawer::menu_specific_update() {
             // 8: Wait One Month
             // 10: Show Distances
             // 11: Save Game
-            if (draw_manager.query_click(id_menu_lines[11]).id) {
+            if (menu_row_clicked(11)) {
                 // Re-open save menu to refresh metadata
                 menu_open(MM_Save);
                 return true;
             }
             // 12: Quit Game
             // 14: Exit Menu
-            if (draw_manager.query_click(id_menu_lines[14]).id) {
+            if (menu_row_clicked(14)) {
                 menu_action = MA_Close;
             }
             break;
@@ -754,7 +756,7 @@ bool MenuDrawer::menu_specific_update() {
                     }
                 }
 
-                if (draw_manager.query_click(id_menu_lines[14]).id) {
+                if (menu_row_clicked(14)) {
                     menu_open(MM_Ctrl);
                     return true;
                 }
@@ -826,7 +828,7 @@ bool MenuDrawer::menu_specific_update() {
             break;
         case MM_OldOfficer:
             {
-                if (draw_manager.query_click(id_menu_lines[2]).id) {
+                if (menu_row_clicked(2)) {
                     if (p->attempt_spend(OFF_PAY_MC)) {
                         p->adjust_reputation(1);
                         menu_open(MM_OldOfficerPaid);
@@ -834,13 +836,13 @@ bool MenuDrawer::menu_specific_update() {
                     }
                 }
 
-                if (draw_manager.query_click(id_menu_lines[3]).id) {
+                if (menu_row_clicked(3)) {
                     p->adjust_reputation(-11);
                     menu_open(MM_OldOfficerDismissed);
                     return true;
                 }
 
-                if (draw_manager.query_click(id_menu_lines[4]).id) {
+                if (menu_row_clicked(4)) {
                     p->adjust_reputation(-1);
                     for (PlanetIterator piter(player_idx); !piter.complete(); ++piter) {
                         piter.get()->adjust_unrest(1);
@@ -860,13 +862,13 @@ bool MenuDrawer::menu_specific_update() {
             break;
         case MM_SecretService:
             // 4: Information Services (20+ MC)
-            if (draw_manager.query_click(id_menu_lines[4]).id) {
+            if (menu_row_clicked(4)) {
                 menu_open(MM_SecInfo);
                 return true;
             }
 
             // 5: A Personal File (100 MC)
-            if (draw_manager.query_click(id_menu_lines[5]).id) {
+            if (menu_row_clicked(5)) {
                 if (p->attempt_spend(100)) {
                     menu_open_player_select(MM_SecPersonalFile);
                     return true;
@@ -876,7 +878,7 @@ bool MenuDrawer::menu_specific_update() {
             // 6: Terrorist Attacks (50+ MC)
             // 7: Orbital Bomb Attacks (500+ MC)
             // 14: Exit Menu
-            if (draw_manager.query_click(id_menu_lines[14]).id) {
+            if (menu_row_clicked(14)) {
                 menu_open(MM_Ctrl);
                 return true;
             }
@@ -885,7 +887,7 @@ bool MenuDrawer::menu_specific_update() {
             // FIXME: Get rid of hard-coded costs
 
             // 3: Amount of money
-            if (draw_manager.query_click(id_menu_lines[3]).id) {
+            if (menu_row_clicked(3)) {
                 if (p->attempt_spend(20)) {
                     menu_open_player_select(MM_SecInfoMC);
                     return true;
@@ -893,7 +895,7 @@ bool MenuDrawer::menu_specific_update() {
             }
 
             // 4: Allies (20MC)
-            if (draw_manager.query_click(id_menu_lines[4]).id) {
+            if (menu_row_clicked(4)) {
                 if (p->attempt_spend(20)) {
                     menu_open_player_select(MM_SecInfoAllies);
                     return true;
@@ -901,7 +903,7 @@ bool MenuDrawer::menu_specific_update() {
             }
 
             // 5: Number of planets (20MC)
-            if (draw_manager.query_click(id_menu_lines[5]).id) {
+            if (menu_row_clicked(5)) {
                 if (p->attempt_spend(20)) {
                     menu_open_player_select(MM_SecInfoPlanets);
                     return true;
@@ -909,7 +911,7 @@ bool MenuDrawer::menu_specific_update() {
             }
 
             // 6: Inventions (50MC)
-            if (draw_manager.query_click(id_menu_lines[6]).id) {
+            if (menu_row_clicked(6)) {
                 if (p->attempt_spend(50)) {
                     menu_open_player_select(MM_SecInfoInventions);
                     return true;
@@ -917,7 +919,7 @@ bool MenuDrawer::menu_specific_update() {
             }
 
             // 7: Planet surface (100MC)
-            if (draw_manager.query_click(id_menu_lines[7]).id) {
+            if (menu_row_clicked(7)) {
                 if (p->attempt_spend(100)) {
                     // TODO
                     return true;
@@ -925,7 +927,7 @@ bool MenuDrawer::menu_specific_update() {
             }
 
             // 14: Exit Menu
-            if (draw_manager.query_click(id_menu_lines[14]).id) {
+            if (menu_row_clicked(14)) {
                 menu_open(MM_SecretService);
                 return true;
             }
@@ -954,13 +956,13 @@ bool MenuDrawer::menu_specific_update() {
             break;
         case MM_Save:
             for (int i = 0; i < MAX_SLOTS; ++i) {
-                if (draw_manager.query_click(id_menu_lines[i+2]).id) {
+                if (menu_row_clicked(i+2)) {
                     save_manager.save(i);
                     menu_open(MM_Save);
                     return true;
                 }
             }
-            if (draw_manager.query_click(id_menu_lines[14]).id) {
+            if (menu_row_clicked(14)) {
                 menu_open(MM_Ctrl);
                 return true;
             }
@@ -976,7 +978,7 @@ bool MenuDrawer::menu_specific_update() {
             // 10: Starship Damage
             // 12: Statistics
             // 14: Exit Menu
-            if (draw_manager.query_click(id_menu_lines[14]).id) {
+            if (menu_row_clicked(14)) {
                 menu_action = MA_Close;
             }
             break;
@@ -1001,6 +1003,13 @@ bool MenuDrawer::menu_specific_update() {
     first_update = false;
 
     return false;
+}
+
+bool MenuDrawer::menu_row_clicked(int row) {
+    if ((menu_clickable_rows & (1<<row)) == 0) {
+        return false;
+    }
+    return draw_manager.query_click(id_menu_lines[row]).id;
 }
 
 void MenuDrawer::menu_open_player_select(MenuMode mode) {

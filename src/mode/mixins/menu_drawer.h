@@ -82,6 +82,9 @@ class MenuDrawer {
         Officer menu_new_officer;
         OfficerQuality menu_new_officer_quality;
 
+        bool menu_row_clicked(int);
+        int menu_clickable_rows;
+
         // Use this to open player select
         // Given mode will be opened following choice,
         // with menu_selected_player set
