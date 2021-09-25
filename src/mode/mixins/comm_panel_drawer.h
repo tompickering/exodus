@@ -216,6 +216,8 @@ class CommPanelDrawer {
         int comm_title_len;
         bool comm_speech;
 
+        bool comm_enable_throbber = false;
+
         void comm_exit_anim(CommAction);
         bool comm_exit_anim_active;
         float comm_exit_anim_time;
@@ -230,6 +232,7 @@ class CommPanelDrawer {
         SprID id_comm_title;
         SprID id_comm_img;
         SprID id_comm_img_bg;
+        SprID id_comm_throbber;
         SprID id_comm_ally_trade;
         SprID id_comm_ally_nonattack;
         SprID id_comm_ally_war;

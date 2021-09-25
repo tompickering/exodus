@@ -28,6 +28,11 @@ const Anim comm_anim_urkash_static(           1, IMG_LD3_LD3);
 const Anim comm_anim_gordoon_static(          1, IMG_LD4_LD4);
 const Anim comm_anim_rebels_static(           1, IMG_LD5_LD5);
 
+Anim anim_throbber(9,
+    IMG_GF4_CLOGO1, IMG_GF4_CLOGO2, IMG_GF4_CLOGO3,
+    IMG_GF4_CLOGO4, IMG_GF4_CLOGO5, IMG_GF4_CLOGO6,
+    IMG_GF4_CLOGO7, IMG_GF4_CLOGO8, IMG_GF4_CLOGO9);
+
 CommPanelDrawer::CommPanelDrawer() {
     comm_text[0] = comm_text0; comm_text[1] = comm_text1; comm_text[2] = comm_text2;
     comm_text[3] = comm_text3; comm_text[4] = comm_text4; comm_text[5] = comm_text5;
@@ -59,6 +64,15 @@ CommAction CommPanelDrawer::comm_update(float dt) {
     if (comm_exit_anim_active) {
         comm_exit_anim_update(dt);
     } else {
+        if (comm_enable_throbber) {
+            float interp = fmod(comm_time/2, 1.f);
+            draw_manager.draw(
+                id_comm_throbber,
+                anim_throbber.interp(interp),
+                {COMM_X + 176, COMM_Y + 194,
+                .5, .5, 1, 1});
+        }
+
         comm_time_since_text_mouseover += dt;
         comm_process_responses();
         comm_draw_text();
@@ -71,6 +85,7 @@ void CommPanelDrawer::comm_exit_anim(CommAction act) {
     comm_exit_anim_active = true;
     comm_exit_anim_time = 0;
     comm_exit_anim_action = act;
+    draw_manager.draw(id_comm_throbber, nullptr);
 }
 
 void CommPanelDrawer::comm_exit_anim_update(float dt) {
@@ -285,6 +300,8 @@ void CommPanelDrawer::comm_set_text(int idx, const char* in_text, ...) {
 }
 
 void CommPanelDrawer::comm_open(CommSend input) {
+    comm_enable_throbber = false;
+
     comm_init(input);
 
     comm_state = DIA_R_None;
@@ -297,6 +314,7 @@ void CommPanelDrawer::comm_open(CommSend input) {
     id_comm_title = draw_manager.new_sprite_id();
     id_comm_img = draw_manager.new_sprite_id();
     id_comm_img_bg = draw_manager.new_sprite_id();
+    id_comm_throbber = draw_manager.new_sprite_id();
     id_comm_ally_trade = draw_manager.new_sprite_id();
     id_comm_ally_nonattack = draw_manager.new_sprite_id();
     id_comm_ally_war = draw_manager.new_sprite_id();
@@ -450,6 +468,7 @@ void CommPanelDrawer::comm_close() {
     draw_manager.release_sprite_id(id_comm_title);
     draw_manager.release_sprite_id(id_comm_img);
     draw_manager.release_sprite_id(id_comm_img_bg);
+    draw_manager.release_sprite_id(id_comm_throbber);
     draw_manager.release_sprite_id(id_comm_adj);
     draw_manager.release_sprite_id(id_comm_adj_ok);
     draw_manager.release_sprite_id(id_comm_ally_trade);
@@ -563,6 +582,8 @@ void CommPanelDrawer::comm_init(CommSend input) {
         case DIA_S_PlanetComm:
             comm_set_img(CI_HumanPlanet);
             comm_set_img_caption("COUNSELLOR");
+            // TODO: Add this to any other comms that need it
+            comm_enable_throbber = true;
             break;
         case DIA_S_HailPlanet:
             comm_set_img_caption_upper(comm_other->get_full_name());
@@ -1849,6 +1870,7 @@ void CommPanelDrawer::comm_process_responses() {
                     comm_report_action = CA_Abort;
                     break;
                 case 3:
+                    // TODO: Add this to any other comms that need it
                     comm_exit_anim(CA_Abort);
                     break;
             }
