@@ -28,6 +28,7 @@ enum MenuMode {
     MM_SecInfoAllies,
     MM_SecInfoPlanets,
     MM_SecInfoInventions,
+    MM_SecPersonalFile,
     MM_StarMarker,
     MM_EquipShip,
     MM_ArtificialWorld,

@@ -531,6 +531,13 @@ void MenuDrawer::menu_open_specific_mode() {
                 }
             }
             break;
+        case MM_SecPersonalFile:
+            {
+                Player *pl = menu_selected_player;
+                menu_set_txt(0, COL_TEXT2, "PERSONAL FILE");
+                // TODO
+            }
+            break;
         case MM_StarMarker:
             break;
         case MM_EquipShip:
@@ -859,6 +866,13 @@ bool MenuDrawer::menu_specific_update() {
             }
 
             // 5: A Personal File (100 MC)
+            if (draw_manager.query_click(id_menu_lines[5]).id) {
+                if (p->attempt_spend(100)) {
+                    menu_open_player_select(MM_SecPersonalFile);
+                    return true;
+                }
+            }
+
             // 6: Terrorist Attacks (50+ MC)
             // 7: Orbital Bomb Attacks (500+ MC)
             // 14: Exit Menu
@@ -926,6 +940,7 @@ bool MenuDrawer::menu_specific_update() {
         case MM_SecInfoAllies:
         case MM_SecInfoPlanets:
         case MM_SecInfoInventions:
+        case MM_SecPersonalFile:
             if (draw_manager.clicked()) {
                 menu_open(MM_SecretService);
                 return true;
