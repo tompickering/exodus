@@ -22,6 +22,9 @@ enum MenuMode {
     MM_OldOfficerDismissed,
     MM_OldOfficerKilled,
     MM_SecretService,
+    MM_SecInfo,
+    MM_SecInfoMCChoice,
+    MM_SecInfoMC,
     MM_StarMarker,
     MM_EquipShip,
     MM_ArtificialWorld,
@@ -74,6 +77,11 @@ class MenuDrawer {
         MenuAction menu_action;
         Officer menu_new_officer;
         OfficerQuality menu_new_officer_quality;
+
+        int menu_line_players[MENU_LINES];
+        void menu_print_other_players();
+        bool menu_player_selected();
+        int menu_selected_player;
 
         bool first_update;
         int menu_get_y(int);

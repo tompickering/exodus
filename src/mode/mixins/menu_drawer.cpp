@@ -451,6 +451,42 @@ void MenuDrawer::menu_open_specific_mode() {
             menu_set_opt(7, "Orbital Bomb Attacks (500+ MC)");
             menu_set_opt(14, "Exit Menu");
             break;
+        case MM_SecInfo:
+            {
+                menu_set_txt(0, COL_TEXT2, "You surely wish to see...");
+                // FIXME Get rid of all the horrible hard-coded costs and string duplication
+                if (p->can_afford(20)) {
+                    menu_set_opt(3, "... a lord's amount of money (20MC)");
+                    menu_set_opt(4, "... a lord's allies (20MC)");
+                    menu_set_opt(5, "... a lord's number of planets (20MC)");
+                } else {
+                    menu_set_txt(3, COL_TEXT_GREYED, "... a lord's amount of money (20MC)");
+                    menu_set_txt(4, COL_TEXT_GREYED, "... a lord's allies (20MC)");
+                    menu_set_txt(5, COL_TEXT_GREYED, "... a lord's number of planets (20MC)");
+                }
+
+                if (p->can_afford(50)) {
+                    menu_set_opt(6, "... a lord's inventions (50MC)");
+                } else {
+                    menu_set_txt(6, COL_TEXT_GREYED, "... a lord's inventions (50MC)");
+                }
+
+                if (p->can_afford(100)) {
+                    menu_set_opt(7, "... a planet's surface (100MC)");
+                } else {
+                    menu_set_txt(7, COL_TEXT_GREYED, "... a planet's surface (100MC)");
+                }
+
+                menu_set_opt(14, "Exit Menu");
+            }
+            break;
+        case MM_SecInfoMCChoice:
+            menu_print_other_players();
+            break;
+        case MM_SecInfoMC:
+            // TODO: Print information
+            menu_set_txt(0, COL_TEXT2, "INFO ABOUT LORD");
+            break;
         case MM_StarMarker:
             break;
         case MM_EquipShip:
@@ -773,12 +809,78 @@ bool MenuDrawer::menu_specific_update() {
             break;
         case MM_SecretService:
             // 4: Information Services (20+ MC)
+            if (draw_manager.query_click(id_menu_lines[4]).id) {
+                menu_open(MM_SecInfo);
+                return true;
+            }
+
             // 5: A Personal File (100 MC)
             // 6: Terrorist Attacks (50+ MC)
             // 7: Orbital Bomb Attacks (500+ MC)
             // 14: Exit Menu
             if (draw_manager.query_click(id_menu_lines[14]).id) {
                 menu_open(MM_Ctrl);
+                return true;
+            }
+            break;
+        case MM_SecInfo:
+            // FIXME: Get rid of hard-coded costs
+
+            // 3: Amount of money
+            if (draw_manager.query_click(id_menu_lines[3]).id) {
+                if (p->attempt_spend(20)) {
+                    menu_open(MM_SecInfoMCChoice);
+                    return true;
+                }
+            }
+
+            // 4: Allies (20MC)
+            if (draw_manager.query_click(id_menu_lines[4]).id) {
+                if (p->attempt_spend(20)) {
+                    // TODO
+                    return true;
+                }
+            }
+
+            // 5: Number of planets (20MC)
+            if (draw_manager.query_click(id_menu_lines[5]).id) {
+                if (p->attempt_spend(20)) {
+                    // TODO
+                    return true;
+                }
+            }
+
+            // 6: Inventions (50MC)
+            if (draw_manager.query_click(id_menu_lines[6]).id) {
+                if (p->attempt_spend(50)) {
+                    // TODO
+                    return true;
+                }
+            }
+
+            // 7: Planet surface (100MC)
+            if (draw_manager.query_click(id_menu_lines[7]).id) {
+                if (p->attempt_spend(100)) {
+                    // TODO
+                    return true;
+                }
+            }
+
+            // 14: Exit Menu
+            if (draw_manager.query_click(id_menu_lines[14]).id) {
+                menu_open(MM_SecretService);
+                return true;
+            }
+            break;
+        case MM_SecInfoMCChoice:
+            if (menu_player_selected()) {
+                menu_open(MM_SecInfoMC);
+                return true;
+            }
+            break;
+        case MM_SecInfoMC:
+            if (draw_manager.clicked()) {
+                menu_open(MM_SecretService);
                 return true;
             }
             break;
@@ -836,5 +938,33 @@ bool MenuDrawer::menu_specific_update() {
 
     first_update = false;
 
+    return false;
+}
+
+void MenuDrawer::menu_print_other_players() {
+    int player_idx = exostate.get_active_player_idx();
+    menu_set_txt(0, COL_TEXT2, "Please select the desired lord.");
+    int row = 1;
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        if (i == player_idx) continue;
+        Player *tgt = exostate.get_player(i);
+        menu_line_players[row] = i;
+        if (tgt->is_participating()) {
+            menu_set_opt(row, tgt->get_full_name());
+        } else {
+            menu_set_txt(row, COL_TEXT_GREYED, tgt->get_full_name());
+        }
+        row++;
+    }
+}
+
+bool MenuDrawer::menu_player_selected() {
+    // Skip the first row as this is text
+    for (int row = 1; row < MENU_LINES; ++row) {
+        if (draw_manager.query_click(id_menu_lines[row]).id) {
+            menu_selected_player = menu_line_players[row];
+            return true;
+        }
+    }
     return false;
 }
