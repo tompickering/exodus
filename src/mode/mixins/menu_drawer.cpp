@@ -640,6 +640,7 @@ bool MenuDrawer::menu_specific_update() {
                 }
 
                 if (redraw_scitax) {
+                    t = p->get_tax();
                     char pct[5];
                     snprintf(pct, sizeof(pct), "%d%%", t);
                     draw_manager.draw_text(
