@@ -235,7 +235,7 @@ ExodusMode GuildBar::update(float delta) {
     talk_loop = fmod(talk_loop + delta * 0.2, 1);
     light_loop = fmod(light_loop + delta, 6);
 
-    draw_manager.draw(id(ID::TALK), talk_anim.interp(talk_loop), {225, 246, 0.5, 0.5, 2, 2});
+    draw_manager.draw(id(ID::TALK), talk_anim.interp(talk_loop), {224, 246, 0.5, 0.5, 2, 2});
 
     switch (stage) {
         case GB_Idle:
