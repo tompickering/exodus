@@ -18,15 +18,30 @@ const int COMM_Y = (RES_Y / 2) - (COMM_H / 2);
 const int COMM_RCOL_X = COMM_X + 196 + COMM_BORDER * 2;
 const float COMM_SPEECH_SPEED = 10.f;
 
-const Anim comm_anim_human_static(            1, IMG_LD0_LD0);
-const Anim comm_anim_human_thoughtful_static( 1, IMG_CS2_C  );
-const Anim comm_anim_human_confident_static(  1, IMG_CS3_C  );
-const Anim comm_anim_human_planet_static(     1, IMG_CS4_C  );
-const Anim comm_anim_yokon_static(            1, IMG_LD1_LD1);
-const Anim comm_anim_teri_static(             1, IMG_LD2_LD2);
-const Anim comm_anim_urkash_static(           1, IMG_LD3_LD3);
-const Anim comm_anim_gordoon_static(          1, IMG_LD4_LD4);
-const Anim comm_anim_rebels_static(           1, IMG_LD5_LD5);
+Anim comm_anim_human(            7, IMG_LD0_LD0  , IMG_LD0_LD0_1,
+                                    IMG_LD0_LD0_2, IMG_LD0_LD0_3,
+                                    IMG_LD0_LD0_2, IMG_LD0_LD0_1,
+                                    IMG_LD0_LD0);
+Anim comm_anim_human_thoughtful( 1, IMG_CS2_C  );
+Anim comm_anim_human_confident(  1, IMG_CS3_C  );
+Anim comm_anim_human_planet(     1, IMG_CS4_C  );
+Anim comm_anim_yokon(            1, IMG_LD1_LD1  , IMG_LD1_LD1_1,
+                                    IMG_LD1_LD1_2, IMG_LD1_LD1_3,
+                                    IMG_LD1_LD1_2, IMG_LD1_LD1_1,
+                                    IMG_LD1_LD1);
+Anim comm_anim_teri(             7, IMG_LD2_LD2  , IMG_LD2_LD2_1,
+                                    IMG_LD2_LD2_2, IMG_LD2_LD2_3,
+                                    IMG_LD2_LD2_2, IMG_LD2_LD2_1,
+                                    IMG_LD2_LD2);
+Anim comm_anim_urkash(           7, IMG_LD3_LD3  , IMG_LD3_LD3_1,
+                                    IMG_LD3_LD3_2, IMG_LD3_LD3_3,
+                                    IMG_LD3_LD3_2, IMG_LD3_LD3_1,
+                                    IMG_LD3_LD3);
+Anim comm_anim_gordoon(          7, IMG_LD4_LD4  , IMG_LD4_LD4_1,
+                                    IMG_LD4_LD4_2, IMG_LD4_LD4_3,
+                                    IMG_LD4_LD4_2, IMG_LD4_LD4_1,
+                                    IMG_LD4_LD4);
+Anim comm_anim_rebels(           1, IMG_LD5_LD5);
 
 Anim anim_throbber(9,
     IMG_GF4_CLOGO1, IMG_GF4_CLOGO2, IMG_GF4_CLOGO3,
@@ -60,12 +75,41 @@ CommPanelDrawer::CommPanelDrawer() {
 
 CommAction CommPanelDrawer::comm_update(float dt) {
     comm_time += dt;
+    comm_time_since_open += dt;
 
     if (comm_exit_anim_active) {
         comm_exit_anim_update(dt);
     } else {
+        if (comm_enable_distort) {
+            float interp = fmax(0, fmod(comm_time_since_open*1.4, 6) - 5);
+            draw_manager.draw(
+                id_comm_img,
+                comm_anim.interp(interp),
+                {COMM_X + COMM_BORDER + 1,
+                 COMM_Y + COMM_BORDER + 1,
+                 0, 0, 1, 1});
+
+            // Redraw text
+            // FIXME: Deduplicate this
+            draw_manager.draw_text(
+                Font::Tiny,
+                comm_img_caption_upper,
+                Justify::Left,
+                COMM_X + COMM_BORDER + 6,
+                COMM_Y + COMM_H - COMM_BORDER - 28,
+                COL_TEXT2);
+
+            draw_manager.draw_text(
+                Font::Tiny,
+                comm_img_caption_lower,
+                Justify::Left,
+                COMM_X + COMM_BORDER + 6,
+                COMM_Y + COMM_H - COMM_BORDER - 16,
+                COL_TEXT2);
+        }
+
         if (comm_enable_throbber) {
-            float interp = fmod(comm_time/2, 1.f);
+            float interp = fmod(comm_time_since_open/2, 1.f);
             draw_manager.draw(
                 id_comm_throbber,
                 anim_throbber.interp(interp),
@@ -237,31 +281,31 @@ void CommPanelDrawer::comm_set_race(Race race) {
 void CommPanelDrawer::comm_set_img(CommImg img) {
     switch (img) {
         case CI_Human:
-            comm_anim = comm_anim_human_static;
+            comm_anim = comm_anim_human;
             break;
         case CI_HumanThoughtful:
-            comm_anim = comm_anim_human_thoughtful_static;
+            comm_anim = comm_anim_human_thoughtful;
             break;
         case CI_HumanConfident:
-            comm_anim = comm_anim_human_confident_static;
+            comm_anim = comm_anim_human_confident;
             break;
         case CI_Yokon:
-            comm_anim = comm_anim_yokon_static;
+            comm_anim = comm_anim_yokon;
             break;
         case CI_Teri:
-            comm_anim = comm_anim_teri_static;
+            comm_anim = comm_anim_teri;
             break;
         case CI_Urkash:
-            comm_anim = comm_anim_urkash_static;
+            comm_anim = comm_anim_urkash;
             break;
         case CI_Gordoon:
-            comm_anim = comm_anim_gordoon_static;
+            comm_anim = comm_anim_gordoon;
             break;
         case CI_Rebels:
-            comm_anim = comm_anim_rebels_static;
+            comm_anim = comm_anim_rebels;
             break;
         case CI_HumanPlanet:
-            comm_anim = comm_anim_human_planet_static;
+            comm_anim = comm_anim_human_planet;
             break;
     }
 }
@@ -300,6 +344,8 @@ void CommPanelDrawer::comm_set_text(int idx, const char* in_text, ...) {
 }
 
 void CommPanelDrawer::comm_open(CommSend input) {
+    comm_time_since_open = 0;
+    comm_enable_distort = false;
     comm_enable_throbber = false;
 
     comm_init(input);
@@ -589,6 +635,8 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img_caption_upper(comm_other->get_full_name());
             comm_set_img_caption_lower("RACE: %s", comm_other->get_race_str());
             comm_set_race(comm_other->get_race());
+            // TODO: Add this to any other comms that need it
+            comm_enable_distort = true;
             break;
         case DIA_S_PlanAttack:
             {

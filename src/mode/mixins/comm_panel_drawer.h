@@ -207,6 +207,7 @@ class CommPanelDrawer {
         char comm_text5[COMM_MAX_TEXT];
         char *comm_text[6];
         float comm_time;
+        float comm_time_since_open;
         float comm_time_since_text_mouseover;
         unsigned char comm_text_interactive_mask;
         unsigned char comm_text_disabled_mask;
@@ -217,6 +218,7 @@ class CommPanelDrawer {
         bool comm_speech;
 
         bool comm_enable_throbber = false;
+        bool comm_enable_distort = false;
 
         void comm_exit_anim(CommAction);
         bool comm_exit_anim_active;
