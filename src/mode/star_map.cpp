@@ -85,7 +85,11 @@ void StarMap::enter() {
 
     audio_manager.target_music(ephstate.default_music);
 
-    stage = SM_Idle;
+    if (ephstate.get_ephemeral_state() == EPH_SelectPlanet) {
+        stage = SM_SelectPlanet;
+    } else {
+        stage = SM_Idle;
+    }
 }
 
 void StarMap::exit() {
@@ -568,6 +572,21 @@ ExodusMode StarMap::update(float delta) {
                     frame_remove();
                     audio_manager.target_music(ephstate.default_music);
                     stage = SM_Idle;
+                }
+            }
+            break;
+        case SM_SelectPlanet:
+            {
+                // TODO: A way to go back - might be 0 planets, or owned planets (right click?)
+                // TODO: "SELECT A PLANET"
+                // TODO: Should we allow you to select unowned planets? Likely needs ephstate config
+                for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+                    if (draw_manager.query_click(id(ID::PLANET1 + i)).id) {
+                        *(ephstate.selectplanet_planet) = i;
+                        ephstate.clear_ephemeral_state();
+                        // TODO: Fade to black
+                        return ExodusMode::MODE_GalaxyMap;
+                    }
                 }
             }
             break;

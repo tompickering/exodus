@@ -61,6 +61,8 @@ void GalaxyMap::enter() {
     if (ephstate.get_ephemeral_state() == EPH_ResumeFly) {
         ephstate.clear_ephemeral_state();
         stage = GM_Fly;
+    } else if (ephstate.get_ephemeral_state() == EPH_SelectPlanet) {
+        stage = GM_SelectStar;
     } else if (mp_state.mp_stage == MP_None) {
         stage = GM_SwapIn;
     } else {
@@ -96,8 +98,6 @@ void GalaxyMap::enter() {
     // Leave selected_ft as-is
 
     draw_manager.show_cursor(true);
-
-    // TODO: Respond to ephstate EPH_SelectPlanet
 }
 
 const float FADE_SPEED = 10.f;
@@ -321,6 +321,24 @@ ExodusMode GalaxyMap::update(float delta) {
         case GM_Fly:
             player->get_location().set_target(ephstate.fly_plan.loc, ephstate.fly_plan.months);
             return ExodusMode::MODE_Fly;
+        case GM_SelectStar:
+            {
+                // TODO: Need a way to cancel this - especially if no options possible!
+                // TODO: Recover mission MC if cancelled?
+                // TODO: "SELECT A STAR" message
+                // TODO: (Show star name on mouseover?)
+                // TODO: Some way to highlight available stars
+                ft = get_clicked_flytarget();
+                if (ft && ft != exostate.get_galaxy()->get_guild()) {
+                    int ft_idx = exostate.tgt2loc(ft);
+                    if (player->get_location().has_visited(ft_idx)) {
+                        *(ephstate.selectplanet_star) = ft_idx;
+                        exostate.set_active_flytarget(ft);
+                        return ExodusMode::MODE_StarMap;
+                    }
+                }
+            }
+            break;
         case GM_MonthPassing:
             {
                 update_panel_info_player(TGT_Primary, exostate.get_player(0));
@@ -782,7 +800,7 @@ bool GalaxyMap::first_spaceport_update(float delta) {
 
 void GalaxyMap::next_mp_stage() {
     mp_state.mp_stage = (MonthPassStage)((int)mp_state.mp_stage + 1);
-    L.verb("MP stage %d", mp_state.mp_stage);
+    L.debug("MP stage %d", mp_state.mp_stage);
     // Reset all mp-stage state tracking
     mp_state.mp_player_idx = 0;
     mp_state.mp_star_idx = 0;
@@ -1196,8 +1214,16 @@ ExodusMode GalaxyMap::month_pass_update() {
         next_mp_stage();
     }
 
-    if (mp_state.mp_stage == MP_AlienMissions) {
-        // TODO - PROCdomission etc
+    if (mp_state.mp_stage == MP_Missions) {
+        for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
+            L.debug("CHECK MISSION %d", mp_state.mp_player_idx);
+            Player *p = exostate.set_active_player(mp_state.mp_player_idx);
+            if (p->has_mission()) {
+                // TODO - PROCdomission etc
+                L.info("[%s]: MISSION", p->get_full_name());
+                p->clear_mission();
+            }
+        }
         next_mp_stage();
     }
 

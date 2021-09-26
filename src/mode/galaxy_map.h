@@ -54,7 +54,7 @@ enum MonthPassStage {
     MP_PlanetBackgroundUpdate,
     MP_PlanetMainUpdate, // PROCcal_plan - comprised of MonthPassPlanetStages
     MP_UpdateAlienFly,
-    MP_AlienMissions,
+    MP_Missions,
     MP_PayOfficers,
     MP_GuildCommendations,
     MP_AlienExile,
@@ -159,6 +159,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
             GM_Zoom2Star,
             GM_FlyConfirm,
             GM_Fly,
+            GM_SelectStar,
             GM_MonthPassing,
             GM_MonthPassMain,
             GM_MP_FirstCity,

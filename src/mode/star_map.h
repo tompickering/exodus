@@ -32,6 +32,7 @@ class StarMap : ModeBase, PanelDrawer, CommPanelDrawer, FrameDrawer {
             SM_PlanAttack,
             SM_FestivalDelay,
             SM_Festival,
+            SM_SelectPlanet,
             SM_Back2Gal,
         };
 
