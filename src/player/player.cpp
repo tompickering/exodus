@@ -576,6 +576,30 @@ int Player::transfer(int n, int* val) {
     return -actual;
 }
 
+bool Player::has_mission() {
+   return mission.type != MT_None;
+}
+
+void Player::set_mission_type(MissionType type) {
+    mission.type = type;
+}
+
+int& Player::get_mission_planet_ref() {
+    return mission.planet_idx;
+}
+
+int& Player::get_mission_star_ref() {
+    return mission.star_idx;
+}
+
+const Mission& Player::get_mission() {
+    return mission;
+}
+
+void Player::clear_mission() {
+    set_mission_type(MT_None);
+}
+
 AIFlag Player::get_flag(int idx) {
     if (idx >= 9) {
         L.fatal("Tried to access AI flag > maximum (%d)", idx);

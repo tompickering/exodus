@@ -17,6 +17,10 @@ void EphemeralState::clear_ephemeral_state() {
     eph_state = EPH_None;
 }
 
+bool EphemeralState::ephemeral_state_set() {
+    return eph_state != EPH_None;
+}
+
 ExodusMode EphemeralState::get_appropriate_mode() {
     switch (eph_state) {
         case EPH_None:
@@ -39,6 +43,8 @@ ExodusMode EphemeralState::get_appropriate_mode() {
             // StarMap. Ideally we would specify StarMap here, but
             // we need to find another way to trigger a mode stack pop.
             return ExodusMode::MODE_Pop;
+        case EPH_SelectPlanet:
+            return ExodusMode::MODE_GalaxyMap;
         case EPH_GameOver:
             return ExodusMode::MODE_GameOver;
     }

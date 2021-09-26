@@ -29,6 +29,7 @@ enum MenuMode {
     MM_SecInfoPlanets,
     MM_SecInfoInventions,
     MM_SecPersonalFile,
+    MM_SecAttack,
     MM_StarMarker,
     MM_EquipShip,
     MM_ArtificialWorld,
@@ -55,7 +56,7 @@ class MenuDrawer {
     public:
         MenuDrawer();
         void menu_open(MenuMode);
-        void menu_update(float);
+        ExodusMode menu_update(float);
         void menu_close();
         bool menu_is_open();
         MenuAction menu_get_action();

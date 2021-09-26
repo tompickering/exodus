@@ -1,6 +1,7 @@
 #include "menu_drawer.h"
 
 #include "state/exodus_state.h"
+#include "state/ephemeral_state.h"
 #include "save/save.h"
 #include "input/input.h"
 #include "util/iter.h"
@@ -11,6 +12,7 @@
 #define OFF_PAY_MC 50
 
 extern ExodusState exostate;
+extern EphemeralState ephstate;
 extern SAVEMANAGER save_manager;
 extern INPUTMANAGER input_manager;
 
@@ -258,7 +260,7 @@ int MenuDrawer::menu_get_y(int row) {
     return MENU_Y + MENU_BORDER + 2 + row * 20;
 }
 
-void MenuDrawer::menu_update(float delta) {
+ExodusMode MenuDrawer::menu_update(float delta) {
     while (true) {
         menu_action = MA_None;
 
@@ -278,6 +280,12 @@ void MenuDrawer::menu_update(float delta) {
             draw_manager.consume_click();
         }
     }
+
+    if (ephstate.ephemeral_state_set()) {
+        return ephstate.get_appropriate_mode();
+    }
+
+    return ExodusMode::MODE_None;
 }
 
 const char* MenuDrawer::menu_get_bg() {
@@ -538,6 +546,48 @@ void MenuDrawer::menu_open_specific_mode() {
                 Player *pl = menu_selected_player;
                 menu_set_txt(0, COL_TEXT2, "PERSONAL FILE");
                 // TODO
+            }
+            break;
+        case MM_SecAttack:
+            {
+                menu_set_txt(0, COL_TEXT2, "You surely wish to attack a planet's...");
+
+                // FIXME: Hard-coded costs
+                if (p->can_afford(200)) {
+                    menu_set_opt(4, "... command station (200MC)");
+                    menu_set_opt(5, "... cultivated area (200MC)");
+                } else {
+                    menu_set_txt(4, COL_TEXT_GREYED, "... command station (200MC)");
+                    menu_set_txt(5, COL_TEXT_GREYED, "... cultivated area (200MC)");
+                }
+
+                if (p->can_afford(150)) {
+                    menu_set_opt(6, "... plutonium production (150MC)");
+                } else {
+                    menu_set_txt(6, COL_TEXT_GREYED, "... plutonium production (150MC)");
+                }
+
+                if (p->can_afford(70)) {
+                    menu_set_opt(7, "... army production (70MC)");
+                } else {
+                    menu_set_txt(8, COL_TEXT_GREYED, "... army production (70MC)");
+                }
+
+                if (p->can_afford(100)) {
+                    menu_set_opt(8, "... spaceport (100MC)");
+                    menu_set_opt(9, "... trading centre (100MC)");
+                } else {
+                    menu_set_txt(8, COL_TEXT_GREYED, "... spaceport (100MC)");
+                    menu_set_txt(9, COL_TEXT_GREYED, "... trading centre (100MC)");
+                }
+
+                if (p->can_afford(50)) {
+                    menu_set_opt(10, "... mining (50MC)");
+                } else {
+                    menu_set_txt(10, COL_TEXT_GREYED, "... mining (50MC)");
+                }
+
+                menu_set_opt(14, "Exit Menu");
             }
             break;
         case MM_StarMarker:
@@ -876,6 +926,13 @@ bool MenuDrawer::menu_specific_update() {
             }
 
             // 6: Terrorist Attacks (50+ MC)
+            if (menu_row_clicked(6)) {
+                if (p->attempt_spend(100)) {
+                    menu_open(MM_SecAttack);
+                    return true;
+                }
+            }
+
             // 7: Orbital Bomb Attacks (500+ MC)
             // 14: Exit Menu
             if (menu_row_clicked(14)) {
@@ -946,6 +1003,34 @@ bool MenuDrawer::menu_specific_update() {
             if (draw_manager.clicked()) {
                 menu_open(MM_SecretService);
                 return true;
+            }
+            break;
+        case MM_SecAttack:
+            {
+                int& star_idx = p->get_mission_star_ref();
+                int& planet_idx = p->get_mission_planet_ref();
+
+                //  4: command station (200MC)
+                if (menu_row_clicked(4)) {
+                    if (p->attempt_spend(200)) {
+                        p->set_mission_type(MT_TerrorComm);
+                        ephstate.select_planet(star_idx, planet_idx);
+                        return false;
+                    }
+                }
+
+                //  5: cultivated area (200MC)
+                //  6: plutonium production (150MC)
+                //  7: army production (70MC)
+                //  8: spaceport (100MC)
+                //  9: trading centre (100MC)
+                // 10: mining (50MC)
+
+                // 14: Exit Menu
+                if (menu_row_clicked(14)) {
+                    menu_open(MM_SecretService);
+                    return true;
+                }
             }
             break;
         case MM_StarMarker:

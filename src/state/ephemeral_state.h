@@ -123,6 +123,7 @@ enum EphState {
     EPH_ResearchCheck,
     EPH_ResumeFly,
     EPH_Festival,
+    EPH_SelectPlanet,
     EPH_GameOver,
 };
 
@@ -132,7 +133,19 @@ class EphemeralState {
         EphState get_ephemeral_state();
         void set_ephemeral_state(EphState);
         void clear_ephemeral_state();
+        bool ephemeral_state_set();
         ExodusMode get_appropriate_mode();
+
+        // These MUST be set going into EPH_SelectPlanet
+        // This is where the results are stored
+        // The state should be done via select_planet()
+        int* selectplanet_star;
+        int* selectplanet_planet;
+        void select_planet(int& st, int& pl) {
+            selectplanet_star = &st;
+            selectplanet_planet = &pl;
+            set_ephemeral_state(EPH_SelectPlanet);
+        }
 
         LunarBattleParams lunar_battle;
         LunarBattleReport lunar_battle_report;

@@ -96,6 +96,8 @@ void GalaxyMap::enter() {
     // Leave selected_ft as-is
 
     draw_manager.show_cursor(true);
+
+    // TODO: Respond to ephstate EPH_SelectPlanet
 }
 
 const float FADE_SPEED = 10.f;
@@ -502,7 +504,11 @@ ExodusMode GalaxyMap::update(float delta) {
                 // is open - and as the panel is visible, it's confusing if this
                 // isn't kept up to date.
                 update_panel_info_player(TGT_Primary, player);
-                menu_update(delta);
+                ExodusMode new_mode = menu_update(delta);
+                if (new_mode != ExodusMode::MODE_None) {
+                    menu_close();
+                    return new_mode;
+                }
                 switch (menu_get_action()) {
                     case MA_Close:
                         menu_close();

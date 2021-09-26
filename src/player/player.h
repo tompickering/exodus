@@ -139,6 +139,25 @@ enum OfficerQuality {
     OFFQ_MAX,
 };
 
+enum MissionType {
+    MT_None,
+    MT_TerrorComm,
+    MT_TerrorAgri,
+    MT_TerrorPlu,
+    MT_TerrorArmy,
+    MT_TerrorPort,
+    MT_TerrorTrade,
+    MT_TerrorMine,
+    MT_RandomBomb,
+    MT_Nuclear,
+};
+
+typedef struct {
+    MissionType type;
+    int star_idx;
+    int planet_idx;
+} Mission;
+
 enum Gender {
     GENDER_Female,
     GENDER_Male,
@@ -235,6 +254,13 @@ class Player {
         int transfer_gli(int);
         int transfer_art(int);
 
+        bool has_mission();
+        void set_mission_type(MissionType);
+        int& get_mission_planet_ref();
+        int& get_mission_star_ref();
+        const Mission& get_mission();
+        void clear_mission();
+
         // AI
         AIFlag get_flag(int);
         int get_tactic();
@@ -271,6 +297,7 @@ class Player {
         bool guild_member;
         int tax;  // Orig: t%
         OfficerQuality officers[OFF_MAX];  // Orig: Ps%
+        Mission mission;
 
         int transfer(int, int*);
 
