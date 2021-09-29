@@ -1253,6 +1253,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                             ephstate.destruction.tgt_stones.reset();
                             ephstate.destruction.n_strikes = mission_n_strikes;
                             ephstate.destruction.enable_explosions = true;
+                            ephstate.destruction.enable_explosion_anims = true;
                             ephstate.destruction.irradiated = false;
                             ephstate.destruction.show_target = false;
                             // Enemy doesn't know you've attacked them (TODO: Check this)
@@ -1267,6 +1268,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                             ephstate.destruction.tgt_stones.reset();
                             ephstate.destruction.n_strikes = 400;
                             ephstate.destruction.enable_explosions = false;
+                            ephstate.destruction.enable_explosion_anims = false;
                             ephstate.destruction.irradiated = true;
                             ephstate.destruction.show_target = false;
                             // Enemy doesn't know you've attacked them (TODO: Check this)
@@ -2831,6 +2833,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 ephstate.destruction.tgt_stones.reset();
                 ephstate.destruction.n_strikes = RND(7) + 1; // 2-8 hits
                 ephstate.destruction.enable_explosions = true;
+                ephstate.destruction.enable_explosion_anims = true;
                 ephstate.destruction.irradiated = false;
                 ephstate.destruction.show_target = false;
                 ephstate.destruction.destroyer_idx = -1;
@@ -3149,6 +3152,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 ephstate.destruction.tgt_stones.add(STONE_Plu);
                 ephstate.destruction.n_strikes = 1;
                 ephstate.destruction.enable_explosions = true;
+                ephstate.destruction.enable_explosion_anims = true;
                 ephstate.destruction.irradiated = true;
                 ephstate.destruction.show_target = true;
                 ephstate.destruction.destroyer_idx = -1;

@@ -422,6 +422,7 @@ ExodusMode StarMap::update(float delta) {
                         ephstate.destruction.tgt_stones = tgt;
                         ephstate.destruction.n_strikes = att;
                         ephstate.destruction.enable_explosions = true;
+                        ephstate.destruction.enable_explosion_anims = true;
                         ephstate.destruction.irradiated = false;
                         ephstate.destruction.show_target = att<3;
                         ephstate.destruction.destroyer_idx = player_idx;

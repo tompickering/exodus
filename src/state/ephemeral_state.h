@@ -89,6 +89,7 @@ typedef struct {
     StoneSet tgt_stones;
     int n_strikes;
     bool enable_explosions;
+    bool enable_explosion_anims;
     bool draw;
     bool irradiated;
     bool show_target;
