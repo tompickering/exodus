@@ -40,6 +40,9 @@ GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer(), PanelDrawer(PNL_
     do_meltdown = false;
     do_lunar_battle = false;
     do_guild_title = GUILDTITLE_None;
+
+    active_mission = false;
+    mission_n_strikes = 0;
 }
 
 void GalaxyMap::enter() {
@@ -1216,12 +1219,113 @@ ExodusMode GalaxyMap::month_pass_update() {
 
     if (mp_state.mp_stage == MP_Missions) {
         for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
-            L.debug("CHECK MISSION %d", mp_state.mp_player_idx);
             Player *p = exostate.set_active_player(mp_state.mp_player_idx);
+            const Mission mission = p->get_mission();
+
+            if (active_mission) {
+                if (p->has_mission()) {
+                    // Resolve the mission here
+                    active_mission = false;
+                    L.debug("[%s] EXECUTE MISSION", p->get_full_name());
+
+                    Planet *pl = exostate.get_active_planet();
+                    int owner_idx = pl->get_owner();
+                    Player *owner = exostate.get_player(owner_idx);
+
+                    switch (mission.type) {
+                        case MT_None:
+                            L.error("No mission type - has_mission() should be false");
+                            break;
+                        case MT_TerrorComm:
+                        case MT_TerrorAgri:
+                        case MT_TerrorPlu:
+                        case MT_TerrorArmy:
+                        case MT_TerrorPort:
+                        case MT_TerrorTrade:
+                        case MT_TerrorMine:
+                            // TODO
+                            p->clear_mission();
+                            break;
+                        case MT_RandomBomb:
+                            p->clear_mission();
+                            ephstate.set_ephemeral_state(EPH_Destruction);
+                            ephstate.destruction.type = DESTROY_NRandom;
+                            ephstate.destruction.tgt_stones.reset();
+                            ephstate.destruction.n_strikes = mission_n_strikes;
+                            ephstate.destruction.enable_explosions = true;
+                            ephstate.destruction.irradiated = false;
+                            ephstate.destruction.show_target = false;
+                            // Enemy doesn't know you've attacked them (TODO: Check this)
+                            ephstate.destruction.destroyer_idx = -1;
+                            ephstate.destruction.draw = owner->is_human();
+                            return ephstate.get_appropriate_mode();
+                        case MT_Nuclear:
+                            // TODO
+                            p->clear_mission();
+                            break;
+                    }
+                    continue;
+                } else {
+                    L.error("Player should have mission if active_mission set");
+                }
+            }
+
+            L.debug("CHECK MISSION %d", mp_state.mp_player_idx);
             if (p->has_mission()) {
-                // TODO - PROCdomission etc
-                L.info("[%s]: MISSION", p->get_full_name());
-                p->clear_mission();
+                Star *st = &stars[mission.star_idx];
+                exostate.set_active_flytarget(st);
+                exostate.set_active_planet(mission.planet_idx);
+                Planet *pl = exostate.get_active_planet();
+                if (pl && pl->is_owned()) {
+                    exostate.set_active_player(mp_state.mp_player_idx);
+                    L.info("[%s] MISSION - %s", p->get_full_name(), pl->get_name());
+                    bulletin_start_new(false);
+                    bulletin_set_bg(pl->sprites()->bulletin_bg);
+                    bulletin_set_active_player_flag();
+                    bulletin_write_planet_info(st, pl);
+                    // TODO - PROCdomission etc
+                    // Just set bulletin here - if we need to trigger an action
+                    // on close, set active_mission and return
+                    // Otherwise, p->clear_mission();
+
+                    switch (mission.type) {
+                        case MT_None:
+                            L.error("Mission with no type - has_mission() should be false");
+                            break;
+                        case MT_TerrorComm:
+                        case MT_TerrorAgri:
+                        case MT_TerrorPlu:
+                        case MT_TerrorArmy:
+                        case MT_TerrorPort:
+                        case MT_TerrorTrade:
+                        case MT_TerrorMine:
+                            // TODO
+                            p->clear_mission();
+                            break;
+                        case MT_RandomBomb:
+                            mission_n_strikes = RND(7) + 9;
+                            bulletin_set_next_text("");
+                            bulletin_set_next_text("");
+                            bulletin_set_next_text(
+                                "ORBITAL ATTACK AT %s",
+                                tmp_caps(pl->get_name()));
+                            bulletin_set_next_text(
+                                "The planet has taken %d hits.",
+                                mission_n_strikes);
+                            active_mission = true;
+                            return ExodusMode::MODE_None;
+                        case MT_Nuclear:
+                            for (int i = 0; i < 5; ++i) bulletin_set_next_text("");
+                            audio_manager.target_music(mpart2mus(9));
+                            bulletin_set_next_text(
+                                "NUCLEAR ATTACK AT %s",
+                                tmp_caps(pl->get_name()));
+                            active_mission = true;
+                            return ExodusMode::MODE_None;
+                    }
+                } else {
+                    L.info("[%s]: CANCEL MISSION: Invalid planet", p->get_full_name());
+                }
             }
         }
         next_mp_stage();

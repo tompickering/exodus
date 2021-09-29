@@ -30,6 +30,7 @@ enum MenuMode {
     MM_SecInfoInventions,
     MM_SecPersonalFile,
     MM_SecAttack,
+    MM_SecBombing,
     MM_StarMarker,
     MM_EquipShip,
     MM_ArtificialWorld,

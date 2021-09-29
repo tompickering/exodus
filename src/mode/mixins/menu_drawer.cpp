@@ -590,6 +590,26 @@ void MenuDrawer::menu_open_specific_mode() {
                 menu_set_opt(14, "Exit Menu");
             }
             break;
+        case MM_SecBombing:
+            {
+                menu_set_txt(0, COL_TEXT2, "You surely wish...");
+
+                // FIXME: Hard-coded costs
+                if (p->can_afford(500)) {
+                    menu_set_opt(4, "... random orbital bombing (500MC)");
+                } else {
+                    menu_set_txt(4, COL_TEXT_GREYED, "... random orbital bombing (500MC)");
+                }
+
+                if (p->can_afford(1000)) {
+                    menu_set_opt(5, "... nuclear extermination (1000MC)");
+                } else {
+                    menu_set_txt(5, COL_TEXT_GREYED, "... nuclear extermination (1000MC)");
+                }
+
+                menu_set_opt(14, "Exit Menu");
+            }
+            break;
         case MM_StarMarker:
             break;
         case MM_EquipShip:
@@ -927,13 +947,19 @@ bool MenuDrawer::menu_specific_update() {
 
             // 6: Terrorist Attacks (50+ MC)
             if (menu_row_clicked(6)) {
-                if (p->attempt_spend(100)) {
-                    menu_open(MM_SecAttack);
-                    return true;
-                }
+                // TODO: Check if mission already set
+                menu_open(MM_SecAttack);
+                return true;
             }
 
             // 7: Orbital Bomb Attacks (500+ MC)
+            if (menu_row_clicked(7)) {
+                // TODO: Invention check
+                // TODO: Check if mission already set
+                menu_open(MM_SecBombing);
+                return true;
+            }
+
             // 14: Exit Menu
             if (menu_row_clicked(14)) {
                 menu_open(MM_Ctrl);
@@ -1007,11 +1033,12 @@ bool MenuDrawer::menu_specific_update() {
             break;
         case MM_SecAttack:
             {
-                int& star_idx = p->get_mission_star_ref();
-                int& planet_idx = p->get_mission_planet_ref();
+                int &star_idx = p->get_mission_star_ref();
+                int &planet_idx = p->get_mission_planet_ref();
 
                 //  4: command station (200MC)
                 if (menu_row_clicked(4)) {
+                    // TODO: Charge MC only after selection of valid planet
                     if (p->attempt_spend(200)) {
                         p->set_mission_type(MT_TerrorComm);
                         ephstate.select_planet(star_idx, planet_idx);
@@ -1019,12 +1046,40 @@ bool MenuDrawer::menu_specific_update() {
                     }
                 }
 
+                // TODO
                 //  5: cultivated area (200MC)
                 //  6: plutonium production (150MC)
                 //  7: army production (70MC)
                 //  8: spaceport (100MC)
                 //  9: trading centre (100MC)
                 // 10: mining (50MC)
+
+                // 14: Exit Menu
+                if (menu_row_clicked(14)) {
+                    menu_open(MM_SecretService);
+                    return true;
+                }
+            }
+            break;
+        case MM_SecBombing:
+            {
+                int &star_idx = p->get_mission_star_ref();
+                int &planet_idx = p->get_mission_planet_ref();
+
+                //  4: random bombing (500MC)
+                if (menu_row_clicked(4)) {
+                    // TODO: Invetion check?
+                    // TODO: Charge MC only after selection of valid planet
+                    if (p->attempt_spend(200)) {
+                        p->set_mission_type(MT_RandomBomb);
+                        ephstate.select_planet(star_idx, planet_idx);
+                        return false;
+                    }
+                }
+
+                // TODO
+                //  5: nuclear extermination (1000MC)
+                //  TODO: Invetion check?
 
                 // 14: Exit Menu
                 if (menu_row_clicked(14)) {
