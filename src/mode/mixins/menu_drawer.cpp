@@ -1070,16 +1070,23 @@ bool MenuDrawer::menu_specific_update() {
                 if (menu_row_clicked(4)) {
                     // TODO: Invetion check?
                     // TODO: Charge MC only after selection of valid planet
-                    if (p->attempt_spend(200)) {
+                    if (p->attempt_spend(500)) {
                         p->set_mission_type(MT_RandomBomb);
                         ephstate.select_planet(star_idx, planet_idx);
                         return false;
                     }
                 }
 
-                // TODO
                 //  5: nuclear extermination (1000MC)
-                //  TODO: Invetion check?
+                if (menu_row_clicked(5)) {
+                    // TODO: Invetion check?
+                    // TODO: Charge MC only after selection of valid planet
+                    if (p->attempt_spend(1000)) {
+                        p->set_mission_type(MT_Nuclear);
+                        ephstate.select_planet(star_idx, planet_idx);
+                        return false;
+                    }
+                }
 
                 // 14: Exit Menu
                 if (menu_row_clicked(14)) {

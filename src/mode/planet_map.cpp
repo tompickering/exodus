@@ -1532,11 +1532,23 @@ void PlanetMap::hide_lunar_base_tool() {
 ExodusMode PlanetMap::update_destruction(float delta) {
     PlanetDestruction &d = ephstate.destruction;
 
-    destruction_time += delta;
+    if (destruction_done) {
+        if (!d.draw || draw_manager.clicked()) {
+            L.debug("Destruction complete");
+            ephstate.clear_ephemeral_state();
+            return ExodusMode::MODE_Pop;
+        }
+
+        if (!d.draw) {
+            return ExodusMode::MODE_None;
+        }
+    }
 
     if (d.draw) {
+        destruction_time += delta;
+
         draw_stones();
-        if (explosion_interp >= 1) {
+        if (!d.enable_explosions || explosion_interp >= 1) {
             exploding = EXP_Done;
             explosion_interp = 0;
         }
@@ -1556,6 +1568,8 @@ ExodusMode PlanetMap::update_destruction(float delta) {
         if (destruction_time < DESTRUCT_DELAY || exploding == EXP_Drawing) {
             return ExodusMode::MODE_None;
         }
+
+        destruction_time = 0;
     }
 
     while (d.n_strikes >= 0) {
@@ -1568,7 +1582,7 @@ ExodusMode PlanetMap::update_destruction(float delta) {
                 explode_y = c.y;
                 if (d.draw) {
                     targeting_interp = 1;
-                    exploding = EXP_Drawing;
+                    exploding = d.enable_explosions ? EXP_Drawing : EXP_Done;
                     break;
                 } else {
                     exploding = EXP_Done;
@@ -1595,7 +1609,7 @@ ExodusMode PlanetMap::update_destruction(float delta) {
 
                 if (d.draw) {
                     targeting_interp = d.show_target ? 0 : 1;
-                    exploding = EXP_Drawing;
+                    exploding = d.enable_explosions ? EXP_Drawing : EXP_Done;
                     break;
                 } else {
                     exploding = EXP_Done;
@@ -1604,7 +1618,7 @@ ExodusMode PlanetMap::update_destruction(float delta) {
         }
 
         if (exploding == EXP_Done) {
-            if (d.draw) {
+            if (d.draw && d.enable_explosions) {
                 clear_surf(explode_x, explode_y);
             }
             planet->set_stone_wrap(
@@ -1635,7 +1649,7 @@ ExodusMode PlanetMap::update_destruction(float delta) {
                             Stone to_stone = STONE_Radiation;
                             if (exploding_stone == STONE_Port2)
                                 to_stone = get_destroyed_stone(s);
-                            if (d.draw) {
+                            if (d.draw && d.enable_explosions) {
                                 clear_surf(cx, cy);
                             }
                             planet->set_stone_wrap(cx, cy, to_stone);
@@ -1652,12 +1666,6 @@ ExodusMode PlanetMap::update_destruction(float delta) {
 
     if (d.n_strikes <= 0) {
         destruction_done = true;
-    }
-
-    if (destruction_done && (!d.draw || draw_manager.clicked())) {
-        L.debug("Destruction complete");
-        ephstate.clear_ephemeral_state();
-        return ExodusMode::MODE_Pop;
     }
 
     return ExodusMode::MODE_None;

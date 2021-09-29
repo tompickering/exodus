@@ -1260,9 +1260,19 @@ ExodusMode GalaxyMap::month_pass_update() {
                             ephstate.destruction.draw = owner->is_human();
                             return ephstate.get_appropriate_mode();
                         case MT_Nuclear:
-                            // TODO
                             p->clear_mission();
-                            break;
+                            ephstate.set_ephemeral_state(EPH_Destruction);
+                            ephstate.destruction.type = DESTROY_NRandom;
+                            ephstate.destruction.tgt_stones.reset();
+                            ephstate.destruction.n_strikes = 400;
+                            ephstate.destruction.enable_explosions = false;
+                            ephstate.destruction.irradiated = true;
+                            ephstate.destruction.show_target = false;
+                            // Enemy doesn't know you've attacked them (TODO: Check this)
+                            ephstate.destruction.destroyer_idx = -1;
+                            // TODO: Check this - nuke always seen by player?
+                            ephstate.destruction.draw = true;
+                            return ephstate.get_appropriate_mode();
                     }
                     continue;
                 } else {
@@ -1315,7 +1325,8 @@ ExodusMode GalaxyMap::month_pass_update() {
                             active_mission = true;
                             return ExodusMode::MODE_None;
                         case MT_Nuclear:
-                            for (int i = 0; i < 5; ++i) bulletin_set_next_text("");
+                            bulletin_set_next_text("");
+                            bulletin_set_next_text("");
                             audio_manager.target_music(mpart2mus(9));
                             bulletin_set_next_text(
                                 "NUCLEAR ATTACK AT %s",
