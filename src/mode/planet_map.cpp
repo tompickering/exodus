@@ -1533,6 +1533,11 @@ ExodusMode PlanetMap::update_destruction(float delta) {
     PlanetDestruction &d = ephstate.destruction;
 
     if (destruction_done) {
+        if (d.nuke && planet->get_class() != Desert) {
+            planet->change_class(Desert);
+            if (d.draw) draw();
+        }
+
         if (!d.draw || draw_manager.clicked()) {
             L.debug("Destruction complete");
             ephstate.clear_ephemeral_state();
@@ -1565,7 +1570,16 @@ ExodusMode PlanetMap::update_destruction(float delta) {
                 }
             }
         }
-        if (destruction_time < DESTRUCT_DELAY || exploding == EXP_Drawing) {
+
+        float delay = DESTRUCT_DELAY;
+        if (d.nuke) {
+            delay /= 4;
+            if (d.n_strikes < 370) {
+                delay /= 10;
+            }
+        }
+
+        if (destruction_time < delay || exploding == EXP_Drawing) {
             return ExodusMode::MODE_None;
         }
 

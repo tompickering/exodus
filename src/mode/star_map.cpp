@@ -425,6 +425,7 @@ ExodusMode StarMap::update(float delta) {
                         ephstate.destruction.irradiated = false;
                         ephstate.destruction.show_target = att<3;
                         ephstate.destruction.destroyer_idx = player_idx;
+                        ephstate.destruction.nuke = false;
                         ephstate.destruction.draw = true;
 
                         stage = SM_MissionBomb;
