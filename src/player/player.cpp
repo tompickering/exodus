@@ -185,7 +185,12 @@ bool Player::leave_galaxy() {
 bool Player::return_to_galaxy() {
     if (left_galaxy) {
         left_galaxy = false;
-        return is_participating();
+        bool returned = is_participating();
+        if (returned) {
+            mc = 0;
+            fleet.freight.clear();
+        }
+        return returned;
     }
     return false;
 }

@@ -95,9 +95,11 @@ class ExodusState {
         Player* get_player(int);
         int get_player_idx(Player*);
         int get_n_active_players();
+        int get_n_active_cpu_players();
         Player* get_random_active_player();
         int get_random_star_idx();
         int get_n_owned_planets();
+        int get_n_unowned_planets();
         Planet* get_planet_under_construction(int);
         PlanetInfo get_random_owned_planet_info();
         int get_n_planets();
@@ -132,6 +134,8 @@ class ExodusState {
         Galaxy galaxy;
         bool galaxy_finalised;
         bool active_flytarget_is_guild;
+
+        int _get_n_owned_planets(bool);
 
         uint8_t get_alliances(int, int);
         void set_alliances(int, int, uint8_t);

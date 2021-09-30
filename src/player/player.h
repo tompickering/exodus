@@ -70,6 +70,15 @@ typedef struct {
     int infantry;
     int gliders;
     int artillery;
+    void clear() {
+        minerals  = 0;
+        food      = 0;
+        plutonium = 0;
+        robots    = 0;
+        infantry  = 0;
+        gliders   = 0;
+        artillery = 0;
+    }
     int size() const {
         return minerals + food + plutonium + robots + army_size();
     }

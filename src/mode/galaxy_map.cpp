@@ -1500,7 +1500,27 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     Star *stars = gal->get_stars(n_stars);
 
     if (mp_state.mpai_stage == MPAI_Return) {
-        // TODO
+        if (exostate.get_n_active_cpu_players() > 0) {
+            if (onein(400) && (exostate.get_n_unowned_planets() > 0) && player->return_to_galaxy()) {
+                int m = exostate.get_orig_month();
+                player->give_mc(RND(300) + (m*50));
+                player->set_tactic(9);
+                player->get_location().set_target(exostate.get_random_star_idx(), 1);
+                player->get_location().advance();
+                player->transfer_inf(m/2);
+                player->transfer_gli(m/2);
+                player->transfer_art(m/2);
+                audio_manager.target_music(mpart2mus(8));
+                bulletin_start_new(false);
+                bulletin_set_flag(IMG_TS1_FLAG16);
+                bulletin_set_text_col(COL_TEXT3);
+                bulletin_set_next_text("%s HAS RETURNED", tmp_caps(player->get_name()));
+                bulletin_set_next_text("");
+                bulletin_set_next_text("We have just received the news that");
+                bulletin_set_next_text("%s has come back.", player->get_full_name());
+                return ExodusMode::MODE_None;
+            }
+        }
         next_mpai_stage();
     }
 

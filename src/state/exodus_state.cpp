@@ -507,7 +507,15 @@ int ExodusState::get_n_active_players() {
     int n_active_players = 0;
     for (int i = 0; i < N_PLAYERS; ++i)
         if (players[i].is_participating())
-           ++ n_active_players;
+           ++n_active_players;
+    return n_active_players;
+}
+
+int ExodusState::get_n_active_cpu_players() {
+    int n_active_players = 0;
+    for (int i = 0; i < N_PLAYERS; ++i)
+        if (players[i].is_participating() && !players[i].is_human())
+           ++n_active_players;
     return n_active_players;
 }
 
@@ -533,7 +541,15 @@ int ExodusState::get_random_star_idx() {
 }
 
 int ExodusState::get_n_owned_planets() {
-    int n_owned_planets = 0;
+    return _get_n_owned_planets(true);
+}
+
+int ExodusState::get_n_unowned_planets() {
+    return _get_n_owned_planets(false);
+}
+
+int ExodusState::_get_n_owned_planets(bool owned) {
+    int n_planets = 0;
     Galaxy *gal = get_galaxy();
     int n_stars;
     Star *stars = gal->get_stars(n_stars);
@@ -541,12 +557,12 @@ int ExodusState::get_n_owned_planets() {
         Star *s = &stars[star_idx];
         for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
             Planet *p = s->get_planet(planet_idx);
-            if (p && p->exists() && p->is_owned()) {
-                ++n_owned_planets;
+            if (p && p->exists() && (p->is_owned() == owned)) {
+                ++n_planets;
             }
         }
     }
-    return n_owned_planets;
+    return n_planets;
 }
 
 Planet* ExodusState::get_planet_under_construction(int player_idx) {
