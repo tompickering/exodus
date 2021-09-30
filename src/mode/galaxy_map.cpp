@@ -1435,7 +1435,35 @@ ExodusMode GalaxyMap::month_pass_update() {
     }
 
     if (mp_state.mp_stage == MP_AlienExile) {
-        // TODO - PROCcheckalive
+        // PROCcheckalive
+        // TODO: In a multiplayer game, check if all humans are dead, or one winner remains
+        for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
+            Player *p = exostate.set_active_player(mp_state.mp_player_idx);
+            // Check all CPU lords participating...
+            if (p && p->is_participating() && !p->is_human()) {
+                // ...who don't have a planet...
+                if (exostate.get_n_planets(p) == 0) {
+                    if (p->can_afford(150)) {
+                        p->set_tactic(9);
+                        // Ensure CPU is at destination
+                        p->get_location().advance();
+                    } else if (p->leave_galaxy()) {
+                        // ...and can't afford to colonise a new one.
+                        audio_manager.target_music(mpart2mus(9));
+                        bulletin_start_new(false);
+                        bulletin_set_flag(IMG_TS1_FLAG16);
+                        bulletin_set_text_col(COL_TEXT3);
+                        bulletin_set_next_text("%s FAILED", tmp_caps(p->get_name()));
+                        bulletin_set_next_text("");
+                        bulletin_set_next_text("%s has lost all planets and", p->get_full_name());
+                        bulletin_set_next_text("left the galaxy.");
+                        // TODO: News item with PROCdonotice
+                        return ExodusMode::MODE_None;
+                    }
+                }
+            }
+        }
+
         next_mp_stage();
     }
 

@@ -71,7 +71,8 @@ void ExodusState::init(GameConfig config) {
 
         // TODO: Set to false for CPU players in a
         // multiplayer game with no other races.
-        players[i].participating_in_game = true;
+        players[i].exists = true;
+        players[i].left_galaxy = false;
     }
 
     // PLAYER INIT: Human

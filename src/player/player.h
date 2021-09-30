@@ -190,6 +190,8 @@ class Player {
         bool is_human();
         bool is_alive();
         bool is_participating();
+        bool leave_galaxy();
+        bool return_to_galaxy();
         bool is_guild_member();
         void set_guild_member(bool);
         GuildTitle get_guild_title();
@@ -282,8 +284,9 @@ class Player {
         char ref[MAX_PLAYER_REFERENCE + 1];
         char full_name[MAX_PLAYER_FULLNAME + 1];
         GuildTitle guild_title;
+        bool exists;
         bool dead;
-        bool participating_in_game;
+        bool left_galaxy;
         int flag_idx;
         int mc;
         bool _intro_seen;

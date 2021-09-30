@@ -29,8 +29,9 @@ const char* get_alien_name(Race race, int idx) {
 
 Player::Player() {
     guild_title = GUILDTITLE_None;
+    exists = true;
     dead = false;
-    participating_in_game = false;
+    left_galaxy = false;
     _intro_seen = false;
     reputation = 3;
     inventions = 0;
@@ -170,8 +171,23 @@ bool Player::is_alive() {
 
 bool Player::is_participating() {
     // Indicate whether this player should be 'taking part' in the game
-    // TODO: Check for has-left-the-galaxy etc
-    return participating_in_game && is_alive();
+    return exists && !left_galaxy && is_alive();
+}
+
+bool Player::leave_galaxy() {
+    if (is_participating()) {
+        left_galaxy = true;
+        return true;
+    }
+    return false;
+}
+
+bool Player::return_to_galaxy() {
+    if (left_galaxy) {
+        left_galaxy = false;
+        return is_participating();
+    }
+    return false;
 }
 
 bool Player::is_guild_member() {
