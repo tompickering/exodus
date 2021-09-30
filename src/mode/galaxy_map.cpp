@@ -1370,7 +1370,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                         p->set_guild_title(new_title);
                         const char* name = p->get_full_name();
                         const char* title_str = p->get_guild_title_str();
-                        // TODO: Music
+                        audio_manager.target_music(mpart2mus(10));
                         bulletin_start_new(false);
                         bulletin_set_flag(IMG_TS1_FLAG16);
                         bulletin_set_text_col(COL_TEXT3);
