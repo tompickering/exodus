@@ -1549,6 +1549,8 @@ ExodusMode PlanetMap::update_destruction(float delta) {
         }
     }
 
+    int nukes_per_update = 1;
+
     if (d.draw) {
         destruction_time += delta;
 
@@ -1573,9 +1575,9 @@ ExodusMode PlanetMap::update_destruction(float delta) {
 
         float delay = DESTRUCT_DELAY;
         if (d.nuke) {
-            delay /= 4;
-            if (d.n_strikes < 370) {
-                delay /= 10;
+            delay /= 10;
+            if (d.n_strikes < 350) {
+                nukes_per_update = 4000*delta;
             }
         }
 
@@ -1624,7 +1626,10 @@ ExodusMode PlanetMap::update_destruction(float delta) {
                 if (d.draw) {
                     targeting_interp = d.show_target ? 0 : 1;
                     exploding = d.enable_explosion_anims ? EXP_Drawing : EXP_Done;
-                    break;
+                    // Continue bomb updates if nuking multiple per update
+                    if (!(d.nuke && (--nukes_per_update > 0 ))) {
+                        break;
+                    }
                 } else {
                     exploding = EXP_Done;
                 }
