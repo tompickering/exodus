@@ -15,6 +15,8 @@
 
 #include "util/value.h"
 
+#define PROPORTIONAL_FADE 0
+
 #ifdef CONTINUOUS_UPSCALING
 const float UPSCALE_X = (float)SCREEN_WIDTH  / (float)RES_X;
 const float UPSCALE_Y = (float)SCREEN_HEIGHT / (float)RES_Y;
@@ -185,9 +187,34 @@ void DrawManagerSDL::update(float delta, MousePos mouse_pos, MousePos new_click_
                     uint8_t r1 = (px1[i] & 0x00FF0000) >> 16;
                     uint8_t g1 = (px1[i] & 0x0000FF00) >> 8;
                     uint8_t b1 = (px1[i] & 0x000000FF);
+#if PROPORTIONAL_FADE
                     uint8_t new_r = (uint8_t)((int16_t)r0 + (int16_t)(fade_progress * ((float)r1 - (float)r0)));
                     uint8_t new_g = (uint8_t)((int16_t)g0 + (int16_t)(fade_progress * ((float)g1 - (float)g0)));
                     uint8_t new_b = (uint8_t)((int16_t)b0 + (int16_t)(fade_progress * ((float)b1 - (float)b0)));
+#else
+                    uint8_t step = fade_progress * 0xFF;
+                    float rs = r1 > r0 ? 1 : -1;
+                    float gs = g1 > g0 ? 1 : -1;
+                    float bs = b1 > b0 ? 1 : -1;
+                    uint8_t new_r;
+                    uint8_t new_g;
+                    uint8_t new_b;
+                    if (abs((int)r0-(int)r1) < step) {
+                        new_r = r1;
+                    } else {
+                        new_r = r0 + step*rs;
+                    }
+                    if (abs((int)g0-(int)g1) < step) {
+                        new_g = g1;
+                    } else {
+                        new_g = g0 + step*gs;
+                    }
+                    if (abs((int)b0-(int)b1) < step) {
+                        new_b = b1;
+                    } else {
+                        new_b = b0 + step*bs;
+                    }
+#endif
                     new_col |= new_r;
                     new_col <<= 8;
                     new_col |= new_g;
