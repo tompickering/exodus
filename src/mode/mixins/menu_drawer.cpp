@@ -9,7 +9,28 @@
 #include "shared.h"
 #include "assetpaths.h"
 
-#define OFF_PAY_MC 50
+#define COST_INF_MC       20
+#define COST_INF_ALLIES   20
+#define COST_INF_NPLANS   20
+#define COST_INF_INV      50
+#define COST_INF_SURF    100
+
+#define COST_FILE        100
+
+#define COST_ATT_CMD     200
+#define COST_ATT_AGRI    200
+#define COST_ATT_PLU     150
+#define COST_ATT_ARMY     70
+#define COST_ATT_PORT    100
+#define COST_ATT_TRADE   100
+#define COST_ATT_MINE     50
+
+#define COST_ATT_BOMB    500
+#define COST_ATT_NUKE   1000
+
+#define OFF_PAY_MC        50
+
+#define COST_ART        1000
 
 extern ExodusState exostate;
 extern EphemeralState ephstate;
@@ -28,8 +49,6 @@ const int MENU_FLAG_BG_W = 96 + MENU_BORDER*2;
 const int MENU_FLAG_BG_H = 56 + MENU_BORDER*2;
 const int MENU_BG_X = MENU_X + MENU_BORDER;
 const int MENU_BG_Y = MENU_Y + MENU_BORDER;
-
-static const int ART_COST = 1000;
 
 static const int OFF_DESC_LINES = 5;
 
@@ -328,12 +347,20 @@ void MenuDrawer::menu_set_opt(int idx, const char* in_text, ...) {
     draw_manager.set_selectable(id_menu_lines[idx]);
 }
 
+void MenuDrawer::menu_set_opt(int idx, const char* in_text, bool enabled) {
+    if (enabled) {
+        menu_set_opt(idx, in_text);
+    } else {
+        menu_set_txt(idx, COL_TEXT_GREYED, in_text);
+    }
+}
+
 void MenuDrawer::menu_open_specific_mode() {
     Player *p = exostate.get_active_player();
     bool art_ok = true;
     first_update = true;
 
-    if (!p->can_afford(ART_COST)) art_ok = false;
+    if (!p->can_afford(COST_ART)) art_ok = false;
     if (!p->has_invention(INV_OrbitalMassConstruction)) art_ok = false;
     // TODO: Also check that the player doesn't have an artificial planet
     // (or rather, whatever pphase != 3 implies).
@@ -347,11 +374,7 @@ void MenuDrawer::menu_open_specific_mode() {
             menu_set_opt(4, "Set / Replace Star Markers (M)");
             // TODO: Hotkey
             menu_set_opt(5, "Equip Starship (E)");
-            if (art_ok) {
-                menu_set_opt(6, "Build Artificial Planet (%dMC)", ART_COST);
-            } else {
-                menu_set_txt(6, COL_TEXT_GREYED, "Build Artificial Planet (%dMC)", ART_COST);
-            }
+            menu_set_opt(6, "Build Artificial Planet (" STR(COST_ART) "MC)", art_ok);
             menu_set_opt(8, "Wait One Month (Spc)");
             // TODO: Hotkey
             menu_set_opt(10, "Show Distances (D)");
@@ -425,11 +448,7 @@ void MenuDrawer::menu_open_specific_mode() {
         case MM_OldOfficer:
             {
                 menu_set_txt(0, COL_TEXT, "What do you want to do with the old officer?");
-                if (p->can_afford(OFF_PAY_MC)) {
-                    menu_set_opt(2, "Pay %dMC for their work", OFF_PAY_MC);
-                } else {
-                    menu_set_txt(2, COL_TEXT_GREYED, "Pay %dMC for their work", OFF_PAY_MC);
-                }
+                menu_set_opt(2, "Pay " STR(OFF_PAY_MC) "MC for their work", p->can_afford(OFF_PAY_MC));
                 menu_set_opt(3, "Dismiss");
                 menu_set_opt(4, "Kill");
             }
@@ -456,7 +475,7 @@ void MenuDrawer::menu_open_specific_mode() {
             menu_set_txt(0, COL_TEXT2, "Secret Service");
             menu_set_txt(2, COL_TEXT, "Please choose:");
             menu_set_opt(4, "Information Services (20+ MC)");
-            menu_set_opt(5, "A Personal File (100 MC)");
+            menu_set_opt(5, "A Personal File (" STR(COST_FILE) " MC)");
             menu_set_opt(6, "Terrorist Attacks (50+ MC)");
             menu_set_opt(7, "Orbital Bomb Attacks (500+ MC)");
             menu_set_opt(14, "Exit Menu");
@@ -464,29 +483,16 @@ void MenuDrawer::menu_open_specific_mode() {
         case MM_SecInfo:
             {
                 menu_set_txt(0, COL_TEXT2, "You surely wish to see...");
-                // FIXME Get rid of all the horrible hard-coded costs and string duplication
-                if (p->can_afford(20)) {
-                    menu_set_opt(3, "... a lord's amount of money (20MC)");
-                    menu_set_opt(4, "... a lord's allies (20MC)");
-                    menu_set_opt(5, "... a lord's number of planets (20MC)");
-                } else {
-                    menu_set_txt(3, COL_TEXT_GREYED, "... a lord's amount of money (20MC)");
-                    menu_set_txt(4, COL_TEXT_GREYED, "... a lord's allies (20MC)");
-                    menu_set_txt(5, COL_TEXT_GREYED, "... a lord's number of planets (20MC)");
-                }
-
-                if (p->can_afford(50)) {
-                    menu_set_opt(6, "... a lord's inventions (50MC)");
-                } else {
-                    menu_set_txt(6, COL_TEXT_GREYED, "... a lord's inventions (50MC)");
-                }
-
-                if (p->can_afford(100)) {
-                    menu_set_opt(7, "... a planet's surface (100MC)");
-                } else {
-                    menu_set_txt(7, COL_TEXT_GREYED, "... a planet's surface (100MC)");
-                }
-
+                menu_set_opt(3, "... a lord's amount of money (" STR(COST_INF_MC) "MC)",
+                        p->can_afford(COST_INF_MC));
+                menu_set_opt(4, "... a lord's allies (" STR(COST_INF_ALLIES) "MC)",
+                        p->can_afford(COST_INF_ALLIES));
+                menu_set_opt(5, "... a lord's number of planets (" STR(COST_INF_NPLANS) "MC)",
+                        p->can_afford(COST_INF_NPLANS));
+                menu_set_opt(6, "... a lord's inventions (" STR(COST_INF_INV) "MC)",
+                        p->can_afford(COST_INF_INV));
+                menu_set_opt(7, "... a planet's surface (" STR(COST_INF_SURF) "MC)",
+                        p->can_afford(COST_INF_SURF));
                 menu_set_opt(14, "Exit Menu");
             }
             break;
@@ -552,40 +558,20 @@ void MenuDrawer::menu_open_specific_mode() {
             {
                 menu_set_txt(0, COL_TEXT2, "You surely wish to attack a planet's...");
 
-                // FIXME: Hard-coded costs
-                if (p->can_afford(200)) {
-                    menu_set_opt(4, "... command station (200MC)");
-                    menu_set_opt(5, "... cultivated area (200MC)");
-                } else {
-                    menu_set_txt(4, COL_TEXT_GREYED, "... command station (200MC)");
-                    menu_set_txt(5, COL_TEXT_GREYED, "... cultivated area (200MC)");
-                }
-
-                if (p->can_afford(150)) {
-                    menu_set_opt(6, "... plutonium production (150MC)");
-                } else {
-                    menu_set_txt(6, COL_TEXT_GREYED, "... plutonium production (150MC)");
-                }
-
-                if (p->can_afford(70)) {
-                    menu_set_opt(7, "... army production (70MC)");
-                } else {
-                    menu_set_txt(8, COL_TEXT_GREYED, "... army production (70MC)");
-                }
-
-                if (p->can_afford(100)) {
-                    menu_set_opt(8, "... spaceport (100MC)");
-                    menu_set_opt(9, "... trading centre (100MC)");
-                } else {
-                    menu_set_txt(8, COL_TEXT_GREYED, "... spaceport (100MC)");
-                    menu_set_txt(9, COL_TEXT_GREYED, "... trading centre (100MC)");
-                }
-
-                if (p->can_afford(50)) {
-                    menu_set_opt(10, "... mining (50MC)");
-                } else {
-                    menu_set_txt(10, COL_TEXT_GREYED, "... mining (50MC)");
-                }
+                menu_set_opt(4, "... command station (" STR(COST_ATT_CMD) "MC)",
+                        p->can_afford(COST_ATT_CMD));
+                menu_set_opt(5, "... cultivated area (" STR(COST_ATT_AGRI) "MC)",
+                        p->can_afford(COST_ATT_AGRI));
+                menu_set_opt(6, "... plutonium production (" STR(COST_ATT_PLU) "MC)",
+                        p->can_afford(COST_ATT_PLU));
+                menu_set_opt(7, "... army production (" STR(COST_ATT_ARMY) "MC)",
+                        p->can_afford(COST_ATT_ARMY));
+                menu_set_opt(8, "... spaceport (" STR(COST_ATT_PORT) "MC)",
+                        p->can_afford(COST_ATT_PORT));
+                menu_set_opt(9, "... trading centre (" STR(COST_ATT_TRADE) "MC)",
+                        p->can_afford(COST_ATT_TRADE));
+                menu_set_opt(10, "... mining (" STR(COST_ATT_MINE) "MC)",
+                        p->can_afford(COST_ATT_MINE));
 
                 menu_set_opt(14, "Exit Menu");
             }
@@ -594,18 +580,10 @@ void MenuDrawer::menu_open_specific_mode() {
             {
                 menu_set_txt(0, COL_TEXT2, "You surely wish...");
 
-                // FIXME: Hard-coded costs
-                if (p->can_afford(500)) {
-                    menu_set_opt(4, "... random orbital bombing (500MC)");
-                } else {
-                    menu_set_txt(4, COL_TEXT_GREYED, "... random orbital bombing (500MC)");
-                }
-
-                if (p->can_afford(1000)) {
-                    menu_set_opt(5, "... nuclear extermination (1000MC)");
-                } else {
-                    menu_set_txt(5, COL_TEXT_GREYED, "... nuclear extermination (1000MC)");
-                }
+                menu_set_opt(4, "... random orbital bombing (" STR(COST_ATT_BOMB) "MC)",
+                        p->can_afford(COST_ATT_BOMB));
+                menu_set_opt(5, "... nuclear extermination (" STR(COST_ATT_NUKE) "MC)",
+                        p->can_afford(COST_ATT_NUKE));
 
                 menu_set_opt(14, "Exit Menu");
             }
@@ -692,7 +670,7 @@ bool MenuDrawer::menu_specific_update() {
                 if (planet) {
                     // TODO: Dialogue here
                     L.debug("Advancing artificial planet");
-                    if (p->attempt_spend(ART_COST)) {
+                    if (p->attempt_spend(COST_ART)) {
                         if (!planet->advance_construction_phase()) {
                             L.fatal("get_planet_under_construction() returned non-advanceable planet");
                         }
@@ -706,7 +684,7 @@ bool MenuDrawer::menu_specific_update() {
                     // TODO: Check if player can build world (viable star, been visited, not too many etc)
                     // TODO: Dialogue here
                     L.debug("Constructing artificial planet");
-                    if (p->attempt_spend(ART_COST)) {
+                    if (p->attempt_spend(COST_ART)) {
                         menu_action = MA_BuildArtificialWorld;
                     } else {
                         L.error("Should not have offered unaffordable option");
@@ -937,22 +915,22 @@ bool MenuDrawer::menu_specific_update() {
                 return true;
             }
 
-            // 5: A Personal File (100 MC)
+            // 5: A Personal File
             if (menu_row_clicked(5)) {
-                if (p->attempt_spend(100)) {
+                if (p->attempt_spend(COST_FILE)) {
                     menu_open_player_select(MM_SecPersonalFile);
                     return true;
                 }
             }
 
-            // 6: Terrorist Attacks (50+ MC)
+            // 6: Terrorist Attacks
             if (menu_row_clicked(6)) {
                 // TODO: Check if mission already set
                 menu_open(MM_SecAttack);
                 return true;
             }
 
-            // 7: Orbital Bomb Attacks (500+ MC)
+            // 7: Orbital Bomb Attacks
             if (menu_row_clicked(7)) {
                 // TODO: Invention check
                 // TODO: Check if mission already set
@@ -967,43 +945,41 @@ bool MenuDrawer::menu_specific_update() {
             }
             break;
         case MM_SecInfo:
-            // FIXME: Get rid of hard-coded costs
-
             // 3: Amount of money
             if (menu_row_clicked(3)) {
-                if (p->attempt_spend(20)) {
+                if (p->attempt_spend(COST_INF_MC)) {
                     menu_open_player_select(MM_SecInfoMC);
                     return true;
                 }
             }
 
-            // 4: Allies (20MC)
+            // 4: Allies
             if (menu_row_clicked(4)) {
-                if (p->attempt_spend(20)) {
+                if (p->attempt_spend(COST_INF_ALLIES)) {
                     menu_open_player_select(MM_SecInfoAllies);
                     return true;
                 }
             }
 
-            // 5: Number of planets (20MC)
+            // 5: Number of planets
             if (menu_row_clicked(5)) {
-                if (p->attempt_spend(20)) {
+                if (p->attempt_spend(COST_INF_NPLANS)) {
                     menu_open_player_select(MM_SecInfoPlanets);
                     return true;
                 }
             }
 
-            // 6: Inventions (50MC)
+            // 6: Inventions
             if (menu_row_clicked(6)) {
-                if (p->attempt_spend(50)) {
+                if (p->attempt_spend(COST_INF_INV)) {
                     menu_open_player_select(MM_SecInfoInventions);
                     return true;
                 }
             }
 
-            // 7: Planet surface (100MC)
+            // 7: Planet surface
             if (menu_row_clicked(7)) {
-                if (p->attempt_spend(100)) {
+                if (p->attempt_spend(COST_INF_SURF)) {
                     // TODO
                     return true;
                 }
@@ -1036,10 +1012,10 @@ bool MenuDrawer::menu_specific_update() {
                 int &star_idx = p->get_mission_star_ref();
                 int &planet_idx = p->get_mission_planet_ref();
 
-                //  4: command station (200MC)
+                //  4: command station
                 if (menu_row_clicked(4)) {
                     // TODO: Charge MC only after selection of valid planet
-                    if (p->attempt_spend(200)) {
+                    if (p->attempt_spend(COST_ATT_CMD)) {
                         p->set_mission_type(MT_TerrorComm);
                         ephstate.select_planet(star_idx, planet_idx);
                         return false;
@@ -1047,12 +1023,12 @@ bool MenuDrawer::menu_specific_update() {
                 }
 
                 // TODO
-                //  5: cultivated area (200MC)
-                //  6: plutonium production (150MC)
-                //  7: army production (70MC)
-                //  8: spaceport (100MC)
-                //  9: trading centre (100MC)
-                // 10: mining (50MC)
+                //  5: cultivated area
+                //  6: plutonium production
+                //  7: army production
+                //  8: spaceport
+                //  9: trading centre
+                // 10: mining
 
                 // 14: Exit Menu
                 if (menu_row_clicked(14)) {
@@ -1066,22 +1042,22 @@ bool MenuDrawer::menu_specific_update() {
                 int &star_idx = p->get_mission_star_ref();
                 int &planet_idx = p->get_mission_planet_ref();
 
-                //  4: random bombing (500MC)
+                //  4: random bombing
                 if (menu_row_clicked(4)) {
                     // TODO: Invetion check?
                     // TODO: Charge MC only after selection of valid planet
-                    if (p->attempt_spend(500)) {
+                    if (p->attempt_spend(COST_ATT_BOMB)) {
                         p->set_mission_type(MT_RandomBomb);
                         ephstate.select_planet(star_idx, planet_idx);
                         return false;
                     }
                 }
 
-                //  5: nuclear extermination (1000MC)
+                //  5: nuclear extermination
                 if (menu_row_clicked(5)) {
                     // TODO: Invetion check?
                     // TODO: Charge MC only after selection of valid planet
-                    if (p->attempt_spend(1000)) {
+                    if (p->attempt_spend(COST_ATT_NUKE)) {
                         p->set_mission_type(MT_Nuclear);
                         ephstate.select_planet(star_idx, planet_idx);
                         return false;
@@ -1172,21 +1148,21 @@ void MenuDrawer::menu_print_other_players() {
         if (i == player_idx) continue;
         Player *tgt = exostate.get_player(i);
         menu_line_players[row] = i;
-        if (tgt->is_participating()) {
-            menu_set_opt(row, tgt->get_full_name());
-        } else {
-            menu_set_txt(row, COL_TEXT_GREYED, tgt->get_full_name());
-        }
+        menu_set_opt(row, tgt->get_full_name(), tgt->is_participating());
         row++;
     }
 }
 
 bool MenuDrawer::menu_player_selected() {
     // Skip the first row as this is text
+    // FIXME: Need a way to go back if no options available
     for (int row = 1; row < MENU_LINES; ++row) {
         if (draw_manager.query_click(id_menu_lines[row]).id) {
-            menu_selected_player = exostate.get_player(menu_line_players[row]);
-            return true;
+            Player *pl = exostate.get_player(menu_line_players[row]);
+            if (pl->is_participating()) {
+                menu_selected_player = pl;
+                return true;
+            }
         }
     }
     return false;

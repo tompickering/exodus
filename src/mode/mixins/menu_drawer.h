@@ -102,6 +102,7 @@ class MenuDrawer {
         const char* menu_get_bg();
         void menu_set_txt(int, RGB, const char*, ...);
         void menu_set_opt(int, const char*, ...);
+        void menu_set_opt(int, const char*, bool);
         void menu_open_specific_mode();
         bool menu_specific_update();
 };

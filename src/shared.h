@@ -12,6 +12,9 @@
 
 #define PROG_NAME "Exodus"
 
+#define STRINGIFY(x) #x
+#define STR(x) STRINGIFY(x)
+
 #define COL_TEXT {0xFF, 0xFF, 0xFF}
 #define COL_TEXT2 {0xEE, 0xEE, 0xAA}
 #define COL_TEXT3 {0xEE, 0xEE, 0x30}
