@@ -214,6 +214,8 @@ class CommPanelDrawer {
         int comm_mouseover_text;
         Anim comm_anim;
 
+        void comm_draw_over_img_elements();
+
         int comm_title_len;
         bool comm_speech;
 

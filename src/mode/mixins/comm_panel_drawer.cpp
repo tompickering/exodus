@@ -89,23 +89,9 @@ CommAction CommPanelDrawer::comm_update(float dt) {
                  COMM_Y + COMM_BORDER + 1,
                  0, 0, 1, 1});
 
-            // Redraw text
-            // FIXME: Deduplicate this
-            draw_manager.draw_text(
-                Font::Tiny,
-                comm_img_caption_upper,
-                Justify::Left,
-                COMM_X + COMM_BORDER + 6,
-                COMM_Y + COMM_H - COMM_BORDER - 28,
-                COL_TEXT2);
-
-            draw_manager.draw_text(
-                Font::Tiny,
-                comm_img_caption_lower,
-                Justify::Left,
-                COMM_X + COMM_BORDER + 6,
-                COMM_Y + COMM_H - COMM_BORDER - 16,
-                COL_TEXT2);
+            // If the draw manager repairs sprites on top when ones underneath
+            // change, there may be no need for this
+            comm_draw_over_img_elements();
         }
 
         if (comm_enable_throbber) {
@@ -409,8 +395,25 @@ void CommPanelDrawer::comm_open(CommSend input) {
          COMM_Y + COMM_BORDER + 1,
          0, 0, 1, 1});
 
-    // TODO: These might need drawing each frame when comm img anims are done,
-    // unless the draw manager repairs sprites on top when ones underneath change...
+    if (!comm_speech) {
+        draw_manager.draw_text(
+            id_comm_title,
+            comm_title,
+            Justify::Left,
+            COMM_RCOL_X + 8,
+            COMM_Y + 11,
+            COL_TEXT);
+    }
+
+    comm_draw_over_img_elements();
+
+    _comm_is_open = true;
+
+    comm_send(input);
+    comm_draw_text();
+}
+
+void CommPanelDrawer::comm_draw_over_img_elements() {
     if (comm_other) {
         int x = 4;
         int p_idx = exostate.get_player_idx(comm_player);
@@ -444,16 +447,6 @@ void CommPanelDrawer::comm_open(CommSend input) {
         }
     }
 
-    if (!comm_speech) {
-        draw_manager.draw_text(
-            id_comm_title,
-            comm_title,
-            Justify::Left,
-            COMM_RCOL_X + 8,
-            COMM_Y + 11,
-            COL_TEXT);
-    }
-
     draw_manager.draw_text(
         Font::Tiny,
         comm_img_caption_upper,
@@ -469,11 +462,6 @@ void CommPanelDrawer::comm_open(CommSend input) {
         COMM_X + COMM_BORDER + 6,
         COMM_Y + COMM_H - COMM_BORDER - 16,
         COL_TEXT2);
-
-    _comm_is_open = true;
-
-    comm_send(input);
-    comm_draw_text();
 }
 
 void CommPanelDrawer::comm_prepare(int text_slots) {
