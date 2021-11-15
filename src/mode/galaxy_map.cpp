@@ -1034,6 +1034,12 @@ ExodusMode GalaxyMap::month_pass_update() {
                 continue;
             }
 
+            // FIXME: Bit of a hack really, but ensures that bulletins
+            // generated in the AI update (such as CPU player dying etc)
+            // are always removed from the screen after being acknowledged.
+            // This should really be expressed more cleanly...
+            bulletin_ensure_closed();
+
             ExodusMode next_mode = month_pass_ai_update();
             if (mp_state.mpai_stage != MPAI_End) {
                 return next_mode;
