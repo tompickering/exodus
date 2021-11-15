@@ -1525,7 +1525,32 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     }
 
     if (mp_state.mpai_stage == MPAI_Die) {
-        // TODO
+        if (exostate.get_n_active_cpu_players() > 0 && exostate.get_orig_month() > 50) {
+            if (onein(1000)) {
+                char oldname[MAX_PLAYER_NAME];
+                char oldfullname[MAX_PLAYER_FULLNAME];
+                snprintf(oldname, MAX_PLAYER_NAME, player->get_name());
+                snprintf(oldfullname, MAX_PLAYER_FULLNAME, player->get_full_name());
+                Gender oldgender = player->get_gender();
+                if (exostate.kill(player)) {
+                    audio_manager.target_music(mpart2mus(9));
+                    bulletin_start_new(false);
+                    bulletin_set_flag(IMG_TS1_FLAG16);
+                    bulletin_set_text_col(COL_TEXT3);
+                    bulletin_set_next_text("%s IS DEAD", tmp_caps(oldname));
+                    bulletin_set_next_text("");
+                    bulletin_set_next_text("For reasons unknown,");
+                    bulletin_set_next_text("%s has died.", oldfullname);
+                    bulletin_set_next_text("");
+                    bulletin_set_next_text("The empire has been taken over by");
+                    bulletin_set_next_text("%s follower, %s.",
+                                           (oldgender == GENDER_Female) ? "her" : "his",
+                                           player->get_full_name());
+                    next_mpai_stage();
+                    return ExodusMode::MODE_None;
+                }
+            }
+        }
         next_mpai_stage();
     }
 

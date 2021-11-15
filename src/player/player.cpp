@@ -6,7 +6,8 @@
 #include "alien_names.h"
 #include "shared.h"
 
-static int alien_names_offset = -1;
+static bool alien_names_offsets_initialised = false;
+static int alien_names_offsets[N_RACES];
 
 const AIFlag ai_hum[9] = {AI_Md, AI_Md, AI_Md, AI_Md, AI_Md, AI_Md, AI_Md, AI_Md, AI_Md};
 const AIFlag ai_yok[9] = {AI_Md, AI_Hi, AI_Md, AI_Md, AI_Md, AI_Lo, AI_Hi, AI_Lo, AI_Md};
@@ -46,11 +47,17 @@ Player::Player() {
     ap_phase = AP_None;
 }
 
-void Player::init_alien_name(int idx) {
-    if (alien_names_offset == -1) {
-        alien_names_offset = rand() % N_ALIEN_NAMES;
+void Player::init_alien_name() {
+    if (!alien_names_offsets_initialised) {
+        for (int i = 0; i < N_RACES; ++i) {
+            alien_names_offsets[i] = rand() % N_ALIEN_NAMES;
+        }
+        alien_names_offsets_initialised = true;
     }
-    int name_idx = (idx + alien_names_offset) % N_ALIEN_NAMES;
+
+    int& alien_names_offset = alien_names_offsets[(int)race];
+
+    int name_idx = (alien_names_offset++) % N_ALIEN_NAMES;
     set_name(get_alien_name(race, name_idx));
     int gender_boundary = 5;
     if (race == RACE_Yokon) gender_boundary = 6;

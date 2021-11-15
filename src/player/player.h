@@ -10,6 +10,8 @@
 #define MAX_PLAYER_REFERENCE 12
 #define MAX_PLAYER_FULLNAME MAX_PLAYER_TITLE + 1 + MAX_PLAYER_NAME
 
+#define N_RACES 5
+
 #define OFF_COST_POOR 0
 #define OFF_COST_AVG  4
 #define OFF_COST_GOOD 8
@@ -183,7 +185,7 @@ enum AIFlag {
 class Player {
     public:
         Player();
-        void init_alien_name(int);
+        void init_alien_name();
         void init_race(Race);
         const char* get_name();
         const char* get_title();

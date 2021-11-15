@@ -110,7 +110,7 @@ void ExodusState::init(GameConfig config) {
     for (; i < N_PLAYERS; ++i) {
         players[i].init_race((Race)(RACE_Human + RND(4)));
         players[i].fleet_marker_idx = 0;
-        players[i].init_alien_name(i); // Orig: Assigned in PROCclear_memory
+        players[i].init_alien_name(); // Orig: Assigned in PROCclear_memory
         bool flag_assigned = false;
         L.debug("Assigning flag for player %d (CPU)", i);
         while (!flag_assigned) {
@@ -795,6 +795,26 @@ int ExodusState::count_alliances(int a) {
         }
     }
     return count;
+}
+
+bool ExodusState::kill(Player* p) {
+    if (!p->is_participating())
+        return false;
+
+    // PROClorddies
+
+    // N.B. race doesn't change - if it did we'd want to do this first
+    p->init_alien_name();
+    p->give_mc(200);
+    p->clear_hostility();
+
+    int p_idx = get_player_idx(p);
+
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        if (i == p_idx)
+            continue;
+        unset_alliances(p_idx, i);
+    }
 }
 
 /*

@@ -121,6 +121,7 @@ class ExodusState {
         void unset_alliance(int, int, AllianceType);
         void unset_alliances(int, int);
         int count_alliances(int);
+        bool kill(Player*);
     private:
         GalaxySize size;
         int n_human_players;
