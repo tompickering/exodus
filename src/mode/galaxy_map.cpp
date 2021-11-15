@@ -1524,6 +1524,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 bulletin_set_next_text("");
                 bulletin_set_next_text("We have just received the news that");
                 bulletin_set_next_text("%s has come back.", player->get_full_name());
+                next_mpai_stage();
                 return ExodusMode::MODE_None;
             }
         }
