@@ -715,6 +715,63 @@ void MenuDrawer::menu_open_specific_mode() {
             }
             break;
         case MM_FleetInfo:
+            {
+                char txt[32];
+
+                menu_set_txt(0, COL_TEXT2, "Fleet information");
+
+                const Fleet &f = p->get_fleet();
+
+                menu_set_txt(2, COL_TEXT, "Scouts:");
+                snprintf(txt, sizeof(txt), "%d", f.scouts);
+                draw_manager.draw_text(txt, Justify::Left, MENU_X+150, menu_get_y(2), COL_TEXT2);
+
+                menu_set_txt(3, COL_TEXT, "Transporters:");
+                snprintf(txt, sizeof(txt), "%d", f.transporters);
+                draw_manager.draw_text(txt, Justify::Left, MENU_X+150, menu_get_y(3), COL_TEXT2);
+                snprintf(txt, sizeof(txt), "Free: %d units", p->get_freight_capacity());
+                draw_manager.draw_text(txt, Justify::Left, MENU_X+240, menu_get_y(3), COL_TEXT);
+
+                menu_set_txt(4, COL_TEXT, "Warships:");
+                snprintf(txt, sizeof(txt), "%d", f.warships);
+                draw_manager.draw_text(txt, Justify::Left, MENU_X+150, menu_get_y(4), COL_TEXT2);
+
+                menu_set_txt(5, COL_TEXT, "Bombers:");
+                snprintf(txt, sizeof(txt), "%d", f.bombers);
+                draw_manager.draw_text(txt, Justify::Left, MENU_X+150, menu_get_y(5), COL_TEXT2);
+
+                menu_set_txt(7, COL_TEXT2, "Cargo:");
+
+                const Freight& fr = f.freight;
+
+                menu_set_txt(9, COL_TEXT, "Minerals:");
+                snprintf(txt, sizeof(txt), "%d", fr.minerals);
+                draw_manager.draw_text(txt, Justify::Left, MENU_X+150, menu_get_y(9), COL_TEXT2);
+
+                menu_set_txt(10, COL_TEXT, "Food:");
+                snprintf(txt, sizeof(txt), "%d", fr.food);
+                draw_manager.draw_text(txt, Justify::Left, MENU_X+150, menu_get_y(10), COL_TEXT2);
+
+                menu_set_txt(11, COL_TEXT, "Plutonium:");
+                snprintf(txt, sizeof(txt), "%d", fr.plutonium);
+                draw_manager.draw_text(txt, Justify::Left, MENU_X+150, menu_get_y(11), COL_TEXT2);
+
+                menu_set_txt(12, COL_TEXT, "Robots:");
+                snprintf(txt, sizeof(txt), "%d", fr.robots);
+                draw_manager.draw_text(txt, Justify::Left, MENU_X+150, menu_get_y(12), COL_TEXT2);
+
+                draw_manager.draw_text("Infantry:", Justify::Left, MENU_X+240, menu_get_y(9), COL_TEXT);
+                snprintf(txt, sizeof(txt), "%d", fr.infantry);
+                draw_manager.draw_text(txt, Justify::Left, MENU_X+360, menu_get_y(9), COL_TEXT2);
+
+                draw_manager.draw_text("Gliders:", Justify::Left, MENU_X+240, menu_get_y(10), COL_TEXT);
+                snprintf(txt, sizeof(txt), "%d", fr.gliders);
+                draw_manager.draw_text(txt, Justify::Left, MENU_X+360, menu_get_y(10), COL_TEXT2);
+
+                draw_manager.draw_text("Artillery:", Justify::Left, MENU_X+240, menu_get_y(11), COL_TEXT);
+                snprintf(txt, sizeof(txt), "%d", fr.artillery);
+                draw_manager.draw_text(txt, Justify::Left, MENU_X+360, menu_get_y(11), COL_TEXT2);
+            }
             break;
         case MM_News:
             break;
@@ -1186,6 +1243,10 @@ bool MenuDrawer::menu_specific_update() {
                 return true;
             }
             // 3: Fleet Information
+            if (menu_row_clicked(3)) {
+                menu_open(MM_FleetInfo);
+                return true;
+            }
             // 4: Recall Latest News
             // 5: List Planets
             // 6: List Inventions
@@ -1205,6 +1266,10 @@ bool MenuDrawer::menu_specific_update() {
             }
             break;
         case MM_FleetInfo:
+            if (draw_manager.clicked()) {
+                menu_open(MM_Stat);
+                return true;
+            }
             break;
         case MM_News:
             break;
