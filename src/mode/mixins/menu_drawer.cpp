@@ -361,6 +361,7 @@ void MenuDrawer::menu_set_opt(int idx, const char* in_text, bool enabled) {
 
 void MenuDrawer::menu_open_specific_mode() {
     Player *p = exostate.get_active_player();
+    int p_idx = exostate.get_player_idx(p);
     bool art_ok = true;
     first_update = true;
 
@@ -628,6 +629,90 @@ void MenuDrawer::menu_open_specific_mode() {
             menu_set_opt(14, "Exit Menu");
             break;
         case MM_GenInfo:
+            {
+                char txt[64 + FT_MAX_NAME];
+
+                menu_set_txt(0, COL_TEXT2, "Status file, Month %d", exostate.get_month());
+
+                menu_set_txt(2, COL_TEXT, "Money:");
+                snprintf(txt, sizeof(txt), "%dMC", p->get_mc());
+                draw_manager.draw_text(
+                    txt,
+                    Justify::Left,
+                    MENU_X+120, menu_get_y(2),
+                    COL_TEXT2);
+
+                menu_set_txt(4, COL_TEXT2, "Monthly:");
+
+                int taxes = 0;
+                int army = 0;
+                int sci = 0;
+                int planets = 0;
+
+                for (PlanetIterator piter(p_idx); !piter.complete(); ++piter) {
+                    int planet_net = piter.get()->get_net_income();
+                    // FIXME: Deduplicate this with the logic when income is calculated
+                    // FIXME: This doesn't account for the special case where we keep 1MC
+                    //        if income is 1 and sci tax < 50%
+                    int kept = (planet_net * (100 - p->get_tax())) / 100;
+                    taxes += kept;
+                    sci += (planet_net - kept);
+                    army += piter.get()->get_army_funding();
+                    planets++;
+                }
+
+                menu_set_txt(5, COL_TEXT, "Taxes:");
+                snprintf(txt, sizeof(txt), "%dMC", taxes);
+                draw_manager.draw_text(
+                    txt,
+                    Justify::Left,
+                    MENU_X+120, menu_get_y(5),
+                    COL_TEXT2);
+
+                menu_set_txt(6, COL_TEXT, "Science:");
+                snprintf(txt, sizeof(txt), "%dMC", sci);
+                draw_manager.draw_text(
+                    txt,
+                    Justify::Left,
+                    MENU_X+120, menu_get_y(6),
+                    COL_TEXT2);
+
+                menu_set_txt(7, COL_TEXT, "Army:");
+                snprintf(txt, sizeof(txt), "%dMC", army);
+                draw_manager.draw_text(
+                    txt,
+                    Justify::Left,
+                    MENU_X+120, menu_get_y(7),
+                    COL_TEXT2);
+
+                menu_set_txt(9, COL_TEXT, "Planets");
+                snprintf(txt, sizeof(txt), "%d", planets);
+                draw_manager.draw_text(
+                    txt,
+                    Justify::Left,
+                    MENU_X+120, menu_get_y(9),
+                    COL_TEXT2);
+
+                const Fleet &f = p->get_fleet();
+                menu_set_txt(10, COL_TEXT, "Fleet size:");
+                snprintf(txt, sizeof(txt), "%d", f.size());
+                draw_manager.draw_text(
+                    txt,
+                    Justify::Left,
+                    MENU_X+120, menu_get_y(10),
+                    COL_TEXT2);
+
+                if (p->get_location().in_flight()) {
+                    int tgt = p->get_location().get_target();
+                    FlyTarget *ft = exostate.loc2tgt(tgt);
+                    bool star = (ft != exostate.get_galaxy()->get_guild());
+                    snprintf(txt, sizeof(txt),
+                             "The fleet is flying to the %s%s.",
+                             (star?"star ":""),
+                             ft->name);
+                    menu_set_txt(12, COL_TEXT, txt);
+                }
+            }
             break;
         case MM_FleetInfo:
             break;
@@ -1096,6 +1181,10 @@ bool MenuDrawer::menu_specific_update() {
             break;
         case MM_Stat:
             // 2: General Information
+            if (menu_row_clicked(2)) {
+                menu_open(MM_GenInfo);
+                return true;
+            }
             // 3: Fleet Information
             // 4: Recall Latest News
             // 5: List Planets
@@ -1110,6 +1199,10 @@ bool MenuDrawer::menu_specific_update() {
             }
             break;
         case MM_GenInfo:
+            if (draw_manager.clicked()) {
+                menu_open(MM_Stat);
+                return true;
+            }
             break;
         case MM_FleetInfo:
             break;
