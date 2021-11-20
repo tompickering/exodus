@@ -276,3 +276,27 @@ void PanelDrawer::update_panel_info_planet(DrawTarget tgt, Player *player, Plane
         area_starinfo.y + 2 + 2*PNL_Y_SEP,
         COL_TEXT);
 }
+
+void PanelDrawer::panel_clear_starinfo() {
+    draw_manager.draw(id_qm, nullptr);
+    draw_manager.draw(id_desc, nullptr);
+    draw_manager.draw(id_desc1, nullptr);
+    draw_manager.draw(id_desc2, nullptr);
+    // TODO: Add fleet marker IDs here when added
+
+    for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+        draw_manager.draw(id_planet_icons[i], nullptr);
+        draw_manager.draw(id_marker_icons[i], nullptr);
+    }
+}
+
+void PanelDrawer::panel_set_text(const char* text) {
+    panel_clear_starinfo();
+    draw_manager.draw_text(
+        id_desc,
+        text,
+        Justify::Left,
+        area_starinfo.x + 4,
+        area_starinfo.y + 2,
+        COL_TEXT);
+}

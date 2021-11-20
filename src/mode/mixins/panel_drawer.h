@@ -29,6 +29,7 @@ class PanelDrawer {
         void update_panel_info_player(DrawTarget, Player*);
         void update_panel_info_ft(DrawTarget, Player*, FlyTarget*);
         void update_panel_info_planet(DrawTarget, Player*, Planet*);
+        void panel_set_text(const char*);
     protected:
         PanelType type;
         SprID id_panel;
@@ -45,6 +46,8 @@ class PanelDrawer {
         SprID id_desc2;
         SprID id_planet_icons[STAR_MAX_PLANETS];
         SprID id_marker_icons[STAR_MAX_PLANETS];
+
+        void panel_clear_starinfo();
 };
 
 #endif

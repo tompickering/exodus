@@ -586,7 +586,10 @@ ExodusMode GalaxyMap::update(float delta) {
                     draw_manager.draw(id(ID::SELECTED), nullptr);
                 }
 
-                // TODO: Draw "SELECT A STAR" in the panel
+                // TODO: Perhaps this should be indicated elsewhere, so the player
+                //       can still use the usual readout to help decide where to
+                //       select.
+                panel_set_text("SELECT A STAR");
             }
             break;
         default:
