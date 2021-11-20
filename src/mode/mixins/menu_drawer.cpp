@@ -778,6 +778,17 @@ void MenuDrawer::menu_open_specific_mode() {
         case MM_Planets:
             break;
         case MM_Inventions:
+            {
+                menu_set_txt(0, COL_TEXT2, "Inventions");
+                for (int i = 0; i < INV_MAX; ++i) {
+                    Invention inv = (Invention)i;
+                    RGB col = COL_TEXT;
+                    if (!p->has_invention(inv)) {
+                        col = COL_TEXT_GREYED;
+                    }
+                    menu_set_txt(i+1, col, p->get_invention_str(inv));
+                }
+            }
             break;
         case MM_Relations:
             {
@@ -1307,6 +1318,10 @@ bool MenuDrawer::menu_specific_update() {
             // 4: Recall Latest News
             // 5: List Planets
             // 6: List Inventions
+            if (menu_row_clicked(6)) {
+                menu_open(MM_Inventions);
+                return true;
+            }
             // 7: Relationship to Lords
             if (menu_row_clicked(7)) {
                 menu_open(MM_Relations);
@@ -1337,6 +1352,16 @@ bool MenuDrawer::menu_specific_update() {
         case MM_Planets:
             break;
         case MM_Inventions:
+            for (int i = 0; i < INV_MAX; ++i) {
+                if (draw_manager.query_click(id_menu_lines[i+1]).id) {
+                    // TODO: Open specific invention
+                    return false;
+                }
+            }
+            if (draw_manager.clicked()) {
+                menu_open(MM_Stat);
+                return true;
+            }
             break;
         case MM_Relations:
             if (draw_manager.clicked()) {
