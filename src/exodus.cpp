@@ -277,6 +277,14 @@ int Exodus::run(int argc, char** argv) {
             exodebug.full_visibility = !exodebug.full_visibility;
         }
 
+        if (input_manager.consume(Input::K_F5)) {
+            exodebug.unlock_all_inventions();
+        }
+
+        if (input_manager.consume(Input::K_F6)) {
+            exodebug.set_all_alliances();
+        }
+
         if (input_manager.consume(Input::K_F8)) {
             save_manager.save(8);
         }

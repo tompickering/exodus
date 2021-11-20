@@ -12,6 +12,8 @@ class ExodusDebug {
         void init();
         void add_mc(int);
         void add_units(int);
+        void unlock_all_inventions();
+        void set_all_alliances();
         bool show_player_markers;
         bool full_visibility;
         SprID player_markers[N_PLAYERS];
