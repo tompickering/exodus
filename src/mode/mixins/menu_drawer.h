@@ -41,6 +41,7 @@ enum MenuMode {
     MM_News,
     MM_Planets,
     MM_Inventions,
+    MM_Relations,
     MM_ShipStatus,
     MM_ShipDamage,
     MM_Stats,

@@ -779,6 +779,63 @@ void MenuDrawer::menu_open_specific_mode() {
             break;
         case MM_Inventions:
             break;
+        case MM_Relations:
+            {
+                char rel[32];
+
+                menu_set_txt(0, COL_TEXT2, "Relationship to other lords");
+
+                int line_idx = 1;
+
+                for (int other_idx = 0; other_idx < N_PLAYERS; ++other_idx) {
+                    if (other_idx == p_idx)
+                        continue;
+
+                    Player *other = exostate.get_player(other_idx);
+
+                    RGB lordcol = COL_TEXT;
+                    RGB relcol = COL_TEXT;
+
+                    snprintf(rel, sizeof(rel), "None");
+
+                    if (other->is_hostile_to(p_idx)) {
+                        snprintf(rel, sizeof(rel), "Hostile");
+                        relcol = COL_TEXT_BAD;
+                    } else {
+                        const char* sep = "";
+
+                        int relidx = 0;
+                        if (exostate.has_alliance(p_idx, other_idx, ALLY_Trade)) {
+                            relidx += snprintf(rel+relidx, sizeof(rel)-relidx, "%sTrade", sep);
+                            relcol = COL_TEXT2;
+                            sep = " / ";
+                        }
+                        if (exostate.has_alliance(p_idx, other_idx, ALLY_NonAttack)) {
+                            relidx += snprintf(rel+relidx, sizeof(rel)-relidx, "%sNo Att", sep);
+                            relcol = COL_TEXT2;
+                            sep = " / ";
+                        }
+                        if (exostate.has_alliance(p_idx, other_idx, ALLY_War)) {
+                            relidx += snprintf(rel+relidx, sizeof(rel)-relidx, "%sWar Ally", sep);
+                            relcol = COL_TEXT2;
+                            sep = " / ";
+                        }
+                    }
+
+                    if (!other->is_participating()) {
+                        lordcol = COL_TEXT_GREYED;
+                        relcol = COL_TEXT_GREYED;
+                    }
+
+                    // TODO: Multiplayer relations here - may be 'friendly' as per 'verhalten'
+
+                    menu_set_txt(line_idx, lordcol, other->get_full_name());
+                    draw_manager.draw_text(rel, Justify::Left, MENU_X+200, menu_get_y(line_idx), relcol);
+
+                    line_idx++;
+                }
+            }
+            break;
         case MM_ShipStatus:
             break;
         case MM_ShipDamage:
@@ -1251,6 +1308,10 @@ bool MenuDrawer::menu_specific_update() {
             // 5: List Planets
             // 6: List Inventions
             // 7: Relationship to Lords
+            if (menu_row_clicked(7)) {
+                menu_open(MM_Relations);
+                return true;
+            }
             // 9: Starship Status
             // 10: Starship Damage
             // 12: Statistics
@@ -1276,6 +1337,12 @@ bool MenuDrawer::menu_specific_update() {
         case MM_Planets:
             break;
         case MM_Inventions:
+            break;
+        case MM_Relations:
+            if (draw_manager.clicked()) {
+                menu_open(MM_Stat);
+                return true;
+            }
             break;
         case MM_ShipStatus:
             break;
