@@ -890,7 +890,19 @@ void MenuDrawer::menu_open_specific_mode() {
                 menu_set_txt(5, COL_TEXT, t1);
                 menu_set_txt(6, COL_TEXT, t2);
 
-                // TODO: Display prerequisites
+                uint32_t pre = p->get_invention_prerequisites(menu_inv);
+
+                if (pre == 0) {
+                    menu_set_txt(8, COL_TEXT2, "This is a basic invention.");
+                } else {
+                    menu_set_txt(8, COL_TEXT2, "Previous inventions needed:");
+                    int l = 10;
+                    for (int i = 0; i < INV_MAX; ++i) {
+                        if (pre & (1<<i)) {
+                            menu_set_txt(l++, COL_TEXT, p->get_invention_str((Invention)i));
+                        }
+                    }
+                }
             }
             break;
         case MM_Relations:

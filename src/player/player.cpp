@@ -316,32 +316,13 @@ bool Player::can_research(Invention inv) {
         return false;
 
     // Invention prerequisites
-    // TODO: We do need some way to display this...
-    switch (inv) {
-        case INV_OrbitalMassConstruction:
-            return has_invention(INV_MassProduction)
-                && has_invention(INV_FusionEngine)
-                && has_invention(INV_MicroMechanicElements);
-        case INV_OrbitalMassThrust:
-            return has_invention(INV_MassProduction)
-                && has_invention(INV_FusionEngine)
-                && has_invention(INV_MicroMechanicElements);
-        case INV_WeatherInfluence:
-            return has_invention(INV_UltraRangeScanner);
-        case INV_MultiFunctionalVaccine:
-            return has_invention(INV_UniversalVaccine);
-        case INV_Acid:
-            return has_invention(INV_UltraRangeScanner);
-        case INV_IndustryGuard:
-            return has_invention(INV_MassProduction)
-                && has_invention(INV_MicroMechanicElements);
-        case INV_DreamInfluence:
-            return has_invention(INV_UniversalVaccine);
-        case INV_RadarExtension:
-            return has_invention(INV_UltraRangeScanner)
-                && has_invention(INV_MicroMechanicElements);
-        default:
-            break;
+    uint32_t pre = get_invention_prerequisites(inv);
+    for (int i = 0; i < INV_MAX; ++i) {
+        if (pre & (1<<i)) {
+            if (!has_invention((Invention)i)) {
+                return false;
+            }
+        }
     }
 
     return true;
@@ -441,6 +422,50 @@ const char* Player::get_invention_type_str(Invention inv) {
     if (t == IT_Weapon)       return "Weapon";
     L.fatal("Requested name for invalid type %d of invention %d", (int)t, (int)inv);
     return "<NO INVENTION TYPE>";
+}
+
+uint32_t Player::get_invention_prerequisites(Invention inv) {
+    uint32_t pre = 0;
+
+    switch (inv) {
+        case INV_OrbitalMassConstruction:
+            pre |= (1 << (int)INV_MassProduction);
+            pre |= (1 << (int)INV_FusionEngine);
+            pre |= (1 << (int)INV_MicroMechanicElements);
+            break;
+        case INV_OrbitalMassThrust:
+            pre |= (1 << (int)INV_MassProduction);
+            pre |= (1 << (int)INV_FusionEngine);
+            pre |= (1 << (int)INV_MicroMechanicElements);
+            break;
+        case INV_WeatherInfluence:
+            pre |= (1 << (int)INV_UltraRangeScanner);
+            break;
+        case INV_MultiFunctionalVaccine:
+            pre |= (1 << (int)INV_UniversalVaccine);
+            break;
+        case INV_Acid:
+            pre |= (1 << (int)INV_UltraRangeScanner);
+            break;
+        case INV_IndustryGuard:
+            pre |= (1 << (int)INV_MassProduction);
+            pre |= (1 << (int)INV_MicroMechanicElements);
+            break;
+        case INV_DreamInfluence:
+            // Oh god...
+            // What a game to be remaking in 2021...
+            // PLEASE BELIEVE I AM NOT AN ANTI-VAXXER!!!
+            pre |= (1 << (int)INV_UniversalVaccine);
+            break;
+        case INV_RadarExtension:
+            pre |= (1 << (int)INV_FusionEngine);
+            pre |= (1 << (int)INV_MicroMechanicElements);
+            break;
+        default:
+            break;
+    }
+
+    return pre;
 }
 
 const Fleet& Player::get_fleet() {

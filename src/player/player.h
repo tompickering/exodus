@@ -233,6 +233,7 @@ class Player {
         InventionType get_invention_type(Invention);
         const char* get_invention_str(Invention);
         const char* get_invention_type_str(Invention);
+        uint32_t get_invention_prerequisites(Invention);
         const Fleet& get_fleet();
         Fleet& get_fleet_nonconst();
         void init_tax();
