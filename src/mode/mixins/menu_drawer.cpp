@@ -967,6 +967,133 @@ void MenuDrawer::menu_open_specific_mode() {
         case MM_ShipDamage:
             break;
         case MM_Stats:
+            {
+                menu_set_txt(0, COL_TEXT2, "Statistics about the lords");
+
+                Player* most_planets = 0;
+                int most_planets_ctr = 0;
+
+                Player* most_mc = p;
+                int most_mc_ctr = 0;
+
+                Player* most_armies = p;
+                int most_armies_ctr = 0;
+
+                Player* most_alliances = p;
+                int most_alliances_ctr = 0;
+
+                Player* most_inventions = p;
+                int most_inventions_ctr = 0;
+
+                Player* most_ships = p;
+                int most_ships_ctr = 0;
+
+                for (int i = 0; i < N_PLAYERS; ++i) {
+                    Player *pl = exostate.get_player(i);
+
+                    if (!pl->is_participating())
+                        continue;
+
+                    int planets = 0;
+                    int mc = 0;
+                    int armies = 0;
+                    int alliances = 0;
+                    int inventions = 0;
+                    int ships = 0;
+
+                    for (PlanetIterator piter(i); !piter.complete(); ++piter) {
+                        ++planets;
+                        armies += piter.get()->get_army_size();
+                    }
+
+                    mc = pl->get_mc();
+
+                    for (int j = 0; j < N_PLAYERS; ++j) {
+                        if (i == j)
+                            continue;
+                        if (!exostate.get_player(j)->is_participating())
+                            continue;
+                        if (exostate.has_alliance(i, j, ALLY_Trade))     ++alliances;
+                        if (exostate.has_alliance(i, j, ALLY_NonAttack)) ++alliances;
+                        if (exostate.has_alliance(i, j, ALLY_War))       ++alliances;
+                    }
+
+                    for (int inv = 0; inv < INV_MAX; ++inv) {
+                        if (pl->has_invention((Invention)inv)) {
+                            ++inventions;
+                        }
+                    }
+
+                    ships = pl->get_fleet().size();
+
+
+
+                    if (planets > most_planets_ctr) {
+                        most_planets = pl;
+                        most_planets_ctr = planets;
+                    }
+
+                    if (mc > most_mc_ctr) {
+                        most_mc = pl;
+                        most_mc_ctr = mc;
+                    }
+
+                    if (armies > most_armies_ctr) {
+                        most_armies = pl;
+                        most_armies_ctr = armies;
+                    }
+
+                    if (alliances > most_alliances_ctr) {
+                        most_alliances = pl;
+                        most_alliances_ctr = alliances;
+                    }
+
+                    if (inventions > most_inventions_ctr) {
+                        most_inventions = pl;
+                        most_inventions_ctr = inventions;
+                    }
+
+                    if (ships > most_ships_ctr) {
+                        most_ships = pl;
+                        most_ships_ctr = ships;
+                    }
+                }
+
+                Player* most_awards;
+                int most_awards_ctr = 0;
+
+                for (int i = 0; i < N_PLAYERS; ++i) {
+                    Player *pl = exostate.get_player(i);
+                    int awards = 0;
+                    if (pl == most_planets)    ++awards;
+                    if (pl == most_mc)         ++awards;
+                    if (pl == most_armies)     ++awards;
+                    if (pl == most_alliances)  ++awards;
+                    if (pl == most_inventions) ++awards;
+                    if (pl == most_ships)      ++awards;
+
+                    if (awards > most_awards_ctr) {
+                        most_awards = pl;
+                        most_awards_ctr = awards;
+                    }
+                }
+
+                menu_set_txt( 3, COL_TEXT , "Most Planets:");
+                draw_manager.draw_text(most_planets->get_full_name(), Justify::Left, MENU_X+260, menu_get_y(3), COL_TEXT);
+                menu_set_txt( 4, COL_TEXT , "Most MC:");
+                draw_manager.draw_text(most_mc->get_full_name(), Justify::Left, MENU_X+260, menu_get_y(4), COL_TEXT);
+                menu_set_txt( 5, COL_TEXT , "Most Armies:");
+                draw_manager.draw_text(most_armies->get_full_name(), Justify::Left, MENU_X+260, menu_get_y(5), COL_TEXT);
+                menu_set_txt( 6, COL_TEXT , "Most Alliances:");
+                draw_manager.draw_text(most_alliances->get_full_name(), Justify::Left, MENU_X+260, menu_get_y(6), COL_TEXT);
+                menu_set_txt( 7, COL_TEXT , "Most Inventions:");
+                draw_manager.draw_text(most_inventions->get_full_name(), Justify::Left, MENU_X+260, menu_get_y(7), COL_TEXT);
+                menu_set_txt( 8, COL_TEXT , "Most Ships:");
+                draw_manager.draw_text(most_ships->get_full_name(), Justify::Left, MENU_X+260, menu_get_y(8), COL_TEXT);
+                menu_set_txt(10, COL_TEXT2, "Superior:");
+                draw_manager.draw_text(most_awards->get_full_name(), Justify::Left, MENU_X+260, menu_get_y(10), COL_TEXT2);
+            }
+
             break;
     }
 }
@@ -1445,6 +1572,10 @@ bool MenuDrawer::menu_specific_update() {
             // 9: Starship Status
             // 10: Starship Damage
             // 12: Statistics
+            if (menu_row_clicked(12)) {
+                menu_open(MM_Stats);
+                return true;
+            }
             // 14: Exit Menu
             if (menu_row_clicked(14)) {
                 menu_action = MA_Close;
@@ -1495,6 +1626,10 @@ bool MenuDrawer::menu_specific_update() {
         case MM_ShipDamage:
             break;
         case MM_Stats:
+            if (draw_manager.clicked()) {
+                menu_open(MM_Stat);
+                return true;
+            }
             break;
     }
 
