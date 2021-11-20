@@ -163,7 +163,11 @@ void MenuDrawer::menu_open(MenuMode mode) {
         draw_manager.unset_selectable(id_menu_lines[i]);
     }
 
-    if (!_menu_is_open) {
+    if (_menu_is_open) {
+        for (int i = 0; i < MENU_LINES; ++i) {
+            draw_manager.draw(id_menu_lines[i], nullptr);
+        }
+    } else {
         id_menu_header_flag_bg = draw_manager.new_sprite_id();
         id_menu_header_flag    = draw_manager.new_sprite_id();
         id_menu_header_l       = draw_manager.new_sprite_id();
