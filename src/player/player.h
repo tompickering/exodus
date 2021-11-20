@@ -98,6 +98,9 @@ typedef struct {
     int warships;
     int bombers;
     Freight freight;
+    int size() const {
+        return scouts + transporters + warships + bombers;
+    }
 } Fleet;
 
 enum ArtificialPlanetPhase {
