@@ -41,6 +41,7 @@ enum MenuMode {
     MM_News,
     MM_Planets,
     MM_Inventions,
+    MM_Invention,
     MM_Relations,
     MM_ShipStatus,
     MM_ShipDamage,
@@ -58,6 +59,7 @@ class MenuDrawer {
     public:
         MenuDrawer();
         void menu_open(MenuMode);
+        void menu_open_invention(Invention);
         ExodusMode menu_update(float);
         void menu_close();
         bool menu_is_open();
@@ -106,6 +108,8 @@ class MenuDrawer {
         void menu_set_opt(int, const char*, bool);
         void menu_open_specific_mode();
         bool menu_specific_update();
+
+        Invention menu_inv;
 };
 
 #endif
