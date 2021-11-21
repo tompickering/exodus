@@ -604,6 +604,63 @@ void MenuDrawer::menu_open_specific_mode() {
             break;
         case MM_ArtificialWorld:
             break;
+        case MM_ArtificialWorldAdvance:
+            {
+                menu_set_txt(0, COL_TEXT2, "Artificial Planet Construction");
+
+                const char* img = IMG_PP2_CONST;
+
+                const char* t0 = "We are starting phase 2";
+                const char* t1 = "Phase: Construction";
+
+                const char* t2 = "1 further phase is required.";
+
+                const char* t3 = "We are now going to use the";
+                const char* t4 = "Orbital Mass Construction System.";
+
+                if (menu_art_planet_phase >= 2) {
+                    img = IMG_PP3_CONST;
+
+                    t0 = "We are starting phase 3";
+                    t1 = "Phase: Animation";
+
+                    t2 = "No further phases are required.";
+
+                    t3 = "We are now creating the artificial";
+                    t4 = "atmosphere and the ice moon.";
+                }
+
+                draw_manager.draw(img, {MENU_X+40, menu_get_y(1)+20, 0, 0, 1, 1});
+
+                draw_manager.draw_text(
+                    t0,
+                    Justify::Left,
+                    MENU_X+150, menu_get_y(3),
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    t1,
+                    Justify::Left,
+                    MENU_X+150, menu_get_y(4),
+                    COL_TEXT);
+
+                draw_manager.draw_text(
+                    t2,
+                    Justify::Left,
+                    MENU_X+40, menu_get_y(7),
+                    COL_TEXT);
+
+                draw_manager.draw_text(
+                    t3,
+                    Justify::Left,
+                    MENU_X+40, menu_get_y(9),
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    t4,
+                    Justify::Left,
+                    MENU_X+40, menu_get_y(10),
+                    COL_TEXT);
+            }
+            break;
         case MM_Save: {
             const SaveMeta *meta = save_manager.get_all_meta(true);
             menu_set_txt(0, COL_TEXT2, "Save game in slot:");
@@ -1124,18 +1181,19 @@ bool MenuDrawer::menu_specific_update() {
             if (menu_row_clicked(6)) {
                 Planet *planet = exostate.get_planet_under_construction(player_idx);
                 if (planet) {
-                    // TODO: Dialogue here
                     L.debug("Advancing artificial planet");
                     if (p->attempt_spend(COST_ART)) {
+                        menu_art_planet_phase = planet->get_construction_phase();
                         if (!planet->advance_construction_phase()) {
                             L.fatal("get_planet_under_construction() returned non-advanceable planet");
                         }
                         // TODO: On completion, the planet should actually appear the following month,
                         // and this should trigger a bulletin (+ news article?)
+                        menu_open(MM_ArtificialWorldAdvance);
+                        return true;
                     } else {
                         L.error("Should not have offered unaffordable option");
                     }
-                    menu_action = MA_Close;
                 } else {
                     // TODO: Check if player can build world (viable star, been visited, not too many etc)
                     // TODO: Dialogue here
@@ -1532,6 +1590,12 @@ bool MenuDrawer::menu_specific_update() {
         case MM_EquipShip:
             break;
         case MM_ArtificialWorld:
+            break;
+        case MM_ArtificialWorldAdvance:
+            if (draw_manager.clicked()) {
+                menu_open(MM_Ctrl);
+                return true;
+            }
             break;
         case MM_Save:
             for (int i = 0; i < MAX_SLOTS; ++i) {
