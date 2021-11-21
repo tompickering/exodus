@@ -9,29 +9,6 @@
 #include "shared.h"
 #include "assetpaths.h"
 
-#define COST_INF_MC       20
-#define COST_INF_ALLIES   20
-#define COST_INF_NPLANS   20
-#define COST_INF_INV      50
-#define COST_INF_SURF    100
-
-#define COST_FILE        100
-
-#define COST_ATT_CMD     200
-#define COST_ATT_AGRI    200
-#define COST_ATT_PLU     150
-#define COST_ATT_ARMY     70
-#define COST_ATT_PORT    100
-#define COST_ATT_TRADE   100
-#define COST_ATT_MINE     50
-
-#define COST_ATT_BOMB    500
-#define COST_ATT_NUKE   1000
-
-#define OFF_PAY_MC        50
-
-#define COST_ART        1000
-
 extern ExodusState exostate;
 extern EphemeralState ephstate;
 extern SAVEMANAGER save_manager;

@@ -554,6 +554,13 @@ ExodusMode GalaxyMap::update(float delta) {
             break;
         case GM_ArtificialWorldStarSelect:
             {
+                // Allow player to cancel
+                if (input_manager.consume(K_Escape)) {
+                    player->give_mc(COST_ART);
+                    stage = GM_Idle;
+                    break;
+                }
+
                 Galaxy *gal = exostate.get_galaxy();
 
                 ft = get_clicked_flytarget();

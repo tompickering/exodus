@@ -242,9 +242,11 @@ int Exodus::run(int argc, char** argv) {
             running = false;
         }
 
+        /*
         if (input_manager.consume(Input::K_Escape)) {
             running = false;
         }
+        */
 
         mouse_pos = input_manager.get_mouse_pos();
         click_pos = input_manager.read_click();
