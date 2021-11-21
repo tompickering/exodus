@@ -124,7 +124,7 @@ class PlanetMap : ModeBase {
         void draw_frame_pl();
         void draw_frame_unrest();
         void draw_frame_help(Tool);
-        void draw_frame(int, int);
+        void draw_frame(int, int, bool);
         void close_frame();
 
         void open_law_panel();

@@ -24,6 +24,204 @@ const int LAW_Y = RES_Y/2 - LAW_H/2;
 
 const float ANIM_RATE = 0.5f;
 
+static const int TOOL_DESC_LINES = 10;
+
+static const char* tool_desc_hq[] = {
+    "The command station",
+    "This is the central institution of a",
+    "planet. From here, the planet is",
+    "ruled and guarded. Without such a",
+    "command base, the planet will lose",
+    "its owner.",
+    "",
+    "To survive, the command base units need",
+    "one cultivated area.",
+    "",
+};
+
+static const char* tool_desc_agri[] = {
+    "Cultivated areas",
+    "These areas are huge farms that produce",
+    "food for the command stations and the",
+    "cities.",
+    "",
+    "1 unit is needed for the base",
+    "3 units are needed for each city",
+    "",
+    "The food that is non needed is going to",
+    "be stored in the planet's depots.",
+};
+
+static const char* tool_desc_mine[] = {
+    "Mining",
+    "The mining units haul minerals that",
+    "are then stored in the planet's depots.",
+    "To work, each mining unit needs to",
+    "consume one plutonium unit per month.",
+    "",
+    "If the player's raw materials have been",
+    "exploited, the mining units will not be able",
+    "to haul any more minerals.",
+    "",
+};
+
+static const char* tool_desc_plu[] = {
+    "Plutonium units",
+    "These large reactors produce energy",
+    "for army production and mining units.",
+    "One plutonium unit is needed for",
+    "each army production factory and for",
+    "each mining unit.",
+    "",
+    "If a plutonium unit explodes for",
+    "any reason, it will destroy its",
+    "environment. Beware of chain reactions.",
+};
+
+static const char* tool_desc_city[] = {
+    "Cities",
+    "Some million citizens can live in one",
+    "of these gigantic cities.",
+    "A city needs to consume 3 food units each",
+    "month to survive. Each month, a city pays",
+    "2 Mega Credits to the government.",
+    "Without cities, no science is possible.",
+    "If the population of a city gets too big,",
+    "the city will expand automatically if",
+    "the environment allows that.",
+};
+
+static const char* tool_desc_clear[] = {
+    "Clear ground",
+    "This clears a land unit of the planet.",
+    "Everything previously located there",
+    "will be destroyed.",
+    "Citizens do not like to be resettled in",
+    "other cities, so clearing their cities",
+    "will make them angry.",
+    "",
+    "If an alien village is cleared, its",
+    "inhabitants will not survive.",
+};
+
+static const char* tool_desc_inf[] = {
+    "Infantry production",
+    "This army production unit produces",
+    "one infantry unit per month.",
+    "",
+    "It needs one plutonium unit",
+    "and one Army Credit (Ar) to work.",
+    "",
+    "",
+    "",
+    "",
+};
+
+static const char* tool_desc_gli[] = {
+    "Glider production",
+    "This army production unit produces",
+    "one glider unit per month.",
+    "",
+    "It needs one plutonium unit",
+    "and two Army Credits (Ar) to work.",
+    "",
+    "",
+    "",
+    "",
+};
+
+static const char* tool_desc_art[] = {
+    "Artillery production",
+    "This army production unit produces",
+    "one artillery unit per month.",
+    "",
+    "It needs one plutonium unit",
+    "and three Army Credits (Ar) to work.",
+    "",
+    "",
+    "",
+    "",
+};
+
+static const char* tool_desc_port0[] = {
+    "Spaceport: Control",
+    "A spaceport consists of a control",
+    "unit, a landing platform unit and",
+    "a power plant.",
+    "",
+    "The spaceport makes it possible to",
+    "transfer goods between the space",
+    "fleet and the planet.",
+    "",
+    "",
+};
+
+static const char* tool_desc_port1[] = {
+    "Spaceport: Landing",
+    "A spaceport consists of a control",
+    "unit, a landing platform unit and",
+    "a power plant.",
+    "",
+    "The spaceport makes it possible to",
+    "transfer goods between the space",
+    "fleet and the planet.",
+    "",
+    "",
+};
+
+static const char* tool_desc_port2[] = {
+    "Spaceport: Power plant",
+    "A spaceport consists of a control",
+    "unit, a landing platform unit and",
+    "a power plant.",
+    "",
+    "The spaceport makes it possible to",
+    "transfer goods between the space",
+    "fleet and the planet.",
+    "",
+    "",
+};
+
+static const char* tool_desc_trade[] = {
+    "Trading Centre",
+    "Private space traders dock at the",
+    "trading centre to buy the food and the",
+    "minerals that are stored in the",
+    "planet's depots.",
+    "",
+    "Each month, a trading centre sells a",
+    "certain amount of the planet's stock.",
+    "",
+    "",
+};
+
+static const char* tool_desc_lunar_base[] = {
+    "Lunar battle base",
+    "The battle base is built on the moon",
+    "and acts as an effective artillery",
+    "unit with four towers. Its fire range",
+    "is not limited.",
+    "",
+    // TODO: Does the original behave like this? If so needs implementing - otherwise needs correcting!
+    "If the control unit of the base is not",
+    "destroyed during battle, the base is",
+    "able to recreate its destroyed units",
+    "after battle.",
+};
+
+static const char* tool_desc_park[] = {
+    "Parks",
+    "Parks should be built near cities. If",
+    "people have access to such a huge park,",
+    "they feel happier.",
+    "",
+    "A park offers sufficient space for",
+    "inhabitants of at least 3 cities.",
+    "",
+    "",
+    "",
+};
+
 enum ID {
     MENU_BG,
     MENU,
@@ -45,6 +243,7 @@ enum ID {
     TARGET,
     EXPLOSION,
     FRAME,
+    FRAME_BG,
     LAW_PANEL,
     LAW_PATTERN,
     LAW_JUSTICE,
@@ -1690,7 +1889,7 @@ ExodusMode PlanetMap::update_destruction(float delta) {
     return ExodusMode::MODE_None;
 }
 
-void PlanetMap::draw_frame(int w, int h) {
+void PlanetMap::draw_frame(int w, int h, bool planet_bg) {
     int border = 6;
     draw_manager.fill(
         id(ID::FRAME),
@@ -1699,14 +1898,26 @@ void PlanetMap::draw_frame(int w, int h) {
          w + 2*border,
          h + 2*border},
          COL_BORDERS);
-    draw_manager.fill_pattern(
-        {(RES_X - w) / 2,
-         (RES_Y - h) / 2 - 18,
-         w, h}
-     );
+    if (planet_bg) {
+        DrawArea area = {108, 90, w, h};
+        draw_manager.set_source_region(id(ID::FRAME_BG), &area);
+        draw_manager.draw(
+            id(ID::FRAME_BG),
+            planet->sprites()->landscape,
+            {(RES_X - w) / 2,
+             (RES_Y - h) / 2 - 18,
+             0, 0, 1, 1});
+        draw_manager.set_source_region(id(ID::FRAME_BG), nullptr);
+    } else {
+        draw_manager.fill_pattern(
+            {(RES_X - w) / 2,
+             (RES_Y - h) / 2 - 18,
+             w, h});
+    }
 }
 
 void PlanetMap::close_frame() {
+    draw_manager.draw(id(ID::FRAME_BG), nullptr);
     draw_manager.draw(id(ID::FRAME), nullptr);
 }
 
@@ -1741,7 +1952,7 @@ void PlanetMap::draw_frame_fd() {
         snprintf(str_advisor, 127, "\"Perfect calculation.\"");
     }
 
-    draw_frame(436, 306);
+    draw_frame(436, 306, false);
     draw_manager.draw_text(
         "Information about cultivated area",
         Justify::Left,
@@ -1794,7 +2005,7 @@ void PlanetMap::draw_frame_fd() {
 }
 
 void PlanetMap::draw_frame_pl() {
-    draw_frame(436, 306);
+    draw_frame(436, 306, false);
 
     int prod = planet->get_plu_production();
     int cons = planet->get_plu_consumption();
@@ -1826,7 +2037,7 @@ void PlanetMap::draw_frame_pl() {
         snprintf(str_advisor, 127, "\"Perfect calculation.\"");
     }
 
-    draw_frame(436, 306);
+    draw_frame(436, 306, false);
     draw_manager.draw_text(
         "Information about energy systems",
         Justify::Left,
@@ -1879,7 +2090,7 @@ void PlanetMap::draw_frame_pl() {
 }
 
 void PlanetMap::draw_frame_unrest() {
-    draw_frame(436, 306);
+    draw_frame(436, 306, false);
 
     const int graph_w = 300;
     const int graph_h = 200;
@@ -1959,9 +2170,69 @@ void PlanetMap::draw_frame_unrest() {
     }
 }
 
-void PlanetMap::draw_frame_help(Tool t) {
-    // TODO
-    draw_frame(436, 306);
+void PlanetMap::draw_frame_help(Tool tool) {
+    draw_frame(436, 306, true);
+
+    const char** desc = tool_desc_hq;
+
+    switch (tool) {
+        case TOOL_HQ:
+            desc = tool_desc_hq;
+            break;
+        case TOOL_Cultivate:
+            desc = tool_desc_agri;
+            break;
+        case TOOL_Mine:
+            desc = tool_desc_mine;
+            break;
+        case TOOL_Plu:
+            desc = tool_desc_plu;
+            break;
+        case TOOL_City:
+            desc = tool_desc_city;
+            break;
+        case TOOL_Clear:
+            desc = tool_desc_clear;
+            break;
+        case TOOL_Inf:
+            desc = tool_desc_inf;
+            break;
+        case TOOL_Gli:
+            desc = tool_desc_gli;
+            break;
+        case TOOL_Art:
+            desc = tool_desc_art;
+            break;
+        case TOOL_Port0:
+            desc = tool_desc_port0;
+            break;
+        case TOOL_Port1:
+            desc = tool_desc_port1;
+            break;
+        case TOOL_Port2:
+            desc = tool_desc_port2;
+            break;
+        case TOOL_Trade:
+            desc = tool_desc_trade;
+            break;
+        case TOOL_LunarBase:
+            desc = tool_desc_lunar_base;
+            break;
+        case TOOL_Park:
+            desc = tool_desc_park;
+            break;
+        default:
+            L.error("No help for tool %d", (int)tool);
+            return;
+    }
+
+    int y = 110;
+    draw_manager.draw_text(desc[0], Justify::Left, 108, y, COL_TEXT2);
+    y += 40;
+    for (int i = 1; i < TOOL_DESC_LINES; ++i) {
+        draw_manager.draw_text(desc[i], Justify::Left, 118, y, COL_TEXT);
+        y += 20;
+    }
 }
 
 void PlanetMap::open_law_panel() {
