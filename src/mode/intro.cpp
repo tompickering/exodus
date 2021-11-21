@@ -645,7 +645,7 @@ ExodusMode Intro::update(float delta) {
         case DepartShip:
             if (!stage_started) {
                 draw_manager.draw(IMG_INTRO_SPACE);
-                draw_manager.draw(id(ID::SPC_SHIP), IMG_INTRO_SH3_CRUISER, {(int)SPC_SHIP_START_X, (int)SPC_SHIP_START_Y, 0.5, 0.5, 2.0, 2.0});
+                draw_manager.draw(id(ID::SPC_SHIP), IMG_INTRO_SH3_CRUISER, {(int)SPC_SHIP_START_X, (int)SPC_SHIP_START_Y, 0.5, 0.5, 1.0, 1.0});
                 draw_manager.save_background();
                 text_idx = 24;
                 break;
@@ -661,27 +661,27 @@ ExodusMode Intro::update(float delta) {
                 ONCE(oid_hideshuttle) {
                     draw_manager.draw(IMG_INTRO_SPACE);
                     draw_manager.save_background();
-                    draw_manager.draw(id(ID::SPC_SHIP), IMG_INTRO_SH3_CRUISER, {(int)SPC_SHIP_START_X, (int)SPC_SHIP_START_Y, 0.5, 0.5, 2.0, 2.0});
+                    draw_manager.draw(id(ID::SPC_SHIP), IMG_INTRO_SH3_CRUISER, {(int)SPC_SHIP_START_X, (int)SPC_SHIP_START_Y, 0.5, 0.5, 1.0, 1.0});
                 }
             }
 
             if (time >= SPC_SHIP_DOOR_START) {
-                ONCE(oid_door0) draw_manager.draw(id(ID::SPC_SHIP), IMG_INTRO_SH3_CRUISER, {(int)SPC_SHIP_START_X, (int)SPC_SHIP_START_Y, 0.5, 0.5, 2.0, 2.0});
+                ONCE(oid_door0) draw_manager.draw(id(ID::SPC_SHIP), IMG_INTRO_SH3_CRUISER, {(int)SPC_SHIP_START_X, (int)SPC_SHIP_START_Y, 0.5, 0.5, 1.0, 1.0});
             }
 
             if (time >= SPC_SHIP_DOOR_START + SPC_SHIP_DOOR_STEP) {
-                ONCE(oid_door1) draw_manager.draw(id(ID::SPC_SHIP), IMG_INTRO_SH3_CRUISER2, {(int)SPC_SHIP_START_X, (int)SPC_SHIP_START_Y, 0.5, 0.5, 2.0, 2.0});
+                ONCE(oid_door1) draw_manager.draw(id(ID::SPC_SHIP), IMG_INTRO_SH3_CRUISER2, {(int)SPC_SHIP_START_X, (int)SPC_SHIP_START_Y, 0.5, 0.5, 1.0, 1.0});
             }
 
             if (time >= SPC_SHIP_DOOR_START + SPC_SHIP_DOOR_STEP * 2) {
-                ONCE(oid_door2) draw_manager.draw(id(ID::SPC_SHIP), IMG_INTRO_SH3_CRUISER1, {(int)SPC_SHIP_START_X, (int)SPC_SHIP_START_Y, 0.5, 0.5, 2.0, 2.0});
+                ONCE(oid_door2) draw_manager.draw(id(ID::SPC_SHIP), IMG_INTRO_SH3_CRUISER1, {(int)SPC_SHIP_START_X, (int)SPC_SHIP_START_Y, 0.5, 0.5, 1.0, 1.0});
             }
 
             if (time >= SPC_SHIP_START) {
                 float interp = (time - SPC_SHIP_START) / (SPC_SHIP_END - SPC_SHIP_START);
                 interp = interp > 1 ? 1 : interp;
                 float anim_interp = pow(interp, 2);
-                float scale = 2 * (1 - anim_interp);
+                float scale = 1 - anim_interp;
                 int x = SPC_SHIP_START_X + (SPC_SHIP_END_X - SPC_SHIP_START_X) * anim_interp;
                 int y = SPC_SHIP_START_Y + (SPC_SHIP_END_Y - SPC_SHIP_START_Y) * anim_interp;
                 draw_manager.draw(id(ID::SPC_SHIP), IMG_INTRO_SH3_CRUISER1, {x, y, 0.5, 0.5, scale, scale});
