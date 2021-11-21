@@ -179,6 +179,7 @@ void MenuDrawer::menu_open(MenuMode mode) {
         id_menu_scimore        = draw_manager.new_sprite_id();
         id_menu_taxmore        = draw_manager.new_sprite_id();
         id_menu_newoff_opt     = draw_manager.new_sprite_id();
+        id_menu_artplanname    = draw_manager.new_sprite_id();
 
         for (int i = 0; i < MENU_N_OFFICERS; ++i) {
             id_menu_newoff[i] = draw_manager.new_sprite_id();
@@ -250,6 +251,7 @@ void MenuDrawer::menu_close() {
         draw_manager.release_sprite_id(id_menu_lines[i]);
     }
 
+    draw_manager.draw(id_menu_artplanname, nullptr);
     draw_manager.draw(id_menu_newoff_opt, nullptr);
     draw_manager.draw(id_menu_sci, nullptr);
     draw_manager.draw(id_menu_tax, nullptr);
@@ -278,6 +280,7 @@ void MenuDrawer::menu_close() {
     draw_manager.release_sprite_id(id_menu_scimore);
     draw_manager.release_sprite_id(id_menu_taxmore);
     draw_manager.release_sprite_id(id_menu_newoff_opt);
+    draw_manager.release_sprite_id(id_menu_artplanname);
 
     input_manager.enable_repeating_clicks(false);
 
@@ -1614,7 +1617,12 @@ bool MenuDrawer::menu_specific_update() {
 
                 const char* name = input_manager.get_input_text(PLANET_MAX_NAME);
 
-                // TODO: Update the name in the UI
+                draw_manager.draw_text(
+                    id_menu_artplanname,
+                    name,
+                    Justify::Left,
+                    MENU_X+200, menu_get_y(9),
+                    COL_TEXT);
 
                 if (input_manager.consume(K_Enter) && strnlen(name, 1)) {
                     menu_art_planet_named = true;

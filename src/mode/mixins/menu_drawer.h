@@ -80,6 +80,7 @@ class MenuDrawer {
         SprID id_menu_taxmore;
         SprID id_menu_newoff[MENU_N_OFFICERS];
         SprID id_menu_newoff_opt;
+        SprID id_menu_artplanname;
         char menu_text[MENU_LINES][MENU_MAX_TEXT];
         RGB menu_text_col[MENU_LINES];
         bool _menu_is_open;
