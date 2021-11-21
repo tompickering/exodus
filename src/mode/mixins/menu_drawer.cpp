@@ -603,20 +603,48 @@ void MenuDrawer::menu_open_specific_mode() {
         case MM_EquipShip:
             break;
         case MM_ArtificialWorld:
-            break;
-        case MM_ArtificialWorldAdvance:
             {
+                int player_idx = exostate.get_active_player_idx();
+                Planet *planet = exostate.get_planet_under_construction(player_idx);
+                if (planet) {
+                    L.debug("Advancing artificial planet");
+                    menu_art_planet_phase = planet->get_construction_phase();
+                    menu_art_planet_named = true;
+                    if (!planet->advance_construction_phase()) {
+                        L.fatal("get_planet_under_construction() returned non-advanceable planet");
+                    }
+                    // TODO: On completion, the planet should actually appear the following month,
+                    // and this should trigger a bulletin (+ news article?)
+                } else {
+                    // TODO: Check if player can build world (viable star, been visited, not too many etc)
+                    // TODO: Dialogue here
+                    L.debug("Constructing artificial planet");
+                    menu_action = MA_BuildArtificialWorld;
+                }
+
                 menu_set_txt(0, COL_TEXT2, "Artificial Planet Construction");
 
-                const char* img = IMG_PP2_CONST;
+                const char* img = IMG_PP1_CONST;
 
-                const char* t0 = "We are starting phase 2";
-                const char* t1 = "Phase: Construction";
+                const char* t0 = "We are starting phase 1";
+                const char* t1 = "Phase: Planning";
 
-                const char* t2 = "1 further phase is required.";
+                const char* t2 = "2 further phases are required.";
 
-                const char* t3 = "We are now going to use the";
-                const char* t4 = "Orbital Mass Construction System.";
+                const char* t3 = "Planet's name:";
+                const char* t4 = "";
+
+                if (menu_art_planet_phase == 1) {
+                    img = IMG_PP2_CONST;
+
+                    t0 = "We are starting phase 2";
+                    t1 = "Phase: Construction";
+
+                    t2 = "1 further phase is required.";
+
+                    t3 = "We are now going to use the";
+                    t4 = "Orbital Mass Construction System.";
+                }
 
                 if (menu_art_planet_phase >= 2) {
                     img = IMG_PP3_CONST;
@@ -659,6 +687,11 @@ void MenuDrawer::menu_open_specific_mode() {
                     Justify::Left,
                     MENU_X+40, menu_get_y(10),
                     COL_TEXT);
+
+                if (!menu_art_planet_named) {
+                    input_manager.start_text_input();
+                    input_manager.set_input_text("Genesis");
+                }
             }
             break;
         case MM_Save: {
@@ -1179,31 +1212,15 @@ bool MenuDrawer::menu_specific_update() {
             }
             // 6: Build Artificial Planet
             if (menu_row_clicked(6)) {
-                Planet *planet = exostate.get_planet_under_construction(player_idx);
-                if (planet) {
-                    L.debug("Advancing artificial planet");
-                    if (p->attempt_spend(COST_ART)) {
-                        menu_art_planet_phase = planet->get_construction_phase();
-                        if (!planet->advance_construction_phase()) {
-                            L.fatal("get_planet_under_construction() returned non-advanceable planet");
-                        }
-                        // TODO: On completion, the planet should actually appear the following month,
-                        // and this should trigger a bulletin (+ news article?)
-                        menu_open(MM_ArtificialWorldAdvance);
-                        return true;
-                    } else {
-                        L.error("Should not have offered unaffordable option");
-                    }
+                // TODO: When creating artificial planet, cost should be incurred
+                //       on placement or refunded on cancel
+                if (p->attempt_spend(COST_ART)) {
+                    menu_art_planet_phase = 0;
+                    menu_art_planet_named = false;
+                    menu_open(MM_ArtificialWorld);
+                    return true;
                 } else {
-                    // TODO: Check if player can build world (viable star, been visited, not too many etc)
-                    // TODO: Dialogue here
-                    L.debug("Constructing artificial planet");
-                    if (p->attempt_spend(COST_ART)) {
-                        menu_action = MA_BuildArtificialWorld;
-                    } else {
-                        L.error("Should not have offered unaffordable option");
-                        menu_action = MA_Close;
-                    }
+                    L.error("Should not have offered unaffordable option");
                 }
             }
             // 8: Wait One Month
@@ -1590,11 +1607,33 @@ bool MenuDrawer::menu_specific_update() {
         case MM_EquipShip:
             break;
         case MM_ArtificialWorld:
-            break;
-        case MM_ArtificialWorldAdvance:
-            if (draw_manager.clicked()) {
-                menu_open(MM_Ctrl);
-                return true;
+            if (!menu_art_planet_named) {
+                if (input_manager.consume(K_Backspace)) {
+                    input_manager.backspace();
+                }
+
+                const char* name = input_manager.get_input_text(PLANET_MAX_NAME);
+
+                // TODO: Update the name in the UI
+
+                if (input_manager.consume(K_Enter) && strnlen(name, 1)) {
+                    menu_art_planet_named = true;
+
+                    draw_manager.draw_text(
+                        "Now please select the planet's position.",
+                        Justify::Left,
+                        MENU_X+40, menu_get_y(12),
+                        COL_TEXT);
+                }
+            } else if (draw_manager.clicked()) {
+                if (menu_art_planet_phase == 0) {
+                    // New planet needs placing
+                    menu_action = MA_BuildArtificialWorld;
+                } else {
+                    // Planet was advanced
+                    menu_open(MM_Ctrl);
+                    return true;
+                }
             }
             break;
         case MM_Save:

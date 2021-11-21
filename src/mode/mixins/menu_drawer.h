@@ -34,7 +34,6 @@ enum MenuMode {
     MM_StarMarker,
     MM_EquipShip,
     MM_ArtificialWorld,
-    MM_ArtificialWorldAdvance,
     MM_Save,
     MM_Stat,
     MM_GenInfo,
@@ -112,6 +111,7 @@ class MenuDrawer {
 
         Invention menu_inv;
         int menu_art_planet_phase;
+        bool menu_art_planet_named;
 };
 
 #endif

@@ -563,7 +563,11 @@ ExodusMode GalaxyMap::update(float delta) {
                     if (ft == selected_ft) {
                         Star *s = (Star*) ft;
                         int player_idx = exostate.get_active_player_idx();
-                        if (s->construct_artificial_world(player_idx, nullptr)) {
+
+                        // FIXME: It's a bit hacky to rely on the input system to remember this...
+                        const char* name = input_manager.get_input_text(PLANET_MAX_NAME);
+
+                        if (s->construct_artificial_world(player_idx, name)) {
                             stage = GM_Idle;
                             break;
                         }
