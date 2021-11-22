@@ -51,6 +51,12 @@ StarMap::StarMap() : ModeBase("StarMap"), PanelDrawer(PNL_Star), CommPanelDrawer
 
 void StarMap::enter() {
     ModeBase::enter(ID::END);
+
+    // If we're returning here having fought a battle, clear ephemeral state
+    if (ephstate.get_ephemeral_state() == EPH_LunarBattleReport) {
+        ephstate.clear_ephemeral_state();
+    }
+
     star = exostate.get_active_star();
 
     DrawTarget tgt = TGT_Primary;
