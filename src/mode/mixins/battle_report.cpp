@@ -39,13 +39,65 @@ void BattleReport::batrpt_draw() {
     draw_manager.fill_pattern({PANEL_X, PANEL_Y,
                                PANEL_W, PANEL_H});
 
+    // Should be true if active human player won
     bool won = (defending ^ rpt.aggressor_won);
 
     audio_manager.target_music(mpart2mus(won ? 5 : 9));
 
-    draw_manager.draw_text(
-        won ? "WON" : "LOST",
-        Justify::Left,
-        PANEL_X + 4, PANEL_Y + 4,
-        COL_TEXT);
+    char l0[32];
+    char l1[32];
+    char l2[32];
+    char l3[32];
+    const char* lines[] = {l0, l1, l2, l3};
+
+    l0[0] = l1[0] = l2[0] = l3[0] = '\0';
+
+    int al = rpt.agg_lost.total();
+    int ai = rpt.agg_init.total();
+    int dl = rpt.def_lost.total();
+    int di = rpt.def_init.total();
+
+    if (defending) {
+        if (won) {
+            snprintf(l0, sizeof(l0), "Your army has successfully");
+            snprintf(l1, sizeof(l1), "defended the planet %s.", p->get_name());
+            snprintf(l2, sizeof(l2), "You lost %d of your %d", dl, di);
+            snprintf(l3, sizeof(l3), "defending units.");
+            // TODO: If not aliens / rebels, PROCdonotice
+        } else {
+            snprintf(l0, sizeof(l0), "All your %d defending units", di);
+            snprintf(l1, sizeof(l1), "have been destroyed.");
+            snprintf(l2, sizeof(l2), "You have lost the planet");
+            snprintf(l3, sizeof(l3), "%s.", p->get_name());
+            // TODO: If not aliens / rebels, PROCdonotice
+        }
+    } else {
+        if (won) {
+            snprintf(l0, sizeof(l0), "The planet is now yours. You");
+            snprintf(l1, sizeof(l1), "lost %d units in this battle.", al);
+            snprintf(l2, sizeof(l2), "The remaining %d units will", ai-al);
+            snprintf(l3, sizeof(l3), "be stationed at %s.", p->get_name());
+        } else {
+            snprintf(l0, sizeof(l0), "Your army did not succeed.");
+            // TODO: Set this if we retreated
+            bool letwin = false;
+            if (letwin) {
+                snprintf(l1, sizeof(l1), "Your invading troops have");
+                snprintf(l2, sizeof(l2), "been transferred back to the");
+                snprintf(l3, sizeof(l3), "transport ships.");
+            } else {
+                snprintf(l1, sizeof(l1), "All your %d invading units", ai);
+                snprintf(l2, sizeof(l2), "have been destroyed. %s", p->get_name());
+                snprintf(l3, sizeof(l3), "remains in the enemy's hand.");
+            }
+        }
+    }
+
+    for (int i = 0; i < 4; ++i) {
+        draw_manager.draw_text(
+            lines[i],
+            Justify::Left,
+            PANEL_X + 4, PANEL_Y + 4 + i*20,
+            COL_TEXT);
+    }
 }

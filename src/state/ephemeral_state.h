@@ -51,6 +51,9 @@ typedef struct {
         art = 0;
         base = 0;
     }
+    int total() {
+        return inf+gli+art;
+    }
 } UnitCount;
 
 typedef struct {
