@@ -94,10 +94,12 @@ void BattleReport::batrpt_draw() {
     }
 
     for (int i = 0; i < 4; ++i) {
+        int y = PANEL_Y + 8 + i*20;
+        if (i >= 2) y += 20;
         draw_manager.draw_text(
             lines[i],
             Justify::Left,
-            PANEL_X + 4, PANEL_Y + 4 + i*20,
+            PANEL_X + 4, y,
             COL_TEXT);
     }
 }
