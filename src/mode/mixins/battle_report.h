@@ -4,7 +4,9 @@
 class BattleReport {
     public:
         BattleReport();
-        void batrpt_draw();
+        bool batrpt_draw(bool);
+    private:
+        int n;
 };
 
 #endif

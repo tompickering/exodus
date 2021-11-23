@@ -116,6 +116,7 @@ void LunarBattle::enter() {
 
     LunarBattleReport &rpt = ephstate.lunar_battle_report;
     rpt.clear();
+    rpt.agg_type     = b.aggressor_type;
     rpt.agg_init.inf = b.aggressor_inf;
     rpt.agg_init.gli = b.aggressor_gli;
     rpt.agg_init.art = b.aggressor_art;
@@ -1101,12 +1102,14 @@ ExodusMode LunarBattle::update(float delta) {
         case LB_Won:
             L.debug("BATTLE WINNER: %s", rpt.aggressor_won ? "AGG" : "DEF");
             ephstate.set_ephemeral_state(EPH_LunarBattleReport);
-            batrpt_draw();
-            stage = LB_CloseOnClick;
+            batrpt_draw(true);
+            stage = LB_BatRpt;
             return ExodusMode::MODE_None;
-        case LB_CloseOnClick:
+        case LB_BatRpt:
             if (draw_manager.clicked()) {
-                return ephstate.get_appropriate_mode();
+                if (!batrpt_draw(false)) {
+                    return ephstate.get_appropriate_mode();
+                }
             }
             // Skip drawing / cursor updating etc
             return ExodusMode::MODE_None;

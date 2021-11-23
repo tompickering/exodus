@@ -772,12 +772,14 @@ ExodusMode LunarBattlePrep::update(float delta) {
             if (!stage_started) {
                 stage_started = true;
                 draw_manager.show_cursor(true);
-                batrpt_draw();
+                batrpt_draw(true);
                 break;
             }
 
             if (draw_manager.clicked()) {
-                return ExodusMode::MODE_Pop;
+                if (!batrpt_draw(false)) {
+                    return ExodusMode::MODE_Pop;
+                }
             }
             break;
     }

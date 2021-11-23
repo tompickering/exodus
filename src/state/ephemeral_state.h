@@ -57,6 +57,7 @@ typedef struct {
 } UnitCount;
 
 typedef struct {
+    AggressorType agg_type;
     bool aggressor_won;
     bool rebel_peace;
     UnitCount agg_init; // \ Units that were taken into battle.

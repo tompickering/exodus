@@ -140,7 +140,7 @@ class LunarBattle : ModeBase, CommPanelDrawer, BattleReport {
             LB_Damage,
             LB_CheckWon,
             LB_Won,
-            LB_CloseOnClick,
+            LB_BatRpt,
         };
 
         Stage stage;
