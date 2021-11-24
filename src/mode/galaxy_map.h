@@ -198,6 +198,9 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
 
         bool active_mission;
         int mission_n_strikes;
+
+        bool update_researchcheck(Star*, Planet *p);
+        bool update_research(Planet *p);
 };
 
 #endif

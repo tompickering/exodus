@@ -2828,32 +2828,8 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             threshold += 2*q - 2;
             threshold += owner->get_tax() / 20;
             if (RND(40) <= threshold) {
-                if (owner->is_human()) {
-                    // If we're a human player, we need to exit to ask if
-                    // they wish to pay for the invension (PROCscimoney)
-                    ephstate.research.cost = max(10 * (RND(owner->get_mc()) / 50), 20);
-                    if (owner->can_afford(ephstate.research.cost)) {
-                        ephstate.set_ephemeral_state(EPH_ResearchCheck);
-                        bulletin_start_new(true);
-                        bulletin_set_bg(p->sprites()->bulletin_bg);
-                        bulletin_set_active_player_flag();
-                        bulletin_write_planet_info(s, p);
-                        bulletin_set_next_text("Request from scientists");
-                        bulletin_set_next_text("");
-                        bulletin_set_next_text("The scientists of %s demand", p->get_name());
-                        bulletin_set_next_text("%d MC from you to support their latest",
-                                               ephstate.research.cost);
-                        bulletin_set_next_text("project.");
-                        bulletin_set_next_text("");
-                        bulletin_set_next_text("Do you wish to pay?");
-                        bulletin_set_yesno();
-                        next_mpp_stage();
-                        return ExodusMode::MODE_None;
-                    }
-                } else {
-                    // CPU players will always get the research free of charge
-                    ephstate.research.cost = 0;
-                    ephstate.research.done = true;
+                if (update_researchcheck(s, p)) {
+                    return ExodusMode::MODE_None;
                 }
             }
         }
@@ -2861,44 +2837,8 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mp_state.mpp_stage == MPP_Research) {
-        if (ephstate.research.done) {
-            ephstate.research.done = false;
-            if (!owner->attempt_spend(ephstate.research.cost)) {
-                L.fatal("Option was given to spend more on research than player's MC");
-            }
-            Invention inv = owner->get_random_researchable_invention();
-            L.debug("%s: RESEARCH %d (%dMC)",
-                    owner->get_full_name(),
-                    inv,
-                    ephstate.research.cost);
-            if (inv != INV_MAX) {
-                if (!owner->research_invention(inv)) {
-                    L.fatal("Unable to research invention identified as researchable");
-                }
-                int mc_reward = RND(10) * 10;
-                if (owner->is_human()) {
-                    bulletin_start_new(false);
-                    bulletin_set_bg(IMG_ME7_MENU);
-                    bulletin_set_active_player_flag();
-                    bulletin_set_text_col(COL_TEXT2);
-                    bulletin_set_next_text("New invention: %s", owner->get_invention_str(inv));
-                    bulletin_set_text_col(COL_TEXT_SPEECH);
-                    bulletin_set_next_text("(%s Research)", owner->get_invention_type_str(inv));
-                    // TODO: Descriptions
-                    // TODO: "This makes possible:"
-                    if (inv > INV_UniversalVaccine) {
-                        // TODO: Show awarded credits
-                        owner->give_mc(mc_reward);
-                    }
-                    next_mpp_stage();
-                    return ExodusMode::MODE_None;
-                } else {
-                    // CPU players get MC for all inventions - not just the later ones
-                    owner->give_mc(mc_reward);
-                }
-            } else {
-                // TODO: New species discovery if all inventions researched
-            }
+        if (update_research(p)) {
+            return ExodusMode::MODE_None;
         }
         next_mpp_stage();
     }
@@ -3067,6 +3007,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 bulletin_set_next_text("from plundering the planet.");
                 p->plunder();
             } else {
+                ephstate.set_ephemeral_state(EPH_AlienResearch);
                 // TODO: This should use full name with SG title
                 bulletin_set_next_text("%s could keep the planet.", owner->get_full_name());
                 bulletin_set_next_text("The pirates did not succeed.");
@@ -3078,12 +3019,20 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mp_state.mpp_stage == MPP_AlienResearchCheck) {
-        // TODO
+        ephstate.research.done = false;
+        if (ephstate.get_ephemeral_state() == EPH_AlienResearch) {
+            ephstate.clear_ephemeral_state();
+            if (update_researchcheck(s, p)) {
+                return ExodusMode::MODE_None;
+            }
+        }
         next_mpp_stage();
     }
 
     if (mp_state.mpp_stage == MPP_AlienResearch) {
-        // TODO
+        if (update_research(p)) {
+            return ExodusMode::MODE_None;
+        }
         next_mpp_stage();
     }
 
@@ -3526,6 +3475,90 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     return ExodusMode::MODE_None;
+}
+
+bool GalaxyMap::update_researchcheck(Star* s, Planet *p) {
+    if (!p->is_owned())
+        return false;
+
+    Player *owner = exostate.get_player(p->get_owner());
+    ephstate.research.done = false;
+    if (owner->is_human()) {
+        // If we're a human player, we need to exit to ask if
+        // they wish to pay for the invension (PROCscimoney)
+        ephstate.research.cost = max(10 * (RND(owner->get_mc()) / 50), 20);
+        if (owner->can_afford(ephstate.research.cost)) {
+            ephstate.set_ephemeral_state(EPH_ResearchCheck);
+            bulletin_start_new(true);
+            bulletin_set_bg(p->sprites()->bulletin_bg);
+            bulletin_set_active_player_flag();
+            bulletin_write_planet_info(s, p);
+            bulletin_set_next_text("Request from scientists");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("The scientists of %s demand", p->get_name());
+            bulletin_set_next_text("%d MC from you to support their latest",
+                                   ephstate.research.cost);
+            bulletin_set_next_text("project.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Do you wish to pay?");
+            bulletin_set_yesno();
+            next_mpp_stage();
+            return true;
+        }
+    } else {
+        // CPU players will always get the research free of charge
+        ephstate.research.cost = 0;
+        ephstate.research.done = true;
+    }
+    return false;
+}
+
+bool GalaxyMap::update_research(Planet *p) {
+    if (!p->is_owned())
+        return false;
+
+    Player *owner = exostate.get_player(p->get_owner());
+    if (ephstate.research.done) {
+        ephstate.research.done = false;
+        if (!owner->attempt_spend(ephstate.research.cost)) {
+            L.fatal("Option was given to spend more on research than player's MC");
+        }
+        Invention inv = owner->get_random_researchable_invention();
+        L.debug("%s: RESEARCH %d (%dMC)",
+                owner->get_full_name(),
+                inv,
+                ephstate.research.cost);
+        if (inv != INV_MAX) {
+            if (!owner->research_invention(inv)) {
+                L.fatal("Unable to research invention identified as researchable");
+            }
+            int mc_reward = RND(10) * 10;
+            if (owner->is_human()) {
+                bulletin_start_new(false);
+                bulletin_set_bg(IMG_ME7_MENU);
+                bulletin_set_active_player_flag();
+                bulletin_set_text_col(COL_TEXT2);
+                bulletin_set_next_text("New invention: %s", owner->get_invention_str(inv));
+                bulletin_set_text_col(COL_TEXT_SPEECH);
+                bulletin_set_next_text("(%s Research)", owner->get_invention_type_str(inv));
+                // TODO: Descriptions
+                // TODO: "This makes possible:"
+                if (inv > INV_UniversalVaccine) {
+                    // TODO: Show awarded credits
+                    owner->give_mc(mc_reward);
+                }
+                next_mpp_stage();
+                return true;
+            } else {
+                // CPU players get MC for all inventions - not just the later ones
+                owner->give_mc(mc_reward);
+            }
+        } else {
+            // TODO: New species discovery if all inventions researched
+        }
+    }
+
+    return false;
 }
 
 void GalaxyMap::ai_planet_update(Planet* p) {

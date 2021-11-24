@@ -105,7 +105,6 @@ bool BattleReport::batrpt_draw(bool reset) {
             snprintf(l2, sizeof(l2), "The aliens have used a");
             snprintf(l3, sizeof(l3), "fascinating new technology");
             snprintf(l4, sizeof(l4), "that we are going to analyse.");
-            // TODO: Set something equivalent to 'inventnow'
         } else {
             return false;
         }

@@ -127,6 +127,7 @@ enum EphState {
     EPH_ScoutPlanet,
     EPH_Destruction,
     EPH_ResearchCheck,
+    EPH_AlienResearch,
     EPH_ResumeFly,
     EPH_Festival,
     EPH_SelectPlanet,
