@@ -27,6 +27,7 @@ Rumour rumours[5];
 
 enum ID {
     TALK,
+    TALKMIRR,
     LIGHT,
     TEXT,
     BARKEEP,
@@ -84,6 +85,32 @@ Anim talk_anim(
     IMG_SG3_TALK5,
     IMG_SG3_TALK3,
     IMG_SG3_TALK6
+);
+
+Anim talkmirr_anim(
+    22,
+    IMG_SG3_MIRR0,
+    IMG_SG3_MIRR0,
+    IMG_SG3_MIRR0,
+    IMG_SG3_MIRR0,
+    IMG_SG3_MIRR0,
+    IMG_SG3_MIRR0,
+    IMG_SG3_MIRR0,
+    IMG_SG3_MIRR0,
+    IMG_SG3_MIRR0,
+    IMG_SG3_MIRR1,
+    IMG_SG3_MIRR0,
+    IMG_SG3_MIRR0,
+    IMG_SG3_MIRR0,
+    IMG_SG3_MIRR3,
+    IMG_SG3_MIRR0,
+    IMG_SG3_MIRR0,
+    IMG_SG3_MIRR0,
+    IMG_SG3_MIRR0,
+    IMG_SG3_MIRR0,
+    IMG_SG3_MIRR2,
+    IMG_SG3_MIRR0,
+    IMG_SG3_MIRR3
 );
 
 Anim screen_anim(
@@ -247,6 +274,7 @@ ExodusMode GuildBar::update(float delta) {
     screen_loop = fmod(screen_loop + delta * 0.12, 1);
 
     draw_manager.draw(id(ID::TALK), talk_anim.interp(talk_loop), {224, 246, 0.5, 0.5, 2, 2});
+    draw_manager.draw(id(ID::TALKMIRR), talkmirr_anim.interp(talk_loop), {222, 318, 0, 1, 2, 2});
 
     switch (stage) {
         case GB_Idle:
