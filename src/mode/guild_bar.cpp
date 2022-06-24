@@ -31,6 +31,7 @@ enum ID {
     TEXT,
     BARKEEP,
     PINBOARD,
+    SCREEN,
     END,
 };
 
@@ -50,6 +51,7 @@ void GuildBar::enter() {
     audio_manager.target_music(MUS_CELEBRATE);
     talk_loop = 0.f;
     light_loop = 0.f;
+    screen_loop = 0.f;
     stage = GB_Idle;
 
     if (exostate.get_month() != last_update_month) {
@@ -82,6 +84,14 @@ Anim talk_anim(
     IMG_SG3_TALK5,
     IMG_SG3_TALK3,
     IMG_SG3_TALK6
+);
+
+Anim screen_anim(
+    4,
+    IMG_SG3_SCREEN1,
+    IMG_SG3_SCREEN2,
+    IMG_SG3_SCREEN3,
+    IMG_SG3_SCREEN4
 );
 
 extern const char* RUMOUR_HEADINGS[];
@@ -234,6 +244,7 @@ ExodusMode GuildBar::update(float delta) {
 
     talk_loop = fmod(talk_loop + delta * 0.2, 1);
     light_loop = fmod(light_loop + delta, 6);
+    screen_loop = fmod(screen_loop + delta * 0.12, 1);
 
     draw_manager.draw(id(ID::TALK), talk_anim.interp(talk_loop), {224, 246, 0.5, 0.5, 2, 2});
 
@@ -244,6 +255,8 @@ ExodusMode GuildBar::update(float delta) {
             } else {
                 draw_manager.draw(id(ID::LIGHT), nullptr);
             }
+
+            draw_manager.draw(id(ID::SCREEN), screen_anim.interp(screen_loop), {427, 252, 0.5, 0.5, 2, 2});
 
             if (draw_manager.mouse_in_area(AREA_BARKEEP)) {
                 draw_manager.draw_text(

@@ -26,6 +26,7 @@ class GuildBar : ModeBase {
         int rumour_indices[2];
         float talk_loop;
         float light_loop;
+        float screen_loop;
 };
 
 #endif
