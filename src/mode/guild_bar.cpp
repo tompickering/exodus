@@ -42,7 +42,6 @@ enum ID {
     SCREEN,
     SHERIFF_FRAME,
     SHERIFF_BORDER,
-    // TODO: Scale the source image!
     SHERIFF_BG,
     SHERIFF_EXIT,
     END,
@@ -526,7 +525,7 @@ ExodusMode GuildBar::update(float delta) {
                 id(ID::SHERIFF_BG),
                 IMG_GM1_PICTURE,
                 {SHERIFF_X + 4, SHERIFF_Y + 4,
-                 0, 0, 1, 2});
+                 0, 0, 1, 1});
             draw_manager.draw(
                 id(ID::SHERIFF_EXIT),
                 IMG_GM1_EXIT,
@@ -641,7 +640,7 @@ bool GuildBar::update_star_sheriff(float delta) {
             id(ID::SHERIFF_BG),
             IMG_GM1_PICTURE,
             {SHERIFF_X + 4, SHERIFF_Y + 4,
-             0, 0, 1, 2});
+             0, 0, 1, 1});
     }
 
     if (sheriff_shot_interp >= 1) {
