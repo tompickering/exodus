@@ -40,6 +40,7 @@ class GuildBar : ModeBase {
             GB_Pinboard,
             GB_Barkeeper,
             GB_StarSheriffSetup,
+            GB_StarSheriffSetupGame,
             GB_StarSheriff,
             GB_StarSheriffExit,
         };

@@ -504,17 +504,6 @@ ExodusMode GuildBar::update(float delta) {
         case GB_StarSheriffSetup:
             audio_manager.target_music(mpart2mus(11));
 
-            sheriff_demo = true;
-            sheriff_level = 1;
-            sheriff_shot_interp = -1;
-            sheriff_hittime = 0;
-            sheriff_shield = 4;
-            sheriff_announce = SA_Go;
-            sheriff_announce_time = -1;
-            sheriff_game_time = 0;
-            sheriff_score = 0;
-            sheriff_tokill = 10 * sheriff_level;
-
             for (int i = 0; i < SHERIFF_N_SHIPS; ++i) {
                 sheriff_ships[i].init(SheriffShip::InitType::Demo);
                 sheriff_ships[i].id = draw_manager.new_sprite_id();
@@ -545,12 +534,33 @@ ExodusMode GuildBar::update(float delta) {
                 {SHERIFF_X + 126, SHERIFF_Y + SHERIFF_H - 28,
                  SHERIFF_W - 132, 26},
                  COL_BORDERS);
+            stage = GB_StarSheriffSetupGame;
+            break;
+        case GB_StarSheriffSetupGame:
+            sheriff_demo = true;
+            sheriff_level = 1;
+            sheriff_shot_interp = -1;
+            sheriff_hittime = 0;
+            sheriff_shield = 4;
+            sheriff_announce = SA_Go;
+            sheriff_announce_time = -1;
+            sheriff_game_time = 0;
+            sheriff_score = 0;
+            sheriff_tokill = 10 * sheriff_level;
+            sheriff_gameover = false;
             stage = GB_StarSheriff;
             break;
         case GB_StarSheriff:
             {
                 bool done = update_star_sheriff(delta);
-                if (done || draw_manager.query_click(id(ID::SHERIFF_EXIT)).id) {
+
+                if (done) {
+                    // TODO: High scores
+                    stage = GB_StarSheriffSetupGame;
+                    break;
+                }
+
+                if (draw_manager.query_click(id(ID::SHERIFF_EXIT)).id) {
                     stage = GB_StarSheriffExit;
                 }
                 break;
@@ -606,7 +616,6 @@ void SheriffShip::init(SheriffShip::InitType t) {
 bool GuildBar::update_star_sheriff(float delta) {
 
     if (sheriff_gameover && sheriff_announce_time <= 0) {
-        // TODO: Some way to show high scores and reset to demo mode
         return true;
     }
 
@@ -735,9 +744,9 @@ bool GuildBar::update_star_sheriff(float delta) {
                     sheriff_shield -= 1;
                 }
 
-                if (sheriff_shield < 0) {
+                if (!sheriff_gameover && sheriff_shield < 0) {
                     sheriff_announce = SA_GameOver;
-                    sheriff_announce_time = 2;
+                    sheriff_announce_time = 3;
                     sheriff_gameover = true;
                 }
 
