@@ -702,6 +702,13 @@ bool GuildBar::update_star_sheriff(float delta) {
                 sheriff_ship_anim.interp(ship.anim_interp),
                 {SHERIFF_X + ship.x, SHERIFF_Y + ship.y,
                  0.5, 0.5, sc, sc});
+
+            if (ship.delay <= 0 && ship.z < 250) {
+                draw_manager.draw(
+                    IMG_GM1_MARKNEW,
+                    {SHERIFF_X + ship.x, SHERIFF_Y + ship.y,
+                     0.5, 0.5, 1, 1});
+            }
         } else {
             if (ship.explosion_interp < 1) {
                 draw_manager.draw(
