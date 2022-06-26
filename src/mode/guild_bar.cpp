@@ -40,6 +40,7 @@ enum ID {
     SCREEN,
     SHERIFF_FRAME,
     SHERIFF_BORDER,
+    // TODO: Scale the source image!
     SHERIFF_BG,
     SHERIFF_EXIT,
     SHERIFF_ANNOUNCE,
