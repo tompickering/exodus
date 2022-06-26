@@ -651,7 +651,17 @@ bool GuildBar::update_star_sheriff(float delta) {
             sheriff_shot_interp = 0.f;
         }
 
-        // TODO: Check if any ships are actually destroyed
+        for (int i = 0; i < SHERIFF_N_SHIPS; ++i) {
+            if (!sheriff_ships[i].live) {
+                continue;
+            }
+            if (draw_manager.query_click(sheriff_ships[i].id).id) {
+                // TODO: Score updates, check for stage completion
+                sheriff_ships[i].live = false;
+                // Can't kill two ships with one laser
+                break;
+            }
+        }
     }
 
     for (int i = 0; i < SHERIFF_N_SHIPS; ++i) {
@@ -664,47 +674,63 @@ bool GuildBar::update_star_sheriff(float delta) {
 
         float sc = (float)ship.z / 1000.f;
 
-        draw_manager.draw(
-            ship.id,
-            sheriff_ship_anim.interp(ship.anim_interp),
-            {SHERIFF_X + ship.x, SHERIFF_Y + ship.y,
-             0.5, 0.5, sc, sc});
+        if (ship.live) {
+            draw_manager.draw(
+                ship.id,
+                sheriff_ship_anim.interp(ship.anim_interp),
+                {SHERIFF_X + ship.x, SHERIFF_Y + ship.y,
+                 0.5, 0.5, sc, sc});
+        } else {
+            if (ship.explosion_interp < 1) {
+                draw_manager.draw(
+                    ship.id,
+                    sheriff_exp_anim.interp(ship.explosion_interp),
+                    {SHERIFF_X + ship.x, SHERIFF_Y + ship.y,
+                     0.5, 0.5, sc, sc});
+
+                ship.explosion_interp += delta * 2;
+            } else {
+                ship.init(SheriffShip::InitType::Respawn);
+            }
+        }
 
         ship.anim_interp = fmod(ship.anim_interp + delta * 0.9f, 1.f);
 
-        ship.z += (15 * delta) * (float)(10 + (sheriff_level*5));
+        if (ship.live) {
+            ship.z += (15 * delta) * (float)(10 + (sheriff_level*5));
 
-        if (ship.z > 1000) {
-            if (ship.blasters_interp <= 0.5) {
-                draw_manager.draw(
-                    ship.blasters_id,
-                    IMG_GM1_TFIRE,
-                    {SHERIFF_X + ship.x, SHERIFF_Y + ship.y,
-                     0.5, 0.5, sc, sc});
-            } else {
+            if (ship.z > 1000) {
+                if (ship.blasters_interp <= 0.5) {
+                    draw_manager.draw(
+                        ship.blasters_id,
+                        IMG_GM1_TFIRE,
+                        {SHERIFF_X + ship.x, SHERIFF_Y + ship.y,
+                         0.5, 0.5, sc, sc});
+                } else {
+                    draw_manager.draw(ship.blasters_id, nullptr);
+                }
+                ship.blasters_interp = fmod(ship.blasters_interp + (delta * 5.f), 1.f);
+            }
+
+            if (ship.z > 1200) {
                 draw_manager.draw(ship.blasters_id, nullptr);
+                draw_manager.draw(ship.id, nullptr);
+
+                // Been hit
+
+                if (!sheriff_demo) {
+                    sheriff_shield -= 1;
+                }
+
+                if (sheriff_shield < 0) {
+                    sheriff_announce = SA_GameOver;
+                    sheriff_announce_time = 2;
+                    sheriff_gameover = true;
+                }
+
+                sheriff_hittime = 0.1;
+                ship.init(SheriffShip::InitType::Respawn);
             }
-            ship.blasters_interp = fmod(ship.blasters_interp + (delta * 5.f), 1.f);
-        }
-
-        if (ship.z > 1200) {
-            draw_manager.draw(ship.blasters_id, nullptr);
-            draw_manager.draw(ship.id, nullptr);
-
-            // Been hit
-
-            if (!sheriff_demo) {
-                sheriff_shield -= 1;
-            }
-
-            if (sheriff_shield < 0) {
-                sheriff_announce = SA_GameOver;
-                sheriff_announce_time = 2;
-                sheriff_gameover = true;
-            }
-
-            sheriff_hittime = 0.1;
-            ship.init(SheriffShip::InitType::Respawn);
         }
     }
 
