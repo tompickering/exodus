@@ -702,7 +702,7 @@ bool GuildBar::update_star_sheriff(float delta) {
                 {SHERIFF_X + ship.x, SHERIFF_Y + ship.y,
                  0.5, 0.5, sc, sc});
 
-            if (ship.delay <= 0 && ship.z < 250) {
+            if (sheriff_level < 5 && ship.delay <= 0 && ship.z < 250) {
                 draw_manager.draw(
                     IMG_GM1_MARKNEW,
                     {SHERIFF_X + ship.x, SHERIFF_Y + ship.y,
