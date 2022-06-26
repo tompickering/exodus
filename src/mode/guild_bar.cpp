@@ -45,7 +45,6 @@ enum ID {
     // TODO: Scale the source image!
     SHERIFF_BG,
     SHERIFF_EXIT,
-    SHERIFF_ANNOUNCE,
     END,
 };
 
@@ -577,8 +576,21 @@ void SheriffShip::init(SheriffShip::InitType t) {
     x = 30 + RND(345);
     y = 30 + RND(195);
     z = 200;
-    // TODO: Check this, vary between demo, game start and replace
-    delay = 10.f * (float)(rand() % 1000)/1000.f;
+    switch (t) {
+        case SheriffShip::InitType::Demo:
+            delay = 5.f * (float)(rand() % 1000)/1000.f;
+            break;
+        case SheriffShip::InitType::Game:
+            delay = 10.f * (float)(rand() % 1000)/1000.f;
+            break;
+        case SheriffShip::InitType::Respawn:
+            x = 30 + RND(270);
+            y = 30 + RND(120);
+            delay = 2.f * (float)(rand() % 1000)/1000.f;
+            break;
+        default:
+            L.error("Unknown init type: %d", t);
+    }
     anim_interp = (float)(rand() % 1000)/1000.f;
     live = true;
     explosion_interp = 0.f;
@@ -595,24 +607,15 @@ bool GuildBar::update_star_sheriff(float delta) {
              {0xFF, 0, 0});
 
         sheriff_hittime -= delta;
-
-        if (sheriff_hittime <= 0) {
-            draw_manager.draw(
-                id(ID::SHERIFF_BG),
-                IMG_GM1_PICTURE,
-                {SHERIFF_X + 4, SHERIFF_Y + 4,
-                 0, 0, 1, 2});
-        }
-    }
-
-    if (sheriff_shot_interp >= 1) {
-        // FIXME: We can't erase the laser, but redrawing the entire BG is horrible
+    } else {
         draw_manager.draw(
             id(ID::SHERIFF_BG),
             IMG_GM1_PICTURE,
             {SHERIFF_X + 4, SHERIFF_Y + 4,
              0, 0, 1, 2});
+    }
 
+    if (sheriff_shot_interp >= 1) {
         sheriff_shot_interp = -1;
     }
 
@@ -621,41 +624,20 @@ bool GuildBar::update_star_sheriff(float delta) {
         SpriteClick clk = draw_manager.query_click(id(ID::SHERIFF_BG));
 
         if (clk.id) {
+            if (sheriff_demo) {
+                sheriff_demo = false;
+                for (int i = 0; i < SHERIFF_N_SHIPS; ++i) {
+                    sheriff_ships[i].init(SheriffShip::InitType::Game);
+                }
+                return false;
+            }
+
             sheriff_laser_x = SHERIFF_X + (clk.x * ((float)SHERIFF_W - 8.f));
             sheriff_laser_y = SHERIFF_Y + (clk.y * ((float)SHERIFF_H - 32.f));
             sheriff_shot_interp = 0.f;
         }
 
         // TODO: Check if any ships are actually destroyed
-    }
-
-    // Update laser
-    if (sheriff_shot_interp >= 0) {
-        sheriff_shot_interp = fmin(1, sheriff_shot_interp + delta * 9.f);
-
-        int origin_xl = SHERIFF_X + 4;
-        int origin_xr = SHERIFF_X + SHERIFF_W - 4;
-        int origin_y  = SHERIFF_Y + 300;
-
-        float start_interp = fmax(0, sheriff_shot_interp - 0.3);
-
-        int xl0 = ilerp(origin_xl, sheriff_laser_x, start_interp);
-        int xr0 = ilerp(origin_xr, sheriff_laser_x, start_interp);
-        int xl1 = ilerp(origin_xl, sheriff_laser_x, sheriff_shot_interp);
-        int xr1 = ilerp(origin_xr, sheriff_laser_x, sheriff_shot_interp);
-
-        int y0 = ilerp(origin_y, sheriff_laser_y, start_interp);
-        int y1 = ilerp(origin_y, sheriff_laser_y, sheriff_shot_interp);
-
-        // FIXME: We can't erase the laser, but redrawing the entire BG is horrible
-        draw_manager.draw(
-            id(ID::SHERIFF_BG),
-            IMG_GM1_PICTURE,
-            {SHERIFF_X + 4, SHERIFF_Y + 4,
-             0, 0, 1, 2});
-
-        draw_manager.draw_line(xl0, y0, xl1, y1, {0xFF, 0, 0});
-        draw_manager.draw_line(xr0, y0, xr1, y1, {0xFF, 0, 0});
     }
 
     for (int i = 0; i < SHERIFF_N_SHIPS; ++i) {
@@ -701,12 +683,34 @@ bool GuildBar::update_star_sheriff(float delta) {
         }
     }
 
-    draw_manager.refresh_sprite_id(id(ID::SHERIFF_ANNOUNCE));
-    draw_manager.draw(
-        id(ID::SHERIFF_ANNOUNCE),
-        IMG_GM1_SHERIFF,
-        {SHERIFF_X + SHERIFF_W/2, SHERIFF_Y + 140,
-         0.5, 0.5, 1, 1});
+    // Update laser
+    if (sheriff_shot_interp >= 0) {
+        sheriff_shot_interp = fmin(1, sheriff_shot_interp + delta * 9.f);
+
+        int origin_xl = SHERIFF_X + 4;
+        int origin_xr = SHERIFF_X + SHERIFF_W - 4;
+        int origin_y  = SHERIFF_Y + 300;
+
+        float start_interp = fmax(0, sheriff_shot_interp - 0.3);
+
+        int xl0 = ilerp(origin_xl, sheriff_laser_x, start_interp);
+        int xr0 = ilerp(origin_xr, sheriff_laser_x, start_interp);
+        int xl1 = ilerp(origin_xl, sheriff_laser_x, sheriff_shot_interp);
+        int xr1 = ilerp(origin_xr, sheriff_laser_x, sheriff_shot_interp);
+
+        int y0 = ilerp(origin_y, sheriff_laser_y, start_interp);
+        int y1 = ilerp(origin_y, sheriff_laser_y, sheriff_shot_interp);
+
+        draw_manager.draw_line(xl0, y0, xl1, y1, {0xFF, 0, 0});
+        draw_manager.draw_line(xr0, y0, xr1, y1, {0xFF, 0, 0});
+    }
+
+    if (sheriff_demo) {
+        draw_manager.draw(
+            IMG_GM1_SHERIFF,
+            {SHERIFF_X + SHERIFF_W/2, SHERIFF_Y + 140,
+             0.5, 0.5, 1, 1});
+    }
 
     return false;
 }
