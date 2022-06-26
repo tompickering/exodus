@@ -351,6 +351,66 @@ void* DrawManagerSDL::get_sprite_data(const char* img_path) {
     return nullptr;
 }
 
+void DrawManagerSDL::draw_line(int x0, int y0, int x1, int y1, RGB rgb) {
+    /*
+     * As we are drawing with surfaces and blitting rather than a renderer
+     * and SDL_RenderCopy, we are not able to take advantage of SDL's
+     * geometry rendering, such as SDL_RenderDrawLine.
+     *
+     * As such, implement Bresenham's line drawing algorithm (with thickness)
+     */
+
+    /*
+    SDL_RenderDrawLine(renderer, rgb.r, rgb.g, rgb.b, SDL_ALPHA_OPAQUE);
+    SDL_RenderDrawLine(renderer, x0, y0, x1, y1);
+    */
+
+    int xdiff = x1 - x0;
+    int ydiff = y1 - y0;
+
+    int xstep = xdiff > 0 ? 1 : -1;
+    int ystep = ydiff > 0 ? 1 : -1;
+
+    int dx = abs(xdiff);
+    int dy = abs(ydiff);
+
+    int xhead = x0;
+    int yhead = y0;
+
+    uint32_t col = (rgb.r << 16)
+                 | (rgb.g <<  8)
+                 | (rgb.b);
+
+    int w = surf->w;
+    uint32_t *pixels = ((uint32_t*)(surf->pixels));
+
+    if (dx >= dy) {
+        int e = (2*dy) - dx;
+        while (xhead != x1) {
+            if (e < 0) {
+                e += 2*dy;
+            } else {
+                e += 2*(dy-dx);
+                yhead += ystep;
+            }
+            xhead += xstep;
+            pixels[yhead*w + xhead] = col;
+        }
+    } else {
+        int e = (2*dx) - dy;
+        while (yhead != y1) {
+            if (e < 0) {
+                e += 2*dx;
+            } else {
+                e += 2*(dx-dy);
+                xhead += xstep;
+            }
+            yhead += ystep;
+            pixels[yhead*w + xhead] = col;
+        }
+    }
+}
+
 void DrawManagerSDL::draw_rect(DrawArea area, float thickness, RGB rgb) {
     int tx = (int)(thickness * UPSCALE_X);
     int ty = (int)(thickness * UPSCALE_Y);
