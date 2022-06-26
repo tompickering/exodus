@@ -671,7 +671,6 @@ bool GuildBar::update_star_sheriff(float delta) {
                 sheriff_score += 99;
                 sheriff_tokill--;
 
-                L.info("%d", sheriff_tokill);
                 if (sheriff_tokill <= 0) {
                     sheriff_level++;
                     sheriff_announce = SA_Stage;
