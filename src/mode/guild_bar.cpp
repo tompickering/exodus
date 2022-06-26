@@ -843,6 +843,13 @@ bool GuildBar::update_star_sheriff(float delta) {
 
     char str[12];
 
+    snprintf(str, sizeof(str), "%d", sheriff_level);
+    draw_manager.draw_text(
+        str,
+        Justify::Left,
+        SHERIFF_X + 90, SHERIFF_Y + 286,
+        COL_TEXT_SPEECH);
+
     snprintf(str, sizeof(str), "%d", sheriff_tokill);
     draw_manager.draw_text(
         str,
