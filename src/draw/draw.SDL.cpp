@@ -480,6 +480,12 @@ void DrawManagerSDL::draw(DrawTarget tgt, SprID id, const char* spr_key, DrawTra
 }
 
 void DrawManagerSDL::repair_dirty_area(SprID id) {
+    for (std::vector<SprID>::size_type i = 0; i < id_repair_exclusions.size(); ++i) {
+        if (id_repair_exclusions[i] == id) {
+            return;
+        }
+    }
+
     DrawArea *dirty_area = get_drawn_area(id);
     if (dirty_area) {
         // We know where this sprite was drawn previously.

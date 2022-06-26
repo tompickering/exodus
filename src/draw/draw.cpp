@@ -253,6 +253,10 @@ DrawArea* DrawManager::get_drawn_area(SprID id) {
     return drawn_info ? &(drawn_info->area) : nullptr;
 }
 
+void DrawManager::exclude_from_repairs(SprID id) {
+    id_repair_exclusions.push_back(id);
+}
+
 void DrawManager::set_source_region(SprID id, DrawArea* area) {
     if (!area) {
         if (id_source_regions.count(id)) {
@@ -273,6 +277,7 @@ DrawArea* DrawManager::get_source_region(SprID id) {
 
 void DrawManager::clear_sprite_ids() {
     drawn_spr_info.clear();
+    id_repair_exclusions.clear();
     id_source_regions.clear();
     selectable_text_ids.clear();
 }

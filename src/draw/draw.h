@@ -174,6 +174,7 @@ class DrawManager {
         virtual void draw_text(DrawTarget, Font, const char*, Justify, int, int, RGB, RGB) = 0;
         virtual void draw_text(DrawTarget, SprID, const char*, Justify, int, int, RGB) = 0;
         virtual void draw_text(DrawTarget, SprID, Font, const char*, Justify, int, int, RGB) = 0;
+        virtual void exclude_from_repairs(SprID);
         virtual void set_source_region(SprID, DrawArea*);
         virtual DrawArea* get_source_region(SprID);
         virtual void fade_start(float, int) = 0;
@@ -200,6 +201,7 @@ class DrawManager {
         map<const char*, void*> sprite_data;
         virtual void* get_sprite_data(const char*) = 0;
         virtual void adjust_selectable_text_col(SprID, RGB&);
+        vector<SprID> id_repair_exclusions;
         map<SprID, DrawArea> id_source_regions;
         map<Font, void*> font_data;
         SprID next_id;
