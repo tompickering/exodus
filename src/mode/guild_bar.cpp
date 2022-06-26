@@ -512,6 +512,7 @@ ExodusMode GuildBar::update(float delta) {
             sheriff_announce = SA_Go;
             sheriff_announce_time = -1;
             sheriff_game_time = 0;
+            sheriff_score = 0;
 
             for (int i = 0; i < SHERIFF_N_SHIPS; ++i) {
                 sheriff_ships[i].init(SheriffShip::InitType::Demo);
@@ -656,8 +657,9 @@ bool GuildBar::update_star_sheriff(float delta) {
                 continue;
             }
             if (draw_manager.query_click(sheriff_ships[i].id).id) {
-                // TODO: Score updates, check for stage completion
+                // TODO: Check for stage completion (+2000 points)
                 sheriff_ships[i].live = false;
+                sheriff_score += 99;
                 // Can't kill two ships with one laser
                 break;
             }
@@ -802,6 +804,14 @@ bool GuildBar::update_star_sheriff(float delta) {
             {SHERIFF_X + 10, SHERIFF_Y + 304,
              0, 1, 1, 1});
     }
+
+    char score_str[12];
+    snprintf(score_str, sizeof(score_str), "%d", sheriff_score);
+    draw_manager.draw_text(
+        score_str,
+        Justify::Right,
+        SHERIFF_X + SHERIFF_W - 12, SHERIFF_Y + 286,
+        COL_TEXT_SPEECH);
 
     if (sheriff_demo) {
         draw_manager.draw(
