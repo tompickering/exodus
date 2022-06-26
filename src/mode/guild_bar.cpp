@@ -510,6 +510,7 @@ ExodusMode GuildBar::update(float delta) {
             for (int i = 0; i < SHERIFF_N_SHIPS; ++i) {
                 sheriff_ships[i].init(SheriffShip::InitType::Demo);
                 sheriff_ships[i].id = draw_manager.new_sprite_id();
+                sheriff_ships[i].blasters_id = draw_manager.new_sprite_id();
             }
 
             draw_manager.fill(
@@ -548,6 +549,8 @@ ExodusMode GuildBar::update(float delta) {
             }
         case GB_StarSheriffExit:
             for (int i = 0; i < SHERIFF_N_SHIPS; ++i) {
+                draw_manager.draw(sheriff_ships[i].blasters_id, nullptr);
+                draw_manager.release_sprite_id(sheriff_ships[i].blasters_id);
                 draw_manager.draw(sheriff_ships[i].id, nullptr);
                 draw_manager.release_sprite_id(sheriff_ships[i].id);
             }
@@ -576,6 +579,7 @@ void SheriffShip::init(SheriffShip::InitType t) {
     anim_interp = (float)(rand() % 1000)/1000.f;
     live = true;
     explosion_interp = 0.f;
+    blasters_interp = 0.f;
 }
 
 bool GuildBar::update_star_sheriff(float delta) {
@@ -616,9 +620,23 @@ bool GuildBar::update_star_sheriff(float delta) {
 
         ship.anim_interp = fmod(ship.anim_interp + delta * 0.9f, 1.f);
 
-        ship.z += (18 * delta) * (float)(10 + (sheriff_level*5));
+        ship.z += (15 * delta) * (float)(10 + (sheriff_level*5));
+
+        if (ship.z > 1000) {
+            if (ship.blasters_interp <= 0.5) {
+                draw_manager.draw(
+                    ship.blasters_id,
+                    IMG_GM1_TFIRE,
+                    {SHERIFF_X + ship.x, SHERIFF_Y + ship.y,
+                     0.5, 0.5, sc, sc});
+            } else {
+                draw_manager.draw(ship.blasters_id, nullptr);
+            }
+            ship.blasters_interp = fmod(ship.blasters_interp + (delta * 5.f), 1.f);
+        }
 
         if (ship.z > 1200) {
+            draw_manager.draw(ship.blasters_id, nullptr);
             draw_manager.draw(ship.id, nullptr);
             // Been hit
             // TODO: Shield depletion

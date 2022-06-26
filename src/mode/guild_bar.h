@@ -15,8 +15,10 @@ struct SheriffShip {
     float anim_interp;
     bool live;
     float explosion_interp;
+    float blasters_interp;
 
     SprID id;
+    SprID blasters_id;
 
     enum InitType {
         Demo,
