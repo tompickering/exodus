@@ -508,6 +508,8 @@ ExodusMode GuildBar::update(float delta) {
             sheriff_level = 1;
             sheriff_shot_interp = -1;
             sheriff_hittime = 0;
+            sheriff_announce = SA_Go;
+            sheriff_announce_time = -1;
 
             for (int i = 0; i < SHERIFF_N_SHIPS; ++i) {
                 sheriff_ships[i].init(SheriffShip::InitType::Demo);
@@ -626,6 +628,8 @@ bool GuildBar::update_star_sheriff(float delta) {
         if (clk.id) {
             if (sheriff_demo) {
                 sheriff_demo = false;
+                sheriff_announce = SA_Go;
+                sheriff_announce_time = 2;
                 for (int i = 0; i < SHERIFF_N_SHIPS; ++i) {
                     sheriff_ships[i].init(SheriffShip::InitType::Game);
                 }
@@ -703,6 +707,39 @@ bool GuildBar::update_star_sheriff(float delta) {
 
         draw_manager.draw_line(xl0, y0, xl1, y1, {0xFF, 0, 0});
         draw_manager.draw_line(xr0, y0, xr1, y1, {0xFF, 0, 0});
+    }
+
+    if (sheriff_announce_time > 0) {
+        sheriff_announce_time -= delta;
+        if (fmod(sheriff_announce_time, 0.2) < 0.1) {
+            const char* spr = IMG_GM1_SHERIFF;
+
+            int x = SHERIFF_X + SHERIFF_W/2;
+
+            switch (sheriff_announce) {
+                case SA_Go:
+                    spr = IMG_GM1_GO;
+                    break;
+                case SA_Stage:
+                    spr = IMG_GM1_STAGE;
+                    x -= 40;
+                    break;
+                case SA_GameOver:
+                    spr = IMG_GM1_GAMEOVER;
+                    break;
+                case SA_BonusKill:
+                    spr = IMG_GM1_KBON;
+                    break;
+                case SA_BonusShield:
+                    spr = IMG_GM1_SBON;
+                    break;
+            }
+
+            draw_manager.draw(
+                spr,
+                {x, SHERIFF_Y + 140,
+                 0.5, 0.5, 1, 1});
+        }
     }
 
     if (sheriff_demo) {

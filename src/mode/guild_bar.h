@@ -56,6 +56,14 @@ class GuildBar : ModeBase {
         float light_loop;
         float screen_loop;
 
+        enum SheriffAnnounce {
+            SA_Go,
+            SA_Stage,
+            SA_GameOver,
+            SA_BonusKill,
+            SA_BonusShield,
+        };
+
         bool sheriff_demo;
         int sheriff_level;
         float sheriff_shot_interp;
@@ -63,6 +71,9 @@ class GuildBar : ModeBase {
         float sheriff_hittime;
         int sheriff_laser_x;
         int sheriff_laser_y;
+
+        SheriffAnnounce sheriff_announce;
+        float sheriff_announce_time;
 };
 
 #endif
