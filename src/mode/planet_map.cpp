@@ -2161,11 +2161,7 @@ void PlanetMap::draw_frame_unrest() {
         int data1 = min(10, planet->get_unrest(m-1));
         int y0 = graph_y + data0*scale_y;
         int y1 = graph_y + data1*scale_y;
-        for (int dx = x0; dx <= x1; dx++) {
-            float prop = (float)(dx-x0)/(float)(x1-x0);
-            int y = y0 + (int)(((float)(y1-y0))*prop);
-            draw_manager.fill({dx,y,1,4}, COL_TEXT2);
-        }
+        draw_manager.draw_line(x0, y0, x1, y1, 5, COL_TEXT2);
         x0 = x1;
     }
 }
