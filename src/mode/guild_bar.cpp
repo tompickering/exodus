@@ -507,9 +507,13 @@ ExodusMode GuildBar::update(float delta) {
                 sheriff_ships[i].init(SheriffShip::InitType::Demo);
                 sheriff_ships[i].id = draw_manager.new_sprite_id();
                 sheriff_ships[i].blasters_id = draw_manager.new_sprite_id();
+
+                draw_manager.exclude_from_repairs(sheriff_ships[i].id);
+                draw_manager.exclude_from_repairs(sheriff_ships[i].blasters_id);
             }
 
             sheriff_bonus_id = draw_manager.new_sprite_id();
+            draw_manager.exclude_from_repairs(sheriff_bonus_id);
 
             draw_manager.fill(
                 id(ID::SHERIFF_FRAME),
