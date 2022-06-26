@@ -513,6 +513,7 @@ ExodusMode GuildBar::update(float delta) {
             sheriff_announce_time = -1;
             sheriff_game_time = 0;
             sheriff_score = 0;
+            sheriff_tokill = 10 * sheriff_level;
 
             for (int i = 0; i < SHERIFF_N_SHIPS; ++i) {
                 sheriff_ships[i].init(SheriffShip::InitType::Demo);
@@ -657,9 +658,19 @@ bool GuildBar::update_star_sheriff(float delta) {
                 continue;
             }
             if (draw_manager.query_click(sheriff_ships[i].id).id) {
-                // TODO: Check for stage completion (+2000 points)
                 sheriff_ships[i].live = false;
                 sheriff_score += 99;
+                sheriff_tokill--;
+
+                L.info("%d", sheriff_tokill);
+                if (sheriff_tokill <= 0) {
+                    sheriff_level++;
+                    sheriff_announce = SA_Stage;
+                    sheriff_announce_time = 2;
+                    sheriff_score += 2000;
+                    sheriff_tokill = sheriff_level * 10;
+                }
+
                 // Can't kill two ships with one laser
                 break;
             }
@@ -788,6 +799,26 @@ bool GuildBar::update_star_sheriff(float delta) {
                 spr,
                 {x, SHERIFF_Y + 140,
                  0.5, 0.5, 1, 1});
+
+            if (sheriff_announce == SA_Stage) {
+                spr = IMG_GM1_S0;
+                if (sheriff_level == 1) spr = IMG_GM1_S1;
+                if (sheriff_level == 2) spr = IMG_GM1_S2;
+                if (sheriff_level == 3) spr = IMG_GM1_S3;
+                if (sheriff_level == 4) spr = IMG_GM1_S4;
+                if (sheriff_level == 5) spr = IMG_GM1_S5;
+                if (sheriff_level == 6) spr = IMG_GM1_S6;
+                if (sheriff_level == 7) spr = IMG_GM1_S7;
+                if (sheriff_level == 8) spr = IMG_GM1_S8;
+                if (sheriff_level == 9) spr = IMG_GM1_S9;
+
+                // FIXME: Do we care about what happens after level 9? Force gameover?
+
+                draw_manager.draw(
+                    spr,
+                    {x + 120, SHERIFF_Y + 140,
+                     0.5, 0.5, 1, 1});
+            }
         }
     }
 
@@ -805,10 +836,23 @@ bool GuildBar::update_star_sheriff(float delta) {
              0, 1, 1, 1});
     }
 
-    char score_str[12];
-    snprintf(score_str, sizeof(score_str), "%d", sheriff_score);
+    draw_manager.draw(
+        IMG_GM1_TOKILL,
+        {SHERIFF_X + 180, SHERIFF_Y + 288,
+         0, 0, 1, 1});
+
+    char str[12];
+
+    snprintf(str, sizeof(str), "%d", sheriff_tokill);
     draw_manager.draw_text(
-        score_str,
+        str,
+        Justify::Left,
+        SHERIFF_X + 200, SHERIFF_Y + 286,
+        COL_TEXT_SPEECH);
+
+    snprintf(str, sizeof(str), "%d", sheriff_score);
+    draw_manager.draw_text(
+        str,
         Justify::Right,
         SHERIFF_X + SHERIFF_W - 12, SHERIFF_Y + 286,
         COL_TEXT_SPEECH);
