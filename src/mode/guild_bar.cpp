@@ -508,8 +508,10 @@ ExodusMode GuildBar::update(float delta) {
             sheriff_level = 1;
             sheriff_shot_interp = -1;
             sheriff_hittime = 0;
+            sheriff_shield = 4;
             sheriff_announce = SA_Go;
             sheriff_announce_time = -1;
+            sheriff_game_time = 0;
 
             for (int i = 0; i < SHERIFF_N_SHIPS; ++i) {
                 sheriff_ships[i].init(SheriffShip::InitType::Demo);
@@ -601,6 +603,13 @@ void SheriffShip::init(SheriffShip::InitType t) {
 
 bool GuildBar::update_star_sheriff(float delta) {
 
+    if (sheriff_gameover && sheriff_announce_time <= 0) {
+        // TODO: Some way to show high scores and reset to demo mode
+        return true;
+    }
+
+    sheriff_game_time += delta;
+
     if (sheriff_hittime > 0) {
         draw_manager.fill(
             id(ID::SHERIFF_BG),
@@ -622,12 +631,13 @@ bool GuildBar::update_star_sheriff(float delta) {
     }
 
     // Player laser fire
-    if (sheriff_shot_interp < 0) {
+    if (!sheriff_gameover && sheriff_shot_interp < 0) {
         SpriteClick clk = draw_manager.query_click(id(ID::SHERIFF_BG));
 
         if (clk.id) {
             if (sheriff_demo) {
                 sheriff_demo = false;
+                sheriff_shield = 4;
                 sheriff_announce = SA_Go;
                 sheriff_announce_time = 2;
                 for (int i = 0; i < SHERIFF_N_SHIPS; ++i) {
@@ -680,8 +690,19 @@ bool GuildBar::update_star_sheriff(float delta) {
         if (ship.z > 1200) {
             draw_manager.draw(ship.blasters_id, nullptr);
             draw_manager.draw(ship.id, nullptr);
+
             // Been hit
-            // TODO: Shield depletion
+
+            if (!sheriff_demo) {
+                sheriff_shield -= 1;
+            }
+
+            if (sheriff_shield < 0) {
+                sheriff_announce = SA_GameOver;
+                sheriff_announce_time = 2;
+                sheriff_gameover = true;
+            }
+
             sheriff_hittime = 0.1;
             ship.init(SheriffShip::InitType::Respawn);
         }
@@ -740,6 +761,20 @@ bool GuildBar::update_star_sheriff(float delta) {
                 {x, SHERIFF_Y + 140,
                  0.5, 0.5, 1, 1});
         }
+    }
+
+    // Draw HUD
+    if (sheriff_shield > 0 || fmod(sheriff_game_time, 0.4) < 0.2) {
+        const char* spr = IMG_GM1_SHIELD0;
+        if (sheriff_shield == 4) spr = IMG_GM1_SHIELD4;
+        if (sheriff_shield == 3) spr = IMG_GM1_SHIELD3;
+        if (sheriff_shield == 2) spr = IMG_GM1_SHIELD2;
+        if (sheriff_shield == 1) spr = IMG_GM1_SHIELD1;
+
+        draw_manager.draw(
+            spr,
+            {SHERIFF_X + 10, SHERIFF_Y + 304,
+             0, 1, 1, 1});
     }
 
     if (sheriff_demo) {
