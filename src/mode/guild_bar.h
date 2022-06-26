@@ -15,6 +15,8 @@ class GuildBar : ModeBase {
             GB_Idle,
             GB_Pinboard,
             GB_Barkeeper,
+            GB_StarSheriff,
+            GB_StarSheriffExit,
         };
 
         void update_pin_and_rumours();

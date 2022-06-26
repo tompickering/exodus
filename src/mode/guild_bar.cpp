@@ -349,6 +349,10 @@ ExodusMode GuildBar::update(float delta) {
                     Justify::Left,
                     10, RES_Y - 30,
                     COL_TEXT2);
+                if (click) {
+                    audio_manager.target_music(mpart2mus(11));
+                    stage = GB_StarSheriff;
+                }
             } else if (draw_manager.mouse_in_area(AREA_PINBOARD)) {
                 draw_manager.draw_text(
                     id(ID::TEXT),
@@ -449,6 +453,14 @@ ExodusMode GuildBar::update(float delta) {
                 draw_manager.draw(id(ID::PINBOARD), nullptr);
                 stage = GB_Idle;
             }
+            break;
+        case GB_StarSheriff:
+            if (draw_manager.clicked()) {
+                stage = GB_StarSheriffExit;
+            }
+            break;
+        case GB_StarSheriffExit:
+            audio_manager.target_music(MUS_CELEBRATE);
             break;
     }
 
