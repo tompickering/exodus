@@ -6,6 +6,8 @@
 #include "assetpaths.h"
 #include "galaxy/flytarget.h"
 
+#include "util/value.h"
+
 #define RUMOUR_LINE_MAX 64
 
 static const DrawArea AREA_BARKEEP  = {200, 230, 40, 50};
@@ -601,6 +603,59 @@ bool GuildBar::update_star_sheriff(float delta) {
                 {SHERIFF_X + 4, SHERIFF_Y + 4,
                  0, 0, 1, 2});
         }
+    }
+
+    if (sheriff_shot_interp >= 1) {
+        // FIXME: We can't erase the laser, but redrawing the entire BG is horrible
+        draw_manager.draw(
+            id(ID::SHERIFF_BG),
+            IMG_GM1_PICTURE,
+            {SHERIFF_X + 4, SHERIFF_Y + 4,
+             0, 0, 1, 2});
+
+        sheriff_shot_interp = -1;
+    }
+
+    // Player laser fire
+    if (sheriff_shot_interp < 0) {
+        SpriteClick clk = draw_manager.query_click(id(ID::SHERIFF_BG));
+
+        if (clk.id) {
+            sheriff_laser_x = SHERIFF_X + (clk.x * ((float)SHERIFF_W - 8.f));
+            sheriff_laser_y = SHERIFF_Y + (clk.y * ((float)SHERIFF_H - 32.f));
+            sheriff_shot_interp = 0.f;
+        }
+
+        // TODO: Check if any ships are actually destroyed
+    }
+
+    // Update laser
+    if (sheriff_shot_interp >= 0) {
+        sheriff_shot_interp = fmin(1, sheriff_shot_interp + delta * 9.f);
+
+        int origin_xl = SHERIFF_X + 4;
+        int origin_xr = SHERIFF_X + SHERIFF_W - 4;
+        int origin_y  = SHERIFF_Y + 300;
+
+        float start_interp = fmax(0, sheriff_shot_interp - 0.3);
+
+        int xl0 = ilerp(origin_xl, sheriff_laser_x, start_interp);
+        int xr0 = ilerp(origin_xr, sheriff_laser_x, start_interp);
+        int xl1 = ilerp(origin_xl, sheriff_laser_x, sheriff_shot_interp);
+        int xr1 = ilerp(origin_xr, sheriff_laser_x, sheriff_shot_interp);
+
+        int y0 = ilerp(origin_y, sheriff_laser_y, start_interp);
+        int y1 = ilerp(origin_y, sheriff_laser_y, sheriff_shot_interp);
+
+        // FIXME: We can't erase the laser, but redrawing the entire BG is horrible
+        draw_manager.draw(
+            id(ID::SHERIFF_BG),
+            IMG_GM1_PICTURE,
+            {SHERIFF_X + 4, SHERIFF_Y + 4,
+             0, 0, 1, 2});
+
+        draw_manager.draw_line(xl0, y0, xl1, y1, {0xFF, 0, 0});
+        draw_manager.draw_line(xr0, y0, xr1, y1, {0xFF, 0, 0});
     }
 
     for (int i = 0; i < SHERIFF_N_SHIPS; ++i) {

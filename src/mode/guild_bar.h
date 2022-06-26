@@ -61,6 +61,8 @@ class GuildBar : ModeBase {
         float sheriff_shot_interp;
         SheriffShip sheriff_ships[SHERIFF_N_SHIPS];
         float sheriff_hittime;
+        int sheriff_laser_x;
+        int sheriff_laser_y;
 };
 
 #endif
