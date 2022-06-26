@@ -77,6 +77,13 @@ class GuildBar : ModeBase {
         int sheriff_score;
         int sheriff_tokill;
 
+        bool sheriff_bonus;
+        SprID sheriff_bonus_id;
+        int sheriff_bonus_x;
+        int sheriff_bonus_y;
+        int sheriff_bonus_z;
+        float sheriff_bonus_interp;
+
         SheriffAnnounce sheriff_announce;
         float sheriff_announce_time;
 

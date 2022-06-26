@@ -510,6 +510,8 @@ ExodusMode GuildBar::update(float delta) {
                 sheriff_ships[i].blasters_id = draw_manager.new_sprite_id();
             }
 
+            sheriff_bonus_id = draw_manager.new_sprite_id();
+
             draw_manager.fill(
                 id(ID::SHERIFF_FRAME),
                 {SHERIFF_X -   BORDER, SHERIFF_Y -   BORDER,
@@ -548,6 +550,8 @@ ExodusMode GuildBar::update(float delta) {
             sheriff_score = 0;
             sheriff_tokill = 10 * sheriff_level;
             sheriff_gameover = false;
+            sheriff_bonus = false;
+            sheriff_bonus_interp = 0;
             stage = GB_StarSheriff;
             break;
         case GB_StarSheriff:
@@ -572,6 +576,9 @@ ExodusMode GuildBar::update(float delta) {
                 draw_manager.draw(sheriff_ships[i].id, nullptr);
                 draw_manager.release_sprite_id(sheriff_ships[i].id);
             }
+
+            draw_manager.draw(sheriff_bonus_id, nullptr);
+            draw_manager.release_sprite_id(sheriff_bonus_id);
 
             draw_manager.draw(ID::SHERIFF_EXIT, nullptr);
             draw_manager.draw(ID::SHERIFF_BORDER, nullptr);
@@ -683,6 +690,22 @@ bool GuildBar::update_star_sheriff(float delta) {
                 break;
             }
         }
+
+        if (draw_manager.query_click(sheriff_bonus_id).id) {
+            sheriff_bonus = false;
+
+            if (onein(2)) {
+                sheriff_announce = SA_BonusKill;
+                sheriff_announce_time = 2;
+                sheriff_score += 999;
+            } else {
+                sheriff_announce = SA_BonusShield;
+                sheriff_announce_time = 2;
+                if (sheriff_shield < 4) {
+                    sheriff_shield++;
+                }
+            }
+        }
     }
 
     for (int i = 0; i < SHERIFF_N_SHIPS; ++i) {
@@ -762,6 +785,24 @@ bool GuildBar::update_star_sheriff(float delta) {
         }
     }
 
+    // Draw bonus
+    if (sheriff_bonus) {
+        sheriff_bonus_interp = fmod(sheriff_bonus_interp + delta * 0.9f, 1.f);
+
+        float sc = (float)sheriff_bonus_z / 1000.f;
+
+        draw_manager.draw(
+            sheriff_bonus_id,
+            sheriff_bonus_anim.interp(sheriff_bonus_interp),
+            {SHERIFF_X + sheriff_bonus_x, SHERIFF_Y + sheriff_bonus_y,
+             0.5, 0.5, sc, sc});
+
+        sheriff_bonus_z += (15 * delta) * (float)(10 + (sheriff_level*5));
+        if (sheriff_bonus_z > 1200) {
+            sheriff_bonus = false;
+        }
+    }
+
     // Update laser
     if (sheriff_shot_interp >= 0) {
         sheriff_shot_interp = fmin(1, sheriff_shot_interp + delta * 9.f);
@@ -835,6 +876,14 @@ bool GuildBar::update_star_sheriff(float delta) {
                      0.5, 0.5, 1, 1});
             }
         }
+    }
+
+    // FIXME: Scaling random range with time is pretty horrible
+    if (!sheriff_bonus && onein((int)(delta * 35000))) {
+        sheriff_bonus = true;
+        sheriff_bonus_x = 30 + RND(345);
+        sheriff_bonus_y = 30 + RND(195);
+        sheriff_bonus_z = 200;
     }
 
     // Draw HUD
