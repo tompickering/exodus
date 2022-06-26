@@ -411,6 +411,25 @@ void DrawManagerSDL::draw_line(int x0, int y0, int x1, int y1, RGB rgb) {
     }
 }
 
+void DrawManagerSDL::draw_line(int x0, int y0, int x1, int y1, int thickness, RGB rgb) {
+    float m = (float)(y1-y0)/(float)(x1-x0);
+
+    int wx = (thickness-1)*sqrt(pow(y1-y0, 2)+pow(y1-y0, 2))/(2*fabs(y1-y0));
+    int wy = (thickness-1)*sqrt(pow(x1-x0, 2)+pow(y1-y0, 2))/(2*fabs(x1-x0));
+
+    if (m < 1) {
+        for (int i = 0; i < wy; ++i) {
+            draw_line(x0, y0+i, x1, y1+i, rgb);
+            draw_line(x0, y0-i, x1, y1-i, rgb);
+        }
+    } else {
+        for (int i = 0; i < wx; ++i) {
+            draw_line(x0+i, y0, x1+i, y1, rgb);
+            draw_line(x0-i, y0, x1-i, y1, rgb);
+        }
+    }
+}
+
 void DrawManagerSDL::draw_rect(DrawArea area, float thickness, RGB rgb) {
     int tx = (int)(thickness * UPSCALE_X);
     int ty = (int)(thickness * UPSCALE_Y);

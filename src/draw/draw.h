@@ -153,6 +153,7 @@ class DrawManager {
         virtual bool pixelswap_active() = 0;
         virtual void pixelswap_update() = 0;
         virtual void draw_line(int, int, int, int, RGB) = 0;
+        virtual void draw_line(int, int, int, int, int, RGB) = 0;
         virtual void draw_rect(DrawArea area, float, RGB) = 0;
         virtual void fill(DrawArea area, RGB) = 0;
         virtual void fill(SprID, DrawArea area, RGB) = 0;
