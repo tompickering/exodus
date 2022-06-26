@@ -18,6 +18,11 @@ static const int PINBOARD_Y = 40;
 static const int PINBOARD_W = 332;
 static const int PINBOARD_H = 318;
 
+static const int SHERIFF_X = 96;
+static const int SHERIFF_Y = 104;
+static const int SHERIFF_W = 410;
+static const int SHERIFF_H = 342;
+
 typedef struct {
     char line0[RUMOUR_LINE_MAX];
     char line1[RUMOUR_LINE_MAX];
@@ -33,6 +38,11 @@ enum ID {
     BARKEEP,
     PINBOARD,
     SCREEN,
+    SHERIFF_FRAME,
+    SHERIFF_BORDER,
+    SHERIFF_BG,
+    SHERIFF_EXIT,
+    SHERIFF_ANNOUNCE,
     END,
 };
 
@@ -119,6 +129,40 @@ Anim screen_anim(
     IMG_SG3_SCREEN2,
     IMG_SG3_SCREEN3,
     IMG_SG3_SCREEN4
+);
+
+Anim sheriff_ship_anim(
+    12,
+    IMG_GM1_T1,
+    IMG_GM1_T2,
+    IMG_GM1_T3,
+    IMG_GM1_T4,
+    IMG_GM1_T5,
+    IMG_GM1_T6,
+    IMG_GM1_T7,
+    IMG_GM1_T8,
+    IMG_GM1_T9,
+    IMG_GM1_T10,
+    IMG_GM1_T11,
+    IMG_GM1_T12
+);
+
+Anim sheriff_exp_anim(
+    6,
+    IMG_GM1_XP1,
+    IMG_GM1_XP2,
+    IMG_GM1_XP3,
+    IMG_GM1_XP4,
+    IMG_GM1_XP5,
+    IMG_GM1_XP6
+);
+
+Anim sheriff_bonus_anim(
+    4,
+    IMG_GM1_B1,
+    IMG_GM1_B2,
+    IMG_GM1_B3,
+    IMG_GM1_B4
 );
 
 extern const char* RUMOUR_HEADINGS[];
@@ -273,8 +317,10 @@ ExodusMode GuildBar::update(float delta) {
     light_loop = fmod(light_loop + delta, 6);
     screen_loop = fmod(screen_loop + delta * 0.12, 1);
 
-    draw_manager.draw(id(ID::TALK), talk_anim.interp(talk_loop), {224, 246, 0.5, 0.5, 2, 2});
-    draw_manager.draw(id(ID::TALKMIRR), talkmirr_anim.interp(talk_loop), {222, 318, 0, 1, 2, 2});
+    if (stage < GB_StarSheriffSetup) {
+        draw_manager.draw(id(ID::TALK), talk_anim.interp(talk_loop), {224, 246, 0.5, 0.5, 2, 2});
+        draw_manager.draw(id(ID::TALKMIRR), talkmirr_anim.interp(talk_loop), {222, 318, 0, 1, 2, 2});
+    }
 
     switch (stage) {
         case GB_Idle:
@@ -350,8 +396,7 @@ ExodusMode GuildBar::update(float delta) {
                     10, RES_Y - 30,
                     COL_TEXT2);
                 if (click) {
-                    audio_manager.target_music(mpart2mus(11));
-                    stage = GB_StarSheriff;
+                    stage = GB_StarSheriffSetup;
                 }
             } else if (draw_manager.mouse_in_area(AREA_PINBOARD)) {
                 draw_manager.draw_text(
@@ -454,17 +499,142 @@ ExodusMode GuildBar::update(float delta) {
                 stage = GB_Idle;
             }
             break;
-        case GB_StarSheriff:
-            if (draw_manager.clicked()) {
-                stage = GB_StarSheriffExit;
+        case GB_StarSheriffSetup:
+            audio_manager.target_music(mpart2mus(11));
+
+            sheriff_demo = true;
+            sheriff_level = 1;
+            sheriff_shot_interp = -1;
+            sheriff_hittime = 0;
+
+            for (int i = 0; i < SHERIFF_N_SHIPS; ++i) {
+                sheriff_ships[i].init(SheriffShip::InitType::Demo);
+                sheriff_ships[i].id = draw_manager.new_sprite_id();
             }
+
+            draw_manager.fill(
+                id(ID::SHERIFF_FRAME),
+                {SHERIFF_X -   BORDER, SHERIFF_Y -   BORDER,
+                 SHERIFF_W + 2*BORDER, SHERIFF_H + 2*BORDER},
+                 COL_BORDERS);
+            draw_manager.fill(
+                id(ID::SHERIFF_BORDER),
+                {SHERIFF_X + 4, SHERIFF_Y + SHERIFF_H - 36,
+                 SHERIFF_W - 8, 36},
+                {0, 0, 0});
+            draw_manager.draw(
+                id(ID::SHERIFF_BG),
+                IMG_GM1_PICTURE,
+                {SHERIFF_X + 4, SHERIFF_Y + 4,
+                 0, 0, 1, 2});
+            draw_manager.draw(
+                id(ID::SHERIFF_EXIT),
+                IMG_GM1_EXIT,
+                {SHERIFF_X + 6, SHERIFF_Y + SHERIFF_H - 2,
+                 0, 1, 1, 1});
+            draw_manager.fill(
+                {SHERIFF_X + 126, SHERIFF_Y + SHERIFF_H - 28,
+                 SHERIFF_W - 132, 26},
+                 COL_BORDERS);
+            stage = GB_StarSheriff;
             break;
+        case GB_StarSheriff:
+            {
+                bool done = update_star_sheriff(delta);
+                if (done || draw_manager.query_click(id(ID::SHERIFF_EXIT)).id) {
+                    stage = GB_StarSheriffExit;
+                }
+                break;
+            }
         case GB_StarSheriffExit:
+            for (int i = 0; i < SHERIFF_N_SHIPS; ++i) {
+                draw_manager.draw(sheriff_ships[i].id, nullptr);
+                draw_manager.release_sprite_id(sheriff_ships[i].id);
+            }
+
+            draw_manager.draw(ID::SHERIFF_EXIT, nullptr);
+            draw_manager.draw(ID::SHERIFF_BORDER, nullptr);
+            draw_manager.draw(ID::SHERIFF_BG, nullptr);
+            draw_manager.draw(ID::SHERIFF_FRAME, nullptr);
+            draw_manager.draw(IMG_SG3_DUST);
             audio_manager.target_music(MUS_CELEBRATE);
+            stage = GB_Idle;
             break;
     }
 
     return ExodusMode::MODE_None;
+}
+
+void SheriffShip::init(SheriffShip::InitType t) {
+    //x = RND(375);
+    //y = RND(225);
+    x = 30 + RND(345);
+    y = 30 + RND(195);
+    z = 200;
+    // TODO: Check this, vary between demo, game start and replace
+    delay = 10.f * (float)(rand() % 1000)/1000.f;
+    anim_interp = (float)(rand() % 1000)/1000.f;
+    live = true;
+    explosion_interp = 0.f;
+}
+
+bool GuildBar::update_star_sheriff(float delta) {
+
+    if (sheriff_hittime > 0) {
+        draw_manager.fill(
+            id(ID::SHERIFF_BG),
+            {SHERIFF_X + 4, SHERIFF_Y + 4,
+             SHERIFF_W - 8, SHERIFF_H - 32},
+             {0xFF, 0, 0});
+
+        sheriff_hittime -= delta;
+
+        if (sheriff_hittime <= 0) {
+            draw_manager.draw(
+                id(ID::SHERIFF_BG),
+                IMG_GM1_PICTURE,
+                {SHERIFF_X + 4, SHERIFF_Y + 4,
+                 0, 0, 1, 2});
+        }
+    }
+
+    for (int i = 0; i < SHERIFF_N_SHIPS; ++i) {
+        SheriffShip &ship = sheriff_ships[i];
+
+        if (ship.delay >= 0) {
+            ship.delay -= delta;
+            continue;
+        }
+
+        float sc = (float)ship.z / 1000.f;
+
+        draw_manager.draw(
+            ship.id,
+            sheriff_ship_anim.interp(ship.anim_interp),
+            {SHERIFF_X + ship.x, SHERIFF_Y + ship.y,
+             0.5, 0.5, sc, sc});
+
+        ship.anim_interp = fmod(ship.anim_interp + delta * 0.9f, 1.f);
+
+        ship.z += (18 * delta) * (float)(10 + (sheriff_level*5));
+
+        if (ship.z > 1200) {
+            draw_manager.draw(ship.id, nullptr);
+            // Been hit
+            // TODO: Shield depletion
+            sheriff_hittime = 0.1;
+            ship.init(SheriffShip::InitType::Respawn);
+        }
+    }
+
+    draw_manager.refresh_sprite_id(id(ID::SHERIFF_ANNOUNCE));
+    draw_manager.draw(
+        id(ID::SHERIFF_ANNOUNCE),
+        IMG_GM1_SHERIFF,
+        {SHERIFF_X + SHERIFF_W/2, SHERIFF_Y + 140,
+         0.5, 0.5, 1, 1});
+
+    return false;
 }
 
 const char* RUMOUR_HEADINGS[] = {
