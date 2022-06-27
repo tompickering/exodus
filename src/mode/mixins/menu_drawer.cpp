@@ -540,8 +540,136 @@ void MenuDrawer::menu_open_specific_mode() {
         case MM_SecPersonalFile:
             {
                 Player *pl = menu_selected_player;
+
                 menu_set_txt(0, COL_TEXT2, "PERSONAL FILE");
-                // TODO
+
+                menu_set_txt(2, COL_TEXT, "Name:");
+
+                draw_manager.draw_text(
+                    pl->get_name(),
+                    Justify::Left,
+                    MENU_X+120, menu_get_y(2),
+                    COL_TEXT2);
+
+                menu_set_txt(4, COL_TEXT, "Race:");
+                draw_manager.draw_text(
+                    pl->get_race_str(),
+                    Justify::Left,
+                    MENU_X+120, menu_get_y(4),
+                    COL_TEXT2);
+
+                // TODO: Check this value
+                GuildTitle t = pl->get_guild_title();
+                menu_set_txt(5, COL_TEXT, "Status:");
+                draw_manager.draw_text(
+                    t == GUILDTITLE_None ? "None" : pl->get_guild_title_str(),
+                    Justify::Left,
+                    MENU_X+120, menu_get_y(5),
+                    COL_TEXT2);
+
+                int nplans = 0;
+                int total_unrest = 0;
+
+                for (PlanetIterator pi(exostate.get_player_idx(pl)); !pi.complete(); ++pi) {
+                    nplans++;
+                    total_unrest += pi.get()->get_unrest();
+                }
+
+                char nplans_str[8];
+                snprintf(nplans_str, sizeof(nplans), "%d", nplans);
+                menu_set_txt(6, COL_TEXT, "Planets:");
+                draw_manager.draw_text(
+                    nplans_str,
+                    Justify::Left,
+                    MENU_X+120, menu_get_y(6),
+                    COL_TEXT2);
+
+                menu_set_txt(8, COL_TEXT, "Profile:");
+
+                char line[128];
+                const char* desc = "%s";
+
+                switch (pl->get_race()) {
+                    case RACE_Human:
+                        L.warn("Personal file unexpectedly called on human player");
+                        desc = "%s has a volatile nature.";
+                        break;
+                    case RACE_Yokon:
+                        desc = "%s has a restless character.";
+                        break;
+                    case RACE_Teri:
+                        desc = "%s is a peaceful monarch.";
+                        break;
+                    case RACE_Urkash:
+                        desc = "%s lives for the war.";
+                        break;
+                    case RACE_Gordoon:
+                        desc = "%s is a fair and silent monarch.";
+                        break;
+                }
+
+                snprintf(line, sizeof(line), desc, pl->get_full_name());
+                menu_set_txt(10, COL_TEXT, line);
+
+                const char* a = "His";
+                const char* b = "him";
+
+                if (pl->get_gender() == GENDER_Female) {
+                    a = "Her";
+                    b = "her";
+                }
+
+                if (pl->get_gender() == GENDER_Other) {
+                    a = "Their";
+                    b = "them";
+                }
+
+                const char* c = "adore %s";
+                if (total_unrest > 8) {
+                    c = "hate ";
+                } else if (total_unrest > 7) {
+                    c = "do not like ";
+                } else if (total_unrest > 5) {
+                    b = "";
+                    c = "are not pleased";
+                } else if (total_unrest > 3) {
+                    c = "accept ";
+                } else if (total_unrest > 1) {
+                    b = "";
+                    c = "are content";
+                } else if (total_unrest > 0) {
+                    c = "love ";
+                }
+
+                snprintf(line, sizeof(line), "%s people %s%s. Amongst the", a, c, b);
+                menu_set_txt(11, COL_TEXT, line);
+
+                int rep = pl->get_reputation();
+
+                a = "he has";
+
+                if (pl->get_gender() == GENDER_Female) {
+                    a = "she has";
+                }
+
+                if (pl->get_gender() == GENDER_Other) {
+                    a = "they have";
+                }
+
+                const char* rep_str = "a very bad";
+
+                if (rep > 3) {
+                    rep_str = "a good";
+                } else if (rep > 2) {
+                    rep_str = "no special";
+                } else if (rep > 1) {
+                    rep_str = "a bad";
+                }
+
+                snprintf(line, sizeof(line), "lords, %s %s reputation.", a, rep_str);
+                menu_set_txt(12, COL_TEXT, line);
+
+                menu_set_txt(14, COL_TEXT2, "End of personal file.");
             }
             break;
         case MM_SecAttack:
