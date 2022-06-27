@@ -2126,10 +2126,11 @@ void PlanetMap::draw_frame_unrest() {
     // TODO: Graph draw needs cleaning up
 
     for (int y = 0; y <= 4; y++) {
-        draw_manager.fill({graph_x, graph_y+y*(graph_h/4), graph_w, 2}, {0x40, 0x40, 0x40});
+        draw_manager.draw_line(graph_x, graph_y+(y*graph_h)/4, graph_x + graph_w, graph_y+(y*graph_h)/4, 4, {0x90, 0x90, 0x90});
     }
+
     for (int x = 0; x < N_UNREST; x++) {
-        draw_manager.fill({graph_x+x*(graph_w/(N_UNREST-1)), graph_y, 2, graph_h}, {0x90, 0x90, 0x90});
+        draw_manager.draw_line(graph_x+(x*graph_w)/(N_UNREST-1), graph_y, graph_x+(x*graph_w)/(N_UNREST-1), graph_y + graph_h, 4, {0x90, 0x90, 0x90});
     }
 
     int prog = 0;
