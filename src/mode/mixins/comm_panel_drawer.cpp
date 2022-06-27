@@ -354,6 +354,8 @@ void CommPanelDrawer::comm_open(CommSend input) {
     id_comm_buttons_bg = draw_manager.new_sprite_id();
     id_comm_adj = draw_manager.new_sprite_id();
     id_comm_adj_ok = draw_manager.new_sprite_id();
+    id_comm_input_frame = draw_manager.new_sprite_id();
+    id_comm_input_box = draw_manager.new_sprite_id();
 
     for (int i = 0; i < 6; ++i) {
         id_text[i] = draw_manager.new_sprite_id();
@@ -510,6 +512,8 @@ void CommPanelDrawer::comm_close() {
     draw_manager.release_sprite_id(id_comm_ally_war);
     draw_manager.release_sprite_id(id_comm_buttons);
     draw_manager.release_sprite_id(id_comm_buttons_bg);
+    draw_manager.release_sprite_id(id_comm_input_frame);
+    draw_manager.release_sprite_id(id_comm_input_box);
 
     draw_manager.draw(id_comm_bg_t, nullptr);
     draw_manager.draw(id_comm_bg_b, nullptr);
@@ -850,13 +854,24 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_set_text(0, "Please name the new planet.");
             input_manager.start_text_input();
             input_manager.set_input_text(comm_planet->get_name_suggestion());
+
+            draw_manager.fill(
+                id_comm_input_frame,
+                {COMM_RCOL_X + 4, comm_text_y(2) - 2 - BORDER,
+                 220 + 2*BORDER, 26 + 2*BORDER},
+                COL_BORDERS);
+            draw_manager.fill(
+                id_comm_input_box,
+                {COMM_RCOL_X + 4 + BORDER, comm_text_y(2) - 2,
+                 220, 26},
+                {0, 0, 0});
+
             comm_recv(DIA_R_SettleNamePlanet);
             break;
         case DIA_S_NamePlanetConfirm:
             {
                 if (comm_planet_name_confirm_time == comm_time) {
                     const char *name = input_manager.get_input_text(PLANET_MAX_NAME);
-                    comm_set_text(2, name);
                     if (comm_player->attempt_spend(comm_planet->get_settlement_cost())) {
                         comm_planet->set_name(name);
                         comm_planet->set_owner(exostate.get_player_idx(comm_player));
@@ -1880,7 +1895,10 @@ void CommPanelDrawer::comm_process_responses() {
                 }
 
                 const char *name = input_manager.get_input_text(PLANET_MAX_NAME);
-                comm_set_text(2, name);
+                char display_name[PLANET_MAX_NAME + 2];
+                snprintf(display_name, sizeof(display_name), "  %s", name);
+
+                comm_set_text(2, display_name);
                 if (input_manager.consume(K_Enter) && strnlen(name, 1)) {
                     comm_planet_name_confirm_time = comm_time;
                     comm_send(DIA_S_NamePlanetConfirm);
