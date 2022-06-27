@@ -70,6 +70,49 @@ void GuildBar::enter() {
         update_pin_and_rumours();
         last_update_month = exostate.get_month();
     }
+
+    // These get refreshed every time you enter the bar in the original
+    uint32_t cpu_player_mask = exostate.get_active_cpu_player_mask();
+    int num_cpu_players = 0;
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        if (cpu_player_mask & (1 << i)) {
+            num_cpu_players++;
+        }
+    }
+
+    int to_select = min(num_cpu_players, 3);
+
+    for (int i = 0; i < SHERIFF_N_HIGHSCORES; ++i) {
+        sheriff_high_scores[i].score = -1;
+    }
+
+    for (int i = 0; i < SHERIFF_N_HIGHSCORES; ++i) {
+        SheriffHighScore hs;
+
+        hs.player_idx = -1;
+
+        if (to_select > 0) {
+            int cpu_idx = rand() % num_cpu_players;
+            for (int j = 0; j < N_PLAYERS; ++j) {
+                if (cpu_player_mask & (1 << j)) {
+                    if (cpu_idx-- == 0) {
+                        hs.player_idx = j;
+                        to_select--;
+                        num_cpu_players--;
+                        cpu_player_mask &= ~(1 << j);
+                        break;
+                    }
+                }
+            }
+        }
+
+        hs.score = RND(30000);
+        if (onein(5)) {
+            hs.score += RND(30000);
+        }
+
+        sheriff_insert_high_score(hs);
+    }
 }
 
 Anim talk_anim(
@@ -939,6 +982,19 @@ bool GuildBar::update_star_sheriff(float delta) {
     }
 
     return false;
+}
+
+void GuildBar::sheriff_insert_high_score(const SheriffHighScore& hs) {
+    for (int i = 0; i < SHERIFF_N_HIGHSCORES; ++i) {
+        // Let's be mean and not use >=
+        if (hs.score > sheriff_high_scores[i].score) {
+            for (int j = SHERIFF_N_HIGHSCORES - 1; j > i; --j) {
+                memcpy(&sheriff_high_scores[j], &sheriff_high_scores[j - 1], sizeof(SheriffHighScore));
+            }
+            memcpy(&sheriff_high_scores[i], &hs, sizeof(SheriffHighScore));
+            return;
+        }
+    }
 }
 
 const char* RUMOUR_HEADINGS[] = {

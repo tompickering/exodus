@@ -6,6 +6,7 @@
 #include "draw/draw.h"
 
 #define SHERIFF_N_SHIPS 5
+#define SHERIFF_N_HIGHSCORES 3
 
 struct SheriffShip {
     int x;
@@ -27,6 +28,11 @@ struct SheriffShip {
     };
 
     void init(InitType);
+};
+
+struct SheriffHighScore {
+    int player_idx;
+    int score;
 };
 
 class GuildBar : ModeBase {
@@ -88,6 +94,9 @@ class GuildBar : ModeBase {
         float sheriff_announce_time;
 
         bool sheriff_gameover;
+
+        SheriffHighScore sheriff_high_scores[SHERIFF_N_HIGHSCORES];
+        void sheriff_insert_high_score(const SheriffHighScore&);
 };
 
 #endif
