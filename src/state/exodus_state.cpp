@@ -533,6 +533,16 @@ Player* ExodusState::get_random_active_player() {
     return nullptr;
 }
 
+uint32_t ExodusState::get_active_cpu_player_mask() {
+    uint32_t res = 0;
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        if (players[i].is_participating() && !players[i].is_human()) {
+            res |= (1 << i);
+        }
+    }
+    return res;
+}
+
 int ExodusState::get_random_star_idx() {
     Galaxy *gal = get_galaxy();
     int n_stars;
