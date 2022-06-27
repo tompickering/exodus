@@ -48,6 +48,7 @@ class GuildBar : ModeBase {
             GB_StarSheriffSetup,
             GB_StarSheriffSetupGame,
             GB_StarSheriff,
+            GB_StarSheriffHighScores,
             GB_StarSheriffExit,
         };
 

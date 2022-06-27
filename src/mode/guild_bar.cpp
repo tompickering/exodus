@@ -605,16 +605,45 @@ ExodusMode GuildBar::update(float delta) {
                 bool done = update_star_sheriff(delta);
 
                 if (done) {
-                    // TODO: High scores
-                    stage = GB_StarSheriffSetupGame;
+                    sheriff_insert_high_score({exostate.get_active_player_idx(), sheriff_score});
+
+                    draw_manager.draw(
+                        id(ID::SHERIFF_BG),
+                        IMG_GM1_PICTURE,
+                        {SHERIFF_X + 4, SHERIFF_Y + 4,
+                         0, 0, 1, 1});
+
+                    draw_manager.draw_text("HIGH SCORES", Justify::Centre, SHERIFF_X+SHERIFF_W/2, SHERIFF_Y+40, COL_TEXT_SPEECH);
+
+                    for (int i = 0; i < SHERIFF_N_HIGHSCORES; ++i) {
+                        const char* name = "Barkeeper";
+                        if (sheriff_high_scores[i].player_idx >= 0) {
+                            name = exostate.get_player(sheriff_high_scores[i].player_idx)->get_full_name();
+                        }
+
+                        char str[12];
+
+                        snprintf(str, sizeof(str), "%d", i+1);
+                        draw_manager.draw_text(str, Justify::Left, SHERIFF_X+30, SHERIFF_Y+80 + 30*i, {0xFF, 0xFF, 0xFF});
+                        draw_manager.draw_text(name, Justify::Left, SHERIFF_X+100, SHERIFF_Y+80 + 30*i, {0xFF, 0xFF, 0xFF});
+                        snprintf(str, sizeof(str), "%d", sheriff_high_scores[i].score);
+                        draw_manager.draw_text(str, Justify::Left, SHERIFF_X+280, SHERIFF_Y+80 + 30*i, {0xFF, 0xFF, 0xFF});
+                    }
+
+                    stage = GB_StarSheriffHighScores;
                     break;
                 }
 
                 if (draw_manager.query_click(id(ID::SHERIFF_EXIT)).id) {
                     stage = GB_StarSheriffExit;
                 }
-                break;
             }
+            break;
+        case GB_StarSheriffHighScores:
+            if (draw_manager.clicked()) {
+                stage = GB_StarSheriffSetup;
+            }
+            break;
         case GB_StarSheriffExit:
             for (int i = 0; i < SHERIFF_N_SHIPS; ++i) {
                 draw_manager.draw(sheriff_ships[i].blasters_id, nullptr);
