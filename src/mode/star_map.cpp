@@ -82,6 +82,10 @@ void StarMap::enter() {
 
     festival_delay = 0;
 
+    for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+        id_fleet_markers[i] = draw_manager.new_sprite_id();
+    }
+
     if (tgt != TGT_Primary) {
         draw_manager.fade_start(1.f, 12);
     }
@@ -102,6 +106,11 @@ void StarMap::exit() {
     draw_manager.set_source_region(id(ID::FLEET_MISSIONBG), nullptr);
     for (ID _id = FLEET_SCOUT; _id <= FLEET_EXIT; _id = (ID)((int)_id + 1)) {
         draw_manager.unset_selectable(id(_id));
+    }
+
+    for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+        draw_manager.draw(id_fleet_markers[i], nullptr);
+        draw_manager.release_sprite_id(id_fleet_markers[i]);
     }
 
     comm_ensure_closed();
@@ -666,7 +675,34 @@ void StarMap::draw_planets(float delta) {
                 }
             }
 
-            // TODO: Fleet markers
+            // Fleet markers
+            Player *player = exostate.get_active_player();
+            PlayerLocation &loc = player->get_location();
+            int s_idx = exostate.tgt2loc(exostate.get_active_star());
+            // Check if we are in this system
+            // TODO: Does orig perform this check?
+            if (!loc.in_flight() && loc.get_target() == s_idx) {
+                if (planet->is_owned()) {
+                    uint32_t drawn_fleets = 0;
+
+                    int owner_idx = planet->get_owner();
+                    Player *owner = exostate.get_player(owner_idx);
+
+                    if (!(drawn_fleets & (1 << owner_idx))) {
+                        PlayerLocation &owner_loc = owner->get_location();
+                        if (!owner_loc.in_flight() && owner_loc.get_target() == s_idx) {
+                            drawn_fleets |= (1 << owner_idx);
+
+                            draw_manager.draw(
+                                id_fleet_markers[i],
+                                IMG_TS1_SHICON,
+                                {draw_x,
+                                 draw_y + 100,
+                                 .5f, .5f, 1, 1});
+                        }
+                    }
+                }
+            }
         } else if (planet && planet->get_construction_phase() > 0) {
             int draw_x = 140 + i*95;
             int draw_y = (RES_Y / 2) - 30 + ((i % 2) == 0 ? -30 : 30);
