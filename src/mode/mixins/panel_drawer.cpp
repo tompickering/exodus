@@ -170,7 +170,6 @@ void PanelDrawer::update_panel_info_ft(DrawTarget tgt, Player* player, FlyTarget
         for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
             draw_manager.draw(id_marker_icons[i], nullptr);
         }
-        // TODO: Clear fleet markers, when implemented
         return;
     }
 
