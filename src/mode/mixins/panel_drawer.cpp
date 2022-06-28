@@ -216,23 +216,28 @@ void PanelDrawer::update_panel_info_ft(DrawTarget tgt, Player* player, FlyTarget
                 }
             }
 
-            int fleets_drawn = 0;
-            for (int i = 0; i < N_PLAYERS && fleets_drawn < PNL_MAX_FLEETS; ++i) {
-                Player *pl = exostate.get_player(i);
+            int ftloc = exostate.tgt2loc(ft);
+            PlayerLocation &loc = player->get_location();
+            if (!loc.in_flight() && loc.get_target() == ftloc)
+            {
+                int fleets_drawn = 0;
+                for (int i = 0; i < N_PLAYERS && fleets_drawn < PNL_MAX_FLEETS; ++i) {
+                    Player *pl = exostate.get_player(i);
 
-                if (pl == player) {
-                    continue;
-                }
+                    if (pl == player) {
+                        continue;
+                    }
 
-                if (pl->get_location().get_target() == exostate.tgt2loc(ft)) {
-                    draw_manager.draw(
-                        id_fleet_icons[PNL_MAX_FLEETS - 1 - fleets_drawn],
-                        IMG_TS1_SHICON,
-                        {area_starinfo.x + 4 + 44*fleets_drawn,
-                         area_starinfo.y + 24,
-                         0, 0, 1, 1});
+                    if (pl->get_location().get_target() == ftloc) {
+                        draw_manager.draw(
+                            id_fleet_icons[PNL_MAX_FLEETS - 1 - fleets_drawn],
+                            IMG_TS1_SHICON,
+                            {area_starinfo.x + 4 + 44*fleets_drawn,
+                             area_starinfo.y + 24,
+                             0, 0, 1, 1});
 
-                    fleets_drawn++;
+                        fleets_drawn++;
+                    }
                 }
             }
         }
