@@ -36,6 +36,10 @@ PanelDrawer::PanelDrawer(PanelType _type) : type(_type) {
         id_marker_icons[i] = draw_manager.new_sprite_id();
     }
 
+    for (int i = 0; i < PNL_MAX_FLEETS ; ++i) {
+        id_fleet_icons[i] = draw_manager.new_sprite_id();
+    }
+
     area_playerinfo = {
         galaxy_panel_area.x + PNL_BORDER,
         galaxy_panel_area.y + PNL_BORDER,
@@ -155,6 +159,10 @@ void PanelDrawer::update_panel_info_ft(DrawTarget tgt, Player* player, FlyTarget
         draw_manager.draw(id_marker_icons[i], nullptr);
     }
 
+    for (int i = 0; i < PNL_MAX_FLEETS; ++i) {
+        draw_manager.draw(id_fleet_icons[i], nullptr);
+    }
+
     if (!(player && ft)) {
         draw_manager.draw(
             id_qm,
@@ -167,7 +175,6 @@ void PanelDrawer::update_panel_info_ft(DrawTarget tgt, Player* player, FlyTarget
     }
 
     // Draw '?' or star details
-    // TODO: Fleet markers
     if (player->get_location().has_visited(exostate.tgt2loc(ft))) {
         draw_manager.draw(
             id_qm,
@@ -207,6 +214,26 @@ void PanelDrawer::update_panel_info_ft(DrawTarget tgt, Player* player, FlyTarget
                     }
 
                     ++planets_drawn;
+                }
+            }
+
+            int fleets_drawn = 0;
+            for (int i = 0; i < N_PLAYERS && fleets_drawn < PNL_MAX_FLEETS; ++i) {
+                Player *pl = exostate.get_player(i);
+
+                if (pl == player) {
+                    continue;
+                }
+
+                if (pl->get_location().get_target() == exostate.tgt2loc(ft)) {
+                    draw_manager.draw(
+                        id_fleet_icons[PNL_MAX_FLEETS - 1 - fleets_drawn],
+                        IMG_TS1_SHICON,
+                        {area_starinfo.x + 4 + 44*fleets_drawn,
+                         area_starinfo.y + 24,
+                         0, 0, 1, 1});
+
+                    fleets_drawn++;
                 }
             }
         }
@@ -282,11 +309,14 @@ void PanelDrawer::panel_clear_starinfo() {
     draw_manager.draw(id_desc, nullptr);
     draw_manager.draw(id_desc1, nullptr);
     draw_manager.draw(id_desc2, nullptr);
-    // TODO: Add fleet marker IDs here when added
 
     for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
         draw_manager.draw(id_planet_icons[i], nullptr);
         draw_manager.draw(id_marker_icons[i], nullptr);
+    }
+
+    for (int i = 0; i < PNL_MAX_FLEETS; ++i) {
+        draw_manager.draw(id_fleet_icons[i], nullptr);
     }
 }
 
