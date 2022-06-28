@@ -269,6 +269,15 @@ int Exodus::run(int argc, char** argv) {
 
         if (input_manager.consume(Input::K_F2)) {
             exodebug.show_player_markers = !exodebug.show_player_markers;
+            L.debug("--- PLAYER LOCATIONS ---");
+            for (int i = 0; i < N_PLAYERS; ++i) {
+                Player *p = exostate.get_player(i);
+                if (p->is_participating()) {
+                    PlayerLocation &loc = p->get_location();
+                    FlyTarget *ft = exostate.loc2tgt(loc.get_target());
+                    L.debug("%s%s%s", p->get_name(), loc.in_flight()?" F ":"   ", ft->name);
+                }
+            }
         }
 
         if (input_manager.consume(Input::K_F3)) {
