@@ -58,7 +58,9 @@ typedef struct {
 
 typedef struct {
     AggressorType agg_type;
+    // FIXME: These two would be better as a BattleResolution enum, since retreated => !won
     bool aggressor_won;
+    bool aggressor_retreated;
     bool rebel_peace;
     UnitCount agg_init; // \ Units that were taken into battle.
     UnitCount def_init; // /
@@ -67,6 +69,8 @@ typedef struct {
     UnitCount agg_surf; // \ Units that are still on the surface and
     UnitCount def_surf; // / may need to be moved to planet or fleet.
     void clear() {
+        aggressor_won = false;
+        aggressor_retreated = false;
         rebel_peace = false;
         agg_init.clear();
         def_init.clear();

@@ -1676,6 +1676,28 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_text_interactive_mask = 0xF;
             comm_recv(DIA_R_B_OpenCommsDefender);
             break;
+        case DIA_S_B_OfferMoneyAttacker:
+            {
+                comm_prepare(4);
+
+                int &a = comm_ctx.battle_strength_att;
+                int &d = comm_ctx.battle_strength_def;
+
+                int p = exostate.get_n_planets(comm_other);
+
+                if (p <= 1 && a*2 > d*3 && comm_other->attempt_spend(comm_ctx.mc)) {
+                    // TODO: Check if we are prevented from attacking again
+                    comm_set_speech("I think I will accept this.");
+                    comm_player->give_mc(comm_ctx.mc);
+                    comm_exit_anim_action = CA_CallOffAttack;
+                } else {
+                    comm_set_speech("Forget that.");
+                    comm_exit_anim_action = CA_Abort;
+                }
+
+                comm_recv(DIA_R_Close);
+            }
+            break;
         case DIA_S_B_MockAttacker:
             {
                 comm_prepare(4);
@@ -2410,8 +2432,7 @@ void CommPanelDrawer::comm_process_responses() {
             switch (opt) {
                 case 0:
                     // Pay X MC and I will leave
-                    // TODO
-                    comm_report_action = CA_Abort;
+                    comm_send(DIA_S_B_OfferMoneyAttacker);
                     break;
                 case 1:
                     // Do you call THIS a defense?

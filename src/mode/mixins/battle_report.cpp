@@ -71,6 +71,7 @@ bool BattleReport::batrpt_draw(bool reset) {
                 snprintf(l4, sizeof(l4), "defending units.");
                 // TODO: If not aliens / rebels, PROCdonotice
             } else {
+                // TODO: What gets printed if aggressor_retreated?
                 snprintf(l0, sizeof(l0), "All your %d defending units", di);
                 snprintf(l1, sizeof(l1), "have been destroyed.");
                 snprintf(l3, sizeof(l3), "You have lost the planet");
@@ -85,9 +86,7 @@ bool BattleReport::batrpt_draw(bool reset) {
                 snprintf(l4, sizeof(l4), "be stationed at %s.", p->get_name());
             } else {
                 snprintf(l0, sizeof(l0), "Your army did not succeed.");
-                // TODO: Set this if we retreated
-                bool letwin = false;
-                if (letwin) {
+                if (rpt.aggressor_retreated) {
                     snprintf(l2, sizeof(l2), "Your invading troops have");
                     snprintf(l3, sizeof(l3), "been transferred back to the");
                     snprintf(l4, sizeof(l4), "transport ships.");

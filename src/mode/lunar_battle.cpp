@@ -501,6 +501,7 @@ ExodusMode LunarBattle::update(float delta) {
                     case CA_CallOffAttack:
                         comm_close();
                         rpt.aggressor_won = false;
+                        rpt.aggressor_retreated = true;
                         if (b.aggressor_type == AGG_Rebels) {
                             rpt.rebel_peace = true;
                         }
@@ -529,6 +530,7 @@ ExodusMode LunarBattle::update(float delta) {
                     case CA_CallOffAttack:
                         comm_close();
                         rpt.aggressor_won = false;
+                        rpt.aggressor_retreated = true;
                         if (b.aggressor_type == AGG_Rebels) {
                             rpt.rebel_peace = true;
                         }
