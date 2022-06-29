@@ -338,7 +338,30 @@ void CommPanelDrawer::comm_open(CommSend input) {
 
     comm_state = DIA_R_None;
     comm_report_action = CA_None;
+
+    /*
+     * There are two ways to use the exit anim, depending on whether
+     * the final message is sent or received by the human player.
+     *
+     * If the last thing said in conversation comes from the HUMAN,
+     * then we can call comm_exit_anim() instead of comm_send when
+     * that final speech option is selected. This function causes the
+     * anim to fire as soon as it is called. This will be inside a
+     * DIA_R, reflecting the last thing that was being said to the
+     * player. For an example, see DIA_R_AwaitingOrders.
+     *
+     * If the last thing said in conversation comes from the CPU,
+     * then we don't want the anim to fire until after the player
+     * has had chance to see the last message from the CPU player.
+     * In this case, we will choose the CPU's final message inside
+     * a DIA_S. We don't want to start the anim immediately, so
+     * instead we set comm_exit_anim_action to a value other than
+     * CA_None, and then close comms with comm_recv(DIA_R_Close).
+     * For an example, see DIA_S_B_NeverMind.
+     */
+
     comm_exit_anim_active = false;
+    comm_exit_anim_action = CA_None;
 
     id_comm_panel = draw_manager.new_sprite_id();
     id_comm_bg_t  = draw_manager.new_sprite_id();
@@ -712,11 +735,13 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img_caption_upper(comm_other->get_full_name());
             comm_set_img_caption_lower("RACE: %s", comm_other->get_race_str());
             comm_set_race(comm_other->get_race());
+            comm_enable_throbber = true;
             break;
         case DIA_S_B_OpenCommsDefender:
             comm_set_img_caption_upper(comm_player->get_full_name());
             comm_set_img_caption_lower("RACE: %s", comm_player->get_race_str());
             comm_set_race(comm_player->get_race());
+            comm_enable_throbber = true;
             break;
         case DIA_S_B_CPU_OpenCommsAttacker:
             comm_set_img_caption_upper(comm_player->get_full_name());
@@ -1633,8 +1658,8 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_set_text(2, "The victory is mine.");
             comm_set_text(3, "Never mind...");
             comm_text_interactive_mask = 0xF;
-            // TODO (placeholder)
-            comm_recv(DIA_R_Close);
+            comm_enable_throbber = true;
+            comm_recv(DIA_R_B_OpenCommsAttacker);
             break;
         case DIA_S_B_OpenCommsDefender:
             comm_prepare(4);
@@ -1649,7 +1674,12 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_set_text(2, "You will lose this battle.");
             comm_set_text(3, "Never mind...");
             comm_text_interactive_mask = 0xF;
-            // TODO (placeholder)
+            comm_recv(DIA_R_B_OpenCommsDefender);
+            break;
+        case DIA_S_B_NeverMind:
+            comm_prepare(4);
+            comm_set_speech("Hum?!");
+            comm_exit_anim_action = CA_Abort;
             comm_recv(DIA_R_Close);
             break;
         case DIA_S_B_CPU_OpenCommsAttacker:
@@ -1866,7 +1896,11 @@ void CommPanelDrawer::comm_process_responses() {
     switch (comm_state) {
         case DIA_R_Close:
             if (clicked) {
-                comm_report_action = CA_Abort;
+                if (comm_exit_anim_action != CA_None) {
+                    comm_exit_anim(comm_exit_anim_action);
+                } else {
+                    comm_report_action = CA_Abort;
+                }
             }
             break;
         case DIA_R_ProceedOrAbort:
@@ -2317,6 +2351,53 @@ void CommPanelDrawer::comm_process_responses() {
                     break;
                 case 1:
                     exostate.set_all_alliances(comm_player_idx, comm_other_idx);
+                    comm_report_action = CA_Abort;
+                    break;
+            }
+            break;
+        case DIA_R_B_OpenCommsAttacker:
+            switch (opt) {
+                case 0:
+                    // Pay X MC and I will leave
+                    // TODO
+                    comm_report_action = CA_Abort;
+                    break;
+                case 1:
+                    // Do you call THIS a defense?
+                    // TODO
+                    comm_report_action = CA_Abort;
+                    break;
+                case 2:
+                    // The victory is mine
+                    // TODO
+                    comm_report_action = CA_Abort;
+                    break;
+                case 3:
+                    // Never mind...
+                    comm_send(DIA_S_B_NeverMind);
+                    break;
+            }
+            break;
+        case DIA_R_B_OpenCommsDefender:
+            switch (opt) {
+                case 0:
+                    // I offer money if you retreat
+                    // TODO
+                    comm_report_action = CA_Abort;
+                    break;
+                case 1:
+                    // Pay X MC and you may retreat
+                    // TODO
+                    comm_report_action = CA_Abort;
+                    break;
+                case 2:
+                    // You will lose this battle
+                    // TODO
+                    comm_report_action = CA_Abort;
+                    break;
+                case 3:
+                    // Never mind...
+                    // TODO
                     comm_report_action = CA_Abort;
                     break;
             }

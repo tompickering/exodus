@@ -93,6 +93,7 @@ enum CommSend {
     // Battle comms
     DIA_S_B_OpenCommsAttacker,
     DIA_S_B_OpenCommsDefender,
+    DIA_S_B_NeverMind,
     DIA_S_B_CPU_OpenCommsAttacker,
     DIA_S_B_CPU_CommsAttackerResponse,
     DIA_S_B_CPU_OpenCommsDefender,
@@ -146,6 +147,8 @@ enum CommRecv {
     DIA_R_CPU_ProposeAllianceMoney,
     DIA_R_CPU_ProposeAllianceAggressively,
     // Battle comms
+    DIA_R_B_OpenCommsAttacker,
+    DIA_R_B_OpenCommsDefender,
     DIA_R_B_CPU_CommsAttacker,
     DIA_R_B_CPU_CommsDefender,
     DIA_R_B_CPU_CommsDefenderAcceptResponse,
