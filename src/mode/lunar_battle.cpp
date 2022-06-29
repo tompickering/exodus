@@ -2000,6 +2000,7 @@ LunarBattle::Stage LunarBattle::update_buttons() {
     }
 
     if (draw_manager.query_click(id(ID::BTN_TALK)).id) {
+        calc_force_strength(comm_ctx.battle_strength_att, comm_ctx.battle_strength_def);
         switch (b.aggressor_type) {
             case AGG_Player:
                 comm_open(defending ? DIA_S_B_OpenCommsDefender : DIA_S_B_OpenCommsAttacker);

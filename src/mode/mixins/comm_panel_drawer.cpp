@@ -1676,6 +1676,57 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_text_interactive_mask = 0xF;
             comm_recv(DIA_R_B_OpenCommsDefender);
             break;
+        case DIA_S_B_MockAttacker:
+            {
+                comm_prepare(4);
+
+                int &a = comm_ctx.battle_strength_att;
+                int &d = comm_ctx.battle_strength_def;
+
+                if (d*3 >= a*2) {
+                    comm_set_speech("Indeed, I do so.");
+                } else {
+                    switch (comm_other->get_flag(0)) {
+                        case AI_Lo:
+                            comm_set_speech("I wanted peace.");
+                            break;
+                        case AI_Md:
+                            comm_set_speech("You will pay for this.");
+                            comm_other->set_hostile_to(comm_player_idx);
+                            break;
+                        case AI_Hi:
+                            comm_set_speech("Go to hell.");
+                            comm_other->set_hostile_to(comm_player_idx);
+                            break;
+                    }
+                }
+
+                comm_exit_anim_action = CA_Abort;
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_B_IntimidateAttacker:
+            {
+                comm_prepare(4);
+
+                int &a = comm_ctx.battle_strength_att;
+                int &d = comm_ctx.battle_strength_def;
+
+                if (d*3 >= a*2) {
+                    comm_set_speech("It's not the time for joking.");
+                } else {
+                    if (comm_other->get_flag(0) == AI_Hi) {
+                        comm_other->set_hostile_to(comm_player_idx);
+                        comm_set_speech("Fight, bloody bastard.");
+                    } else {
+                        comm_set_speech("We will see.");
+                    }
+                }
+
+                comm_exit_anim_action = CA_Abort;
+                comm_recv(DIA_R_Close);
+            }
+            break;
         case DIA_S_B_NeverMind:
             comm_prepare(4);
             comm_set_speech("Hum?!");
@@ -2364,13 +2415,11 @@ void CommPanelDrawer::comm_process_responses() {
                     break;
                 case 1:
                     // Do you call THIS a defense?
-                    // TODO
-                    comm_report_action = CA_Abort;
+                    comm_send(DIA_S_B_MockAttacker);
                     break;
                 case 2:
                     // The victory is mine
-                    // TODO
-                    comm_report_action = CA_Abort;
+                    comm_send(DIA_S_B_IntimidateAttacker);
                     break;
                 case 3:
                     // Never mind...

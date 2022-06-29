@@ -93,6 +93,8 @@ enum CommSend {
     // Battle comms
     DIA_S_B_OpenCommsAttacker,
     DIA_S_B_OpenCommsDefender,
+    DIA_S_B_MockAttacker,       // As in, we ARE the attacker, mocking the defender
+    DIA_S_B_IntimidateAttacker, // As above
     DIA_S_B_NeverMind,
     DIA_S_B_CPU_OpenCommsAttacker,
     DIA_S_B_CPU_CommsAttackerResponse,
@@ -167,6 +169,8 @@ typedef struct {
     bool battle_first_comms;
     int location;
     int months;
+    int battle_strength_att;
+    int battle_strength_def;
 } CommContext;
 
 class CommPanelDrawer {
