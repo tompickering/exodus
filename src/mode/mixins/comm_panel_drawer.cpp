@@ -1761,7 +1761,26 @@ void CommPanelDrawer::comm_send(CommSend input) {
             break;
         case DIA_S_B_OfferMoneyDefender:
             {
-                // TODO
+                if (comm_player->is_hostile_to(comm_other_idx)) {
+                    comm_set_speech("Forget that.");
+                    comm_exit_anim_action = CA_Abort;
+                    comm_recv(DIA_R_Close);
+                } else {
+                    comm_set_speech("I will listen.");
+                    comm_ctx.mc = comm_other->get_mc() / 2;
+                    comm_prepare(1);
+                    comm_set_text(0, "I offer %dMC.", comm_ctx.mc);
+                    comm_show_adj(true);
+                    input_manager.enable_repeating_clicks(true);
+                    comm_recv(DIA_R_B_OfferMoneyDefenderListen);
+                }
+            }
+            break;
+        case DIA_S_B_OfferMoneyDefenderAccept:
+            {
+                comm_prepare(1);
+                comm_set_speech("I think I will accept this.");
+                comm_exit_anim_action = CA_CallOffAttack;
                 comm_recv(DIA_R_Close);
             }
             break;
@@ -2507,6 +2526,31 @@ void CommPanelDrawer::comm_process_responses() {
                     // Never mind...
                     comm_send(DIA_S_B_NeverMind);
                     break;
+            }
+            break;
+        case DIA_R_B_OfferMoneyDefenderListen:
+            {
+                comm_text_interactive_mask = 0;
+
+                SpriteClick adjclick = draw_manager.query_click(id_comm_adj);
+                if (adjclick.id) {
+                    if (adjclick.x < 0.5f) {
+                        comm_ctx.mc = max(comm_ctx.mc - 1, 0);
+                    } else {
+                        comm_ctx.mc = min(comm_ctx.mc + 1, comm_other->get_mc());
+                    }
+                    comm_set_text(0, "I offer %dMC.", comm_ctx.mc);
+                }
+
+                if (draw_manager.query_click(id_comm_adj_ok).id) {
+                    input_manager.enable_repeating_clicks(false);
+                    if (comm_ctx.mc > exostate.get_orig_month()/2) {
+                        if (comm_other->attempt_spend(comm_ctx.mc)) {
+                            // FIXME: Orig doesn't give MC to CPU player either
+                            comm_send(DIA_S_B_OfferMoneyDefenderAccept);
+                        }
+                    }
+                }
             }
             break;
         case DIA_R_B_CPU_CommsAttacker:
