@@ -1664,11 +1664,21 @@ void CommPanelDrawer::comm_send(CommSend input) {
         case DIA_S_B_OpenCommsDefender:
             comm_prepare(4);
             if (comm_ctx.battle_first_comms) {
-                comm_set_speech("What do you want, %s?", comm_player->get_name());
+                /*
+                 * N.B. The player is opening the speech as defender
+                 * This means the player is being attacked on a non-player turn.
+                 * Therefore, the player is comm_other.
+                 */
+                comm_set_speech("What do you want, %s?", comm_other->get_name());
             } else {
-                comm_set_speech("You again, %s?", comm_player->get_name());
+                comm_set_speech("You again, %s?", comm_other->get_name());
             }
             comm_set_text(0, "I offer money if you retreat.");
+
+            if (!comm_other->can_afford(1)) {
+                comm_text_disabled_mask &= 1;
+            }
+
             comm_ctx.mc = 20;
             comm_set_text(1, "Pay %dMC and you may retreat.", comm_ctx.mc);
             comm_set_text(2, "You will lose this battle.");
@@ -1743,6 +1753,37 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     } else {
                         comm_set_speech("We will see.");
                     }
+                }
+
+                comm_exit_anim_action = CA_Abort;
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_B_OfferMoneyDefender:
+            {
+                // TODO
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_B_RequestMoneyDefender:
+            {
+                // TODO
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_B_IntimidateDefender:
+            {
+                comm_prepare(4);
+
+                int &a = comm_ctx.battle_strength_att;
+                int &d = comm_ctx.battle_strength_def;
+
+                if (onein(3)) {
+                    comm_set_speech("We will see.");
+                } else if (a >= d) {
+                    comm_set_speech("It's not the time for joking.");
+                } else {
+                    comm_set_speech("Do not make me angry.");
                 }
 
                 comm_exit_anim_action = CA_Abort;
@@ -2452,23 +2493,19 @@ void CommPanelDrawer::comm_process_responses() {
             switch (opt) {
                 case 0:
                     // I offer money if you retreat
-                    // TODO
-                    comm_report_action = CA_Abort;
+                    comm_send(DIA_S_B_OfferMoneyDefender);
                     break;
                 case 1:
                     // Pay X MC and you may retreat
-                    // TODO
-                    comm_report_action = CA_Abort;
+                    comm_send(DIA_S_B_RequestMoneyDefender);
                     break;
                 case 2:
                     // You will lose this battle
-                    // TODO
-                    comm_report_action = CA_Abort;
+                    comm_send(DIA_S_B_IntimidateDefender);
                     break;
                 case 3:
                     // Never mind...
-                    // TODO
-                    comm_report_action = CA_Abort;
+                    comm_send(DIA_S_B_NeverMind);
                     break;
             }
             break;

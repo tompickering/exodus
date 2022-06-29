@@ -93,9 +93,12 @@ enum CommSend {
     // Battle comms
     DIA_S_B_OpenCommsAttacker,
     DIA_S_B_OpenCommsDefender,
-    DIA_S_B_OfferMoneyAttacker, // As below
-    DIA_S_B_MockAttacker,       // As in, we ARE the attacker, mocking the defender
-    DIA_S_B_IntimidateAttacker, // As above
+    DIA_S_B_OfferMoneyAttacker, // }
+    DIA_S_B_MockAttacker,       // }> As in, we ARE the attacker, mocking the defender
+    DIA_S_B_IntimidateAttacker, // }
+    DIA_S_B_OfferMoneyDefender,   // }
+    DIA_S_B_RequestMoneyDefender, // }> As in, we ARE the defender, requesting from attacker
+    DIA_S_B_IntimidateDefender,   // }
     DIA_S_B_NeverMind,
     DIA_S_B_CPU_OpenCommsAttacker,
     DIA_S_B_CPU_CommsAttackerResponse,
