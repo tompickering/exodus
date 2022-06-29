@@ -1802,7 +1802,29 @@ void CommPanelDrawer::comm_send(CommSend input) {
             break;
         case DIA_S_B_RequestMoneyDefender:
             {
-                // TODO
+                comm_prepare(4);
+
+                comm_exit_anim_action = CA_Abort;
+
+                int &a = comm_ctx.battle_strength_att;
+                int &d = comm_ctx.battle_strength_def;
+
+                if (d > a*3) {
+                    if (comm_player->attempt_spend(comm_ctx.mc)) {
+                        comm_other->give_mc(comm_ctx.mc);
+                        comm_set_speech("This is a fair offer.");
+                        comm_exit_anim_action = CA_CallOffAttack;
+                    } else {
+                        comm_set_speech("If I had the money...");
+                    }
+                } else {
+                    if (comm_player->get_flag(0) == AI_Hi) {
+                        comm_set_speech("Are you afraid or what?");
+                    } else {
+                        comm_set_speech("You are kidding.");
+                    }
+                }
+
                 comm_recv(DIA_R_Close);
             }
             break;
