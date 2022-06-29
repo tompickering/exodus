@@ -202,6 +202,8 @@ void CommPanelDrawer::comm_draw_text() {
     for (int i = 0; i < 6; ++i) {
         if (comm_text_interactive_mask & (1 << i)) {
             draw_manager.set_selectable(id_text[i]);
+        } else {
+            draw_manager.unset_selectable(id_text[i]);
         }
 
         RGB col = COL_TEXT;
