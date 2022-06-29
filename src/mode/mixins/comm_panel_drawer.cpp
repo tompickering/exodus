@@ -1786,6 +1786,20 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_recv(DIA_R_Close);
             }
             break;
+        case DIA_S_B_OfferMoneyDefenderReject:
+            {
+                comm_prepare(1);
+
+                if (comm_player->get_flag(0) == AI_Hi) {
+                    comm_set_speech("Forget that.");
+                } else {
+                    comm_set_speech("That is not enough.");
+                }
+
+                comm_exit_anim_action = CA_Abort;
+                comm_recv(DIA_R_Close);
+            }
+            break;
         case DIA_S_B_RequestMoneyDefender:
             {
                 // TODO
@@ -2550,7 +2564,11 @@ void CommPanelDrawer::comm_process_responses() {
                         if (comm_other->attempt_spend(comm_ctx.mc)) {
                             // FIXME: Orig doesn't give MC to CPU player either
                             comm_send(DIA_S_B_OfferMoneyDefenderAccept);
+                        } else {
+                            L.warn("Shouldn't have been able to set this much MC");
                         }
+                    } else {
+                        comm_send(DIA_S_B_OfferMoneyDefenderReject);
                     }
                 }
             }

@@ -98,6 +98,7 @@ enum CommSend {
     DIA_S_B_IntimidateAttacker, // }
     DIA_S_B_OfferMoneyDefender,       // }
     DIA_S_B_OfferMoneyDefenderAccept, // }
+    DIA_S_B_OfferMoneyDefenderReject, // }
     DIA_S_B_RequestMoneyDefender,     // }> As in, we ARE the defender
     DIA_S_B_IntimidateDefender,       // }
     DIA_S_B_NeverMind,
