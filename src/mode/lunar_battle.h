@@ -183,6 +183,8 @@ class LunarBattle : ModeBase, CommPanelDrawer, BattleReport {
 
         BattleUnit* unit_at(int, int);
 
+        void calc_force_strength(int&, int&);
+
         int cursor_x;
         int cursor_y;
         int cursor_prev_x;

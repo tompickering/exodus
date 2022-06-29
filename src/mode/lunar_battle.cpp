@@ -1041,45 +1041,7 @@ ExodusMode LunarBattle::update(float delta) {
                                 if (!defending && defender->can_afford(100)) {
                                     int aat = 0;
                                     int adf = 0;
-                                    for (int i = 0; i < n_units; ++i) {
-                                        int hp = max(0, units[i].hp);
-                                        if (units[i].defending) {
-                                            switch (units[i].type) {
-                                                case UNIT_Inf:
-                                                    adf += hp;
-                                                    break;
-                                                case UNIT_Gli:
-                                                    adf += 2*hp;
-                                                    break;
-                                                case UNIT_Art:
-                                                    adf += 3*hp;
-                                                    break;
-                                                case UNIT_LBGun:
-                                                    adf += 4*hp;
-                                                    break;
-                                                default:
-                                                    break;
-                                            }
-                                        } else {
-                                            switch (units[i].type) {
-                                                case UNIT_Inf:
-                                                    aat += hp;
-                                                    break;
-                                                case UNIT_Gli:
-                                                    aat += 2*hp;
-                                                    break;
-                                                case UNIT_Art:
-                                                    aat += 3*hp;
-                                                    break;
-                                                case UNIT_LBGun:
-                                                    L.warn("Attacker shouldn't have LBGuns");
-                                                    aat += 4*hp;
-                                                    break;
-                                                default:
-                                                    break;
-                                            }
-                                        }
-                                    }
+                                    calc_force_strength(aat, adf);
 
                                     if ((aat*2 > adf*3) && (exostate.get_n_planets(defender) == 1)) {
                                         comm_open(DIA_S_B_CPU_OpenCommsDefender);
@@ -1580,6 +1542,49 @@ BattleUnit* LunarBattle::unit_at(int x, int y) {
     }
 
     return nullptr;
+}
+
+// Commonly-used force stength metric
+void LunarBattle::calc_force_strength(int& aat, int& adf) {
+    for (int i = 0; i < n_units; ++i) {
+        int hp = max(0, units[i].hp);
+        if (units[i].defending) {
+            switch (units[i].type) {
+                case UNIT_Inf:
+                    adf += hp;
+                    break;
+                case UNIT_Gli:
+                    adf += 2*hp;
+                    break;
+                case UNIT_Art:
+                    adf += 3*hp;
+                    break;
+                case UNIT_LBGun:
+                    adf += 4*hp;
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            switch (units[i].type) {
+                case UNIT_Inf:
+                    aat += hp;
+                    break;
+                case UNIT_Gli:
+                    aat += 2*hp;
+                    break;
+                case UNIT_Art:
+                    aat += 3*hp;
+                    break;
+                case UNIT_LBGun:
+                    L.warn("Attacker shouldn't have LBGuns");
+                    aat += 4*hp;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 }
 
 void LunarBattle::draw_units() {
