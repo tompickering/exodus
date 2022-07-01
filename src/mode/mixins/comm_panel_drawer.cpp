@@ -1282,6 +1282,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     comm_set_text(0, "That is too much! I offer %dMC.", comm_ctx.mc2);
                     comm_set_text(1, "I will not pay this sum!");
                     comm_set_text(2, "I will pay.");
+                    comm_text_interactive_mask = 0x7;
                     if (!comm_player->can_afford(comm_ctx.mc)) {
                         comm_text_disabled_mask = 0x4;
                     }
@@ -1943,6 +1944,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_set_text(1, "I will build parks.");
             comm_set_text(2, "I will improve the laws.");
             comm_set_text(3, "I will pay for improvements.");
+            comm_text_interactive_mask = 0xF;
             if (!comm_other->can_afford(1)) {
                 comm_text_disabled_mask |= 0x8;
             }
