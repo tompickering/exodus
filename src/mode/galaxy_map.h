@@ -9,6 +9,7 @@
 #include "mixins/frame_drawer.h"
 #include "mixins/menu_drawer.h"
 #include "mixins/month_report.h"
+#include "mixins/trade_buy.h"
 
 #include "platform.h"
 #include "draw/draw.h"
@@ -145,7 +146,7 @@ typedef struct {
     int mpai_substage;
 } MPState;
 
-class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, BulletinDrawer, FrameDrawer, MenuDrawer, MonthReport {
+class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, BulletinDrawer, FrameDrawer, MenuDrawer, MonthReport, TradeBuy {
     public:
         GalaxyMap();
         virtual void enter() override;

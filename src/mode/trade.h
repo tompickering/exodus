@@ -5,6 +5,8 @@
 
 #include "draw/draw.h"
 
+#include "mixins/trade_buy.h"
+
 struct TradeRow {
     const char* img;
     const char* name;
@@ -17,7 +19,7 @@ struct TradeRow {
     SprID id_unavailable;
 };
 
-class Trade : ModeBase {
+class Trade : ModeBase, TradeBuy {
     public:
         Trade();
         virtual void enter() override;

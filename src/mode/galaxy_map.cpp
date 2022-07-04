@@ -2715,7 +2715,18 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         player->give_mc(b*player->transfer_fd(-f.food));
                         player->give_mc(c*player->transfer_plu(-f.plutonium));
                         player->set_tactic(0);
-                        // TODO: PROClordbuy
+
+                        // PROClordbuy
+                        // TODO: Populate values correctly!
+                        if (!tradebuy_start(100, 100, 100, 100)) {
+                            /*
+                             * TODO: If tradebuy_start returns false, this is
+                             * a human-owned planet and we should enter into a
+                             * stage where we can call tradebuy_update() until
+                             * it returns true.
+                             */
+                        }
+
                     } else {
                         player->set_tactic(22);
                     }

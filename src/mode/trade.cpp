@@ -431,7 +431,16 @@ ExodusMode Trade::update(float delta) {
                             draw_manager.draw(id(ID::TRADE_PANEL), nullptr);
                             close_panel();
                             // TODO: trace% if we sold anything illegal etc (end of PROCbuysell)
-                            // TODO: PROClordbuy - allows planet owner to purchase goods
+                            // PROClordbuy - allows planet owner to purchase goods
+                            // TODO: Populate values correctly!
+                            if (!tradebuy_start(100, 100, 100, 100)) {
+                                /*
+                                 * TODO: If tradebuy_start returns false, this is
+                                 * a human-owned planet and we should enter into a
+                                 * stage where we can call tradebuy_update() until
+                                 * it returns true.
+                                 */
+                            }
                             stage = Overview;
                         } else if (clk.y > .7f) {
                             bool inc = clk.x > .82f;
