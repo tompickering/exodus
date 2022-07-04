@@ -825,6 +825,8 @@ bool ExodusState::kill(Player* p) {
             continue;
         unset_alliances(p_idx, i);
     }
+
+    return true;
 }
 
 /*
