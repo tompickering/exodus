@@ -32,6 +32,9 @@ class TradeBuy {
 
         TradeBuyGoods tradebuy_available[TRADEBUY_OPTIONS];
 
+        int tradebuy_text_x(int);
+        int tradebuy_text_y(int);
+
         void tradebuy_open();
         void tradebuy_close();
 };

@@ -23,6 +23,14 @@ const int TRADEBUY_BG_Y = TRADEBUY_Y + TRADEBUY_BORDER;
 extern DRAWMANAGER draw_manager;
 extern ExodusState exostate;
 
+const char* CORP_NAMES[] = {
+    " Corporation", " Industries", " Systems", " Technics", " Productions",
+    " Hardware", " Cybertech", " Cybertron", " Chemics", " Boitech",
+    " Chemtech", "chem", "tron", "tech", " Electronics",
+    " Laboratories", " Mechanix", " Technix", " Mechanic", " Bionics",
+    " Alpha", " Beta", " Gamma", " Delta", " Epsilon"
+};
+
 /*
  * This represents an opportunity for the owner of a planet
  * to buy goods, following a rival player conducting trade
@@ -141,6 +149,8 @@ bool TradeBuy::tradebuy_start(int fd, int inf, int gli, int art) {
 }
 
 void TradeBuy::tradebuy_open() {
+    Planet *p = exostate.get_active_planet();
+
     id_tradebuy_header_flag = draw_manager.new_sprite_id();
     id_tradebuy_header_l    = draw_manager.new_sprite_id();
     id_tradebuy_header_r    = draw_manager.new_sprite_id();
@@ -187,6 +197,58 @@ void TradeBuy::tradebuy_open() {
         {TRADEBUY_X + 10,
          TRADEBUY_Y + TRADEBUY_H - 10,
          0, 1, 1, 1});
+
+    char text[128];
+
+    const char* suffix = "";
+
+    if (onein(3)) {
+        /*
+         * In the original, the 5th option is unreachable.
+         * I'll kick the can down the road and do the same!
+         */
+        switch (rand() % 4) {
+            case 0:
+                suffix = " Interstellar";
+                break;
+            case 1:
+                suffix = " Inc.";
+                break;
+            case 2:
+                suffix = " Worldwide";
+                break;
+            case 3:
+                suffix = " Starwide";
+                break;
+            case 4:
+                suffix = " Ltd.";
+                break;
+        }
+    }
+
+    snprintf(text, sizeof(text), "Offer from %s%s%s",
+            p->get_name(), CORP_NAMES[rand() % 25], suffix);
+
+    draw_manager.draw_text(text,
+        Justify::Left, TRADEBUY_TEXT_X, tradebuy_text_y(0), {0, 0xFF, 0});
+
+    draw_manager.draw_text("We have just got hold of some wares",
+        Justify::Left, TRADEBUY_TEXT_X, tradebuy_text_y(1), COL_TEXT);
+
+    draw_manager.draw_text("which might be of interest.",
+        Justify::Left, TRADEBUY_TEXT_X, tradebuy_text_y(2), COL_TEXT);
+
+    draw_manager.draw_text("Offer",
+        Justify::Centre, tradebuy_text_x(1), tradebuy_text_y(4), COL_TEXT);
+
+    draw_manager.draw_text("Price",
+        Justify::Centre, tradebuy_text_x(2), tradebuy_text_y(4), COL_TEXT);
+
+    draw_manager.draw_text("Planet",
+        Justify::Centre, tradebuy_text_x(3), tradebuy_text_y(4), COL_TEXT);
+
+    draw_manager.draw_text("Buy",
+        Justify::Centre, tradebuy_text_x(4), tradebuy_text_y(4), COL_TEXT);
 }
 
 void TradeBuy::tradebuy_close() {
@@ -203,6 +265,15 @@ void TradeBuy::tradebuy_close() {
     draw_manager.release_sprite_id(id_tradebuy_panel);
     draw_manager.release_sprite_id(id_tradebuy_black);
     draw_manager.release_sprite_id(id_tradebuy_exit);
+}
+
+int TradeBuy::tradebuy_text_x(int idx) {
+    int sep = TRADEBUY_W / 6;
+    return TRADEBUY_X + sep/2 + idx*sep;
+}
+
+int TradeBuy::tradebuy_text_y(int idx) {
+    return TRADEBUY_Y + TRADEBUY_BORDER + 4 + idx * 18;
 }
 
 // Return true when we're done
