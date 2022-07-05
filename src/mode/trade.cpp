@@ -1,5 +1,7 @@
 #include "trade.h"
 
+#include "util/value.h"
+
 #include "assetpaths.h"
 
 #define ACTIVE_H 30
@@ -84,6 +86,10 @@ void Trade::enter() {
     draw_manager.show_cursor(true);
 
     audio_manager.target_music(mpart2mus(6));
+
+    const Fleet fleet = p0->get_fleet();
+    const Freight &freight = fleet.freight;
+    memcpy(&freight_initial, &freight, sizeof(Freight));
 
     active_row = 0;
     sell = false;
@@ -369,7 +375,24 @@ ExodusMode Trade::update(float delta) {
                         start_trade(true);
                         stage = DoTrade;
                     } else {
-                        return ExodusMode::MODE_Pop;
+                        // PROClordbuy - allows planet owner to purchase goods
+                        const Fleet fleet = p->get_fleet();
+                        const Freight &freight = fleet.freight;
+                        int sold_f = max(0, freight_initial.food - freight.food);
+                        int sold_i = max(0, freight_initial.infantry - freight.infantry);
+                        int sold_g = max(0, freight_initial.gliders - freight.gliders);
+                        int sold_a = max(0, freight_initial.artillery - freight.artillery);
+                        if (tradebuy_start(sold_f, sold_i, sold_g, sold_a)) {
+                            return ExodusMode::MODE_Pop;
+                        } else {
+                            /*
+                             * TODO: If tradebuy_start returns false, this is
+                             * a human-owned planet and we should enter into a
+                             * stage where we can call tradebuy_update() until
+                             * it returns true.
+                             */
+                            return ExodusMode::MODE_Pop;
+                        }
                     }
                 } else if (draw_manager.clicked()) {
                     for (int i = 0; i < 8; ++i) {
@@ -431,16 +454,6 @@ ExodusMode Trade::update(float delta) {
                             draw_manager.draw(id(ID::TRADE_PANEL), nullptr);
                             close_panel();
                             // TODO: trace% if we sold anything illegal etc (end of PROCbuysell)
-                            // PROClordbuy - allows planet owner to purchase goods
-                            // TODO: Populate values correctly!
-                            if (!tradebuy_start(100, 100, 100, 100)) {
-                                /*
-                                 * TODO: If tradebuy_start returns false, this is
-                                 * a human-owned planet and we should enter into a
-                                 * stage where we can call tradebuy_update() until
-                                 * it returns true.
-                                 */
-                            }
                             stage = Overview;
                         } else if (clk.y > .7f) {
                             bool inc = clk.x > .82f;

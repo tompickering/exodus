@@ -2711,14 +2711,14 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         }
 
                         const Freight &f = player->get_fleet().freight;
+                        int sold_food = f.food;
                         player->give_mc(a*player->transfer_min(-f.minerals));
                         player->give_mc(b*player->transfer_fd(-f.food));
                         player->give_mc(c*player->transfer_plu(-f.plutonium));
                         player->set_tactic(0);
 
                         // PROClordbuy
-                        // TODO: Populate values correctly!
-                        if (!tradebuy_start(100, 100, 100, 100)) {
+                        if (!tradebuy_start(sold_food, rand()%6, rand()%5, rand()%4)) {
                             /*
                              * TODO: If tradebuy_start returns false, this is
                              * a human-owned planet and we should enter into a

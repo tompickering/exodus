@@ -54,6 +54,8 @@ class Trade : ModeBase, TradeBuy {
         void start_trade(bool);
         void adjust_trade(bool);
         void adjust_freight(int, bool);
+
+        Freight freight_initial;
 };
 
 #endif
