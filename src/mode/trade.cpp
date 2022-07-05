@@ -386,12 +386,12 @@ ExodusMode Trade::update(float delta) {
                             return ExodusMode::MODE_Pop;
                         } else {
                             /*
-                             * TODO: If tradebuy_start returns false, this is
+                             * If tradebuy_start returns false, this is
                              * a human-owned planet and we should enter into a
                              * stage where we can call tradebuy_update() until
                              * it returns true.
                              */
-                            return ExodusMode::MODE_Pop;
+                            stage = TradeBuy;
                         }
                     }
                 } else if (draw_manager.clicked()) {
@@ -460,6 +460,13 @@ ExodusMode Trade::update(float delta) {
                             adjust_trade(inc);
                         }
                     }
+                }
+            }
+            break;
+        case TradeBuy:
+            {
+                if (tradebuy_update()) {
+                    return ExodusMode::MODE_Pop;
                 }
             }
             break;

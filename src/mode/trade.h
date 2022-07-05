@@ -31,6 +31,7 @@ class Trade : ModeBase, TradeBuy {
             Overview,
             Info,
             DoTrade,
+            TradeBuy,
         };
 
         Stage stage;

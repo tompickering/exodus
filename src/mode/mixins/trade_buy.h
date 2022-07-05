@@ -3,6 +3,8 @@
 
 #define TRADEBUY_OPTIONS 4
 
+#include "draw/draw.h"
+
 enum TradeBuyGoodsType {
     TBGT_Food,
     TBGT_Inf,
@@ -21,7 +23,17 @@ class TradeBuy {
         bool tradebuy_start(int, int, int, int);
         bool tradebuy_update();
     private:
+        SprID id_tradebuy_header_flag;
+        SprID id_tradebuy_header_l;
+        SprID id_tradebuy_header_r;
+        SprID id_tradebuy_panel;
+        SprID id_tradebuy_black;
+        SprID id_tradebuy_exit;
+
         TradeBuyGoods tradebuy_available[TRADEBUY_OPTIONS];
+
+        void tradebuy_open();
+        void tradebuy_close();
 };
 
 #endif

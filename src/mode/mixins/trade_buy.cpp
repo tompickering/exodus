@@ -7,10 +7,18 @@
 
 #include "shared.h"
 
-static const int TRADEBUY_W = 328;
-static const int TRADEBUY_H = 120;
-static const int TRADEBUY_X = RES_X/2 - (TRADEBUY_W/2);
-static const int TRADEBUY_Y = 150;
+const int TRADEBUY_BORDER = 6;
+const int TRADEBUY_W = 436 + (TRADEBUY_BORDER) * 2;
+const int TRADEBUY_H = 306 + (TRADEBUY_BORDER) * 2;
+const int TRADEBUY_X = (RES_X / 2) - (TRADEBUY_W / 2);
+const int TRADEBUY_Y = (RES_Y / 2) - (TRADEBUY_H / 2) - 12;
+const int TRADEBUY_TEXT_X = TRADEBUY_X + TRADEBUY_BORDER * 2 + 4;
+const int TRADEBUY_FLAG_BG_X = (RES_X / 2) - 48 - TRADEBUY_BORDER;
+const int TRADEBUY_FLAG_BG_Y = TRADEBUY_Y - 2 - 56 - TRADEBUY_BORDER*2;
+const int TRADEBUY_FLAG_BG_W = 96 + TRADEBUY_BORDER*2;
+const int TRADEBUY_FLAG_BG_H = 56 + TRADEBUY_BORDER*2;
+const int TRADEBUY_BG_X = TRADEBUY_X + TRADEBUY_BORDER;
+const int TRADEBUY_BG_Y = TRADEBUY_Y + TRADEBUY_BORDER;
 
 extern DRAWMANAGER draw_manager;
 extern ExodusState exostate;
@@ -127,7 +135,74 @@ bool TradeBuy::tradebuy_start(int fd, int inf, int gli, int art) {
     tradebuy_available[3].type = TBGT_Art;
     tradebuy_available[3].avail = art;
 
+    tradebuy_open();
+
     return false;
+}
+
+void TradeBuy::tradebuy_open() {
+    id_tradebuy_header_flag = draw_manager.new_sprite_id();
+    id_tradebuy_header_l    = draw_manager.new_sprite_id();
+    id_tradebuy_header_r    = draw_manager.new_sprite_id();
+    id_tradebuy_panel       = draw_manager.new_sprite_id();
+    id_tradebuy_black       = draw_manager.new_sprite_id();
+    id_tradebuy_exit        = draw_manager.new_sprite_id();
+
+    draw_manager.fill(
+        id_tradebuy_panel,
+        {TRADEBUY_X, TRADEBUY_Y,
+         TRADEBUY_W, TRADEBUY_H},
+        COL_BORDERS);
+
+    draw_manager.fill(
+        id_tradebuy_black,
+        {TRADEBUY_X + TRADEBUY_BORDER,
+         TRADEBUY_Y + TRADEBUY_BORDER,
+         436, 306},
+        {0, 0, 0});
+
+    draw_manager.fill(
+        id_tradebuy_header_flag,
+        {TRADEBUY_FLAG_BG_X, TRADEBUY_FLAG_BG_Y,
+         TRADEBUY_FLAG_BG_W, TRADEBUY_FLAG_BG_H},
+        COL_BORDERS);
+
+    draw_manager.draw(
+        id_tradebuy_header_l,
+        IMG_TS1_HEADER,
+        {TRADEBUY_FLAG_BG_X - 2,
+         TRADEBUY_Y - 2,
+         1, 1, 1, 1});
+
+    draw_manager.draw(
+        id_tradebuy_header_r,
+        IMG_TS1_HEADER,
+        {TRADEBUY_FLAG_BG_X + TRADEBUY_FLAG_BG_W + 2,
+         TRADEBUY_Y - 2,
+         0, 1, 1, 1});
+
+    draw_manager.draw(
+        id_tradebuy_exit,
+        IMG_BR5_EXPORT4,
+        {TRADEBUY_X + 10,
+         TRADEBUY_Y + TRADEBUY_H - 10,
+         0, 1, 1, 1});
+}
+
+void TradeBuy::tradebuy_close() {
+    draw_manager.draw(id_tradebuy_exit,        nullptr);
+    draw_manager.draw(id_tradebuy_black,       nullptr);
+    draw_manager.draw(id_tradebuy_panel,       nullptr);
+    draw_manager.draw(id_tradebuy_header_r,    nullptr);
+    draw_manager.draw(id_tradebuy_header_l,    nullptr);
+    draw_manager.draw(id_tradebuy_header_flag, nullptr);
+
+    draw_manager.release_sprite_id(id_tradebuy_header_flag);
+    draw_manager.release_sprite_id(id_tradebuy_header_l);
+    draw_manager.release_sprite_id(id_tradebuy_header_r);
+    draw_manager.release_sprite_id(id_tradebuy_panel);
+    draw_manager.release_sprite_id(id_tradebuy_black);
+    draw_manager.release_sprite_id(id_tradebuy_exit);
 }
 
 // Return true when we're done
@@ -136,6 +211,9 @@ bool TradeBuy::tradebuy_update() {
     Player *owner = exostate.get_player(p->get_owner());
 
     // TODO: Present UI and perform updates until human player is done
+    if (draw_manager.query_click(id_tradebuy_exit).id) {
+        return true;
+    }
 
-    return true;
+    return false;
 }

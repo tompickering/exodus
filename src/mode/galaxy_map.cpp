@@ -2720,17 +2720,32 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         // PROClordbuy
                         if (!tradebuy_start(sold_food, rand()%6, rand()%5, rand()%4)) {
                             /*
-                             * TODO: If tradebuy_start returns false, this is
+                             * If tradebuy_start returns false, this is
                              * a human-owned planet and we should enter into a
                              * stage where we can call tradebuy_update() until
                              * it returns true.
                              */
+                            mp_state.mpai_substage = 3;
+                            return ExodusMode::MODE_None;
                         }
 
                     } else {
                         player->set_tactic(22);
                     }
                 }
+
+                /*
+                 * We drop into this substage when a human tradebuy interaction is resolving.
+                 * We remain here until tradebuy_update() returns true.
+                 */
+                if (mp_state.mpai_substage == 3) {
+                    if (tradebuy_update()) {
+                        mp_state.mpai_substage = 0;
+                    } else {
+                        return ExodusMode::MODE_None;
+                    }
+                }
+
                 L.debug("[%s] PROCe_tact11 END", player->get_full_name());
             }
             if (p->get_tactic() == 0) {
