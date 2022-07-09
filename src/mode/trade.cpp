@@ -60,6 +60,8 @@ Trade::Trade() : ModeBase("Trade") {
 }
 
 void Trade::enter() {
+    stage = Overview;
+
     Planet *p = exostate.get_active_planet();
 
     if (!(p && p->is_owned())) {
