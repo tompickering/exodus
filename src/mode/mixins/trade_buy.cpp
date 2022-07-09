@@ -216,11 +216,21 @@ void TradeBuy::tradebuy_open() {
          TRADEBUY_Y - 2,
          0, 1, 1, 1});
 
+    draw_manager.fill(
+        {TRADEBUY_X + TRADEBUY_BORDER + 2, TRADEBUY_Y + TRADEBUY_H - 2*TRADEBUY_BORDER - 22,
+         30, 26},
+        COL_BORDERS);
+
+    draw_manager.fill(
+        {TRADEBUY_X + TRADEBUY_BORDER + 154, TRADEBUY_Y + TRADEBUY_H - 2*TRADEBUY_BORDER - 22,
+         280, 26},
+        COL_BORDERS);
+
     draw_manager.draw(
         id_tradebuy_exit,
         IMG_BR5_EXPORT4,
-        {TRADEBUY_X + 10,
-         TRADEBUY_Y + TRADEBUY_H - 10,
+        {TRADEBUY_X + 40,
+         TRADEBUY_Y + TRADEBUY_H - 8,
          0, 1, 1, 1});
 
     char text[128];
