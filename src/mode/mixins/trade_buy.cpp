@@ -166,6 +166,7 @@ bool TradeBuy::tradebuy_start(int fd, int inf, int gli, int art) {
 
 void TradeBuy::tradebuy_open() {
     Planet *p = exostate.get_active_planet();
+    int owner_idx = exostate.get_active_player_idx();
 
     input_manager.enable_repeating_clicks(true);
 
@@ -194,6 +195,12 @@ void TradeBuy::tradebuy_open() {
         {TRADEBUY_FLAG_BG_X, TRADEBUY_FLAG_BG_Y,
          TRADEBUY_FLAG_BG_W, TRADEBUY_FLAG_BG_H},
         COL_BORDERS);
+
+    draw_manager.draw(
+        flags[owner_idx],
+        {TRADEBUY_FLAG_BG_X + TRADEBUY_BORDER,
+         TRADEBUY_FLAG_BG_Y + TRADEBUY_BORDER,
+        0, 0, 1, 1});
 
     draw_manager.draw(
         id_tradebuy_header_l,
