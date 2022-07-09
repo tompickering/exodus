@@ -6,6 +6,8 @@
 #include "assetpaths.h"
 
 enum ID {
+    BG,
+    TEXT,
     YESORNO,
     END,
 };
@@ -27,7 +29,7 @@ void GalaxyGen::enter() {
     draw_manager.show_cursor(true);
 }
 
-const float FADE_SPEED = 10.f;
+const float FADE_SPEED = 5.f;
 
 ExodusMode GalaxyGen::update(float delta) {
     SpriteClick click;
@@ -35,6 +37,8 @@ ExodusMode GalaxyGen::update(float delta) {
     if (draw_manager.pixelswap_active()) {
         return ExodusMode::MODE_None;
     }
+
+    unsigned char c;
 
     switch (stage) {
         case GGSTG_Gen:
@@ -48,15 +52,26 @@ ExodusMode GalaxyGen::update(float delta) {
             stage = GGSTG_SwapIn;
             break;
         case GGSTG_SwapIn:
+            draw_manager.fill(
+                ID::BG,
+                galaxy_panel_area,
+                {0, 0, 0});
             stage = GGSTG_FadeIn;
             break;
         case GGSTG_FadeIn:
             fade_interp += delta * FADE_SPEED;
             if (fade_interp > 1) fade_interp = 1;
+            c = (int)(fade_interp * (float)0xFF);
             draw_manager.draw(
                 id(ID::YESORNO),
                 anim_ynfade.frame(fade_interp),
                 {RES_X/2, 480, 0.5, 0.5, 1, 1});
+            draw_manager.draw_text(
+                id(ID::TEXT),
+                "Choose this galaxy?",
+                Justify::Centre,
+                RES_X/2, 434,
+                {c, c, c});
             if (fade_interp == 1) {
                 draw_manager.save_background();
                 stage = GGSTG_Wait;
@@ -72,12 +87,20 @@ ExodusMode GalaxyGen::update(float delta) {
         case GGSTG_FadeOut:
             fade_interp -= delta * FADE_SPEED;
             if (fade_interp < 0) fade_interp = 0;
+            c = (int)(fade_interp * (float)0xFF);
             draw_manager.draw(
                 id(ID::YESORNO),
                 anim_ynfade.frame(fade_interp),
                 {RES_X/2, 480, 0.5, 0.5, 1, 1});
+            draw_manager.draw_text(
+                id(ID::TEXT),
+                "Choose this galaxy?",
+                Justify::Centre,
+                RES_X/2, 434,
+                {c, c, c});
             if (fade_interp == 0) {
                 draw_manager.fill(
+                    ID::BG,
                     galaxy_panel_area,
                     {0, 0, 0});
                 if (accepted) {
