@@ -15,6 +15,11 @@ enum TradeBuyGoodsType {
 struct TradeBuyGoods {
     TradeBuyGoodsType type;
     int avail;
+    int cost;
+    int buy;
+    SprID id_offer;
+    SprID id_buy;
+    SprID id_adj;
 };
 
 class TradeBuy {
@@ -34,6 +39,8 @@ class TradeBuy {
 
         int tradebuy_text_x(int);
         int tradebuy_text_y(int);
+
+        int tradebuy_row_y(int);
 
         void tradebuy_open();
         void tradebuy_close();

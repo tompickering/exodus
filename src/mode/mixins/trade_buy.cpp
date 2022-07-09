@@ -130,18 +130,30 @@ bool TradeBuy::tradebuy_start(int fd, int inf, int gli, int art) {
     }
 
     // Human player
+    // N.B. Costs are different for human
 
     tradebuy_available[0].type = TBGT_Food;
     tradebuy_available[0].avail = fd;
+    tradebuy_available[0].cost = RND(2) + 1;
 
     tradebuy_available[1].type = TBGT_Inf;
     tradebuy_available[1].avail = inf;
+    tradebuy_available[1].cost = RND(4) + 2;
 
     tradebuy_available[2].type = TBGT_Gli;
     tradebuy_available[2].avail = gli;
+    tradebuy_available[2].cost = RND(6) + 2;
 
     tradebuy_available[3].type = TBGT_Art;
     tradebuy_available[3].avail = art;
+    tradebuy_available[3].cost = RND(6) + 2;
+
+    for (int i = 0; i < TRADEBUY_OPTIONS; ++i) {
+        tradebuy_available[i].buy = 0;
+        tradebuy_available[i].id_offer = draw_manager.new_sprite_id();
+        tradebuy_available[i].id_buy = draw_manager.new_sprite_id();
+        tradebuy_available[i].id_adj = draw_manager.new_sprite_id();
+    }
 
     tradebuy_open();
 
@@ -249,9 +261,82 @@ void TradeBuy::tradebuy_open() {
 
     draw_manager.draw_text("Buy",
         Justify::Centre, tradebuy_text_x(4), tradebuy_text_y(4), COL_TEXT);
+
+    for (int i = 0; i < TRADEBUY_OPTIONS; ++i) {
+        const char* icon = IMG_TD2_TR2;
+        switch (tradebuy_available[i].type) {
+            case TBGT_Food:
+                icon = IMG_TD2_TR2;
+                break;
+            case TBGT_Inf:
+                icon = IMG_TD2_TR4;
+                break;
+            case TBGT_Gli:
+                icon = IMG_TD2_TR5;
+                break;
+            case TBGT_Art:
+                icon = IMG_TD2_TR6;
+                break;
+        }
+
+        draw_manager.draw(
+            icon,
+            {tradebuy_text_x(0), tradebuy_row_y(i),
+             0.5, 0.5, 1, 1}
+        );
+
+        const int text_y_off = -6;
+
+        snprintf(text, sizeof(text), "%d", tradebuy_available[i].avail);
+        draw_manager.draw_text(
+            tradebuy_available[i].id_offer,
+            text,
+            Justify::Centre,
+            tradebuy_text_x(1), tradebuy_row_y(i) + text_y_off,
+            COL_TEXT);
+
+        snprintf(text, sizeof(text), "%d", tradebuy_available[i].cost);
+        draw_manager.draw_text(
+            text,
+            Justify::Centre,
+            tradebuy_text_x(2), tradebuy_row_y(i) + text_y_off,
+            COL_TEXT);
+
+        // TODO: Planet
+        snprintf(text, sizeof(text), "%d", -1);
+        draw_manager.draw_text(
+            text,
+            Justify::Centre,
+            tradebuy_text_x(3), tradebuy_row_y(i) + text_y_off,
+            COL_TEXT);
+
+        snprintf(text, sizeof(text), "%d", tradebuy_available[i].buy);
+        draw_manager.draw_text(
+            tradebuy_available[i].id_buy,
+            text,
+            Justify::Centre,
+            tradebuy_text_x(4), tradebuy_row_y(i) + text_y_off,
+            COL_TEXT);
+
+        draw_manager.draw(
+            tradebuy_available[i].id_adj,
+            IMG_BR4_EXPORT3,
+            {tradebuy_text_x(5), tradebuy_row_y(i),
+             0.5, 0.5, 1, 1}
+        );
+    }
 }
 
 void TradeBuy::tradebuy_close() {
+    for (int i = 0; i < TRADEBUY_OPTIONS; ++i) {
+        draw_manager.draw(tradebuy_available[i].id_offer, nullptr);
+        draw_manager.draw(tradebuy_available[i].id_buy, nullptr);
+        draw_manager.draw(tradebuy_available[i].id_adj, nullptr);
+        draw_manager.release_sprite_id(tradebuy_available[i].id_offer);
+        draw_manager.release_sprite_id(tradebuy_available[i].id_buy);
+        draw_manager.release_sprite_id(tradebuy_available[i].id_adj);
+    }
+
     draw_manager.draw(id_tradebuy_exit,        nullptr);
     draw_manager.draw(id_tradebuy_black,       nullptr);
     draw_manager.draw(id_tradebuy_panel,       nullptr);
@@ -268,12 +353,17 @@ void TradeBuy::tradebuy_close() {
 }
 
 int TradeBuy::tradebuy_text_x(int idx) {
-    int sep = TRADEBUY_W / 6;
-    return TRADEBUY_X + sep/2 + idx*sep;
+    int pad = 6;
+    int sep = (TRADEBUY_W - (2*pad)) / 6;
+    return TRADEBUY_X + pad + sep/2 + idx*sep;
 }
 
 int TradeBuy::tradebuy_text_y(int idx) {
     return TRADEBUY_Y + TRADEBUY_BORDER + 4 + idx * 18;
+}
+
+int TradeBuy::tradebuy_row_y(int idx) {
+    return tradebuy_text_y(7 + 2*idx) + (idx-2)*6;
 }
 
 // Return true when we're done
@@ -281,7 +371,6 @@ bool TradeBuy::tradebuy_update() {
     Planet *p = exostate.get_active_planet();
     Player *owner = exostate.get_player(p->get_owner());
 
-    // TODO: Present UI and perform updates until human player is done
     if (draw_manager.query_click(id_tradebuy_exit).id) {
         return true;
     }
