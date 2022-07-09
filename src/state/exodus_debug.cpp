@@ -33,6 +33,15 @@ void ExodusDebug::add_units(int n) {
     }
 }
 
+void ExodusDebug::add_goods(int n) {
+    Player* p = exostate.get_active_player();
+    if (p) {
+        p->transfer_fd(n);
+        p->transfer_min(n);
+        p->transfer_plu(n);
+    }
+}
+
 void ExodusDebug::unlock_all_inventions() {
     Player *p = exostate.get_active_player();
     if (p) {

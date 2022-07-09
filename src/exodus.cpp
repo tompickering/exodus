@@ -296,6 +296,10 @@ int Exodus::run(int argc, char** argv) {
             exodebug.set_all_alliances();
         }
 
+        if (input_manager.consume(Input::K_F7)) {
+            exodebug.add_goods(10);
+        }
+
         if (input_manager.consume(Input::K_F8)) {
             save_manager.save(8);
         }
