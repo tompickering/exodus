@@ -20,6 +20,8 @@ const int TRADEBUY_FLAG_BG_H = 56 + TRADEBUY_BORDER*2;
 const int TRADEBUY_BG_X = TRADEBUY_X + TRADEBUY_BORDER;
 const int TRADEBUY_BG_Y = TRADEBUY_Y + TRADEBUY_BORDER;
 
+const int TRADEBUY_TEXT_Y_OFF = -8;
+
 extern DRAWMANAGER draw_manager;
 extern ExodusState exostate;
 
@@ -285,37 +287,36 @@ void TradeBuy::tradebuy_open() {
              0.5, 0.5, 1, 1}
         );
 
-        const int text_y_off = -6;
-
-        snprintf(text, sizeof(text), "%d", tradebuy_available[i].avail);
-        draw_manager.draw_text(
-            tradebuy_available[i].id_offer,
-            text,
-            Justify::Centre,
-            tradebuy_text_x(1), tradebuy_row_y(i) + text_y_off,
-            COL_TEXT);
-
         snprintf(text, sizeof(text), "%d", tradebuy_available[i].cost);
         draw_manager.draw_text(
             text,
             Justify::Centre,
-            tradebuy_text_x(2), tradebuy_row_y(i) + text_y_off,
+            tradebuy_text_x(2), tradebuy_row_y(i) + TRADEBUY_TEXT_Y_OFF,
             COL_TEXT);
 
-        // TODO: Planet
-        snprintf(text, sizeof(text), "%d", -1);
+        int reserves = 0;
+        int _i, _g, _a;
+        p->get_army(_i, _g, _a);
+        switch (tradebuy_available[i].type) {
+            case TBGT_Food:
+                reserves = p->get_reserves_food();
+                break;
+            case TBGT_Inf:
+                reserves = _i;
+                break;
+            case TBGT_Gli:
+                reserves = _g;
+                break;
+            case TBGT_Art:
+                reserves = _a;
+                break;
+        }
+
+        snprintf(text, sizeof(text), "%d", reserves);
         draw_manager.draw_text(
             text,
             Justify::Centre,
-            tradebuy_text_x(3), tradebuy_row_y(i) + text_y_off,
-            COL_TEXT);
-
-        snprintf(text, sizeof(text), "%d", tradebuy_available[i].buy);
-        draw_manager.draw_text(
-            tradebuy_available[i].id_buy,
-            text,
-            Justify::Centre,
-            tradebuy_text_x(4), tradebuy_row_y(i) + text_y_off,
+            tradebuy_text_x(3), tradebuy_row_y(i) + TRADEBUY_TEXT_Y_OFF,
             COL_TEXT);
 
         draw_manager.draw(
@@ -371,7 +372,81 @@ bool TradeBuy::tradebuy_update() {
     Planet *p = exostate.get_active_planet();
     Player *owner = exostate.get_player(p->get_owner());
 
+    char text[8];
+
+    for (int i = 0; i < TRADEBUY_OPTIONS; ++i) {
+        TradeBuyGoods &r = tradebuy_available[i];
+        SpriteClick clk = draw_manager.query_click(r.id_adj);
+        if (clk.id) {
+            if (clk.x < 0.5f) {
+                if (r.buy > 0) {
+                    owner->give_mc(r.cost);
+                    r.buy--;
+                }
+            } else {
+                if (r.buy < r.avail) {
+                    int reserves = 0;
+                    int _i, _g, _a;
+                    p->get_army(_i, _g, _a);
+                    switch (r.type) {
+                        case TBGT_Food:
+                            reserves = p->get_reserves_food();
+                            break;
+                        case TBGT_Inf:
+                            reserves = _i;
+                            break;
+                        case TBGT_Gli:
+                            reserves = _g;
+                            break;
+                        case TBGT_Art:
+                            reserves = _a;
+                            break;
+                    }
+
+                    if ((reserves + r.buy) < p->get_resource_cap()) {
+                        if (owner->attempt_spend(r.cost)) {
+                            r.buy++;
+                        }
+                    }
+                }
+            }
+        }
+
+        snprintf(text, sizeof(text), "%d", r.avail - r.buy);
+        draw_manager.draw_text(
+            r.id_offer,
+            text,
+            Justify::Centre,
+            tradebuy_text_x(1), tradebuy_row_y(i) + TRADEBUY_TEXT_Y_OFF,
+            COL_TEXT);
+
+        snprintf(text, sizeof(text), "%d", tradebuy_available[i].buy);
+        draw_manager.draw_text(
+            r.id_buy,
+            text,
+            Justify::Centre,
+            tradebuy_text_x(4), tradebuy_row_y(i) + TRADEBUY_TEXT_Y_OFF,
+            COL_TEXT);
+    }
+
     if (draw_manager.query_click(id_tradebuy_exit).id) {
+        for (int i = 0; i < TRADEBUY_OPTIONS; ++i) {
+            TradeBuyGoods &r = tradebuy_available[i];
+            switch (r.type) {
+                case TBGT_Food:
+                    p->adjust_reserves(0, r.buy, 0);
+                    break;
+                case TBGT_Inf:
+                    p->adjust_army(r.buy, 0, 0);
+                    break;
+                case TBGT_Gli:
+                    p->adjust_army(0, r.buy, 0);
+                    break;
+                case TBGT_Art:
+                    p->adjust_army(0, 0, r.buy);
+                    break;
+            }
+        }
         return true;
     }
 
