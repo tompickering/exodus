@@ -1,6 +1,7 @@
 #include "trade_buy.h"
 
 #include "draw/draw.h"
+#include "input/input.h"
 #include "state/exodus_state.h"
 
 #include "util/value.h"
@@ -23,6 +24,7 @@ const int TRADEBUY_BG_Y = TRADEBUY_Y + TRADEBUY_BORDER;
 const int TRADEBUY_TEXT_Y_OFF = -8;
 
 extern DRAWMANAGER draw_manager;
+extern INPUTMANAGER input_manager;
 extern ExodusState exostate;
 
 const char* CORP_NAMES[] = {
@@ -164,6 +166,8 @@ bool TradeBuy::tradebuy_start(int fd, int inf, int gli, int art) {
 
 void TradeBuy::tradebuy_open() {
     Planet *p = exostate.get_active_planet();
+
+    input_manager.enable_repeating_clicks(true);
 
     id_tradebuy_header_flag = draw_manager.new_sprite_id();
     id_tradebuy_header_l    = draw_manager.new_sprite_id();
@@ -329,6 +333,8 @@ void TradeBuy::tradebuy_open() {
 }
 
 void TradeBuy::tradebuy_close() {
+    input_manager.enable_repeating_clicks(false);
+
     for (int i = 0; i < TRADEBUY_OPTIONS; ++i) {
         draw_manager.draw(tradebuy_available[i].id_offer, nullptr);
         draw_manager.draw(tradebuy_available[i].id_buy, nullptr);
