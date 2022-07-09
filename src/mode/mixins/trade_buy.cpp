@@ -154,6 +154,8 @@ bool TradeBuy::tradebuy_start(int fd, int inf, int gli, int art) {
 
     for (int i = 0; i < TRADEBUY_OPTIONS; ++i) {
         tradebuy_available[i].buy = 0;
+        tradebuy_available[i].id_img = draw_manager.new_sprite_id();
+        tradebuy_available[i].id_unavailable = draw_manager.new_sprite_id();
         tradebuy_available[i].id_offer = draw_manager.new_sprite_id();
         tradebuy_available[i].id_buy = draw_manager.new_sprite_id();
         tradebuy_available[i].id_adj = draw_manager.new_sprite_id();
@@ -303,6 +305,7 @@ void TradeBuy::tradebuy_open() {
         }
 
         draw_manager.draw(
+            tradebuy_available[i].id_img,
             icon,
             {tradebuy_text_x(0), tradebuy_row_y(i),
              0.5, 0.5, 1, 1}
@@ -353,9 +356,13 @@ void TradeBuy::tradebuy_close() {
     input_manager.enable_repeating_clicks(false);
 
     for (int i = 0; i < TRADEBUY_OPTIONS; ++i) {
+        draw_manager.draw(tradebuy_available[i].id_buy, nullptr);
+        draw_manager.draw(tradebuy_available[i].id_unavailable, nullptr);
         draw_manager.draw(tradebuy_available[i].id_offer, nullptr);
         draw_manager.draw(tradebuy_available[i].id_buy, nullptr);
         draw_manager.draw(tradebuy_available[i].id_adj, nullptr);
+        draw_manager.release_sprite_id(tradebuy_available[i].id_buy);
+        draw_manager.release_sprite_id(tradebuy_available[i].id_unavailable);
         draw_manager.release_sprite_id(tradebuy_available[i].id_offer);
         draw_manager.release_sprite_id(tradebuy_available[i].id_buy);
         draw_manager.release_sprite_id(tradebuy_available[i].id_adj);
@@ -435,6 +442,17 @@ bool TradeBuy::tradebuy_update() {
             }
         }
 
+        if (r.avail - r.buy <= 0) {
+            draw_manager.draw(
+                r.id_unavailable,
+                IMG_TD2_TR0,
+                {tradebuy_text_x(0), tradebuy_row_y(i),
+                 0.5, 0.5, 1, 1}
+            );
+        } else {
+            draw_manager.draw(r.id_unavailable, nullptr);
+        }
+
         snprintf(text, sizeof(text), "%d", r.avail - r.buy);
         draw_manager.draw_text(
             r.id_offer,
@@ -470,6 +488,7 @@ bool TradeBuy::tradebuy_update() {
                     break;
             }
         }
+        tradebuy_close();
         return true;
     }
 

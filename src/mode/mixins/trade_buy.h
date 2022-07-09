@@ -17,6 +17,8 @@ struct TradeBuyGoods {
     int avail;
     int cost;
     int buy;
+    SprID id_img;
+    SprID id_unavailable;
     SprID id_offer;
     SprID id_buy;
     SprID id_adj;
