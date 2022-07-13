@@ -45,6 +45,7 @@ enum CommImg {
 // even when a CPU player appears to be initiating a
 // conversation with us.
 enum CommSend {
+    DIA_S_ThrustBroken,
     DIA_S_PlanFly,
     DIA_S_PlanSettle,
     DIA_S_NamePlanet,

@@ -632,6 +632,11 @@ void CommPanelDrawer::comm_init(CommSend input) {
     }
 
     switch (input) {
+        case DIA_S_ThrustBroken:
+            comm_set_img(CI_HumanThoughtful);
+            comm_set_title("Message from counsellor");
+            comm_set_img_caption("COUNSELLOR");
+            break;
         case DIA_S_PlanFly:
             comm_set_img(CI_Human);
             comm_set_title("Message from counsellor");
@@ -786,6 +791,16 @@ void CommPanelDrawer::comm_send(CommSend input) {
     }
 
     switch (input) {
+        case DIA_S_ThrustBroken:
+            comm_prepare(6);
+            // SUGGEST: Would be cool to check crew numbers and vary response accordingly
+            comm_set_text(0, "The engines of our starship are");
+            comm_set_text(1, "heavily damaged. We cannot fly");
+            comm_set_text(2, "until they are repaired.");
+            comm_set_text(3, "You should check if we have");
+            comm_set_text(4, "enough crew members for that.");
+            comm_recv(DIA_R_Close);
+            break;
         case DIA_S_PlanFly:
             {
                 comm_prepare(6);

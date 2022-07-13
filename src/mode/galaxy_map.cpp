@@ -229,6 +229,12 @@ ExodusMode GalaxyMap::update(float delta) {
                 if (click.x < 0.25) {
                     // Fly
                     if (!player->get_location().in_flight() && selected_ft != exostate.loc2tgt(player->get_location().get_target())) {
+                        if (player->get_starship().pct_damage_thrust > 50) {
+                            comm_open(DIA_S_ThrustBroken);
+                            stage = GM_FlyConfirm;
+                            return ExodusMode::MODE_None;
+                        }
+
                         comm_ctx.location = exostate.tgt2loc(selected_ft);
                         // TODO: Vary number of months
                         comm_ctx.months = 1;
