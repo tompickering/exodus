@@ -23,6 +23,7 @@ class LunarBattlePrep : ModeBase, BattleReport {
             LBP_InitialPause,
             LBP_InvaderReport,
             LBP_AllySupport,
+            LBP_AllySupportWaitForClick,
             LBP_GuildSupport,
             LBP_BuyMines,
             LBP_CommandOrWait,
@@ -38,6 +39,8 @@ class LunarBattlePrep : ModeBase, BattleReport {
         };
 
         Stage stage;
+
+        int war_ally_idx;
 
         int mines_available;
         int mines_price;
