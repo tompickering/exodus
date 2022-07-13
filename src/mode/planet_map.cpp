@@ -441,6 +441,8 @@ void PlanetMap::exit() {
     for (ID i = LAW_JUSTICE; i <= LAW_EXIT; i = (ID)((int)i+1)) {
         draw_manager.unset_selectable(id(i));
     }
+
+    ModeBase::exit();
 }
 
 void PlanetMap::draw() {
