@@ -187,6 +187,12 @@ ExodusMode StarMap::update(float delta) {
                 } else if (click.x < 0.75) {
                     // Comm
                     if (planet && planet->exists()) {
+                        if (player->get_starship().pct_damage_comms > 50) {
+                            comm_open(DIA_S_CommsBroken);
+                            stage = SM_PlanetComm;
+                            return ExodusMode::MODE_None;
+                        }
+
                         if (planet->is_owned()) {
                             if (planet->get_owner() == player_idx) {
                                 // Comms with own planet

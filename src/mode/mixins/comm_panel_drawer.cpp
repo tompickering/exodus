@@ -642,6 +642,11 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_title("Message from counsellor");
             comm_set_img_caption("COUNSELLOR");
             break;
+        case DIA_S_CommsBroken:
+            comm_set_img(CI_HumanThoughtful);
+            comm_set_title("Message from counsellor");
+            comm_set_img_caption("COUNSELLOR");
+            break;
         case DIA_S_PlanetComm:
             comm_set_img(CI_HumanPlanet);
             comm_set_img_caption("COUNSELLOR");
@@ -910,6 +915,16 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     }
                 }
             }
+            break;
+        case DIA_S_CommsBroken:
+            comm_prepare(6);
+            // SUGGEST: Would be cool to check crew numbers and vary response accordingly
+            comm_set_text(0, "The communication systems are");
+            comm_set_text(1, "heavily damaged. We cannot");
+            comm_set_text(2, "communicate until they are repaired.");
+            comm_set_text(3, "You should check if we have");
+            comm_set_text(4, "enough crew members for that.");
+            comm_recv(DIA_R_Close);
             break;
         case DIA_S_PlanetComm:
             comm_prepare(4);

@@ -49,6 +49,7 @@ enum CommSend {
     DIA_S_PlanSettle,
     DIA_S_NamePlanet,
     DIA_S_NamePlanetConfirm,
+    DIA_S_CommsBroken,
     DIA_S_PlanetComm,
     DIA_S_HailPlanet,
     DIA_S_Attack,
