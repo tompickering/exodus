@@ -82,6 +82,8 @@ void StarMap::enter() {
 
     festival_delay = 0;
 
+    lookagain = false;
+
     for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
         id_fleet_markers[i] = draw_manager.new_sprite_id();
     }
@@ -137,16 +139,15 @@ ExodusMode StarMap::update(float delta) {
             update_panel_info_player(TGT_Primary, player);
             update_panel_info_planet(TGT_Primary, player, planet);
 
+            if (ephstate.get_ephemeral_state() == EPH_PostPlanet) {
+                stage = SM_HandlePostPlanet;
+                return ExodusMode::MODE_None;
+            }
+
             for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
                 if (draw_manager.query_click(id(ID::PLANET1 + i)).id) {
                     select_planet(i);
                 }
-            }
-
-            if (ephstate.get_ephemeral_state() == EPH_Festival) {
-                ephstate.clear_ephemeral_state();
-                stage = SM_FestivalDelay;
-                return ExodusMode::MODE_None;
             }
 
             click = draw_manager.query_click(id_panel);
@@ -611,6 +612,46 @@ ExodusMode StarMap::update(float delta) {
                         return ExodusMode::MODE_GalaxyMap;
                     }
                 }
+            }
+            break;
+        case SM_HandlePostPlanet:
+            if (ephstate.consume_postplanet(PPA_BadLaws)) {
+                comm_open(DIA_S_LookAgainBadLaws);
+                stage = SM_HandlePostPlanetComms;
+                return ExodusMode::MODE_None;
+            }
+            if (ephstate.consume_postplanet(PPA_NoEssentials)) {
+                comm_open(DIA_S_LookAgainNoEssentials);
+                stage = SM_HandlePostPlanetComms;
+                return ExodusMode::MODE_None;
+            }
+
+            if (lookagain) {
+                return ExodusMode::MODE_PlanetMap;
+            }
+
+            if (ephstate.consume_postplanet(PPA_Festival)) {
+                stage = SM_FestivalDelay;
+                return ExodusMode::MODE_None;
+            }
+
+            // All postplanet actions consumed - we can clear state now
+            ephstate.clear_ephemeral_state();
+
+            stage = SM_Idle;
+            return ExodusMode::MODE_None;
+        case SM_HandlePostPlanetComms:
+            switch (comm_update(delta)) {
+                case CA_Proceed:
+                    lookagain = true;
+                    // Fallthrough...
+                case CA_Abort:
+                    comm_close();
+                    stage = SM_HandlePostPlanet;
+                    break;
+                default:
+                    break;
+
             }
             break;
         case SM_Back2Gal:

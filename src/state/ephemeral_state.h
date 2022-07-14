@@ -117,6 +117,15 @@ typedef struct {
     int months;
 } FlyPlan;
 
+enum PostPlanetAction : uint8_t {
+    PPA_BadLaws,
+    PPA_NoEssentials,
+    PPA_Festival,
+};
+
+// Multiple actions might be needed simultaneously - need 1 bit per reason
+typedef uint8_t PostPlanetFlags;
+
 enum GameOverReason {
     GAMEOVER_Failed,
     GAMEOVER_Dead,
@@ -133,7 +142,7 @@ enum EphState {
     EPH_ResearchCheck,
     EPH_AlienResearch,
     EPH_ResumeFly,
-    EPH_Festival,
+    EPH_PostPlanet,
     EPH_SelectPlanet,
     EPH_GameOver,
 };
@@ -146,6 +155,9 @@ class EphemeralState {
         void clear_ephemeral_state();
         bool ephemeral_state_set();
         ExodusMode get_appropriate_mode();
+
+        void set_postplanet(PostPlanetAction);
+        bool consume_postplanet(PostPlanetAction);
 
         // These MUST be set going into EPH_SelectPlanet
         // This is where the results are stored
@@ -169,6 +181,8 @@ class EphemeralState {
         const char* default_music;
     private:
         EphState eph_state;
+
+        PostPlanetFlags postplanet_flags;
 
     friend class ExodusDebug;
 };

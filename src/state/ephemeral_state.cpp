@@ -38,7 +38,7 @@ ExodusMode EphemeralState::get_appropriate_mode() {
             return ExodusMode::MODE_PlanetMap;
         case EPH_ResearchCheck:
             return ExodusMode::MODE_None;
-        case EPH_Festival:
+        case EPH_PostPlanet:
             // FIXME: This assumes exiting planet map will open
             // StarMap. Ideally we would specify StarMap here, but
             // we need to find another way to trigger a mode stack pop.
@@ -50,4 +50,17 @@ ExodusMode EphemeralState::get_appropriate_mode() {
     }
 
     return ExodusMode::MODE_None;
+}
+
+void EphemeralState::set_postplanet(PostPlanetAction ppa) {
+    postplanet_flags |= (1 << ppa);
+}
+
+bool EphemeralState::consume_postplanet(PostPlanetAction ppa) {
+    PostPlanetFlags fmask = (1 << ppa);
+    if (postplanet_flags & fmask) {
+        postplanet_flags &= ~fmask;
+        return true;
+    }
+    return false;
 }

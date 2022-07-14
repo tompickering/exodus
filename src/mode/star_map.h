@@ -33,6 +33,8 @@ class StarMap : ModeBase, PanelDrawer, CommPanelDrawer, FrameDrawer {
             SM_FestivalDelay,
             SM_Festival,
             SM_SelectPlanet,
+            SM_HandlePostPlanet,
+            SM_HandlePostPlanetComms,
             SM_Back2Gal,
         };
 
@@ -46,6 +48,8 @@ class StarMap : ModeBase, PanelDrawer, CommPanelDrawer, FrameDrawer {
         void update_fleet_menu();
 
         float festival_delay;
+
+        bool lookagain;
 
         SprID id_fleet_markers[STAR_MAX_PLANETS];
 };

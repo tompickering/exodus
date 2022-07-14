@@ -652,7 +652,25 @@ ExodusMode PlanetMap::update(float delta) {
             }
 
             if (draw_manager.query_click(id(ID::EXIT)).id) {
-                if (ephstate.get_ephemeral_state() == EPH_Festival) {
+                // 'lookagain' in orig
+
+                if (planet->laws_cause_unrest() && onein(3)) {
+                    ephstate.set_ephemeral_state(EPH_PostPlanet);
+                    ephstate.set_postplanet(PPA_BadLaws);
+                }
+
+                /*
+                 * It's weird that having a city precludes this warning, but this
+                 * is how the original works. Maybe if the player has a city then
+                 * they should be competent enough to realise this for themselves!
+                 */
+                if (!planet->has_stone(STONE_Base)
+                    || (!planet->has_stone(STONE_Agri) && !planet->has_stone(STONE_City))) {
+                    ephstate.set_ephemeral_state(EPH_PostPlanet);
+                    ephstate.set_postplanet(PPA_NoEssentials);
+                }
+
+                if (ephstate.get_ephemeral_state() == EPH_PostPlanet) {
                     return ephstate.get_appropriate_mode();
                 }
                 return ExodusMode::MODE_Pop;
@@ -1096,7 +1114,8 @@ ExodusMode PlanetMap::update(float delta) {
                 }
 
                 if (festival) {
-                    ephstate.set_ephemeral_state(EPH_Festival);
+                    ephstate.set_ephemeral_state(EPH_PostPlanet);
+                    ephstate.set_postplanet(PPA_Festival);
                     clear_law_ids();
                     draw_law_panel();
                     draw_manager.draw_text(

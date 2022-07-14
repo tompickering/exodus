@@ -52,6 +52,8 @@ We also have a second singleton in addition to ExodusState, named EphemeralState
 
 It is important to ensure that the game flow stays sane in that we always enter the correct mode to handle the current ephemeral state. We attempt to keep this tight by providing an interface within the EphemeralState to inform us of the appropriate mode for a particular configuration, such that we may at least limit our need to worry about this matter to a single point in the codebase.
 
+Like several other things, the ephemeral state turned out to be a bit horrible in practice. Particularly with regards to the PostPlanet logic which is used for multiple things and stops PlanetMap from really being able to use EphemeralState for anything else whilst in normal planet editing mode. Eurgh.
+
 
 - timer
 

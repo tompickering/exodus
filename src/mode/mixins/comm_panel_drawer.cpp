@@ -647,6 +647,16 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_title("Message from counsellor");
             comm_set_img_caption("COUNSELLOR");
             break;
+        case DIA_S_LookAgainBadLaws:
+            comm_set_img(CI_HumanThoughtful);
+            comm_set_title("Message from counsellor");
+            comm_set_img_caption("COUNSELLOR");
+            break;
+        case DIA_S_LookAgainNoEssentials:
+            comm_set_img(CI_HumanThoughtful);
+            comm_set_title("Message from counsellor");
+            comm_set_img_caption("COUNSELLOR");
+            break;
         case DIA_S_CommsBroken:
             comm_set_img(CI_HumanThoughtful);
             comm_set_title("Message from counsellor");
@@ -930,6 +940,26 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     }
                 }
             }
+            break;
+        case DIA_S_LookAgainBadLaws:
+            comm_prepare(6);
+            comm_set_text(0, "I am not sure if your people");
+            comm_set_text(1, "accept the new rules you have");
+            comm_set_text(2, "created.");
+            comm_set_text(3, "Maybe you should take a look at");
+            comm_set_text(4, "them again.");
+            comm_show_buttons(true);
+            comm_recv(DIA_R_ProceedOrAbort);
+            break;
+        case DIA_S_LookAgainNoEssentials:
+            comm_prepare(6);
+            comm_set_text(0, "You have to build at least one");
+            comm_set_text(1, "command station and one food");
+            comm_set_text(2, "unit for its supply.");
+            comm_set_text(3, "We have no control over the planet");
+            comm_set_text(4, "without a command base.");
+            comm_show_buttons(true);
+            comm_recv(DIA_R_ProceedOrAbort);
             break;
         case DIA_S_CommsBroken:
             comm_prepare(6);
