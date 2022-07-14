@@ -849,8 +849,23 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 break;
             }
 
-            // TODO: Check for villages, show data from Co14
+            if (comm_planet->has_stone(STONE_Village)) {
+                comm_prepare(6);
+                comm_set_text(0, "Our experts have discovered");
+                comm_set_text(1, "intelligent life on this planet. It");
+                comm_set_text(2, "seems to be a primitive and");
+                comm_set_text(3, "peaceful race, living in small");
+                comm_set_text(4, "villages.");
+                comm_recv(DIA_R_SettleIntelligentLife);
+                break;
+            }
 
+            // Still needed, otherwise we hit a div-by-zero when it tries to draw...
+            comm_prepare(6);
+
+            comm_recv_proxyto(DIA_S_PlanClaim);
+            break;
+        case DIA_S_PlanClaim:
             {
                 comm_prepare(6);
                 const char *size_str = "small";
@@ -2078,6 +2093,11 @@ void CommPanelDrawer::comm_recv(CommRecv output) {
     comm_state = output;
 }
 
+void CommPanelDrawer::comm_recv_proxyto(CommSend proxyto) {
+    comm_proxyto = proxyto;
+    comm_recv(DIA_R_Proxy);
+}
+
 void CommPanelDrawer::comm_process_responses() {
     /*
      * Respond to user interaction.
@@ -2143,9 +2163,17 @@ void CommPanelDrawer::comm_process_responses() {
                 comm_report_action = CA_Abort;
             }
             break;
+        case DIA_R_Proxy:
+            comm_send(comm_proxyto);
+            break;
         case DIA_R_SettleCannotAfford:
             if (clicked) {
                 comm_report_action = CA_Abort;
+            }
+            break;
+        case DIA_R_SettleIntelligentLife:
+            if (clicked) {
+                comm_send(DIA_S_PlanClaim);
             }
             break;
         case DIA_R_SettlePlanetInfo:
