@@ -137,7 +137,6 @@ ExodusMode StarMap::update(float delta) {
             draw_planets(delta);
 
             update_panel_info_player(TGT_Primary, player);
-            update_panel_info_planet(TGT_Primary, player, planet);
 
             if (ephstate.get_ephemeral_state() == EPH_PostPlanet) {
                 stage = SM_HandlePostPlanet;
@@ -188,6 +187,13 @@ ExodusMode StarMap::update(float delta) {
                 } else if (click.x < 0.75) {
                     // Comm
                     if (planet && planet->exists()) {
+                        PlayerLocation &loc = player->get_location();
+                        if (loc.in_flight() || loc.get_target() != exostate.get_active_star_idx()) {
+                            panel_set_text("Your fleet is not in this system.");
+                            return ExodusMode::MODE_None;
+                        }
+
+
                         if (player->get_starship().pct_damage_comms > 50) {
                             comm_open(DIA_S_CommsBroken);
                             stage = SM_PlanetComm;
@@ -773,6 +779,7 @@ bool StarMap::select_planet(int index) {
     if (p && p->exists()) {
         exostate.set_active_planet(index);
         set_fleet_button(!(p->is_owned() && exostate.get_active_player_idx() == p->get_owner()));
+        update_panel_info_planet(TGT_Primary, exostate.get_active_player(), p);
         return true;
     }
     return false;
