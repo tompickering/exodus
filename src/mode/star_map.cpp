@@ -390,6 +390,16 @@ ExodusMode StarMap::update(float delta) {
                         comm_open(DIA_S_NoBombers);
                         return ExodusMode::MODE_None;
                     } else {
+                        /*
+                         * This is a little out of order compared to the original,
+                         * which finishes PROCflybomb first (from PROCbombplan) and
+                         * then adjusts unrest, sets punish and trace etc.
+                         */
+                        planet->adjust_unrest(1);
+
+                        // TODO: punish%(1,2)=1
+                        // TODO: trace%(9)+=1
+
                         int bombers_killed = 0;
                         int att = planet->plan_bomb(fleet.bombers, tgt, bombers_killed, bmb_guns);
 
