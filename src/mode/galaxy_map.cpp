@@ -500,6 +500,11 @@ ExodusMode GalaxyMap::update(float delta) {
                     bulletin_ensure_closed();
                     // The only place we emerge from month-pass-specific stages...
                     stage = GM_Idle;
+
+                    // This is mainly to redraw stars in case a sun expansion occurred
+                    draw_galaxy(false);
+                    draw_panel_bg(TGT_Primary);
+
                     // Ensure we prepare the next frame straight away
                     // Otherwise causes an annoying flicker on month pass end
                     update(0);
