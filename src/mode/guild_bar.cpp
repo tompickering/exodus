@@ -660,9 +660,7 @@ ExodusMode GuildBar::update(float delta) {
             draw_manager.draw(ID::SHERIFF_BG, nullptr);
             draw_manager.draw(ID::SHERIFF_FRAME, nullptr);
             draw_manager.draw(IMG_SG3_DUST);
-            audio_manager.target_music(MUS_CELEBRATE);
-            stage = GB_Idle;
-            break;
+            return ExodusMode::MODE_Reload;
     }
 
     return ExodusMode::MODE_None;
