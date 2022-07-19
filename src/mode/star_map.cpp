@@ -397,7 +397,9 @@ ExodusMode StarMap::update(float delta) {
                          */
                         planet->adjust_unrest(1);
 
-                        // TODO: punish%(1,2)=1
+                        // punish%(1,2)=1
+                        player->commit_infraction(INF_BombAttack);
+
                         // TODO: trace%(9)+=1
 
                         int bombers_killed = 0;

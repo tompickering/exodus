@@ -653,6 +653,18 @@ void Player::clear_mission() {
     set_mission_type(MT_None);
 }
 
+void Player::commit_infraction(Infraction inf) {
+    infraction_mask |= (1 << inf);
+}
+
+bool Player::committed_infraction(Infraction inf) {
+    return (infraction_mask & (1 << inf)) > 0;
+}
+
+void Player::clear_infractions() {
+    infraction_mask = 0;
+}
+
 AIFlag Player::get_flag(int idx) {
     if (idx >= 9) {
         L.fatal("Tried to access AI flag > maximum (%d)", idx);

@@ -158,6 +158,7 @@ void ExodusState::init(GameConfig config) {
         for (int j = 0; j < OFF_MAX; ++j) {
             players[i].set_officer((Officer)j, OFFQ_Poor);
         }
+        players[i].infraction_mask = 0;
     }
 
     // TODO: Check whether any initial alliances are set up

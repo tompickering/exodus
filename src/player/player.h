@@ -153,6 +153,12 @@ enum OfficerQuality {
     OFFQ_MAX,
 };
 
+enum Infraction : uint8_t {
+    INF_TradePlu,
+    INF_AttackGuildShip,
+    INF_BombAttack,
+};
+
 enum MissionType {
     MT_None,
     MT_TerrorComm,
@@ -278,6 +284,10 @@ class Player {
         const Mission& get_mission();
         void clear_mission();
 
+        void commit_infraction(Infraction);
+        bool committed_infraction(Infraction);
+        void clear_infractions();
+
         // AI
         AIFlag get_flag(int);
         int get_tactic();
@@ -316,6 +326,8 @@ class Player {
         int tax;  // Orig: t%
         OfficerQuality officers[OFF_MAX];  // Orig: Ps%
         Mission mission;
+
+        uint32_t infraction_mask;
 
         int transfer(int, int*);
 

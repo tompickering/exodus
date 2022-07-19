@@ -338,7 +338,8 @@ ExodusMode AlienVessel::update(float delta) {
                 }
 
                 if (type == VESSEL_GuildPatrol) {
-                    // TODO: punish%(1,1)=1
+                    // punish%(1,1)=1
+                    player->commit_infraction(INF_AttackGuildShip);
                 }
 
                 if (will_surrender) {

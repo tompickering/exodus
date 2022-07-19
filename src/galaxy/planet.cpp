@@ -1513,7 +1513,8 @@ TradeReport Planet::monthly_trade() {
     reserves_plu -= rpt.pl;
 
     if (rpt.pl > 0) {
-        // TODO: Criminal record for plutonium trade!
+        // punish%(1,0)=1
+        o->commit_infraction(INF_TradePlu);
     }
 
     o->give_mc(rpt.mc);
