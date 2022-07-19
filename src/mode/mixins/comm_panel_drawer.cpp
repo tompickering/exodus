@@ -643,6 +643,7 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img_caption("COUNSELLOR");
             break;
         case DIA_S_PlanSettle:
+        case DIA_S_PlanProbe:
             comm_set_img(CI_Human);
             comm_set_title("Message from counsellor");
             comm_set_img_caption("COUNSELLOR");
@@ -849,6 +850,51 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 break;
             }
 
+            if (comm_player->get_starship().bionic_probes > 0) {
+                comm_prepare(6);
+                comm_set_text(0, "Shall we launch a bionic probe?");
+                comm_show_buttons(true);
+                comm_recv(DIA_R_SettleQueryProbe);
+                break;
+            }
+
+            // Still needed, otherwise we hit a div-by-zero when it tries to draw...
+            comm_prepare(6);
+
+            comm_recv_proxyto(DIA_S_PlanSettle2);
+            break;
+        case DIA_S_PlanProbe:
+            {
+                comm_prepare(6);
+
+                StoneSet buildset;
+                buildset.add(STONE_Base);
+                buildset.add(STONE_Mine);
+                buildset.add(STONE_Plu);
+                buildset.add(STONE_City);
+                buildset.add(STONE_Inf);
+                buildset.add(STONE_Gli);
+                buildset.add(STONE_Art);
+                buildset.add(STONE_Port0);
+                buildset.add(STONE_Port1);
+                buildset.add(STONE_Port2);
+                buildset.add(STONE_Trade);
+                buildset.add(STONE_Village);
+                buildset.add(STONE_Park);
+
+                StoneSet freeset;
+                freeset.add(STONE_Clear);
+                freeset.add(STONE_NaturalSmall);
+
+                comm_set_text(0, "Bionic Probe Results:");
+                comm_set_text(2, "Minerals: %d", comm_planet->get_minerals());
+                comm_set_text(3, "Buildings: %d", comm_planet->count_stones(buildset));
+                comm_set_text(4, "Free space: %d", comm_planet->count_stones(freeset));
+
+                comm_recv(DIA_R_SettleProbeResults);
+            }
+            break;
+        case DIA_S_PlanSettle2:
             if (comm_planet->has_stone(STONE_Village)) {
                 comm_prepare(6);
                 comm_set_text(0, "Our experts have discovered");
@@ -2169,6 +2215,23 @@ void CommPanelDrawer::comm_process_responses() {
         case DIA_R_SettleCannotAfford:
             if (clicked) {
                 comm_report_action = CA_Abort;
+            }
+            break;
+        case DIA_R_SettleQueryProbe:
+            if (proceed) {
+                if (comm_player->get_starship().bionic_probes > 0) {
+                    comm_player->get_starship().bionic_probes--;
+                    comm_report_action = CA_BionicProbe;
+                } else {
+                    L.error("Should not have been prompted to use probe we don't have");
+                }
+            } else if (abort) {
+                comm_send(DIA_S_PlanSettle2);
+            }
+            break;
+        case DIA_R_SettleProbeResults:
+            if (clicked) {
+                comm_send(DIA_S_PlanSettle2);
             }
             break;
         case DIA_R_SettleIntelligentLife:

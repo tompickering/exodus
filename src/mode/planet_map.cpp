@@ -383,7 +383,8 @@ void PlanetMap::enter() {
     // 2 = scout / planning bomb attack
     // 3 = bombing
 
-    if (ephstate.get_ephemeral_state() == EPH_ScoutPlanet) {
+    if (ephstate.get_ephemeral_state() == EPH_ProbePlanet
+     || ephstate.get_ephemeral_state() == EPH_ScoutPlanet) {
         mus = mpart2mus(4);
         draw_menu = false;
         do_animations = false;
@@ -722,7 +723,10 @@ ExodusMode PlanetMap::update(float delta) {
         case PM_Scout:
             {
                 if (draw_manager.clicked()) {
-                    ephstate.clear_ephemeral_state();
+                    // We need to remember that we're in the middle of a probe
+                    if (ephstate.get_ephemeral_state() != EPH_ProbePlanet) {
+                        ephstate.clear_ephemeral_state();
+                    }
                     return ExodusMode::MODE_Pop;
                 }
             }

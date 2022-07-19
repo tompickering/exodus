@@ -143,6 +143,15 @@ ExodusMode StarMap::update(float delta) {
                 return ExodusMode::MODE_None;
             }
 
+            // We have returned from planet probe view - resume dialogue
+            if (ephstate.get_ephemeral_state() == EPH_ProbePlanet) {
+                ephstate.clear_ephemeral_state();
+                comm_open(DIA_S_PlanProbe);
+                stage = SM_PlanSettle;
+                return ExodusMode::MODE_None;
+            }
+
+
             for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
                 if (draw_manager.query_click(id(ID::PLANET1 + i)).id) {
                     select_planet(i);
@@ -517,6 +526,10 @@ ExodusMode StarMap::update(float delta) {
             } else if (action == CA_Abort) {
                 comm_close();
                 stage = SM_Idle;
+            } else if (action == CA_BionicProbe) {
+                comm_close();
+                ephstate.set_ephemeral_state(EPH_ProbePlanet);
+                return ExodusMode::MODE_PlanetMap;
             }
             break;
         case SM_PlanSettleFade:
