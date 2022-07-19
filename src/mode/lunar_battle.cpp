@@ -270,6 +270,8 @@ void LunarBattle::draw_ground() {
 }
 
 void LunarBattle::exit() {
+    comm_ensure_closed();
+
     LunarBattleParams &b = ephstate.lunar_battle;
 
     if (!b.auto_battle) {
