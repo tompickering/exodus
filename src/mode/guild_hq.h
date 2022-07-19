@@ -16,6 +16,7 @@ class GuildHQ : ModeBase {
             HQ_Guildbot,
             HQ_GuildbotBecomeMember,
             HQ_GuildbotQuitMembership,
+            HQ_GuildbotPayFine,
             HQ_GuildbotCloseOnClick,
             HQ_ClaimGuildmaster,
             HQ_GuildmasterClaimed,
@@ -27,6 +28,9 @@ class GuildHQ : ModeBase {
         float guildbot_interp;
         float eyes_loop;
         float ending_delay;
+
+        int fine;
+        int text_y;
 
         void draw_panel();
         void draw_choice();

@@ -451,8 +451,7 @@ ExodusMode GalaxyMap::update(float delta) {
                                 break;
                         }
 
-                        // TODO
-                        if (false) {
+                        if (player->committed_any_infractions()) {
                             bulletin_set_next_text("");
                             bulletin_set_next_text("But please note that you have violated");
                             bulletin_set_next_text("the Space Guild Rules.");

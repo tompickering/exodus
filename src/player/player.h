@@ -286,6 +286,7 @@ class Player {
 
         void commit_infraction(Infraction);
         bool committed_infraction(Infraction);
+        bool committed_any_infractions();
         void clear_infractions();
 
         // AI

@@ -190,8 +190,7 @@ ExodusMode GuildHQ::update(float delta) {
 
                     bool worthy = exostate.mission_complete();
                     bool member = player->is_guild_member();
-                    // TODO: Check whether we have outstanding violations
-                    bool punish = false;
+                    bool punish = player->committed_any_infractions();
                     int line = 60;
 
                     stage = HQ_ClaimGuildmaster;
@@ -422,6 +421,104 @@ ExodusMode GuildHQ::update(float delta) {
                 stage = HQ_GuildbotBecomeMember;
             }
 
+            if (draw_manager.query_click(id(ID::BOT_REP)).id) {
+                clear_bot_options();
+                draw_panel();
+                draw_manager.draw_text(
+                    "Reputation amongst the lords:",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 4,
+                    COL_TEXT2);
+
+                const int rep = player->get_reputation();
+
+                const char* rep_str = "very bad";
+                if (rep >= 3) {
+                    rep_str = "very good";
+                } else if (rep > 2) {
+                    rep_str = "good";
+                } else if (rep > 1) {
+                    rep_str = "bad";
+                }
+
+                char text[64];
+                snprintf(text, sizeof(text), "Your reputation is %s", rep_str);
+
+                draw_manager.draw_text(
+                    text,
+                    Justify::Left,
+                    PANEL_X + 12, PANEL_Y + 44,
+                    COL_TEXT);
+
+                draw_manager.draw_text(
+                    "Space Guild Entries:",
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 84,
+                    COL_TEXT2);
+
+                fine = 0;
+                text_y = 124;
+
+                if (player->committed_infraction(INF_TradePlu)) {
+                    draw_manager.draw_text(
+                        "Dealing with Plutonium",
+                        Justify::Left,
+                        PANEL_X + 12, PANEL_Y + text_y,
+                        COL_TEXT);
+                    text_y += 20;
+                    fine += 200;
+                }
+
+                if (player->committed_infraction(INF_AttackGuildShip)) {
+                    draw_manager.draw_text(
+                        "Attack of Guild Patrol Ships",
+                        Justify::Left,
+                        PANEL_X + 12, PANEL_Y + text_y,
+                        COL_TEXT);
+                    text_y += 20;
+                    fine += 500;
+                }
+
+                if (player->committed_infraction(INF_BombAttack)) {
+                    draw_manager.draw_text(
+                        "Bomb Attacks",
+                        Justify::Left,
+                        PANEL_X + 12, PANEL_Y + text_y,
+                        COL_TEXT);
+                    text_y += 20;
+                    fine += 300;
+                }
+
+                if (fine > 0) {
+                    snprintf(text, sizeof(text), "Fine: %d MC", fine);
+                    draw_manager.draw_text(
+                        text,
+                        Justify::Left,
+                        PANEL_X + 12, PANEL_Y + text_y,
+                        COL_TEXT);
+                    text_y += 20;
+
+                    if (player->can_afford(fine)) {
+                        draw_manager.draw_text(
+                            "Do you wish to pay?",
+                            Justify::Left,
+                            PANEL_X + 12, PANEL_Y + text_y,
+                            COL_TEXT);
+                        text_y += 20;
+
+                        draw_choice();
+                        stage = HQ_GuildbotPayFine;
+                    }
+                } else {
+                    draw_manager.draw_text(
+                        "You are clean, Sir.",
+                        Justify::Left,
+                        PANEL_X + 12, PANEL_Y + text_y,
+                        COL_TEXT);
+                    stage = HQ_GuildbotCloseOnClick;
+                }
+            }
+
             if (draw_manager.query_click(id(ID::BOT_QUIT)).id) {
                 close_bot_panel();
             }
@@ -498,6 +595,35 @@ ExodusMode GuildHQ::update(float delta) {
                     }
 
                     stage = HQ_GuildbotCloseOnClick;
+                }
+            }
+            break;
+        case HQ_GuildbotPayFine:
+            {
+                SpriteClick click = draw_manager.query_click(id(ID::MEMBER_CHOICE));
+                if (click.id) {
+                    if (click.x < .5f) {
+                        // Proceed
+                        if (player->attempt_spend(fine)) {
+                            player->clear_infractions();
+                            player->adjust_reputation(1);
+                            draw_manager.draw_text(
+                                "Thank you, Sir.",
+                                Justify::Left,
+                                PANEL_X + 12, PANEL_Y + text_y,
+                                COL_TEXT);
+                            stage = HQ_GuildbotCloseOnClick;
+                        } else {
+                            L.error("Should have checked we can afford fine already");
+                        }
+                    } else {
+                        draw_manager.draw_text(
+                            "Think about it, Sir.",
+                            Justify::Left,
+                            PANEL_X + 12, PANEL_Y + text_y,
+                            COL_TEXT);
+                        stage = HQ_GuildbotCloseOnClick;
+                    }
                 }
             }
             break;

@@ -661,6 +661,10 @@ bool Player::committed_infraction(Infraction inf) {
     return (infraction_mask & (1 << inf)) > 0;
 }
 
+bool Player::committed_any_infractions() {
+    return infraction_mask > 0;
+}
+
 void Player::clear_infractions() {
     infraction_mask = 0;
 }
