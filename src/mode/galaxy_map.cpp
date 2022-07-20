@@ -2328,8 +2328,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 Star *s = &stars[star_idx];
                 Planet *p = s->get_planet(planet_idx);
                 if (p && p->exists() && !p->is_owned()) {
-                    // TODO: Orig doesn't check affordability here, allowing -ve MC
-                    if (player->attempt_spend(190)) {
+                    if (player->attempt_spend_cpuforce(190)) {
                         p->set_owner(player_idx);
                         // FIXME: Set to 0 properly...
                         p->adjust_unrest(-99);
@@ -2710,8 +2709,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
                         if (!owner->is_human()) {
                             if (!exostate.has_alliance(player_idx, owner_idx, ALLY_Trade)) {
-                                // FIXME: Orig allows CPU to pay price they can't afford (-ve MC) here
-                                if (!player->attempt_spend(n)) {
+                                if (!player->attempt_spend_cpuforce(n)) {
                                     L.warn("[%s] Preventing trade that was not affordable",
                                             player->get_full_name());
                                     player->set_tactic(22);

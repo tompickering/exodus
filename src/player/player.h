@@ -226,6 +226,7 @@ class Player {
         bool can_afford(int);
         bool attempt_spend(int);
         bool attempt_spend_with_remaining(int, int);
+        bool attempt_spend_cpuforce(int);
         int get_fleet_marker_idx();
         PlayerLocation& get_location();
         Starship& get_starship();

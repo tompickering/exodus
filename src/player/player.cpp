@@ -290,6 +290,20 @@ bool Player::attempt_spend_with_remaining(int cost, int remaining) {
     return false;
 }
 
+bool Player::attempt_spend_cpuforce(int cost) {
+    if (is_human()) {
+        return attempt_spend(cost);
+    }
+
+    mc -= cost;
+
+    if (mc < 0) {
+        L.info("%s now has negative MC: %d", get_full_name(), mc);
+    }
+
+    return true;
+}
+
 int Player::get_fleet_marker_idx() {
     return fleet_marker_idx;
 }

@@ -2070,17 +2070,13 @@ void Planet::ai_update() {
                 break;
             case 5:
                 // BUILD TRADE CENTRE
-                // TODO: PROCeta5 doesn't check that the owner can afford the cost
-                // and can result in -ve MC. Should we retain that behaviour here?
-                if (free > 0 && owner->attempt_spend(stone_cost(STONE_Trade))) {
+                if (free > 0 && owner->attempt_spend_cpuforce(stone_cost(STONE_Trade))) {
                     free -= ai_place_stone(1, STONE_Trade, STONE_City);
                 }
                 break;
             case 6:
                 // BUILD LUNAR BASE
-                // TODO: PROCeta6 doesn't check that the owner can afford the cost
-                // and can result in -ve MC. Should we retain that behaviour here?
-                if (!has_lunar_base() && owner->attempt_spend(COST_LUNAR_BASE)) {
+                if (!has_lunar_base() && owner->attempt_spend_cpuforce(COST_LUNAR_BASE)) {
                     build_lunar_base();
                 } else {
                     // TODO: PROCeta6 sets action=2 in this case. It looks ineconsequential,
