@@ -228,7 +228,8 @@ ExodusMode GalaxyMap::update(float delta) {
             if (click.id) {
                 if (click.x < 0.25) {
                     // Fly
-                    if (!player->get_location().in_flight() && selected_ft != exostate.loc2tgt(player->get_location().get_target())) {
+                    FlyTarget *tgt = exostate.loc2tgt(player->get_location().get_target());
+                    if (!player->get_location().in_flight() && selected_ft != tgt) {
                         if (player->get_starship().pct_damage_thrust > 50) {
                             comm_open(DIA_S_ThrustBroken);
                             stage = GM_FlyConfirm;
@@ -236,8 +237,16 @@ ExodusMode GalaxyMap::update(float delta) {
                         }
 
                         comm_ctx.location = exostate.tgt2loc(selected_ft);
-                        // TODO: Vary number of months
-                        comm_ctx.months = 1;
+                        // Orig stores pixel locations instead of low-res grid values
+                        // See PROC_Csunpos for original's multiplaication by 43
+                        int dx = (selected_ft->x - tgt->x) * 43;
+                        int dy = (selected_ft->y - tgt->y) * 43;
+                        int dist = sqrt((dx*dx) + (dy*dy));
+                        int ftime = 1 + (dist/300);
+                        if (ftime > 1 && player->has_invention(INV_OrbitalMassThrust)) {
+                            ftime /= 3;
+                        }
+                        comm_ctx.months = max(1, ftime);
                         comm_open(DIA_S_PlanFly);
                         stage = GM_FlyConfirm;
                         return ExodusMode::MODE_None;
