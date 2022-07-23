@@ -439,6 +439,59 @@ void DrawManagerSDL::draw_rect(DrawArea area, float thickness, RGB rgb) {
     fill(TGT_Primary, {area.x, area.y + area.h, area.w + tx, ty}, rgb);
 }
 
+void DrawManagerSDL::draw_circle(int cx, int cy, int r, RGB rgb) {
+    /*
+     * As we are drawing with surfaces and blitting rather than a renderer
+     * and SDL_RenderCopy, we are not able to take advantage of SDL's
+     * geometry rendering, such as SDL_RenderDrawLine.
+     *
+     * As such, implement circle drawing
+     */
+
+    uint32_t col = (rgb.r << 16)
+                 | (rgb.g <<  8)
+                 | (rgb.b);
+
+    int w = surf->w;
+    int h = surf->h;
+
+    uint32_t *pixels = ((uint32_t*)(surf->pixels));
+
+    int r2 = pow(r, 2);
+
+    for (int y = max(cy-r, 0); y < min(cy+r, h); ++y) {
+        int y2 = pow(y-cy, 2);
+        int dx2 = r2 - y2;
+        int dx = (int)sqrt(dx2);
+        int x0 = cx - dx;
+        int x1 = cx + dx;
+
+        if (x0 >= 0 && x0 < w) {
+            pixels[y*w + x0] = col;
+        }
+
+        if (x1 >= 0 && x1 < w) {
+            pixels[y*w + x1] = col;
+        }
+    }
+
+    for (int x = max(cx-r, 0); x < min(cx+r, w); ++x) {
+        int x2 = pow(x-cx, 2);
+        int dy2 = r2 - x2;
+        int dy = (int)sqrt(dy2);
+        int y0 = cy - dy;
+        int y1 = cy + dy;
+
+        if (y0 >= 0 && y0 < h) {
+            pixels[y0*w + x] = col;
+        }
+
+        if (y1 >= 0 && y1 < h) {
+            pixels[y1*w + x] = col;
+        }
+    }
+}
+
 void DrawManagerSDL::draw(const char* spr_key) {
     draw(DrawTarget::TGT_Primary, spr_key, nullptr, nullptr);
 }

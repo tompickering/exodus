@@ -27,6 +27,7 @@ class DrawManagerSDL : public DrawManager {
         virtual void draw_line(int, int, int, int, RGB) override;
         virtual void draw_line(int, int, int, int, int, RGB) override;
         virtual void draw_rect(DrawArea, float, RGB) override;
+        virtual void draw_circle(int, int, int, RGB) override;
         virtual void draw(const char*) override;
         virtual void draw(const char*, DrawArea) override;
         virtual void draw(const char*, DrawTransform) override;
