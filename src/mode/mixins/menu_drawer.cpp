@@ -282,8 +282,14 @@ ExodusMode MenuDrawer::menu_update(float delta) {
                 menu_text_col[i]);
         }
 
+        menu_new_mode = MODE_None;
+
         if (!menu_specific_update()) {
             break;
+        } else if (menu_new_mode != MODE_None) {
+            ExodusMode new_mode = menu_new_mode;
+            menu_new_mode = ExodusMode::MODE_None;
+            return new_mode;
         } else {
             draw_manager.consume_click();
         }
@@ -1333,6 +1339,10 @@ bool MenuDrawer::menu_specific_update() {
             }
             // 8: Wait One Month
             // 10: Show Distances
+            if (menu_row_clicked(10)) {
+                menu_new_mode = MODE_Distances;
+                return true;
+            }
             // 11: Save Game
             if (menu_row_clicked(11)) {
                 // Re-open save menu to refresh metadata

@@ -92,6 +92,8 @@ class MenuDrawer {
     private:
         MenuMode menu_mode;
 
+        ExodusMode menu_new_mode;
+
         SprID id_menu_lines[MENU_LINES];
         SprID id_menu_header_flag_bg;
         SprID id_menu_header_flag;

@@ -20,6 +20,7 @@ enum ExodusMode {
     MODE_GalaxyGen,
     MODE_GalaxyMap,
     MODE_GalaxyIntro,
+    MODE_Distances,
     MODE_GuildExterior,
     MODE_GuildBar,
     MODE_GuildHQ,
