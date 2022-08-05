@@ -393,6 +393,8 @@ void PlanetMap::enter() {
         draw_class_and_population();
         stage = PM_Scout;
     } else if (ephstate.get_ephemeral_state() == EPH_Destruction) {
+        PlanetDestruction &d = ephstate.destruction;
+
         mus = mpart2mus(8);
         draw_menu = false;
         do_animations = false;
@@ -401,11 +403,29 @@ void PlanetMap::enter() {
             draw_stones();
             // TODO: It'd be fun to keep redrawing population to watch it tick down with cities destroyed... >:D
             draw_class_and_population();
+
+            if (d.destroyer_idx >= 0 && !d.nuke) {
+                int y = 240;
+                draw_manager.draw_text(
+                    "Aerospace",
+                    Justify::Left,
+                    500, y,
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    "Bomber",
+                    Justify::Left,
+                    500, y+20,
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    "attack",
+                    Justify::Left,
+                    500, y+40,
+                    COL_TEXT);
+            }
         } else {
             play_music = false;
         }
 
-        PlanetDestruction &d = ephstate.destruction;
         if (planet->is_owned() && d.destroyer_idx >= 0) {
             int owner_idx = planet->get_owner();
             exostate.unset_alliances(planet->get_owner(), d.destroyer_idx);
