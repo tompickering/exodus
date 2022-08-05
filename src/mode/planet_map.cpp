@@ -390,7 +390,7 @@ void PlanetMap::enter() {
         do_animations = false;
         draw();
         draw_stones();
-        // TODO: Draw class and population (Destruction missing this as well?)
+        draw_class_and_population();
         stage = PM_Scout;
     } else if (ephstate.get_ephemeral_state() == EPH_Destruction) {
         mus = mpart2mus(8);
@@ -399,6 +399,8 @@ void PlanetMap::enter() {
         if (ephstate.destruction.draw) {
             draw();
             draw_stones();
+            // TODO: It'd be fun to keep redrawing population to watch it tick down with cities destroyed... >:D
+            draw_class_and_population();
         } else {
             play_music = false;
         }
@@ -1751,6 +1753,38 @@ void PlanetMap::hide_lunar_base_tool() {
         IMG_SU1_STONEXX,
         {541, 199,
         0, 0, 1, 1});
+}
+
+void PlanetMap::draw_class_and_population() {
+    int x = 500;
+    int y = 50;
+
+    draw_manager.draw_text(
+        "Class:",
+        Justify::Left,
+        x, y,
+        COL_TEXT);
+    draw_manager.draw_text(
+        planet->get_class_str(),
+        Justify::Left,
+        x, y+20,
+        COL_TEXT);
+
+    y += 80;
+
+    char population[16];
+    snprintf(population, sizeof(population), "%d m.", planet->get_population());
+
+    draw_manager.draw_text(
+        "Population:",
+        Justify::Left,
+        x, y,
+        COL_TEXT);
+    draw_manager.draw_text(
+        population,
+        Justify::Left,
+        x, y+20,
+        COL_TEXT);
 }
 
 ExodusMode PlanetMap::update_destruction(float delta) {
