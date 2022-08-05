@@ -16,7 +16,7 @@ class PlayerLocation {
         int get();
         void set(int);
         void set_target(int, int);
-        int get_target();
+        int get_target() const;
         void set_planet_target(int);
         int get_planet_target();
         bool has_visited(int);

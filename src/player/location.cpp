@@ -55,7 +55,7 @@ void PlayerLocation::set_target(int nt, int m) {
     }
 }
 
-int PlayerLocation::get_target() {
+int PlayerLocation::get_target() const {
     return target;
 }
 
