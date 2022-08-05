@@ -298,6 +298,10 @@ ExodusMode GalaxyMap::update(float delta) {
                 stage = GM_MonthPassing;
             }
 
+            if (input_manager.consume(K_D)) {
+                return ExodusMode::MODE_Distances;
+            }
+
             break;
         case GM_Zoom2Guild:
             return ExodusMode::MODE_GuildExterior;
