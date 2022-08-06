@@ -4,6 +4,7 @@
 
 #include "anim.h"
 #include "assetpaths.h"
+#include "exodus_features.h"
 
 #include "util/value.h"
 
@@ -2520,6 +2521,18 @@ bool LunarBattle::is_in_cover(BattleUnit* u) {
             return true;
         }
     }
+
+#if FEATURE_GLIDERS_COVER
+    for (int i = 0; i < n_units; ++i) {
+        if (units[i].type == UNIT_Gli) {
+            if (units[i].hp <= 0) {
+                if (units[i].x == u->x && units[i].y == u->y) {
+                    return true;
+                }
+            }
+        }
+    }
+#endif
 
     return false;
 }

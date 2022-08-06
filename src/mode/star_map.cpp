@@ -6,6 +6,7 @@
 #include "util/value.h"
 
 #include "assetpaths.h"
+#include "exodus_features.h"
 
 const float PLANET_ROTATE_SPD = .1f;
 
@@ -713,9 +714,11 @@ void StarMap::draw_planets(float delta) {
 
                 float planet_scale = 1.f;
 
+#if FEATURE_MULTISIZE_PLANETS
                 // The original renders all planets at the same scale...
                 if (planet->get_size() == PLANET_Small) planet_scale = 0.6;
                 if (planet->get_size() == PLANET_Medium) planet_scale = 0.8;
+#endif
 
                 draw_manager.draw(
                     id(ID::PLANET1 + i),
