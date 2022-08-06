@@ -221,6 +221,8 @@ class Planet {
         void adjust_unrest(int);
         void surfchange();
         void change_class(PlanetClass);
+        void register_festival();
+        bool festival_happened_this_month();
         bool surfchange_happened_this_month();
         bool trade_possible(int player_idx);
         TradeQuality initiate_trade(int player_idx);
@@ -315,6 +317,7 @@ class Planet {
 
         // TODO: SItb
 
+        bool festival_this_month;
         bool surfchange_this_month;
         bool processing_in_progress;
 

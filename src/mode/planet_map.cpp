@@ -7,6 +7,7 @@
 #include "util/value.h"
 
 #include "assetpaths.h"
+#include "exodus_features.h"
 
 using std::map;
 
@@ -789,12 +790,25 @@ ExodusMode PlanetMap::update(float delta) {
                     Justify::Left,
                     LAW_X + 20, LAW_Y+124,
                     tax_col);
+
+                RGB fest_col = COL_TEXT;
+
+#if FEATURE_FESTIVAL_LIMIT
+                if (planet->festival_happened_this_month()) {
+                    fest_col = COL_TEXT_GREYED;
+                    draw_manager.unset_selectable(id(ID::LAW_FESTIVAL));
+                } else {
+                    draw_manager.set_selectable(id(ID::LAW_FESTIVAL));
+                }
+#endif
+
                 draw_manager.draw_text(
                     id(ID::LAW_FESTIVAL),
                     "Public Festival",
                     Justify::Left,
                     LAW_X + 20, LAW_Y+164,
-                    COL_TEXT);
+                    fest_col);
+
                 draw_manager.draw_text(
                     id(ID::LAW_EXIT),
                     "Exit",
@@ -878,6 +892,9 @@ ExodusMode PlanetMap::update(float delta) {
                     return ExodusMode::MODE_Redo;
                 }
 
+#if FEATURE_FESTIVAL_LIMIT
+                if (!planet->festival_happened_this_month())
+#endif
                 if (draw_manager.query_click(id(ID::LAW_FESTIVAL)).id) {
                     clear_law_ids();
                     draw_law_panel();
@@ -1132,14 +1149,12 @@ ExodusMode PlanetMap::update(float delta) {
                 if (draw_manager.query_click(id(ID::LAW_FESTLG)).id) {
                     if (player->attempt_spend(100)) {
                         festival = true;
-                        // FIXME: Orig allows multiple festivals per
-                        // planet per month - this option makes no
-                        // sense unless that is restricted!
                         planet->adjust_unrest(-2);
                     }
                 }
 
                 if (festival) {
+                    planet->register_festival();
                     ephstate.set_ephemeral_state(EPH_PostPlanet);
                     ephstate.set_postplanet(PPA_Festival);
                     clear_law_ids();

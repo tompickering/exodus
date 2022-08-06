@@ -71,6 +71,7 @@ Planet::Planet() {
     name[0] = '\0';
     traded = 0;
     laws = 0;
+    festival_this_month = false;
     surfchange_this_month = false;
     processing_in_progress = false;
     moon_cls = MOON_Dirt;
@@ -243,6 +244,7 @@ void Planet::init() {
     set_law(LAW_PrivateIndustry,    true);
     set_law(LAW_DifferentReligions, true);
 
+    festival_this_month = false;
     surfchange_this_month = false;
     processing_in_progress = false;
 
@@ -1233,6 +1235,10 @@ void Planet::surfchange() {
     surfchange_this_month = true;
 }
 
+bool Planet::festival_happened_this_month() {
+    return festival_this_month;
+}
+
 bool Planet::surfchange_happened_this_month() {
     return surfchange_this_month;
 }
@@ -1249,6 +1255,10 @@ void Planet::change_class(PlanetClass new_cls) {
     // Ensure that changes to income due to class are
     // accompanied by an army funding cap as appropriate.
     validate_army_funding();
+}
+
+void Planet::register_festival() {
+    festival_this_month = true;
 }
 
 bool Planet::trade_possible(int player_idx) {
@@ -1269,6 +1279,7 @@ void Planet::month_reset() {
     traded = 0;
     taxes_collected = false;
     paid_to_leave = 0;
+    festival_this_month = false;
     surfchange_this_month = false;
     processing_in_progress = false;
 }
