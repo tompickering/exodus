@@ -14,6 +14,7 @@ extern ExodusDebug exodebug;
 enum ID {
     SELECTED,
     FLEET_MARKER,
+    MONTH_PASSING_BG,
     MONTH_PASSING,
     FRAMED_IMG,
     SPACEPORT2,
@@ -884,18 +885,30 @@ void GalaxyMap::month_pass_start() {
         L.fatal("We started a month-pass whilst one was still in progress");
     }
 
-    draw_manager.fill(
-        id(ID::MONTH_PASSING),
-        {160, 150, RES_X - 320, 30},
-        COL_BORDERS
-    );
+    {
+        int x = 160;
+        int y = 180;
+        int h = 40;
 
-    draw_manager.draw_text(
-        "One month is passing by",
-        Justify::Centre,
-        RES_X / 2, 154,
-        COL_TEXT2
-    );
+        draw_manager.fill(
+            id(ID::MONTH_PASSING_BG),
+            {x-2, y-2, RES_X - x*2+4, h+4},
+            {0, 0, 0}
+        );
+
+        draw_manager.fill(
+            id(ID::MONTH_PASSING),
+            {x, y, RES_X - x*2, h},
+            {0x50, 0x50, 0x50}
+        );
+
+        draw_manager.draw_text(
+            "One month is passing by",
+            Justify::Centre,
+            RES_X / 2, y+9,
+            COL_TEXT
+        );
+    }
 
     reset_planet_report();
     exostate.advance_month();
@@ -951,6 +964,7 @@ ExodusMode GalaxyMap::month_pass_update() {
         // Time delay here so the "Month passing" notification doesn't flicker.
         if (mp_state.month_pass_time > 1.f) {
             draw_manager.draw(id(ID::MONTH_PASSING), nullptr);
+            draw_manager.draw(id(ID::MONTH_PASSING_BG), nullptr);
             next_mp_stage();
         } else {
             return ExodusMode::MODE_None;
