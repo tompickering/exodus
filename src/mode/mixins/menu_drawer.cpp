@@ -1167,8 +1167,74 @@ void MenuDrawer::menu_open_specific_mode() {
             }
             break;
         case MM_ShipStatus:
+            {
+                draw_manager.draw(IMG_SP1_SHIP1, {MENU_X+248, menu_get_y(1), 0, 0, 2, 2});
+
+                const Starship& s = p->get_starship();
+
+                menu_set_txt(0, COL_TEXT2, "Ship status");
+                menu_set_txt(2, COL_TEXT, "Condition: %s", s.damaged() ? "Damaged" : "OK");
+
+                menu_set_txt(4, COL_TEXT2, "Systems:");
+
+                int x = MENU_X + 190;
+                char n[8];
+
+                menu_set_txt(6, COL_TEXT, "Shield generators");
+                snprintf(n, sizeof(n), "%d", s.shield_generators);
+                draw_manager.draw_text(n, Justify::Left, x, menu_get_y(6), COL_TEXT2);
+
+                menu_set_txt(7, COL_TEXT, "Laser guns");
+                snprintf(n, sizeof(n), "%d", s.laser_guns);
+                draw_manager.draw_text(n, Justify::Left, x, menu_get_y(7), COL_TEXT2);
+
+                menu_set_txt(8, COL_TEXT, "Missile launchers");
+                snprintf(n, sizeof(n), "%d", s.missile_launchers);
+                draw_manager.draw_text(n, Justify::Left, x, menu_get_y(8), COL_TEXT2);
+
+                menu_set_txt(9, COL_TEXT, "Crew");
+                snprintf(n, sizeof(n), "%d", s.crew);
+                draw_manager.draw_text(n, Justify::Left, x, menu_get_y(9), COL_TEXT2);
+
+                menu_set_txt(10, COL_TEXT, "Bionic probes");
+                snprintf(n, sizeof(n), "%d", s.bionic_probes);
+                draw_manager.draw_text(n, Justify::Left, x, menu_get_y(10), COL_TEXT2);
+
+                menu_set_txt(11, COL_TEXT, "Escape capsule");
+                draw_manager.draw_text(s.escape_capsule ? "Yes" : "No",
+                        Justify::Left, x, menu_get_y(11), COL_TEXT2);
+
+                menu_set_txt(12, COL_TEXT, "Repair hangar");
+                draw_manager.draw_text(s.repair_hangar ? "Yes" : "No",
+                        Justify::Left, x, menu_get_y(12), COL_TEXT2);
+            }
             break;
         case MM_ShipDamage:
+            {
+                draw_manager.draw(IMG_SP1_SHIP1, {MENU_X+248, menu_get_y(1), 0, 0, 2, 2});
+
+                const Starship& s = p->get_starship();
+
+                menu_set_txt(0, COL_TEXT2, "Ship status");
+                menu_set_txt(2, COL_TEXT, "Condition: %s", s.damaged() ? "Damaged" : "OK");
+
+                menu_set_txt(4, COL_TEXT2, "Internal systems:");
+
+                int x = MENU_X + 190;
+                char n[8];
+
+                menu_set_txt(6, COL_TEXT, "Thrust engines");
+                snprintf(n, sizeof(n), "%d%%", 100 - s.pct_damage_thrust);
+                draw_manager.draw_text(n, Justify::Left, x, menu_get_y(6), COL_TEXT2);
+
+                menu_set_txt(7, COL_TEXT, "Comm systems");
+                snprintf(n, sizeof(n), "%d%%", 100 - s.pct_damage_comms);
+                draw_manager.draw_text(n, Justify::Left, x, menu_get_y(7), COL_TEXT2);
+
+                menu_set_txt(8, COL_TEXT, "Structure");
+                snprintf(n, sizeof(n), "%d%%", 100 - s.pct_damage_struct);
+                draw_manager.draw_text(n, Justify::Left, x, menu_get_y(8), COL_TEXT2);
+            }
             break;
         case MM_Stats:
             {
@@ -1796,7 +1862,15 @@ bool MenuDrawer::menu_specific_update() {
                 return true;
             }
             // 9: Starship Status
+            if (menu_row_clicked(9)) {
+                menu_open(MM_ShipStatus);
+                return true;
+            }
             // 10: Starship Damage
+            if (menu_row_clicked(10)) {
+                menu_open(MM_ShipDamage);
+                return true;
+            }
             // 12: Statistics
             if (menu_row_clicked(12)) {
                 menu_open(MM_Stats);
@@ -1848,8 +1922,16 @@ bool MenuDrawer::menu_specific_update() {
             }
             break;
         case MM_ShipStatus:
+            if (draw_manager.clicked()) {
+                menu_open(MM_Stat);
+                return true;
+            }
             break;
         case MM_ShipDamage:
+            if (draw_manager.clicked()) {
+                menu_open(MM_Stat);
+                return true;
+            }
             break;
         case MM_Stats:
             if (draw_manager.clicked()) {

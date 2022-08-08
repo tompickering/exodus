@@ -50,6 +50,9 @@ typedef struct {
     int pct_damage_thrust;   // 8   |
     int pct_damage_comms;    // 9   |
     int pct_damage_struct;   // 10 -
+    bool damaged() const {
+        return pct_damage_thrust + pct_damage_comms + pct_damage_struct > 0;
+    }
     void reset() {
         shield_generators = 0;
         laser_guns = 1;
