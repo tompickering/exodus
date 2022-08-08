@@ -62,6 +62,11 @@ Planet* PlanetIterator::get() {
     return s->get_planet(idx);
 }
 
+Star* PlanetIterator::get_star() {
+    if (complete()) return nullptr;
+    return star_iter.get();
+}
+
 bool PlanetIterator::valid() {
     Planet *p = get();
     if (!(p && p->exists())) {

@@ -985,6 +985,65 @@ void MenuDrawer::menu_open_specific_mode() {
         case MM_News:
             break;
         case MM_Planets:
+            {
+                menu_planets_more = false;
+
+                int x_inf = MENU_X + 300;
+                int x_gli = x_inf + 46;
+                int x_art = x_gli + 46;
+
+                menu_set_txt(0, COL_TEXT2, "List of planets");
+                draw_manager.draw_text("Inf", Justify::Centre, x_inf, menu_get_y(0), COL_TEXT2);
+                draw_manager.draw_text("Gli", Justify::Centre, x_gli, menu_get_y(0), COL_TEXT2);
+                draw_manager.draw_text("Art", Justify::Centre, x_art, menu_get_y(0), COL_TEXT2);
+
+                char n[8];
+
+                bool any = false;
+                int ctr = 0;
+                for (PlanetIterator piter(p_idx); !piter.complete(); ++piter) {
+                    ctr++;
+
+                    if (ctr <= menu_planets_start) {
+                        continue;
+                    }
+
+                    any = true;
+
+                    Star *st = piter.get_star();
+                    Planet *pl = piter.get();
+
+                    int r = 1 + (ctr - menu_planets_start);
+                    menu_set_txt(r, COL_TEXT, "%s at %s", pl->get_name(), st->name);
+
+                    int inf, gli, art;
+                    pl->get_army(inf, gli, art);
+
+                    snprintf(n, sizeof(n), "%d", inf);
+                    draw_manager.draw_text(n, Justify::Centre, x_inf, menu_get_y(r), COL_TEXT);
+                    snprintf(n, sizeof(n), "%d", gli);
+                    draw_manager.draw_text(n, Justify::Centre, x_gli, menu_get_y(r), COL_TEXT);
+                    snprintf(n, sizeof(n), "%d", art);
+                    draw_manager.draw_text(n, Justify::Centre, x_art, menu_get_y(r), COL_TEXT);
+
+                    if (r >= 12) {
+                        // This is the last row available - check if more are needed
+                        ++piter;
+                        if (!piter.complete()) {
+                            // There are more planets after this one
+                            menu_planets_start = ctr;
+                            menu_planets_more = true;
+                            draw_manager.draw_text("More...", Justify::Right, MENU_X + MENU_W - 8, menu_get_y(14), COL_TEXT);
+                            break;
+                        }
+                    }
+                }
+
+                if (!any) {
+                    menu_set_txt(2, COL_TEXT, "You have no planets yet.");
+                }
+
+            }
             break;
         case MM_Inventions:
             {
@@ -1851,6 +1910,11 @@ bool MenuDrawer::menu_specific_update() {
             }
             // 4: Recall Latest News
             // 5: List Planets
+            if (menu_row_clicked(5)) {
+                menu_planets_start = 0;
+                menu_open(MM_Planets);
+                return true;
+            }
             // 6: List Inventions
             if (menu_row_clicked(6)) {
                 menu_open(MM_Inventions);
@@ -1896,6 +1960,14 @@ bool MenuDrawer::menu_specific_update() {
         case MM_News:
             break;
         case MM_Planets:
+            if (draw_manager.clicked()) {
+                if (menu_planets_more) {
+                    menu_open(MM_Planets);
+                    return true;
+                }
+                menu_open(MM_Stat);
+                return true;
+            }
             break;
         case MM_Inventions:
             for (int i = 0; i < INV_MAX; ++i) {

@@ -30,6 +30,7 @@ class PlanetIterator : public Iterator {
         virtual void operator++() override;
         virtual bool complete() override;
         Planet* get();
+        Star* get_star();
     private:
         StarIterator star_iter;
         int owner;

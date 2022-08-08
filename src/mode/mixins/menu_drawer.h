@@ -140,6 +140,9 @@ class MenuDrawer {
         Invention menu_inv;
         int menu_art_planet_phase;
         bool menu_art_planet_named;
+
+        int menu_planets_start;
+        bool menu_planets_more;
 };
 
 #endif
