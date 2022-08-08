@@ -793,14 +793,26 @@ ExodusMode PlanetMap::update(float delta) {
 
                 RGB fest_col = COL_TEXT;
 
+                bool festival_ok = true;
+
 #if FEATURE_FESTIVAL_LIMIT
                 if (planet->festival_happened_this_month()) {
-                    fest_col = COL_TEXT_GREYED;
-                    draw_manager.unset_selectable(id(ID::LAW_FESTIVAL));
-                } else {
-                    draw_manager.set_selectable(id(ID::LAW_FESTIVAL));
+                    festival_ok = false;
                 }
 #endif
+
+#if FEATURE_FESTIVAL_REQUIRES_CITY
+                if (!planet->has_stone(STONE_City)) {
+                    festival_ok = false;
+                }
+#endif
+
+                if (festival_ok) {
+                    draw_manager.set_selectable(id(ID::LAW_FESTIVAL));
+                } else {
+                    fest_col = COL_TEXT_GREYED;
+                    draw_manager.unset_selectable(id(ID::LAW_FESTIVAL));
+                }
 
                 draw_manager.draw_text(
                     id(ID::LAW_FESTIVAL),
@@ -892,10 +904,7 @@ ExodusMode PlanetMap::update(float delta) {
                     return ExodusMode::MODE_Redo;
                 }
 
-#if FEATURE_FESTIVAL_LIMIT
-                if (!planet->festival_happened_this_month())
-#endif
-                if (draw_manager.query_click(id(ID::LAW_FESTIVAL)).id) {
+                if (festival_ok && draw_manager.query_click(id(ID::LAW_FESTIVAL)).id) {
                     clear_law_ids();
                     draw_law_panel();
                     draw_manager.draw_text(

@@ -12,5 +12,7 @@
 // (N.B. 'Large festival' makes no sense without this!)
 #define FEATURE_FESTIVAL_LIMIT 1
 
+// Only allow festivals if the planet has at least one city
+#define FEATURE_FESTIVAL_REQUIRES_CITY 1
 
 #endif
