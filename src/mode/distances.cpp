@@ -52,4 +52,6 @@ ExodusMode Distances::update(float delta) {
     if (draw_manager.clicked() || input_manager.consume(K_D)) {
         return ExodusMode::MODE_Pop;
     }
+
+    return ExodusMode::MODE_None;
 }
