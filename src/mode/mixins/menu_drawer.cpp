@@ -1909,6 +1909,10 @@ bool MenuDrawer::menu_specific_update() {
                 return true;
             }
             // 4: Recall Latest News
+            if (menu_row_clicked(4)) {
+                menu_new_mode = MODE_News;
+                return true;
+            }
             // 5: List Planets
             if (menu_row_clicked(5)) {
                 menu_planets_start = 0;

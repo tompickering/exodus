@@ -33,6 +33,7 @@
 #include "mode/trade.h"
 #include "mode/fleet_production.h"
 #include "mode/ship_equip.h"
+#include "mode/news.h"
 #include "mode/arrive.h"
 #include "mode/alien_vessel.h"
 #include "mode/space_battle.h"
@@ -133,6 +134,7 @@ int Exodus::run(int argc, char** argv) {
     Trade mode_trade;
     FleetProduction mode_fleetproduction;
     ShipEquip mode_shipequip;
+    News mode_news;
     Arrive mode_arrive;
     AlienVessel mode_alienvessel;
     SpaceBattle mode_spacebattle;
@@ -158,6 +160,7 @@ int Exodus::run(int argc, char** argv) {
     mode_map[MODE_Trade] = (ModeBase*) &mode_trade;
     mode_map[MODE_FleetProduction] = (ModeBase*) &mode_fleetproduction;
     mode_map[MODE_ShipEquip] = (ModeBase*) &mode_shipequip;
+    mode_map[MODE_News] = (ModeBase*) &mode_news;
     mode_map[MODE_Arrive] = (ModeBase*) &mode_arrive;
     mode_map[MODE_AlienVessel] = (ModeBase*) &mode_alienvessel;
     mode_map[MODE_SpaceBattle] = (ModeBase*) &mode_spacebattle;
