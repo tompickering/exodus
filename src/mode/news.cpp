@@ -43,9 +43,18 @@ void News::draw_news() {
             break;
         }
 
+        if (news.star_idx < 0 || news.planet_idx < 0) {
+            L.error("Bad indices in newsitem: %d / %d", news.star_idx, news.planet_idx);
+            continue;
+        }
+
+        Galaxy *gal = exostate.get_galaxy();
+        Star *s = &(gal->get_stars()[news.star_idx]);
+        Planet *p = s->get_planet(news.planet_idx);
+
         any = true;
 
-        snprintf(text, sizeof(text), "%s at X", news.get_string());
+        snprintf(text, sizeof(text), "%s at %s: %s", p->get_name(), s->name, news.get_string());
 
         draw_manager.draw_text(
             text,
