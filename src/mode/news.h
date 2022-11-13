@@ -15,6 +15,8 @@ class News : ModeBase {
         News();
         virtual void enter() override;
         virtual ExodusMode update(float) override;
+    private:
+        void draw_news();
 };
 
 #endif
