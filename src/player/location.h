@@ -4,6 +4,7 @@
 #include <cstdint>
 
 // TARGET_NONE is unique to CPU players and used as a flag in AI tactics
+// TODO: This is unused now - why did I introduce it? Can it go?
 extern const int TARGET_NONE;
 
 // Location of a player's fleet
