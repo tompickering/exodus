@@ -303,6 +303,11 @@ ExodusMode GalaxyMap::update(float delta) {
                 return ExodusMode::MODE_Distances;
             }
 
+            // Orig is 'R' for 'Recall' but 'N' seems more intuitive
+            if (input_manager.consume(K_R) || input_manager.consume(K_N)) {
+                return ExodusMode::MODE_News;
+            }
+
             break;
         case GM_Zoom2Guild:
             return ExodusMode::MODE_GuildExterior;

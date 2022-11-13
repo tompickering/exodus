@@ -13,7 +13,7 @@ void News::enter() {
 }
 
 ExodusMode News::update(float delta) {
-    if (draw_manager.clicked()) {
+    if (draw_manager.clicked() || input_manager.consume(K_R) || input_manager.consume(K_N)) {
         return ExodusMode::MODE_Pop;
     }
 
