@@ -5,6 +5,32 @@
 
 enum NewsItemType {
     NI_None,
+    NI_NativesOfferPresents,
+    NI_NotEnoughFood,
+    NI_ControlLost,
+    NI_SurfChangeCultivation,
+    NI_SurfChangeClearing,
+    NI_CityExpanded,
+    NI_SuccessfulRevolution,
+    NI_Revolution,
+    NI_AlienAttack,
+    NI_PlanetTakeover,
+    NI_FailedTakeover,
+    NI_AssassinCaptured,
+    NI_TerroristAttack,
+    NI_Meteor,
+    NI_LeftGalaxy,
+    NI_NewAnimal,
+    NI_NewPlant,
+    NI_NewInvention,
+    NI_Plague,
+    NI_PlantsPoisoned,
+    NI_Epidemic,
+    NI_BattleMachinesDestructed,
+    NI_GeologicalChange,
+    NI_PlayerTakeover,
+    NI_PlayerFailedTakeover,
+    NI_BombAttack,
     NI_Debug
 };
 
