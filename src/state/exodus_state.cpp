@@ -317,6 +317,7 @@ Aim ExodusState::get_aim() {
 
 void ExodusState::advance_month() {
     ++month;
+    newsitem_head = 0;
 }
 
 bool ExodusState::final_month() {
@@ -828,6 +829,25 @@ bool ExodusState::kill(Player* p) {
     }
 
     return true;
+}
+
+void ExodusState::register_news(NewsItemType type) {
+    if (newsitem_head >= MAX_NEWSITEMS) {
+        L.debug("Too many newsitems; unable to record %d", type);
+        return;
+    }
+
+    int s = get_active_star_idx();
+    int p = get_active_planet_idx();
+    new (&newsitems[newsitem_head++]) NewsItem(s, p, type);
+}
+
+const NewsItem& ExodusState::get_news(int i) {
+    if (i >= newsitem_head) {
+        new (&newsitems[i]) NewsItem(-1, -1, NI_None);
+    }
+
+    return newsitems[i];
 }
 
 /*

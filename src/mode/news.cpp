@@ -33,13 +33,36 @@ void News::enter() {
 void News::draw_news() {
     int y = HEADER_HEIGHT + 16;
 
-    // TODO
+    bool any = false;
 
-    draw_manager.draw_text(
-        "There is no information.",
-        Justify::Left,
-        4, y,
-        COL_TEXT);
+    char text[256];
+
+    for (int i = 0; i < MAX_NEWSITEMS; ++i) {
+        const NewsItem& news = exostate.get_news(i);
+        if (news.type == NI_None) {
+            break;
+        }
+
+        any = true;
+
+        snprintf(text, sizeof(text), "%s at X", news.get_string());
+
+        draw_manager.draw_text(
+            text,
+            Justify::Left,
+            4, y,
+            COL_TEXT);
+
+        y += 20;
+    }
+
+    if (!any) {
+        draw_manager.draw_text(
+            "There is no information.",
+            Justify::Left,
+            4, y,
+            COL_TEXT);
+    }
 }
 
 ExodusMode News::update(float delta) {

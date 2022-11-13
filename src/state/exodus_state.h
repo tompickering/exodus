@@ -11,6 +11,8 @@
  * present in a save file, and should be shallow-serialisable.
  */
 
+#include "newsitem.h"
+
 #include "player/player.h"
 
 #include "galaxy/galaxy.h"
@@ -123,6 +125,8 @@ class ExodusState {
         void unset_alliances(int, int);
         int count_alliances(int);
         bool kill(Player*);
+        void register_news(NewsItemType);
+        const NewsItem& get_news(int);
     private:
         GalaxySize size;
         int n_human_players;
@@ -142,6 +146,9 @@ class ExodusState {
         uint8_t get_alliances(int, int);
         void set_alliances(int, int, uint8_t);
         uint8_t alliance_matrix[N_PLAYERS * N_PLAYERS];
+
+        int newsitem_head;
+        NewsItem newsitems[MAX_NEWSITEMS];
 
     friend class ExodusDebug;
 };
