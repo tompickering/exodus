@@ -35,7 +35,6 @@ const char* NewsItem::get_string() const {
         case NI_Revolution:
              return "Revolution";
         case NI_AlienAttack:
-            // TODO: Implement
              return "Attack of alien pirates";
         case NI_PlanetTakeover:
              // TODO: This needs to vary based on planet

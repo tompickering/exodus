@@ -3039,7 +3039,8 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     // Doesn't cause planet loss - only damage
     if (mp_state.mpp_stage == MPP_AlienAttack) {
         if (onein(200) && exostate.get_orig_month() >= 10) {
-            // TODO: PROCdonotice, music
+            // TODO: music
+            exostate.register_news(NI_AlienAttack);
             bulletin_start_new(false);
             bulletin_set_bg(p->sprites()->bulletin_bg);
             bulletin_set_active_player_flag();
