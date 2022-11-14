@@ -613,8 +613,8 @@ ExodusMode PlanetMap::update(float delta) {
                     Stone existing = planet->get_stone(block_x, block_y);
                     bool ok = can_build_on(existing);
                     if (active_tool == TOOL_Clear) {
-                        // Can clear anything except radiation
-                        ok = existing != STONE_Radiation;
+                        // Can clear anything except radiation and already-clear ground
+                        ok = existing != STONE_Radiation && existing != STONE_Clear;
                     }
                     if (ok) {
                         if (player->attempt_spend(tool2cost(active_tool))) {
