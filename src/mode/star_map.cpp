@@ -166,6 +166,10 @@ ExodusMode StarMap::update(float delta) {
                     if (planet) {
                         if (planet->get_owner() == player_idx) {
                             return ExodusMode::MODE_PlanetMap;
+                        } else if (exostate.get_active_star_idx() != player->get_location().get_target()) {
+                            comm_open(DIA_S_FleetNotInSystem);
+                            stage = SM_Counsellor;
+                            return ExodusMode::MODE_None;
                         } else {
                             bool owned = planet->is_owned();
 
@@ -684,6 +688,12 @@ ExodusMode StarMap::update(float delta) {
                 default:
                     break;
 
+            }
+            break;
+        case SM_Counsellor:
+            if (comm_update(delta) != CA_None) {
+                comm_close();
+                stage = SM_Idle;
             }
             break;
         case SM_Back2Gal:

@@ -724,6 +724,11 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img(CI_HumanThoughtful);
             comm_set_img_caption("COUNSELLOR");
             break;
+        case DIA_S_FleetNotInSystem:
+            comm_set_title("Message from counsellor");
+            comm_set_img(CI_HumanThoughtful);
+            comm_set_img_caption("COUNSELLOR");
+            break;
         case DIA_S_NoScouts:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_HumanThoughtful);
@@ -1540,6 +1545,15 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_set_text(2, "stronger our opponents are");
                 comm_set_text(3, "getting.");
                 comm_set_text(4, "We should act now.");
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_FleetNotInSystem:
+            {
+                comm_prepare(6);
+                comm_set_text(0, "Our fleet is not in this");
+                comm_set_text(1, "system, so orbital flights");
+                comm_set_text(2, "are impossible.");
                 comm_recv(DIA_R_Close);
             }
             break;

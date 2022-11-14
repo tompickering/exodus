@@ -36,6 +36,7 @@ class StarMap : ModeBase, PanelDrawer, CommPanelDrawer, FrameDrawer {
             SM_SelectPlanet,
             SM_HandlePostPlanet,
             SM_HandlePostPlanetComms,
+            SM_Counsellor,
             SM_Back2Gal,
         };
 
