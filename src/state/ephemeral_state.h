@@ -9,9 +9,12 @@
 
 #include "exodus.h"
 
+#include "exodus_state.h"
 #include "galaxy/planet.h"
 
 #include "exodus_debug.h"
+
+extern ExodusState exostate;
 
 enum AggressorType {
     AGG_Player,
@@ -148,6 +151,12 @@ enum EphState {
     EPH_GameOver,
 };
 
+enum SelectPlanetReason : uint8_t {
+    SPR_None,
+    SPR_PlanetSurface,
+    SPR_MAX
+};
+
 class EphemeralState {
     public:
         EphemeralState();
@@ -165,10 +174,36 @@ class EphemeralState {
         // The state should be done via select_planet()
         int* selectplanet_star;
         int* selectplanet_planet;
+        // Use this form if you just want to store values to use later
         void select_planet(int& st, int& pl) {
             selectplanet_star = &st;
             selectplanet_planet = &pl;
             set_ephemeral_state(EPH_SelectPlanet);
+        }
+        // Parameterless select_planet will use internal value storage
+        // Use this form if you want to respond immediately
+        SelectPlanetReason selectplanet_reason = SPR_None;
+        int selectplanet_star_internal;
+        int selectplanet_planet_internal;
+        void select_planet(SelectPlanetReason reason) {
+            selectplanet_reason = reason;
+            select_planet(selectplanet_star_internal, selectplanet_planet_internal);
+        }
+        ExodusMode selectplanet_resolve() {
+            clear_ephemeral_state();
+            SelectPlanetReason reason = selectplanet_reason;
+            selectplanet_reason = SPR_None;
+            switch (reason) {
+                case SPR_PlanetSurface:
+                    exostate.set_active_flytarget(exostate.loc2tgt(selectplanet_star_internal));
+                    exostate.set_active_planet(selectplanet_planet_internal);
+                    set_ephemeral_state(EPH_ScoutPlanet);
+                    return get_appropriate_mode();
+                default:
+                    break;
+            }
+
+            return ExodusMode::MODE_GalaxyMap;
         }
 
         LunarBattleParams lunar_battle;

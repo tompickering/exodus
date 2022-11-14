@@ -1753,8 +1753,10 @@ bool MenuDrawer::menu_specific_update() {
 
             // 7: Planet surface
             if (menu_row_clicked(7)) {
+                // TODO: Delay spend or refund on cancel
                 if (p->attempt_spend(COST_INF_SURF)) {
-                    // TODO
+                    ephstate.select_planet(SPR_PlanetSurface);
+                    menu_new_mode = ephstate.get_appropriate_mode();
                     return true;
                 }
             }

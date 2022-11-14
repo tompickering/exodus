@@ -34,6 +34,8 @@ ExodusMode EphemeralState::get_appropriate_mode() {
             // to the previous mode, which should expect and respond to
             // EPH_LunarBattleReport.
             return ExodusMode::MODE_Pop;
+        case EPH_ScoutPlanet:
+            return ExodusMode::MODE_PlanetMap;
         case EPH_Destruction:
             return ExodusMode::MODE_PlanetMap;
         case EPH_ResearchCheck:

@@ -639,9 +639,9 @@ ExodusMode StarMap::update(float delta) {
                 for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
                     if (draw_manager.query_click(id(ID::PLANET1 + i)).id) {
                         *(ephstate.selectplanet_planet) = i;
-                        ephstate.clear_ephemeral_state();
                         // TODO: Fade to black
-                        return ExodusMode::MODE_GalaxyMap;
+                        // Clear EPH_SelectPlanet and set up further ephemeral state if necessary
+                        return ephstate.selectplanet_resolve();
                     }
                 }
             }
