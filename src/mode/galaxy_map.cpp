@@ -3178,6 +3178,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             bulletin_set_next_text("The revolution of %s", p->get_name());
             bulletin_set_next_text("");
             if (rpt.aggressor_won) {
+                exostate.register_news(NI_SuccessfulRevolution);
                 bulletin_set_next_text("The rebels have succeeded. So the");
                 bulletin_set_next_text("planet needs a new leader. The people");
                 if (false) {
@@ -3195,6 +3196,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     return ExodusMode::MODE_None;
                 }
             } else {
+                exostate.register_news(NI_Revolution);
                 bulletin_set_next_text("The rebels did not succeed. The planet");
                 bulletin_set_next_text("remains in %s's hand.", owner->get_full_name());
                 if (!rpt.rebel_peace && onein(2)) {

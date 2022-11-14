@@ -31,10 +31,8 @@ const char* NewsItem::get_string() const {
         case NI_CityExpanded:
              return "A city has expanded";
         case NI_SuccessfulRevolution:
-            // TODO: Implement
              return "Successful revolution";
         case NI_Revolution:
-            // TODO: Implement
              return "Revolution";
         case NI_AlienAttack:
             // TODO: Implement
