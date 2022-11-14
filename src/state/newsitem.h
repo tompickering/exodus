@@ -1,6 +1,8 @@
 #ifndef GUARD_NEWSITEM_H
 #define GUARD_NEWSITEM_H
 
+#include "player/player.h"
+
 #define MAX_NEWSITEMS 20
 
 enum NewsItemType {
@@ -42,6 +44,12 @@ class NewsItem {
         const int star_idx;
         const int planet_idx;
         const char* get_string() const;
+
+        bool player_owned;
+
+        int player_0;
+        int player_1;
+        Invention inv;
 };
 
 #endif

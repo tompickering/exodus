@@ -3407,7 +3407,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             owner->give_mc(mc);
             report.add_line("The native village inhabitants offer");
             report.add_line("presents that are worth %d MC.", mc);
-            // TODO: PROCdonotice
+            exostate.register_news(NI_NativesOfferPresents);
         }
         next_mpp_stage();
     }

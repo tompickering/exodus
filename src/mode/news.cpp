@@ -56,11 +56,16 @@ void News::draw_news() {
 
         snprintf(text, sizeof(text), "%s at %s: %s", p->get_name(), s->name, news.get_string());
 
+        RGB col = COL_TEXT;
+        if (news.player_owned) {
+            col = COL_TEXT2;
+        }
+
         draw_manager.draw_text(
             text,
             Justify::Left,
             4, y,
-            COL_TEXT);
+            col);
 
         y += 20;
     }

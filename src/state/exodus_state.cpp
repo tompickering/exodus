@@ -831,15 +831,41 @@ bool ExodusState::kill(Player* p) {
     return true;
 }
 
-void ExodusState::register_news(NewsItemType type) {
-    if (newsitem_head >= MAX_NEWSITEMS) {
-        L.debug("Too many newsitems; unable to record %d", type);
-        return;
-    }
+static NewsItem mock;
 
+NewsItem& ExodusState::register_news(NewsItemType type) {
     int s = get_active_star_idx();
     int p = get_active_planet_idx();
-    new (&newsitems[newsitem_head++]) NewsItem(s, p, type);
+
+    bool ok = false;
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        Player *player = get_player(i);
+        if (player->is_human() && player->get_location().has_visited(s)) {
+            ok = true;
+            break;
+        }
+    }
+
+    if (!ok) {
+        // No player has visited this system
+        // This news item won't be displayed
+        // Return a fake reference
+        return mock;
+    }
+
+    if (newsitem_head >= MAX_NEWSITEMS) {
+        L.debug("Too many newsitems; unable to record %d", type);
+        // Return a fake reference
+        return mock;
+    }
+
+    Planet *pl = get_active_planet();
+    Player *owner = pl->is_owned() ? get_player(pl->get_owner()) : nullptr;
+
+    NewsItem &ni = newsitems[newsitem_head++];
+    new (&ni) NewsItem(s, p, type);
+    ni.player_owned = owner ? owner->is_human() : false;;
+    return ni;
 }
 
 const NewsItem& ExodusState::get_news(int i) {
