@@ -3316,7 +3316,18 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 if (p->count_stones(STONE_Agri) >= threshold) {
                     p->change_class(Terra);
                     exostate.register_news(NI_SurfChangeCultivation);
-                    // TODO: Bulletin
+                    bulletin_start_new(true);
+                    bulletin_set_bg(p->sprites()->bulletin_bg);
+                    bulletin_set_active_player_flag();
+                    bulletin_write_planet_info(s, p);
+                    audio_manager.target_music(mpart2mus(5));
+                    bulletin_set_next_text("SURFACE CHANGE due to cultivation");
+                    bulletin_set_next_text("");
+                    bulletin_set_next_text("Due to global cultivation,");
+                    bulletin_set_next_text("the planet's surface has changed from");
+                    bulletin_set_next_text("bleak rubble into green plains.");
+                    next_mpp_stage();
+                    return ExodusMode::MODE_None;
                 }
             }
         }
@@ -3332,7 +3343,17 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 if (p->count_stones(STONE_NaturalLarge) < threshold) {
                     p->change_class(Rock);
                     exostate.register_news(NI_SurfChangeClearing);
-                    // TODO: Bulletin
+                    bulletin_start_new(true);
+                    bulletin_set_bg(p->sprites()->bulletin_bg);
+                    bulletin_set_active_player_flag();
+                    bulletin_write_planet_info(s, p);
+                    audio_manager.target_music(mpart2mus(9));
+                    bulletin_set_next_text("SURFACE CHANGE due to clearing");
+                    bulletin_set_next_text("");
+                    bulletin_set_next_text("Too much forest has been cleared.");
+                    bulletin_set_next_text("The planet's surface has changed from");
+                    bulletin_set_next_text("green plains into bleak rubble.");
+                    return ExodusMode::MODE_None;
                 }
             }
         }
