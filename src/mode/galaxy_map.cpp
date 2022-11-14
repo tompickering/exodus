@@ -3283,6 +3283,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 if (p->get_size() == PLANET_Large)  threshold = 153;
                 if (p->count_stones(STONE_Agri) >= threshold) {
                     p->change_class(Terra);
+                    exostate.register_news(NI_SurfChangeCultivation);
                     // TODO: Bulletin
                 }
             }
@@ -3298,6 +3299,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 if (p->get_size() == PLANET_Large)  threshold = 51;
                 if (p->count_stones(STONE_NaturalLarge) < threshold) {
                     p->change_class(Rock);
+                    exostate.register_news(NI_SurfChangeClearing);
                     // TODO: Bulletin
                 }
             }

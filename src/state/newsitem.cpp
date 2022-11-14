@@ -25,10 +25,8 @@ const char* NewsItem::get_string() const {
         case NI_ControlLost:
              return "Control lost";
         case NI_SurfChangeCultivation:
-            // TODO: Implement
              return "Surface change due to cultivation";
         case NI_SurfChangeClearing:
-            // TODO: Implement
              return "Surface change due to clearing";
         case NI_CityExpanded:
             // TODO: Implement
