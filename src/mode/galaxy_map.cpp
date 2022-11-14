@@ -3159,8 +3159,36 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mp_state.mpp_stage == MPP_CityEpidemic) {
-        // TODO
-        // TODO: PROCdonotice (NI_Epidemic)
+        if (onein(150)) {
+            if (!owner->has_invention(INV_MultiFunctionalVaccine)) {
+                int cities = p->count_stones(STONE_City);
+                if (cities > 0) {
+                    if (exostate.get_orig_month() >= 10) {
+                        int closedown = min(cities, RND(4));
+                        for (int i = closedown; i > 0; --i) {
+                            int x, y;
+                            p->find_random_stone(STONE_City, x, y);
+                            p->set_stone(x, y, STONE_Rubble);
+                        }
+                        audio_manager.target_music(mpart2mus(8));
+                        exostate.register_news(NI_Epidemic);
+                        bulletin_start_new(true);
+                        bulletin_set_bg(p->sprites()->bulletin_bg);
+                        bulletin_set_active_player_flag();
+                        bulletin_write_planet_info(s, p);
+                        bulletin_set_next_text("EPIDEMIC AT %s", tmp_caps(p->get_name()));
+                        bulletin_set_next_text("");
+                        const char* a = closedown == 1 ? "city" : "cities";
+                        const char* b = closedown == 1 ? "has" : "have";
+                        bulletin_set_next_text("%d %s %s been haunted by an", closedown, a, b);
+                        bulletin_set_next_text("unknown epidemic. The %s closed", a);
+                        bulletin_set_next_text("down.");
+                        next_mpp_stage();
+                        return ExodusMode::MODE_None;
+                    }
+                }
+            }
+        }
         next_mpp_stage();
     }
 
