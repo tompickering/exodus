@@ -754,6 +754,11 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img(CI_HumanThoughtful);
             comm_set_img_caption("COUNSELLOR");
             break;
+        case DIA_S_Quit:
+            comm_set_title("Message from counsellor");
+            comm_set_img(CI_HumanThoughtful);
+            comm_set_img_caption("COUNSELLOR");
+            break;
         case DIA_S_CPU_Attack:
             comm_set_img_caption_upper(comm_player->get_full_name());
             comm_set_img_caption_lower("RACE: %s", comm_player->get_race_str());
@@ -1588,6 +1593,16 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_set_text(1, "on this system.");
                 comm_set_text(3, "We need to fly there first.");
                 comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_Quit:
+            {
+                comm_prepare(6);
+                comm_set_text(0, "Do you really wish to give up");
+                comm_set_text(1, "this game...?");
+                comm_set_text(4, "Click <Proceed> to quit.");
+                comm_show_buttons(true);
+                comm_recv(DIA_R_ProceedOrAbort);
             }
             break;
         case DIA_S_CPU_Attack:

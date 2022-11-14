@@ -83,6 +83,7 @@ ExodusMode GameOver::update(float delta) {
             break;
         case GO_AgainOrNot:
             {
+                draw_manager.show_cursor(true);
                 if (draw_manager.query_click(id(ID::LEAVE)).id) {
                     quit = true;
                     draw_manager.fade_black(1.2f, 24);

@@ -1475,6 +1475,9 @@ bool MenuDrawer::menu_specific_update() {
                 return true;
             }
             // 12: Quit Game
+            if (menu_row_clicked(12)) {
+                menu_action = MA_Quit;
+            }
             // 14: Exit Menu
             if (menu_row_clicked(14)) {
                 menu_action = MA_Close;

@@ -599,6 +599,11 @@ ExodusMode GalaxyMap::update(float delta) {
                         selected_ft_blink = 0;
                         stage = GM_ArtificialWorldStarSelect;
                         break;
+                    case MA_Quit:
+                        menu_close();
+                        comm_open(DIA_S_Quit);
+                        stage = GM_QuitConfirm;
+                        break;
                     default:
                         break;
                 }
@@ -656,6 +661,23 @@ ExodusMode GalaxyMap::update(float delta) {
                 //       select.
                 panel_set_text("SELECT A STAR");
             }
+            break;
+        case GM_QuitConfirm:
+            if (ephstate.get_ephemeral_state() != EPH_GameOver) {
+                action = comm_update(delta);
+                if (action == CA_Proceed) {
+                    ephstate.set_ephemeral_state(EPH_GameOver);
+                    ephstate.game_over_reason = GAMEOVER_Failed;
+                    draw_manager.fade_black(1.2f, 24);
+                } else if (action == CA_Abort) {
+                    comm_close();
+                    stage = GM_Idle;
+                    break;
+                }
+            } else if (!draw_manager.fade_active()) {
+                return ephstate.get_appropriate_mode();
+            }
+
             break;
         default:
             break;
