@@ -3004,6 +3004,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     if (mp_state.mpp_stage == MPP_Epidemic) {
         // PROCepidemic(1) case
+        // TODO: PROCepidemic(2) case (plants poisoned) and trigger
         if (onein(150)) {
             if (exostate.get_orig_month() >= 10 && !owner->has_invention(INV_Acid)) {
                 int to_die = RND(15);
@@ -3020,7 +3021,8 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     if (to_die <= 0) break;
                 }
                 p->adjust_unrest(2);
-                // TODO: Music, PROCdonotice
+                // TODO: Music
+                exostate.register_news(NI_Plague);
                 bulletin_start_new(true);
                 bulletin_set_bg(p->sprites()->bulletin_bg);
                 bulletin_set_active_player_flag();
@@ -3110,6 +3112,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     if (mp_state.mpp_stage == MPP_CityEpidemic) {
         // TODO
+        // TODO: PROCdonotice (NI_Epidemic)
         next_mpp_stage();
     }
 

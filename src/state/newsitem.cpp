@@ -67,7 +67,6 @@ const char* NewsItem::get_string() const {
             // TODO: Implement
              return "TODO";
         case NI_Plague:
-            // TODO: Implement
              return "Plague";
         case NI_PlantsPoisoned:
             // TODO: Implement
