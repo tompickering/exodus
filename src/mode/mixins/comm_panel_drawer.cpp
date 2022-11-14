@@ -1576,7 +1576,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
         case DIA_S_FlyAlreadyThere:
             {
                 comm_prepare(6);
-                comm_set_text(0, "Our fleet is already in the target");
+                comm_set_text(0, "Our fleet is already in the selected");
                 comm_set_text(1, "system.");
                 comm_recv(DIA_R_Close);
             }
