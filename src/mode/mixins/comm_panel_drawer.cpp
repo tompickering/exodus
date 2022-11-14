@@ -739,6 +739,21 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img(CI_HumanThoughtful);
             comm_set_img_caption("COUNSELLOR");
             break;
+        case DIA_S_FlyAlreadyFlying:
+            comm_set_title("Message from counsellor");
+            comm_set_img(CI_HumanThoughtful);
+            comm_set_img_caption("COUNSELLOR");
+            break;
+        case DIA_S_FlyAlreadyThere:
+            comm_set_title("Message from counsellor");
+            comm_set_img(CI_Human);
+            comm_set_img_caption("COUNSELLOR");
+            break;
+        case DIA_S_ZoomButNotVisited:
+            comm_set_title("Message from counsellor");
+            comm_set_img(CI_HumanThoughtful);
+            comm_set_img_caption("COUNSELLOR");
+            break;
         case DIA_S_CPU_Attack:
             comm_set_img_caption_upper(comm_player->get_full_name());
             comm_set_img_caption_lower("RACE: %s", comm_player->get_race_str());
@@ -1546,6 +1561,32 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_set_text(0, "We do not have any aerospace");
                 comm_set_text(1, "bombers, so a bomb attack is");
                 comm_set_text(2, "impossible.");
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_FlyAlreadyFlying:
+            {
+                comm_prepare(6);
+                comm_set_text(0, "Our fleet is already in flight.");
+                comm_set_text(2, "We are unable to plot a new route");
+                comm_set_text(3, "until we arrive.");
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_FlyAlreadyThere:
+            {
+                comm_prepare(6);
+                comm_set_text(0, "Our fleet is already in the target");
+                comm_set_text(1, "system.");
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_ZoomButNotVisited:
+            {
+                comm_prepare(6);
+                comm_set_text(0, "We do not yet have detailed data");
+                comm_set_text(1, "on this system.");
+                comm_set_text(3, "We need to fly there first.");
                 comm_recv(DIA_R_Close);
             }
             break;

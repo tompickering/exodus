@@ -85,6 +85,9 @@ enum CommSend {
     DIA_S_NoScouts,
     DIA_S_NoCoverBombers,
     DIA_S_NoBombers,
+    DIA_S_FlyAlreadyFlying,
+    DIA_S_FlyAlreadyThere,
+    DIA_S_ZoomButNotVisited,
     // For these, CPU is talking to us - so CPU is comm_player and human is comm_other
     DIA_S_CPU_Attack,
     DIA_S_CPU_AttackAlly,

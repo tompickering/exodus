@@ -15,4 +15,7 @@
 // Only allow festivals if the planet has at least one city
 #define FEATURE_FESTIVAL_REQUIRES_CITY 1
 
+// Enables a few extra counsellor messages
+#define FEATURE_COUNSELLOR_EXTRA 1
+
 #endif

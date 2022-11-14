@@ -2,6 +2,8 @@
 
 #include "assetpaths.h"
 
+#include "exodus_features.h"
+
 #include "util/str.h"
 #include "util/value.h"
 
@@ -230,27 +232,39 @@ ExodusMode GalaxyMap::update(float delta) {
                 if (click.x < 0.25) {
                     // Fly
                     FlyTarget *tgt = exostate.loc2tgt(player->get_location().get_target());
-                    if (!player->get_location().in_flight() && selected_ft != tgt) {
-                        if (player->get_starship().pct_damage_thrust > 50) {
-                            comm_open(DIA_S_ThrustBroken);
+                    if (selected_ft != tgt) {
+                        if (!player->get_location().in_flight()) {
+                            if (player->get_starship().pct_damage_thrust > 50) {
+                                comm_open(DIA_S_ThrustBroken);
+                                stage = GM_FlyConfirm;
+                                return ExodusMode::MODE_None;
+                            }
+
+                            comm_ctx.location = exostate.tgt2loc(selected_ft);
+                            // Orig stores pixel locations instead of low-res grid values
+                            // See PROC_Csunpos for original's multiplaication by 43
+                            int dx = (selected_ft->x - tgt->x) * 43;
+                            int dy = (selected_ft->y - tgt->y) * 43;
+                            int dist = sqrt((dx*dx) + (dy*dy));
+                            int ftime = 1 + (dist/300);
+                            if (ftime > 1 && player->has_invention(INV_OrbitalMassThrust)) {
+                                ftime /= 3;
+                            }
+                            comm_ctx.months = max(1, ftime);
+                            comm_open(DIA_S_PlanFly);
                             stage = GM_FlyConfirm;
                             return ExodusMode::MODE_None;
+                        } else {
+#if FEATURE_COUNSELLOR_EXTRA
+                            comm_open(DIA_S_FlyAlreadyFlying);
+                            stage = GM_Counsellor;
+#endif
                         }
-
-                        comm_ctx.location = exostate.tgt2loc(selected_ft);
-                        // Orig stores pixel locations instead of low-res grid values
-                        // See PROC_Csunpos for original's multiplaication by 43
-                        int dx = (selected_ft->x - tgt->x) * 43;
-                        int dy = (selected_ft->y - tgt->y) * 43;
-                        int dist = sqrt((dx*dx) + (dy*dy));
-                        int ftime = 1 + (dist/300);
-                        if (ftime > 1 && player->has_invention(INV_OrbitalMassThrust)) {
-                            ftime /= 3;
-                        }
-                        comm_ctx.months = max(1, ftime);
-                        comm_open(DIA_S_PlanFly);
-                        stage = GM_FlyConfirm;
-                        return ExodusMode::MODE_None;
+                    } else {
+#if FEATURE_COUNSELLOR_EXTRA
+                        comm_open(DIA_S_FlyAlreadyThere);
+                        stage = GM_Counsellor;
+#endif
                     }
                 } else if (click.x < 0.5) {
                     stage = GM_Menu;
@@ -289,6 +303,10 @@ ExodusMode GalaxyMap::update(float delta) {
                             }
                         }
                     } else {
+#if FEATURE_COUNSELLOR_EXTRA
+                        comm_open(DIA_S_ZoomButNotVisited);
+                        stage = GM_Counsellor;
+#endif
                         L.debug("Can't zoom - not visited");
                     }
                 }
@@ -349,6 +367,13 @@ ExodusMode GalaxyMap::update(float delta) {
         case GM_Fly:
             player->get_location().set_target(ephstate.fly_plan.loc, ephstate.fly_plan.months);
             return ExodusMode::MODE_Fly;
+        case GM_Counsellor:
+            action = comm_update(delta);
+            if (action != CA_None) {
+                comm_close();
+                stage = GM_Idle;
+            }
+            break;
         case GM_SelectStar:
             {
                 // TODO: Need a way to cancel this - especially if no options possible!
