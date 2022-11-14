@@ -30,10 +30,10 @@ class ModeBase {
         virtual void enter(unsigned int);
         virtual void exit();
         virtual ExodusMode update(float) = 0;
+        virtual bool should_push_to_stack();
         bool draw_cursor;
         const char* get_name();
         const char *name;
-        bool should_push_to_stack();
     protected:
         SprID id(unsigned int);
         bool stackable;

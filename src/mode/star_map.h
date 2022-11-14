@@ -19,6 +19,7 @@ class StarMap : ModeBase, PanelDrawer, CommPanelDrawer, FrameDrawer {
         virtual void enter() override;
         virtual void exit() override;
         virtual ExodusMode update(float) override;
+        virtual bool should_push_to_stack() override;
     private:
         enum Stage {
             SM_Idle,

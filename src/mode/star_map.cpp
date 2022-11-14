@@ -915,3 +915,7 @@ void StarMap::update_fleet_menu() {
         FLEET_PANEL_X+4, FLEET_PANEL_Y+284,
         COL_TEXT);
 }
+
+bool StarMap::should_push_to_stack() {
+    return ephstate.get_ephemeral_state() != EPH_SelectPlanet;
+}
