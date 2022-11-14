@@ -3308,7 +3308,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     if (mp_state.mpp_stage == MPP_LosePlanetControl) {
         if (p->count_stones(STONE_Base) == 0) {
             // TODO: music
-            // No PROCdonotice here?
+            // FIXME: No PROCdonotice here? (Orig doesn't...)
             bulletin_start_new(true);
             bulletin_set_bg(p->sprites()->bulletin_bg);
             bulletin_set_active_player_flag();
