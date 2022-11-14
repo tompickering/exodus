@@ -3069,7 +3069,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     if (to_die <= 0) break;
                 }
                 p->adjust_unrest(2);
-                // TODO: Music
+                audio_manager.target_music(mpart2mus(9));
                 exostate.register_news(NI_Plague);
                 bulletin_start_new(true);
                 bulletin_set_bg(p->sprites()->bulletin_bg);
