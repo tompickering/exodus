@@ -19,10 +19,8 @@ const char* NewsItem::get_string() const {
         case NI_None:
             return "";
         case NI_NativesOfferPresents:
-            // TODO: Implement
              return "Natives offer presents";
         case NI_NotEnoughFood:
-            // TODO: Implement
              return "Not enough food";
         case NI_ControlLost:
             // TODO: Implement

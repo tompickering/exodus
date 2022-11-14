@@ -3459,7 +3459,9 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         int food_needed = p->consume_food();
         if (food_needed > 0) {
             report.add_line("There is not enough food for all systems.");
-            // TODO: PROCdonotice for human players
+            if (owner && owner->is_human()) {
+                exostate.register_news(NI_NotEnoughFood);
+            }
             p->adjust_unrest(3);
             int cities_closed = 0;
             bool bases_collapsed = false;
