@@ -3485,7 +3485,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                                 cities_closed == 1 ? "city has" : "cities have");
             }
             if (bases_collapsed) {
-                // TODO: PROCdonotice
+                exostate.register_news(NI_ControlLost);
                 report.add_line("COMMAND STATION HAS COLLAPSED");
                 if (owner) {
                     if (owner->is_human()) {

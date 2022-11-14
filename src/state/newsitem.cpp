@@ -23,7 +23,6 @@ const char* NewsItem::get_string() const {
         case NI_NotEnoughFood:
              return "Not enough food";
         case NI_ControlLost:
-            // TODO: Implement
              return "Control lost";
         case NI_SurfChangeCultivation:
             // TODO: Implement
