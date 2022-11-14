@@ -51,7 +51,6 @@ const char* NewsItem::get_string() const {
             // TODO: Implement
              return "Terrorist attack";
         case NI_Meteor:
-            // TODO: Implement
              return "Meteor has hit the planet";
         case NI_LeftGalaxy:
              // TODO: This needs to vary based on player

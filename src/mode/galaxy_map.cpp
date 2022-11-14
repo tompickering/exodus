@@ -2911,7 +2911,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     if (mp_state.mpp_stage == MPP_Meteors) {
         if (onein(200)) {
-            // TODO PROCdonotice
+            exostate.register_news(NI_Meteor);
             bulletin_start_new(false);
             bulletin_set_bg(IMG_ME5_MENU);
             bulletin_set_active_player_flag();
