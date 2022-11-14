@@ -57,7 +57,12 @@ void BulletinDrawer::bulletin_start_new(bool transition) {
 
 void BulletinDrawer::bulletin_update(float dt) {
     bulletin_transition += dt * BULLETIN_TRANSITION_RATE;
-    if (bulletin_transition > 1) bulletin_transition = 1;
+    if (bulletin_transition >= 1) {
+        bulletin_transition = 1;
+        draw_manager.draw(
+            id_bulletin_bg_scan,
+            nullptr);
+    }
 
     if (bulletin_redraws_needed && !bulletin_has_been_acknowledged) {
         bulletin_update_bg();
