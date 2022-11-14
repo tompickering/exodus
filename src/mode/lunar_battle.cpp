@@ -2522,9 +2522,13 @@ bool LunarBattle::is_in_cover(BattleUnit* u) {
         }
     }
 
-#if FEATURE_GLIDERS_COVER
+#if FEATURE_WRECKAGE_COVER
     for (int i = 0; i < n_units; ++i) {
-        if (units[i].type == UNIT_Gli) {
+        if (units[i].type == UNIT_Gli
+         || units[i].type == UNIT_Art
+         || units[i].type == UNIT_LBGun
+         || units[i].type == UNIT_LBCtl
+         || units[i].type == UNIT_AArt) {
             if (units[i].hp <= 0) {
                 if (units[i].x == u->x && units[i].y == u->y) {
                     return true;
