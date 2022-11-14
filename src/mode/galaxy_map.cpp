@@ -3437,7 +3437,9 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             if (onein(20)) {
                 if (p->expand_city()) {
                     report.add_line("A city has expanded.");
-                    // TODO: PROCdonotice
+                    if (owner && owner->is_human()) {
+                        exostate.register_news(NI_CityExpanded);
+                    }
                 }
                 break;
             }

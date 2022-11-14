@@ -29,7 +29,6 @@ const char* NewsItem::get_string() const {
         case NI_SurfChangeClearing:
              return "Surface change due to clearing";
         case NI_CityExpanded:
-            // TODO: Implement
              return "A city has expanded";
         case NI_SuccessfulRevolution:
             // TODO: Implement
