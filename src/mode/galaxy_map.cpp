@@ -2983,6 +2983,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     if (mp_state.mpp_stage == MPP_ClimateChange) {
         if (onein(250)) {
+            exostate.register_news(NI_GeologicalChange);
             const char* before = p->get_class_str_lower();
             p->surfchange();
             const char* after = p->get_class_str_lower();
