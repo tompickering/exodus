@@ -75,7 +75,6 @@ const char* NewsItem::get_string() const {
             // TODO: Implement
              return "Epidemic";
         case NI_BattleMachinesDestructed:
-            // TODO: Implement
              return "Battle machines have been destructed";
         case NI_GeologicalChange:
             // TODO: Implement

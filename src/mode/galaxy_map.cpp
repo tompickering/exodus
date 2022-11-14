@@ -2973,7 +2973,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 bulletin_set_next_text("Defects at %s have caused", p->get_name());
                 bulletin_set_next_text("some battle machines to be destructed.");
                 // TODO: Should we tell the player how many have been destroyed?
-                // TODO: News item (PROCdonotice)
+                exostate.register_news(NI_BattleMachinesDestructed);
                 next_mpp_stage();
                 return ExodusMode::MODE_None;
             }
