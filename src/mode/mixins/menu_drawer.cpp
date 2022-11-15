@@ -1798,26 +1798,67 @@ bool MenuDrawer::menu_specific_update() {
             break;
         case MM_SecAttack:
             {
+                MissionType mission = MT_None;
+
                 int &star_idx = p->get_mission_star_ref();
                 int &planet_idx = p->get_mission_planet_ref();
 
+                // TODO: Charge MC only after selection of valid planet in each case
+
                 //  4: command station
-                if (menu_row_clicked(4)) {
-                    // TODO: Charge MC only after selection of valid planet
+                if (mission == MT_None && menu_row_clicked(4)) {
                     if (p->attempt_spend(COST_ATT_CMD)) {
-                        p->set_mission_type(MT_TerrorComm);
-                        ephstate.select_planet(star_idx, planet_idx);
-                        return false;
+                        mission = MT_TerrorComm;
                     }
                 }
 
-                // TODO
                 //  5: cultivated area
+                if (mission == MT_None && menu_row_clicked(5)) {
+                    if (p->attempt_spend(COST_ATT_AGRI)) {
+                        mission = MT_TerrorAgri;
+                    }
+                }
+
                 //  6: plutonium production
+                if (mission == MT_None && menu_row_clicked(6)) {
+                    if (p->attempt_spend(COST_ATT_PLU)) {
+                        mission = MT_TerrorPlu;
+                    }
+                }
+
                 //  7: army production
+                if (mission == MT_None && menu_row_clicked(7)) {
+                    if (p->attempt_spend(COST_ATT_ARMY)) {
+                        mission = MT_TerrorArmy;
+                    }
+                }
+
                 //  8: spaceport
+                if (mission == MT_None && menu_row_clicked(8)) {
+                    if (p->attempt_spend(COST_ATT_PORT)) {
+                        mission = MT_TerrorPort;
+                    }
+                }
+
                 //  9: trading centre
+                if (mission == MT_None && menu_row_clicked(9)) {
+                    if (p->attempt_spend(COST_ATT_TRADE)) {
+                        mission = MT_TerrorTrade;
+                    }
+                }
+
                 // 10: mining
+                if (mission == MT_None && menu_row_clicked(10)) {
+                    if (p->attempt_spend(COST_ATT_MINE)) {
+                        mission = MT_TerrorMine;
+                    }
+                }
+
+                if (mission != MT_None) {
+                    p->set_mission_type(mission);
+                    ephstate.select_planet(star_idx, planet_idx);
+                    return false;
+                }
 
                 // 14: Exit Menu
                 if (menu_row_clicked(14)) {
