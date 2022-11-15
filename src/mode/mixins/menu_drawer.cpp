@@ -361,11 +361,13 @@ void MenuDrawer::menu_open_specific_mode() {
     // TODO: Also check that the player doesn't have an artificial planet
     // (or rather, whatever pphase != 3 implies).
 
+    bool service_ok = exostate.get_n_active_cpu_players() > 0;
+
     switch(menu_mode) {
         case MM_Ctrl:
             menu_set_txt(0, COL_TEXT2, "Please select, %s", p->get_ref());
             menu_set_opt(2, "Change Officers & Taxes");
-            menu_set_opt(3, "Secret Service");
+            menu_set_opt(3, "Secret Service", service_ok);
             // TODO: Hotkey
             menu_set_opt(4, "Set / Replace Star Markers (M)");
             // TODO: Hotkey
