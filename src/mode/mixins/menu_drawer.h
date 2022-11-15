@@ -57,6 +57,7 @@ enum MenuMode {
     MM_SecAttack,
     MM_SecAttackAlreadyPlanned,
     MM_SecBombing,
+    MM_SecBombingNoTech,
     MM_StarMarker,
     MM_EquipShip,
     MM_ArtificialWorld,

@@ -720,6 +720,12 @@ void MenuDrawer::menu_open_specific_mode() {
                 menu_set_opt(14, "Exit Menu");
             }
             break;
+        case MM_SecBombingNoTech:
+            {
+                menu_set_txt(1, COL_TEXT, "We haven't yet invented a system to");
+                menu_set_txt(2, COL_TEXT, "realize orbital attacks. Sorry.");
+            }
+            break;
         case MM_StarMarker:
             break;
         case MM_EquipShip:
@@ -1721,9 +1727,15 @@ bool MenuDrawer::menu_specific_update() {
 
             // 7: Orbital Bomb Attacks
             if (menu_row_clicked(7)) {
-                // TODO: Invention check
-                // TODO: Check if mission already set
-                menu_open(MM_SecBombing);
+                if (p->has_invention(INV_OrbitalBombs)) {
+                    if (p->has_mission()) {
+                        menu_open(MM_SecAttackAlreadyPlanned);
+                    } else {
+                        menu_open(MM_SecBombing);
+                    }
+                } else {
+                    menu_open(MM_SecBombingNoTech);
+                }
                 return true;
             }
 
@@ -1906,6 +1918,14 @@ bool MenuDrawer::menu_specific_update() {
 
                 // 14: Exit Menu
                 if (menu_row_clicked(14)) {
+                    menu_open(MM_SecretService);
+                    return true;
+                }
+            }
+            break;
+        case MM_SecBombingNoTech:
+            {
+                if (draw_manager.clicked()) {
                     menu_open(MM_SecretService);
                     return true;
                 }
