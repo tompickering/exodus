@@ -55,6 +55,7 @@ enum MenuMode {
     MM_SecInfoInventions,
     MM_SecPersonalFile,
     MM_SecAttack,
+    MM_SecAttackAlreadyPlanned,
     MM_SecBombing,
     MM_StarMarker,
     MM_EquipShip,

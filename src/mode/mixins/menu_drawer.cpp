@@ -700,6 +700,12 @@ void MenuDrawer::menu_open_specific_mode() {
                 menu_set_opt(14, "Exit Menu");
             }
             break;
+        case MM_SecAttackAlreadyPlanned:
+            {
+                menu_set_txt(1, COL_TEXT, "We are already working out a mission.");
+                menu_set_txt(2, COL_TEXT, "Sorry.");
+            }
+            break;
         case MM_SecBombing:
             {
                 menu_set_txt(0, COL_TEXT2, "You surely wish...");
@@ -1703,8 +1709,11 @@ bool MenuDrawer::menu_specific_update() {
 
             // 6: Terrorist Attacks
             if (menu_row_clicked(6)) {
-                // TODO: Check if mission already set
-                menu_open(MM_SecAttack);
+                if (p->has_mission()) {
+                    menu_open(MM_SecAttackAlreadyPlanned);
+                } else {
+                    menu_open(MM_SecAttack);
+                }
                 return true;
             }
 
@@ -1812,6 +1821,14 @@ bool MenuDrawer::menu_specific_update() {
 
                 // 14: Exit Menu
                 if (menu_row_clicked(14)) {
+                    menu_open(MM_SecretService);
+                    return true;
+                }
+            }
+            break;
+        case MM_SecAttackAlreadyPlanned:
+            {
+                if (draw_manager.clicked()) {
                     menu_open(MM_SecretService);
                     return true;
                 }
