@@ -739,7 +739,7 @@ void MenuDrawer::menu_open_specific_mode() {
                     menu_art_planet_phase = planet->get_construction_phase();
                     menu_art_planet_named = true;
                     if (!planet->advance_construction_phase()) {
-                        L.fatal("get_planet_under_construction() returned non-advanceable planet");
+                        L.error("get_planet_under_construction() returned non-advanceable planet");
                     }
                     // TODO: On completion, the planet should actually appear the following month,
                     // and this should trigger a bulletin (+ news article?)

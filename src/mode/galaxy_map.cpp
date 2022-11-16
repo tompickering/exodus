@@ -2093,7 +2093,9 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
             if (   (phase == 2 && player->can_afford(1500))
                 || (phase == 1 && player->can_afford(1000))) {
                 if (player->attempt_spend(1000)) {
-                    art->advance_construction_phase();
+                    if (!art->advance_construction_phase()) {
+                        L.error("get_planet_under_construction() returned non-advanceable planet (CPU)");
+                    }
                     L.debug("[%s]: ARTIFICIAL PLANET PHASE %d", player->get_full_name(), phase+1);
                 }
             }
