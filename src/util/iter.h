@@ -18,6 +18,7 @@ class StarIterator : public Iterator {
     public:
         StarIterator();
         Star* get();
+        int get_idx();
     private:
         int n_stars;
         Star* s;
@@ -31,6 +32,8 @@ class PlanetIterator : public Iterator {
         virtual bool complete() override;
         Planet* get();
         Star* get_star();
+        int get_idx();
+        int get_star_idx();
     private:
         StarIterator star_iter;
         int owner;

@@ -23,6 +23,11 @@ Star* StarIterator::get() {
     return &s[idx];
 }
 
+int StarIterator::get_idx() {
+    if (complete()) return -1;
+    return idx;
+}
+
 PlanetIterator::PlanetIterator() : PlanetIterator(-1) {
 }
 
@@ -65,6 +70,16 @@ Planet* PlanetIterator::get() {
 Star* PlanetIterator::get_star() {
     if (complete()) return nullptr;
     return star_iter.get();
+}
+
+int PlanetIterator::get_idx() {
+    if (complete()) return -1;
+    return idx;
+}
+
+int PlanetIterator::get_star_idx() {
+    if (complete()) return -1;
+    return star_iter.get_idx();
 }
 
 bool PlanetIterator::valid() {
