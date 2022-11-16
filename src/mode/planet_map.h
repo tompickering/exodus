@@ -107,7 +107,7 @@ class PlanetMap : ModeBase {
         void set_build_button(bool);
         void hide_lunar_base_tool();
 
-        void draw_class_and_population();
+        void draw_attack_details();
 
         ExodusMode update_destruction(float);
         bool destruction_done;

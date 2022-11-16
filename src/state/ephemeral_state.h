@@ -107,6 +107,7 @@ typedef struct {
     // If -1 then blameless destruction (meteor etc)
     // If >=0 then this player's attacking
     int destroyer_idx;
+    bool terror;
     bool nuke;
 } PlanetDestruction;
 

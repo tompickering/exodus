@@ -391,7 +391,7 @@ void PlanetMap::enter() {
         do_animations = false;
         draw();
         draw_stones();
-        draw_class_and_population();
+        draw_attack_details();
         stage = PM_Scout;
     } else if (ephstate.get_ephemeral_state() == EPH_Destruction) {
         PlanetDestruction &d = ephstate.destruction;
@@ -403,7 +403,7 @@ void PlanetMap::enter() {
             draw();
             draw_stones();
             // TODO: It'd be fun to keep redrawing population to watch it tick down with cities destroyed... >:D
-            draw_class_and_population();
+            draw_attack_details();
 
             if (d.destroyer_idx >= 0 && !d.nuke) {
                 int y = 240;
@@ -1799,7 +1799,7 @@ void PlanetMap::hide_lunar_base_tool() {
         0, 0, 1, 1});
 }
 
-void PlanetMap::draw_class_and_population() {
+void PlanetMap::draw_attack_details() {
     int x = 500;
     int y = 50;
 
@@ -1808,13 +1808,14 @@ void PlanetMap::draw_class_and_population() {
         Justify::Left,
         x, y,
         COL_TEXT);
+    y += 20;
     draw_manager.draw_text(
         planet->get_class_str(),
         Justify::Left,
-        x, y+20,
+        x, y,
         COL_TEXT);
 
-    y += 80;
+    y += 60;
 
     char population[16];
     snprintf(population, sizeof(population), "%d m.", planet->get_population());
@@ -1824,11 +1825,37 @@ void PlanetMap::draw_class_and_population() {
         Justify::Left,
         x, y,
         COL_TEXT);
+    y += 20;
     draw_manager.draw_text(
         population,
         Justify::Left,
-        x, y+20,
+        x, y,
         COL_TEXT);
+
+    y += 60;
+
+    if (ephstate.destruction.terror) {
+        int n = ephstate.destruction.n_strikes;
+        char t[32];
+        snprintf(t, sizeof(t), "%d Unit%s", n, n==1?" has":"s have");
+        draw_manager.draw_text(
+            t,
+            Justify::Left,
+            x, y,
+            COL_TEXT);
+        y += 20;
+        draw_manager.draw_text(
+            "been struck",
+            Justify::Left,
+            x, y,
+            COL_TEXT);
+        y += 20;
+        draw_manager.draw_text(
+            "down.",
+            Justify::Left,
+            x, y,
+            COL_TEXT);
+    }
 }
 
 ExodusMode PlanetMap::update_destruction(float delta) {
