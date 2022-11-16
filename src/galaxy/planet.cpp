@@ -123,6 +123,17 @@ bool Planet::advance_construction_phase() {
     return false;
 }
 
+bool Planet::finalise_construction() {
+    if (get_class() != Artificial) {
+        return false;
+    }
+    if (construction_phase >= 3) {
+        construction_phase = 0;
+        return true;
+    }
+    return false;
+}
+
 int Planet::get_quality() {
     if (!exists() || is_owned()) {
         return 0;

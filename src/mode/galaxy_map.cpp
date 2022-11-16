@@ -1155,7 +1155,33 @@ ExodusMode GalaxyMap::month_pass_update() {
     }
 
     if (mp_state.mp_stage == MP_ArtificialWorldNews) {
-        // TODO - PROCwpc
+        // PROCwpc
+        for (; mp_state.mp_star_idx < n_stars; ++mp_state.mp_star_idx) {
+            for (; mp_state.mp_planet_idx < STAR_MAX_PLANETS; ++mp_state.mp_planet_idx) {
+                Planet *p = stars[mp_state.mp_star_idx].get_planet(mp_state.mp_planet_idx);
+                if (p && p->exists() && p->finalise_construction()) {
+                    Player *owner = exostate.get_player(p->get_owner());
+                    if (!owner) {
+                        // Possible if lord completed planet and then was defeated?
+                        // TODO: Check that this case is made impossible when player is removed from the game
+                        L.error("No owner on completed artificial world");
+                        continue;
+                    }
+                    bulletin_start_new(false);
+                    bulletin_set_bg(p->sprites()->bulletin_bg);
+                    bulletin_set_flag(flags[owner->get_flag_idx()]);
+                    bulletin_set_next_text("");
+                    bulletin_set_next_text("ARTIFICIAL PLANET CONSTRUCTION");
+                    bulletin_set_next_text("");
+                    bulletin_set_next_text("%s is constructing", owner->get_full_name());
+                    bulletin_set_next_text("an artificial planet.");
+                    mp_state.mp_planet_idx++;
+                    return ExodusMode::MODE_None;
+                }
+            }
+            mp_state.mp_planet_idx = 0;
+        }
+        bulletin_ensure_closed();
         next_mp_stage();
     }
 
@@ -2088,7 +2114,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
     if (mp_state.mpai_stage == MPAI_DevelopArtificialPlanet) {
         Planet *art = exostate.get_planet_under_construction(player_idx);
-        int phase = art->get_construction_phase();
+        int phase = art ? art->get_construction_phase() : 0;
         if (art) {
             if (   (phase == 2 && player->can_afford(1500))
                 || (phase == 1 && player->can_afford(1000))) {

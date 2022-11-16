@@ -150,6 +150,7 @@ class Planet {
         void destroy();
         int get_construction_phase();
         bool advance_construction_phase();
+        bool finalise_construction();
         int get_quality();
         PlanetClass get_class();
         const char* get_class_str();
