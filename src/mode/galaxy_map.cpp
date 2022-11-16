@@ -4,6 +4,7 @@
 
 #include "exodus_features.h"
 
+#include "util/iter.h"
 #include "util/str.h"
 #include "util/value.h"
 
@@ -1969,7 +1970,56 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     }
 
     if (mp_state.mpai_stage == MPAI_DecideTerrorAttacks) {
-        // TODO
+        int hostile_to = player->get_hostile_to();
+        if (!player->has_mission() && hostile_to >= 0 && onein(20)) {
+            if (exostate.get_orig_month() > 15 && player->can_afford(70)) {
+                // PROCet_terror
+
+                bool target_found = false;
+
+                for (PlanetIterator pi(hostile_to); !pi.complete(); ++pi) {
+                    L.info("[%s]: PLANNING MISSION", player->get_full_name());
+                    player->get_mission_star_ref() = pi.get_star_idx();
+                    player->get_mission_planet_ref() = pi.get_idx();
+                    // FIXME: Always picking the first one - should ideally be random!
+                    target_found = true;
+                    break;
+                }
+
+                if (target_found) {
+                    /*
+                     * Orig has a bug here whereby the different costs are evaluated
+                     * in an inappropriate order such that only the cheapest can ever
+                     * be selected!
+                     */
+                    MissionType plan = MT_TerrorPort;
+                    int cost = 100;
+
+#if FIX_AI_TERROR
+                    bool nuke_possible = player->has_invention(INV_OrbitalBombs) && exostate.get_orig_month() > 50;
+                    if (nuke_possible && player->can_afford(1500)) {
+                        plan = MT_Nuclear;
+                        cost = 1000;
+                    } else if (player->can_afford(201)) {
+                        plan = MT_TerrorAgri;
+                        cost = 200;
+                    } else if (player->can_afford(151)) {
+                        plan = MT_TerrorPlu;
+                        cost = 150;
+                    }
+#endif
+
+                    if (player->attempt_spend(cost)) {
+                        L.info("[%s]: COMMITTING MISSION %d", player->get_full_name(), plan);
+                        player->set_mission_type(plan);
+                    }
+                } else {
+                    L.debug("[%s]: Could not find target planet - clearing hostility", player->get_full_name());
+                    // Our nemesis does not have a valid target planet - clear hostility
+                    player->clear_hostility();
+                }
+            }
+        }
         next_mpai_stage();
     }
 
