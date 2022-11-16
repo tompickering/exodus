@@ -1415,7 +1415,6 @@ ExodusMode GalaxyMap::month_pass_update() {
                             ephstate.destruction.destroyer_idx = -1;
                             ephstate.destruction.terror = false;
                             ephstate.destruction.nuke = true;
-                            // TODO: Check this - nuke always seen by player?
                             ephstate.destruction.draw = true;
                             return ephstate.get_appropriate_mode();
                     }
@@ -1441,7 +1440,6 @@ ExodusMode GalaxyMap::month_pass_update() {
                     bulletin_set_bg(pl->sprites()->bulletin_bg);
                     bulletin_set_active_player_flag();
                     bulletin_write_planet_info(st, pl);
-                    // TODO - PROCdomission etc
                     // Just set bulletin here - if we need to trigger an action
                     // on close, set active_mission and return
                     // Otherwise, p->clear_mission();
