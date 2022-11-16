@@ -106,13 +106,6 @@ typedef struct {
     }
 } Fleet;
 
-enum ArtificialPlanetPhase {
-    AP_None,
-    AP_Phase1,
-    AP_Phase2,
-    AP_Complete,
-};
-
 // N.B. This is sensitive to order
 enum Invention {
     INV_MassProduction,           // 1   -
@@ -257,7 +250,6 @@ class Player {
         int get_total_officer_costs(Officer);
         void set_officer(Officer, OfficerQuality);
         int nopirates;
-        ArtificialPlanetPhase ap_phase;
 
         int get_freight_capacity();
         void cap_freight_randomly();

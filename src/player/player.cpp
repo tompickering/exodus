@@ -43,8 +43,6 @@ Player::Player() {
     clear_ai_attack();
 
     set_tax(30);
-
-    ap_phase = AP_None;
 }
 
 void Player::init_alien_name() {

@@ -2087,7 +2087,34 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     }
 
     if (mp_state.mpai_stage == MPAI_DevelopArtificialPlanet) {
-        // TODO
+        Planet *art = exostate.get_planet_under_construction(player_idx);
+        int phase = art->get_construction_phase();
+        if (art) {
+            if (   (phase == 2 && player->can_afford(1500))
+                || (phase == 1 && player->can_afford(1000))) {
+                if (player->attempt_spend(1000)) {
+                    art->advance_construction_phase();
+                    L.debug("[%s]: ARTIFICIAL PLANET PHASE %d", player->get_full_name(), phase+1);
+                }
+            }
+        }
+
+        // TODO: Check if 'art' is a reasonable way of getting a COMPLETE artificial world
+        // TODO: What if we have more than one artificial planet?
+        if (phase >= 3) {
+            // PROClordbwp: Move an artificial planet
+            // TODO: PROClordbwp
+            L.debug("[%s]: MOVE ARTIFICIAL PLANET", player->get_full_name());
+        }
+
+        if (!art && player->has_invention(INV_OrbitalMassConstruction)) {
+            if (onein(5) && player->can_afford(1000)) {
+                // PROClorddwp: Begin an artificial planet
+                // TODO: PROClorddwp
+                L.debug("[%s]: BEGIN ARTIFICIAL PLANET", player->get_full_name());
+            }
+        }
+
         next_mpai_stage();
     }
 
