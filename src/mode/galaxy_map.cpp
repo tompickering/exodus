@@ -637,6 +637,10 @@ ExodusMode GalaxyMap::update(float delta) {
                         if (s->construct_artificial_world(player_idx, name)) {
                             stage = GM_Idle;
                             break;
+                        } else {
+                            comm_open(DIA_S_ArtificialPlanetStarInvalid);
+                            stage = GM_ArtificialWorldStarSelectInvalid;
+                            break;
                         }
                     }
                 }
@@ -661,6 +665,14 @@ ExodusMode GalaxyMap::update(float delta) {
                 //       can still use the usual readout to help decide where to
                 //       select.
                 panel_set_text("SELECT A STAR");
+            }
+            break;
+        case GM_ArtificialWorldStarSelectInvalid:
+            {
+                if (comm_update(delta) != CA_None) {
+                    comm_ensure_closed();
+                    stage = GM_ArtificialWorldStarSelect;
+                }
             }
             break;
         case GM_QuitConfirm:

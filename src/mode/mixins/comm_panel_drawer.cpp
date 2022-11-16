@@ -744,6 +744,11 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img(CI_HumanThoughtful);
             comm_set_img_caption("COUNSELLOR");
             break;
+        case DIA_S_ArtificialPlanetStarInvalid:
+            comm_set_title("Message from counsellor");
+            comm_set_img(CI_HumanThoughtful);
+            comm_set_img_caption("COUNSELLOR");
+            break;
         case DIA_S_FlyAlreadyFlying:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_HumanThoughtful);
@@ -1580,6 +1585,22 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_set_text(0, "We do not have any aerospace");
                 comm_set_text(1, "bombers, so a bomb attack is");
                 comm_set_text(2, "impossible.");
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_ArtificialPlanetStarInvalid:
+            {
+                comm_prepare(6);
+                /*
+                 * Adjusted the text here, as it might be wrong (inner
+                 * planets may have been destroyed by an expanding star,
+                 * or it may have fewer than 5 planets but includes
+                 * another artificial planet in the outermost slot.
+                 */
+                //comm_set_text(0, "This star has already five planets.");
+                comm_set_text(0, "This star has no suitable orbit.");
+                comm_set_text(2, "We cannot place the artificial");
+                comm_set_text(3, "planet here.");
                 comm_recv(DIA_R_Close);
             }
             break;

@@ -168,6 +168,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
             GM_MP_FirstSpaceport,
             GM_Menu,
             GM_ArtificialWorldStarSelect,
+            GM_ArtificialWorldStarSelectInvalid,
             GM_QuitConfirm,
         };
 
