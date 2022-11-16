@@ -1346,14 +1346,44 @@ ExodusMode GalaxyMap::month_pass_update() {
                             L.error("No mission type - has_mission() should be false");
                             break;
                         case MT_TerrorComm:
-                        case MT_TerrorAgri:
                         case MT_TerrorPlu:
                         case MT_TerrorArmy:
                         case MT_TerrorPort:
                         case MT_TerrorTrade:
                         case MT_TerrorMine:
-                            // TODO
                             p->clear_mission();
+                            if (ephstate.get_ephemeral_state() == EPH_Destruction) {
+                                L.debug("Terrorist mission took effect");
+                                return ephstate.get_appropriate_mode();
+                            } else {
+                                L.debug("Terrorist mission did not take effect");
+                            }
+                            break;
+                        case MT_TerrorAgri:
+                            {
+                                p->clear_mission();
+
+                                pl->adjust_unrest(1);
+
+                                int to_die = RND(15);
+                                if (pl->count_stones(STONE_Agri) < 15) to_die = RND(5);
+
+                                L.debug("Executing plant poisoning: %d units", to_die);
+
+                                int sz = pl->get_size_blocks();
+                                for (int j = 0; j < sz; ++j) {
+                                    for (int i = 0; i < sz; ++i) {
+                                        if (pl->get_stone(i, j) == STONE_Agri) {
+                                            L.debug("Poisoning %d,%d", i, j);
+                                            pl->set_stone(i, j, STONE_AgriDead);
+                                            --to_die;
+                                            if (to_die <= 0) break;
+                                        }
+                                    }
+                                    if (to_die <= 0) break;
+                                }
+
+                            }
                             break;
                         case MT_RandomBomb:
                             p->clear_mission();
@@ -1400,8 +1430,11 @@ ExodusMode GalaxyMap::month_pass_update() {
                 exostate.set_active_planet(mission.planet_idx);
                 Planet *pl = exostate.get_active_planet();
                 if (pl && pl->is_owned()) {
+                    int owner_idx = pl->get_owner();
+                    Player *owner = exostate.get_player(owner_idx);
+
                     exostate.set_active_player(mp_state.mp_player_idx);
-                    L.info("[%s] MISSION - %s", p->get_full_name(), pl->get_name());
+                    L.info("[%s] MISSION - %s (%s)", p->get_full_name(), pl->get_name(), owner->get_full_name());
                     bulletin_start_new(false);
                     bulletin_set_bg(pl->sprites()->bulletin_bg);
                     bulletin_set_active_player_flag();
@@ -1422,8 +1455,112 @@ ExodusMode GalaxyMap::month_pass_update() {
                         case MT_TerrorPort:
                         case MT_TerrorTrade:
                         case MT_TerrorMine:
-                            // TODO
-                            p->clear_mission();
+                            {
+                                // PROCspyspot
+                                int r = RND(owner->has_invention(INV_IndustryGuard) ? 5 : 10);
+                                // TODO: r increases with attacker's officer quality
+                                if (r < 4) {
+                                    // TODO: Spy captured
+                                    L.info("[%s] SPY CAPTURED - %s", p->get_full_name(), pl->get_name());
+                                    //audio_manager.target_music(mpart2mus(9));
+                                    p->clear_mission();
+                                } else {
+                                    audio_manager.target_music(mpart2mus(9));
+
+                                    if (mission.type == MT_TerrorAgri) {
+                                        L.debug("Mission type: Poison plants");
+                                        exostate.register_news(NI_PlantsPoisoned);
+                                        bulletin_start_new(true);
+                                        bulletin_set_bg(pl->sprites()->bulletin_bg);
+                                        bulletin_set_active_player_flag();
+                                        bulletin_write_planet_info(st, pl);
+                                        bulletin_set_next_text("PLANTS POISONED AT %s", tmp_caps(pl->get_name()));
+                                        bulletin_set_next_text("");
+                                        bulletin_set_next_text("Large parts of cultivated area");
+                                        bulletin_set_next_text("have collapsed.");
+                                    } else {
+                                        L.debug("Mission type: Terrorist bombing");
+
+                                        ephstate.destruction.tgt_stones.reset();
+
+                                        switch (mission.type) {
+                                            case MT_TerrorComm:
+                                                ephstate.destruction.tgt_stones.add(STONE_Base);
+                                                break;
+                                            case MT_TerrorPlu:
+                                                ephstate.destruction.tgt_stones.add(STONE_Plu);
+                                                break;
+                                            case MT_TerrorArmy:
+                                                switch (rand() % 3) {
+                                                    case 0:
+                                                        ephstate.destruction.tgt_stones.add(STONE_Inf);
+                                                        break;
+                                                    case 1:
+                                                        ephstate.destruction.tgt_stones.add(STONE_Gli);
+                                                        break;
+                                                    case 2:
+                                                        ephstate.destruction.tgt_stones.add(STONE_Art);
+                                                        break;
+                                                }
+                                                break;
+                                            case MT_TerrorPort:
+                                                // We only target the power station here
+                                                ephstate.destruction.tgt_stones.add(STONE_Port2);
+                                                break;
+                                            case MT_TerrorTrade:
+                                                ephstate.destruction.tgt_stones.add(STONE_Trade);
+                                                break;
+                                            case MT_TerrorMine:
+                                                ephstate.destruction.tgt_stones.add(STONE_Mine);
+                                                break;
+                                            default:
+                                                L.error("Mission type %d should not be processed here", mission.type);
+                                                break;
+                                        }
+
+
+                                        bool did_anything = pl->count_stones(ephstate.destruction.tgt_stones) > 0;
+
+                                        if (did_anything) {
+                                            ephstate.set_ephemeral_state(EPH_Destruction);
+                                            ephstate.destruction.type = DESTROY_NStones;
+                                            ephstate.destruction.n_strikes = 1;
+                                            ephstate.destruction.enable_explosions = true;
+                                            ephstate.destruction.enable_explosion_anims = true;
+                                            ephstate.destruction.irradiated = false;
+                                            ephstate.destruction.show_target = true;
+                                            // Enemy doesn't know you've attacked them (TODO: Check this)
+                                            ephstate.destruction.destroyer_idx = -1;
+                                            ephstate.destruction.nuke = false;
+                                            ephstate.destruction.draw = owner->is_human();
+                                            // TODO: Something to request the "1 unit has been struck down" text
+                                        } else {
+                                            // Things should clear this before use anyway, but we'll tidy this up as we don't need it
+                                            ephstate.destruction.tgt_stones.reset();
+                                        }
+
+                                        exostate.register_news(NI_TerroristAttack);
+                                        bulletin_start_new(true);
+                                        bulletin_set_bg(pl->sprites()->bulletin_bg);
+                                        bulletin_set_active_player_flag();
+                                        bulletin_write_planet_info(st, pl);
+                                        bulletin_set_next_text("TERRORIST ATTCK AT %s", tmp_caps(pl->get_name()));
+
+                                        if (did_anything) {
+                                            bulletin_set_next_text("");
+                                            if (ephstate.destruction.draw) {
+                                                bulletin_set_next_text("Visual replay follows.");
+                                            } else {
+                                                bulletin_set_next_text("A technical unit has been destroyed.");
+                                            }
+                                        }
+                                    }
+
+                                    // TODO: Spy captured case probably needs to set this as well, so we can move it up one level
+                                    active_mission = true;
+                                    return ExodusMode::MODE_None;
+                                }
+                            }
                             break;
                         case MT_RandomBomb:
                             mission_n_strikes = RND(7) + 9;
@@ -3052,7 +3189,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     if (mp_state.mpp_stage == MPP_Epidemic) {
         // PROCepidemic(1) case
-        // TODO: PROCepidemic(2) case (plants poisoned) and trigger
+        // PROCepidemic(2) case (plants poisoned) is handled as MT_TerrorAgri
         if (onein(150)) {
             if (exostate.get_orig_month() >= 10 && !owner->has_invention(INV_Acid)) {
                 int to_die = RND(15);
