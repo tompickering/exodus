@@ -1358,6 +1358,30 @@ ExodusMode GalaxyMap::month_pass_update() {
                             } else {
                                 L.debug("Terrorist mission did not take effect");
                             }
+
+                            switch (mission.type) {
+                                case MT_TerrorComm:
+                                    pl->adjust_unrest(1);
+                                    break;
+                                case MT_TerrorPlu:
+                                    pl->adjust_unrest(2);
+                                    break;
+                                case MT_TerrorArmy:
+                                    pl->adjust_unrest(1);
+                                    break;
+                                case MT_TerrorPort:
+                                    pl->adjust_unrest(1);
+                                    break;
+                                case MT_TerrorTrade:
+                                    pl->adjust_unrest(2);
+                                    break;
+                                case MT_TerrorMine:
+                                    pl->adjust_unrest(1);
+                                    break;
+                                default:
+                                    L.error("Mission %d should have unrest case", mission.type);
+                                    break;
+                            }
                             break;
                         case MT_TerrorAgri:
                             {
