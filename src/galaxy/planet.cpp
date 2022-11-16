@@ -913,6 +913,8 @@ void Planet::adjust_robots(int adj) {
 }
 
 bool Planet::is_owned() {
+    // N.B. Artificial worlds under construction do NOT exist but ARE owned
+
     if (owner <0) return false;
 
     Player *ownerplayer = exostate.get_player(owner);
