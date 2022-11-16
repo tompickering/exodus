@@ -2101,19 +2101,41 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
             }
         }
 
-        // TODO: Check if 'art' is a reasonable way of getting a COMPLETE artificial world
-        // TODO: What if we have more than one artificial planet?
+        // Initialise an artificial planet we have just finished creating
+        // N.B. 'phase' will get reset to 0 in PROCwpc - then it will be a normal planet
         if (phase >= 3) {
-            // PROClordbwp: Move an artificial planet
-            // TODO: PROClordbwp
-            L.debug("[%s]: MOVE ARTIFICIAL PLANET", player->get_full_name());
+            // PROClordbwp: Initialize an artificial planet
+            L.debug("[%s]: COMPLETE ARTIFICIAL PLANET", player->get_full_name());
+            /*
+             * The first thing this PROC does is to set up various planet properties
+             * (PROCdowp), however I don't believe this is needed in our version, as
+             * this happens when we initialise the planet object.
+             *
+             * The second thing is to invoke PROCenemytactics for this lord.
+             * Our equivalent is ai_planet_update(), however instead of invoking it
+             * on all planets now, we will only invoke on the new planet.
+             *
+             * This is a deviation from the original, which would process all owned
+             * planets at this point.
+             */
+            ai_planet_update(art);
         }
 
         if (!art && player->has_invention(INV_OrbitalMassConstruction)) {
             if (onein(5) && player->can_afford(1000)) {
                 // PROClorddwp: Begin an artificial planet
-                // TODO: PROClorddwp
-                L.debug("[%s]: BEGIN ARTIFICIAL PLANET", player->get_full_name());
+                for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
+                    Star *s = &stars[star_idx];
+                    if (s->artificial_world_viable()) {
+                        if (player->attempt_spend(1000)) {
+                            if (!s->construct_artificial_world(player_idx, nullptr)) {
+                                L.error("Should be possible - viability check returned true");
+                            }
+                            L.debug("[%s]: BEGIN ARTIFICIAL PLANET", player->get_full_name());
+                        }
+                        break;
+                    }
+                }
             }
         }
 
