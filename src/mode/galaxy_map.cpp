@@ -3176,7 +3176,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             bulletin_set_bg(p->sprites()->bulletin_bg);
             bulletin_set_active_player_flag();
             bulletin_write_planet_info(s, p);
-            // TODO: Music
+            // No special music here (PROCsurfchange)
             bulletin_set_next_text("GEOLOGICAL CHANGE AT %s", tmp_caps(p->get_name()));
             bulletin_set_next_text("");
             bulletin_set_next_text("Due to a global climate effect,");
@@ -3227,7 +3227,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     // Doesn't cause planet loss - only damage
     if (mp_state.mpp_stage == MPP_AlienAttack) {
         if (onein(200) && exostate.get_orig_month() >= 10) {
-            // TODO: music
+            audio_manager.target_music(mpart2mus(8));
             exostate.register_news(NI_AlienAttack);
             bulletin_start_new(false);
             bulletin_set_bg(p->sprites()->bulletin_bg);
@@ -3337,7 +3337,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 int robots = p->get_robots();
                 if ((robots < cities*3) || onein(4)) {
                     p->adjust_unrest(-3);
-                    // TODO: PROCdonotice, music
+                    audio_manager.target_music(mpart2mus(8));
                     bulletin_start_new(false);
                     bulletin_set_bg(p->sprites()->bulletin_bg);
                     bulletin_set_active_player_flag();
@@ -3465,7 +3465,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     if (mp_state.mpp_stage == MPP_ReactorMeltdown) {
         if (onein(200)) {
             if (p->has_stone(STONE_Plu)) {
-                // TODO: Music
+                audio_manager.target_music(mpart2mus(8));
                 bulletin_start_new(false);
                 bulletin_set_bg(p->sprites()->bulletin_bg);
                 bulletin_set_active_player_flag();
@@ -3551,7 +3551,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     if (mp_state.mpp_stage == MPP_LosePlanetControl) {
         if (p->count_stones(STONE_Base) == 0) {
-            // TODO: music
+            audio_manager.target_music(mpart2mus(9));
             // FIXME: No PROCdonotice here? (Orig doesn't...)
             bulletin_start_new(true);
             bulletin_set_bg(p->sprites()->bulletin_bg);
