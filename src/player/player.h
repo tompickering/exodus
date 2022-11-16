@@ -33,10 +33,10 @@ enum GuildTitle {
 
 enum Race {
     RACE_Human,
-    RACE_Yokon,
-    RACE_Teri,
-    RACE_Urkash,
-    RACE_Gordoon,
+    RACE_Yokon,   // 1 -
+    RACE_Teri,    // 2  \ Original codes for
+    RACE_Urkash,  // 3  / player races
+    RACE_Gordoon, // 4 -
 };
 
 typedef struct {
