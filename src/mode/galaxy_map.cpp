@@ -2024,7 +2024,42 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     }
 
     if (mp_state.mpai_stage == MPAI_FleetPurchase) {
-        // TODO
+        if (exostate.get_orig_month() > 8 && player->can_afford(11) && player->get_tactic() != 6) {
+            Fleet &fleet = player->get_fleet_nonconst();
+
+            int n = RND(7);
+            for (int i = 0; i <= n; ++i) {
+                switch (rand() % 4) {
+                    case 0:
+                        if (onein(3) && player->attempt_spend(10)) {
+                            L.debug("[%s]: BUY SCOUT", player->get_full_name());
+                            fleet.scouts++;
+                        }
+                        break;
+                    case 1:
+                        for (int j = 0; j < 3; ++j) {
+                            if (player->attempt_spend(15)) {
+                                L.debug("[%s]: BUY TRANSPORTER", player->get_full_name());
+                                fleet.transporters++;
+                            }
+                        }
+                        break;
+                    case 2:
+                        // TODO: Check if there's even any point in AI having warships...?!
+                        if (player->attempt_spend(20)) {
+                            L.debug("[%s]: BUY WARSHIP", player->get_full_name());
+                            fleet.warships++;
+                        }
+                        break;
+                    case 3:
+                        if (player->get_race() != RACE_Teri && player->attempt_spend(25)) {
+                            L.debug("[%s]: BUY BOMBER", player->get_full_name());
+                            fleet.bombers++;
+                        }
+                        break;
+                }
+            }
+        }
         next_mpai_stage();
     }
 
