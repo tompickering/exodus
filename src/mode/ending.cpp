@@ -31,6 +31,10 @@
 #define STAR_X 410
 #define STAR_Y 140
 
+#define DEED_CHARS 64
+#define DEEDS_MAX 10
+static char deed_text[DEED_CHARS * DEEDS_MAX];
+
 #define THEEND_DELAY 2
 #define THEEND_TIME 12
 
@@ -221,6 +225,105 @@ ExodusMode Ending::update(float dt) {
             {
                 if (!draw_manager.pixelswap_active()) {
                     draw_manager.draw(TGT_Secondary, IMG_BG_MENU1);
+
+                    static const int n_bad_things = TRACE_BAD_END - TRACE_BAD - 1;
+                    char* bad_things[n_bad_things];
+
+                    int ctr = 0;
+
+                    for (int i = 0; i < n_bad_things; ++i) {
+                        Trace t = (Trace)((int)TRACE_BAD + 1 + i);
+                        int n = exostate.get_active_player()->get_trace(t);
+
+                        if (n == 0) {
+                            continue;
+                        }
+
+                        bad_things[ctr] = &(deed_text[i*DEED_CHARS]);
+
+                        switch (t) {
+                            case TRACE_BattlesStarted:
+                                snprintf(bad_things[ctr], DEED_CHARS, "Started %d battles", n);
+                                break;
+                            case TRACE_AlliancesBroken:
+                                snprintf(bad_things[ctr], DEED_CHARS, "Broken %d alliances", n);
+                                break;
+                            case TRACE_RevolutionsCaused:
+                                snprintf(bad_things[ctr], DEED_CHARS, "Caused %d revolutions", n);
+                                break;
+                            case TRACE_PeacefulShipsAttacked:
+                                snprintf(bad_things[ctr], DEED_CHARS, "Attacked %d peaceful ships", n);
+                                break;
+                            case TRACE_CitiesDestroyed:
+                                snprintf(bad_things[ctr], DEED_CHARS, "Destroyed %d cities", n);
+                                break;
+                            case TRACE_VillagesAnnihilated:
+                                snprintf(bad_things[ctr], DEED_CHARS, "Annihilated %d natives' villages", n);
+                                break;
+                            case TRACE_PlutoniumSold:
+                                snprintf(bad_things[ctr], DEED_CHARS, "Sold %d units of plutonium", n);
+                                break;
+                            case TRACE_PlanetsNuked:
+                                snprintf(bad_things[ctr], DEED_CHARS, "Nuked %d planets", n);
+                                break;
+                            case TRACE_PlanetsBombed:
+                                snprintf(bad_things[ctr], DEED_CHARS, "Bombed %d planets", n);
+                                break;
+                            default:
+                                L.error("Unknown trace in bad deeds: %d", t);
+                                snprintf(bad_things[ctr], DEED_CHARS, "");
+                                break;
+                        }
+
+                        ctr++;
+                    }
+
+                    int y = 100;
+
+                    draw_manager.draw_text(
+                        TGT_Secondary,
+                        "THE BAD THINGS YOU HAVE DONE",
+                        Justify::Centre,
+                        RES_X/2, y,
+                        COL_TEXT2);
+
+                    y += 40;
+
+                    for (int i = 0; i < ctr; ++i) {
+                        draw_manager.draw_text(
+                            TGT_Secondary,
+                            bad_things[i],
+                            Justify::Centre,
+                            RES_X/2, y,
+                            COL_TEXT2);
+                        y += 30;
+                    }
+
+                    y = 420;
+                    draw_manager.draw_text(
+                        TGT_Secondary,
+                        "Let us know when you have finished reading,",
+                        Justify::Centre,
+                        RES_X/2, y,
+                        COL_TEXT2);
+                    y += 20;
+                    draw_manager.draw_text(
+                        TGT_Secondary,
+                        "Guildmaster.",
+                        Justify::Centre,
+                        RES_X/2, y,
+                        COL_TEXT2);
+
+                    draw_manager.pixelswap_start();
+                    set_stage(BadDeedsWait);
+                    return ExodusMode::MODE_None;
+                }
+            }
+            break;
+        case BadDeedsWait:
+            {
+                if (!draw_manager.pixelswap_active() && draw_manager.clicked()) {
+                    draw_manager.draw(TGT_Secondary, IMG_BG_MENU1);
                     draw_manager.pixelswap_start();
                     set_stage(GoodDeeds);
                     return ExodusMode::MODE_None;
@@ -228,6 +331,106 @@ ExodusMode Ending::update(float dt) {
             }
             break;
         case GoodDeeds:
+            {
+                if (!draw_manager.pixelswap_active()) {
+                    draw_manager.draw(TGT_Secondary, IMG_BG_MENU1);
+
+                    static const int n_good_things = TRACE_GOOD_END - TRACE_GOOD - 1;
+                    char* good_things[n_good_things];
+
+                    int ctr = 0;
+
+                    for (int i = 0; i < n_good_things; ++i) {
+                        Trace t = (Trace)((int)TRACE_GOOD + 1 + i);
+                        int n = exostate.get_active_player()->get_trace(t);
+
+                        if (n == 0) {
+                            continue;
+                        }
+
+                        good_things[ctr] = &(deed_text[i*DEED_CHARS]);
+
+                        switch (t) {
+                            case TRACE_PlanetsClaimed:
+                                snprintf(good_things[ctr], DEED_CHARS, "Claimed %d planets", n);
+                                break;
+                            case TRACE_AlliancesCreated:
+                                snprintf(good_things[ctr], DEED_CHARS, "Created %d alliances", n);
+                                break;
+                            case TRACE_CitiesBuilt:
+                                snprintf(good_things[ctr], DEED_CHARS, "Built %d cities", n);
+                                break;
+                            case TRACE_MineralsSold:
+                                snprintf(good_things[ctr], DEED_CHARS, "Sold %d units of minerals", n);
+                                break;
+                            case TRACE_FoodSold:
+                                snprintf(good_things[ctr], DEED_CHARS, "Sold %d units of food", n);
+                                break;
+                            case TRACE_AlliesHelped:
+                                snprintf(good_things[ctr], DEED_CHARS, "Assisted %d allies", n);
+                                break;
+                            default:
+                                L.error("Unknown trace in good deeds: %d", t);
+                                snprintf(good_things[ctr], DEED_CHARS, "");
+                                break;
+                        }
+
+                        ctr++;
+                    }
+
+                    int y = 100;
+
+                    draw_manager.draw_text(
+                        TGT_Secondary,
+                        "THE GOOD THINGS YOU HAVE DONE",
+                        Justify::Centre,
+                        RES_X/2, y,
+                        COL_TEXT2);
+
+                    y += 40;
+
+                    for (int i = 0; i < ctr; ++i) {
+                        draw_manager.draw_text(
+                            TGT_Secondary,
+                            good_things[i],
+                            Justify::Centre,
+                            RES_X/2, y,
+                            COL_TEXT2);
+                        y += 30;
+                    }
+
+                    y = 420;
+                    draw_manager.draw_text(
+                        TGT_Secondary,
+                        "Let us know when you have finished reading,",
+                        Justify::Centre,
+                        RES_X/2, y,
+                        COL_TEXT2);
+                    y += 20;
+                    draw_manager.draw_text(
+                        TGT_Secondary,
+                        "Guildmaster.",
+                        Justify::Centre,
+                        RES_X/2, y,
+                        COL_TEXT2);
+
+                    draw_manager.pixelswap_start();
+                    set_stage(GoodDeedsWait);
+                    return ExodusMode::MODE_None;
+                }
+            }
+            break;
+        case GoodDeedsWait:
+            {
+                if (!draw_manager.pixelswap_active() && draw_manager.clicked()) {
+                    draw_manager.draw(TGT_Secondary, IMG_BG_MENU1);
+                    draw_manager.pixelswap_start();
+                    set_stage(DeedsFadeOut);
+                    return ExodusMode::MODE_None;
+                }
+            }
+            break;
+        case DeedsFadeOut:
             {
                 if (!draw_manager.pixelswap_active()) {
                     draw_manager.fade_black(1.2f, 24);
