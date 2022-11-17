@@ -622,17 +622,22 @@ ExodusMode PlanetMap::update(float delta) {
                                 // Clearing cities increases unrest
                                 if (existing == STONE_City) {
                                     planet->adjust_unrest(3);
-                                    // TODO: trace%
+                                    player->add_trace(TRACE_CitiesDestroyed);
                                 }
                                 // Clearing villages increases unrest
                                 if (existing == STONE_Village) {
                                     planet->adjust_unrest(2);
-                                    // TODO: trace%
+                                    player->add_trace(TRACE_VillagesAnnihilated);
                                 }
                             }
 
                             clear_surf(block_x, block_y);
                             construct_stone = tool2stone(active_tool);
+
+                            if (construct_stone == STONE_City) {
+                                player->add_trace(TRACE_CitiesBuilt);
+                            }
+
                             construct_anim = get_construct_anim(construct_stone);
                             if (construct_anim) {
                                 construct_progress = 0;

@@ -187,6 +187,32 @@ enum AIFlag {
     AI_Hi,
 };
 
+enum Trace {
+    TRACE_NONE,
+    // Bad things
+    TRACE_BAD,
+    TRACE_BattlesStarted,        //  1
+    TRACE_AlliancesBroken,       //  2
+    TRACE_RevolutionsCaused,     //  3
+    TRACE_PeacefulShipsAttacked, //  4
+    TRACE_CitiesDestroyed,       //  5
+    TRACE_VillagesAnnihilated,   //  6
+    TRACE_PlutoniumSold,         //  7
+    TRACE_PlanetsNuked,          //  8
+    TRACE_PlanetsBombed,         //  9
+    TRACE_BAD_END,
+    // Good things
+    TRACE_GOOD,
+    TRACE_PlanetsClaimed,        // 10
+    TRACE_AlliancesCreated,      // 11
+    TRACE_CitiesBuilt,           // 12
+    TRACE_MineralsSold,          // 13
+    TRACE_FoodSold,              // 14
+    TRACE_AlliesHelped,          // 15
+    TRACE_GOOD_END,
+    TRACE_MAX
+};
+
 class Player {
     public:
         Player();
@@ -298,6 +324,10 @@ class Player {
         void clear_ai_attack();
         void get_ai_attack(int&, int&);
         void set_ai_attack(int, int);
+
+        int get_trace(Trace);
+        void add_trace(Trace);
+        void add_trace(Trace, int);
     private:
         Race race;
         Gender gender;
@@ -335,6 +365,7 @@ class Player {
         int ai_attack_star;   // Orig: lordvar(), lower 8 bits
         int ai_attack_planet; // Orig: lordvar(), upper 8 bits
 
+        int trace[TRACE_MAX];
     // The ExodusState sets up the player data during game init.
     friend class ExodusState;
 };

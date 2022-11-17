@@ -455,7 +455,12 @@ ExodusMode Trade::update(float delta) {
                         if (clk.y > .86f) {
                             draw_manager.draw(id(ID::TRADE_PANEL), nullptr);
                             close_panel();
-                            // TODO: trace% if we sold anything illegal etc (end of PROCbuysell)
+                            // trace% (end of PROCbuysell)
+                            const Fleet &fleet = p->get_fleet();
+                            const Freight &freight = fleet.freight;
+                            p->add_trace(TRACE_MineralsSold, max(0, freight_initial.minerals - freight.minerals));
+                            p->add_trace(TRACE_FoodSold, max(0, freight_initial.food - freight.food));
+                            p->add_trace(TRACE_PlutoniumSold, max(0, freight_initial.plutonium - freight.plutonium));
                             stage = Overview;
                         } else if (clk.y > .7f) {
                             bool inc = clk.x > .82f;

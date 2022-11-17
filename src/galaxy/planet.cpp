@@ -1557,6 +1557,10 @@ TradeReport Planet::monthly_trade() {
         o->commit_infraction(INF_TradePlu);
     }
 
+    o->add_trace(TRACE_MineralsSold, rpt.mi);
+    o->add_trace(TRACE_FoodSold, rpt.fd);
+    o->add_trace(TRACE_PlutoniumSold, rpt.pl);
+
     o->give_mc(rpt.mc);
 
     return rpt;

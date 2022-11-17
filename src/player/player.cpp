@@ -739,3 +739,16 @@ void Player::set_ai_attack(int s, int p) {
     ai_attack_star = s;
     ai_attack_planet = p;
 }
+
+int Player::get_trace(Trace t) {
+    return trace[t];
+}
+
+void Player::add_trace(Trace t) {
+    add_trace(t, 1);
+}
+
+void Player::add_trace(Trace t, int n) {
+    trace[t] += n;
+    L.debug("%s: TRACE %d -> %d", get_full_name(), (int)t, trace[t]);
+}

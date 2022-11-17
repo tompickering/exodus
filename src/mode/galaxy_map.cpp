@@ -3651,6 +3651,11 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 int robots = p->get_robots();
                 if ((robots < cities*3) || onein(4)) {
                     p->adjust_unrest(-3);
+
+                    if (owner) {
+                        owner->add_trace(TRACE_RevolutionsCaused);
+                    }
+
                     audio_manager.target_music(mpart2mus(8));
                     bulletin_start_new(false);
                     bulletin_set_bg(p->sprites()->bulletin_bg);

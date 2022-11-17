@@ -414,7 +414,7 @@ ExodusMode StarMap::update(float delta) {
                         // punish%(1,2)=1
                         player->commit_infraction(INF_BombAttack);
 
-                        // TODO: trace%(9)+=1
+                        player->add_trace(TRACE_PlanetsBombed);
 
                         int bombers_killed = 0;
                         int att = planet->plan_bomb(fleet.bombers, tgt, bombers_killed, bmb_guns);
@@ -594,6 +594,7 @@ ExodusMode StarMap::update(float delta) {
                     break;
                 case CA_Proceed:
                     comm_close();
+                    player->add_trace(TRACE_BattlesStarted);
                     ephstate.set_ephemeral_state(EPH_LunarBattlePrep);
                     ephstate.lunar_battle.aggressor_type = AGG_Player;
                     ephstate.lunar_battle.aggressor_idx = player_idx;

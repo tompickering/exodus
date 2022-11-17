@@ -334,7 +334,7 @@ ExodusMode AlienVessel::update(float delta) {
         case AV_Attack:
             {
                 if (type != VESSEL_NoID) {
-                    // TODO: trace%(4) += 1
+                    player->add_trace(TRACE_PeacefulShipsAttacked);
                 }
 
                 if (type == VESSEL_GuildPatrol) {

@@ -1023,6 +1023,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     if (comm_player->attempt_spend(comm_planet->get_settlement_cost())) {
                         comm_planet->set_name(name);
                         comm_planet->set_owner(exostate.get_player_idx(comm_player));
+                        comm_player->add_trace(TRACE_PlanetsClaimed);
                         comm_set_text(4, "%s is now yours.", name);
                         comm_recv(DIA_R_SettleNamePlanetProceed);
                     } else {
@@ -1222,7 +1223,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_prepare(1);
                 exostate.unset_alliances(comm_player_idx, comm_other_idx);
                 comm_player->adjust_reputation(-1);
-                // TODO: Orig sets trace%(2)+=1 here - why?
+                comm_player->add_trace(TRACE_AlliancesBroken);
                 int r = RND(3);
                 if ((r == 2) && (comm_other->get_flag(5) == AI_Hi)) {
                     r = 1;
@@ -1353,7 +1354,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     // FIXME: Should this say something else...?
                     comm_set_speech("But we have an ALLIANCE!");
                     exostate.set_all_alliances(comm_player_idx, comm_other_idx);
-                    // TODO: trace%(11)+=1
+                    comm_player->add_trace(TRACE_AlliancesCreated);
                     comm_recv(DIA_R_Close);
                 } else {
                     if ((comm_other->get_flag(0) == AI_Hi) || onein(4)) {
@@ -1389,7 +1390,8 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 //       but they don't go to the other lord! More important
                 //       in multiplayer.
                 exostate.set_alliance(comm_player_idx, comm_other_idx, comm_ctx.alliance_type);
-                // TODO: Orig sets 'trace%(11)+=1' and 'san=1' here - why?
+                // TODO: Orig sets 'san=1' here - why?
+                comm_player->add_trace(TRACE_AlliancesCreated);
                 comm_set_speech("I accept this.");
                 comm_recv(DIA_R_Close);
             } else {
