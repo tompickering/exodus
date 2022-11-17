@@ -480,7 +480,7 @@ ExodusMode Ending::update(float dt) {
                 draw_manager.draw(
                     id(ID::OUTRO_BACKGROUND),
                     IMG_EN2_SCAPE,
-                    {0, RES_Y + (int)(interp*946.f),
+                    {0, RES_Y + (int)(interp*950.f),
                      0, 1, 1, 1});
 
                 // Outro text
