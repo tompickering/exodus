@@ -628,6 +628,18 @@ ExodusMode GalaxyMap::update(float delta) {
                 if (ft && (ft != gal->get_guild())) {
                     exostate.set_active_flytarget(ft);
                     if (ft == selected_ft) {
+                        if (!player->get_location().has_visited(exostate.tgt2loc(ft))) {
+                            /*
+                             * I'm not sure if the original prevented this - but I don't
+                             * think you'd want to create a planet in a system that you
+                             * can't even view to access the planet map!
+                             */
+                            // FIXME: Bit hacky to reuse DIA_S_ZoomButNotVisited
+                            comm_open(DIA_S_ZoomButNotVisited);
+                            stage = GM_ArtificialWorldStarSelectInvalid;
+                            break;
+                        }
+
                         Star *s = (Star*) ft;
                         int player_idx = exostate.get_active_player_idx();
 
