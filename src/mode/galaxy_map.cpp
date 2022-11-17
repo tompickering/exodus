@@ -1538,8 +1538,55 @@ ExodusMode GalaxyMap::month_pass_update() {
                                 if (r < 4) {
                                     // TODO: Spy captured
                                     L.info("[%s] SPY CAPTURED - %s", p->get_full_name(), pl->get_name());
-                                    //audio_manager.target_music(mpart2mus(9));
+                                    audio_manager.target_music(mpart2mus(9));
+
+                                    // TODO: Bit early in PROCspyspot that draws IMG_CT3_EXPORT and waits for a click with PROCgetMK
+
+                                    // Clear mission now - this does not go ahead
+                                    // This also means we do not re-process this player again when we return after the bulletin
                                     p->clear_mission();
+
+                                    exostate.register_news(NI_AssassinCaptured);
+                                    bulletin_start_new(true);
+                                    bulletin_set_bg(pl->sprites()->bulletin_bg);
+                                    bulletin_set_active_player_flag();
+                                    bulletin_write_planet_info(st, pl);
+                                    bulletin_set_next_text("");
+                                    bulletin_set_next_text("ASSASSIN AT %s", tmp_caps(pl->get_name()));
+                                    bulletin_set_next_text("");
+                                    bulletin_set_next_text("An assassin has been captured by");
+                                    bulletin_set_next_text("security units of %s.", pl->get_name());
+                                    bulletin_set_next_text("");
+
+                                    if (r != 1 && !owner->has_invention(INV_DreamInfluence)) {
+                                        // Add feminine case to orig
+                                        if (onein(2)) {
+                                            bulletin_set_next_text("He has killed himself.");
+                                        } else {
+                                            bulletin_set_next_text("She has killed herself.");
+                                        }
+                                    } else {
+                                        // TODO: Would be good to see when the dream influence system was actually helpful
+                                        if (owner->is_human()) {
+                                            bulletin_set_next_text("Maybe he wants to cooperate.");
+                                            bulletin_set_next_text("");
+                                            bulletin_set_next_text("Do you wish to kill him?");
+                                            // TODO: Choice
+                                        } else {
+                                            // Again, feminine case easy to add here with no extra state tracking
+                                            if (onein(2)) {
+                                                bulletin_set_next_text("Maybe he wants to cooperate.");
+                                            } else {
+                                                bulletin_set_next_text("Maybe she wants to cooperate.");
+                                            }
+                                            // The CPU owner discovers who sent the spy, and becomes hostile
+                                            owner->set_hostile_to(mp_state.mp_player_idx);
+                                        }
+                                    }
+
+                                    // Don't set active_mission true - we have no mission to process
+                                    // TODO: BUT resolve assassin by separate means
+                                    return ExodusMode::MODE_None;
                                 } else {
                                     audio_manager.target_music(mpart2mus(9));
 
@@ -1632,7 +1679,6 @@ ExodusMode GalaxyMap::month_pass_update() {
                                         }
                                     }
 
-                                    // TODO: Spy captured case probably needs to set this as well, so we can move it up one level
                                     active_mission = true;
                                     return ExodusMode::MODE_None;
                                 }
