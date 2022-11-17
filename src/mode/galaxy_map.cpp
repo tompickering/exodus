@@ -1049,7 +1049,8 @@ ExodusMode GalaxyMap::month_pass_update() {
     }
 
     if (mp_state.mp_stage == MP_CheckMissionFail) {
-        // TODO: Check if we've run out of time for our mission
+        // Towards start of PROCcalculatefly
+        // Orig tests gameover here - but we instead perform this test in GM_MonthPassing
         next_mp_stage();
     }
 
