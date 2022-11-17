@@ -247,7 +247,7 @@ class Player {
         int get_officer_cost(Officer);
         int get_officer_cost(OfficerQuality);
         int get_officer_initial_cost(OfficerQuality);
-        int get_total_officer_costs(Officer);
+        int get_total_officer_costs();
         void set_officer(Officer, OfficerQuality);
         int nopirates;
 

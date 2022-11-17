@@ -6,6 +6,8 @@
 #include "input/input.h"
 #include "util/iter.h"
 
+#include "exodus_features.h"
+
 #include "shared.h"
 #include "assetpaths.h"
 
@@ -908,22 +910,40 @@ void MenuDrawer::menu_open_specific_mode() {
                     MENU_X+120, menu_get_y(7),
                     COL_TEXT2);
 
-                menu_set_txt(9, COL_TEXT, "Planets");
+                int row = 8;
+
+#if FEATURE_OFFICER_COST_INFO
+                menu_set_txt(row, COL_TEXT, "Officers:");
+                snprintf(txt, sizeof(txt), "%dMC", p->get_total_officer_costs());
+                draw_manager.draw_text(
+                    txt,
+                    Justify::Left,
+                    MENU_X+120, menu_get_y(row),
+                    COL_TEXT2);
+                row++;
+#endif
+                row++;
+
+                menu_set_txt(row, COL_TEXT, "Planets");
                 snprintf(txt, sizeof(txt), "%d", planets);
                 draw_manager.draw_text(
                     txt,
                     Justify::Left,
-                    MENU_X+120, menu_get_y(9),
+                    MENU_X+120, menu_get_y(row),
                     COL_TEXT2);
 
+                row++;
+
                 const Fleet &f = p->get_fleet();
-                menu_set_txt(10, COL_TEXT, "Fleet size:");
+                menu_set_txt(row, COL_TEXT, "Fleet size:");
                 snprintf(txt, sizeof(txt), "%d", f.size());
                 draw_manager.draw_text(
                     txt,
                     Justify::Left,
-                    MENU_X+120, menu_get_y(10),
+                    MENU_X+120, menu_get_y(row),
                     COL_TEXT2);
+
+                row += 2;
 
                 if (p->get_location().in_flight()) {
                     int tgt = p->get_location().get_target();
@@ -933,7 +953,7 @@ void MenuDrawer::menu_open_specific_mode() {
                              "The fleet is flying to the %s%s.",
                              (star?"star ":""),
                              ft->name);
-                    menu_set_txt(12, COL_TEXT, txt);
+                    menu_set_txt(row, COL_TEXT, txt);
                 }
             }
             break;

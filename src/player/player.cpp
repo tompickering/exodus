@@ -542,7 +542,7 @@ int Player::get_officer_initial_cost(OfficerQuality q) {
     return OFF_INITCOST_POOR;
 }
 
-int Player::get_total_officer_costs(Officer off) {
+int Player::get_total_officer_costs() {
     int total = 0;
     for (int i = 0; i < (int)OFF_MAX; ++i) {
         total += get_officer_cost((Officer)i);
