@@ -188,7 +188,7 @@ enum AIFlag {
 };
 
 enum Trace {
-    TRACE_NONE,
+    TRACE_None,
     // Bad things
     TRACE_BAD,
     TRACE_BattlesStarted,        //  1

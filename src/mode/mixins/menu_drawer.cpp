@@ -1800,9 +1800,9 @@ bool MenuDrawer::menu_specific_update() {
 
             // 7: Planet surface
             if (menu_row_clicked(7)) {
-                // TODO: Delay spend or refund on cancel
-                if (p->attempt_spend(COST_INF_SURF)) {
+                if (p->can_afford(COST_INF_SURF)) {
                     ephstate.select_planet(SPR_PlanetSurface);
+                    ephstate.selectplanet_mc = COST_INF_SURF;
                     menu_new_mode = ephstate.get_appropriate_mode();
                     return true;
                 }
@@ -1837,60 +1837,59 @@ bool MenuDrawer::menu_specific_update() {
                 int &star_idx = p->get_mission_star_ref();
                 int &planet_idx = p->get_mission_planet_ref();
 
-                // TODO: Charge MC only after selection of valid planet in each case
+                int cost = 0;
 
                 //  4: command station
                 if (mission == MT_None && menu_row_clicked(4)) {
-                    if (p->attempt_spend(COST_ATT_CMD)) {
-                        mission = MT_TerrorComm;
-                    }
+                    cost = COST_ATT_CMD;
+                    mission = MT_TerrorComm;
                 }
 
                 //  5: cultivated area
                 if (mission == MT_None && menu_row_clicked(5)) {
-                    if (p->attempt_spend(COST_ATT_AGRI)) {
-                        mission = MT_TerrorAgri;
-                    }
+                    cost = COST_ATT_AGRI;
+                    mission = MT_TerrorAgri;
                 }
 
                 //  6: plutonium production
                 if (mission == MT_None && menu_row_clicked(6)) {
-                    if (p->attempt_spend(COST_ATT_PLU)) {
-                        mission = MT_TerrorPlu;
-                    }
+                    cost = COST_ATT_PLU;
+                    mission = MT_TerrorPlu;
                 }
 
                 //  7: army production
                 if (mission == MT_None && menu_row_clicked(7)) {
-                    if (p->attempt_spend(COST_ATT_ARMY)) {
-                        mission = MT_TerrorArmy;
-                    }
+                    cost = COST_ATT_ARMY;
+                    mission = MT_TerrorArmy;
                 }
 
                 //  8: spaceport
                 if (mission == MT_None && menu_row_clicked(8)) {
-                    if (p->attempt_spend(COST_ATT_PORT)) {
-                        mission = MT_TerrorPort;
-                    }
+                    cost = COST_ATT_PORT;
+                    mission = MT_TerrorPort;
                 }
 
                 //  9: trading centre
                 if (mission == MT_None && menu_row_clicked(9)) {
-                    if (p->attempt_spend(COST_ATT_TRADE)) {
-                        mission = MT_TerrorTrade;
-                    }
+                    cost = COST_ATT_TRADE;
+                    mission = MT_TerrorTrade;
                 }
 
                 // 10: mining
                 if (mission == MT_None && menu_row_clicked(10)) {
-                    if (p->attempt_spend(COST_ATT_MINE)) {
-                        mission = MT_TerrorMine;
-                    }
+                    cost = COST_ATT_MINE;
+                    mission = MT_TerrorMine;
+                }
+
+                if (mission != MT_None && !p->can_afford(cost)) {
+                    mission = MT_None;
+                    cost = 0;
                 }
 
                 if (mission != MT_None) {
                     p->set_mission_type(mission);
                     ephstate.select_planet(star_idx, planet_idx);
+                    ephstate.selectplanet_mc = cost;
                     return false;
                 }
 
@@ -1917,11 +1916,11 @@ bool MenuDrawer::menu_specific_update() {
                 //  4: random bombing
                 if (menu_row_clicked(4)) {
                     // TODO: Invetion check?
-                    // TODO: Charge MC only after selection of valid planet
-                    // TODO: TRACE_PlanetsBombed only after selection of valid planet
-                    if (p->attempt_spend(COST_ATT_BOMB)) {
+                    if (p->can_afford(COST_ATT_BOMB)) {
                         p->set_mission_type(MT_RandomBomb);
                         ephstate.select_planet(star_idx, planet_idx);
+                        ephstate.selectplanet_mc = COST_ATT_BOMB;
+                        ephstate.selectplanet_trace = TRACE_PlanetsBombed;
                         return false;
                     }
                 }
@@ -1929,11 +1928,11 @@ bool MenuDrawer::menu_specific_update() {
                 //  5: nuclear extermination
                 if (menu_row_clicked(5)) {
                     // TODO: Invetion check?
-                    // TODO: Charge MC only after selection of valid planet
-                    // TODO: TRACE_PlanetsNuked only after selection of valid planet
-                    if (p->attempt_spend(COST_ATT_NUKE)) {
+                    if (p->can_afford(COST_ATT_NUKE)) {
                         p->set_mission_type(MT_Nuclear);
                         ephstate.select_planet(star_idx, planet_idx);
+                        ephstate.selectplanet_mc = COST_ATT_NUKE;
+                        ephstate.selectplanet_trace = TRACE_PlanetsNuked;
                         return false;
                     }
                 }

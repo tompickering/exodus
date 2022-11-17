@@ -644,10 +644,17 @@ ExodusMode StarMap::update(float delta) {
                 // TODO: Should we allow you to select unowned planets? Likely needs ephstate config
                 for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
                     if (draw_manager.query_click(id(ID::PLANET1 + i)).id) {
-                        *(ephstate.selectplanet_planet) = i;
-                        // TODO: Fade to black
-                        // Clear EPH_SelectPlanet and set up further ephemeral state if necessary
-                        return ephstate.selectplanet_resolve();
+                        if (ephstate.selectplanet_mc <= 0 || player->attempt_spend(ephstate.selectplanet_mc)) {
+                            if (ephstate.selectplanet_trace != TRACE_None) {
+                                player->add_trace(ephstate.selectplanet_trace);
+                            }
+                            *(ephstate.selectplanet_planet) = i;
+                            // TODO: Fade to black
+                            // Clear EPH_SelectPlanet and set up further ephemeral state if necessary
+                            return ephstate.selectplanet_resolve();
+                        } else {
+                            L.error("Player cannot afford selectplanet MC - should not have gotten this far");
+                        }
                     }
                 }
             }
