@@ -143,8 +143,6 @@ void MonthReport::monthreport_open() {
                             int n_planets = 0;
                             for (PlanetIterator piter(player_idx); !piter.complete(); ++piter) {
                                 n_planets++;
-                                // TODO: Check month value here - easy to check against
-                                // other uses in PROCfillstatus
                                 if (piter.get()->get_army_size() < exostate.get_orig_month()) {
                                     ok = false;
                                 }
