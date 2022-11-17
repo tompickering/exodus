@@ -1699,6 +1699,7 @@ void Planet::disown() {
     army_art = 0;
     unrest[0] = 0;
     army_funding = 0;
+    L.debug("%s: DISOWN: Unrest reset to 0", name);
 }
 
 bool Planet::expand_city() {
