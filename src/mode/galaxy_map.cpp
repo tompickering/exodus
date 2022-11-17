@@ -923,6 +923,7 @@ void GalaxyMap::next_mp_stage() {
     mp_state.mp_player_idx = 0;
     mp_state.mp_star_idx = 0;
     mp_state.mp_planet_idx = 0;
+    mp_state.mp_officer = (Officer)0;
 }
 
 void GalaxyMap::next_mpai_stage() {
@@ -1715,7 +1716,63 @@ ExodusMode GalaxyMap::month_pass_update() {
     }
 
     if (mp_state.mp_stage == MP_PayOfficers) {
-        // TODO - PROCpayoff etc
+        for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
+            Player *p = exostate.set_active_player(mp_state.mp_player_idx);
+            if (p && p->is_participating()) {
+                Officer &o = mp_state.mp_officer;
+                for (; o < OFF_MAX; o = (Officer)((int)o + 1)) {
+                    int cost = p->get_officer_cost(o);
+                    if (cost <= 0) {
+                        continue;
+                    }
+                    if (p->attempt_spend(cost)) {
+                        L.debug("[%s] Paid for officer: %d", p->get_full_name(), cost);
+                    } else {
+                        L.debug("[%s] Could not pay for officer: %d", p->get_full_name(), cost);
+                        bulletin_start_new(false);
+                        bulletin_set_active_player_flag();
+                        bulletin_set_text_col(COL_TEXT3);
+                        bulletin_set_next_text("");
+                        bulletin_set_next_text("OFFICER NOT PAID");
+                        bulletin_set_next_text("");
+#if FEATURE_UNPAID_OFFICER_NAMED
+                        bulletin_set_next_text("%s, you are unable to", p->get_full_name());
+                        switch (o) {
+                            case OFF_Science:
+                                bulletin_set_next_text("pay your Science Officer.");
+                                break;
+                            case OFF_Fleet:
+                                bulletin_set_next_text("pay your Fleet Admiral.");
+                                break;
+                            case OFF_Battle:
+                                bulletin_set_next_text("pay your Battle General.");
+                                break;
+                            case OFF_Secret:
+                                bulletin_set_next_text("pay your Secret Service Leader.");
+                                break;
+                            case OFF_Counsellor:
+                                bulletin_set_next_text("pay your Ship Counsellor.");
+                                break;
+                            default:
+                                bulletin_set_next_text("pay an officer.");
+                                L.warn("Unknown officer going unpaid");
+                                break;
+                        }
+#else
+                        bulletin_set_next_text("%s,", p->get_full_name());
+                        bulletin_set_next_text("pay an officer.");
+#endif
+                        if (onein(6)) {
+                            bulletin_set_next_text("The officer has left.");
+                            p->set_officer(o, OFFQ_Poor);
+                        }
+
+                        o = (Officer)((int)o + 1);
+                        return ExodusMode::MODE_None;
+                    }
+                }
+            }
+        }
         next_mp_stage();
     }
 

@@ -140,6 +140,7 @@ typedef struct {
     int mp_player_idx;
     int mp_star_idx;
     int mp_planet_idx;
+    Officer mp_officer;
     int mpai_player_idx;
     int mpai_star_idx;
     int mpai_planet_idx;

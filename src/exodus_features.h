@@ -18,6 +18,9 @@
 // Enables a few extra counsellor messages
 #define FEATURE_COUNSELLOR_EXTRA 1
 
+// Display the name of an unpaid officer in bulletin
+#define FEATURE_UNPAID_OFFICER_NAMED 1
+
 // Fixes bug meaning some AI terrorist actions are never taken
 #define FIX_AI_TERROR 1
 
