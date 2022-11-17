@@ -880,7 +880,29 @@ ExodusMode LunarBattle::update(float delta) {
                 if (cover) {
                     power -= 3;
                 }
-                // TODO: Officer power bonuses
+                /*
+                 * Slight deviation from orig here - when CPU attacks us,
+                 * or rebels / alients attack us, both armies are given
+                 * average-quality officers (see params to PROCb_start()).
+                 * This seems off, however. Give each player their hired
+                 * officer quality.
+                 */
+                OfficerQuality offq = OFFQ_Average;
+                if (defender_turn) {
+                    offq = defender->get_officer(OFF_Battle);
+                } else if (aggressor) {
+                    offq = aggressor->get_officer(OFF_Battle);
+                }
+                switch (offq) {
+                    case OFFQ_Poor:
+                        power -= 1;
+                        break;
+                    case OFFQ_Good:
+                        power += 1;
+                        break;
+                    default:
+                        break;
+                }
                 power = clamp(power, 0, 4);
                 if (active_unit->is_alien) {
                     if (cover) {
@@ -1237,7 +1259,33 @@ void LunarBattle::auto_act(bool agg) {
         if (agg && b.aggressor_type == AGG_Rebels) {
             power = 1;
         }
-        // TODO: Officer power bonuses: power += generalAT-2 or generalDF-2
+
+        Planet *p = exostate.get_active_planet();
+        Player *defender = exostate.get_player(p->get_owner());
+
+        /*
+         * Slight deviation from orig here - when CPU attacks us,
+         * or rebels / alients attack us, both armies are given
+         * average-quality officers (see params to PROCb_start()).
+         * This seems off, however. Give each player their hired
+         * officer quality.
+         */
+        OfficerQuality offq = OFFQ_Average;
+        if (!agg) {
+            offq = defender->get_officer(OFF_Battle);
+        } else if (aggressor) {
+            offq = aggressor->get_officer(OFF_Battle);
+        }
+        switch (offq) {
+            case OFFQ_Poor:
+                power -= 1;
+                break;
+            case OFFQ_Good:
+                power += 1;
+                break;
+            default:
+                break;
+        }
 
         power = min(power, 4);
         power = max(power, 0);
