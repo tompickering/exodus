@@ -1535,7 +1535,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                             {
                                 // PROCspyspot
                                 int r = RND(owner->has_invention(INV_IndustryGuard) ? 5 : 10);
-                                // TODO: r increases with attacker's officer quality
+                                r += 2*(int)p->get_officer(OFF_Secret);
                                 if (r < 4) {
                                     // TODO: Spy captured
                                     L.info("[%s] SPY CAPTURED - %s", p->get_full_name(), pl->get_name());
