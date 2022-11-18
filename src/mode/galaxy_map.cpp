@@ -377,8 +377,12 @@ ExodusMode GalaxyMap::update(float delta) {
             break;
         case GM_SelectStar:
             {
-                // TODO: Need a way to cancel this - especially if no options possible!
-                // TODO: Recover mission MC if cancelled?
+                if (input_manager.consume(K_Escape) || draw_manager.clicked_r()) {
+                    // TODO: Bug where mission doesn't get cancelled
+                    ephstate.clear_ephemeral_state();
+                    return ExodusMode::MODE_Reload;
+                }
+
                 // TODO: "SELECT A STAR" message
                 // TODO: (Show star name on mouseover?)
                 // TODO: Some way to highlight available stars

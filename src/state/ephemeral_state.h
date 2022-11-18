@@ -177,12 +177,14 @@ class EphemeralState {
         int* selectplanet_planet;
         int selectplanet_mc;
         Trace selectplanet_trace;
+        MissionType selectplanet_mission;
         // Use this form if you just want to store values to use later
         void select_planet(int& st, int& pl) {
             selectplanet_star = &st;
             selectplanet_planet = &pl;
             selectplanet_mc = 0;
             selectplanet_trace = TRACE_None;
+            selectplanet_mission = MT_None;
             set_ephemeral_state(EPH_SelectPlanet);
         }
         // Parameterless select_planet will use internal value storage

@@ -639,7 +639,11 @@ ExodusMode StarMap::update(float delta) {
             break;
         case SM_SelectPlanet:
             {
-                // TODO: A way to go back - might be 0 planets, or owned planets (right click?)
+                if (input_manager.consume(K_Escape) || draw_manager.clicked_r()) {
+                    // Go back to galaxy map - still in planet select mode
+                    return ExodusMode::MODE_Pop;
+                }
+
                 // TODO: "SELECT A PLANET"
                 // TODO: Should we allow you to select unowned planets? Likely needs ephstate config
                 for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
@@ -647,6 +651,9 @@ ExodusMode StarMap::update(float delta) {
                         if (ephstate.selectplanet_mc <= 0 || player->attempt_spend(ephstate.selectplanet_mc)) {
                             if (ephstate.selectplanet_trace != TRACE_None) {
                                 player->add_trace(ephstate.selectplanet_trace);
+                            }
+                            if (ephstate.selectplanet_mission != MT_None) {
+                                player->set_mission_type(ephstate.selectplanet_mission);
                             }
                             *(ephstate.selectplanet_planet) = i;
                             draw_manager.fade_black(1.2f, 24);

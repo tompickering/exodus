@@ -1887,9 +1887,9 @@ bool MenuDrawer::menu_specific_update() {
                 }
 
                 if (mission != MT_None) {
-                    p->set_mission_type(mission);
                     ephstate.select_planet(star_idx, planet_idx);
                     ephstate.selectplanet_mc = cost;
+                    ephstate.selectplanet_mission = mission;
                     return false;
                 }
 
@@ -1917,10 +1917,10 @@ bool MenuDrawer::menu_specific_update() {
                 if (menu_row_clicked(4)) {
                     // TODO: Invetion check?
                     if (p->can_afford(COST_ATT_BOMB)) {
-                        p->set_mission_type(MT_RandomBomb);
                         ephstate.select_planet(star_idx, planet_idx);
                         ephstate.selectplanet_mc = COST_ATT_BOMB;
                         ephstate.selectplanet_trace = TRACE_PlanetsBombed;
+                        ephstate.selectplanet_mission = MT_RandomBomb;
                         return false;
                     }
                 }
@@ -1929,10 +1929,10 @@ bool MenuDrawer::menu_specific_update() {
                 if (menu_row_clicked(5)) {
                     // TODO: Invetion check?
                     if (p->can_afford(COST_ATT_NUKE)) {
-                        p->set_mission_type(MT_Nuclear);
                         ephstate.select_planet(star_idx, planet_idx);
                         ephstate.selectplanet_mc = COST_ATT_NUKE;
                         ephstate.selectplanet_trace = TRACE_PlanetsNuked;
+                        ephstate.selectplanet_mission = MT_Nuclear;
                         return false;
                     }
                 }
