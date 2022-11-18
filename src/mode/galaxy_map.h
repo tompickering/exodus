@@ -145,6 +145,7 @@ typedef struct {
     int mpai_star_idx;
     int mpai_planet_idx;
     int mpai_substage;
+    int mpai_substage_player_idx;
 } MPState;
 
 class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, BulletinDrawer, FrameDrawer, MenuDrawer, MonthReport, TradeBuy {

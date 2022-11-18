@@ -2914,6 +2914,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
                 // Resolve to attack a planet
                 if (mp_state.mpai_substage == 0) {
+                    mp_state.mpai_substage_player_idx = 0;
                     if (p && p->exists() && p->is_owned() && p->get_owner() != player_idx) {
                         // FIXME: Factor in lunar base here?
                         int p_army = p->get_army_size();
@@ -2936,10 +2937,13 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     L.debug("[%s] PROCe_tact6 : ANNOUNCING ATTACK ON %s AT %s ", player->get_full_name(), p->get_name(), s->name);
                     exostate.set_active_flytarget(s);
                     exostate.set_active_planet(planet_idx);
+                    // Unrest increases even before MODE_Arrive, if we're attacking a human planet
+                    p->adjust_unrest(1);
                     int owner_idx = p->get_owner();
                     Player *owner = exostate.get_player(owner_idx);
                     if (owner->is_human()) {
                         mp_state.mpai_substage = 2;
+                        // PROCenemyplayerattack from this point
                         return ExodusMode::MODE_Arrive;
                     } else {
                         mp_state.mpai_substage = 4;
@@ -2971,7 +2975,73 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
                 // Attacking CPU, requesting support from war allies
                 if (mp_state.mpai_substage == 4) {
-                    // TODO
+                    int owner_idx = p->get_owner();
+                    Player *owner = exostate.get_player(owner_idx);
+
+                    int &i = mp_state.mpai_substage_player_idx;
+                    for (; i < N_PLAYERS; ++i) {
+                        if (i == owner_idx) {
+                            continue;
+                        }
+
+                        Player *other = exostate.get_player(i);
+
+                        if (!(other && other->is_participating())) {
+                            continue;
+                        }
+
+                        if (!other->is_human()) {
+                            // CPUs never provide war ally support
+                            continue;
+                        }
+
+                        // TODO: Have alliances been unset? We should not process attacker!
+
+                        if (exostate.has_alliance(owner_idx, i, ALLY_War)) {
+                            Planet *army_planet = nullptr;
+                            int army_sz = -1;
+                            // Iterate defender's war ally's planets
+                            for (PlanetIterator pi(i); !pi.complete(); ++pi) {
+                                int this_army_sz = pi.get()->get_army_size();
+                                if (this_army_sz > army_sz) {
+                                    army_sz = this_army_sz;
+                                    army_planet = pi.get();
+                                }
+                            }
+
+                            if (army_sz > 1) {
+                                int c = max(1, min(RND(4)*2, other->get_mc()));
+
+                                bulletin_start_new(true);
+                                bulletin_set_flag(flags[other->get_flag_idx()]);
+                                bulletin_set_text_col(COL_TEXT3);
+                                bulletin_set_next_text("");
+                                bulletin_set_next_text("%s is going to be attacked.", owner->get_full_name());
+                                bulletin_set_next_text("");
+                                const char* n = army_planet->get_name();
+                                switch (owner->get_gender()) {
+                                    case GENDER_Female:
+                                        bulletin_set_next_text("As her war-ally, you should support");
+                                        bulletin_set_next_text("her. Your strongest planet is %s.", n);
+                                        break;
+                                    case GENDER_Male:
+                                        bulletin_set_next_text("As his war-ally, you should support");
+                                        bulletin_set_next_text("him. Your strongest planet is %s.", n);
+                                        break;
+                                    case GENDER_Other:
+                                        bulletin_set_next_text("As their war-ally, you should support");
+                                        bulletin_set_next_text("them. Your strongest planet is %s.", n);
+                                        break;
+                                }
+                                bulletin_set_next_text("Hyperspace transport costs %d MC.", c);
+                                bulletin_set_next_text("");
+                                bulletin_set_next_text("How many units do you wish to launch?");
+                                // TODO: Need something akin to bulletin_set_yesno()
+                                mp_state.mpai_substage = 8;
+                                return ExodusMode::MODE_None;
+                            }
+                        }
+                    }
                     mp_state.mpai_substage = 5;
                 }
 
@@ -2994,6 +3064,40 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     // TODO: Freight adjustment of units
                     // TODO: If won, some artificial planet logic
                     mp_state.mpai_substage = 10;
+                }
+
+                // Handle outcome of war ally bulletin
+                if (mp_state.mpai_substage == 8) {
+                    int owner_idx = p->get_owner();
+                    int supporter_idx = mp_state.mpai_substage_player_idx;
+
+                    Player *owner = exostate.get_player(owner_idx);
+                    Player *supporter = exostate.get_player(supporter_idx);
+
+                    // TODO: Supporter, credits are ONLY expended and units added to defender planet when total > 3 - but supporter still loses them
+                    // TODO: Ensure credits, supporter planet army and defender army are adjusted
+                    // TODO: Get number of army units transferred
+                    // TODO: PLACEHOLDER VALUES:
+                    int inf = 2;
+                    int gli = 1;
+                    int art = 1;
+                    if (inf + gli + art > 3) {
+                        L.info("[%s] Received support from %s", owner->get_full_name(), supporter->get_full_name());
+                        // TODO: Credits expenditure
+                        p->adjust_army(inf, gli, art);
+                        supporter->add_trace(TRACE_AlliesHelped);
+                    } else {
+                        L.info("[%s] Did not receive sufficient support from %s", owner->get_full_name(), supporter->get_full_name());
+                        if (onein(2)) {
+                            // Player under attack calls off alliance
+                            exostate.unset_alliances(owner_idx, supporter_idx);
+                        }
+                    }
+
+                    mp_state.mpai_substage = 4;
+                    // Ensure we resume substage 4's loop from the next iteration
+                    mp_state.mpai_substage_player_idx++;
+                    return ExodusMode::MODE_None;
                 }
 
                 // Always end with this
