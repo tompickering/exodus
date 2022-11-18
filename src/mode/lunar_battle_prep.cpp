@@ -249,6 +249,8 @@ void LunarBattlePrep::exit() {
     draw_manager.unset_selectable(id(ID::OPT_GROUP_MAN));
     draw_manager.unset_selectable(id(ID::OPT_PLACE_AUTO));
     draw_manager.unset_selectable(id(ID::OPT_PLACE_MAN));
+
+    ModeBase::exit();
 }
 
 ExodusMode LunarBattlePrep::update(float delta) {

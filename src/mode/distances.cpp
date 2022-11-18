@@ -13,6 +13,8 @@ Distances::Distances() : ModeBase("Distances"), GalaxyDrawer(), PanelDrawer(PNL_
 }
 
 void Distances::enter() {
+    ModeBase::enter();
+
     draw_galaxy(false);
 
     Player *p = exostate.get_active_player();

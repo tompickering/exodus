@@ -60,6 +60,8 @@ Trade::Trade() : ModeBase("Trade") {
 }
 
 void Trade::enter() {
+    ModeBase::enter(ID::END);
+
     stage = Overview;
 
     Planet *p = exostate.get_active_planet();
@@ -83,7 +85,6 @@ void Trade::enter() {
     food_needed = (p->get_n_agri() < p->get_food_consumption());
     arms_offered = exostate.is_allied(p0idx, p1idx);
 
-    ModeBase::enter(ID::END);
     draw_manager.draw(p->sprites()->map_bg);
     draw_manager.show_cursor(true);
 
@@ -244,6 +245,8 @@ void Trade::exit() {
         draw_manager.release_sprite_id(rows[i].id_stock);
         draw_manager.release_sprite_id(rows[i].id_freight);
     }
+
+    ModeBase::exit();
 }
 
 ExodusMode Trade::update(float delta) {

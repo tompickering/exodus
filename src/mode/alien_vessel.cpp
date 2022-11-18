@@ -180,6 +180,8 @@ void AlienVessel::exit() {
     for (int i = 0; i < MAX_COMM_LINES; ++i) {
         draw_manager.release_sprite_id(comm_ids[i]);
     }
+
+    ModeBase::exit();
 }
 
 ExodusMode AlienVessel::update(float delta) {

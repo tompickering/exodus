@@ -145,6 +145,8 @@ void FleetProduction::exit() {
         draw_manager.release_sprite_id(rows[i].id_produce);
         draw_manager.release_sprite_id(rows[i].id_adj);
     }
+
+    ModeBase::exit();
 }
 
 ExodusMode FleetProduction::update(float delta) {

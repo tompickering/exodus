@@ -92,6 +92,8 @@ void SpaceBattle::exit() {
     for (int i = 0; i < N_EXPLOSIONS; ++i) {
         draw_manager.release_sprite_id(explosions[i].spr_id);
     }
+
+    ModeBase::exit();
 }
 
 BattleShip* SpaceBattle::place(BattleShipType type, bool enemy, int hp) {
