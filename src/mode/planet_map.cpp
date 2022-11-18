@@ -1869,7 +1869,10 @@ ExodusMode PlanetMap::update_destruction(float delta) {
     if (destruction_done) {
         if (d.nuke && planet->get_class() != Desert) {
             planet->change_class(Desert);
-            if (d.draw) draw();
+            if (d.draw) {
+                draw();
+                draw_attack_details();
+            }
         }
 
         if (!d.draw || draw_manager.clicked()) {
