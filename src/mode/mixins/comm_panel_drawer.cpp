@@ -1206,6 +1206,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             } else {
                 comm_set_speech("I am deeply disappointed.");
             }
+            comm_exit_anim_action = CA_Abort;
             comm_recv(DIA_R_Close);
             break;
         case DIA_S_AttackAllyApology:
@@ -1216,6 +1217,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             } else {
                 comm_set_speech("I am deeply disappointed.");
             }
+            comm_exit_anim_action = CA_Abort;
             comm_recv(DIA_R_Close);
             break;
         case DIA_S_AttackAllyProceed:
@@ -1265,6 +1267,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                         } else {
                             comm_prepare(1);
                             comm_set_speech("I do not want you to trade.");
+                            comm_exit_anim_action = CA_Abort;
                             comm_recv(DIA_R_Close);
                         }
                     } else {
@@ -1294,6 +1297,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 // TODO: This seems like a weird thing to say...
                 comm_set_speech("Why should I do so?");
             }
+            comm_exit_anim_action = CA_Abort;
             comm_recv(DIA_R_Close);
             break;
         case DIA_S_Offer:
@@ -1325,11 +1329,13 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 if (comm_other->is_hostile_to(idx) || comm_player->get_reputation() < 1) {
                     comm_prepare(1);
                     comm_set_speech("I am not interested.");
+                    comm_exit_anim_action = CA_Abort;
                     comm_recv(DIA_R_Close);
                     break;
                 } else if (comm_other->get_flag(2) == AI_Lo) {
                     comm_prepare(1);
                     comm_set_speech("Sorry, but I have to refuse.");
+                    comm_exit_anim_action = CA_Abort;
                     comm_recv(DIA_R_Close);
                     break;
                 }
@@ -1393,9 +1399,11 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 // TODO: Orig sets 'san=1' here - why?
                 comm_player->add_trace(TRACE_AlliancesCreated);
                 comm_set_speech("I accept this.");
+                comm_exit_anim_action = CA_Abort;
                 comm_recv(DIA_R_Close);
             } else {
                 comm_set_speech("I am not interested.");
+                comm_exit_anim_action = CA_Abort;
                 comm_recv(DIA_R_Close);
             }
             break;
@@ -1419,10 +1427,12 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 if ((!hostile) && (comm_other->get_flag(4) != AI_Hi)) {
                     comm_prepare(1);
                     comm_set_speech("This is not necessary.");
+                    comm_exit_anim_action = CA_Abort;
                     comm_recv(DIA_R_Close);
                 } else if (comm_other->get_flag(2) == AI_Lo) {
                     comm_prepare(1);
                     comm_set_speech("I do not wish you as my friend.");
+                    comm_exit_anim_action = CA_Abort;
                     comm_recv(DIA_R_Close);
                 } else {
                     comm_prepare(4);
@@ -1448,6 +1458,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_prepare(1);
                 if (comm_other->get_flag(4) == AI_Hi || comm_ctx.mc < 50) {
                     comm_set_speech("Sorry, but I have to refuse.");
+                    comm_exit_anim_action = CA_Abort;
                     comm_recv(DIA_R_Close);
                 } else {
                     comm_set_speech("I accept this.");
@@ -1457,6 +1468,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     }
                     comm_other->give_mc(comm_ctx.mc);
                     comm_other->clear_hostility();
+                    comm_exit_anim_action = CA_Abort;
                     comm_recv(DIA_R_Close);
                 }
             }
@@ -1465,6 +1477,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             {
                 comm_prepare(1);
                 comm_set_speech("I do not wish you as my friend.");
+                comm_exit_anim_action = CA_Abort;
                 comm_recv(DIA_R_Close);
             }
             break;
@@ -1478,6 +1491,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 }
                 comm_other->give_mc(comm_ctx.mc);
                 comm_other->clear_hostility();
+                comm_exit_anim_action = CA_Abort;
                 comm_recv(DIA_R_Close);
             }
             break;
@@ -1494,6 +1508,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 } else {
                     comm_set_speech("Thank you very much.");
                 }
+                comm_exit_anim_action = CA_Abort;
                 comm_recv(DIA_R_Close);
             }
             break;
@@ -1507,6 +1522,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     comm_set_speech("The humans will die.");
                 }
                 comm_other->set_hostile_to(comm_player_idx);
+                comm_exit_anim_action = CA_Abort;
                 comm_recv(DIA_R_Close);
             }
             break;
@@ -1524,6 +1540,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 } else {
                     comm_set_speech("I am not afraid of you.");
                 }
+                comm_exit_anim_action = CA_Abort;
                 comm_recv(DIA_R_Close);
             }
             break;
@@ -1714,6 +1731,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 if (accept && comm_other->attempt_spend(comm_ctx.mc)) {
                     comm_set_speech("I accept this.");
                     // FIXME: Orig doesn't increment lord's credits here
+                    comm_exit_anim_action = CA_Abort;
                     comm_recv(DIA_R_Close);
                 } else {
                     comm_set_speech("I do not want your money...");
@@ -1736,6 +1754,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 if (exostate.has_alliance(comm_player_idx, comm_other_idx, ALLY_Trade)) {
                     comm_prepare(1);
                     comm_set_speech("I will not trade then.");
+                    comm_exit_anim_action = CA_Abort;
                     comm_recv(DIA_R_Close);
                 } else {
                     comm_prepare(4);
@@ -1772,6 +1791,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     comm_set_speech("I will not trade then.");
                 }
 
+                comm_exit_anim_action = CA_Abort;
                 comm_recv(DIA_R_Close);
             }
             break;
@@ -2089,6 +2109,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
         case DIA_S_B_CPU_CommsAttackerResponse:
             comm_prepare(1);
             comm_set_speech("So let us fight...");
+            comm_exit_anim_action = CA_Abort;
             comm_recv(DIA_R_Close);
             break;
         case DIA_S_B_CPU_OpenCommsDefender:
@@ -2109,6 +2130,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
         case DIA_S_B_CPU_CommsDefenderRequestMore:
             comm_prepare(1);
             comm_set_speech("So let us fight...");
+            comm_exit_anim_action = CA_Abort;
             comm_recv(DIA_R_Close);
             break;
         case DIA_S_B_CPU_CommsDefenderAccept:
@@ -2149,6 +2171,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
         case DIA_S_B_CPU_RebelsOfferCompromise:
             comm_prepare(1);
             comm_set_speech("We do not want compromises!");
+            comm_exit_anim_action = CA_Abort;
             comm_recv(DIA_R_Close);
             break;
         case DIA_S_B_CPU_RebelsOfferBetterLife:
@@ -2180,6 +2203,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     comm_set_speech("Against the tyranny!");
                     break;
             }
+            comm_exit_anim_action = CA_Abort;
             comm_recv(DIA_R_Close);
             break;
         case DIA_S_B_CPU_RebelsProposeNoMC:
@@ -2189,6 +2213,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             } else {
                 comm_set_speech("We do not believe that!");
             }
+            comm_exit_anim_action = CA_Abort;
             comm_recv(DIA_R_Close);
             break;
         case DIA_S_B_CPU_RebelsProposeMC:
@@ -2218,6 +2243,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     comm_recv(DIA_R_B_CPU_RebelsAcceptOffer);
                 } else {
                     comm_set_speech("That is not enough!");
+                    comm_exit_anim_action = CA_Abort;
                     comm_recv(DIA_R_Close);
                 }
             }
@@ -2365,10 +2391,10 @@ void CommPanelDrawer::comm_process_responses() {
         case DIA_R_AwaitingOrders:
             switch (opt) {
                 case 0:
-                    comm_report_action = CA_GoodsTransfer;
+                    comm_exit_anim(CA_GoodsTransfer);
                     break;
                 case 1:
-                    comm_report_action = CA_StartProduction;
+                    comm_exit_anim(CA_StartProduction);
                     break;
                 case 2:
                     // TODO: Change global climate
@@ -2442,29 +2468,29 @@ void CommPanelDrawer::comm_process_responses() {
                     comm_report_action = CA_Abort;
                     break;
                 case 1:
-                    comm_report_action = CA_PlanAttack;
+                    comm_exit_anim(CA_PlanAttack);
                     break;
             }
             break;
         case DIA_R_NoAttackResponse:
             if (clicked) {
-                comm_report_action = CA_PlanAttack;
+                comm_exit_anim(CA_PlanAttack);
             }
             break;
         case DIA_R_TradeOK:
             if (clicked) {
-                comm_report_action = CA_Trade;
+                comm_exit_anim(CA_Trade);
             }
             break;
         case DIA_R_TradeFee:
             switch (opt) {
                 case 0:
                     if (comm_player->attempt_spend(comm_ctx.mc)) {
-                        comm_report_action = CA_Trade;
+                        comm_exit_anim(CA_Trade);
                     }
                     break;
                 case 1:
-                    comm_report_action = CA_Abort;
+                    comm_exit_anim(CA_Abort);
                     break;
             }
             break;
@@ -2475,10 +2501,10 @@ void CommPanelDrawer::comm_process_responses() {
                     break;
                 case 1:
                     // FIXME: Should "Curb your tongue!" do more than close the comms?
-                    comm_report_action = CA_Abort;
+                    comm_exit_anim(CA_Abort);
                     break;
                 case 2:
-                    comm_report_action = CA_Abort;
+                    comm_exit_anim(CA_Abort);
                     break;
             }
             break;
@@ -2649,7 +2675,7 @@ void CommPanelDrawer::comm_process_responses() {
         case DIA_R_CPU_AttackPayOffReject:
             if (clicked) {
                 exostate.unset_alliances(comm_player_idx, comm_other_idx);
-                comm_report_action = CA_Attack;
+                comm_exit_anim(CA_Attack);
             }
             break;
         case DIA_R_CPU_TradeResponse:
@@ -2689,10 +2715,10 @@ void CommPanelDrawer::comm_process_responses() {
         case DIA_R_CPU_TradeInsultResponse:
             switch (opt) {
                 case 0:
-                    comm_report_action = CA_Abort;
+                    comm_exit_anim(CA_Abort);
                     break;
                 case 1:
-                    comm_report_action = CA_Abort;
+                    comm_exit_anim(CA_Abort);
                     break;
             }
             break;
@@ -2729,7 +2755,7 @@ void CommPanelDrawer::comm_process_responses() {
             switch (opt) {
                 case 0:
                     // I am not interested
-                    comm_report_action = CA_Abort;
+                    comm_exit_anim(CA_Abort);
                     break;
                 case 1:
                     // Why should I do so?
@@ -2737,7 +2763,7 @@ void CommPanelDrawer::comm_process_responses() {
                     break;
                 case 2:
                     // Sorry, but I have to refuse
-                    comm_report_action = CA_Abort;
+                    comm_exit_anim(CA_Abort);
                     break;
                 case 3:
                     // I accept this
@@ -2753,22 +2779,22 @@ void CommPanelDrawer::comm_process_responses() {
                     // FIXME: Orig doesn't subtract MC from CPU lord, so neither do we
                     comm_other->give_mc(comm_ctx.mc);
                     exostate.set_alliance(comm_player_idx, comm_other_idx, comm_ctx.alliance_type);
-                    comm_report_action = CA_Abort;
+                    comm_exit_anim(CA_Abort);
                     break;
                 case 1:
                     // I am not interested
-                    comm_report_action = CA_Abort;
+                    comm_exit_anim(CA_Abort);
                     break;
             }
             break;
         case DIA_R_CPU_ProposeAllianceAggressively:
             switch (opt) {
                 case 0:
-                    comm_report_action = CA_Attack;
+                    comm_exit_anim(CA_Abort);
                     break;
                 case 1:
                     exostate.set_all_alliances(comm_player_idx, comm_other_idx);
-                    comm_report_action = CA_Abort;
+                    comm_exit_anim(CA_Abort);
                     break;
             }
             break;
@@ -2861,7 +2887,7 @@ void CommPanelDrawer::comm_process_responses() {
             break;
         case DIA_R_B_CPU_CommsDefenderAcceptResponse:
             if (clicked) {
-                comm_report_action = CA_CallOffAttack;
+                comm_exit_anim(CA_CallOffAttack);
             }
             break;
         case DIA_R_B_CPU_RebelComms:
@@ -2915,7 +2941,7 @@ void CommPanelDrawer::comm_process_responses() {
             }
             break;
         case DIA_R_B_CPU_RebelsAcceptOffer:
-            comm_report_action = CA_CallOffAttack;
+            comm_exit_anim(CA_CallOffAttack);
             break;
         default:
             break;
