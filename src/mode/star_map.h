@@ -34,6 +34,7 @@ class StarMap : ModeBase, PanelDrawer, CommPanelDrawer, FrameDrawer {
             SM_FestivalDelay,
             SM_Festival,
             SM_SelectPlanet,
+            SM_SelectPlanetFadeOut,
             SM_HandlePostPlanet,
             SM_HandlePostPlanetComms,
             SM_Counsellor,

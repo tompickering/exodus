@@ -649,13 +649,21 @@ ExodusMode StarMap::update(float delta) {
                                 player->add_trace(ephstate.selectplanet_trace);
                             }
                             *(ephstate.selectplanet_planet) = i;
-                            // TODO: Fade to black
-                            // Clear EPH_SelectPlanet and set up further ephemeral state if necessary
-                            return ephstate.selectplanet_resolve();
+                            draw_manager.fade_black(1.2f, 24);
+                            stage = SM_SelectPlanetFadeOut;
+                            return ExodusMode::MODE_None;
                         } else {
                             L.error("Player cannot afford selectplanet MC - should not have gotten this far");
                         }
                     }
+                }
+            }
+            break;
+        case SM_SelectPlanetFadeOut:
+            {
+                if (!draw_manager.fade_active()) {
+                    // Clear EPH_SelectPlanet and set up further ephemeral state if necessary
+                    return ephstate.selectplanet_resolve();
                 }
             }
             break;
