@@ -192,6 +192,7 @@ class DrawManager {
         virtual bool mouse_in_area(DrawArea);
         virtual void clear_sprite_ids();
         virtual bool clicked();
+        virtual bool clicked_r();
         virtual int right(SprID);
         virtual void get_upscale(float&, float&);
         virtual void set_selectable(SprID);
@@ -215,6 +216,7 @@ class DrawManager {
         int fade_stages;
         bool draw_cursor;
         bool clicked_this_frame;
+        bool clicked_this_frame_r;
     private:
         MousePos mouse_pos;
         MousePos click_pos;

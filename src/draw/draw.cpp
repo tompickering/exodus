@@ -20,6 +20,7 @@ DrawManager::DrawManager() {
     draw_cursor = false;
     sprite_click.id = ID_NONE;
     clicked_this_frame = false;
+    clicked_this_frame_r = false;
     prev_mouseover_selectable_text_id = ID_NONE;
     mouseover_selectable_text_id = ID_NONE;
 }
@@ -42,6 +43,7 @@ void DrawManager::update(float delta, MousePos new_mouse_pos, MousePos new_click
     click_pos = new_click_pos;
     click_pos_r = new_click_pos_r;
     clicked_this_frame = (click_pos.x >= 0 && click_pos.y >= 0);
+    clicked_this_frame_r = (click_pos_r.x >= 0 && click_pos_r.y >= 0);
     if (clicked_this_frame) {
         float up_x, up_y;
         get_upscale(up_x, up_y);
@@ -168,6 +170,7 @@ void DrawManager::consume_click() {
     click_pos = {-1, -1};
     click_pos_r = {-1, -1};
     clicked_this_frame = false;
+    clicked_this_frame_r = false;
 }
 
 bool DrawManager::mouse_over(SprID query) {
@@ -294,6 +297,10 @@ void DrawManager::show_cursor(bool show) {
 
 bool DrawManager::clicked() {
     return clicked_this_frame;
+}
+
+bool DrawManager::clicked_r() {
+    return clicked_this_frame_r;
 }
 
 int DrawManager::right(SprID id) {
