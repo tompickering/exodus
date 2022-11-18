@@ -666,14 +666,13 @@ void CommPanelDrawer::comm_init(CommSend input) {
         case DIA_S_PlanetComm:
             comm_set_img(CI_HumanPlanet);
             comm_set_img_caption("COUNSELLOR");
-            // TODO: Add this to any other comms that need it
             comm_enable_throbber = true;
             break;
         case DIA_S_HailPlanet:
             comm_set_img_caption_upper(comm_other->get_full_name());
             comm_set_img_caption_lower("RACE: %s", comm_other->get_race_str());
             comm_set_race(comm_other->get_race());
-            // TODO: Add this to any other comms that need it
+            comm_enable_throbber = true;
             comm_enable_distort = true;
             break;
         case DIA_S_PlanAttack:
