@@ -1709,6 +1709,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                     }
                 } else {
                     L.info("[%s]: CANCEL MISSION: Invalid planet", p->get_full_name());
+                    p->clear_mission();
                 }
             }
         }
