@@ -202,7 +202,14 @@ ExodusMode Intro::update(float delta) {
     text_time += delta;
 
     if (input_manager.consume(K_Space)) {
-        stage = End;
+        if (stage < Title) {
+            draw_manager.clear();
+            while (stage < Title) {
+                next_stage();
+            }
+        } else {
+            stage = End;
+        }
         return ExodusMode::MODE_None;
     }
 
