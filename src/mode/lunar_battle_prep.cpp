@@ -441,11 +441,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
                             PANEL_X + 4, PANEL_Y + 44,
                             COL_TEXT);
 
-                        /*
-                         * TODO: Check we get to keep these after the battle.
-                         * I believe so - we simply increment d_army and there is no
-                         * state to record this ever happened.
-                         */
+                        // N.B. We get to keep these after the battle.
                         b.defender_inf += support_inf;
                         b.defender_gli += support_gli;
                         b.defender_art += support_art;
