@@ -3015,7 +3015,6 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                                 bulletin_start_new(true);
                                 bulletin_set_flag(flags[other->get_flag_idx()]);
                                 bulletin_set_text_col(COL_TEXT3);
-                                bulletin_set_next_text("");
                                 bulletin_set_next_text("%s is going to be attacked.", owner->get_full_name());
                                 bulletin_set_next_text("");
                                 const char* n = army_planet->get_name();
@@ -3034,9 +3033,8 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                                         break;
                                 }
                                 bulletin_set_next_text("Hyperspace transport costs %d MC.", c);
-                                bulletin_set_next_text("");
                                 bulletin_set_next_text("How many units do you wish to launch?");
-                                // TODO: Need something akin to bulletin_set_yesno()
+                                bulletin_set_war_ally(army_planet, c);
                                 mp_state.mpai_substage = 8;
                                 return ExodusMode::MODE_None;
                             }
@@ -3074,16 +3072,11 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     Player *owner = exostate.get_player(owner_idx);
                     Player *supporter = exostate.get_player(supporter_idx);
 
-                    // TODO: Supporter, credits are ONLY expended and units added to defender planet when total > 3 - but supporter still loses them
-                    // TODO: Ensure credits, supporter planet army and defender army are adjusted
-                    // TODO: Get number of army units transferred
-                    // TODO: PLACEHOLDER VALUES:
-                    int inf = 2;
-                    int gli = 1;
-                    int art = 1;
-                    if (inf + gli + art > 3) {
+                    // Supporter MC ONLY expended and units added to defender planet when total > 3 - but supporter still loses them
+                    int inf, gli, art;
+                    int cost = bulletin_get_war_ally_result(inf, gli, art);
+                    if (inf + gli + art > 3 && supporter->attempt_spend(cost)) {
                         L.info("[%s] Received support from %s", owner->get_full_name(), supporter->get_full_name());
-                        // TODO: Credits expenditure
                         p->adjust_army(inf, gli, art);
                         supporter->add_trace(TRACE_AlliesHelped);
                     } else {

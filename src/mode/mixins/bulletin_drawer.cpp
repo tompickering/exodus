@@ -82,6 +82,8 @@ void BulletinDrawer::bulletin_update(float dt) {
             }
             bulletin_has_been_acknowledged = true;
         }
+    } else if (bulletin_is_war_ally) {
+        bulletin_war_ally_update();
     } else if (draw_manager.clicked()) {
         if (bulletin_transition < 1) {
             bulletin_transition = 1;
@@ -117,6 +119,103 @@ void BulletinDrawer::bulletin_draw_text() {
                  BULLETIN_Y + BULLETIN_H - BULLETIN_BORDER - 2,
                  0.5f, 1, 1, 1});
         }
+        if (bulletin_is_war_ally) {
+            bulletin_war_ally_init();
+        }
+    }
+}
+
+void BulletinDrawer::bulletin_war_ally_init() {
+    for (int i = 0; i < sizeof(bulletin_war_ally_ids_army); ++i) {
+        bulletin_war_ally_ids_army[i] = draw_manager.new_sprite_id();
+    }
+    bulletin_war_ally_id_exit = draw_manager.new_sprite_id();
+
+    for (int i = 0; i < 3; ++i) {
+        const char* img = IMG_TD2_TR4;
+        if (i == 1) {
+            img =  IMG_TD2_TR5;
+        } else if (i == 2) {
+            img =  IMG_TD2_TR6;
+        }
+
+        draw_manager.draw(
+            bulletin_war_ally_ids_army[i*5],
+            img,
+            {BULLETIN_X + 20,
+             BULLETIN_Y + 164 + i*44,
+             0, 0.5f, 1, 1});
+
+        draw_manager.draw(
+            bulletin_war_ally_ids_army[i*5 + 3],
+            IMG_BR4_EXPORT3,
+            {BULLETIN_X + BULLETIN_W - 20,
+             BULLETIN_Y + 164 + i*44,
+             1, 0.5f, 1, 1});
+    }
+
+    draw_manager.draw(
+        bulletin_war_ally_id_exit,
+        IMG_BR5_EXPORT4,
+        {RES_X / 2,
+         BULLETIN_Y + BULLETIN_H - BULLETIN_BORDER - 2,
+         0.5f, 1, 1, 1});
+}
+
+void BulletinDrawer::bulletin_war_ally_update() {
+    if (draw_manager.query_click(bulletin_war_ally_id_exit).id) {
+        for (int i = 0; i < sizeof(bulletin_war_ally_ids_army); ++i) {
+            draw_manager.draw(bulletin_war_ally_ids_army[i], nullptr);
+            draw_manager.release_sprite_id(bulletin_war_ally_ids_army[i]);
+        }
+        draw_manager.draw(bulletin_war_ally_id_exit, nullptr);
+        draw_manager.release_sprite_id(bulletin_war_ally_id_exit);
+        bulletin_has_been_acknowledged = true;
+        return;
+    }
+
+    int inf, gli, art;
+    bulletin_war_ally_planet->get_army(inf, gli, art);
+
+    char n[8];
+    for (int i = 0; i < 3; ++i) {
+        int stock = inf;
+        int *to_send = &bulletin_war_ally_inf;
+        if (i == 1) {
+            stock = gli;
+            to_send = &bulletin_war_ally_gli;
+        } else if (i == 2) {
+            stock = art;
+            to_send = &bulletin_war_ally_art;
+        }
+
+        snprintf(n, sizeof(n), "%d", stock);
+        draw_manager.draw_text(
+            bulletin_war_ally_ids_army[i*5 + 1],
+            n,
+            Justify::Left,
+            BULLETIN_X + 164,
+            BULLETIN_Y + 152 + i*44,
+            COL_TEXT);
+
+        snprintf(n, sizeof(n), "%d", *to_send);
+        draw_manager.draw_text(
+            bulletin_war_ally_ids_army[i*5 + 2],
+            n,
+            Justify::Left,
+            BULLETIN_X + 270,
+            BULLETIN_Y + 152 + i*44,
+            COL_TEXT);
+
+        SpriteClick clk = draw_manager.query_click(bulletin_war_ally_ids_army[i*5 + 3]);
+
+        if (clk.id) {
+            // TODO
+            if (clk.x < 0.5) {
+            } else {
+            }
+        }
+        // TODO: Blank out 0 stock
     }
 }
 
@@ -259,6 +358,13 @@ void BulletinDrawer::bulletin_reset() {
     bulletin_text_idx = 0;
     bulletin_is_yesno = false;
     bulletin_yesno_was_yes = false;
+
+    bulletin_is_war_ally = false;
+    bulletin_war_ally_planet = nullptr;
+    bulletin_war_ally_mc = 0;
+    bulletin_war_ally_inf = 0;
+    bulletin_war_ally_gli = 0;
+    bulletin_war_ally_art = 0;
 }
 
 void BulletinDrawer::bulletin_ensure_closed() {
@@ -295,6 +401,22 @@ void BulletinDrawer::bulletin_set_bg(const char* img) {
 void BulletinDrawer::bulletin_set_yesno() {
     bulletin_is_yesno = true;
     bulletin_yesno_was_yes = false;
+}
+
+void BulletinDrawer::bulletin_set_war_ally(Planet* p, int mc) {
+    bulletin_is_war_ally = true;
+    bulletin_war_ally_planet = p;
+    bulletin_war_ally_mc = mc;
+    bulletin_war_ally_inf = 0;
+    bulletin_war_ally_gli = 0;
+    bulletin_war_ally_art = 0;
+}
+
+int BulletinDrawer::bulletin_get_war_ally_result(int& i, int& g, int& a) {
+    i = bulletin_war_ally_inf;
+    g = bulletin_war_ally_gli;
+    a = bulletin_war_ally_art;
+    return bulletin_war_ally_mc;
 }
 
 void BulletinDrawer::bulletin_update_bg() {
