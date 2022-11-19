@@ -824,21 +824,26 @@ void MenuDrawer::menu_open_specific_mode() {
                 }
             }
             break;
-        case MM_Save: {
-            const SaveMeta *meta = save_manager.get_all_meta(true);
-            menu_set_txt(0, COL_TEXT2, "Save game in slot:");
-            for (int i = 0; i < MAX_SLOTS; ++i) {
-                if (meta[i].exists) {
-                    // TODO: Position these elements nicely
-                    menu_set_opt(i+2, "%d: %s / Month %d / Planets %d",
-                                 i+1, meta[i].name, meta[i].month, meta[i].planets);
-                } else {
-                    menu_set_opt(i+2, "%d", i+1);
+        case MM_Save:
+            {
+                const SaveMeta *meta = save_manager.get_all_meta(true);
+                menu_set_txt(0, COL_TEXT2, "Save game in slot:");
+                char n[4];
+                for (int i = 0; i < MAX_SLOTS; ++i) {
+                    if (meta[i].exists) {
+                        // TODO: Position these elements nicely
+                        menu_set_opt(i+2, "%d: %s / Month %d / Planets %d",
+                                     i+1, meta[i].name, meta[i].month, meta[i].planets);
+                    } else {
+                        // FIXME: The following line should work, but values end up corrupt
+                        //menu_set_opt(i+2, "%d", i+1);
+                        snprintf(n, sizeof(n), "%d", i+1);
+                        menu_set_opt(i+2, n);
+                    }
                 }
+                menu_set_opt(14, "Exit Menu");
             }
-            menu_set_opt(14, "Exit Menu");
             break;
-            }
         case MM_Stat:
             menu_set_txt(0, COL_TEXT2, "Please select, %s", p->get_ref());
             menu_set_opt(2, "General Information");
