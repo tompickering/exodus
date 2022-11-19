@@ -5,11 +5,13 @@
 
 #include "platform.h"
 #include "draw/draw.h"
+#include "save/save.h"
 
 class Menu : ModeBase {
     public:
         Menu();
         virtual void enter() override;
+        virtual void exit() override;
         virtual ExodusMode update(float) override;
     private:
         enum Stage {
@@ -45,6 +47,9 @@ class Menu : ModeBase {
 
         // The purpose of the Menu is to init this game config
         GameConfig config;
+
+        SprID load_game_ids[MAX_SLOTS];
+        const SaveMeta *savemeta;
 };
 
 #endif

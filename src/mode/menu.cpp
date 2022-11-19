@@ -30,6 +30,8 @@ const int LOADFRAME_STEP = 20;
 const int LOADFRAME_MONTH_X = LOADFRAME_X + 240;
 const int LOADFRAME_PLANETS_X = LOADFRAME_MONTH_X + 120;
 
+extern SAVEMANAGER save_manager;
+
 enum ID {
     NEWGAME_TXT,
     LOADGAME_TXT,
@@ -98,6 +100,19 @@ void Menu::enter() {
     ModeBase::enter(ID::END);
     stage = Main;
     trans_state = None;
+
+    for (int i = 0; i < MAX_SLOTS; ++i) {
+        load_game_ids[i] = draw_manager.new_sprite_id();
+    }
+}
+
+void Menu::exit() {
+    for (int i = 0; i < MAX_SLOTS; ++i) {
+        draw_manager.unset_selectable(load_game_ids[i]);
+        draw_manager.draw(load_game_ids[i], nullptr);
+        draw_manager.release_sprite_id(load_game_ids[i]);
+    }
+    ModeBase::exit();
 }
 
 SprID id_diff_0;
@@ -181,13 +196,13 @@ ExodusMode Menu::update(float delta) {
                     "Month",
                     Justify::Centre,
                     LOADFRAME_MONTH_X, LOADFRAME_Y+2,
-                    COL_BORDERS);
+                    COL_TEXT_GREYED);
 
                 draw_manager.draw_text(
                     "Planets",
                     Justify::Centre,
                     LOADFRAME_PLANETS_X, LOADFRAME_Y+2,
-                    COL_BORDERS);
+                    COL_TEXT_GREYED);
 
                 draw_manager.draw_text(
                     id(LOADFRAME_EXIT),
@@ -195,6 +210,42 @@ ExodusMode Menu::update(float delta) {
                     Justify::Left,
                     LOADFRAME_X+4, LOADFRAME_Y+2+(14*LOADFRAME_STEP),
                     COL_TEXT2);
+
+                savemeta = save_manager.get_all_meta(true);
+
+                char n[8];
+                for (int i = 0; i < MAX_SLOTS; ++i) {
+                    snprintf(n, sizeof(n), "%d", i+1);
+                    draw_manager.draw_text(
+                        n,
+                        Justify::Left,
+                        LOADFRAME_X+4, LOADFRAME_Y+2+((i+2)*LOADFRAME_STEP),
+                        COL_TEXT);
+                    if (savemeta[i].exists) {
+                        snprintf(n, sizeof(n), "%d", savemeta[i].month);
+                        draw_manager.draw_text(
+                            n,
+                            Justify::Centre,
+                            LOADFRAME_MONTH_X, LOADFRAME_Y+2+((i+2)*LOADFRAME_STEP),
+                            COL_TEXT);
+                        snprintf(n, sizeof(n), "%d", savemeta[i].planets);
+                        draw_manager.draw_text(
+                            n,
+                            Justify::Centre,
+                            LOADFRAME_PLANETS_X, LOADFRAME_Y+2+((i+2)*LOADFRAME_STEP),
+                            COL_TEXT);
+                    } else {
+                        draw_manager.draw_text(
+                            "Empty",
+                            Justify::Left,
+                            LOADFRAME_X+4+30, LOADFRAME_Y+2+((i+2)*LOADFRAME_STEP),
+                            COL_TEXT_GREYED);
+                    }
+                }
+
+                for (int i = 0; i < MAX_SLOTS; ++i) {
+                    draw_manager.set_selectable(load_game_ids[i]);
+                }
 
                 stage = Load;
                 return ExodusMode::MODE_None;
@@ -205,6 +256,22 @@ ExodusMode Menu::update(float delta) {
                 if (draw_manager.query_click(id(LOADFRAME_EXIT)).id) {
                     set_stage(Main);
                     return ExodusMode::MODE_None;
+                }
+
+                for (int i = 0; i < MAX_SLOTS; ++i) {
+                    if (savemeta[i].exists) {
+                        draw_manager.draw_text(
+                            load_game_ids[i],
+                            savemeta[i].name,
+                            Justify::Left,
+                            LOADFRAME_X+4+30, LOADFRAME_Y+2+((i+2)*LOADFRAME_STEP),
+                            COL_TEXT);
+
+                        if (draw_manager.query_click(load_game_ids[i]).id) {
+                            // TODO
+                            L.debug("LOAD GAME: %s", savemeta[i].name);
+                        }
+                    }
                 }
             }
             break;
