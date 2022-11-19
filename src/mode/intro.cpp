@@ -203,6 +203,7 @@ ExodusMode Intro::update(float delta) {
 
     if (input_manager.consume(K_Space)) {
         if (stage < Title) {
+            draw_manager.cancel_transitions();
             draw_manager.clear();
             while (stage < Title) {
                 next_stage();
