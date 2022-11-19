@@ -131,6 +131,19 @@ void BulletinDrawer::bulletin_war_ally_init() {
     }
     bulletin_war_ally_id_exit = draw_manager.new_sprite_id();
 
+    draw_manager.draw_text(
+        "Planet",
+        Justify::Centre,
+        BULLETIN_X + 170,
+        bulletin_text_y(6) + 6,
+        COL_TEXT);
+    draw_manager.draw_text(
+        "Send",
+        Justify::Centre,
+        BULLETIN_X + 276,
+        bulletin_text_y(6) + 6,
+        COL_TEXT);
+
     for (int i = 0; i < 3; ++i) {
         const char* img = IMG_TD2_TR4;
         if (i == 1) {
@@ -193,8 +206,8 @@ void BulletinDrawer::bulletin_war_ally_update() {
         draw_manager.draw_text(
             bulletin_war_ally_ids_army[i*5 + 1],
             n,
-            Justify::Left,
-            BULLETIN_X + 164,
+            Justify::Centre,
+            BULLETIN_X + 170,
             BULLETIN_Y + 152 + i*44,
             COL_TEXT);
 
@@ -202,8 +215,8 @@ void BulletinDrawer::bulletin_war_ally_update() {
         draw_manager.draw_text(
             bulletin_war_ally_ids_army[i*5 + 2],
             n,
-            Justify::Left,
-            BULLETIN_X + 270,
+            Justify::Centre,
+            BULLETIN_X + 276,
             BULLETIN_Y + 152 + i*44,
             COL_TEXT);
 
