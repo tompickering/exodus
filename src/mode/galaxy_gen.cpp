@@ -112,6 +112,7 @@ ExodusMode GalaxyGen::update(float delta) {
             }
             break;
         case GGSTG_ToGame:
+            ephstate.galaxymap_pixelswap = true;
             return ExodusMode::MODE_GalaxyMap;
             break;
         default:

@@ -222,6 +222,8 @@ class EphemeralState {
         GameOverReason game_over_reason;
 
         const char* default_music;
+
+        bool galaxymap_pixelswap;
     private:
         EphState eph_state;
 

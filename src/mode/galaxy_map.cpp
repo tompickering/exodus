@@ -51,17 +51,21 @@ GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer(), PanelDrawer(PNL_
 
 void GalaxyMap::enter() {
     ModeBase::enter(ID::END);
-    draw_galaxy(false);
 
     DrawTarget tgt = TGT_Primary;
-    if (exodus.get_prev_mode() == ExodusMode::MODE_GalaxyGen) {
+    if (ephstate.galaxymap_pixelswap) {
         tgt = TGT_Secondary;
+        draw_galaxy(true);
+        ephstate.galaxymap_pixelswap = false;
+        draw_manager.pixelswap_start();
+    } else {
+        draw_galaxy(false);
     }
 
     draw_panel_bg(tgt);
 
     if (tgt != TGT_Primary) {
-        draw_manager.pixelswap_start(&galaxy_panel_area);
+        draw_manager.pixelswap_start();
     }
 
 

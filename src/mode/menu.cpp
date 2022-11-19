@@ -268,11 +268,52 @@ ExodusMode Menu::update(float delta) {
                             COL_TEXT);
 
                         if (draw_manager.query_click(load_game_ids[i]).id) {
-                            // TODO
                             L.debug("LOAD GAME: %s", savemeta[i].name);
+                            save_manager.load(i);
+
+                            draw_manager.draw(IMG_BG_STARS2);
+
+                            Player *p = exostate.get_player(0);
+                            char welcome[64];
+                            snprintf(welcome, sizeof(welcome), "Welcome, %s.", p->get_full_name());
+                            draw_manager.draw_text(
+                                    Font::Large,
+                                    welcome,
+                                    Justify::Centre,
+                                    RES_X/2, 200,
+                                    COL_TEXT2);
+
+                            set_stage(LoadWelcome);
+                            return ExodusMode::MODE_None;
                         }
                     }
                 }
+            }
+            break;
+        case LoadWelcome:
+            {
+                if (timer > 1.5f) {
+                    draw_manager.draw(TGT_Secondary, IMG_BG_STARS2);
+                    draw_manager.pixelswap_start();
+                    stage = LoadWelcomeFade;
+                    return ExodusMode::MODE_None;
+                }
+
+                timer += delta;
+            }
+            break;
+        case LoadWelcomeFade:
+            {
+                if (!draw_manager.pixelswap_active()) {
+                    stage = LoadFinish;
+                    return ExodusMode::MODE_None;
+                }
+            }
+            break;
+        case LoadFinish:
+            {
+                ephstate.galaxymap_pixelswap = true;
+                return ExodusMode::MODE_GalaxyMap;
             }
             break;
         case Size:

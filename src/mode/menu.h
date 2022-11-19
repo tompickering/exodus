@@ -17,6 +17,9 @@ class Menu : ModeBase {
         enum Stage {
             Main,
             Load,
+            LoadWelcome,
+            LoadWelcomeFade,
+            LoadFinish,
             Size,
             NPlayers,
             Name,
