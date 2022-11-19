@@ -397,11 +397,8 @@ void BulletinDrawer::bulletin_reset() {
     bulletin_yesno_was_yes = false;
 
     bulletin_is_war_ally = false;
-    bulletin_war_ally_planet = nullptr;
-    bulletin_war_ally_mc = 0;
-    bulletin_war_ally_inf = 0;
-    bulletin_war_ally_gli = 0;
-    bulletin_war_ally_art = 0;
+
+    // N.B. Don't reset war ally vars here as we need to retrieve them later
 }
 
 void BulletinDrawer::bulletin_ensure_closed() {
