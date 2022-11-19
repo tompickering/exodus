@@ -3,6 +3,8 @@
 #include "assetpaths.h"
 #include "shared.h"
 
+#include "input/input.h"
+
 #define BULLETIN_TRANSITION_RATE 1.4f
 
 const int BULLETIN_BORDER = 6;
@@ -17,6 +19,8 @@ const int BULLETIN_FLAG_BG_W = 96 + BULLETIN_BORDER*2;
 const int BULLETIN_FLAG_BG_H = 56 + BULLETIN_BORDER*2;
 const int BULLETIN_BG_X = BULLETIN_X + BULLETIN_BORDER;
 const int BULLETIN_BG_Y = BULLETIN_Y + BULLETIN_BORDER;
+
+extern INPUTMANAGER input_manager;
 
 BulletinDrawer::BulletinDrawer() {
     for (int i = 0; i < BULLETIN_LINES; ++i) {
@@ -131,6 +135,8 @@ void BulletinDrawer::bulletin_war_ally_init() {
     }
     bulletin_war_ally_id_exit = draw_manager.new_sprite_id();
 
+    input_manager.enable_repeating_clicks(true);
+
     draw_manager.draw_text(
         "Planet",
         Justify::Centre,
@@ -183,6 +189,7 @@ void BulletinDrawer::bulletin_war_ally_update() {
         }
         draw_manager.draw(bulletin_war_ally_id_exit, nullptr);
         draw_manager.release_sprite_id(bulletin_war_ally_id_exit);
+        input_manager.enable_repeating_clicks(false);
         bulletin_has_been_acknowledged = true;
         return;
     }
