@@ -210,12 +210,49 @@ void BulletinDrawer::bulletin_war_ally_update() {
         SpriteClick clk = draw_manager.query_click(bulletin_war_ally_ids_army[i*5 + 3]);
 
         if (clk.id) {
-            // TODO
             if (clk.x < 0.5) {
+                if (*to_send > 0) {
+                    (*to_send)--;
+                    switch (i) {
+                        case 0:
+                            bulletin_war_ally_planet->adjust_army(1, 0, 0);
+                            break;
+                        case 1:
+                            bulletin_war_ally_planet->adjust_army(0, 1, 0);
+                            break;
+                        case 2:
+                            bulletin_war_ally_planet->adjust_army(0, 0, 1);
+                            break;
+                    }
+                }
             } else {
+                if (stock > 0) {
+                    switch (i) {
+                        case 0:
+                            bulletin_war_ally_planet->adjust_army(-1, 0, 0);
+                            break;
+                        case 1:
+                            bulletin_war_ally_planet->adjust_army(0, -1, 0);
+                            break;
+                        case 2:
+                            bulletin_war_ally_planet->adjust_army(0, 0, -1);
+                            break;
+                    }
+                    (*to_send)++;
+                }
             }
         }
-        // TODO: Blank out 0 stock
+
+        if (stock <= 0) {
+            draw_manager.draw(
+                bulletin_war_ally_ids_army[i*5 + 4],
+                IMG_TD2_TR0,
+                {BULLETIN_X + 20,
+                 BULLETIN_Y + 164 + i*44,
+                 0, 0.5f, 1, 1});
+        } else {
+            draw_manager.draw(bulletin_war_ally_ids_army[i*5 + 4], nullptr);
+        }
     }
 }
 
