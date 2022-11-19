@@ -22,9 +22,20 @@
 #define TXT_2_X 95
 #define TXT_2_Y 383
 
+const int LOADFRAME_W = 436;
+const int LOADFRAME_H = 306;
+const int LOADFRAME_X = RES_X/2 - LOADFRAME_W/2;
+const int LOADFRAME_Y = RES_Y/2 - LOADFRAME_H/2;
+const int LOADFRAME_STEP = 20;
+const int LOADFRAME_MONTH_X = LOADFRAME_X + 240;
+const int LOADFRAME_PLANETS_X = LOADFRAME_MONTH_X + 120;
+
 enum ID {
     NEWGAME_TXT,
     LOADGAME_TXT,
+    LOADFRAME,
+    LOADFRAME_INNER,
+    LOADFRAME_EXIT,
     GAL_SZ_SMALL,
     GAL_SZ_MEDIUM,
     GAL_SZ_LARGE,
@@ -149,10 +160,53 @@ ExodusMode Menu::update(float delta) {
             }
 
             if (draw_manager.query_click(id(LOADGAME_TXT)).id) {
-                L.debug("Load game");
+                draw_manager.fill(
+                    id(LOADFRAME),
+                    {LOADFRAME_X-4, LOADFRAME_Y-4,
+                     LOADFRAME_W+8, LOADFRAME_H+8},
+                    COL_BORDERS);
+
+                draw_manager.fill_pattern(
+                    id(LOADFRAME_INNER),
+                    {LOADFRAME_X, LOADFRAME_Y,
+                     LOADFRAME_W, LOADFRAME_H});
+
+                draw_manager.draw_text(
+                    "Load game:",
+                    Justify::Left,
+                    LOADFRAME_X+4, LOADFRAME_Y+2,
+                    COL_TEXT2);
+
+                draw_manager.draw_text(
+                    "Month",
+                    Justify::Centre,
+                    LOADFRAME_MONTH_X, LOADFRAME_Y+2,
+                    COL_BORDERS);
+
+                draw_manager.draw_text(
+                    "Planets",
+                    Justify::Centre,
+                    LOADFRAME_PLANETS_X, LOADFRAME_Y+2,
+                    COL_BORDERS);
+
+                draw_manager.draw_text(
+                    id(LOADFRAME_EXIT),
+                    "Exit menu",
+                    Justify::Left,
+                    LOADFRAME_X+4, LOADFRAME_Y+2+(14*LOADFRAME_STEP),
+                    COL_TEXT2);
+
+                stage = Load;
+                return ExodusMode::MODE_None;
             }
             break;
         case Load:
+            {
+                if (draw_manager.query_click(id(LOADFRAME_EXIT)).id) {
+                    set_stage(Main);
+                    return ExodusMode::MODE_None;
+                }
+            }
             break;
         case Size:
             if (trans_state == None) {
