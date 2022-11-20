@@ -4303,8 +4303,8 @@ bool GalaxyMap::update_research(Planet *p) {
     Player *owner = exostate.get_player(p->get_owner());
     if (ephstate.research.done) {
         ephstate.research.done = false;
-        if (!owner->attempt_spend(ephstate.research.cost)) {
-            L.fatal("Option was given to spend more on research than player's MC");
+        if (ephstate.research.cost > 0 && !owner->attempt_spend(ephstate.research.cost)) {
+            L.fatal("Option was given to spend more on research than player's MC. Cost: %d", ephstate.research.cost);
         }
         Invention inv = owner->get_random_researchable_invention();
         L.debug("%s: RESEARCH %d (%dMC)",
