@@ -3727,8 +3727,9 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 p->plunder();
             } else {
                 ephstate.set_ephemeral_state(EPH_AlienResearch);
-                // TODO: This should use full name with SG title
-                bulletin_set_next_text("%s could keep the planet.", owner->get_full_name());
+                bulletin_set_next_text("%s%s could keep the planet.",
+                    owner->get_full_name(),
+                    owner->get_guild_title_str_with_space());
                 bulletin_set_next_text("The pirates did not succeed.");
             }
             next_mpp_stage();

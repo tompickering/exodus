@@ -213,14 +213,22 @@ GuildTitle Player::get_guild_title() {
 }
 
 const char* Player::get_guild_title_str() {
+    const char* withspace = get_guild_title_str_with_space();
+    if (withspace[0] != '\0') {
+        return &withspace[1];
+    }
+    return "";
+}
+
+const char* Player::get_guild_title_str_with_space() {
     GuildTitle t = get_guild_title();
-    if (t == GUILDTITLE_Warrior)   return "The Warrior";
-    if (t == GUILDTITLE_Strong)    return "The Strong";
-    if (t == GUILDTITLE_Conqueror) return "The Conqueror";
-    if (t == GUILDTITLE_Mighty)    return "The Mighty";
-    if (t == GUILDTITLE_Great)     return "The Great";
-    if (t == GUILDTITLE_Warlord)   return "The Warlord";
-    if (t == GUILDTITLE_Emperor)   return "The Emperor";
+    if (t == GUILDTITLE_Warrior)   return " The Warrior";
+    if (t == GUILDTITLE_Strong)    return " The Strong";
+    if (t == GUILDTITLE_Conqueror) return " The Conqueror";
+    if (t == GUILDTITLE_Mighty)    return " The Mighty";
+    if (t == GUILDTITLE_Great)     return " The Great";
+    if (t == GUILDTITLE_Warlord)   return " The Warlord";
+    if (t == GUILDTITLE_Emperor)   return " The Emperor";
     return "";
 }
 

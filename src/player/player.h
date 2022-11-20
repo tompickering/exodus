@@ -238,6 +238,7 @@ class Player {
         void set_guild_member(bool);
         GuildTitle get_guild_title();
         const char* get_guild_title_str();
+        const char* get_guild_title_str_with_space();
         void set_guild_title(GuildTitle);
         int get_mc();
         int get_flag_idx();
