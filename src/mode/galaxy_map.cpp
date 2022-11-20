@@ -382,7 +382,6 @@ ExodusMode GalaxyMap::update(float delta) {
         case GM_SelectStar:
             {
                 if (input_manager.consume(K_Escape) || draw_manager.clicked_r()) {
-                    // TODO: Bug where mission doesn't get cancelled
                     ephstate.clear_ephemeral_state();
                     return ExodusMode::MODE_Reload;
                 }
