@@ -1089,7 +1089,6 @@ ExodusMode GalaxyMap::month_pass_update() {
 
     if (mp_state.mp_stage == MP_SunExpansion) {
         // PROCsunexpand
-        // FIXME: Ensure stars are drawn correctly when the bulletin is closed
         for (; mp_state.mp_star_idx < n_stars; ++mp_state.mp_star_idx) {
             exostate.set_active_flytarget(&stars[mp_state.mp_star_idx]);
             Star *s = exostate.get_active_star();
@@ -1103,14 +1102,62 @@ ExodusMode GalaxyMap::month_pass_update() {
                 sz = s->expand();
             }
 
-            // TODO: Bulletin data from fillarray files SN1-SN4
-
             if ((int)sz > (int)STAR_Huge) {
                 if ((int)sz < (int)STAR_Dwarf) {
                     bulletin_start_new(false);
                     bulletin_set_bg(IMG_ME4_MENU);
                     bulletin_set_flag(IMG_TS1_FLAG16);
-                    bulletin_set_next_text("SUN %s IS EXPANDING", tmp_caps(s->name));
+                    if (sz < STAR_Expand4) {
+                        bulletin_set_next_text("SUN %s IS EXPANDING", tmp_caps(s->name));
+                    } else {
+                        bulletin_set_next_text("SUN %s HAS COLLAPSED", tmp_caps(s->name));
+                    }
+                    bulletin_set_next_text("");
+                    switch(sz) {
+                        case STAR_Expand1:
+                            bulletin_set_next_text("The sun will have reached its maximum");
+                            bulletin_set_next_text("expansion in 3 months.");
+                            bulletin_set_next_text("");
+                            bulletin_set_next_text("It is recommended not to enter this system");
+                            bulletin_set_next_text("with a spacefleet because of high risks at");
+                            bulletin_set_next_text("the time of a supernova.");
+                            bulletin_set_next_text("");
+                            bulletin_set_next_text("Scientific prognosis: At least the first three");
+                            bulletin_set_next_text("planets of this system will not survive");
+                            bulletin_set_next_text("the supernova.");
+                            break;
+                        case STAR_Expand2:
+                            bulletin_set_next_text("The sun will have reached its maximum");
+                            bulletin_set_next_text("expansion in 2 months.");
+                            bulletin_set_next_text("");
+                            bulletin_set_next_text("Advice for star traders and private traffic:");
+                            bulletin_set_next_text("This system must not be entered because of");
+                            bulletin_set_next_text("high risks.");
+                            break;
+                        case STAR_Expand3:
+                            bulletin_set_next_text("The sun will have reached its maximum");
+                            bulletin_set_next_text("expansion in 1 month.");
+                            bulletin_set_next_text("");
+                            bulletin_set_next_text("The first planet of the system has been");
+                            bulletin_set_next_text("swallowed.");
+                            bulletin_set_next_text("");
+                            bulletin_set_next_text("The system must not be entered under any");
+                            bulletin_set_next_text("circumstances.");
+                            break;
+                        case STAR_Expand4:
+                            bulletin_set_next_text("The sun has reached its maximum");
+                            bulletin_set_next_text("expansion and has gone supernova.");
+                            bulletin_set_next_text("");
+                            bulletin_set_next_text("The first three planets have been");
+                            bulletin_set_next_text("destroyed.");
+                            bulletin_set_next_text("");
+                            bulletin_set_next_text("Fleets that might not yet have left the");
+                            bulletin_set_next_text("system will have taken heavy damage.");
+                            break;
+                        default:
+                            L.warn("No bulletin text for expanding sun size %d", sz);
+                            break;
+                    }
                 }
             }
 
@@ -1127,10 +1174,6 @@ ExodusMode GalaxyMap::month_pass_update() {
                     if (snd && snd->exists()) snd->change_class(Volcano);
                     break;
                 case STAR_Expand4:
-                    bulletin_start_new(false);
-                    bulletin_set_bg(IMG_ME4_MENU);
-                    bulletin_set_flag(IMG_TS1_FLAG16);
-                    bulletin_set_next_text("SUN %s HAS COLLAPSED", tmp_caps(s->name));
                     for (int i = 0; i < 3; ++i) {
                         Planet *pl = s->get_planet(i);
                         if (pl && pl->exists()) {
@@ -1143,8 +1186,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                             pl->change_class(Ice);
                         }
                     }
-                    // TODO: Orig moves any players here to the guild
-                    // TODO: Orig moves star if no planets
+                    // TODO: If no planets, orig moves star off-screen and players here are moved to guild
                     break;
                 default:
                     break;
