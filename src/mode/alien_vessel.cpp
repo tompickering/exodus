@@ -152,7 +152,7 @@ void AlienVessel::enter() {
     draw_manager.draw(
         id(ID::BACKGROUND),
         IMG_VS0_VPIC,
-        {6, 8, 0, 0, 1, 1});
+        {6, 6, 0, 0, 1, 1});
 
     draw_manager.draw_text(
         id(ID::INTRO_0),
