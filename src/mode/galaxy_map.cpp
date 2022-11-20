@@ -1349,7 +1349,10 @@ ExodusMode GalaxyMap::month_pass_update() {
                     if (onein(250)) p->surfchange();
                 }
 
-                // TODO: Owned planet maintenance
+                /*
+                 * Owned planet maintenance happens here (PROCcal_plan).
+                 * We implement this with 'MPP' stages below.
+                 */
             }
             mp_state.mp_planet_idx = 0;
         }
@@ -2481,7 +2484,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                             }
                         }
                         player->set_tactic(4);
-                        // TODO: Fairly certain CPU journeys are always 1 month, but check
+                        // CPU journeys are always 1 month
                         player->get_location().set_target(star_idx, 1);
                         player->get_location().set_planet_target(planet_idx);
                         done = true;
