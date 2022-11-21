@@ -151,7 +151,8 @@ class Planet {
         int get_construction_phase();
         bool advance_construction_phase();
         int get_star_target();
-        bool set_star_target(int);
+        void set_star_target(int);
+        void clear_star_target();
         bool finalise_construction();
         int get_quality();
         PlanetClass get_class();

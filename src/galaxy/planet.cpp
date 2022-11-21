@@ -128,9 +128,13 @@ int Planet::get_star_target() {
     return star_target;
 }
 
-bool Planet::set_star_target(int tgt) {
+void Planet::set_star_target(int tgt) {
     L.info("%s: Setting star target: %d", get_name(), tgt);
     star_target = tgt;
+}
+
+void Planet::clear_star_target() {
+    star_target = -1;
 }
 
 bool Planet::finalise_construction() {

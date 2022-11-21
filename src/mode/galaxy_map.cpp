@@ -1202,7 +1202,45 @@ ExodusMode GalaxyMap::month_pass_update() {
     }
 
     if (mp_state.mp_stage == MP_MoveArtificialPlanets) {
-        // TODO - PROCarrivewp
+        // PROCarrivewp
+        /*
+         * Note that this is resolving a move scheduled earlier, by
+         * setting the star_target property of a planet.
+         */
+        for (PlanetIterator pi; !pi.complete(); ++pi) {
+            Planet *p = pi.get();
+            int tgt_idx = p->get_star_target();
+            if (tgt_idx >= 0) {
+                // We have a copy of the tgt_index - wipe it on p
+                // It'll need to be reset after moving anyway
+                p->clear_star_target();
+                if (p->get_class() != Artificial) {
+                    L.warn("Non-artificial planet scheduled to move: %s", p->get_name());
+                }
+                Star *current = pi.get_star();
+                Star *tgt = &(exostate.get_galaxy()->get_stars()[tgt_idx]);
+                if (current == tgt) {
+                    L.warn("Planet scheduled to move to its own star: %s", p->get_name());
+                    continue;
+                }
+                Planet *tgt_slot = tgt->get_artificial_world_slot();
+                if (tgt_slot->exists()) {
+                    L.error("Planet %s scheduled to move to slot containing existing planet", p->get_name());
+                    continue;
+                }
+                if (tgt_slot->get_construction_phase() > 0) {
+                    L.error("Planet %s scheduled to move to slot containing planet under construction", p->get_name());
+                    continue;
+                }
+
+                L.info("Moving planet %s: %s -> %s", p->get_name(), current->name, tgt->name);
+
+                // 'Move' planet to new star. Here we go...
+                memcpy(tgt_slot, p, sizeof(Planet));
+                // And wipe the original
+                new (p) Planet();
+            }
+        }
         next_mp_stage();
     }
 
