@@ -1950,6 +1950,22 @@ ExodusMode PlanetMap::update_destruction(float delta) {
                     case DESTROY_NStones:
                         if (!planet->find_random_stone(d.tgt_stones, exploding_stone, explode_x, explode_y)) {
                             L.info("Run out of bombing targets for stone %d", exploding_stone);
+                            /*
+                             * N.B. This case *can* legitimately arise during gameplay.
+                             * For example - a bombing mission targeting the 3 starport
+                             * stones Port0, Port1 and Port2. If a planet has all 3, we
+                             * might report that "3 bombers have hit a target". However,
+                             * when updating destruction, the first bomber hits the
+                             * explosive power station (Port2) which in turn destroys,
+                             * say, the Port1 stone. The second bomber hits the remaining
+                             * Port0 stone, and the third can no longer find a valid
+                             * bombing target.
+                             *
+                             * FIXME: I suppose the better gameplay experience in this
+                             * case would be to process this ahead of time and report
+                             * that only 2 bombers hit a target - but that requires a
+                             * significant restructure.
+                             */
                             destruction_done = true;
                         }
                         break;
