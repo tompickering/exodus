@@ -69,6 +69,7 @@ int Planet::stone_cost(Stone st) {
 Planet::Planet() {
     _exists = false;
     name[0] = '\0';
+    construction_phase = 0;
     traded = 0;
     laws = 0;
     festival_this_month = false;
