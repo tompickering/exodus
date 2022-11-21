@@ -150,6 +150,8 @@ class Planet {
         void destroy();
         int get_construction_phase();
         bool advance_construction_phase();
+        int get_star_target();
+        bool set_star_target(int);
         bool finalise_construction();
         int get_quality();
         PlanetClass get_class();
@@ -283,6 +285,7 @@ class Planet {
         Stone surf[MAX_STONES];
 
         int construction_phase;
+        int star_target;       // Orig: ptarget
 
         int pspeed;            // Orig: pspeed
         int diameter;          // Orig: SId.

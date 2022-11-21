@@ -103,6 +103,8 @@ class ExodusState {
         int get_random_star_idx();
         int get_n_owned_planets();
         int get_n_unowned_planets();
+        bool artificial_planet_viable(Star*);
+        bool construct_artificial_planet(Star*, int, const char*);
         Planet* get_planet_under_construction(int);
         PlanetInfo get_random_owned_planet_info();
         int get_n_planets();

@@ -653,7 +653,7 @@ ExodusMode GalaxyMap::update(float delta) {
                         // FIXME: It's a bit hacky to rely on the input system to remember this...
                         const char* name = input_manager.get_input_text(PLANET_MAX_NAME);
 
-                        if (s->construct_artificial_world(player_idx, name)) {
+                        if (exostate.construct_artificial_planet(s, player_idx, name)) {
                             stage = GM_Idle;
                             break;
                         } else {
@@ -2333,9 +2333,9 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 // PROClorddwp: Begin an artificial planet
                 for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
                     Star *s = &stars[star_idx];
-                    if (s->artificial_world_viable()) {
+                    if (exostate.artificial_planet_viable(s)) {
                         if (player->attempt_spend(1000)) {
-                            if (!s->construct_artificial_world(player_idx, nullptr)) {
+                            if (!exostate.construct_artificial_planet(s, player_idx, nullptr)) {
                                 L.error("Should be possible - viability check returned true");
                             }
                             L.debug("[%s]: BEGIN ARTIFICIAL PLANET", player->get_full_name());
@@ -2350,7 +2350,28 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     }
 
     if (mp_state.mpai_stage == MPAI_MoveArtificialPlanet) {
-        // TODO
+        // PROCet_movewar
+        if (player->has_invention(INV_OrbitalMassThrust)) {
+            for (PlanetIterator pi(player_idx); !pi.complete(); ++pi) {
+                Planet *p = pi.get();
+                if (p->get_class() == Artificial && onein(10)) {
+                    // AI have absolutely no tactical decision-making on where to move...
+                    // FIXME: Randomise this order...
+                    for (StarIterator si; !si.complete(); ++si) {
+                        Star *tgt = si.get();
+                        Planet *tgt_slot = tgt->get_artificial_world_slot();
+                        if (tgt_slot == p) {
+                            continue;
+                        }
+                        if (exostate.artificial_planet_viable(tgt)) {
+                            // Move planet here
+                            p->set_star_target(exostate.tgt2loc(tgt));
+                            break;
+                        }
+                    }
+                }
+            }
+        }
         next_mpai_stage();
     }
 

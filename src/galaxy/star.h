@@ -26,7 +26,7 @@ class Star : public FlyTarget {
         Planet* next_planet_slot();
         Planet* get_planet(int);
         Planet* get_planet_nocheck(int);
-        bool artificial_world_viable();
+        Planet* get_artificial_world_slot();
         Planet* construct_artificial_world(int, const char*);
         StarSize expand();
     private:

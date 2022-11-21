@@ -580,6 +580,55 @@ int ExodusState::_get_n_owned_planets(bool owned) {
     return n_planets;
 }
 
+/*
+ * Can an artificial planet be created OR MOVED here?
+ */
+bool ExodusState::artificial_planet_viable(Star* tgt) {
+    Planet *tgt_planet = tgt->get_artificial_world_slot();
+
+    /*
+     * FIXME: In THEORY we could target a star with an existing planet
+     * which was scheduled to be moved away (get_star_target() is set
+     * and is not equal to the star that it's current at). But this
+     * complicates moving, to make sure that you don't destroy data
+     * by moving the planet memory around in the wrong order. We
+     * don't support thia, and just bail if a planet exists.
+     */
+    if (tgt_planet->exists() || tgt_planet->get_construction_phase() > 0) {
+        return false;
+    }
+
+    // The slot itself is free - check if anything is scheduled to move there
+
+    int tgt_idx = tgt2loc(tgt);
+    Galaxy *gal = get_galaxy();
+    int n_stars;
+    Star *stars = gal->get_stars(n_stars);
+    for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
+        Star *s = &stars[star_idx];
+        Planet *p = s->get_artificial_world_slot();
+        if (p && (p->exists() || p->get_construction_phase() > 0) && p->get_star_target() == tgt_idx) {
+            // This planet is scheduled to move here
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool ExodusState::construct_artificial_planet(Star* s, int player_idx, const char* name) {
+    if (!artificial_planet_viable(s)) {
+        return false;
+    }
+
+    /*
+     * Should be the only call to construct_artificial_world().
+     * All calls should go through ExodusState.
+     */
+    s->construct_artificial_world(player_idx, name);
+    return true;
+}
+
 Planet* ExodusState::get_planet_under_construction(int player_idx) {
     Galaxy *gal = get_galaxy();
     int n_stars;

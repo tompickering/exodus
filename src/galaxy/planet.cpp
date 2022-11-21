@@ -123,6 +123,15 @@ bool Planet::advance_construction_phase() {
     return false;
 }
 
+int Planet::get_star_target() {
+    return star_target;
+}
+
+bool Planet::set_star_target(int tgt) {
+    L.info("%s: Setting star target: %s", tgt);
+    star_target = tgt;
+}
+
 bool Planet::finalise_construction() {
     if (get_class() != Artificial) {
         return false;
@@ -231,6 +240,7 @@ void Planet::init() {
     name[0] = '\0';
 
     construction_phase = 0;
+    star_target = -1;
 
     if (cls == Artificial) {
         _exists = false;
