@@ -624,9 +624,9 @@ bool ExodusState::construct_artificial_planet(Star* s, int player_idx, const cha
     /*
      * Should be the only call to construct_artificial_world().
      * All calls should go through ExodusState.
+     * Should always return a valid pointer as we already performed a viability check.
      */
-    s->construct_artificial_world(player_idx, name);
-    return true;
+    return s->construct_artificial_world(player_idx, name) != nullptr;
 }
 
 Planet* ExodusState::get_planet_under_construction(int player_idx) {

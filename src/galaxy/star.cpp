@@ -48,6 +48,18 @@ Planet* Star::get_artificial_world_slot() {
 Planet* Star::construct_artificial_world(int player_idx, const char* name) {
     Planet *outer = get_artificial_world_slot();
 
+    /*
+     * N.B. It's primarily the responsibility of the caller to ensure that
+     * an artificial world can be constructed here. This is because the
+     * viability is not *just* informed by whether the star's outer slot
+     * is empty or not; but *also* by whether there are any other artificial
+     * worlds elsewhere in the galaxy which are scheduled to move here.
+     * The caller must have verified that there aren't any.
+     */
+    if (outer->exists() || outer->get_construction_phase() > 0) {
+        return nullptr;
+    }
+
     L.debug("CONSTRUCTING ARTIFICIAL WORLD");
 
     // TODO: On completion, world should not appear until following month
