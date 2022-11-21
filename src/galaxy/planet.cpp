@@ -128,7 +128,7 @@ int Planet::get_star_target() {
 }
 
 bool Planet::set_star_target(int tgt) {
-    L.info("%s: Setting star target: %s", tgt);
+    L.info("%s: Setting star target: %d", get_name(), tgt);
     star_target = tgt;
 }
 
