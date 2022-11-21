@@ -3607,7 +3607,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 ephstate.destruction.show_target = false;
                 ephstate.destruction.destroyer_idx = -1;
                 ephstate.destruction.terror = false;
-                ephstate.destruction.nuke = true;
+                ephstate.destruction.nuke = false;
                 ephstate.destruction.draw = exostate.get_active_player()->is_human();
                 do_meteor = true;
 
@@ -3977,7 +3977,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 ephstate.destruction.show_target = true;
                 ephstate.destruction.destroyer_idx = -1;
                 ephstate.destruction.terror = false;
-                ephstate.destruction.nuke = true;
+                ephstate.destruction.nuke = false;
                 ephstate.destruction.draw = exostate.get_active_player()->is_human();
                 do_meltdown = true;
                 next_mpp_stage();
