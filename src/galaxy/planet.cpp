@@ -1288,6 +1288,17 @@ void Planet::change_class(PlanetClass new_cls) {
         return;
     }
 
+    /*
+     * Orig doesn't have a blanket ban on artificial worlds changing
+     * class (nuking, star expansion etc can change it), but it does
+     * in some cases. I think the intention is that these can never
+     * change, and those corner cases in the original are oversights.
+     */
+    if (cls == Artificial) {
+        L.warn("Attempt to change class of an artificial world");
+        return;
+    }
+
     L.info("CLIMATE CHANGE: %d -> %d", (int)cls, (int)new_cls);
     cls = new_cls;
 
