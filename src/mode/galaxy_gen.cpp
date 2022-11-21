@@ -25,6 +25,7 @@ GalaxyGen::GalaxyGen() : ModeBase("GalaxyGen"), GalaxyDrawer() {
 void GalaxyGen::enter() {
     ModeBase::enter(ID::END);
     stage = GGSTG_Gen;
+    fade_interp = 0;
     accepted = false;
     draw_manager.show_cursor(true);
 }
