@@ -563,7 +563,7 @@ ExodusMode StarMap::update(float delta) {
                     ephstate.set_ephemeral_state(EPH_MovePlanet);
                     return ephstate.get_appropriate_mode();;
                 default:
-                    L.fatal("Unexpected comm action in SM_PlanetComm: %d", (int)action);
+                    L.error("Unexpected comm action in SM_PlanetComm: %d", (int)action);
             }
             break;
         case SM_EnemyComm:
