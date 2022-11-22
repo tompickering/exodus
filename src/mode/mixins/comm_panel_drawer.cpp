@@ -2835,7 +2835,7 @@ void CommPanelDrawer::comm_process_responses() {
         case DIA_R_CPU_ProposeAllianceAggressively:
             switch (opt) {
                 case 0:
-                    comm_exit_anim(CA_Abort);
+                    comm_exit_anim(CA_Attack);
                     break;
                 case 1:
                     exostate.set_all_alliances(comm_player_idx, comm_other_idx);

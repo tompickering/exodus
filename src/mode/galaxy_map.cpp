@@ -2121,11 +2121,28 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     if (mp_state.mpai_stage == MPAI_Alliances) {
         bool resume = false;
 
-        if (mp_state.mpai_substage == 3) {
+        if (mp_state.mpai_substage == 4) {
             // TODO: Respond to lunar battle report
             ephstate.clear_ephemeral_state();
             mp_state.mpai_substage = 0;
             resume = true;
+        }
+
+        if (mp_state.mpai_substage == 3) {
+            switch (comm_action_check()) {
+                case CA_Abort:
+                    comm_close();
+                    mp_state.mpai_substage = 0;
+                    resume = true;
+                    break;
+                case CA_Attack:
+                    ephstate.set_ephemeral_state(EPH_LunarBattlePrep);
+                    ephstate.lunar_battle.aggressor_type = AGG_Player;
+                    ephstate.lunar_battle.aggressor_idx = player_idx;
+                    return ephstate.get_appropriate_mode();
+                default:
+                    L.fatal("Unexpected comm action on CPU alliance attack: %d", comm_action_check());
+            }
         }
 
         if (mp_state.mpai_substage == 2) {
@@ -2137,13 +2154,11 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     break;
                 case CA_Attack:
                     comm_close();
+                    comm_open(DIA_S_CPU_Attack);
                     mp_state.mpai_substage = 3;
-                    ephstate.set_ephemeral_state(EPH_LunarBattlePrep);
-                    ephstate.lunar_battle.aggressor_type = AGG_Player;
-                    ephstate.lunar_battle.aggressor_idx = player_idx;
-                    return ephstate.get_appropriate_mode();
+                    return ExodusMode::MODE_None;
                 default:
-                    L.fatal("Unexpected comm action on CPU alliance offer: %d");
+                    L.fatal("Unexpected comm action on CPU alliance offer: %d", comm_action_check());
             }
         }
 
