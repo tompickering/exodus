@@ -3124,7 +3124,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                             mp_state.mpai_substage = 5;
                             break;
                         default:
-                            L.fatal("Unexpected comm action on CPU attack: %d");
+                            L.fatal("Unexpected comm action on CPU attack: %d", comm_action_check());
                     }
                 }
 
@@ -3469,7 +3469,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                                 comm_close();
                                 break;
                             default:
-                                L.fatal("Unexpected comm action on CPU trade offer: %d");
+                                L.fatal("Unexpected comm action on CPU trade offer: %d", comm_action_check());
                         }
                     } else {
                         proceed = true;
