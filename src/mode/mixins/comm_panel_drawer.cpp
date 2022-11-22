@@ -1032,6 +1032,12 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 }
             }
             break;
+        case DIA_S_ChangeClimate:
+            comm_prepare(6);
+            comm_set_speech("The change has begun.");
+            comm_complete_speech();
+            comm_recv(DIA_R_ChangeClimateConfirm);
+            break;
         case DIA_S_LookAgainBadLaws:
             comm_prepare(6);
             comm_set_text(0, "I am not sure if your people");
@@ -2409,14 +2415,25 @@ void CommPanelDrawer::comm_process_responses() {
                         // Move artificial planet
                         comm_report_action = CA_MovePlanet;
                     } else {
-                        // TODO: Change global climate
-                        comm_report_action = CA_Abort;
+                        // Change global climate
+                        if (comm_player->attempt_spend(500)) {
+                            comm_send(DIA_S_ChangeClimate);
+                        } else {
+                            L.error("Unaffordable change climate should not be enabled");
+                        }
                     }
                     break;
                 case 3:
                     // TODO: Add this to any other comms that need it
                     comm_exit_anim(CA_Abort);
                     break;
+            }
+            break;
+        case DIA_R_ChangeClimateConfirm:
+            {
+                if (clicked) {
+                    comm_report_action = CA_ChangeClimate;
+                }
             }
             break;
         case DIA_R_Greeting:

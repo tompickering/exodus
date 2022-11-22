@@ -1279,6 +1279,22 @@ void Planet::surfchange() {
     surfchange_this_month = true;
 }
 
+void Planet::changeclimate() {
+    // Artifical planet climates don't change
+    if (cls == Artificial)
+        return;
+
+    PlanetClass new_cls = Forest;
+    if (cls == Forest)  new_cls = Terra;
+    if (cls == Desert)  new_cls = Rock;
+    if (cls == Volcano) new_cls = Desert;
+    if (cls == Rock)    new_cls = Terra;
+    if (cls == Ice)     new_cls = Rock;
+    if (cls == Terra)   new_cls = Forest;
+
+    change_class(new_cls);
+}
+
 bool Planet::festival_happened_this_month() {
     return festival_this_month;
 }

@@ -224,6 +224,7 @@ class Planet {
         void reset_unrest();
         void adjust_unrest(int);
         void surfchange();
+        void changeclimate();
         void change_class(PlanetClass);
         void register_festival();
         bool festival_happened_this_month();

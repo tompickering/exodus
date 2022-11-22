@@ -558,6 +558,10 @@ ExodusMode StarMap::update(float delta) {
                 case CA_StartProduction:
                     comm_close();
                     return ExodusMode::MODE_FleetProduction;
+                case CA_ChangeClimate:
+                    comm_close();
+                    planet->changeclimate();
+                    return ExodusMode::MODE_Reload;
                 case CA_MovePlanet:
                     comm_close();
                     ephstate.set_ephemeral_state(EPH_MovePlanet);
