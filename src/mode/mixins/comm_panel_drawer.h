@@ -90,6 +90,7 @@ enum CommSend {
     DIA_S_NoCoverBombers,
     DIA_S_NoBombers,
     DIA_S_ArtificialPlanetStarInvalid,
+    DIA_S_ArtificialPlanetStarMoveDest,
     DIA_S_FlyAlreadyFlying,
     DIA_S_FlyAlreadyThere,
     DIA_S_ZoomButNotVisited,

@@ -748,6 +748,11 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img(CI_HumanThoughtful);
             comm_set_img_caption("COUNSELLOR");
             break;
+        case DIA_S_ArtificialPlanetStarMoveDest:
+            comm_set_title("Message from counsellor");
+            comm_set_img(CI_HumanThoughtful);
+            comm_set_img_caption("COUNSELLOR");
+            break;
         case DIA_S_FlyAlreadyFlying:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_HumanThoughtful);
@@ -1634,6 +1639,16 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_set_text(0, "This star has no suitable orbit.");
                 comm_set_text(2, "We cannot place the artificial");
                 comm_set_text(3, "planet here.");
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_ArtificialPlanetStarMoveDest:
+            {
+                comm_prepare(6);
+                comm_set_text(0, "Another War Planet has this");
+                comm_set_text(1, "destination.");
+                comm_set_text(3, "Choose a new system");
+                comm_set_text(4, "or abort.");
                 comm_recv(DIA_R_Close);
             }
             break;

@@ -583,7 +583,7 @@ int ExodusState::_get_n_owned_planets(bool owned) {
 /*
  * Can an artificial planet be created OR MOVED here?
  */
-bool ExodusState::artificial_planet_viable(Star* tgt) {
+ArtificialPlanetViable ExodusState::artificial_planet_viable(Star* tgt) {
     Planet *tgt_planet = tgt->get_artificial_world_slot();
 
     /*
@@ -595,7 +595,7 @@ bool ExodusState::artificial_planet_viable(Star* tgt) {
      * don't support thia, and just bail if a planet exists.
      */
     if (tgt_planet->exists() || tgt_planet->get_construction_phase() > 0) {
-        return false;
+        return APV_No_StarFull;
     }
 
     // The slot itself is free - check if anything is scheduled to move there
@@ -609,15 +609,15 @@ bool ExodusState::artificial_planet_viable(Star* tgt) {
         Planet *p = s->get_artificial_world_slot();
         if (p && (p->exists() || p->get_construction_phase() > 0) && p->get_star_target() == tgt_idx) {
             // This planet is scheduled to move here
-            return false;
+            return APV_No_MoveDest;
         }
     }
 
-    return true;
+    return APV_Yes;
 }
 
 bool ExodusState::construct_artificial_planet(Star* s, int player_idx, const char* name) {
-    if (!artificial_planet_viable(s)) {
+    if (artificial_planet_viable(s) != APV_Yes) {
         return false;
     }
 

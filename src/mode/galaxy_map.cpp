@@ -662,14 +662,21 @@ ExodusMode GalaxyMap::update(float delta) {
 
                         if (artificial_planet_to_move) {
                             // Moving a planet
-                            if (exostate.artificial_planet_viable(s)) {
+                            ArtificialPlanetViable apv = exostate.artificial_planet_viable(s);
+                            if (apv == APV_Yes) {
                                 int tgt_idx = exostate.tgt2loc(s);
                                 artificial_planet_to_move->set_star_target(tgt_idx);
                                 artificial_planet_to_move = nullptr;
                                 stage = GM_Idle;
                             } else {
-                                // TODO: We need to know the exact reason here to choose PROCcounselor() 4 or 5
-                                comm_open(DIA_S_ArtificialPlanetStarInvalid);
+                                if (apv == APV_No_StarFull) {
+                                    comm_open(DIA_S_ArtificialPlanetStarInvalid);
+                                } else if (apv == APV_No_MoveDest) {
+                                    comm_open(DIA_S_ArtificialPlanetStarMoveDest);
+                                } else {
+                                    L.error("Unknown ArtificialPlanetViable result %d", apv);
+                                    comm_open(DIA_S_ArtificialPlanetStarInvalid);
+                                }
                                 stage = GM_ArtificialWorldStarSelectInvalid;
                                 break;
                             }
@@ -2397,7 +2404,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 // PROClorddwp: Begin an artificial planet
                 for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
                     Star *s = &stars[star_idx];
-                    if (exostate.artificial_planet_viable(s)) {
+                    if (exostate.artificial_planet_viable(s) == APV_Yes) {
                         if (player->attempt_spend(1000)) {
                             if (!exostate.construct_artificial_planet(s, player_idx, nullptr)) {
                                 L.error("Should be possible - viability check returned true");
@@ -2427,7 +2434,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         if (tgt_slot == p) {
                             continue;
                         }
-                        if (exostate.artificial_planet_viable(tgt)) {
+                        if (exostate.artificial_planet_viable(tgt) == APV_Yes) {
                             // Move planet here
                             p->set_star_target(exostate.tgt2loc(tgt));
                             break;

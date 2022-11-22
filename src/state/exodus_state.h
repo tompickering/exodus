@@ -66,6 +66,12 @@ enum AllianceType : uint8_t {
     ALLY_War,
 };
 
+enum ArtificialPlanetViable : uint8_t {
+    APV_No_StarFull,
+    APV_No_MoveDest,
+    APV_Yes,
+};
+
 class ExodusState {
     public:
         ExodusState();
@@ -103,7 +109,7 @@ class ExodusState {
         int get_random_star_idx();
         int get_n_owned_planets();
         int get_n_unowned_planets();
-        bool artificial_planet_viable(Star*);
+        ArtificialPlanetViable artificial_planet_viable(Star*);
         bool construct_artificial_planet(Star*, int, const char*);
         Planet* get_planet_under_construction(int);
         PlanetInfo get_random_owned_planet_info();
