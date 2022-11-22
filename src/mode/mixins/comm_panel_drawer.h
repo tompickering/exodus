@@ -23,6 +23,7 @@ enum CommAction {
     CA_BionicProbe,
     CA_GoodsTransfer,
     CA_StartProduction,
+    CA_MovePlanet,
     CA_PlanAttack,
     CA_Trade,
     CA_Attack,

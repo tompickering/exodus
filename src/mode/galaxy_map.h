@@ -207,6 +207,8 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
 
         bool update_researchcheck(Star*, Planet *p);
         bool update_research(Planet *p);
+
+        Planet* artificial_planet_to_move;
 };
 
 #endif

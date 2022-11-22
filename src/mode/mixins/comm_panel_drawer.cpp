@@ -1077,13 +1077,22 @@ void CommPanelDrawer::comm_send(CommSend input) {
             if (!comm_planet->has_spaceport()) {
                 comm_text_disabled_mask |= 0x3;
             }
-            // TODO: This is "Move the artificial planet" for artificial worlds
-            comm_set_text(2, "Change global climate (500MC)");
-            if (!comm_player->has_invention(INV_WeatherInfluence)) {
-                comm_text_disabled_mask |= 0x4;
-            }
-            if (!comm_player->can_afford(500)) {
-                comm_text_disabled_mask |= 0x4;
+            if (comm_planet->get_class() == Artificial) {
+                comm_set_text(2, "Move the artificial planet");
+                if (!comm_player->has_invention(INV_OrbitalMassThrust)) {
+                    comm_text_disabled_mask |= 0x4;
+                }
+                if (comm_planet->get_star_target() >= 0) {
+                    comm_text_disabled_mask |= 0x4;
+                }
+            } else {
+                comm_set_text(2, "Change global climate (500MC)");
+                if (!comm_player->has_invention(INV_WeatherInfluence)) {
+                    comm_text_disabled_mask |= 0x4;
+                }
+                if (!comm_player->can_afford(500)) {
+                    comm_text_disabled_mask |= 0x4;
+                }
             }
             comm_set_text(3, "Never mind...");
             comm_text_interactive_mask = 0xF;
@@ -2396,8 +2405,13 @@ void CommPanelDrawer::comm_process_responses() {
                     comm_exit_anim(CA_StartProduction);
                     break;
                 case 2:
-                    // TODO: Change global climate
-                    comm_report_action = CA_Abort;
+                    if (comm_planet->get_class() == Artificial) {
+                        // Move artificial planet
+                        comm_report_action = CA_MovePlanet;
+                    } else {
+                        // TODO: Change global climate
+                        comm_report_action = CA_Abort;
+                    }
                     break;
                 case 3:
                     // TODO: Add this to any other comms that need it

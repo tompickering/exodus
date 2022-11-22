@@ -68,12 +68,17 @@ void GalaxyMap::enter() {
         draw_manager.pixelswap_start();
     }
 
+    artificial_planet_to_move = nullptr;
 
     if (ephstate.get_ephemeral_state() == EPH_ResumeFly) {
         ephstate.clear_ephemeral_state();
         stage = GM_Fly;
     } else if (ephstate.get_ephemeral_state() == EPH_SelectPlanet) {
         stage = GM_SelectStar;
+    } else if (ephstate.get_ephemeral_state() == EPH_MovePlanet) {
+        ephstate.clear_ephemeral_state();
+        artificial_planet_to_move = exostate.get_active_planet();
+        stage = GM_ArtificialWorldStarSelect;
     } else if (mp_state.mp_stage == MP_None) {
         stage = GM_SwapIn;
     } else {
@@ -605,6 +610,8 @@ ExodusMode GalaxyMap::update(float delta) {
                         selected_ft = nullptr;
                         draw_manager.draw(id(ID::SELECTED), nullptr);
                         selected_ft_blink = 0;
+                        // Denote that we are constructing; not moving
+                        artificial_planet_to_move = nullptr;
                         stage = GM_ArtificialWorldStarSelect;
                         break;
                     case MA_Quit:
@@ -623,7 +630,10 @@ ExodusMode GalaxyMap::update(float delta) {
             {
                 // Allow player to cancel
                 if (input_manager.consume(K_Escape)) {
-                    player->give_mc(COST_ART);
+                    if (!artificial_planet_to_move) {
+                        player->give_mc(COST_ART);
+                    }
+                    artificial_planet_to_move = nullptr;
                     stage = GM_Idle;
                     break;
                 }
@@ -650,16 +660,32 @@ ExodusMode GalaxyMap::update(float delta) {
                         Star *s = (Star*) ft;
                         int player_idx = exostate.get_active_player_idx();
 
-                        // FIXME: It's a bit hacky to rely on the input system to remember this...
-                        const char* name = input_manager.get_input_text(PLANET_MAX_NAME);
-
-                        if (exostate.construct_artificial_planet(s, player_idx, name)) {
-                            stage = GM_Idle;
-                            break;
+                        if (artificial_planet_to_move) {
+                            // Moving a planet
+                            if (exostate.artificial_planet_viable(s)) {
+                                int tgt_idx = exostate.tgt2loc(s);
+                                artificial_planet_to_move->set_star_target(tgt_idx);
+                                artificial_planet_to_move = nullptr;
+                                stage = GM_Idle;
+                            } else {
+                                // TODO: We need to know the exact reason here to choose PROCcounselor() 4 or 5
+                                comm_open(DIA_S_ArtificialPlanetStarInvalid);
+                                stage = GM_ArtificialWorldStarSelectInvalid;
+                                break;
+                            }
                         } else {
-                            comm_open(DIA_S_ArtificialPlanetStarInvalid);
-                            stage = GM_ArtificialWorldStarSelectInvalid;
-                            break;
+                            // Constructing a planet
+                            // FIXME: It's a bit hacky to rely on the input system to remember this...
+                            const char* name = input_manager.get_input_text(PLANET_MAX_NAME);
+
+                            if (exostate.construct_artificial_planet(s, player_idx, name)) {
+                                stage = GM_Idle;
+                                break;
+                            } else {
+                                comm_open(DIA_S_ArtificialPlanetStarInvalid);
+                                stage = GM_ArtificialWorldStarSelectInvalid;
+                                break;
+                            }
                         }
                     }
                 }

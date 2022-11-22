@@ -149,6 +149,7 @@ enum EphState {
     EPH_ResumeFly,
     EPH_PostPlanet,
     EPH_SelectPlanet,
+    EPH_MovePlanet,
     EPH_GameOver,
 };
 

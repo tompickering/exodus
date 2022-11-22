@@ -48,6 +48,8 @@ ExodusMode EphemeralState::get_appropriate_mode() {
             return ExodusMode::MODE_Pop;
         case EPH_SelectPlanet:
             return ExodusMode::MODE_GalaxyMap;
+        case EPH_MovePlanet:
+            return ExodusMode::MODE_GalaxyMap;
         case EPH_GameOver:
             return ExodusMode::MODE_GameOver;
     }
