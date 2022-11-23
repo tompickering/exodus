@@ -60,7 +60,6 @@ const char* NewsItem::get_string() const {
             // TODO: Implement
              return "Assassin captured";
         case NI_TerroristAttack:
-            // TODO: Implement
              return "Terrorist attack";
         case NI_Meteor:
              return "Meteor has hit the planet";
@@ -80,10 +79,8 @@ const char* NewsItem::get_string() const {
         case NI_Plague:
              return "Plague";
         case NI_PlantsPoisoned:
-            // TODO: Implement
              return "Plants poisoned";
         case NI_Epidemic:
-            // TODO: Implement
              return "Epidemic";
         case NI_BattleMachinesDestructed:
              return "Battle machines have been destructed";
