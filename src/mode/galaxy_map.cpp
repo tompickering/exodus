@@ -753,6 +753,7 @@ ExodusMode GalaxyMap::update(float delta) {
 
 void GalaxyMap::exit() {
     comm_ensure_closed();
+    bulletin_ensure_closed();
     ModeBase::exit();
 }
 
