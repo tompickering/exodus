@@ -51,13 +51,11 @@ const char* NewsItem::get_string() const {
         case NI_AlienAttack:
              return "Attack of alien pirates";
         case NI_PlanetTakeover:
-             // TODO: This needs to vary based on planet
-            // TODO: Implement
-             return "TODO";
+             snprintf(b, sizeof(b), "%s has taken over %s's planet", p0->get_name(), p1->get_name());
+             return b;
         case NI_FailedTakeover:
-             // TODO: This needs to vary based on planet
-            // TODO: Implement
-             return "TODO";
+             snprintf(b, sizeof(b), "%s tried to take over %s's planet", p0->get_name(), p1->get_name());
+             return b;
         case NI_AssassinCaptured:
             // TODO: Implement
              return "Assassin captured";

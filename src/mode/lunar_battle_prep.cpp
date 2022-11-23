@@ -854,6 +854,10 @@ ExodusMode LunarBattlePrep::update(float delta) {
                     int a = rpt.agg_surf.art;
 
                     if (rpt.aggressor_won) {
+                        NewsItem& news = exostate.register_news(NI_PlanetTakeover);
+                        news.player_0 = b.aggressor_idx;
+                        news.player_1 = p->get_owner();
+
                         // Transfer planet
                         p->set_owner(b.aggressor_idx);
 
@@ -864,6 +868,10 @@ ExodusMode LunarBattlePrep::update(float delta) {
                         p->clear_army();
                         p->adjust_army(i, g, a);
                     } else {
+                        NewsItem& news = exostate.register_news(NI_FailedTakeover);
+                        news.player_0 = b.aggressor_idx;
+                        news.player_1 = p->get_owner();
+
                         // Transfer any surviving units back to the fleet
                         agg->transfer_art(a);
                         agg->transfer_gli(g);
