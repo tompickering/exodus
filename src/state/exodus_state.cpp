@@ -905,6 +905,13 @@ NewsItem& ExodusState::register_news(NewsItemType type) {
         return mock;
     }
 
+    return register_news_force(type);
+}
+
+NewsItem& ExodusState::register_news_force(NewsItemType type) {
+    int s = get_active_star_idx();
+    int p = get_active_planet_idx();
+
     if (newsitem_head >= MAX_NEWSITEMS) {
         L.debug("Too many newsitems; unable to record %d", type);
         // Return a fake reference

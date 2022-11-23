@@ -2007,7 +2007,9 @@ ExodusMode GalaxyMap::month_pass_update() {
                         bulletin_set_next_text("");
                         bulletin_set_next_text("%s has lost all planets and", p->get_full_name());
                         bulletin_set_next_text("left the galaxy.");
-                        // TODO: News item with PROCdonotice
+                        // This is a special newsitem which isn't planet-associated
+                        NewsItem &news = exostate.register_news_force(NI_LeftGalaxy);
+                        news.player_0 = mp_state.mp_player_idx;
                         return ExodusMode::MODE_None;
                     }
                 }

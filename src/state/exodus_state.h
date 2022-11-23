@@ -134,6 +134,7 @@ class ExodusState {
         int count_alliances(int);
         bool kill(Player*);
         NewsItem& register_news(NewsItemType);
+        NewsItem& register_news_force(NewsItemType);
         const NewsItem& get_news(int);
     private:
         GalaxySize size;

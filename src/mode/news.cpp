@@ -54,7 +54,11 @@ void News::draw_news() {
 
         any = true;
 
-        snprintf(text, sizeof(text), "%s at %s: %s", p->get_name(), s->name, news.get_string());
+        if (news.type == NI_LeftGalaxy) {
+            snprintf(text, sizeof(text), "%s", news.get_string());
+        } else {
+            snprintf(text, sizeof(text), "%s at %s: %s", p->get_name(), s->name, news.get_string());
+        }
 
         RGB col = COL_TEXT;
         if (news.player_owned) {
