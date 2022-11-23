@@ -4,6 +4,8 @@
 
 #include "assetpaths.h"
 
+#define SPEECH_CHARS_PER_SECOND 20.f
+
 enum ID {
     BACKGROUND,
     INTRO_0,
@@ -36,7 +38,6 @@ AlienVessel::AlienVessel() : ModeBase("AlienVessel"), PanelDrawer(PNL_Galaxy), F
     enemy_cargo = 0;
     enemy_scouts = 0;
 
-    comm_started = false;
     comm_done = false;
     comm_timer = 0.f;
     comm_line = 0;
@@ -55,7 +56,6 @@ void AlienVessel::enter() {
     stage = AV_Approach;
 
     approach = 0;
-    comm_started = false;
     comm_done = false;
     comm_timer = 0.f;
     comm_line = 0;
@@ -292,45 +292,70 @@ ExodusMode AlienVessel::update(float delta) {
             break;
         case AV_Comm:
             {
-                if (!comm_started) {
-                    clear_overlay();
+                comm_done = true;
 
-                    if (!will_respond) {
-                        comm_done = true;
-                        draw_manager.draw_text(
-                            id(ID::COMM_RESULT),
-                            "The ship does not respond.",
-                            Justify::Left,
-                            20, 20,
-                            COL_TEXT);
-                    } else {
-                        draw_manager.draw_text(
-                            id(ID::COMM_RESULT),
-                            "The ship answers:",
-                            Justify::Left,
-                            20, 20,
-                            COL_TEXT);
-                    }
+                clear_overlay();
 
-                    comm_started = true;
-                }
-
-                if (comm_done) {
+                if (!will_respond) {
+                    draw_manager.draw_text(
+                        id(ID::COMM_RESULT),
+                        "The ship does not respond.",
+                        Justify::Left,
+                        20, 20,
+                        COL_TEXT);
                     stage = AV_Idle;
                     break;
                 }
 
-                // TODO - Gradual speech
-                for (int i = 0; i < MAX_COMM_LINES; ++i) {
-                    draw_manager.draw_text(
-                        comm_ids[i],
-                        comm_text[i],
-                        Justify::Left,
-                        20, 60 + 20*i,
-                        COL_TEXT2);
+                draw_manager.draw_text(
+                    id(ID::COMM_RESULT),
+                    "The ship answers:",
+                    Justify::Left,
+                    20, 20,
+                    COL_TEXT);
+
+                comm_timer = 0;
+                comm_line = 0;
+                stage = AV_CommSpeech;
+            }
+            break;
+        case AV_CommSpeech:
+            {
+                comm_timer += delta;
+                int max_chars = comm_timer * SPEECH_CHARS_PER_SECOND;
+
+                char line[64];
+                line[0] = '\0';
+                snprintf(line, max_chars, "%s", comm_text[comm_line]);
+
+                draw_manager.draw_text(
+                    comm_ids[comm_line],
+                    line,
+                    Justify::Left,
+                    20, 60 + 20*comm_line,
+                    COL_TEXT2);
+
+                if (strnlen(line, sizeof(line)) == strnlen(comm_text[comm_line], sizeof(line))) {
+                    comm_timer = 0;
+                    comm_line++;
                 }
 
-                comm_done = true;
+                if (draw_manager.clicked()) {
+                    for (int i = comm_line; i < MAX_COMM_LINES; ++i) {
+                        draw_manager.draw_text(
+                            comm_ids[i],
+                            comm_text[i],
+                            Justify::Left,
+                            20, 60 + 20*i,
+                            COL_TEXT2);
+                    }
+                    comm_line = MAX_COMM_LINES;
+                }
+
+                if (comm_line >= MAX_COMM_LINES) {
+                    stage = AV_Idle;
+                    break;
+                }
             }
             break;
         case AV_Attack:

@@ -26,6 +26,7 @@ class AlienVessel : ModeBase, PanelDrawer, FrameDrawer {
             AV_Approach,
             AV_Idle,
             AV_Comm,
+            AV_CommSpeech,
             AV_Attack,
             AV_Surrender,
             AV_Exit,
@@ -59,7 +60,6 @@ class AlienVessel : ModeBase, PanelDrawer, FrameDrawer {
         int enemy_scouts;
 
         float approach;
-        bool comm_started;
         bool comm_done;
         float comm_timer;
         int comm_line;
