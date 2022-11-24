@@ -724,6 +724,18 @@ bool ExodusState::owns_a_planet(Player* player) {
     return false;
 }
 
+bool ExodusState::any_human_has_visited(int idx) {
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        Player *p = get_player(i);
+        if (p->is_participating() && p->is_human()) {
+            if (p->get_location().has_visited(idx)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 bool ExodusState::active_player_local() {
     Player *player = get_active_player();
     if (player->get_location().in_flight())

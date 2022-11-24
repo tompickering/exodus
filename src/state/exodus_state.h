@@ -116,6 +116,7 @@ class ExodusState {
         int get_n_planets();
         int get_n_planets(Player*);
         bool owns_a_planet(Player*);
+        bool any_human_has_visited(int);
         bool active_player_local(); // Is the active player at the active flytarget?
         PlanetInfo recommend_planet();
         Player* get_hostile_to(Player&);
