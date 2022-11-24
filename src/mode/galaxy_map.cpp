@@ -2132,6 +2132,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
         }
 
         if (mp_state.mpai_substage == 3) {
+            Planet *planet = exostate.get_active_planet();
             switch (comm_action_check()) {
                 case CA_Abort:
                     comm_close();
@@ -3213,12 +3214,34 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
                 // Handle outcome of battle
                 if (mp_state.mpai_substage == 6) {
-                    // TODO: Respond to lunar battle report
+                    const LunarBattleReport &b = ephstate.lunar_battle_report;
+                    Player* defender = exostate.get_player(b.defender_idx);
+                    bool won = b.aggressor_won;
+                    bool vis = exostate.any_human_has_visited(exostate.get_active_star_idx());
                     ephstate.clear_ephemeral_state();
-                    // TODO: If CPU planet + won + in a region player has explored, bulletin
-                    // TODO: News item
-                    // TODO: Freight adjustment of units
-                    // TODO: If won, some artificial planet logic
+
+                    if (vis) {
+                        bulletin_start_new(false);
+                        bulletin_set_bg(p->sprites()->bulletin_bg);
+                        bulletin_set_active_player_flag();
+                        bulletin_write_planet_info(s, p);
+                        bulletin_set_next_text("%s is under attack.", p->get_name());
+                        bulletin_set_next_text("The attacker is %s%s.", player->get_full_name(), player->get_guild_title_str_with_space());
+
+                        // Bulletin part of PROCenemyattack
+                        if (won) {
+                            bulletin_set_next_text("%s has taken over the planet of %s.", player->get_name(), defender->get_full_name());
+                            mp_state.mpai_substage = 10;
+                        } else {
+                            bulletin_set_next_text("%s could keep the planet.", defender->get_full_name());
+                            bulletin_set_next_text("%s has lost the battle.", player->get_name());
+                            // TODO: Bombings - different substage
+                            mp_state.mpai_substage = 10;
+                        }
+
+                        return ExodusMode::MODE_None;
+                    }
+
                     mp_state.mpai_substage = 10;
                 }
 
