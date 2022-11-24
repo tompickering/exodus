@@ -85,14 +85,6 @@ const char* NewsItem::get_string() const {
              return "Battle machines have been destructed";
         case NI_GeologicalChange:
              return "Geological change of surface";
-        case NI_PlayerTakeover:
-             // TODO: This needs to vary based on players
-            // TODO: Implement
-             return "TODO";
-        case NI_PlayerFailedTakeover:
-             // TODO: This needs to vary based on players
-            // TODO: Implement
-             return "TODO";
         case NI_BombAttack:
             // TODO: Implement
              return "Bomb attack";

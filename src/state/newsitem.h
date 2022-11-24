@@ -30,8 +30,6 @@ enum NewsItemType {
     NI_Epidemic,
     NI_BattleMachinesDestructed,
     NI_GeologicalChange,
-    NI_PlayerTakeover,
-    NI_PlayerFailedTakeover,
     NI_BombAttack,
     NI_Debug
 };
