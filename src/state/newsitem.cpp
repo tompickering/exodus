@@ -73,9 +73,8 @@ const char* NewsItem::get_string() const {
             // TODO: Implement
              return "New plant discovered";
         case NI_NewInvention:
-             // TODO: This needs to vary based on invention
-            // TODO: Implement
-             return "TODO";
+             snprintf(b, sizeof(b), "New invention: %s", p0->get_invention_str(inv));
+             return b;
         case NI_Plague:
              return "Plague";
         case NI_PlantsPoisoned:

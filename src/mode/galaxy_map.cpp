@@ -4428,6 +4428,9 @@ bool GalaxyMap::update_research(Planet *p) {
             }
             int mc_reward = RND(10) * 10;
             if (owner->is_human()) {
+                NewsItem& news = exostate.register_news(NI_NewInvention);
+                news.player_0 = p->get_owner();
+                news.inv = inv;
                 bulletin_start_new(false);
                 bulletin_set_bg(IMG_ME7_MENU);
                 bulletin_set_active_player_flag();
