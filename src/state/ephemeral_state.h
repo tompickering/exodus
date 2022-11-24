@@ -60,6 +60,7 @@ typedef struct {
 } UnitCount;
 
 typedef struct {
+    int defender_idx;
     AggressorType agg_type;
     // FIXME: These two would be better as a BattleResolution enum, since retreated => !won
     bool aggressor_won;

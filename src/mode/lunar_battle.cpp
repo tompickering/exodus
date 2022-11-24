@@ -117,6 +117,7 @@ void LunarBattle::enter() {
 
     LunarBattleReport &rpt = ephstate.lunar_battle_report;
     rpt.clear();
+    rpt.defender_idx = p->get_owner();
     rpt.agg_type     = b.aggressor_type;
     rpt.agg_init.inf = b.aggressor_inf;
     rpt.agg_init.gli = b.aggressor_gli;
