@@ -323,8 +323,17 @@ ExodusMode GalaxyMap::update(float delta) {
             }
 
             // Hotkeys
-            if (input_manager.consume(K_Space)) {
-                stage = GM_MonthPassing;
+
+            {
+                bool month_pass = input_manager.consume(K_Space);
+
+#ifdef DBG
+                month_pass = month_pass || input_manager.read(K_M);
+#endif
+
+                if (month_pass) {
+                    stage = GM_MonthPassing;
+                }
             }
 
             if (input_manager.consume(K_D)) {

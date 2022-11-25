@@ -269,6 +269,10 @@ int Exodus::run(int argc, char** argv) {
             delta_time *= 10;
         }
 
+        if (input_manager.read(Input::K_C)) {
+            click_pos = {1, 1};
+        }
+
         if (input_manager.consume(Input::K_F1)) {
             exodebug.add_mc(1000);
         }
