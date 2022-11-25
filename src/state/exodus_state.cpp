@@ -931,7 +931,7 @@ NewsItem& ExodusState::register_news_force(NewsItemType type) {
     }
 
     Planet *pl = get_active_planet();
-    Player *owner = pl->is_owned() ? get_player(pl->get_owner()) : nullptr;
+    Player *owner = (pl && pl->is_owned()) ? get_player(pl->get_owner()) : nullptr;
 
     NewsItem &ni = newsitems[newsitem_head++];
     new (&ni) NewsItem(s, p, type);

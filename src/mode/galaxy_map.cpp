@@ -2879,16 +2879,18 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 bool stop = false;
                 if (star_idx >= 0 && planet_idx >= 0) {
                     Planet *p = stars[star_idx].get_planet(planet_idx);
+
                     if (p && p->exists()) {
                         player->get_location().set_target(star_idx, 1);
                         player->get_location().set_planet_target(planet_idx);
-                    }
-                    player->clear_ai_attack();
-                    if (p->is_owned() && p->get_owner() != player_idx) {
-                        player->next_tactic();
-                        if (!player->get_location().in_flight()) {
-                            player->set_tactic(5);
-                            stop = true;
+
+                        player->clear_ai_attack();
+                        if (p->is_owned() && p->get_owner() != player_idx) {
+                            player->next_tactic();
+                            if (!player->get_location().in_flight()) {
+                                player->set_tactic(5);
+                                stop = true;
+                            }
                         }
                     }
                 }
