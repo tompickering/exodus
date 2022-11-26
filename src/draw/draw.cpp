@@ -23,6 +23,8 @@ DrawManager::DrawManager() {
     clicked_this_frame_r = false;
     prev_mouseover_selectable_text_id = ID_NONE;
     mouseover_selectable_text_id = ID_NONE;
+
+    init_special_vfx();
 }
 
 void DrawManager::update(float delta, MousePos new_mouse_pos, MousePos new_click_pos, MousePos new_click_pos_r) {
@@ -358,5 +360,43 @@ void DrawManager::unset_selectable(SprID id) {
 void DrawManager::adjust_selectable_text_col(SprID id, RGB& rgb) {
     if (id && id == mouseover_selectable_text_id) {
         rgb = text_pulse_col(mouseover_selectable_text_time);
+    }
+}
+
+void DrawManager::init_special_vfx() {
+    // Set up flag_motion
+    // Orig: 'motion' in PROCfl_doanim
+    float k = 359.f/255.f;
+    for (int i = 0; i <= 255; ++i) {
+        float a = (float)i*k;
+        a *= 3.1415926535;
+        a /= 180.f;
+        int32_t x = (int32_t)(20.f*cos(a*5.f) + 15.f*sin(a*2.f) + 10.f*cos(a*3.f));
+        int32_t y = (int32_t)(20.f*sin(a*3.f) + 10.f*cos(a    ) + 10.f*sin(a*2.f));
+
+        float x_before_round = (float)x/16.f;
+        float y_before_round = (float)y/16.f;
+        uint32_t x_after_round = int32_t(x_before_round);
+        uint32_t y_after_round = int32_t(y_before_round);
+
+        /*
+         * N.B. BBC BASIC INT() seems to round towards -inf, whereas casting
+         * rounds towards 0. When negative, and a round has occurred, subtract
+         * 1 from the result.
+         */
+        if (x_before_round < 0 && (float)flag_motion[i*2    ] != x_before_round) {
+            x_after_round--;
+        }
+        if (y_before_round < 0 && (float)flag_motion[i*2 + 1] != y_before_round) {
+            y_after_round--;
+        }
+
+        flag_motion[i*2    ] = x_after_round;
+        flag_motion[i*2 + 1] = y_after_round;
+
+        /*
+        L.debug("%d", flag_motion[i*2    ]);
+        L.debug("%d", flag_motion[i*2 + 1]);
+        */
     }
 }

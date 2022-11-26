@@ -217,6 +217,10 @@ class DrawManager {
         bool draw_cursor;
         bool clicked_this_frame;
         bool clicked_this_frame_r;
+
+        // Special VFX
+        int32_t flag_motion[2048];
+        void init_special_vfx();
     private:
         MousePos mouse_pos;
         MousePos click_pos;
