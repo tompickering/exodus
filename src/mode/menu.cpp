@@ -1024,11 +1024,11 @@ ExodusMode Menu::update(float delta) {
 
                 for (int i = 0; i < config.n_players; ++i) {
                     int sep = RES_X / (config.n_players + 1);
+                    draw_manager.set_flag_vfx(id(ID::CONFIRM_FLAG));
                     draw_manager.draw(
                         id(ID::CONFIRM_FLAG),
                         flags[config.players[i].get_flag_idx()],
                         {(int)((i+1)*sep), 400, .5, .5, 1, 1});
-                    draw_manager.set_flag_vfx(id(ID::CONFIRM_FLAG));
                 }
 
                 draw_manager.draw(
