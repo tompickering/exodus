@@ -219,8 +219,9 @@ class DrawManager {
         bool clicked_this_frame_r;
 
         // Special VFX
-        int32_t flag_motion[2048];
         void init_special_vfx();
+        // N.B. Orig is size 2048 - but this is bytewise, not int32_t-wise
+        int32_t flag_motion[512];
     private:
         MousePos mouse_pos;
         MousePos click_pos;
