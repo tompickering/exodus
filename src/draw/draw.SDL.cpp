@@ -1064,6 +1064,8 @@ void DrawManagerSDL::draw_flag_vfx() {
             continue;
         }
 
+        repair_dirty_area(id, 10);
+
         DrawArea area = spr->area;
 
         float interp = fmin(1.0, it->second / FLAGVFX_TIME);
@@ -1090,14 +1092,14 @@ void DrawManagerSDL::draw_flag_vfx() {
         for (int prior = 4; prior >= 0; --prior) {
             uint32_t r4 = (r4_max + 0x100 - prior) % 0x100;
 
-            uint32_t r7 = 50;
+            uint32_t r7 = 0;
 
             //L.debug("%d %d", spr->area.w/2, spr->area.h/2);
             // 48, 28
 
             // Our stored flag sprite is twice the size of the original - correct for this
             for (int r9 = spr->area.h/2; r9 > 0; r9--) {
-                uint32_t r6 = 40;
+                uint32_t r6 = 0;
                 for (int r8 = spr->area.w/2; r8 > 0; r8--) {
                     uint32_t r11 = r4 + (r8 << 1);
                     r11 += r9 << 2;
@@ -1110,14 +1112,13 @@ void DrawManagerSDL::draw_flag_vfx() {
                      */
                     r11 >>= 2;
 
-                    if (r11 >= sizeof(flag_motion)) {
-                        L.error("Offset > motion size: %d", r11);
-                    }
-
                     uint32_t r0 = flag_motion[r11];
                     uint32_t r1 = flag_motion[r11+1];
 
-                    uint32_t r2 = flag_px[(2*(r9-1))*spr->area.w + (2*(r8-1))];
+                    int fx = (2*(r8-1));
+                    int fy = (2*(r9-1));
+                    fy = spr->area.h - fy - 2;
+                    uint32_t r2 = flag_px[fy*spr->area.w + fx];
 
                     // flag_px seems to be RGBA and we want RGB
                     r2 >>= 8;
@@ -1127,19 +1128,15 @@ void DrawManagerSDL::draw_flag_vfx() {
 
                     ++r6;
 
-                    r0 += r1<<8;
-                    r0 += r1<<6;
+                    r0 <<= 1;
+                    r1 <<= 1;
 
-                    // r0 = y*RES_X/2 + x from BOTTOM LEFT
-                    // We want y*RES_X + x from TOP LEFT
-                    int orig_x = r0 % (RES_X/2);
-                    int orig_y = r0 / (RES_X/2);
-                    int orig_y_inv = (RES_Y/2) - orig_y;
-                    int our_y = orig_y_inv*2;
-                    int our_x = orig_x*2;
+                    r0 += r1 * RES_X;
 
-                    our_x += 180;
-                    int _r0 = our_y*RES_X + our_x;
+                    r0 += spr->area.x;
+                    r0 += spr->area.y * RES_X;
+
+                    int _r0 = r0;//our_y*RES_X + our_x;
                     for (int _j = 0; _j < 2; ++_j) {
                         for (int _i = 0; _i < 2; ++_i) {
                             screen[_r0 + _j*RES_X + _i] = r2;
