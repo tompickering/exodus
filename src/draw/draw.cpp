@@ -376,8 +376,9 @@ void DrawManager::init_special_vfx() {
 
         float x_before_round = (float)x/16.f;
         float y_before_round = (float)y/16.f;
-        uint32_t x_after_round = int32_t(x_before_round);
-        uint32_t y_after_round = int32_t(y_before_round);
+
+        int32_t x_after_round = int32_t(x_before_round);
+        int32_t y_after_round = int32_t(y_before_round);
 
         /*
          * N.B. BBC BASIC INT() seems to round towards -inf, whereas casting
