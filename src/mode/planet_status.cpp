@@ -46,6 +46,8 @@ void PlanetStatus::enter() {
     if (owner) {
         text_x += 100;
 
+        draw_manager.set_flag_vfx(id(ID::FLAG));
+
         draw_manager.draw(
             id(ID::FLAG),
             flags[owner->get_flag_idx()],
