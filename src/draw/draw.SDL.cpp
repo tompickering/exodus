@@ -535,6 +535,10 @@ void DrawManagerSDL::draw(DrawTarget tgt, SprID id, const char* spr_key, DrawTra
 }
 
 void DrawManagerSDL::repair_dirty_area(SprID id) {
+    repair_dirty_area(id, 0);
+}
+
+void DrawManagerSDL::repair_dirty_area(SprID id, int extend) {
     for (std::vector<SprID>::size_type i = 0; i < id_repair_exclusions.size(); ++i) {
         if (id_repair_exclusions[i] == id) {
             return;
@@ -546,6 +550,8 @@ void DrawManagerSDL::repair_dirty_area(SprID id) {
         // We know where this sprite was drawn previously.
         // Wipe that area with the background.
         SDL_Rect r = {dirty_area->x, dirty_area->y, dirty_area->w, dirty_area->h};
+        r.x -= extend; r.w += extend*2;
+        r.y -= extend; r.h += extend*2;
         SDL_BlitSurface(background, &r, surf, &r);
         // Now iterate over all recorded draw information
         for (std::vector<DrawnSprite>::size_type i = 0; i < drawn_spr_info.size(); ++i) {
