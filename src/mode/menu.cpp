@@ -1034,12 +1034,12 @@ ExodusMode Menu::update(float delta) {
                 draw_manager.draw(
                         id(PROCEED),
                         IMG_BR7_E1,
-                        {200, 480, .5, .5, 1, 1});
+                        {180, 400, .5, .5, 1, 1});
 
                 draw_manager.draw(
                         id(RESTART),
                         IMG_BR7_E2,
-                        {RES_X-200, 480, .5, .5, 1, 1});
+                        {RES_X-180, 400, .5, .5, 1, 1});
 
                 draw_manager.save_background();
                 trans_state = Done;
