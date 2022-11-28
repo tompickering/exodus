@@ -1053,7 +1053,7 @@ void DrawManagerSDL::draw_flag_vfx() {
         DrawArea area = spr->area;
 
         float interp = fmin(1.0, it->second / FLAGVFX_TIME);
-        uint32_t r4 = (uint8_t)((float)0xFF * interp);
+        uint32_t r4_max = (uint8_t)((float)0xFF * interp);
 
         uint32_t *screen = ((uint32_t*)(surf->pixels));
 
@@ -1065,64 +1065,76 @@ void DrawManagerSDL::draw_flag_vfx() {
 
         uint32_t *flag_px = ((uint32_t*)(flag_surf->pixels));
 
-        uint32_t r7 = 50;
+        /*
+         * This is a hack; a single draw iteration leaves gaps of not-filled-in pixels,
+         * so if we repair the full background each frame, then these holes are visible.
+         * However, if we don't repair at all, then the edges of the flag contain stale
+         * pixel data and leave an 'imprint' where the edge of the flag has since moved
+         * away. We avoid this by performing a repair, but rendering the last few prior
+         * iterations.
+         */
+        for (int prior = 4; prior >= 0; --prior) {
+            uint32_t r4 = (r4_max + 0x100 - prior) % 0x100;
 
-        //L.debug("%d %d", spr->area.w/2, spr->area.h/2);
-        // 48, 28
+            uint32_t r7 = 50;
 
-        // Our stored flag sprite is twice the size of the original - correct for this
-        for (int r9 = spr->area.h/2; r9 > 0; r9--) {
-            uint32_t r6 = 40;
-            for (int r8 = spr->area.w/2; r8 > 0; r8--) {
-                uint32_t r11 = r4 + (r8 << 1);
-                r11 += r9 << 2;
-                r11 = r11 & 0xFF;
-                r11 = r11 << 3;
+            //L.debug("%d %d", spr->area.w/2, spr->area.h/2);
+            // 48, 28
 
-                /*
-                 * Orig's index into flag_motion is bytewise - ours is
-                 * int32_t-wise, so we need to divide by 4.
-                 */
-                r11 >>= 2;
+            // Our stored flag sprite is twice the size of the original - correct for this
+            for (int r9 = spr->area.h/2; r9 > 0; r9--) {
+                uint32_t r6 = 40;
+                for (int r8 = spr->area.w/2; r8 > 0; r8--) {
+                    uint32_t r11 = r4 + (r8 << 1);
+                    r11 += r9 << 2;
+                    r11 = r11 & 0xFF;
+                    r11 = r11 << 3;
 
-                if (r11 >= sizeof(flag_motion)) {
-                    L.error("Offset > motion size: %d", r11);
-                }
+                    /*
+                     * Orig's index into flag_motion is bytewise - ours is
+                     * int32_t-wise, so we need to divide by 4.
+                     */
+                    r11 >>= 2;
 
-                uint32_t r0 = flag_motion[r11];
-                uint32_t r1 = flag_motion[r11+1];
-
-                uint32_t r2 = flag_px[(2*r9)*spr->area.w + (2*r8)];
-
-                // flag_px seems to be RGBA and we want RGB
-                r2 >>= 8;
-
-                r0 += r6;
-                r1 += r7;
-
-                ++r6;
-
-                r0 += r1<<8;
-                r0 += r1<<6;
-
-                // r0 = y*RES_X/2 + x from BOTTOM LEFT
-                // We want y*RES_X + x from TOP LEFT
-                int orig_x = r0 % (RES_X/2);
-                int orig_y = r0 / (RES_X/2);
-                int orig_y_inv = (RES_Y/2) - orig_y;
-                int our_y = orig_y_inv*2;
-                int our_x = orig_x*2;
-
-                our_x += 180;
-                int _r0 = our_y*RES_X + our_x;
-                for (int _j = 0; _j < 2; ++_j) {
-                    for (int _i = 0; _i < 2; ++_i) {
-                        screen[_r0 + _j*RES_X + _i] = r2;
+                    if (r11 >= sizeof(flag_motion)) {
+                        L.error("Offset > motion size: %d", r11);
                     }
-                }
 
+                    uint32_t r0 = flag_motion[r11];
+                    uint32_t r1 = flag_motion[r11+1];
+
+                    uint32_t r2 = flag_px[(2*(r9-1))*spr->area.w + (2*(r8-1))];
+
+                    // flag_px seems to be RGBA and we want RGB
+                    r2 >>= 8;
+
+                    r0 += r6;
+                    r1 += r7;
+
+                    ++r6;
+
+                    r0 += r1<<8;
+                    r0 += r1<<6;
+
+                    // r0 = y*RES_X/2 + x from BOTTOM LEFT
+                    // We want y*RES_X + x from TOP LEFT
+                    int orig_x = r0 % (RES_X/2);
+                    int orig_y = r0 / (RES_X/2);
+                    int orig_y_inv = (RES_Y/2) - orig_y;
+                    int our_y = orig_y_inv*2;
+                    int our_x = orig_x*2;
+
+                    our_x += 180;
+                    int _r0 = our_y*RES_X + our_x;
+                    for (int _j = 0; _j < 2; ++_j) {
+                        for (int _i = 0; _i < 2; ++_i) {
+                            screen[_r0 + _j*RES_X + _i] = r2;
+                        }
+                    }
+
+                }
+                ++r7;
             }
-            ++r7;
         }
     }
 }
