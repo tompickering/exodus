@@ -229,6 +229,8 @@ void DrawManagerSDL::update(float delta, MousePos mouse_pos, MousePos new_click_
         }
     }
 
+    draw_flag_vfx();
+
     bool render_cursor = draw_cursor && mouse_pos.x > 0 && mouse_pos.y > 0;
 
     if (render_cursor) {
@@ -1038,6 +1040,91 @@ void DrawManagerSDL::get_upscale(float& up_x, float& up_y) {
 void DrawManagerSDL::cancel_transitions() {
     pixelswap_stage = 0;
     fade_stages = 0;
+}
+
+void DrawManagerSDL::draw_flag_vfx() {
+    for (auto it = flag_vfx_ids.begin(); it != flag_vfx_ids.end(); ++it) {
+        SprID id = it->first;
+        DrawnSprite *spr = get_drawn_info(id);
+        if (!spr) {
+            continue;
+        }
+
+        DrawArea area = spr->area;
+
+        float interp = fmin(1.0, it->second / FLAGVFX_TIME);
+        uint32_t r4 = (uint8_t)((float)0xFF * interp);
+
+        uint32_t *screen = ((uint32_t*)(surf->pixels));
+
+        SDL_Surface *flag_surf = (SDL_Surface*)get_sprite_data(spr->sprite);
+        if (!flag_surf) {
+            L.warn("Unknown flag VFX sprite: %s", spr->sprite);
+            continue;
+        }
+
+        uint32_t *flag_px = ((uint32_t*)(flag_surf->pixels));
+
+        uint32_t r7 = 50;
+
+        //L.debug("%d %d", spr->area.w/2, spr->area.h/2);
+        // 48, 28
+
+        // Our stored flag sprite is twice the size of the original - correct for this
+        for (int r9 = spr->area.h/2; r9 > 0; r9--) {
+            uint32_t r6 = 40;
+            for (int r8 = spr->area.w/2; r8 > 0; r8--) {
+                uint32_t r11 = r4 + (r8 << 1);
+                r11 += r9 << 2;
+                r11 = r11 & 0xFF;
+                r11 = r11 << 3;
+
+                /*
+                 * Orig's index into flag_motion is bytewise - ours is
+                 * int32_t-wise, so we need to divide by 4.
+                 */
+                r11 >>= 2;
+
+                if (r11 >= sizeof(flag_motion)) {
+                    L.error("Offset > motion size: %d", r11);
+                }
+
+                uint32_t r0 = flag_motion[r11];
+                uint32_t r1 = flag_motion[r11+1];
+
+                uint32_t r2 = flag_px[(2*r9)*spr->area.w + (2*r8)];
+
+                // flag_px seems to be RGBA and we want RGB
+                r2 >>= 8;
+
+                r0 += r6;
+                r1 += r7;
+
+                ++r6;
+
+                r0 += r1<<8;
+                r0 += r1<<6;
+
+                // r0 = y*RES_X/2 + x from BOTTOM LEFT
+                // We want y*RES_X + x from TOP LEFT
+                int orig_x = r0 % (RES_X/2);
+                int orig_y = r0 / (RES_X/2);
+                int orig_y_inv = (RES_Y/2) - orig_y;
+                int our_y = orig_y_inv*2;
+                int our_x = orig_x*2;
+
+                our_x += 180;
+                int _r0 = our_y*RES_X + our_x;
+                for (int _j = 0; _j < 2; ++_j) {
+                    for (int _i = 0; _i < 2; ++_i) {
+                        screen[_r0 + _j*RES_X + _i] = r2;
+                    }
+                }
+
+            }
+            ++r7;
+        }
+    }
 }
 
 #endif

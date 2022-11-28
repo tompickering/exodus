@@ -36,6 +36,8 @@ void DrawManager::update(float delta, MousePos new_mouse_pos, MousePos new_click
         fade_time += delta;
     }
 
+    update_special_vfx(delta);
+
     // N.B. mouse_pos and click_pos are both in screen
     // co-ordinates, not resolution co-ordinates.
 
@@ -285,6 +287,7 @@ void DrawManager::clear_sprite_ids() {
     id_repair_exclusions.clear();
     id_source_regions.clear();
     selectable_text_ids.clear();
+    flag_vfx_ids.clear();
 }
 
 void DrawManager::clear(DrawTarget tgt) {
@@ -399,5 +402,20 @@ void DrawManager::init_special_vfx() {
         L.debug("%d", flag_motion[i*2    ]);
         L.debug("%d", flag_motion[i*2 + 1]);
         */
+    }
+}
+
+void DrawManager::set_flag_vfx(SprID id) {
+    flag_vfx_ids[id] = 0.0f;
+}
+
+void DrawManager::update_special_vfx(float delta) {
+    update_flag_vfx(delta);
+}
+
+void DrawManager::update_flag_vfx(float delta) {
+    for (auto it = flag_vfx_ids.begin(); it != flag_vfx_ids.end(); ++it) {
+        float upd = fmod(it->second + delta, FLAGVFX_TIME);
+        flag_vfx_ids[it->first] = upd;
     }
 }

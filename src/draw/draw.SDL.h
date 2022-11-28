@@ -87,6 +87,9 @@ class DrawManagerSDL : public DrawManager {
         void draw_text(DrawTarget, SprID, Font, const char*, Justify, int, int, RGB*, RGB*);
         void repair_dirty_area(SprID);
         DrawnSprite* update_dirty_area(SprID, DrawArea);
+
+        // Special VFX
+        virtual void draw_flag_vfx() override;
 };
 
 #endif

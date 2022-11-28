@@ -14,6 +14,7 @@
 #define RES_Y 512
 
 #define PIXELSWAP_STEP_TIME 0.03
+#define FLAGVFX_TIME 3.0f
 
 using std::map;
 using std::vector;
@@ -198,6 +199,9 @@ class DrawManager {
         virtual void set_selectable(SprID);
         virtual void unset_selectable(SprID);
         virtual void cancel_transitions() = 0;
+
+        // Special VFX
+        virtual void set_flag_vfx(SprID);
     protected:
         virtual SpriteClick query_click(SprID, bool);
         map<const char*, void*> sprite_data;
@@ -219,9 +223,10 @@ class DrawManager {
         bool clicked_this_frame_r;
 
         // Special VFX
-        void init_special_vfx();
+        virtual void draw_flag_vfx() = 0;
         // N.B. Orig is size 2048 - but this is bytewise, not int32_t-wise
         int32_t flag_motion[512];
+        map<SprID, float> flag_vfx_ids;
     private:
         MousePos mouse_pos;
         MousePos click_pos;
@@ -232,6 +237,11 @@ class DrawManager {
         float mouseover_selectable_text_time;
         vector<SprID> selectable_text_ids;
         virtual RGB text_pulse_col(float);
+
+        // Special VFX
+        void init_special_vfx();
+        virtual void update_special_vfx(float);
+        virtual void update_flag_vfx(float);
 };
 
 #ifdef SDL
