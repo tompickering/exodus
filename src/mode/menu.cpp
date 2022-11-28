@@ -72,7 +72,6 @@ enum ID {
     OTHERS_WEAK,
     OTHERS_MEDIUM,
     OTHERS_STRONG,
-    CONFIRM_BG,
     CONFIRM_FLAG,
     PROCEED,
     RESTART,
@@ -963,7 +962,8 @@ ExodusMode Menu::update(float delta) {
             break;
         case Confirm:
             if (trans_state == None) {
-                draw_manager.draw(id(ID::CONFIRM_BG), IMG_BG_STARS0);
+                draw_manager.draw(IMG_BG_STARS0);
+                draw_manager.save_background();
                 draw_manager.draw_text(
                     "Let me repeat.",
                     Justify::Centre, RES_X/2, 60,
