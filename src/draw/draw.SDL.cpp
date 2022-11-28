@@ -774,6 +774,14 @@ void DrawManagerSDL::draw(DrawTarget tgt, const char* spr_key, DrawArea* area, S
     if (!spr_key)
         return;
 
+    if (id && flag_vfx_ids.count(*id)) {
+        /*
+         * This is a special case - we are going to create some VFX
+         * based on this, and we don't actually want to draw it.
+         */
+        return;
+    }
+
     SDL_Surface *spr = (SDL_Surface*)get_sprite_data(spr_key);
     if (!spr) {
         L.warn("Unknown sprite: %s", spr_key);
