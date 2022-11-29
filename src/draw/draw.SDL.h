@@ -91,6 +91,7 @@ class DrawManagerSDL : public DrawManager {
 
         // Special VFX
         virtual void draw_flag_vfx() override;
+        virtual void draw_button_vfx() override;
 };
 
 #endif

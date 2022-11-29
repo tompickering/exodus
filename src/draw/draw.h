@@ -15,6 +15,7 @@
 
 #define PIXELSWAP_STEP_TIME 0.03
 #define FLAGVFX_TIME 3.0f
+#define BUTTONVFX_TIME 0.5f
 
 using std::map;
 using std::vector;
@@ -102,6 +103,23 @@ typedef struct {
     float x;
     float y;
 } SpriteClick;
+
+/*
+ * A 'button' can be a subregion of a larger sprite.
+ * We need to store the x,y of the entire sprite's SpriteClick
+ * so that we can enact this later. We also need to track the
+ * time that the button press is in efffect for, as well as
+ * which of the potentially multiple specific button areas
+ * within the sprite we are tracking. We do need to know the
+ * SprID as well - but this is tracked as a map key with
+ * ButtonPress as the value.
+ */
+typedef struct {
+    float x;
+    float y;
+    float t;
+    DrawArea area;
+} ButtonPress;
 
 enum Font {
     Default,
@@ -202,6 +220,8 @@ class DrawManager {
 
         // Special VFX
         virtual void set_flag_vfx(SprID);
+        virtual void register_button(const char*);
+        virtual void register_button(const char*, const DrawArea&);
     protected:
         virtual SpriteClick query_click(SprID, bool);
         map<const char*, void*> sprite_data;
@@ -224,9 +244,14 @@ class DrawManager {
 
         // Special VFX
         virtual void draw_flag_vfx() = 0;
+        virtual void draw_button_vfx() = 0;
         // N.B. Orig is size 2048 - but this is bytewise, not int32_t-wise
         int32_t flag_motion[512];
         map<SprID, float> flag_vfx_ids;
+        // Unchanging list of sprites which have button areas
+        map<const char*, vector<DrawArea>> buttons;
+        // Specific presses of button areas on sprite IDs
+        map<SprID, ButtonPress> button_presses;
     private:
         MousePos mouse_pos;
         MousePos click_pos;
@@ -242,6 +267,7 @@ class DrawManager {
         void init_special_vfx();
         virtual void update_special_vfx(float);
         virtual void update_flag_vfx(float);
+        virtual void update_button_vfx(float);
 };
 
 #ifdef SDL

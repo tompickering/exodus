@@ -230,6 +230,7 @@ void DrawManagerSDL::update(float delta, MousePos mouse_pos, MousePos new_click_
     }
 
     draw_flag_vfx();
+    draw_button_vfx();
 
     bool render_cursor = draw_cursor && mouse_pos.x > 0 && mouse_pos.y > 0;
 
@@ -1148,6 +1149,10 @@ void DrawManagerSDL::draw_flag_vfx() {
             }
         }
     }
+}
+
+void DrawManagerSDL::draw_button_vfx() {
+    // TODO
 }
 
 #endif

@@ -55,6 +55,7 @@ class Exodus {
         virtual bool init() = 0;
         virtual void cleanup() = 0;
     private:
+        void register_buttons();
         ModeBase *mode;
         ExodusMode current_mode;
         map<ExodusMode, ModeBase*> mode_map;

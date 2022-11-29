@@ -109,9 +109,20 @@ SpriteClick DrawManager::query_click_r(SprID query) {
 }
 
 SpriteClick DrawManager::query_click(SprID query, bool right) {
-    DrawArea *area = nullptr;
     SpriteClick res;
     res.id = ID_NONE;
+
+    // First, check if we have an expired ButtonPress for this ID
+    for (auto it = button_presses.begin(); it != button_presses.end(); ++it) {
+        SprID id = it->first;
+        if (id == query && it->second.t < 0) {
+            res.id = id;
+            res.x = it->second.x;
+            res.y = it->second.y;
+            button_presses.erase(id);
+            return res;
+        }
+    }
 
     const MousePos &clk_pos = right ? click_pos_r : click_pos;
 
@@ -119,6 +130,8 @@ SpriteClick DrawManager::query_click(SprID query, bool right) {
         return res;
     if (clk_pos.x < 0 || clk_pos.y < 0)
         return res;
+
+    DrawArea *area = nullptr;
 
     for (std::vector<DrawnSprite>::size_type i = 0; i < drawn_spr_info.size(); ++i) {
         if (drawn_spr_info[i].id != query)
@@ -130,6 +143,50 @@ SpriteClick DrawManager::query_click(SprID query, bool right) {
         float spr_y = (float)(clk_pos.y - area->y) / (float)area->h;
         if (   spr_x >= 0 && spr_x <= 1
             && spr_y >= 0 && spr_y <= 1) {
+            /*
+             * SprID click detected.
+             *
+             * If we're a button, then handle that and set a timer going.
+             * Otherwise, report it now.
+             */
+            const char *spr = drawn_spr_info[i].sprite;
+            if (buttons.count(spr)) {
+                bool clicked_on_button = false;
+                // This sprite has button regions defined inside it
+                // Iterate over them
+                for (int j = 0; j < buttons[spr].size(); ++j) {
+                    DrawArea btn_area = buttons[spr][j];
+                    if (btn_area.x < 0 && btn_area.y < 0) {
+                        clicked_on_button = true;
+                    } else {
+                        // Translate the button area of the sprite into the screen area
+                        btn_area.x += area->x;
+                        btn_area.y += area->y;
+                        if (   clk_pos.x >= btn_area.x
+                            && clk_pos.x <= btn_area.x + btn_area.w
+                            && clk_pos.y >= btn_area.y
+                            && clk_pos.y <= btn_area.y + btn_area.h) {
+                            // Click occurred in button region
+                            clicked_on_button = true;
+                        }
+                    }
+
+                    if (clicked_on_button) {
+                        L.debug("Clicked on button");
+                        ButtonPress press;
+                        press.x = spr_x;
+                        press.y = spr_y;
+                        press.t = BUTTONVFX_TIME;
+                        press.area = btn_area;
+                        button_presses[drawn_spr_info[i].id] = press;
+                        break;
+                    }
+                }
+
+                if (clicked_on_button) {
+                    break;
+                }
+            }
             res.id = drawn_spr_info[i].id;
             res.x = spr_x;
             res.y = spr_y;
@@ -409,13 +466,32 @@ void DrawManager::set_flag_vfx(SprID id) {
     flag_vfx_ids[id] = 0.0f;
 }
 
+void DrawManager::register_button(const char* sprite) {
+    DrawArea area = {-1, -1, -1, -1};
+    register_button(sprite, area);
+}
+
+void DrawManager::register_button(const char* sprite, const DrawArea& area) {
+    if (!buttons.count(sprite)) {
+        buttons[sprite] = vector<DrawArea>();
+    }
+    buttons[sprite].push_back(area);
+}
+
 void DrawManager::update_special_vfx(float delta) {
     update_flag_vfx(delta);
+    update_button_vfx(delta);
 }
 
 void DrawManager::update_flag_vfx(float delta) {
     for (auto it = flag_vfx_ids.begin(); it != flag_vfx_ids.end(); ++it) {
         float upd = fmod(it->second + delta, FLAGVFX_TIME);
         flag_vfx_ids[it->first] = upd;
+    }
+}
+
+void DrawManager::update_button_vfx(float delta) {
+    for (auto it = button_presses.begin(); it != button_presses.end(); ++it) {
+        it->second.t -= delta;
     }
 }

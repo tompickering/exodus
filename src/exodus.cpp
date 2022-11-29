@@ -81,6 +81,10 @@ bool Exodus::init() {
 
     bool ok = draw_manager.init();
 
+    if (ok) {
+        register_buttons();
+    }
+
     if (!audio_manager.init()) {
         L.error("Audio subsystem failed to initialise - game will not feature sound");
     }
@@ -375,4 +379,9 @@ ExodusMode Exodus::get_prev_mode() {
     if (mode_stack_head > 0)
         return mode_stack[mode_stack_head - 1];
     return ExodusMode::MODE_None;
+}
+
+void Exodus::register_buttons() {
+    draw_manager.register_button(IMG_BR7_E1);
+    draw_manager.register_button(IMG_BR7_E2);
 }
