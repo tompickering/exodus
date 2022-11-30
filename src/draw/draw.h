@@ -161,6 +161,7 @@ class DrawManager {
         virtual void draw(const char*, DrawArea) = 0;
         virtual void draw(const char*, DrawTransform) = 0;
         virtual void draw(SprID, const char*) = 0;
+        virtual void draw(SprID, const char*, DrawArea) = 0;
         virtual void draw(SprID, const char*, DrawTransform) = 0;
         virtual void draw(DrawTarget, const char*) = 0;
         virtual void draw(DrawTarget, const char*, DrawArea) = 0;

@@ -32,6 +32,7 @@ class DrawManagerSDL : public DrawManager {
         virtual void draw(const char*, DrawArea) override;
         virtual void draw(const char*, DrawTransform) override;
         virtual void draw(SprID, const char*) override;
+        virtual void draw(SprID, const char*, DrawArea) override;
         virtual void draw(SprID, const char*, DrawTransform) override;
         virtual void draw(DrawTarget, const char*) override;
         virtual void draw(DrawTarget, const char*, DrawArea) override;

@@ -511,6 +511,10 @@ void DrawManagerSDL::draw(SprID id, const char* spr_key) {
     draw(DrawTarget::TGT_Primary, spr_key, nullptr, &id);
 }
 
+void DrawManagerSDL::draw(SprID id, const char* spr_key, DrawArea area) {
+    draw(DrawTarget::TGT_Primary, spr_key, &area, &id);
+}
+
 void DrawManagerSDL::draw(SprID id, const char* spr_key, DrawTransform t) {
     draw(DrawTarget::TGT_Primary, spr_key, t, &id);
 }
