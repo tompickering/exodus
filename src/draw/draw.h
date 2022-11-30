@@ -168,6 +168,7 @@ class DrawManager {
         virtual void draw(DrawTarget, const char*, DrawTransform) = 0;
         virtual void draw(DrawTarget, SprID, const char*) = 0;
         virtual void draw(DrawTarget, SprID, const char*, DrawTransform) = 0;
+        virtual void redraw(SprID);
         virtual void pixelswap_start() = 0;
         virtual void pixelswap_start(const DrawArea*) = 0;
         virtual bool pixelswap_active() = 0;

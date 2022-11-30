@@ -317,6 +317,15 @@ DrawArea* DrawManager::get_drawn_area(SprID id) {
     return drawn_info ? &(drawn_info->area) : nullptr;
 }
 
+void DrawManager::redraw(SprID id) {
+    DrawnSprite *info = get_drawn_info(id);
+    if (!info) {
+        L.error("Redraw request for unknown ID %d", id);
+        return;
+    }
+    draw(id, info->sprite, info->area);
+}
+
 void DrawManager::exclude_from_repairs(SprID id) {
     id_repair_exclusions.push_back(id);
 }
