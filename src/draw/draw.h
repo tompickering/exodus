@@ -15,7 +15,7 @@
 
 #define PIXELSWAP_STEP_TIME 0.03
 #define FLAGVFX_TIME 3.0f
-#define BUTTONVFX_TIME 0.5f
+#define BUTTONVFX_TIME 0.3f
 
 using std::map;
 using std::vector;
@@ -119,6 +119,7 @@ typedef struct {
     float y;
     float t;
     DrawArea area;
+    bool drawn;
 } ButtonPress;
 
 enum Font {

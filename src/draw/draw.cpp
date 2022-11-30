@@ -178,6 +178,7 @@ SpriteClick DrawManager::query_click(SprID query, bool right) {
                         press.y = spr_y;
                         press.t = BUTTONVFX_TIME;
                         press.area = btn_area;
+                        press.drawn = false;
                         button_presses[drawn_spr_info[i].id] = press;
                         break;
                     }

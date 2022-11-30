@@ -384,4 +384,7 @@ ExodusMode Exodus::get_prev_mode() {
 void Exodus::register_buttons() {
     draw_manager.register_button(IMG_BR7_E1);
     draw_manager.register_button(IMG_BR7_E2);
+    draw_manager.register_button(IMG_BR11_LR, {0, 0, 32, 26});
+    draw_manager.register_button(IMG_BR11_LR, {33, 0, 32, 26});
+    draw_manager.register_button(IMG_BR11_OK);
 }

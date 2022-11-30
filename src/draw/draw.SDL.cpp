@@ -1156,7 +1156,40 @@ void DrawManagerSDL::draw_flag_vfx() {
 }
 
 void DrawManagerSDL::draw_button_vfx() {
-    // TODO
+    for (auto it = button_presses.begin(); it != button_presses.end(); ++it) {
+        SprID id = it->first;
+        ButtonPress& press = it->second;
+        DrawnSprite *info = get_drawn_info(id);
+        if (!info) {
+            L.error("Unknown ID during button update: %d", id);
+            continue;
+        }
+
+        if (press.t < 0 && press.drawn) {
+            redraw(id);
+        } else if (!press.drawn) {
+            uint32_t *screen = ((uint32_t*)(surf->pixels));
+            const DrawArea *a = &(press.area);
+            if (a->x < 0 || a->y < 0) {
+                // Whole sprite is a button
+                a = &(info->area);
+            }
+
+            const int shift = 1;
+            for (int j = a->h-1; j >= 0; --j) {
+                for (int i = a->w-1; i >= 0; --i) {
+                    int x = (a->x+i);
+                    int y = (a->y+j);
+                    //int sx = max(a->x, x - shift);
+                    //int sy = max(a->y, y - shift);
+                    int sx = max(0, x - shift);
+                    int sy = max(0, y - shift);
+                    screen[y*RES_X + x] = screen[sy*RES_X + sx];
+                }
+            }
+            press.drawn = true;
+        }
+    }
 }
 
 #endif
