@@ -387,10 +387,53 @@ void Exodus::register_buttons() {
     draw_manager.register_button(IMG_BR10_EXPORT, {218, 0, 108, 26});
     draw_manager.register_button(IMG_BR10_EXPORT, {325, 0, 108, 26});
 
-    draw_manager.register_button(IMG_BR7_E1);
-    draw_manager.register_button(IMG_BR7_E2);
-
+    draw_manager.register_button(IMG_BR11_DEF);
     draw_manager.register_button(IMG_BR11_LR, {0, 0, 32, 26});
     draw_manager.register_button(IMG_BR11_LR, {33, 0, 32, 26});
     draw_manager.register_button(IMG_BR11_OK);
+
+    draw_manager.register_button(IMG_BR12_EXPORT, {0, 0, 108, 26});
+    draw_manager.register_button(IMG_BR12_EXPORT, {109, 0, 108, 26});
+    draw_manager.register_button(IMG_BR12_EXPORT, {217, 0, 108, 26});
+
+    draw_manager.register_button(IMG_BR13_FEMALE);
+    draw_manager.register_button(IMG_BR13_MALE);
+    draw_manager.register_button(IMG_BUTTON_OTHER);
+
+    draw_manager.register_button(IMG_BR14_EXPORT, {0, 0, 118, 26});
+    draw_manager.register_button(IMG_BR14_EXPORT, {119, 0, 118, 26});
+
+    // TODO: IMG_BR16_NBAR
+
+    draw_manager.register_button(IMG_BR1_EXPORT, {0, 0, 123, 26});
+    draw_manager.register_button(IMG_BR1_EXPORT, {124, 0, 113, 26});
+
+    draw_manager.register_button(IMG_BR2_EXPORT, {0, 0, 119, 26});
+    draw_manager.register_button(IMG_BR2_EXPORT, {120, 0, 119, 26});
+    draw_manager.register_button(IMG_BR2_EXPORT, {240, 0, 119, 26});
+    draw_manager.register_button(IMG_BR2_EXPORT, {360, 0, 120, 26});
+
+    draw_manager.register_button(IMG_BR3_EXPORT2, {0, 0, 59, 26});
+    draw_manager.register_button(IMG_BR3_EXPORT2, {60, 0, 59, 26});
+    draw_manager.register_button(IMG_BR3_EXPORT2, {0, 26, 118, 26});
+
+    draw_manager.register_button(IMG_BR4_EXPORT3, {0, 0, 32, 26});
+    draw_manager.register_button(IMG_BR4_EXPORT3, {33, 0, 32, 26});
+
+    draw_manager.register_button(IMG_BR5_EXPORT4);
+
+    draw_manager.register_button(IMG_BR6_OK);
+
+    draw_manager.register_button(IMG_BR7_E1);
+    draw_manager.register_button(IMG_BR7_E2);
+
+    draw_manager.register_button(IMG_BR8_EXPORT, {0, 0, 119, 26});
+    draw_manager.register_button(IMG_BR8_EXPORT, {120, 0, 119, 26});
+    draw_manager.register_button(IMG_BR8_EXPORT, {240, 0, 119, 26});
+
+    draw_manager.register_button(IMG_BR9_EXPORT, {0, 0, 108, 26});
+    draw_manager.register_button(IMG_BR9_EXPORT, {109, 0, 108, 26});
+    draw_manager.register_button(IMG_BR9_EXPORT, {218, 0, 108, 26});
+    draw_manager.register_button(IMG_BR9_EXPORT, {327, 0, 108, 26});
+
 }
