@@ -1195,7 +1195,7 @@ void DrawManagerSDL::draw_button_vfx() {
                 a = &(info->area);
             }
 
-            const int shift = 1;
+            const int shift = 2;
             for (int j = a->h-1; j >= 0; --j) {
                 for (int i = a->w-1; i >= 0; --i) {
                     int x = (a->x+i);
