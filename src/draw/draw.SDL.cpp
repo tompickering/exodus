@@ -540,10 +540,10 @@ void DrawManagerSDL::draw(DrawTarget tgt, SprID id, const char* spr_key, DrawTra
 }
 
 void DrawManagerSDL::repair_dirty_area(SprID id) {
-    repair_dirty_area(id, 0);
+    repair_dirty_area(id, REPAIR_Below, 0);
 }
 
-void DrawManagerSDL::repair_dirty_area(SprID id, int extend) {
+void DrawManagerSDL::repair_dirty_area(SprID id, int mode, int extend) {
     for (std::vector<SprID>::size_type i = 0; i < id_repair_exclusions.size(); ++i) {
         if (id_repair_exclusions[i] == id) {
             return;
@@ -553,19 +553,39 @@ void DrawManagerSDL::repair_dirty_area(SprID id, int extend) {
     DrawArea *dirty_area = get_drawn_area(id);
     if (dirty_area) {
         // We know where this sprite was drawn previously.
-        // Wipe that area with the background.
-        SDL_Rect r = {dirty_area->x, dirty_area->y, dirty_area->w, dirty_area->h};
-        r.x -= extend; r.w += extend*2;
-        r.y -= extend; r.h += extend*2;
-        SDL_BlitSurface(background, &r, surf, &r);
+
+        if (mode & REPAIR_Below) {
+            // If we're repairing below, wipe that area with the background.
+            SDL_Rect r = {dirty_area->x, dirty_area->y, dirty_area->w, dirty_area->h};
+            r.x -= extend; r.w += extend*2;
+            r.y -= extend; r.h += extend*2;
+            SDL_BlitSurface(background, &r, surf, &r);
+        }
+
+        Repair current = REPAIR_Below;
         // Now iterate over all recorded draw information
         for (std::vector<DrawnSprite>::size_type i = 0; i < drawn_spr_info.size(); ++i) {
             DrawnSprite *info = &drawn_spr_info[i];
-            // If we've found our current draw ID ('layer'), then we must stop,
-            // as we've looked at everything 'below' this sprite.
-            if (info->id == id) {
-                break;
+
+            if (current == REPAIR_This) {
+                current = REPAIR_Above;
             }
+            if (info->id == id) {
+                current = REPAIR_This;
+            }
+
+            if (current == REPAIR_Below && !(mode & REPAIR_Below)) {
+                continue;
+            }
+
+            if (current == REPAIR_This && !(mode & REPAIR_This)) {
+                continue;
+            }
+
+            if (current == REPAIR_Above && !(mode & REPAIR_Above)) {
+                continue;
+            }
+
             if (info->area.overlaps(*dirty_area)) {
                 // Determine the on-screen area which is overlapping
                 DrawArea overlap_area;
@@ -1069,7 +1089,7 @@ void DrawManagerSDL::draw_flag_vfx() {
             continue;
         }
 
-        repair_dirty_area(id, 10);
+        repair_dirty_area(id, REPAIR_Below, 10);
 
         DrawArea area = spr->area;
 
@@ -1166,7 +1186,7 @@ void DrawManagerSDL::draw_button_vfx() {
         }
 
         if (press.t < 0 && press.drawn) {
-            redraw(id);
+            repair_dirty_area(id, REPAIR_Below | REPAIR_This | REPAIR_Above, 0);
         } else if (!press.drawn) {
             uint32_t *screen = ((uint32_t*)(surf->pixels));
             const DrawArea *a = &(press.area);

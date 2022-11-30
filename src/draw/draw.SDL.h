@@ -12,6 +12,13 @@
 //       Text looks terrible.
 //#define CONTINUOUS_UPSCALING
 
+enum Repair : uint8_t {
+    REPAIR_None,
+    REPAIR_Below = 0x1,
+    REPAIR_This  = 0x2,
+    REPAIR_Above = 0x4
+};
+
 class DrawManagerSDL : public DrawManager {
     public:
         DrawManagerSDL();
@@ -87,7 +94,7 @@ class DrawManagerSDL : public DrawManager {
         void draw(DrawTarget, const char*, DrawTransform, SprID*);
         void draw_text(DrawTarget, SprID, Font, const char*, Justify, int, int, RGB*, RGB*);
         void repair_dirty_area(SprID);
-        void repair_dirty_area(SprID, int);
+        void repair_dirty_area(SprID, int, int);
         DrawnSprite* update_dirty_area(SprID, DrawArea);
 
         // Special VFX
