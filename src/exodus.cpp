@@ -417,8 +417,23 @@ void Exodus::register_buttons() {
     draw_manager.register_button(IMG_BR3_EXPORT2, {60, 0, 59, 26});
     draw_manager.register_button(IMG_BR3_EXPORT2, {0, 26, 118, 26});
 
+    /*
+     * FIXME: These are left/right arrows that are normally used
+     * with repeating clicks enabled. However, button press VFX
+     * and repeating clicks don't currently work well together,
+     * because the VFX rate limits the clicks. We'd need some way
+     * to allow query_click() to return true whilst still keeping
+     * the click active - but this is messy, and may leave dangling
+     * button press state...
+     *
+     * Just omit these for now.
+     *
+     * N.B. IMG_BR11_LR can be used for 'push'-able LR arrows.
+     */
+    /*
     draw_manager.register_button(IMG_BR4_EXPORT3, {0, 0, 32, 26});
     draw_manager.register_button(IMG_BR4_EXPORT3, {33, 0, 32, 26});
+    */
 
     draw_manager.register_button(IMG_BR5_EXPORT4);
 
