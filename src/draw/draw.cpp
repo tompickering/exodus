@@ -115,11 +115,16 @@ SpriteClick DrawManager::query_click(SprID query, bool right) {
     // First, check if we have an expired ButtonPress for this ID
     if (active_button_press) {
         SprID id = active_button_press->id;
-        if (id == query && active_button_press->t < 0) {
-            res.id = id;
-            res.x = active_button_press->x;
-            res.y = active_button_press->y;
-            active_button_press = nullptr;
+        if (id == query) {
+            if (active_button_press->t < 0) {
+                res.id = id;
+                res.x = active_button_press->x;
+                res.y = active_button_press->y;
+                active_button_press = nullptr;
+                return res;
+            }
+
+            // There is an active button press for this ID - do nothing
             return res;
         }
     }
