@@ -1176,13 +1176,14 @@ void DrawManagerSDL::draw_flag_vfx() {
 }
 
 void DrawManagerSDL::draw_button_vfx() {
-    for (auto it = button_presses.begin(); it != button_presses.end(); ++it) {
-        SprID id = it->first;
-        ButtonPress& press = it->second;
+    if (active_button_press) {
+        ButtonPress& press = *active_button_press;
+        SprID id = press.id;
         DrawnSprite *info = get_drawn_info(id);
+
         if (!info) {
             L.error("Unknown ID during button update: %d", id);
-            continue;
+            return;
         }
 
         if (press.t < 0 && press.drawn) {

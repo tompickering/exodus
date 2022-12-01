@@ -113,13 +113,13 @@ SpriteClick DrawManager::query_click(SprID query, bool right) {
     res.id = ID_NONE;
 
     // First, check if we have an expired ButtonPress for this ID
-    for (auto it = button_presses.begin(); it != button_presses.end(); ++it) {
-        SprID id = it->first;
-        if (id == query && it->second.t < 0) {
+    if (active_button_press) {
+        SprID id = active_button_press->id;
+        if (id == query && active_button_press->t < 0) {
             res.id = id;
-            res.x = it->second.x;
-            res.y = it->second.y;
-            button_presses.erase(id);
+            res.x = active_button_press->x;
+            res.y = active_button_press->y;
+            active_button_press = nullptr;
             return res;
         }
     }
@@ -173,13 +173,13 @@ SpriteClick DrawManager::query_click(SprID query, bool right) {
 
                     if (clicked_on_button) {
                         L.debug("Clicked on button");
-                        ButtonPress press;
-                        press.x = spr_x;
-                        press.y = spr_y;
-                        press.t = BUTTONVFX_TIME;
-                        press.area = btn_area;
-                        press.drawn = false;
-                        button_presses[drawn_spr_info[i].id] = press;
+                        button_press.id = drawn_spr_info[i].id;
+                        button_press.x = spr_x;
+                        button_press.y = spr_y;
+                        button_press.t = BUTTONVFX_TIME;
+                        button_press.area = btn_area;
+                        button_press.drawn = false;
+                        active_button_press = &button_press;
                         break;
                     }
                 }
@@ -470,6 +470,8 @@ void DrawManager::init_special_vfx() {
         L.debug("%d", flag_motion[i*2 + 1]);
         */
     }
+
+    active_button_press = nullptr;
 }
 
 void DrawManager::set_flag_vfx(SprID id) {
@@ -501,7 +503,7 @@ void DrawManager::update_flag_vfx(float delta) {
 }
 
 void DrawManager::update_button_vfx(float delta) {
-    for (auto it = button_presses.begin(); it != button_presses.end(); ++it) {
-        it->second.t -= delta;
+    if (active_button_press) {
+        active_button_press->t -= delta;
     }
 }

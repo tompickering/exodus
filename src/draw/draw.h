@@ -110,11 +110,10 @@ typedef struct {
  * so that we can enact this later. We also need to track the
  * time that the button press is in efffect for, as well as
  * which of the potentially multiple specific button areas
- * within the sprite we are tracking. We do need to know the
- * SprID as well - but this is tracked as a map key with
- * ButtonPress as the value.
+ * within the sprite we are tracking.
  */
 typedef struct {
+    SprID id;
     float x;
     float y;
     float t;
@@ -254,7 +253,8 @@ class DrawManager {
         // Unchanging list of sprites which have button areas
         map<const char*, vector<DrawArea>> buttons;
         // Specific presses of button areas on sprite IDs
-        map<SprID, ButtonPress> button_presses;
+        ButtonPress *active_button_press;
+        ButtonPress button_press;
     private:
         MousePos mouse_pos;
         MousePos click_pos;
