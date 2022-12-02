@@ -1205,7 +1205,15 @@ void DrawManagerSDL::draw_button_vfx() {
                     //int sy = max(a->y, y - shift);
                     int sx = max(0, x - shift);
                     int sy = max(0, y - shift);
-                    screen[y*RES_X + x] = screen[sy*RES_X + sx];
+                    //screen[y*RES_X + x] = screen[sy*RES_X + sx];
+                    uint32_t col = screen[sy*RES_X + sx];
+                    uint32_t r = (col >> 16) & 0xFF;
+                    uint32_t g = (col >> 8) & 0xFF;
+                    uint32_t b = col & 0xFF;
+                    r *= 0.95;
+                    g *= 0.95;
+                    b *= 0.95;
+                    screen[y*RES_X + x] = (r<<16) | (g<<8) | b;
                 }
             }
             press.drawn = true;
