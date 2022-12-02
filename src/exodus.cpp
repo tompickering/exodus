@@ -403,7 +403,10 @@ void Exodus::register_buttons() {
     draw_manager.register_button(IMG_BR14_EXPORT, {0, 0, 118, 26});
     draw_manager.register_button(IMG_BR14_EXPORT, {119, 0, 118, 26});
 
-    // TODO: IMG_BR16_NBAR
+    draw_manager.register_button(IMG_BR16_NBAR, {96, 0, 108, 26});
+    draw_manager.register_button(IMG_BR16_NBAR, {206, 0, 108, 26});
+    draw_manager.register_button(IMG_BR16_NBAR, {314, 0, 108, 26});
+    draw_manager.register_button(IMG_BR16_NBAR, {422, 0, 108, 26});
 
     draw_manager.register_button(IMG_BR1_EXPORT, {0, 0, 123, 26});
     draw_manager.register_button(IMG_BR1_EXPORT, {124, 0, 113, 26});
@@ -469,7 +472,11 @@ void Exodus::register_buttons() {
     draw_manager.register_button(IMG_SU1_TRI, {40, 0, 39, 26});
     draw_manager.register_button(IMG_SU1_TRI, {80, 0, 39, 26});
 
-    // TODO: IMG_TD1_TRADEBACK
+    /*
+    draw_manager.register_button(IMG_TD1_TRADEBACK, {208, 144, 58, 26});
+    draw_manager.register_button(IMG_TD1_TRADEBACK, {268, 144, 58, 26});
+    */
+    draw_manager.register_button(IMG_TD1_TRADEBACK, {208, 172, 118, 26});
 
     draw_manager.register_button(IMG_TS1_M2_1);
     draw_manager.register_button(IMG_TS1_M2_2);
@@ -482,4 +489,9 @@ void Exodus::register_buttons() {
     draw_manager.register_button(IMG_TS2_SML_MENU, {0, 0, 112, 26});
     draw_manager.register_button(IMG_TS2_SML_MENU, {0, 26, 112, 26});
     draw_manager.register_button(IMG_TS2_SML_MENU, {0, 52, 112, 26});
+
+    draw_manager.register_button(IMG_VS0_VPIC, {96, 366, 108, 26});
+    draw_manager.register_button(IMG_VS0_VPIC, {206, 366, 108, 26});
+    draw_manager.register_button(IMG_VS0_VPIC, {314, 366, 108, 26});
+    draw_manager.register_button(IMG_VS0_VPIC, {422, 366, 108, 26});
 }
