@@ -44,8 +44,17 @@ void DrawManager::update(float delta, MousePos new_mouse_pos, MousePos new_click
     DrawArea *area = nullptr;
     sprite_click.id = ID_NONE;
     mouse_pos = new_mouse_pos;
-    click_pos = new_click_pos;
-    click_pos_r = new_click_pos_r;
+
+    if (active_button_press) {
+        /*
+         * Disable click activity whilst a button press is active.
+         */
+        consume_click();
+    } else {
+        click_pos = new_click_pos;
+        click_pos_r = new_click_pos_r;
+    }
+
     clicked_this_frame = (click_pos.x >= 0 && click_pos.y >= 0);
     clicked_this_frame_r = (click_pos_r.x >= 0 && click_pos_r.y >= 0);
     if (clicked_this_frame) {
@@ -509,6 +518,20 @@ void DrawManager::update_flag_vfx(float delta) {
 
 void DrawManager::update_button_vfx(float delta) {
     if (active_button_press) {
-        active_button_press->t -= delta;
+        if (active_button_press->t < 0) {
+            /*
+             * This is perhaps overly-defensive - at the moment, button press VFX
+             * relies on query_click() being called each frame whilst the press
+             * is in effect, such that the code can actually respond when the effect
+             * completes. This is a bit horrible - but it is a reasonable assumption.
+             * If that doesn't happen however, then we'd end up with a stale button
+             * press. It shouldn't happen, but we'll preclude the possibility by
+             * clearing it here if we decreased it below 0 last frame and it still
+             * hasn't been processed.
+             */
+            active_button_press = nullptr;
+        } else {
+            active_button_press->t -= delta;
+        }
     }
 }
