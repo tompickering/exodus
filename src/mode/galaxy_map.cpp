@@ -3290,6 +3290,8 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     // Lord has failed invasion - do we start bombing?
                     int def = p->get_airdef_guns();
                     int bmb = player->get_fleet().bombers;
+                    L.debug("BOMB DEF: %d", def);
+                    L.debug("BOMB BMB: %d", bmb);
                     if (player->get_race() != RACE_Teri && def < bmb*2) {
                         mp_state.mpai_bombings_max = 2 + RND(3) + (def < 4 ? 3 : 0);
                         mp_state.mpai_bombings_remain = mp_state.mpai_bombings_max;
