@@ -3247,8 +3247,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         } else {
                             bulletin_set_next_text("%s could keep the planet.", defender->get_full_name());
                             bulletin_set_next_text("%s has lost the battle.", player->get_name());
-                            // TODO: Bombings - different substage
-                            mp_state.mpai_substage = 100;
+                            mp_state.mpai_substage = 20;
                         }
 
                         return ExodusMode::MODE_None;
@@ -3286,8 +3285,46 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     return ExodusMode::MODE_None;
                 }
 
+                if (mp_state.mpai_substage == 20) {
+                    mp_state.mpai_substage = 100;
+                    // Lord has failed invasion - do we start bombing?
+                    int def = p->get_airdef_guns();
+                    int bmb = player->get_fleet().bombers;
+                    if (player->get_race() != RACE_Teri && def < bmb*2) {
+                        mp_state.mpai_bombings_max = 2 + RND(3) + (def < 4 ? 3 : 0);
+                        mp_state.mpai_bombings_remain = mp_state.mpai_bombings_max;
+                        mp_state.mpai_original_bombers = bmb;
+                        L.debug("MAX BOMBINGS: %d", mp_state.mpai_bombings_max);
+                        mp_state.mpai_substage = 21;
+                    } else {
+                        L.debug("NO BOMBINGS");
+                    }
+                }
+
+                if (mp_state.mpai_substage == 21) {
+                    if (mp_state.mpai_bombings_remain <= 0) {
+                        L.debug("BOMBINGS END");
+                        mp_state.mpai_substage = 100;
+                    } else {
+                        mp_state.mpai_bombings_remain -= 1;
+                        exostate.register_news(NI_BombAttack);
+
+                        L.debug("BOMB (Remaining: %d)", mp_state.mpai_bombings_remain);
+
+                        // TODO: PROCenemybomb
+
+                        int def = p->get_airdef_guns();
+                        int bmb = player->get_fleet().bombers;
+                        if (bmb*3 < mp_state.mpai_original_bombers || bmb < mp_state.mpai_bombings_max) {
+                            L.debug("Halt bombings early");
+                            mp_state.mpai_bombings_remain = 0;
+                        }
+                    }
+                }
+
                 // Always end with this
                 if (mp_state.mpai_substage == 100) {
+                    mp_state.mpai_substage = 0;
                     player->set_tactic(0);
                     player->get_location().unset_target();
                 }

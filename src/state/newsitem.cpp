@@ -84,7 +84,6 @@ const char* NewsItem::get_string() const {
         case NI_GeologicalChange:
              return "Geological change of surface";
         case NI_BombAttack:
-            // TODO: Implement
              return "Bomb attack";
         case NI_Debug:
             return "TEST NEWS ITEM";

@@ -146,6 +146,10 @@ typedef struct {
     int mpai_planet_idx;
     int mpai_substage;
     int mpai_substage_player_idx;
+
+    int mpai_bombings_max;
+    int mpai_bombings_remain;
+    int mpai_original_bombers;
 } MPState;
 
 class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, BulletinDrawer, FrameDrawer, MenuDrawer, MonthReport, TradeBuy {
