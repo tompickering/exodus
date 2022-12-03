@@ -3319,6 +3319,8 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                             L.debug("Halt bombings early");
                             mp_state.mpai_bombings_remain = 0;
                         }
+
+                        return ExodusMode::MODE_None;
                     }
                 }
 
