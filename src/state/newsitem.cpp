@@ -67,10 +67,8 @@ const char* NewsItem::get_string() const {
              snprintf(b, sizeof(b), "%s has left the galaxy", p0->get_name());
              return b;
         case NI_NewAnimal:
-            // TODO: Implement
              return "New animal discovered";
         case NI_NewPlant:
-            // TODO: Implement
              return "New plant discovered";
         case NI_NewInvention:
              snprintf(b, sizeof(b), "New invention: %s", p0->get_invention_str(inv));
