@@ -2149,6 +2149,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     resume = true;
                     break;
                 case CA_Attack:
+                    L.debug("[%s] MPAI_Alliances : LAUNCHING ATTACK ON %s", player->get_full_name(), planet->get_name());
                     ephstate.set_ephemeral_state(EPH_LunarBattlePrep);
                     ephstate.lunar_battle.aggressor_type = AGG_Player;
                     ephstate.lunar_battle.aggressor_idx = player_idx;
