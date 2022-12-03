@@ -99,7 +99,7 @@ void LunarBattlePrep::enter() {
     if (b.aggressor_type == AGG_Player) {
         aggressor = exostate.get_player(b.aggressor_idx);
         if (aggressor == owner) {
-            L.fatal("%d is attacking own planet!", owner->get_full_name());
+            L.fatal("%s is attacking own planet!", owner->get_full_name());
         }
         b.human_attacking = aggressor->is_human();
     }
