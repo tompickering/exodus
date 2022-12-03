@@ -3092,13 +3092,13 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         if (p_army > army) {
                             // FIXME: I think this is pointless - orig sets back to 0 afterwards anyway
                             player->set_tactic(1);
-                            mp_state.mpai_substage = 10;
+                            mp_state.mpai_substage = 100;
                         } else {
                             // TODO: Orig bails if planet is aritificial and lord has artificial world
                             mp_state.mpai_substage = 1;
                         }
                     } else {
-                        mp_state.mpai_substage = 10;
+                        mp_state.mpai_substage = 100;
                     }
                 }
 
@@ -3132,7 +3132,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     switch (comm_action_check()) {
                         case CA_Abort:
                             comm_close();
-                            mp_state.mpai_substage = 10;
+                            mp_state.mpai_substage = 100;
                             break;
                         case CA_Attack:
                             comm_close();
@@ -3242,18 +3242,18 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         // Bulletin part of PROCenemyattack
                         if (won) {
                             bulletin_set_next_text("%s has taken over the planet of %s.", player->get_name(), defender->get_full_name());
-                            mp_state.mpai_substage = 10;
+                            mp_state.mpai_substage = 100;
                         } else {
                             bulletin_set_next_text("%s could keep the planet.", defender->get_full_name());
                             bulletin_set_next_text("%s has lost the battle.", player->get_name());
                             // TODO: Bombings - different substage
-                            mp_state.mpai_substage = 10;
+                            mp_state.mpai_substage = 100;
                         }
 
                         return ExodusMode::MODE_None;
                     }
 
-                    mp_state.mpai_substage = 10;
+                    mp_state.mpai_substage = 100;
                 }
 
                 // Handle outcome of war ally bulletin
@@ -3286,7 +3286,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 }
 
                 // Always end with this
-                if (mp_state.mpai_substage == 10) {
+                if (mp_state.mpai_substage == 100) {
                     player->set_tactic(0);
                     player->get_location().unset_target();
                 }
