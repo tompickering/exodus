@@ -396,6 +396,8 @@ void PlanetMap::enter() {
     } else if (ephstate.get_ephemeral_state() == EPH_Destruction) {
         PlanetDestruction &d = ephstate.destruction;
 
+        exploding = EXP_None;
+
         mus = mpart2mus(8);
         draw_menu = false;
         do_animations = false;
