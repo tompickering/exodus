@@ -3315,17 +3315,74 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
                         L.debug("BOMB (Remaining: %d)", mp_state.mpai_bombings_remain);
 
-                        // TODO: PROCenemybomb
+                        // PROCenemybomb
 
-                        int def = p->get_airdef_guns();
-                        int bmb = player->get_fleet().bombers;
-                        if (bmb*3 < mp_state.mpai_original_bombers || bmb < mp_state.mpai_bombings_max) {
-                            L.debug("Halt bombings early");
-                            mp_state.mpai_bombings_remain = 0;
-                        }
+                        audio_manager.target_music(mpart2mus(8));
 
+                        int owner_idx = p->get_owner();
+                        Player *owner = exostate.get_player(owner_idx);
+
+                        bulletin_start_new(false);
+                        bulletin_set_bg(p->sprites()->bulletin_bg);
+                        bulletin_set_flag(flags[owner->get_flag_idx()]);
+                        bulletin_set_next_text("");
+                        bulletin_set_next_text("");
+                        bulletin_set_next_text("BOMB ATTACK");
+                        bulletin_set_next_text("");
+                        bulletin_set_next_text("%s's fleet is attacking the planet.", player->get_name());
+
+                        mp_state.mpai_substage = 22;
                         return ExodusMode::MODE_None;
                     }
+                }
+
+                if (mp_state.mpai_substage == 22) {
+                    StoneSet targets;
+
+                    StoneSet bset;
+                    bset.add(STONE_Inf);
+                    bset.add(STONE_Gli);
+                    bset.add(STONE_Art);
+
+                    int a = p->count_stones(bset);
+                    int b = p->count_stones(STONE_Plu);
+
+                    Stone d = a == 0 ? STONE_Agri : STONE_Plu;
+
+                    if (onein(4)) {
+                        if (p->has_stone(STONE_City)) {
+                            if (player->get_flag(0) == AI_Hi) {
+                                d = STONE_City;
+                            }
+                        }
+                    }
+
+                    if (onein(3) && b > 0) {
+                        targets.add(STONE_Inf);
+                        targets.add(STONE_Gli);
+                        targets.add(STONE_Art);
+                    } else {
+                        targets.add(d);
+                    }
+
+                    int def = p->get_airdef_guns();
+                    int bmb = player->get_fleet().bombers;
+                    if (bmb*3 < mp_state.mpai_original_bombers || bmb < mp_state.mpai_bombings_max) {
+                        L.debug("Halt bombings early");
+                        mp_state.mpai_bombings_remain = 0;
+                    }
+
+                    // TODO: PROCflybomb - set ephstate and enter destruction here
+                    mp_state.mpai_substage = 23;
+
+                    return ExodusMode::MODE_None;
+                }
+
+                if (mp_state.mpai_substage == 23) {
+                    // TODO: Return from planet destruction here - clear ephstate
+                    // Resume bomb loop
+                    mp_state.mpai_substage = 21;
+                    return ExodusMode::MODE_None;
                 }
 
                 // Always end with this
