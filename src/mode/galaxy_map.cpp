@@ -3372,14 +3372,36 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         mp_state.mpai_bombings_remain = 0;
                     }
 
-                    // TODO: PROCflybomb - set ephstate and enter destruction here
+                    int owner_idx = p->get_owner();
+                    Player *owner = exostate.get_player(owner_idx);
+
+                    // Set ephstate and enter destruction
+                    // TODO: Need to decrement bombers as per airdef
+                    ephstate.set_ephemeral_state(EPH_Destruction);
+                    ephstate.destruction.type = DESTROY_NStones;
+                    ephstate.destruction.tgt_stones = targets;
+                    ephstate.destruction.n_strikes = bmb;
+                    ephstate.destruction.enable_explosions = true;
+                    ephstate.destruction.enable_explosion_anims = true;
+                    ephstate.destruction.irradiated = false;
+                    ephstate.destruction.show_target = bmb<3;
+                    ephstate.destruction.destroyer_idx = player_idx;
+                    ephstate.destruction.terror = false;
+                    ephstate.destruction.nuke = false;
+                    ephstate.destruction.draw = owner->is_human();
+
                     mp_state.mpai_substage = 23;
 
                     return ExodusMode::MODE_None;
                 }
 
                 if (mp_state.mpai_substage == 23) {
-                    // TODO: Return from planet destruction here - clear ephstate
+                    mp_state.mpai_substage = 24;
+                    return ephstate.get_appropriate_mode();
+                }
+
+                if (mp_state.mpai_substage == 24) {
+                    ephstate.clear_ephemeral_state();
                     // Resume bomb loop
                     mp_state.mpai_substage = 21;
                     return ExodusMode::MODE_None;
