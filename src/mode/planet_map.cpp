@@ -368,6 +368,7 @@ void PlanetMap::enter() {
     explosion_interp = 0;
     destruction_done = false;
     exploding_stone = STONE_Clear;
+    exploding = EXP_None;
 
     for (int i = 0; i < MAX_STONES; ++i) {
         id_stones[i] = draw_manager.new_sprite_id();
@@ -395,8 +396,6 @@ void PlanetMap::enter() {
         stage = PM_Scout;
     } else if (ephstate.get_ephemeral_state() == EPH_Destruction) {
         PlanetDestruction &d = ephstate.destruction;
-
-        exploding = EXP_None;
 
         mus = mpart2mus(8);
         draw_menu = false;
