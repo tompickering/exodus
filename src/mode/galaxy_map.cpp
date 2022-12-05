@@ -3323,74 +3323,79 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         int owner_idx = p->get_owner();
                         Player *owner = exostate.get_player(owner_idx);
 
+                        Star *s = (Star*)exostate.get_active_flytarget();
+
                         bulletin_start_new(false);
                         bulletin_set_bg(p->sprites()->bulletin_bg);
                         bulletin_set_flag(flags[owner->get_flag_idx()]);
-                        bulletin_set_next_text("");
+                        bulletin_write_planet_info(s, p);
                         bulletin_set_next_text("");
                         bulletin_set_next_text("BOMB ATTACK");
                         bulletin_set_next_text("");
                         bulletin_set_next_text("%s's fleet is attacking the planet.", player->get_name());
+                        bulletin_set_next_text("");
+
+                        StoneSet targets;
+
+                        StoneSet bset;
+                        bset.add(STONE_Inf);
+                        bset.add(STONE_Gli);
+                        bset.add(STONE_Art);
+
+                        int a = p->count_stones(bset);
+                        int b = p->count_stones(STONE_Plu);
+
+                        Stone d = a == 0 ? STONE_Agri : STONE_Plu;
+
+                        if (onein(4)) {
+                            if (p->has_stone(STONE_City)) {
+                                if (player->get_flag(0) == AI_Hi) {
+                                    d = STONE_City;
+                                }
+                            }
+                        }
+
+                        if (onein(3) && b > 0) {
+                            targets.add(STONE_Inf);
+                            targets.add(STONE_Gli);
+                            targets.add(STONE_Art);
+                        } else {
+                            targets.add(d);
+                        }
+
+                        int def = p->get_airdef_guns();
+                        int bmb = player->get_fleet().bombers;
+                        // If air def guns remain, reconsider bombing
+                        if (def > 0) {
+                            if (bmb*3 < mp_state.mpai_original_bombers || bmb < mp_state.mpai_bombings_max) {
+                                L.debug("Halt bombings early");
+                                mp_state.mpai_bombings_remain = 0;
+                            }
+                        }
+
+                        // N.B. Sets up ephstate
+                        int hits, bombers_killed;
+                        bomb_planet(targets, false, hits, bombers_killed);
+
+                        if (def > 0) {
+                            bulletin_set_next_text("AirDef guns destroyed %d bombers.", bombers_killed);
+                            bulletin_set_next_text("");
+                        }
+
+                        bulletin_set_next_text("%d bombers have hit a target.", hits);
 
                         mp_state.mpai_substage = 22;
+
                         return ExodusMode::MODE_None;
                     }
                 }
 
                 if (mp_state.mpai_substage == 22) {
-                    StoneSet targets;
-
-                    StoneSet bset;
-                    bset.add(STONE_Inf);
-                    bset.add(STONE_Gli);
-                    bset.add(STONE_Art);
-
-                    int a = p->count_stones(bset);
-                    int b = p->count_stones(STONE_Plu);
-
-                    Stone d = a == 0 ? STONE_Agri : STONE_Plu;
-
-                    if (onein(4)) {
-                        if (p->has_stone(STONE_City)) {
-                            if (player->get_flag(0) == AI_Hi) {
-                                d = STONE_City;
-                            }
-                        }
-                    }
-
-                    if (onein(3) && b > 0) {
-                        targets.add(STONE_Inf);
-                        targets.add(STONE_Gli);
-                        targets.add(STONE_Art);
-                    } else {
-                        targets.add(d);
-                    }
-
-                    int def = p->get_airdef_guns();
-                    int bmb = player->get_fleet().bombers;
-                    // If air def guns remain, reconsider bombing
-                    if (def > 0) {
-                        if (bmb*3 < mp_state.mpai_original_bombers || bmb < mp_state.mpai_bombings_max) {
-                            L.debug("Halt bombings early");
-                            mp_state.mpai_bombings_remain = 0;
-                        }
-                    }
-
-                    // N.B. Sets up ephstate
-                    int hits, bombers_killed;
-                    bomb_planet(targets, false, hits, bombers_killed);
-
                     mp_state.mpai_substage = 23;
-
-                    return ExodusMode::MODE_None;
-                }
-
-                if (mp_state.mpai_substage == 23) {
-                    mp_state.mpai_substage = 24;
                     return ephstate.get_appropriate_mode();
                 }
 
-                if (mp_state.mpai_substage == 24) {
+                if (mp_state.mpai_substage == 23) {
                     ephstate.clear_ephemeral_state();
                     // Resume bomb loop
                     mp_state.mpai_substage = 21;
