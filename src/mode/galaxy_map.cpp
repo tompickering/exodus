@@ -3368,9 +3368,12 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
                     int def = p->get_airdef_guns();
                     int bmb = player->get_fleet().bombers;
-                    if (bmb*3 < mp_state.mpai_original_bombers || bmb < mp_state.mpai_bombings_max) {
-                        L.debug("Halt bombings early");
-                        mp_state.mpai_bombings_remain = 0;
+                    // If air def guns remain, reconsider bombing
+                    if (def > 0) {
+                        if (bmb*3 < mp_state.mpai_original_bombers || bmb < mp_state.mpai_bombings_max) {
+                            L.debug("Halt bombings early");
+                            mp_state.mpai_bombings_remain = 0;
+                        }
                     }
 
                     // N.B. Sets up ephstate
