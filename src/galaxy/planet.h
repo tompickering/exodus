@@ -321,8 +321,6 @@ class Planet {
         int army_gli;          // Orig: SIk(2)
         int army_art;          // Orig: SIk(3)
 
-        // TODO: SItb
-
         bool festival_this_month;
         bool surfchange_this_month;
         bool processing_in_progress;
