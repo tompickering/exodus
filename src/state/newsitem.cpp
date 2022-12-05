@@ -57,7 +57,6 @@ const char* NewsItem::get_string() const {
              snprintf(b, sizeof(b), "%s tried to take over %s's planet", p0->get_name(), p1->get_name());
              return b;
         case NI_AssassinCaptured:
-            // TODO: Implement
              return "Assassin captured";
         case NI_TerroristAttack:
              return "Terrorist attack";
