@@ -667,13 +667,11 @@ ExodusMode PlanetMap::update(float delta) {
             }
 
             if (draw_manager.query_click(id(ID::LAWBUILD)).id) {
-                if (active_tool == TOOL_LunarBase) {
-                    if (!planet->has_lunar_base()) {
-                        if (player->attempt_spend(tool2cost(TOOL_LunarBase))) {
-                            planet->build_lunar_base();
-                            hide_lunar_base_tool();
-                            set_build_button(false);
-                        }
+                if (active_tool == TOOL_LunarBase && !planet->has_lunar_base()) {
+                    if (player->attempt_spend(tool2cost(TOOL_LunarBase))) {
+                        planet->build_lunar_base();
+                        hide_lunar_base_tool();
+                        set_build_button(false);
                     }
                 } else {
                     open_law_panel();
