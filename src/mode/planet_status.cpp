@@ -351,7 +351,6 @@ void PlanetStatus::enter() {
         text_x + 140, text_y,
         COL_TEXT2);
 
-    // TODO: Min / Food / Plu gauges
     bool see_resources = false;
     if (p->is_owned() && player == exostate.get_player(p->get_owner())) {
         see_resources = true;

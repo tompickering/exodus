@@ -221,7 +221,10 @@ ExodusMode GuildHQ::update(float delta) {
                                 COL_TEXT);
                         }
 
-                        // TODO: "But you have cheated" / chcount - sets 'claim' false
+                        /*
+                         * Orig has "But you have cheated" / chcount - sets 'claim' false
+                         * I don't think we need this - you can always cheat an open source game!
+                         */
 
                         if (claim) {
                             stage = HQ_GuildmasterClaimed;
