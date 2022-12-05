@@ -416,6 +416,22 @@ ExodusMode StarMap::update(float delta) {
 
                         player->add_trace(TRACE_PlanetsBombed);
 
+                        int owner_idx = planet->get_owner();
+                        Player *owner = exostate.get_player(owner_idx);
+
+                        if (owner) {
+                            exostate.unset_alliances(player_idx, owner_idx);
+                            if (!owner->is_human()) {
+                                if (owner->get_flag(0) != AI_Lo) {
+                                    owner->set_hostile_to(player_idx);
+                                }
+                            }
+                        }
+
+                        if (tgt.has(STONE_City)) {
+                            planet->adjust_unrest(2);
+                        }
+
                         int bombers_killed = 0;
                         int att = planet->plan_bomb(fleet.bombers, tgt, bombers_killed, bmb_guns);
 
