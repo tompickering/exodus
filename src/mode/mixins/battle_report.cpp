@@ -69,14 +69,14 @@ bool BattleReport::batrpt_draw(bool reset) {
                 snprintf(l1, sizeof(l1), "defended the planet %s.", p->get_name());
                 snprintf(l3, sizeof(l3), "You lost %d of your %d", dl, di);
                 snprintf(l4, sizeof(l4), "defending units.");
-                // TODO: If not aliens / rebels, PROCdonotice
+                // Orig calls PROCdonotice here - we register NI_PlanetTakeover elsewhere
             } else {
                 // TODO: What gets printed if aggressor_retreated?
                 snprintf(l0, sizeof(l0), "All your %d defending units", di);
                 snprintf(l1, sizeof(l1), "have been destroyed.");
                 snprintf(l3, sizeof(l3), "You have lost the planet");
                 snprintf(l4, sizeof(l4), "%s.", p->get_name());
-                // TODO: If not aliens / rebels, PROCdonotice
+                // Orig calls PROCdonotice here - we register NI_PlanetTakeover elsewhere
             }
         } else {
             if (won) {
