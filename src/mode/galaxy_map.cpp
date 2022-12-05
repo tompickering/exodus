@@ -3384,6 +3384,11 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
                         bulletin_set_next_text("%d bombers have hit a target.", hits);
 
+                        if (hits <= 0) {
+                            // Don't show planet map if nothing happened
+                            ephstate.clear_ephemeral_state();
+                        }
+
                         mp_state.mpai_substage = 22;
 
                         return ExodusMode::MODE_None;
