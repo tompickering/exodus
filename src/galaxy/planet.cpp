@@ -305,7 +305,6 @@ void Planet::init() {
             minerals *= 2;
         }
 
-        // TODO: Initialise surface from the data read in from PROCloadplans
         const int* initial_surf_data = get_loadplans_data(rand() % 3, cls, rand() % 5);
         for (int i = 0; i < PLANET_BLOCKS_LG * PLANET_BLOCKS_LG; ++i) {
             // The original uses y=0 for the bottom of the screen. We use the inverse.
@@ -345,8 +344,6 @@ void Planet::init() {
         army_inf = 15;
         army_gli = 15;
         army_art = 15;
-
-        // TODO: Why does SIna (n agruculture zones) get set to 6?
 
         int sz = get_size_blocks();
         for (int j = 1; j < sz-1; ++j) {
@@ -2166,21 +2163,20 @@ void Planet::ai_update() {
                 if (!has_lunar_base() && owner->attempt_spend_cpuforce(COST_LUNAR_BASE)) {
                     build_lunar_base();
                 } else {
-                    // TODO: PROCeta6 sets action=2 in this case. It looks ineconsequential,
-                    // but verify.
+                    // PROCeta6 sets action=2 in this case, but it looks inconsequential
                 }
                 break;
             case 7:
                 // HANDLE HUNGER BY REPLACING CITIES WITH AGRI
                 if (!agri_sufficient() && free < 5) {
                     _ai_make_space();
-                    // TODO: PROCeta7 doesn't recalculate free after potentially
+                    // CHECK: PROCeta7 doesn't recalculate free after potentially
                     // creating space - should we retain that behaviour?
                     free = count_stones(STONE_Clear) + count_stones(STONE_NaturalSmall);
                 }
                 if (free > 0) {
                     if (!agri_sufficient() && (free + possfree) < 5) {
-                        // TODO: Original always finds first cities
+                        // Original always finds first cities
                         int n = 2;
                         int x, y;
                         while (n > 0 && find_random_stone(STONE_City, x, y)) {
