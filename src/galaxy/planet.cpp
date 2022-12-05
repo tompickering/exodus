@@ -2193,8 +2193,7 @@ void Planet::ai_update() {
                     if (r > free) {
                         r = rand() % free;
                     }
-                    // TODO: PROCeta7 skips MC check here
-                    if (owner->attempt_spend(r * stone_cost(STONE_Agri))) {
+                    if (owner->attempt_spend_cpuforce(r * stone_cost(STONE_Agri))) {
                         free -= ai_place_stone(r, STONE_Agri, STONE_Agri);
                     }
                 }
@@ -2227,8 +2226,7 @@ void Planet::ai_update() {
                 break;
             case 10:
                 // BUILD A BACKUP BASE
-                // TODO: PROCeta10 skips MC check here
-                if (owner->attempt_spend(stone_cost(STONE_Base))) {
+                if (owner->attempt_spend_cpuforce(stone_cost(STONE_Base))) {
                     free -= ai_place_stone(1, STONE_Base, STONE_Base);
                 }
                 break;
@@ -2236,10 +2234,9 @@ void Planet::ai_update() {
                 // BUILD ROBOTS
                 {
                     int r = RND(3);
-                    // TODO: PROCeta11 skips MC check here
                     // TODO: Should we check we're within resource limits here?! (Note get_robot_cap())
                     // These robots might be scrapped on discard_excess_resources()!
-                    if (owner->attempt_spend(r * COST_ROBOT)) {
+                    if (owner->attempt_spend_cpuforce(r * COST_ROBOT)) {
                         robots += r;
                     }
                 }
@@ -2254,8 +2251,7 @@ void Planet::ai_update() {
                             for (int x = rand() % sz; x < sz; ++x) {
                                 Stone s = get_stone(x, y);
                                 if (s == STONE_AgriDead || s == STONE_Rubble) {
-                                    // TODO: PROCeta12 skips MC check
-                                    if (owner->attempt_spend(stone_cost(STONE_Clear))) {
+                                    if (owner->attempt_spend_cpuforce(stone_cost(STONE_Clear))) {
                                         set_stone(x, y, STONE_Clear);
                                         break;
                                     }
@@ -2276,7 +2272,7 @@ void Planet::ai_update() {
                     // does, and just takes the number of plutonium reactors.
                     // Should we preserve this behaviour?
                     int to_build = get_plu_consumption() - get_plu_production();
-                    // TODO: Orig zeroes credits here if <0 - if we allow -ve MC, we should add this
+                    owner->cpu_write_off_debt();
                     // FIXME: Should we halve (rounding up) build count of volcano worlds?
                     int crd = owner->get_mc();
                     int cost = stone_cost(STONE_Plu);
@@ -2284,8 +2280,7 @@ void Planet::ai_update() {
                         to_build = (crd/cost)+1;
                     }
                     for (int i = 0; i < to_build; ++i) {
-                        // TODO: PROCeta13 skips MC check
-                        if (owner->attempt_spend(cost)) {
+                        if (owner->attempt_spend_cpuforce(cost)) {
                             free -= ai_place_stone(1, STONE_Plu, STONE_NaturalLarge);
                         }
                     }

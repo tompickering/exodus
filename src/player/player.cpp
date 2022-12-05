@@ -310,6 +310,18 @@ bool Player::attempt_spend_cpuforce(int cost) {
     return true;
 }
 
+void Player::cpu_write_off_debt() {
+    if (!is_human()) {
+        L.error("Attempt to write off debt of human player, who should never be in debt");
+        return;
+    }
+
+    if (mc < 0) {
+        L.info("[%s] - Writing off debt (%d)", get_full_name(), mc);
+        mc = 0;
+    }
+}
+
 int Player::get_fleet_marker_idx() {
     return fleet_marker_idx;
 }
