@@ -3244,7 +3244,8 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
                         // Bulletin part of PROCenemyattack
                         if (won) {
-                            bulletin_set_next_text("%s has taken over the planet of %s.", player->get_name(), defender->get_full_name());
+                            bulletin_set_next_text("%s has taken over", player->get_name());
+                            bulletin_set_next_text("the planet of %s.", defender->get_full_name());
                             mp_state.mpai_substage = 100;
                         } else {
                             bulletin_set_next_text("%s could keep the planet.", defender->get_full_name());
