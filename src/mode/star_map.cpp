@@ -416,30 +416,9 @@ ExodusMode StarMap::update(float delta) {
 
                         player->add_trace(TRACE_PlanetsBombed);
 
-                        int owner_idx = planet->get_owner();
-                        Player *owner = exostate.get_player(owner_idx);
-
-                        if (owner) {
-                            exostate.unset_alliances(player_idx, owner_idx);
-                            if (!owner->is_human()) {
-                                if (owner->get_flag(0) != AI_Lo) {
-                                    owner->set_hostile_to(player_idx);
-                                }
-                            }
-                        }
-
-                        if (tgt.has(STONE_City)) {
-                            planet->adjust_unrest(2);
-                        }
-
-                        int bombers_killed = 0;
-                        int att = planet->plan_bomb(fleet.bombers, tgt, bombers_killed, bmb_guns);
-
-                        if (bmb_guns) {
-                            planet->adjust_airdef_guns(-att);
-                        }
-
-                        fleet.bombers = max(fleet.bombers - bombers_killed, 0);
+                        // N.B. Sets up ephstate
+                        int hits, bombers_killed;
+                        bomb_planet(tgt, bmb_guns, hits, bombers_killed);
 
                         draw_manager.draw(
                             id(ID::FLEET_MISSIONBG),
@@ -468,7 +447,7 @@ ExodusMode StarMap::update(float delta) {
                             FLEET_PANEL_X+4, FLEET_PANEL_Y+64,
                             COL_TEXT);
 
-                        snprintf(text, sizeof(text), "%d bombers have hit", att);
+                        snprintf(text, sizeof(text), "%d bombers have hit", hits);
                         draw_manager.draw_text(
                             text,
                             Justify::Left,
@@ -485,20 +464,6 @@ ExodusMode StarMap::update(float delta) {
                             Justify::Left,
                             FLEET_PANEL_X+4, FLEET_PANEL_Y+224,
                             COL_TEXT);
-
-                        // TODO: Do we proceed if all bombers killed?
-                        ephstate.set_ephemeral_state(EPH_Destruction);
-                        ephstate.destruction.type = DESTROY_NStones;
-                        ephstate.destruction.tgt_stones = tgt;
-                        ephstate.destruction.n_strikes = att;
-                        ephstate.destruction.enable_explosions = true;
-                        ephstate.destruction.enable_explosion_anims = true;
-                        ephstate.destruction.irradiated = false;
-                        ephstate.destruction.show_target = att<3;
-                        ephstate.destruction.destroyer_idx = player_idx;
-                        ephstate.destruction.terror = false;
-                        ephstate.destruction.nuke = false;
-                        ephstate.destruction.draw = true;
 
                         stage = SM_MissionBomb;
                         return ExodusMode::MODE_None;

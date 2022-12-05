@@ -5,6 +5,7 @@
 #include "mixins/panel_drawer.h"
 #include "mixins/comm_panel_drawer.h"
 #include "mixins/frame_drawer.h"
+#include "mixins/bombing.h"
 
 #include "draw/draw.h"
 
@@ -13,7 +14,7 @@
 
 extern ExodusState exostate;
 
-class StarMap : ModeBase, PanelDrawer, CommPanelDrawer, FrameDrawer {
+class StarMap : ModeBase, PanelDrawer, CommPanelDrawer, FrameDrawer, Bombing {
     public:
         StarMap();
         virtual void enter() override;

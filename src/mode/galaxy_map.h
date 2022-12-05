@@ -10,6 +10,7 @@
 #include "mixins/menu_drawer.h"
 #include "mixins/month_report.h"
 #include "mixins/trade_buy.h"
+#include "mixins/bombing.h"
 
 #include "platform.h"
 #include "draw/draw.h"
@@ -152,7 +153,7 @@ typedef struct {
     int mpai_original_bombers;
 } MPState;
 
-class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, BulletinDrawer, FrameDrawer, MenuDrawer, MonthReport, TradeBuy {
+class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, BulletinDrawer, FrameDrawer, MenuDrawer, MonthReport, TradeBuy, Bombing {
     public:
         GalaxyMap();
         virtual void enter() override;
