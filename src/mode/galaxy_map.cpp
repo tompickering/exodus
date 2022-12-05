@@ -45,7 +45,7 @@ GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer(), PanelDrawer(PNL_
     do_lunar_battle = false;
     do_guild_title = GUILDTITLE_None;
 
-    active_mission = false;
+    mission_state = MS_None;
     mission_n_strikes = 0;
 }
 
@@ -1517,10 +1517,108 @@ ExodusMode GalaxyMap::month_pass_update() {
             Player *p = exostate.set_active_player(mp_state.mp_player_idx);
             const Mission mission = p->get_mission();
 
-            if (active_mission) {
+            if (mission_state == MS_AssassinCapturedKillChoice) {
+                bool killed = bulletin_was_yesno_yes();
+
+                mission_state = MS_None;
+
+                Star *st = (Star*)exostate.get_active_flytarget();
+                Planet *pl = exostate.get_active_planet();
+
+                int owner_idx = pl->get_owner();
+                Player *owner = exostate.get_player(owner_idx);
+
+                bulletin_start_new(false);
+                bulletin_set_bg(pl->sprites()->bulletin_bg);
+                bulletin_set_flag(flags[owner->get_flag_idx()]);
+                bulletin_write_planet_info(st, pl);
+                bulletin_set_next_text("");
+
+                if (killed) {
+                    bulletin_set_next_text("The assassin has been shot.");
+                } else {
+                    int n = exostate.get_n_planets(p);
+                    const Fleet& f = p->get_fleet();
+
+                    bulletin_set_next_text("The assassin co-operates.");
+                    bulletin_set_next_text("He gives the following information:");
+                    bulletin_set_next_text("");
+                    bulletin_set_next_text("He was sent by %s.", p->get_full_name());
+                    bulletin_set_next_text("%s owns %d Mega Credits", p->get_name(), p->get_mc());
+                    bulletin_set_next_text("and rules %d planet%s.", n, n == 1 ? "" : "s");
+                    bulletin_set_next_text("%s's fleet consists of %d", p->get_name(), f.size());
+                    bulletin_set_next_text("ships.");
+                }
+
+                return ExodusMode::MODE_None;
+            }
+
+            if (mission_state == MS_AssassinCaptured || mission_state == MS_AssassinCapturedDead) {
+                if (!draw_manager.clicked()) {
+                    return ExodusMode::MODE_None;
+                }
+
+                draw_manager.draw(
+                    id(ID::FRAMED_IMG),
+                    nullptr);
+                frame_remove();
+
+                Star *st = (Star*)exostate.get_active_flytarget();
+                Planet *pl = exostate.get_active_planet();
+
+                int owner_idx = pl->get_owner();
+                Player *owner = exostate.get_player(owner_idx);
+
+                exostate.register_news(NI_AssassinCaptured);
+                bulletin_start_new(false);
+                bulletin_set_bg(pl->sprites()->bulletin_bg);
+                bulletin_set_flag(flags[owner->get_flag_idx()]);
+                bulletin_write_planet_info(st, pl);
+                bulletin_set_next_text("");
+                bulletin_set_next_text("ASSASSIN AT %s", tmp_caps(pl->get_name()));
+                bulletin_set_next_text("");
+                bulletin_set_next_text("An assassin has been captured by");
+                bulletin_set_next_text("security units of %s.", pl->get_name());
+                bulletin_set_next_text("");
+
+                if (mission_state == MS_AssassinCapturedDead) {
+                    // Add feminine case to orig
+                    if (onein(2)) {
+                        bulletin_set_next_text("He has killed himself.");
+                    } else {
+                        bulletin_set_next_text("She has killed herself.");
+                    }
+
+                    mission_state = MS_None;
+                } else {
+                    // TODO: Would be good to see when the dream influence system was actually helpful
+                    if (owner->is_human()) {
+                        bulletin_set_next_text("Maybe he wants to cooperate.");
+                        bulletin_set_next_text("");
+                        bulletin_set_next_text("Do you wish to kill him?");
+                        bulletin_set_yesno();
+                        mission_state = MS_AssassinCapturedKillChoice;
+                    } else {
+                        // Again, feminine case easy to add here with no extra state tracking
+                        if (onein(2)) {
+                            bulletin_set_next_text("Maybe he wants to cooperate.");
+                        } else {
+                            bulletin_set_next_text("Maybe she wants to cooperate.");
+                        }
+                        // The CPU owner discovers who sent the spy, and becomes hostile
+                        owner->set_hostile_to(mp_state.mp_player_idx);
+
+                        mission_state = MS_None;
+                    }
+                }
+
+                return ExodusMode::MODE_None;
+            }
+
+            if (mission_state == MS_Active) {
                 if (p->has_mission()) {
                     // Resolve the mission here
-                    active_mission = false;
+                    mission_state = MS_None;
                     L.debug("[%s] EXECUTE MISSION", p->get_full_name());
 
                     Planet *pl = exostate.get_active_planet();
@@ -1630,7 +1728,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                     }
                     continue;
                 } else {
-                    L.error("Player should have mission if active_mission set");
+                    L.error("Player should have mission if mission_state is MS_Active");
                 }
             }
 
@@ -1651,7 +1749,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                     bulletin_set_active_player_flag();
                     bulletin_write_planet_info(st, pl);
                     // Just set bulletin here - if we need to trigger an action
-                    // on close, set active_mission and return
+                    // on close, set mission_state and return
                     // Otherwise, p->clear_mission();
 
                     switch (mission.type) {
@@ -1669,57 +1767,40 @@ ExodusMode GalaxyMap::month_pass_update() {
                                 // PROCspyspot
                                 int r = RND(owner->has_invention(INV_IndustryGuard) ? 5 : 10);
                                 r += 2*(int)p->get_officer(OFF_Secret);
+                                r = 0;
                                 if (r < 4) {
-                                    // TODO: Spy captured
                                     L.info("[%s] SPY CAPTURED - %s", p->get_full_name(), pl->get_name());
+
+                                    // Cancel bulletin in this case...
+                                    bulletin_ensure_closed();
+
                                     audio_manager.target_music(mpart2mus(9));
 
-                                    // TODO: Bit early in PROCspyspot that draws IMG_CT3_EXPORT and waits for a click with PROCgetMK
+                                    draw_manager.draw(
+                                        id(ID::FRAMED_IMG),
+                                        IMG_CT3_EXPORT,
+                                        {5, 7, 0, 0, 1, 1});
+
+                                    char t[64];
+                                    snprintf(t, sizeof(t), "Assassin captured at %s", pl->get_name());
+                                    draw_manager.draw_text(
+                                        t,
+                                        Justify::Left,
+                                        12, 378,
+                                        COL_TEXT2);
+
+                                    frame_draw();
 
                                     // Clear mission now - this does not go ahead
                                     // This also means we do not re-process this player again when we return after the bulletin
                                     p->clear_mission();
 
-                                    exostate.register_news(NI_AssassinCaptured);
-                                    bulletin_start_new(true);
-                                    bulletin_set_bg(pl->sprites()->bulletin_bg);
-                                    bulletin_set_active_player_flag();
-                                    bulletin_write_planet_info(st, pl);
-                                    bulletin_set_next_text("");
-                                    bulletin_set_next_text("ASSASSIN AT %s", tmp_caps(pl->get_name()));
-                                    bulletin_set_next_text("");
-                                    bulletin_set_next_text("An assassin has been captured by");
-                                    bulletin_set_next_text("security units of %s.", pl->get_name());
-                                    bulletin_set_next_text("");
-
                                     if (r != 1 && !owner->has_invention(INV_DreamInfluence)) {
-                                        // Add feminine case to orig
-                                        if (onein(2)) {
-                                            bulletin_set_next_text("He has killed himself.");
-                                        } else {
-                                            bulletin_set_next_text("She has killed herself.");
-                                        }
+                                        mission_state = MS_AssassinCapturedDead;
                                     } else {
-                                        // TODO: Would be good to see when the dream influence system was actually helpful
-                                        if (owner->is_human()) {
-                                            bulletin_set_next_text("Maybe he wants to cooperate.");
-                                            bulletin_set_next_text("");
-                                            bulletin_set_next_text("Do you wish to kill him?");
-                                            // TODO: Choice
-                                        } else {
-                                            // Again, feminine case easy to add here with no extra state tracking
-                                            if (onein(2)) {
-                                                bulletin_set_next_text("Maybe he wants to cooperate.");
-                                            } else {
-                                                bulletin_set_next_text("Maybe she wants to cooperate.");
-                                            }
-                                            // The CPU owner discovers who sent the spy, and becomes hostile
-                                            owner->set_hostile_to(mp_state.mp_player_idx);
-                                        }
+                                        mission_state = MS_AssassinCaptured;
                                     }
 
-                                    // Don't set active_mission true - we have no mission to process
-                                    // TODO: BUT resolve assassin by separate means
                                     return ExodusMode::MODE_None;
                                 } else {
                                     audio_manager.target_music(mpart2mus(9));
@@ -1813,7 +1894,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                                         }
                                     }
 
-                                    active_mission = true;
+                                    mission_state = MS_Active;
                                     return ExodusMode::MODE_None;
                                 }
                             }
@@ -1828,7 +1909,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                             bulletin_set_next_text(
                                 "The planet has taken %d hits.",
                                 mission_n_strikes);
-                            active_mission = true;
+                            mission_state = MS_Active;
                             return ExodusMode::MODE_None;
                         case MT_Nuclear:
                             bulletin_set_next_text("");
@@ -1837,7 +1918,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                             bulletin_set_next_text(
                                 "NUCLEAR ATTACK AT %s",
                                 tmp_caps(pl->get_name()));
-                            active_mission = true;
+                            mission_state = MS_Active;
                             return ExodusMode::MODE_None;
                     }
                 } else {

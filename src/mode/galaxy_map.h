@@ -153,6 +153,14 @@ typedef struct {
     int mpai_original_bombers;
 } MPState;
 
+enum MissionState : uint8_t {
+    MS_None,
+    MS_Active,
+    MS_AssassinCaptured,
+    MS_AssassinCapturedDead,
+    MS_AssassinCapturedKillChoice,
+};
+
 class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, BulletinDrawer, FrameDrawer, MenuDrawer, MonthReport, TradeBuy, Bombing {
     public:
         GalaxyMap();
@@ -207,7 +215,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
         bool do_lunar_battle;
         GuildTitle do_guild_title;
 
-        bool active_mission;
+        MissionState mission_state;
         int mission_n_strikes;
 
         bool update_researchcheck(Star*, Planet *p);
