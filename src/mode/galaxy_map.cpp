@@ -1314,8 +1314,8 @@ ExodusMode GalaxyMap::month_pass_update() {
         // PROCwpc
         for (; mp_state.mp_star_idx < n_stars; ++mp_state.mp_star_idx) {
             for (; mp_state.mp_planet_idx < STAR_MAX_PLANETS; ++mp_state.mp_planet_idx) {
-                Planet *p = stars[mp_state.mp_star_idx].get_planet(mp_state.mp_planet_idx);
-                if (p && p->exists() && p->finalise_construction()) {
+                Planet *p = stars[mp_state.mp_star_idx].get_planet_nocheck(mp_state.mp_planet_idx);
+                if (p && p->finalise_construction()) {
                     Player *owner = exostate.get_player(p->get_owner());
                     if (!owner) {
                         // Possible if lord completed planet and then was defeated?
@@ -2479,12 +2479,12 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     if (mp_state.mpai_stage == MPAI_DevelopArtificialPlanet) {
         Planet *art = exostate.get_planet_under_construction(player_idx);
         int phase = art ? art->get_construction_phase() : 0;
-        if (art) {
+        if (art && phase < 3) {
             if (   (phase == 2 && player->can_afford(1500))
                 || (phase == 1 && player->can_afford(1000))) {
                 if (player->attempt_spend(1000)) {
                     if (!art->advance_construction_phase()) {
-                        L.error("get_planet_under_construction() returned non-advanceable planet (CPU)");
+                        L.error("Attempt to advance non-advanceable planet");
                     }
                     L.debug("[%s]: ARTIFICIAL PLANET PHASE %d", player->get_full_name(), phase+1);
                 }

@@ -116,9 +116,10 @@ bool Planet::advance_construction_phase() {
         return false;
     }
     if (construction_phase < 3) {
-        if (++construction_phase >= 3) {
-            _exists = true;
-        }
+        ++construction_phase;
+        /*
+         * N.B. We don't 'exist' until finalise_construction()
+         */
         return true;
     }
     return false;
@@ -142,6 +143,7 @@ bool Planet::finalise_construction() {
         return false;
     }
     if (construction_phase >= 3) {
+        _exists = true;
         construction_phase = 0;
         return true;
     }

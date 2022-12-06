@@ -360,8 +360,12 @@ void MenuDrawer::menu_open_specific_mode() {
 
     if (!p->can_afford(COST_ART)) art_ok = false;
     if (!p->has_invention(INV_OrbitalMassConstruction)) art_ok = false;
-    // TODO: Also check that the player doesn't have an artificial planet
-    // (or rather, whatever pphase != 3 implies).
+
+    Planet *art = exostate.get_planet_under_construction(p_idx);
+    if (art && art->get_construction_phase() >= 3) {
+        // Artificial planet is awaiting finalisation
+        art_ok = false;
+    }
 
     bool service_ok = exostate.get_n_active_cpu_players() > 0;
 
@@ -741,10 +745,12 @@ void MenuDrawer::menu_open_specific_mode() {
                     menu_art_planet_phase = planet->get_construction_phase();
                     menu_art_planet_named = true;
                     if (!planet->advance_construction_phase()) {
-                        L.error("get_planet_under_construction() returned non-advanceable planet");
+                        L.error("Attempt to advance non-advanceable planet");
                     }
-                    // TODO: On completion, the planet should actually appear the following month,
-                    // and this should trigger a bulletin (+ news article?)
+                    /*
+                     * On completion, the planet will actually appear the following month,
+                     * and a bulletin will show. This is done with finalise_construction().
+                     */
                 } else {
                     // TODO: Check if player can build world (viable star, been visited, not too many etc)
                     // TODO: Dialogue here
