@@ -2491,6 +2491,8 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
             }
         }
 
+        phase = art ? art->get_construction_phase() : 0;
+
         // Initialise an artificial planet we have just finished creating
         // N.B. 'phase' will get reset to 0 in PROCwpc - then it will be a normal planet
         if (phase >= 3) {
