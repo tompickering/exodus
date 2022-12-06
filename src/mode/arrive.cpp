@@ -53,7 +53,6 @@ void Arrive::base_draw(const char* bg) {
     update_panel_info_player(TGT_Primary, player);
     update_panel_info_ft(TGT_Primary, player, tgt);
 
-    // TODO: Check exact text here, get_name() vs get_full_name() etc
     char text[128];
     snprintf(
         text,
