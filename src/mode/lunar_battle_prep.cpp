@@ -185,9 +185,6 @@ void LunarBattlePrep::enter() {
         }
     }
 
-    // TODO - Supplements from war allies - ensure we don't subtrace these from
-    // garrison at the end of combat!
-
     switch (b.aggressor_type) {
         case AGG_Player:
             {
@@ -209,7 +206,10 @@ void LunarBattlePrep::enter() {
             break;
     }
 
-    // TODO: I think this only happens for humans
+    /*
+     * SUGGEST: In orig, this only happens for humans.
+     * Suggest keeping this as-is for CPU players also.
+     */
     if (get_def_total() == 0) {
         b.defender_inf = 1;
     }
