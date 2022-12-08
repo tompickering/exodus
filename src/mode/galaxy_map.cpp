@@ -401,8 +401,8 @@ ExodusMode GalaxyMap::update(float delta) {
                 }
 
                 // TODO: "SELECT A STAR" message
-                // TODO: (Show star name on mouseover?)
-                // TODO: Some way to highlight available stars
+                // SUGGEST: (Show star name on mouseover?)
+                // SUGGEST: Some way to highlight available stars
                 ft = get_clicked_flytarget();
                 if (ft && ft != exostate.get_galaxy()->get_guild()) {
                     int ft_idx = exostate.tgt2loc(ft);
@@ -722,9 +722,9 @@ ExodusMode GalaxyMap::update(float delta) {
                     draw_manager.draw(id(ID::SELECTED), nullptr);
                 }
 
-                // TODO: Perhaps this should be indicated elsewhere, so the player
-                //       can still use the usual readout to help decide where to
-                //       select.
+                // SUGGEST: Perhaps this should be indicated elsewhere, so the player
+                //          can still use the usual readout to help decide where to
+                //          select.
                 panel_set_text("SELECT A STAR");
             }
             break;
@@ -1229,7 +1229,12 @@ ExodusMode GalaxyMap::month_pass_update() {
                             pl->change_class(Ice);
                         }
                     }
-                    // TODO: If no planets, orig moves star off-screen and players here are moved to guild
+                    /*
+                     * SUGGEST: If no planets, orig moves star off-screen and players here are moved to guild -
+                     * suggest that we leave this as-is and allow an empty star to remain. This does have gameplay
+                     * implications - if you can break an otherwise 2-month flight into 2 one-month flights then
+                     * you can decide to change your course in the middle month.
+                     */
                     break;
                 default:
                     break;

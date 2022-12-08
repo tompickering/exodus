@@ -403,7 +403,7 @@ void PlanetMap::enter() {
         if (ephstate.destruction.draw) {
             draw();
             draw_stones();
-            // TODO: It'd be fun to keep redrawing population to watch it tick down with cities destroyed... >:D
+            // SUGGEST: It'd be fun to keep redrawing population to watch it tick down with cities destroyed... >:D
             draw_attack_details();
 
             if (d.destroyer_idx >= 0 && !d.nuke) {

@@ -2236,7 +2236,7 @@ void Planet::ai_update() {
                 // BUILD ROBOTS
                 {
                     int r = RND(3);
-                    // TODO: Should we check we're within resource limits here?! (Note get_robot_cap())
+                    // SUGGEST: Don't buy robots outside resource limits (get_robot_cap())
                     // These robots might be scrapped on discard_excess_resources()!
                     if (owner->attempt_spend_cpuforce(r * COST_ROBOT)) {
                         robots += r;

@@ -558,9 +558,6 @@ ExodusMode Ending::update(float dt) {
                 return ExodusMode::MODE_Menu;
             }
             break;
-        default:
-            // TODO: Remove this when everything else done
-            break;
     }
 
     time += dt;

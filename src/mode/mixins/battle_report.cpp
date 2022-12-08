@@ -71,7 +71,6 @@ bool BattleReport::batrpt_draw(bool reset) {
                 snprintf(l4, sizeof(l4), "defending units.");
                 // Orig calls PROCdonotice here - we register NI_PlanetTakeover elsewhere
             } else {
-                // TODO: What gets printed if aggressor_retreated?
                 snprintf(l0, sizeof(l0), "All your %d defending units", di);
                 snprintf(l1, sizeof(l1), "have been destroyed.");
                 snprintf(l3, sizeof(l3), "You have lost the planet");
