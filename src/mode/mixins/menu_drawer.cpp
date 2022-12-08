@@ -752,8 +752,6 @@ void MenuDrawer::menu_open_specific_mode() {
                      * and a bulletin will show. This is done with finalise_construction().
                      */
                 } else {
-                    // TODO: Check if player can build world (viable star, been visited, not too many etc)
-                    // TODO: Dialogue here
                     L.debug("Constructing artificial planet");
                     menu_action = MA_BuildArtificialWorld;
                 }
