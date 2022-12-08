@@ -2440,7 +2440,11 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         }
                         break;
                     case 2:
-                        // TODO: Check if there's even any point in AI having warships...?!
+                        /*
+                         * SUGGEST: AI don't use warships - drop this? Disadvantage is that
+                         * it saves the CPU player money. Advantage is that without this noise
+                         * you get more meaningful fleet size info from a captured assassin.
+                         */
                         if (player->attempt_spend(20)) {
                             L.debug("[%s]: BUY WARSHIP", player->get_full_name());
                             fleet.warships++;
