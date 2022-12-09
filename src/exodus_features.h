@@ -24,6 +24,8 @@
 // Display the name of an unpaid officer in bulletin
 #define FEATURE_OFFICER_COST_INFO 1
 
+#define FEATURE_FLIP_BUTTONS 1
+
 // Fixes bug meaning some AI terrorist actions are never taken
 #define FIX_AI_TERROR 1
 

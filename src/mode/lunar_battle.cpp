@@ -247,6 +247,8 @@ void LunarBattle::enter() {
     active_unit = &units[0];
     target_unit = nullptr;
     panel_unit = nullptr;
+
+    fast = false;
 }
 
 void LunarBattle::draw_ground() {
@@ -1866,13 +1868,19 @@ void LunarBattle::update_panel() {
 
             draw_manager.fill_pattern({226, 12, 210, 50});
 
+#if FEATURE_FLIP_BUTTONS
+            const char* fast_button = fast ? IMG_GF4_HMENU5 : IMG_GF4_HMENU3;
+#else
+            const char* fast_button = fast ? IMG_GF4_HMENU3 : IMG_GF4_HMENU5;
+#endif
+
             draw_manager.draw(
                 id(ID::BTN_INFO),
                 IMG_GF4_HMENU1,
                 {447, 8, 0, 0, 1, 1});
             draw_manager.draw(
                 id(ID::BTN_SPEED),
-                IMG_GF4_HMENU5,
+                fast_button,
                 {447, 38, 0, 0, 1, 1});
             draw_manager.draw(
                 id(ID::BTN_TALK),
@@ -2050,7 +2058,20 @@ LunarBattle::Stage LunarBattle::update_buttons() {
     }
 
     if (draw_manager.query_click(id(ID::BTN_SPEED)).id) {
-        // TODO
+        fast = !fast;
+
+#if FEATURE_FLIP_BUTTONS
+        const char* fast_button = fast ? IMG_GF4_HMENU5 : IMG_GF4_HMENU3;
+#else
+        const char* fast_button = fast ? IMG_GF4_HMENU3 : IMG_GF4_HMENU5;
+#endif
+
+        draw_manager.draw(
+            id(ID::BTN_SPEED),
+            fast_button,
+            {447, 38, 0, 0, 1, 1});
+
+        // TODO: Implement 'fast'
     }
 
     if (draw_manager.query_click(id(ID::BTN_TALK)).id) {
