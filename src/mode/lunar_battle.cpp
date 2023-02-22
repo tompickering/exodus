@@ -36,6 +36,8 @@ static const int LUNAR_BASE_CTL_HP = 10;
 
 static const float DYING_TIME = .1f;
 
+static const float FAST_SHOT_MULTIPLIER = 4.f;
+
 enum ID {
     PANEL,
     PANEL_PATTERN,
@@ -679,6 +681,11 @@ ExodusMode LunarBattle::update(float delta) {
                     active_unit->do_move(move_dir);
                     unit_moving = true;
                     move_interp = 0;
+
+                    if (fast) {
+                        move_interp = 1;
+                    }
+
                     int r = rand() % 3;
                     const char* sfx = active_unit->move0_sfx;
                     if (r == 1) sfx = active_unit->move1_sfx;
@@ -824,7 +831,7 @@ ExodusMode LunarBattle::update(float delta) {
             }
 
             if (shot_interp > 0) {
-                shot_interp -= delta * active_unit->fire_rate;
+                shot_interp -= (fast ? FAST_SHOT_MULTIPLIER : 1.f) * delta * active_unit->fire_rate;
                 if (shot_interp < 0) {
                     shot_interp = 0;
                 }
@@ -985,10 +992,19 @@ ExodusMode LunarBattle::update(float delta) {
                         damage_to_apply = 0;
                         target_unit->hp = 0;
                     } else {
-                        --damage_to_apply;
-                        (*lost_tracker) += target_unit->hp > 0 ? 1 : 0;
-                        (*surf_tracker) -= target_unit->hp > 0 ? 1 : 0;
-                        target_unit->hp = max(0, target_unit->hp - 1);
+                        int to_subtract = 0;
+                        if (fast) {
+                            // In fast mode, when >=1 damage is incurred, play one explosion and apply all of it
+                            to_subtract = min(damage_to_apply, target_unit->hp);
+                            damage_to_apply = 0;
+                        } else {
+                            to_subtract = min(1, target_unit->hp);
+                            --damage_to_apply;
+                        }
+
+                        (*lost_tracker) += to_subtract;
+                        (*surf_tracker) -= to_subtract;
+                        target_unit->hp = max(0, target_unit->hp - to_subtract);
                     }
                 }
                 break;
@@ -2070,8 +2086,6 @@ LunarBattle::Stage LunarBattle::update_buttons() {
             id(ID::BTN_SPEED),
             fast_button,
             {447, 38, 0, 0, 1, 1});
-
-        // TODO: Implement 'fast'
     }
 
     if (draw_manager.query_click(id(ID::BTN_TALK)).id) {
