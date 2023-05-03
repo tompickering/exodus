@@ -31,6 +31,8 @@ class Menu : ModeBase {
             Aim,
             Difficulty,
             Confirm,
+            Delay0,
+            Delay1,
             End,
         };
 
@@ -43,6 +45,20 @@ class Menu : ModeBase {
         Stage stage;
         TransitionState trans_state;
         unsigned char current_player;
+
+        Stage delayed_stage;
+        int delay_border_to_reset;
+        SprID delay_redraw_id;
+        const char* delay_redraw_spr;
+        DrawTransform delay_redraw_transform;
+        void delay_stage(Stage, int, SprID, const char*, DrawTransform);
+        void draw_border_opt(int, RGB);
+        void draw_border_opt(DrawTarget, int, RGB);
+        void draw_border_flag(int, RGB);
+
+        const char* img_diff_0;
+        const char* img_diff_1;
+        const char* img_diff_2;
 
         float timer;
 

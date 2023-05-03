@@ -30,6 +30,8 @@ const int LOADFRAME_STEP = 20;
 const int LOADFRAME_MONTH_X = LOADFRAME_X + 240;
 const int LOADFRAME_PLANETS_X = LOADFRAME_MONTH_X + 120;
 
+const float DELAY_TIME = 0.4f;
+
 extern SAVEMANAGER save_manager;
 
 enum ID {
@@ -38,6 +40,21 @@ enum ID {
     LOADFRAME,
     LOADFRAME_INNER,
     LOADFRAME_EXIT,
+    BUTTON_BG_0,
+    BUTTON_BG_1,
+    BUTTON_BG_2,
+    BUTTON_BG_3,
+    BUTTON_BG_4,
+    BUTTON_BG_5,
+    BUTTON_BG_6,
+    BUTTON_BG_7,
+    BUTTON_BG_8,
+    BUTTON_BG_9,
+    BUTTON_BG_10,
+    BUTTON_BG_11,
+    BUTTON_BG_12,
+    BUTTON_BG_13,
+    BUTTON_BG_14,
     GAL_SZ_SMALL,
     GAL_SZ_MEDIUM,
     GAL_SZ_LARGE,
@@ -326,6 +343,10 @@ ExodusMode Menu::update(float delta) {
                 draw_manager.fill(TGT_Secondary, {OPT_1_X-6, OPT_1_Y-6, 212, 112}, COL_BORDERS);
                 draw_manager.fill(TGT_Secondary, {OPT_2_X-6, OPT_2_Y-6, 212, 112}, COL_BORDERS);
 
+                draw_border_opt(TGT_Secondary, 0, {0, 0, 0});
+                draw_border_opt(TGT_Secondary, 1, {0, 0, 0});
+                draw_border_opt(TGT_Secondary, 2, {0, 0, 0});
+
                 draw_manager.draw(TGT_Secondary,
                         id(GAL_SZ_SMALL),
                         IMG_STARTGR_GAL_S,
@@ -378,13 +399,16 @@ ExodusMode Menu::update(float delta) {
             } else {
                 if (draw_manager.query_click(id(GAL_SZ_SMALL)).id) {
                     config.size = GAL_Small;
-                    set_stage(NPlayers);
+                    draw_border_opt(0, {0, 0, 0xFF});
+                    delay_stage(NPlayers, 0, id(GAL_SZ_SMALL), IMG_STARTGR_GAL_S, OPT_0);
                 } else if (draw_manager.query_click(id(GAL_SZ_MEDIUM)).id) {
                     config.size = GAL_Medium;
-                    set_stage(NPlayers);
+                    draw_border_opt(1, {0, 0, 0xFF});
+                    delay_stage(NPlayers, 1, id(GAL_SZ_MEDIUM), IMG_STARTGR_GAL_M, OPT_1);
                 } else if (draw_manager.query_click(id(GAL_SZ_LARGE)).id) {
                     config.size = GAL_Large;
-                    set_stage(NPlayers);
+                    draw_border_opt(2, {0, 0, 0xFF});
+                    delay_stage(NPlayers, 2, id(GAL_SZ_LARGE), IMG_STARTGR_GAL_L, OPT_2);
                 }
             }
 
@@ -761,6 +785,10 @@ ExodusMode Menu::update(float delta) {
                 draw_manager.fill({OPT_1_X-6, OPT_1_Y-6, 212, 112}, COL_BORDERS);
                 draw_manager.fill({OPT_2_X-6, OPT_2_Y-6, 212, 112}, COL_BORDERS);
 
+                draw_border_opt(0, {0, 0, 0});
+                draw_border_opt(1, {0, 0, 0});
+                draw_border_opt(2, {0, 0, 0});
+
                 draw_manager.draw(
                         id(AIM_MIGHT),
                         IMG_STARTGR_AIM_MIGHT,
@@ -813,13 +841,16 @@ ExodusMode Menu::update(float delta) {
 
             if (draw_manager.query_click(id(AIM_MIGHT)).id) {
                 config.aim = AIM_Might;
-                set_stage(Difficulty);
+                draw_border_opt(0, {0, 0, 0xFF});
+                delay_stage(Difficulty, 0, id(AIM_MIGHT), IMG_STARTGR_AIM_MIGHT, OPT_0);
             } else if (draw_manager.query_click(id(AIM_MONEY)).id) {
                 config.aim = AIM_Money;
-                set_stage(Difficulty);
+                draw_border_opt(1, {0, 0, 0xFF});
+                delay_stage(Difficulty, 1, id(AIM_MONEY), IMG_STARTGR_AIM_MONEY, OPT_1);
             } else if (draw_manager.query_click(id(AIM_CIV)).id) {
                 config.aim = AIM_Civilization;
-                set_stage(Difficulty);
+                draw_border_opt(2, {0, 0, 0xFF});
+                delay_stage(Difficulty, 2, id(AIM_CIV), IMG_STARTGR_AIM_CIV, OPT_2);
             }
 
             break;
@@ -833,9 +864,6 @@ ExodusMode Menu::update(float delta) {
                     Justify::Left,
                     20, 30, COL_TEXT2);
 
-                const char* img_diff_0;
-                const char* img_diff_1;
-                const char* img_diff_2;
                 const char* txt0_0;
                 const char* txt0_1;
                 const char* txt0_2;
@@ -883,6 +911,10 @@ ExodusMode Menu::update(float delta) {
                 draw_manager.fill({OPT_0_X-6, OPT_0_Y-6, 212, 112}, COL_BORDERS);
                 draw_manager.fill({OPT_1_X-6, OPT_1_Y-6, 212, 112}, COL_BORDERS);
                 draw_manager.fill({OPT_2_X-6, OPT_2_Y-6, 212, 112}, COL_BORDERS);
+
+                draw_border_opt(0, {0, 0, 0});
+                draw_border_opt(1, {0, 0, 0});
+                draw_border_opt(2, {0, 0, 0});
 
                 draw_manager.draw(
                         id_diff_0,
@@ -951,13 +983,16 @@ ExodusMode Menu::update(float delta) {
 
             if (draw_manager.query_click(id_diff_0).id) {
                 config.enemy_start = (config.n_players == 1) ? ENEMY_Weak : ENEMY_None;
-                set_stage(Confirm);
+                draw_border_opt(0, {0, 0, 0xFF});
+                delay_stage(Confirm, 0, id(id_diff_0), img_diff_0, OPT_0);
             } else if (draw_manager.query_click(id_diff_1).id) {
                 config.enemy_start = (config.n_players == 1) ? ENEMY_Medium : ENEMY_Weak;
-                set_stage(Confirm);
+                draw_border_opt(1, {0, 0, 0xFF});
+                delay_stage(Confirm, 1, id(id_diff_1), img_diff_1, OPT_1);
             } else if (draw_manager.query_click(id_diff_2).id) {
                 config.enemy_start = (config.n_players == 1) ? ENEMY_Strong : ENEMY_Medium;
-                set_stage(Confirm);
+                draw_border_opt(2, {0, 0, 0xFF});
+                delay_stage(Confirm, 2, id(id_diff_2), img_diff_2, OPT_2);
             }
             break;
         case Confirm:
@@ -1054,6 +1089,27 @@ ExodusMode Menu::update(float delta) {
             }
 
             break;
+        case Delay0:
+            timer += delta;
+            if (timer > DELAY_TIME) {
+                if (delay_border_to_reset < 3) {
+                    draw_border_opt(delay_border_to_reset, {0, 0, 0});
+                } else {
+                    draw_border_flag(delay_border_to_reset-3, {0, 0, 0});
+                }
+                draw_manager.draw(
+                        delay_redraw_id,
+                        delay_redraw_spr,
+                        delay_redraw_transform);
+                set_stage(Delay1);
+            }
+            break;
+        case Delay1:
+            timer += delta;
+            if (timer > DELAY_TIME) {
+                set_stage(delayed_stage);
+            }
+            break;
         case End:
             exostate.init(config);
             return ExodusMode::MODE_GalaxyGen;
@@ -1067,4 +1123,50 @@ void Menu::set_stage(Stage new_stage) {
     stage = new_stage;
     draw_manager.clear_sprite_ids();
     timer = 0;
+}
+
+void Menu::draw_border_opt(int idx, RGB col) {
+    draw_border_opt(TGT_Primary, idx, col);
+}
+
+void Menu::draw_border_opt(DrawTarget tgt, int idx, RGB col) {
+    int thickness = 2;
+
+    int x = OPT_0_X;
+    int y = OPT_0_Y;
+    if (idx == 1) {
+        x = OPT_1_X;
+        y = OPT_1_Y;
+    }
+    if (idx == 2) {
+        x = OPT_2_X;
+        y = OPT_2_Y;
+    }
+
+    draw_manager.fill(
+        tgt,
+        id(BUTTON_BG_0+idx),
+        {x-thickness, y-thickness, 200+2*thickness, 100+2*thickness},
+        col);
+}
+
+void Menu::draw_border_flag(int idx, RGB col) {
+    int thickness = 2;
+    // TODO
+}
+
+void Menu::delay_stage(Stage next_stage, int border_to_reset, SprID to_redraw, const char* spr, DrawTransform t) {
+    delayed_stage = next_stage;
+
+    delay_border_to_reset = border_to_reset;
+    delay_redraw_id = to_redraw;
+    delay_redraw_spr = spr;
+    delay_redraw_transform = t;
+
+    draw_manager.draw(
+            delay_redraw_id,
+            delay_redraw_spr,
+            delay_redraw_transform);
+
+    set_stage(Delay0);
 }
