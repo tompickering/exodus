@@ -12,7 +12,7 @@
 #include "state/exodus_state.h"
 #include "state/ephemeral_state.h"
 
-#define MAX_STATIC_IDS 50
+#define MAX_STATIC_IDS 64
 
 extern DRAWMANAGER draw_manager;
 extern AUDIOMANAGER audio_manager;
