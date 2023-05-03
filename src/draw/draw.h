@@ -179,6 +179,7 @@ class DrawManager {
         virtual void draw_circle(int, int, int, RGB) = 0;
         virtual void fill(DrawArea area, RGB) = 0;
         virtual void fill(SprID, DrawArea area, RGB) = 0;
+        virtual void fill(DrawTarget, SprID, DrawArea area, RGB) = 0;
         virtual void fill(DrawTarget, DrawArea area, RGB) = 0;
         virtual void fill_pattern(DrawArea area) = 0;
         virtual void fill_pattern(SprID, DrawArea area) = 0;

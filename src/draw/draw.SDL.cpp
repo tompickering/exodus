@@ -970,19 +970,27 @@ void DrawManagerSDL::fill(DrawArea area, RGB col) {
 }
 
 void DrawManagerSDL::fill(SprID id, DrawArea area, RGB col) {
+    fill(TGT_Primary, id, area, col);
+}
+
+void DrawManagerSDL::fill(DrawTarget tgt, SprID id, DrawArea area, RGB col) {
     DrawArea transformed_area = {
         (int)((float)area.x * UPSCALE_X),
         (int)((float)area.y * UPSCALE_Y),
         (int)((float)area.w * UPSCALE_X),
         (int)((float)area.h * UPSCALE_Y)};
-    repair_dirty_area(id);
+
+    if (tgt == TGT_Primary) {
+        repair_dirty_area(id);
+    }
+
     DrawnSprite *drawn_info = update_dirty_area(id, transformed_area);
     if (!drawn_info) {
         L.fatal("Could not attain draw info for fill");
     }
     drawn_info->type = DRAWTYPE_Fill;
     drawn_info->colour = col;
-    fill(TGT_Primary, area, col);
+    fill(tgt, area, col);
 
     // FIXME: If we want to be able to move sprites below other sprites,
     // we need an equivalent of repair_dirty_area() to carry out draws

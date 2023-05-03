@@ -52,6 +52,7 @@ class DrawManagerSDL : public DrawManager {
         virtual void pixelswap_update() override;
         virtual void fill(DrawArea, RGB) override;
         virtual void fill(SprID, DrawArea, RGB) override;
+        virtual void fill(DrawTarget, SprID, DrawArea, RGB) override;
         virtual void fill(DrawTarget, DrawArea, RGB) override;
         virtual void fill_pattern(DrawArea) override;
         virtual void fill_pattern(SprID, DrawArea) override;
