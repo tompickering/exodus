@@ -136,14 +136,14 @@ ExodusMode Menu::update(float delta) {
 
                 draw_manager.draw(TGT_Secondary, IMG_BG_STARS2);
 
-                draw_manager.draw_text(TGT_Secondary, 
+                draw_manager.draw_text(TGT_Secondary,
                         Font::Large,
                         "Please select.",
                         Justify::Centre,
                         RES_X/2, 135,
                         COL_TEXT2);
 
-                draw_manager.draw_text(TGT_Secondary, 
+                draw_manager.draw_text(TGT_Secondary,
                         id(NEWGAME_TXT),
                         Font::Large,
                         "Conquer the stars",
@@ -151,7 +151,7 @@ ExodusMode Menu::update(float delta) {
                         RES_X/2, 205,
                         COL_TEXT);
 
-                draw_manager.draw_text(TGT_Secondary, 
+                draw_manager.draw_text(TGT_Secondary,
                         id(LOADGAME_TXT),
                         Font::Large,
                         "Load a saved game",
@@ -326,46 +326,46 @@ ExodusMode Menu::update(float delta) {
                 draw_manager.fill(TGT_Secondary, {OPT_1_X-6, OPT_1_Y-6, 212, 112}, COL_BORDERS);
                 draw_manager.fill(TGT_Secondary, {OPT_2_X-6, OPT_2_Y-6, 212, 112}, COL_BORDERS);
 
-                draw_manager.draw(TGT_Secondary, 
+                draw_manager.draw(TGT_Secondary,
                         id(GAL_SZ_SMALL),
                         IMG_STARTGR_GAL_S,
                         OPT_0);
-                draw_manager.draw(TGT_Secondary, 
+                draw_manager.draw(TGT_Secondary,
                         id(GAL_SZ_MEDIUM),
                         IMG_STARTGR_GAL_M,
                         OPT_1);
-                draw_manager.draw(TGT_Secondary, 
+                draw_manager.draw(TGT_Secondary,
                         id(GAL_SZ_LARGE),
                         IMG_STARTGR_GAL_L,
                         OPT_2);
 
-                draw_manager.draw_text(TGT_Secondary, 
+                draw_manager.draw_text(TGT_Secondary,
                         "Small",
                         Justify::Left, TXT_0_X, TXT_0_Y, COL_TEXT2);
-                draw_manager.draw_text(TGT_Secondary, 
+                draw_manager.draw_text(TGT_Secondary,
                         "Desperate fights for the",
                         Justify::Left, TXT_0_X, TXT_0_Y + 20, COL_TEXT);
-                draw_manager.draw_text(TGT_Secondary, 
+                draw_manager.draw_text(TGT_Secondary,
                         "few resources.",
                         Justify::Left, TXT_0_X, TXT_0_Y + 40, COL_TEXT);
 
-                draw_manager.draw_text(TGT_Secondary, 
+                draw_manager.draw_text(TGT_Secondary,
                         "Medium",
                         Justify::Right, TXT_1_X, TXT_1_Y, COL_TEXT2);
-                draw_manager.draw_text(TGT_Secondary, 
+                draw_manager.draw_text(TGT_Secondary,
                         "Hardly enough stars to",
                         Justify::Right, TXT_1_X, TXT_1_Y + 20, COL_TEXT);
-                draw_manager.draw_text(TGT_Secondary, 
+                draw_manager.draw_text(TGT_Secondary,
                         "live together in peace.",
                         Justify::Right, TXT_1_X, TXT_1_Y + 40, COL_TEXT);
 
-                draw_manager.draw_text(TGT_Secondary, 
+                draw_manager.draw_text(TGT_Secondary,
                         "Large",
                         Justify::Left, TXT_2_X, TXT_2_Y, COL_TEXT2);
-                draw_manager.draw_text(TGT_Secondary, 
+                draw_manager.draw_text(TGT_Secondary,
                         "Free expansion",
                         Justify::Left, TXT_2_X, TXT_2_Y + 20, COL_TEXT);
-                draw_manager.draw_text(TGT_Secondary, 
+                draw_manager.draw_text(TGT_Secondary,
                         "into space.",
                         Justify::Left, TXT_2_X, TXT_2_Y + 40, COL_TEXT);
 
