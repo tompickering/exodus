@@ -56,6 +56,8 @@ class Menu : ModeBase {
         void draw_border_opt(DrawTarget, int, RGB);
         void draw_border_flag(int, RGB);
 
+        void get_flag_pos(int, int&, int&);
+
         const char* img_diff_0;
         const char* img_diff_1;
         const char* img_diff_2;

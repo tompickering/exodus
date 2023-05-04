@@ -727,19 +727,21 @@ ExodusMode Menu::update(float delta) {
                 for (int j = 0; j < 5; ++j) {
                     for (int i = 0; i < 3; ++i) {
                         int flag_idx = (j*3) + i;
+
+                        draw_border_flag(flag_idx, {0, 0, 0x0});
+
+                        int x, y;
+                        get_flag_pos(flag_idx, x, y);
+
                         draw_manager.draw(
                             id(ID::FLAG_0 + flag_idx),
                             flags[flag_idx],
-                            {RES_X/4 + i*RES_X/4,
-                             140 + j*RES_Y/7,
-                             0.5, 0.5, 1, 1});
+                            {x, y, 0.5, 0.5, 1, 1});
                         for (int k = 0; k < current_player; ++k) {
                             if (config.players[k].get_flag_idx() == flag_idx) {
                                 draw_manager.draw(
                                     IMG_TS1_FLAG0,
-                                    {RES_X/4 + i*RES_X/4,
-                                     140 + j*RES_Y/7,
-                                     0.5, 0.5, 1, 1});
+                                    {x, y, 0.5, 0.5, 1, 1});
                             }
                         }
                     }
@@ -761,11 +763,15 @@ ExodusMode Menu::update(float delta) {
 
                     if (!taken) {
                         config.players[current_player].set_flag_idx(i);
+                        int x, y;
+                        get_flag_pos(i, x, y);
                         if (++current_player == config.n_players) {
-                            set_stage(Aim);
+                            draw_border_flag(i, {0, 0, 0xFF});
+                            delay_stage(Aim, 3+i, id(FLAG_0+i), flags[i], {x, y, 0.5f, 0.5f, 1, 1});
                         } else {
                             // Go back to name input for next player
-                            set_stage(Name);
+                            draw_border_flag(i, {0, 0, 0xFF});
+                            delay_stage(Name, 3+i, id(FLAG_0+i), flags[i], {x, y, 0.5f, 0.5f, 1, 1});
                         }
                     }
                 }
@@ -1125,6 +1131,14 @@ void Menu::set_stage(Stage new_stage) {
     timer = 0;
 }
 
+void Menu::get_flag_pos(int idx, int& x, int& y) {
+    int i = idx % 3;
+    int j = idx / 3;
+    x = RES_X/4 + i*RES_X/4;
+    y = 140 + j*RES_Y/7;
+
+}
+
 void Menu::draw_border_opt(int idx, RGB col) {
     draw_border_opt(TGT_Primary, idx, col);
 }
@@ -1151,8 +1165,19 @@ void Menu::draw_border_opt(DrawTarget tgt, int idx, RGB col) {
 }
 
 void Menu::draw_border_flag(int idx, RGB col) {
-    int thickness = 2;
-    // TODO
+    int thickness = 1;
+
+    int x, y;
+    get_flag_pos(idx, x, y);
+
+    // Flags are drawn centre-anchored - find the top-left corner
+    x -= 96/2;
+    y -= 56/2;
+
+    draw_manager.fill(
+        id(BUTTON_BG_0+idx),
+        {x-thickness, y-thickness, 96+2*thickness, 56+2*thickness},
+        col);
 }
 
 void Menu::delay_stage(Stage next_stage, int border_to_reset, SprID to_redraw, const char* spr, DrawTransform t) {
