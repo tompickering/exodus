@@ -1651,21 +1651,21 @@ void PlanetMap::draw_tool_rect(Tool t, RGB col) {
         case TOOL_Inf:
         case TOOL_Port0:
         case TOOL_Trade:
-            x = 499;
+            x = 498;
             break;
         case TOOL_Cultivate:
         case TOOL_City:
         case TOOL_Gli:
         case TOOL_Port1:
         case TOOL_LunarBase:
-            x = 539;
+            x = 538;
             break;
         case TOOL_Mine:
         case TOOL_Clear:
         case TOOL_Art:
         case TOOL_Port2:
         case TOOL_Park:
-            x = 579;
+            x = 578;
             break;
         default:
             break;
@@ -1675,27 +1675,27 @@ void PlanetMap::draw_tool_rect(Tool t, RGB col) {
         case TOOL_HQ:
         case TOOL_Cultivate:
         case TOOL_Mine:
-            y = 45;
+            y = 44;
             break;
         case TOOL_Plu:
         case TOOL_City:
         case TOOL_Clear:
-            y = 83;
+            y = 82;
             break;
         case TOOL_Inf:
         case TOOL_Gli:
         case TOOL_Art:
-            y = 121;
+            y = 120;
             break;
         case TOOL_Port0:
         case TOOL_Port1:
         case TOOL_Port2:
-            y = 159;
+            y = 158;
             break;
         case TOOL_Trade:
         case TOOL_LunarBase:
         case TOOL_Park:
-            y = 197;
+            y = 196;
             break;
         default:
             break;
