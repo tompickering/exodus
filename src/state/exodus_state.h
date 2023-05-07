@@ -133,6 +133,9 @@ class ExodusState {
         void unset_alliance(int, int, AllianceType);
         void unset_alliances(int, int);
         int count_alliances(int);
+        bool can_request_alliance(int, AllianceType);
+        void register_request_alliance(int, AllianceType);
+        void reset_alliance_requests();
         bool kill(Player*);
         NewsItem& register_news(NewsItemType);
         NewsItem& register_news_force(NewsItemType);
@@ -156,6 +159,8 @@ class ExodusState {
         uint8_t get_alliances(int, int);
         void set_alliances(int, int, uint8_t);
         uint8_t alliance_matrix[N_PLAYERS * N_PLAYERS];
+
+        char alliance_requests[N_PLAYERS];
 
         int newsitem_head;
         NewsItem newsitems[MAX_NEWSITEMS];

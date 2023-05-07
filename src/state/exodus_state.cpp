@@ -1,5 +1,7 @@
 #include "exodus_state.h"
 
+#include "exodus_features.h"
+
 #include <cstdio>
 #include <cstring>
 
@@ -170,6 +172,7 @@ void ExodusState::init(GameConfig config) {
         for (int i = 0; i < N_PLAYERS; ++i) {
             alliance_matrix[j*N_PLAYERS + i] = 0;
         }
+        alliance_requests[j] = 0;
     }
 
     aim = config.aim;
@@ -871,6 +874,24 @@ int ExodusState::count_alliances(int a) {
         }
     }
     return count;
+}
+
+bool ExodusState::can_request_alliance(int other, AllianceType t) {
+#if FEATURE_ALLIANCE_LIMIT
+    return !(alliance_requests[other] & (1 << (int)t));
+#else
+    return true;
+#endif
+}
+
+void ExodusState::register_request_alliance(int other, AllianceType t) {
+    alliance_requests[other] |= (1 << (int)t);
+}
+
+void ExodusState::reset_alliance_requests() {
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        alliance_requests[i] = 0;
+    }
 }
 
 bool ExodusState::kill(Player* p) {

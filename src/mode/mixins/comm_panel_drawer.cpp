@@ -1330,6 +1330,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_set_text(1, "I propose a non-attack alliance.");
             comm_set_text(2, "I propose a war alliance.");
             comm_set_text(3, "Become my ally or I attack.");
+            // TODO: Need an option to back out if the only other available option is attack!
             if (exostate.has_alliance(comm_player_idx, comm_other_idx, ALLY_Trade)) {
                 comm_text_disabled_mask |= 1;
             }
@@ -1339,6 +1340,17 @@ void CommPanelDrawer::comm_send(CommSend input) {
             if (exostate.has_alliance(comm_player_idx, comm_other_idx, ALLY_War)) {
                 comm_text_disabled_mask |= 4;
             }
+
+            if (!exostate.can_request_alliance(comm_other_idx, ALLY_Trade)) {
+                comm_text_disabled_mask |= 1;
+            }
+            if (!exostate.can_request_alliance(comm_other_idx, ALLY_NonAttack)) {
+                comm_text_disabled_mask |= 2;
+            }
+            if (!exostate.can_request_alliance(comm_other_idx, ALLY_War)) {
+                comm_text_disabled_mask |= 4;
+            }
+
             comm_text_interactive_mask = 0xF;
             comm_recv(DIA_R_OfferListen);
             break;
@@ -2558,16 +2570,19 @@ void CommPanelDrawer::comm_process_responses() {
                 case 0:
                     // Trading alliance
                     comm_ctx.alliance_type = ALLY_Trade;
+                    exostate.register_request_alliance(comm_other_idx, comm_ctx.alliance_type);
                     comm_send(DIA_S_ProposeAlliance);
                     break;
                 case 1:
                     // Non-attack alliance
                     comm_ctx.alliance_type = ALLY_NonAttack;
+                    exostate.register_request_alliance(comm_other_idx, comm_ctx.alliance_type);
                     comm_send(DIA_S_ProposeAlliance);
                     break;
                 case 2:
                     // War alliance
                     comm_ctx.alliance_type = ALLY_War;
+                    exostate.register_request_alliance(comm_other_idx, comm_ctx.alliance_type);
                     comm_send(DIA_S_ProposeAlliance);
                     break;
                 case 3:

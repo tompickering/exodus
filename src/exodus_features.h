@@ -8,6 +8,9 @@
 // In lunar battles, downed gliders and broken artillery serve as cover
 #define FEATURE_WRECKAGE_COVER 1
 
+// Only allow one alliance request per player per alliance type per month
+#define FEATURE_ALLIANCE_LIMIT 1
+
 // Only allow one festival per planet per month
 // (N.B. 'Large festival' makes no sense without this!)
 #define FEATURE_FESTIVAL_LIMIT 1
