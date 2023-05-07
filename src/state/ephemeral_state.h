@@ -66,6 +66,7 @@ typedef struct {
     bool aggressor_won;
     bool aggressor_retreated;
     bool rebel_peace;
+    bool human_surrendered;
     UnitCount agg_init; // \ Units that were taken into battle.
     UnitCount def_init; // /
     UnitCount agg_lost; // \ Units that were destroyed in battle.
@@ -76,6 +77,7 @@ typedef struct {
         aggressor_won = false;
         aggressor_retreated = false;
         rebel_peace = false;
+        human_surrendered = false;
         agg_init.clear();
         def_init.clear();
         agg_lost.clear();

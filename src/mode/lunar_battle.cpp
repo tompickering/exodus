@@ -63,6 +63,7 @@ enum ID {
     TELE2,
     TELELIGHTS,
     TELESTAR,
+    SURRENDER_YESNO,
     END,
 };
 
@@ -1065,7 +1066,29 @@ ExodusMode LunarBattle::update(float delta) {
                     }
                 }
 
-                if (agg_units == 0 || def_units == 0) {
+                if (rpt.human_surrendered) {
+                    rpt.aggressor_won = !(aggressor && aggressor->is_human());
+
+                    // Result of PROCquerybattle
+
+                    /*
+                     * What's the point of surrendering? In the original you seem to lose
+                     * all of your units either way - you might as well take out as many
+                     * of the opponent's units as possible...
+                     */
+
+                    // TODO: Give surrendering some advantage?
+
+                    if (aggressor && aggressor->is_human()) {
+                        rpt.agg_lost = rpt.agg_init;
+                        rpt.agg_surf.clear();
+                    } else {
+                        rpt.def_lost = rpt.def_init;
+                        rpt.def_surf.clear();
+                    }
+                    rpt.agg_lost.gli++;
+                    stage = LB_Won;
+                } else if (agg_units == 0 || def_units == 0) {
                     rpt.aggressor_won = def_units == 0;
                     stage = LB_Won;
                 } else {
@@ -1120,6 +1143,32 @@ ExodusMode LunarBattle::update(float delta) {
                 }
             }
             // Skip drawing / cursor updating etc
+            return ExodusMode::MODE_None;
+        case LB_Surrender:
+            {
+                SpriteClick clk = draw_manager.query_click(id(ID::SURRENDER_YESNO));
+                if (clk.id) {
+                    draw_manager.draw(id(ID::SURRENDER_YESNO), nullptr);
+                    draw_manager.draw(id(ID::PANEL_PATTERN), nullptr);
+                    draw_manager.draw(id(ID::PANEL), nullptr);
+                    if (clk.x < 0.5f) {
+                        // Yes - surrender
+                        surrender_timer = 0;
+                        stage = LB_SurrenderDelay;
+                    } else {
+                        // No - don't surrender
+                        stage = button_prev_stage;
+                    }
+                }
+                return ExodusMode::MODE_None;
+            }
+            break;
+        case LB_SurrenderDelay:
+            surrender_timer += delta;
+            if (surrender_timer > 1) {
+                rpt.human_surrendered = true;
+                stage = LB_CheckWon;
+            }
             return ExodusMode::MODE_None;
     }
 
@@ -2104,7 +2153,32 @@ LunarBattle::Stage LunarBattle::update_buttons() {
     }
 
     if (draw_manager.query_click(id(ID::BTN_QUIT)).id) {
-        // TODO
+        draw_manager.fill(
+            id(ID::PANEL),
+            {PANEL_X - BORDER, PANEL_Y - BORDER,
+            PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+            COL_BORDERS);
+        draw_manager.fill_pattern(
+            id(ID::PANEL_PATTERN),
+            {PANEL_X, PANEL_Y,
+            PANEL_W, PANEL_H});
+
+        draw_manager.draw_text(
+            "SURRENDER?",
+            Justify::Centre,
+            PANEL_X + PANEL_W/2, PANEL_Y + 24,
+            COL_TEXT);
+
+        int fill_w = 40;
+        draw_manager.fill({PANEL_X+4, PANEL_Y+PANEL_H-50, fill_w, 26}, COL_BORDERS);
+        draw_manager.fill({PANEL_X+PANEL_W-4-fill_w, PANEL_Y+PANEL_H-50, fill_w, 26}, COL_BORDERS);
+
+        draw_manager.draw(
+            id(ID::SURRENDER_YESNO),
+            IMG_BR14_EXPORT,
+            {PANEL_X + PANEL_W/2, PANEL_Y + PANEL_H - 24, 0.5, 1, 1, 1});
+
+        return LB_Surrender;
     }
 
     return stage;

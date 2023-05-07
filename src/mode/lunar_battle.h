@@ -141,6 +141,8 @@ class LunarBattle : ModeBase, CommPanelDrawer, BattleReport {
             LB_CheckWon,
             LB_Won,
             LB_BatRpt,
+            LB_Surrender,
+            LB_SurrenderDelay,
         };
 
         Stage stage;
@@ -243,6 +245,8 @@ class LunarBattle : ModeBase, CommPanelDrawer, BattleReport {
         bool tele_done;
 
         bool fast;
+
+        float surrender_timer;
 };
 
 #endif
