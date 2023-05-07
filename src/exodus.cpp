@@ -400,8 +400,8 @@ void Exodus::register_buttons() {
     draw_manager.register_button(IMG_BR13_MALE);
     draw_manager.register_button(IMG_BUTTON_OTHER);
 
-    draw_manager.register_button(IMG_BR14_EXPORT, {0, 0, 118, 26});
-    draw_manager.register_button(IMG_BR14_EXPORT, {119, 0, 118, 26});
+    draw_manager.register_button(IMG_BR14_EXPORT, {0, 0, 122, 26});
+    draw_manager.register_button(IMG_BR14_EXPORT, {123, 0, 114, 26});
 
     draw_manager.register_button(IMG_BR16_NBAR, {96, 0, 108, 26});
     draw_manager.register_button(IMG_BR16_NBAR, {206, 0, 108, 26});
