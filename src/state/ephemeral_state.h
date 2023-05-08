@@ -55,7 +55,10 @@ typedef struct {
         base = 0;
     }
     int total() {
-        return inf+gli+art;
+        return inf+gli+art+base;
+    }
+    int total_weighted() {
+        return inf+2*gli+3*art+4*base;
     }
 } UnitCount;
 

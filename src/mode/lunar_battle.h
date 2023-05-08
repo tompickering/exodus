@@ -141,6 +141,7 @@ class LunarBattle : ModeBase, CommPanelDrawer, BattleReport {
             LB_CheckWon,
             LB_Won,
             LB_BatRpt,
+            LB_Info,
             LB_Surrender,
             LB_SurrenderDelay,
         };
@@ -175,6 +176,8 @@ class LunarBattle : ModeBase, CommPanelDrawer, BattleReport {
 
         int n_units;
         BattleUnit units[BATTLE_UNITS_MAX];
+
+        int turn;
 
         bool select_unit();
         void reset_round();
@@ -245,6 +248,9 @@ class LunarBattle : ModeBase, CommPanelDrawer, BattleReport {
         bool tele_done;
 
         bool fast;
+
+        void show_info();
+        void hide_info();
 
         float surrender_timer;
 };

@@ -244,6 +244,8 @@ void LunarBattle::enter() {
         }
     }
 
+    turn = 0;
+
     draw_manager.show_cursor(!b.auto_battle);
 
     // Modified at the start of combat, but best always pointing to something valid
@@ -554,7 +556,9 @@ ExodusMode LunarBattle::update(float delta) {
             }
             break;
         case LB_SelectUnit:
-            if (!select_unit()) {
+            if (select_unit()) {
+                turn++;
+            } else {
                 // Neither side has a unit which can move.
                 // Clear turn markers and try again.
                 L.info("No units can move - resetting round");
@@ -1144,6 +1148,16 @@ ExodusMode LunarBattle::update(float delta) {
             }
             // Skip drawing / cursor updating etc
             return ExodusMode::MODE_None;
+        case LB_Info:
+            {
+                if (draw_manager.clicked()) {
+                    hide_info();
+                    stage = button_prev_stage;
+                }
+
+                return ExodusMode::MODE_None;
+            }
+            break;
         case LB_Surrender:
             {
                 SpriteClick clk = draw_manager.query_click(id(ID::SURRENDER_YESNO));
@@ -2119,7 +2133,8 @@ LunarBattle::Stage LunarBattle::update_buttons() {
     bool defending = !(aggressor && aggressor->is_human());
 
     if (draw_manager.query_click(id(ID::BTN_INFO)).id) {
-        // TODO
+        show_info();
+        return LB_Info;
     }
 
     if (draw_manager.query_click(id(ID::BTN_SPEED)).id) {
@@ -2697,6 +2712,126 @@ bool LunarBattle::is_in_cover(BattleUnit* u) {
 #endif
 
     return false;
+}
+
+void LunarBattle::show_info() {
+    Planet *p = exostate.get_active_planet();
+    Player *defender = exostate.get_player(p->get_owner());
+    LunarBattleReport &rpt = ephstate.lunar_battle_report;
+
+    draw_manager.fill(
+        id(ID::PANEL),
+        {PANEL_X - BORDER, PANEL_Y - BORDER,
+        PANEL_W + 2*BORDER, PANEL_H + 60 + 2*BORDER},
+        COL_BORDERS);
+    draw_manager.fill_pattern(
+        id(ID::PANEL_PATTERN),
+        {PANEL_X, PANEL_Y,
+        PANEL_W, PANEL_H + 60});
+
+    char text[64 + PLANET_MAX_NAME];
+
+    snprintf(text, sizeof(text), "The battle of %s, Status", p->get_name());
+
+    draw_manager.draw_text(
+        text,
+        Justify::Centre,
+        PANEL_X + PANEL_W/2, PANEL_Y + 4,
+        COL_TEXT2);
+
+    draw_manager.fill({PANEL_X, PANEL_Y + 28, PANEL_W, 4}, COL_BORDERS);
+
+    RGB col_att = COL_TEXT2;
+    RGB col_def = COL_TEXT2;
+
+    if (!defender_turn && aggressor && aggressor->is_human()) {
+        col_att = COL_TEXT;
+    }
+
+    if (defender_turn && defender->is_human()) {
+        col_def = COL_TEXT;
+    }
+
+    draw_manager.draw_text(
+        "Attackers",
+        Justify::Left,
+        PANEL_X + 4, PANEL_Y + 36,
+        col_att);
+
+    draw_manager.draw_text(
+        "Defenders",
+        Justify::Left,
+        PANEL_X + 172, PANEL_Y + 35,
+        col_def);
+
+    snprintf(text, sizeof(text), "Active: %d", rpt.agg_surf.total());
+    draw_manager.draw_text(
+        text,
+        Justify::Left,
+        PANEL_X + 4, PANEL_Y + 56,
+        COL_TEXT);
+
+    snprintf(text, sizeof(text), "Active: %d", rpt.def_surf.total());
+    draw_manager.draw_text(
+        text,
+        Justify::Left,
+        PANEL_X + 172, PANEL_Y + 56,
+        COL_TEXT);
+
+    snprintf(text, sizeof(text), "Killed: %d", rpt.agg_lost.total());
+    draw_manager.draw_text(
+        text,
+        Justify::Left,
+        PANEL_X + 4, PANEL_Y + 76,
+        COL_TEXT);
+
+    snprintf(text, sizeof(text), "Killed: %d", rpt.def_lost.total());
+    draw_manager.draw_text(
+        text,
+        Justify::Left,
+        PANEL_X + 172, PANEL_Y + 76,
+        COL_TEXT);
+
+    snprintf(text, sizeof(text), "Move: %d", turn);
+    draw_manager.draw_text(
+        text,
+        Justify::Left,
+        PANEL_X + 4, PANEL_Y + 102,
+        COL_TEXT);
+
+    // Chances are tsa:tsb in PROCb_stat
+
+    int aat = max(1, rpt.agg_surf.total_weighted());
+    int adf = max(1, rpt.def_surf.total_weighted());
+
+    int tsa = 0;
+    int tsb = 0;
+
+    if (aat > adf) {
+        tsa = (int)(100.f*(float)aat/(float)adf) / 100;
+        tsb = 1;
+    } else {
+        tsa = 1;
+        tsb = (int)(100.f*(float)adf/(float)aat) / 100;
+    }
+
+    if (defender_turn && defender->is_human()) {
+        int tmp = tsa;
+        tsa = tsb;
+        tsb = tmp;
+    }
+
+    snprintf(text, sizeof(text), "Our chances are %d : %d", tsa, tsb);
+    draw_manager.draw_text(
+        text,
+        Justify::Left,
+        PANEL_X + 4, PANEL_Y + 128,
+        COL_TEXT);
+}
+
+void LunarBattle::hide_info() {
+    draw_manager.draw(id(ID::PANEL_PATTERN), nullptr);
+    draw_manager.draw(id(ID::PANEL), nullptr);
 }
 
 bool BattleUnit::use_alt_aliens = false;
