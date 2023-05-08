@@ -1330,7 +1330,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_set_text(1, "I propose a non-attack alliance.");
             comm_set_text(2, "I propose a war alliance.");
             comm_set_text(3, "Become my ally or I attack.");
-            // TODO: Need an option to back out if the only other available option is attack!
+            comm_set_text(4, "Never mind...");
             if (exostate.has_alliance(comm_player_idx, comm_other_idx, ALLY_Trade)) {
                 comm_text_disabled_mask |= 1;
             }
@@ -1351,7 +1351,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_text_disabled_mask |= 4;
             }
 
-            comm_text_interactive_mask = 0xF;
+            comm_text_interactive_mask = 0x1F;
             comm_recv(DIA_R_OfferListen);
             break;
         case DIA_S_ProposeAlliance:
@@ -1400,6 +1400,14 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     comm_set_speech("Do not risk a war.");
                     comm_recv(DIA_R_NoAttackResponse);
                 }
+            }
+            break;
+        case DIA_S_ProposeAllianceCancel:
+            {
+                comm_prepare(1);
+                comm_set_speech("...?");
+                comm_exit_anim_action = CA_Abort;
+                comm_recv(DIA_R_Close);
             }
             break;
         case DIA_S_OfferAllianceMoney:
@@ -2588,6 +2596,10 @@ void CommPanelDrawer::comm_process_responses() {
                 case 3:
                     // Threaten
                     comm_send(DIA_S_ProposeAllianceAggressively);
+                    break;
+                case 4:
+                    // Abort (not in orig)
+                    comm_send(DIA_S_ProposeAllianceCancel);
                     break;
             }
             break;
