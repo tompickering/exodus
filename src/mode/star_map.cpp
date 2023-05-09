@@ -15,6 +15,9 @@ const int FLEET_PANEL_H = 308;
 const int FLEET_PANEL_X = RES_X/2 - FLEET_PANEL_W/2;
 const int FLEET_PANEL_Y = RES_Y/2 - FLEET_PANEL_H/2 - 40;
 
+const int RENAME_W = 120;
+const int RENAME_H = 20;
+
 enum ID {
     PLANET1,
     PLANET2,
@@ -39,6 +42,9 @@ enum ID {
     FLEET_EXIT,
     FLEET_MISSIONBG,
     FESTIVAL,
+    RENAME,
+    RENAME_BORDER,
+    RENAME_NEWNAME,
     END,
 };
 
@@ -160,6 +166,20 @@ ExodusMode StarMap::update(float delta) {
                     Planet *p = star->get_planet(i);
                     if (p->exists() && p->is_owned() && p->get_owner() == player_idx) {
                         rename_planet = i;
+                        int x, y;
+                        get_planet_draw_pos(i, x, y);
+                        draw_manager.fill(
+                            id(ID::RENAME_BORDER),
+                            {x-RENAME_W/2-BORDER, y+50-BORDER,
+                             RENAME_W+2*BORDER, RENAME_H+2*BORDER},
+                            COL_BORDERS);
+                        draw_manager.fill(
+                            id(ID::RENAME),
+                            {x-RENAME_W/2, y+50,
+                             RENAME_W, RENAME_H},
+                            {0, 0, 0});
+                        input_manager.start_text_input();
+                        input_manager.set_input_text(p->get_name());
                         stage = SM_PlanetRename;
                         return ExodusMode::MODE_None;
                     }
@@ -723,10 +743,34 @@ ExodusMode StarMap::update(float delta) {
             }
             break;
         case SM_PlanetRename:
-            // TODO
-            if (input_manager.consume(K_Enter)) {
-                // TODO: Commit changed name
-                stage = SM_Idle;
+            {
+                const char* newname = input_manager.get_input_text(PLANET_MAX_NAME);
+
+                int x, y;
+                get_planet_draw_pos(rename_planet, x, y);
+
+                draw_manager.draw_text(
+                    id(ID::RENAME_NEWNAME),
+                    newname,
+                    Justify::Left,
+                    x - RENAME_W/2 + 4,
+                    y + 50,
+                    COL_TEXT
+                );
+
+                if (input_manager.consume(K_Backspace)) {
+                    input_manager.backspace();
+                }
+
+                if (input_manager.consume(K_Enter)) {
+                    Planet *p = star->get_planet(rename_planet);
+                    p->set_name(newname);
+                    input_manager.stop_text_input();
+                    draw_manager.draw(id(ID::RENAME_NEWNAME), nullptr);
+                    draw_manager.draw(id(ID::RENAME), nullptr);
+                    draw_manager.draw(id(ID::RENAME_BORDER), nullptr);
+                    return ExodusMode::MODE_Reload;
+                }
             }
             break;
         case SM_Back2Gal:
@@ -741,8 +785,8 @@ void StarMap::draw_planets(float delta) {
         Planet *planet = star->get_planet_nocheck(i);
         if (planet && planet->exists()) {
             bool active = planet == exostate.get_active_planet();
-            int draw_x = 140 + i*95;
-            int draw_y = (RES_Y / 2) - 30 + ((i % 2) == 0 ? -30 : 30);
+            int draw_x, draw_y;
+            get_planet_draw_pos(i, draw_x, draw_y);
             if (delta == 0 || active) {
                 if (active) {
                     int p = exostate.get_active_planet_idx();
@@ -844,6 +888,11 @@ void StarMap::draw_planets(float delta) {
                  .5f, .5f});
         }
     }
+}
+
+void StarMap::get_planet_draw_pos(int i, int& x, int& y) {
+    x = 140 + i*95;
+    y = (RES_Y / 2) - 30 + ((i % 2) == 0 ? -30 : 30);
 }
 
 bool StarMap::select_planet(int index) {

@@ -52,6 +52,8 @@ class StarMap : ModeBase, PanelDrawer, CommPanelDrawer, FrameDrawer, Bombing {
         void set_fleet_button(bool);
         void update_fleet_menu();
 
+        void get_planet_draw_pos(int, int&, int&);
+
         float festival_delay;
 
         bool lookagain;
