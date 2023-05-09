@@ -86,6 +86,7 @@ void StarMap::enter() {
     lookagain = false;
 
     for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+        id_planet_names[i] = draw_manager.new_sprite_id();
         id_fleet_markers[i] = draw_manager.new_sprite_id();
     }
 
@@ -112,6 +113,8 @@ void StarMap::exit() {
     }
 
     for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+        draw_manager.draw(id_planet_names[i], nullptr);
+        draw_manager.release_sprite_id(id_planet_names[i]);
         draw_manager.draw(id_fleet_markers[i], nullptr);
         draw_manager.release_sprite_id(id_fleet_markers[i]);
     }
@@ -152,6 +155,16 @@ ExodusMode StarMap::update(float delta) {
                 return ExodusMode::MODE_None;
             }
 
+            for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+                if (draw_manager.query_click(id_planet_names[i]).id) {
+                    Planet *p = star->get_planet(i);
+                    if (p->exists() && p->is_owned() && p->get_owner() == player_idx) {
+                        rename_planet = i;
+                        stage = SM_PlanetRename;
+                        return ExodusMode::MODE_None;
+                    }
+                }
+            }
 
             for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
                 if (draw_manager.query_click(id(ID::PLANET1 + i)).id) {
@@ -709,6 +722,13 @@ ExodusMode StarMap::update(float delta) {
                 stage = SM_Idle;
             }
             break;
+        case SM_PlanetRename:
+            // TODO
+            if (input_manager.consume(K_Enter)) {
+                // TODO: Commit changed name
+                stage = SM_Idle;
+            }
+            break;
         case SM_Back2Gal:
             return ExodusMode::MODE_Pop;
     }
@@ -769,6 +789,7 @@ void StarMap::draw_planets(float delta) {
                         }
                     }
                     draw_manager.draw_text(
+                        id_planet_names[i],
                         Font::Tiny,
                         name,
                         Justify::Centre,

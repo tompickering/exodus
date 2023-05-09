@@ -39,6 +39,7 @@ class StarMap : ModeBase, PanelDrawer, CommPanelDrawer, FrameDrawer, Bombing {
             SM_HandlePostPlanet,
             SM_HandlePostPlanetComms,
             SM_Counsellor,
+            SM_PlanetRename,
             SM_Back2Gal,
         };
 
@@ -55,7 +56,10 @@ class StarMap : ModeBase, PanelDrawer, CommPanelDrawer, FrameDrawer, Bombing {
 
         bool lookagain;
 
+        SprID id_planet_names[STAR_MAX_PLANETS];
         SprID id_fleet_markers[STAR_MAX_PLANETS];
+
+        int rename_planet;
 };
 
 #endif
