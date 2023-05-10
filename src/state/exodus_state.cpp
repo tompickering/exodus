@@ -164,6 +164,10 @@ void ExodusState::init(GameConfig config) {
         for (int j = 0; j < TRACE_MAX; ++j) {
             players[i].trace[j] = 0;
         }
+
+        for (int j = 0; j < N_MARKERS; ++j) {
+            players[i].star_markers[j].reset();
+        }
     }
 
     // TODO: Check whether any initial alliances are set up

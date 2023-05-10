@@ -2,6 +2,8 @@
 #define GUARD_PLAYER_H
 
 #include <cstdint>
+#include <cstdio>
+#include <cstring>
 
 #include "location.h"
 
@@ -9,6 +11,9 @@
 #define MAX_PLAYER_TITLE     12
 #define MAX_PLAYER_REFERENCE 12
 #define MAX_PLAYER_FULLNAME MAX_PLAYER_TITLE + 1 + MAX_PLAYER_NAME
+
+#define N_MARKERS             8
+#define MAX_MARKER           12
 
 #define N_RACES 5
 
@@ -105,6 +110,24 @@ typedef struct {
         return scouts + transporters + warships + bombers;
     }
 } Fleet;
+
+typedef struct {
+    int idx;
+    char tag[MAX_MARKER+1];
+
+    bool valid() const {
+        return idx >= 0 && tag[0] != '\0';
+    }
+
+    void reset() {
+        idx = -1;
+        memset(tag, '\0', MAX_MARKER+1);
+    }
+
+    void set_tag(const char* new_marker) {
+        snprintf(tag, MAX_MARKER, new_marker);
+    }
+} StarMarker;
 
 // N.B. This is sensitive to order
 enum Invention {
@@ -308,6 +331,9 @@ class Player {
         const Mission& get_mission();
         void clear_mission();
 
+        StarMarker* get_marker(int);
+        void set_marker_tag(int, const char*);
+
         void commit_infraction(Infraction);
         bool committed_infraction(Infraction);
         bool committed_any_infractions();
@@ -355,6 +381,7 @@ class Player {
         int tax;  // Orig: t%
         OfficerQuality officers[OFF_MAX];  // Orig: Ps%
         Mission mission;
+        StarMarker star_markers[N_MARKERS];
 
         uint32_t infraction_mask;
 

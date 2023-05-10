@@ -685,6 +685,16 @@ void Player::clear_mission() {
     set_mission_type(MT_None);
 }
 
+StarMarker* Player::get_marker(int i) {
+    StarMarker* marker = &star_markers[i];
+    return marker;
+}
+
+void Player::set_marker_tag(int i, const char* new_marker) {
+    L.debug("Setting tag %d = %s", i, new_marker);
+    star_markers[i].set_tag(new_marker);
+}
+
 void Player::commit_infraction(Infraction inf) {
     infraction_mask |= (1 << inf);
 }
