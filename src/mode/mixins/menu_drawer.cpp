@@ -733,6 +733,28 @@ void MenuDrawer::menu_open_specific_mode() {
             }
             break;
         case MM_StarMarker:
+            {
+                menu_set_txt(0, COL_TEXT2, "Set/replace a marker");
+
+                for (int i = 0; i < N_MARKERS; ++i) {
+                    // FIXME: Formatting in menu_set_opt is ideal but causes numbers to be off - why?
+                    char t[4];
+                    snprintf(t, sizeof(t), "M%d", i+1);
+                    menu_set_opt(i+2, t);
+
+                    const StarMarker *m = p->get_marker(i);
+                    if (m->tag[0] != '\0') {
+                        draw_manager.draw_text(
+                            m->tag,
+                            Justify::Left,
+                            MENU_TEXT_X + 50,
+                            menu_get_y(i+2),
+                            {0xFF, 0, 0});
+                    }
+                }
+
+                marker_being_set = -1;
+            }
             break;
         case MM_EquipShip:
             break;
@@ -1488,6 +1510,10 @@ bool MenuDrawer::menu_specific_update() {
                 return true;
             }
             // 4: Set / Replace Star Markers
+            if (menu_row_clicked(4)) {
+                menu_open(MM_StarMarker);
+                return true;
+            }
             // 5: Equip Starship
             if (menu_row_clicked(5)) {
                 menu_action = MA_EquipShip;
@@ -1962,6 +1988,35 @@ bool MenuDrawer::menu_specific_update() {
             }
             break;
         case MM_StarMarker:
+            if (marker_being_set < 0) {
+                for (int i = 0; i < N_MARKERS; ++i) {
+                    if (menu_row_clicked(i+2)) {
+                        // TODO - render input box
+                        marker_being_set = i;
+                        const StarMarker *m = p->get_marker(i);
+                        input_manager.start_text_input();
+                        if (m) {
+                            input_manager.set_input_text(m->tag);
+                        }
+                    }
+                }
+            } else {
+                if (input_manager.consume(K_Backspace)) {
+                    input_manager.backspace();
+                }
+
+                if (input_manager.consume(K_Enter)) {
+                    const char* new_marker = input_manager.get_input_text(MAX_MARKER);
+                    if (new_marker[0] != '\0') {
+                        p->set_marker_tag(marker_being_set, new_marker);
+                        input_manager.stop_text_input();
+                        StarMarker *marker = p->get_marker(marker_being_set);
+                        ephstate.select_planet(&marker->idx, nullptr);
+                        menu_new_mode = ephstate.get_appropriate_mode();
+                        return true;
+                    }
+                }
+            }
             break;
         case MM_EquipShip:
             break;

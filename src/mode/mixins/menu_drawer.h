@@ -146,6 +146,8 @@ class MenuDrawer {
 
         int menu_planets_start;
         bool menu_planets_more;
+
+        int marker_being_set;
 };
 
 #endif
