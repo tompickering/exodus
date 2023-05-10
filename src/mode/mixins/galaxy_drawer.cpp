@@ -91,4 +91,22 @@ void GalaxyDrawer::draw_galaxy(bool pixelswap) {
     draw_manager.draw(tgt, guild_id, spr, {x, y, 0.5, 0.5, 1, 1});
 
     //draw_manager.fill({0, PAD_Y + DRAW_H, RES_X, RES_Y - PAD_Y - DRAW_H}, {0, 0, 0});
+
+    // Star markers
+    Player *p = exostate.get_active_player();
+    for (int i = 0; i < N_MARKERS; ++i) {
+        const StarMarker* marker = p->get_marker(i);
+        if (marker->valid()) {
+            const Star* s = &stars[marker->idx];
+            get_draw_position(s, x, y);
+            draw_manager.draw(tgt, IMG_TS1_MK2, {x, y, 0.5, 0.5, 1, 1});
+            // TODO: Check colour
+            draw_manager.draw_text(
+                Font::Tiny,
+                marker->tag,
+                Justify::Centre,
+                x, y+14,
+                {0x33, 0x77, 0xFF});
+        }
+    }
 }
