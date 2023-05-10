@@ -1992,8 +1992,11 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 int p = exostate.get_n_planets(comm_other);
 
                 if (p <= 1 && a*2 > d*3 && comm_other->attempt_spend(comm_ctx.mc)) {
-                    // TODO: Check if we are prevented from attacking again
                     comm_set_speech("I think I will accept this.");
+
+                    // Prevent further attacks this month (orig doesn't do this)
+                    exostate.prevent_attack(comm_planet);
+
                     comm_player->give_mc(comm_ctx.mc);
                     comm_exit_anim_action = CA_CallOffAttack;
                 } else {
@@ -2200,6 +2203,10 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 }
             }
             comm_player->give_mc(comm_ctx.mc);
+
+            // Prevent further attacks this month (orig doesn't do this)
+            exostate.prevent_attack(comm_planet);
+
             comm_prepare(1);
             comm_set_speech("You are a worthy enemy.");
             comm_recv(DIA_R_B_CPU_CommsDefenderAcceptResponse);
