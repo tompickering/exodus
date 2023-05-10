@@ -2497,7 +2497,6 @@ void CommPanelDrawer::comm_process_responses() {
                     comm_send(DIA_S_Trade);
                     break;
                 case 2:
-                    // TODO: Consider limiting to once per player per month...?
                     comm_send(DIA_S_Offer);
                     break;
                 case 3:
