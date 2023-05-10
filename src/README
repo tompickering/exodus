@@ -1,3 +1,18 @@
+# Qualifying remarks
+
+As writing code is my livelihood, I feel compelled to include a few remarks regarding some of the characteristics of this codebase...
+
+Although the codebase is written in C++, it doesn't use 'modern C++' features - it's used much more like 'C with classes'. This was a deliberate decision which has no better reason than "because I wanted to", and also because by keeping things simpler then maybe older compilers will play nicely with it, which means that perhaps it can be made to build on the original game's native RISC OS sometime.
+
+In a similar vein, I've avoided dynamic allocation pretty much everywhere, and also implemented an overly-complex draw system that goes to lengths to minimise pixel updates rather than redrawing every pixel every frame, despite the fact that this is really not necessary on modern hardware - but again, I felt like writing something that kept CPU load to a minimum, which felt 'right' for the nature of the game.
+
+Some parts of the code architecture worked out pretty well; others are a bit 'orrible. The 'ephemeral state' singleton for example, whilst comfortable as a concept, turned into a bit of a mess. Also, although the concept of 'modes' works quite well, the recurring 'stage' / switch-case pattern in their update() methods isn't great - especially the particularly distasteful pattern of performing some 'prep work' for a particular stage at the same time the stage value is set. In hindsight I should have made 'mode' a recursive concept and made proper enter()/exit() mechanisms available for those as well.
+
+The horrendously overloaded draw() calls got a bit out of hand. They should really be collapsed into one which takes a single configurable structure to encapsulate the parameters - and then I wouldn't have to remember what order to put them all in either! On the subject of the draw interface, I initially concluded that the game was too small and simple to warrant any kind of complex widget abstraction... but I really could have done with one. Some of the input mechanisms needed to be more complex than I originally gave the game credit for, and ended up with some nasty hacks where they could really have done with a refactor.
+
+The dual-nature of index/pointer identifiers for stars and planets (depending on whether the references need to be written as serialisable data) became a bit fiddly in places and should have been better-managed.
+
+
 # Code structure overview
 
 The code is structured so as to maintain a line of separation between pure C++ and anything specific to a particular library or platform. Wherever these things must be interfaced with, we provide an abstract interface with a specific implementation. For example, the DrawManager class provides a generic interface for all drawing - when compiled with SDL, the game will use the DrawManagerSDL class as the specific implementation, which encapsulates all SDL-specific draw calls. In this way, the game can theoretically be ported to other platforms with comparatively minimal effort.
