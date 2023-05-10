@@ -35,8 +35,15 @@ const int SEP_Y = GDRAW_H / GALAXY_ROWS;
 
 GalaxyDrawer::GalaxyDrawer() {
     guild_id = ID_NONE;
-    for (int i = 0; i < GALAXY_MAX_STARS; ++i)
+
+    for (int i = 0; i < GALAXY_MAX_STARS; ++i) {
         star_ids[i] = ID_NONE;
+    }
+
+    for (int i = 0; i < N_MARKERS; ++i) {
+        marker_ids[i] = ID_NONE;
+        marker_text_ids[i] = ID_NONE;
+    }
 }
 
 FlyTarget* GalaxyDrawer::get_clicked_flytarget() {
@@ -92,16 +99,46 @@ void GalaxyDrawer::draw_galaxy(bool pixelswap) {
 
     //draw_manager.fill({0, PAD_Y + DRAW_H, RES_X, RES_Y - PAD_Y - DRAW_H}, {0, 0, 0});
 
-    // Star markers
+    for (int i = 0; i < N_MARKERS; ++i) {
+        marker_ids[i] = draw_manager.new_sprite_id();
+    }
+
+    for (int i = 0; i < N_MARKERS; ++i) {
+        marker_text_ids[i] = draw_manager.new_sprite_id();
+    }
+
+    draw_markers(pixelswap, false);
+}
+
+void GalaxyDrawer::draw_markers(bool pixelswap, bool names_only) {
+    int x, y;
     Player *p = exostate.get_active_player();
+
+    DrawTarget tgt = pixelswap ? TGT_Secondary : TGT_Primary;
+
+    int n_stars;
+    Galaxy *gal = exostate.get_galaxy();
+    const Star *stars = gal->get_stars(n_stars);
+
+    if (!names_only) {
+        for (int i = 0; i < N_MARKERS; ++i) {
+            const StarMarker* marker = p->get_marker(i);
+            if (marker->valid()) {
+                const Star* s = &stars[marker->idx];
+                get_draw_position(s, x, y);
+                draw_manager.draw(tgt, marker_ids[i], IMG_TS1_MK2, {x, y, 0.5, 0.5, 1, 1});
+            }
+        }
+    }
+
     for (int i = 0; i < N_MARKERS; ++i) {
         const StarMarker* marker = p->get_marker(i);
         if (marker->valid()) {
             const Star* s = &stars[marker->idx];
             get_draw_position(s, x, y);
-            draw_manager.draw(tgt, IMG_TS1_MK2, {x, y, 0.5, 0.5, 1, 1});
             draw_manager.draw_text(
                 Font::Tiny,
+                marker_text_ids[i],
                 marker->tag,
                 Justify::Centre,
                 x, y+14,

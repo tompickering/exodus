@@ -149,6 +149,12 @@ ExodusMode GalaxyMap::update(float delta) {
                 return ExodusMode::MODE_GalaxyIntro;
             }
 
+            /*
+             * Unfortunately, we need to redraw markers whilst idling.
+             * This is because text can't be repaired.
+             */
+            draw_markers(false, true);
+
             draw_manager.show_cursor(true);
 
             ft = get_clicked_flytarget();
