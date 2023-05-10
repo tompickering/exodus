@@ -100,7 +100,6 @@ void GalaxyDrawer::draw_galaxy(bool pixelswap) {
             const Star* s = &stars[marker->idx];
             get_draw_position(s, x, y);
             draw_manager.draw(tgt, IMG_TS1_MK2, {x, y, 0.5, 0.5, 1, 1});
-            // TODO: Check colour
             draw_manager.draw_text(
                 Font::Tiny,
                 marker->tag,

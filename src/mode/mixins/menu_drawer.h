@@ -111,6 +111,9 @@ class MenuDrawer {
         SprID id_menu_newoff[MENU_N_OFFICERS];
         SprID id_menu_newoff_opt;
         SprID id_menu_artplanname;
+        SprID id_menu_marker_entry_border;
+        SprID id_menu_marker_entry;
+        SprID id_menu_marker_entry_text;
         char menu_text[MENU_LINES][MENU_MAX_TEXT];
         RGB menu_text_col[MENU_LINES];
         bool _menu_is_open;

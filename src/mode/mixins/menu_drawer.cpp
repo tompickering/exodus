@@ -29,6 +29,9 @@ const int MENU_FLAG_BG_H = 56 + MENU_BORDER*2;
 const int MENU_BG_X = MENU_X + MENU_BORDER;
 const int MENU_BG_Y = MENU_Y + MENU_BORDER;
 
+const int MARKER_ENTRY_W = 120;
+const int MARKER_ENTRY_H = 20;
+
 static const int OFF_DESC_LINES = 5;
 
 static const char* off_desc_poor[] = {
@@ -147,18 +150,21 @@ void MenuDrawer::menu_open(MenuMode mode) {
             draw_manager.draw(id_menu_lines[i], nullptr);
         }
     } else {
-        id_menu_header_flag_bg = draw_manager.new_sprite_id();
-        id_menu_header_flag    = draw_manager.new_sprite_id();
-        id_menu_header_l       = draw_manager.new_sprite_id();
-        id_menu_header_r       = draw_manager.new_sprite_id();
-        id_menu_panel          = draw_manager.new_sprite_id();
-        id_menu_bg             = draw_manager.new_sprite_id();
-        id_menu_sci            = draw_manager.new_sprite_id();
-        id_menu_tax            = draw_manager.new_sprite_id();
-        id_menu_scimore        = draw_manager.new_sprite_id();
-        id_menu_taxmore        = draw_manager.new_sprite_id();
-        id_menu_newoff_opt     = draw_manager.new_sprite_id();
-        id_menu_artplanname    = draw_manager.new_sprite_id();
+        id_menu_header_flag_bg      = draw_manager.new_sprite_id();
+        id_menu_header_flag         = draw_manager.new_sprite_id();
+        id_menu_header_l            = draw_manager.new_sprite_id();
+        id_menu_header_r            = draw_manager.new_sprite_id();
+        id_menu_panel               = draw_manager.new_sprite_id();
+        id_menu_bg                  = draw_manager.new_sprite_id();
+        id_menu_sci                 = draw_manager.new_sprite_id();
+        id_menu_tax                 = draw_manager.new_sprite_id();
+        id_menu_scimore             = draw_manager.new_sprite_id();
+        id_menu_taxmore             = draw_manager.new_sprite_id();
+        id_menu_newoff_opt          = draw_manager.new_sprite_id();
+        id_menu_artplanname         = draw_manager.new_sprite_id();
+        id_menu_marker_entry_border = draw_manager.new_sprite_id();
+        id_menu_marker_entry        = draw_manager.new_sprite_id();
+        id_menu_marker_entry_text   = draw_manager.new_sprite_id();
 
         for (int i = 0; i < MENU_N_OFFICERS; ++i) {
             id_menu_newoff[i] = draw_manager.new_sprite_id();
@@ -230,18 +236,21 @@ void MenuDrawer::menu_close() {
         draw_manager.release_sprite_id(id_menu_lines[i]);
     }
 
-    draw_manager.draw(id_menu_artplanname, nullptr);
-    draw_manager.draw(id_menu_newoff_opt, nullptr);
-    draw_manager.draw(id_menu_sci, nullptr);
-    draw_manager.draw(id_menu_tax, nullptr);
-    draw_manager.draw(id_menu_scimore, nullptr);
-    draw_manager.draw(id_menu_taxmore, nullptr);
-    draw_manager.draw(id_menu_header_flag_bg, nullptr);
-    draw_manager.draw(id_menu_header_flag, nullptr);
-    draw_manager.draw(id_menu_header_l, nullptr);
-    draw_manager.draw(id_menu_header_r, nullptr);
-    draw_manager.draw(id_menu_panel, nullptr);
-    draw_manager.draw(id_menu_bg, nullptr);
+    draw_manager.draw(id_menu_marker_entry_text,   nullptr);
+    draw_manager.draw(id_menu_marker_entry,        nullptr);
+    draw_manager.draw(id_menu_marker_entry_border, nullptr);
+    draw_manager.draw(id_menu_artplanname,         nullptr);
+    draw_manager.draw(id_menu_newoff_opt,          nullptr);
+    draw_manager.draw(id_menu_sci,                 nullptr);
+    draw_manager.draw(id_menu_tax,                 nullptr);
+    draw_manager.draw(id_menu_scimore,             nullptr);
+    draw_manager.draw(id_menu_taxmore,             nullptr);
+    draw_manager.draw(id_menu_header_flag_bg,      nullptr);
+    draw_manager.draw(id_menu_header_flag,         nullptr);
+    draw_manager.draw(id_menu_header_l,            nullptr);
+    draw_manager.draw(id_menu_header_r,            nullptr);
+    draw_manager.draw(id_menu_panel,               nullptr);
+    draw_manager.draw(id_menu_bg,                  nullptr);
 
     for (int i = 0; i < MENU_N_OFFICERS; ++i) {
         draw_manager.draw(id_menu_newoff[i], nullptr);
@@ -260,6 +269,9 @@ void MenuDrawer::menu_close() {
     draw_manager.release_sprite_id(id_menu_taxmore);
     draw_manager.release_sprite_id(id_menu_newoff_opt);
     draw_manager.release_sprite_id(id_menu_artplanname);
+    draw_manager.release_sprite_id(id_menu_marker_entry_border);
+    draw_manager.release_sprite_id(id_menu_marker_entry);
+    draw_manager.release_sprite_id(id_menu_marker_entry_text);
 
     input_manager.enable_repeating_clicks(false);
 
@@ -1991,16 +2003,36 @@ bool MenuDrawer::menu_specific_update() {
             if (marker_being_set < 0) {
                 for (int i = 0; i < N_MARKERS; ++i) {
                     if (menu_row_clicked(i+2)) {
-                        // TODO - render input box
                         marker_being_set = i;
                         const StarMarker *m = p->get_marker(i);
                         input_manager.start_text_input();
                         if (m) {
                             input_manager.set_input_text(m->tag);
                         }
+
+                        int y = menu_get_y(i+2);
+                        draw_manager.fill(
+                            id_menu_marker_entry_border,
+                            {MENU_TEXT_X + 50-BORDER, y-BORDER,
+                             MARKER_ENTRY_W+2*BORDER, MARKER_ENTRY_H+2*BORDER},
+                            COL_BORDERS);
+                        draw_manager.fill(
+                            id_menu_marker_entry,
+                            {MENU_TEXT_X + 50, y,
+                             MARKER_ENTRY_W, MARKER_ENTRY_H},
+                             {0, 0, 0});
                     }
                 }
             } else {
+                int y = menu_get_y(marker_being_set+2);
+
+                draw_manager.draw_text(
+                    id_menu_marker_entry_text,
+                    input_manager.get_input_text(MAX_MARKER),
+                    Justify::Left,
+                    MENU_TEXT_X + 54, y,
+                    COL_TEXT);
+
                 if (input_manager.consume(K_Backspace)) {
                     input_manager.backspace();
                 }
