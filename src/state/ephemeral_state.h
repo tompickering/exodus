@@ -180,15 +180,16 @@ class EphemeralState {
         // These MUST be set going into EPH_SelectPlanet
         // This is where the results are stored
         // The state should be done via select_planet()
+        // Setting the planet to nullptr indicates that we're only selecting a star
         int* selectplanet_star;
         int* selectplanet_planet;
         int selectplanet_mc;
         Trace selectplanet_trace;
         MissionType selectplanet_mission;
         // Use this form if you just want to store values to use later
-        void select_planet(int& st, int& pl) {
-            selectplanet_star = &st;
-            selectplanet_planet = &pl;
+        void select_planet(int* st, int* pl) {
+            selectplanet_star = st;
+            selectplanet_planet = pl;
             selectplanet_mc = 0;
             selectplanet_trace = TRACE_None;
             selectplanet_mission = MT_None;
@@ -201,7 +202,7 @@ class EphemeralState {
         int selectplanet_planet_internal;
         void select_planet(SelectPlanetReason reason) {
             selectplanet_reason = reason;
-            select_planet(selectplanet_star_internal, selectplanet_planet_internal);
+            select_planet(&selectplanet_star_internal, &selectplanet_planet_internal);
         }
         ExodusMode selectplanet_resolve() {
             clear_ephemeral_state();

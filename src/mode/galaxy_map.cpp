@@ -409,7 +409,12 @@ ExodusMode GalaxyMap::update(float delta) {
                     if (player->get_location().has_visited(ft_idx)) {
                         *(ephstate.selectplanet_star) = ft_idx;
                         exostate.set_active_flytarget(ft);
-                        return ExodusMode::MODE_StarMap;
+                        if (ephstate.selectplanet_planet) {
+                            return ExodusMode::MODE_StarMap;
+                        } else {
+                            // We only wanted to select a star
+                            return ephstate.selectplanet_resolve();
+                        }
                     }
                 }
             }
