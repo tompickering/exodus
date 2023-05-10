@@ -137,8 +137,9 @@ void GalaxyDrawer::draw_markers(bool pixelswap, bool names_only) {
             const Star* s = &stars[marker->idx];
             get_draw_position(s, x, y);
             draw_manager.draw_text(
-                Font::Tiny,
+                tgt,
                 marker_text_ids[i],
+                Font::Tiny,
                 marker->tag,
                 Justify::Centre,
                 x, y+14,
