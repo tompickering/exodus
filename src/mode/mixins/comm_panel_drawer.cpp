@@ -1130,6 +1130,11 @@ void CommPanelDrawer::comm_send(CommSend input) {
             }
             comm_set_text(3, "I have something to say.");
             comm_text_interactive_mask = 0xF;
+
+            if (exostate.attack_prevented(comm_planet)) {
+                comm_text_disabled_mask |= 1;
+            }
+
             comm_recv(DIA_R_Greeting);
             break;
         case DIA_S_Attack:
@@ -1352,6 +1357,11 @@ void CommPanelDrawer::comm_send(CommSend input) {
             }
 
             comm_text_interactive_mask = 0x1F;
+
+            if (exostate.attack_prevented(comm_planet)) {
+                comm_text_disabled_mask |= 8;
+            }
+
             comm_recv(DIA_R_OfferListen);
             break;
         case DIA_S_ProposeAlliance:
@@ -2514,7 +2524,10 @@ void CommPanelDrawer::comm_process_responses() {
                         L.fatal("CPU offered more than they could afford");
                     }
                     comm_player->give_mc(comm_ctx.mc);
-                    // TODO: Prevent further attacks this month
+
+                    // Prevent further attacks this month (orig doesn't do this)
+                    exostate.prevent_attack(comm_planet);
+
                     comm_report_action = CA_Abort;
                     break;
                 case 2:
@@ -2529,7 +2542,10 @@ void CommPanelDrawer::comm_process_responses() {
                         L.fatal("CPU offered more than they could afford after increase");
                     }
                     comm_player->give_mc(comm_ctx.mc);
-                    // TODO: Prevent further attacks this month (hmm, orig does not here!)
+
+                    // Prevent further attacks this month (orig doesn't do this)
+                    exostate.prevent_attack(comm_planet);
+
                     comm_report_action = CA_Abort;
                     break;
                 case 1:

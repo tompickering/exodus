@@ -972,6 +972,47 @@ const NewsItem& ExodusState::get_news(int i) {
     return newsitems[i];
 }
 
+bool ExodusState::get_star_planet_idx(Planet* planet, int& _star_idx, int& _planet_idx) {
+    Galaxy *gal = get_galaxy();
+    int n_stars;
+    Star *stars = gal->get_stars(n_stars);
+    for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
+        Star *s = &stars[star_idx];
+        for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
+            Planet *p = s->get_planet(planet_idx);
+            if (p && p->exists() && p == planet) {
+                _star_idx = star_idx;
+                _planet_idx = planet_idx;
+                return true;
+            }
+        }
+    }
+
+    L.error("Unable to find requested planet at %x", planet);
+    return false;
+}
+
+void ExodusState::prevent_attack(Planet* p) {
+    int s_idx, p_idx;
+    if (get_star_planet_idx(p, s_idx, p_idx)) {
+        attack_preventions[s_idx] |= (1 << p_idx);
+    }
+}
+
+bool ExodusState::attack_prevented(Planet* p) {
+    int s_idx, p_idx;
+    if (get_star_planet_idx(p, s_idx, p_idx)) {
+        return attack_preventions[s_idx] & (1 << p_idx);
+    }
+    return false;
+}
+
+void ExodusState::clear_attack_preventions() {
+    for (int i = 0; i < GALAXY_MAX_STARS; ++i) {
+        attack_preventions[i] = 0;
+    }
+}
+
 /*
  * These two functions are the *only* places outside init
  * alliance_matrix is read or written.

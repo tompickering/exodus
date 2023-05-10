@@ -140,6 +140,12 @@ class ExodusState {
         NewsItem& register_news(NewsItemType);
         NewsItem& register_news_force(NewsItemType);
         const NewsItem& get_news(int);
+        bool get_star_planet_idx(Planet*, int&, int&);
+
+        void prevent_attack(Planet*);
+        bool attack_prevented(Planet*);
+        void clear_attack_preventions();
+
     private:
         GalaxySize size;
         int n_human_players;
@@ -164,6 +170,8 @@ class ExodusState {
 
         int newsitem_head;
         NewsItem newsitems[MAX_NEWSITEMS];
+
+        uint8_t attack_preventions[GALAXY_MAX_STARS];
 
     friend class ExodusDebug;
 };

@@ -431,7 +431,10 @@ ExodusMode GalaxyMap::update(float delta) {
                 update_panel_info_ft(TGT_Primary, exostate.get_player(0), selected_ft);
 
                 // TODO: In multiplayer, check this happens at end of each player's turn
-                exostate.reset_alliance_requests();
+                {
+                    exostate.reset_alliance_requests();
+                    exostate.clear_attack_preventions();
+                }
 
                 if (exostate.final_month()) {
                     if (ephstate.get_ephemeral_state() != EPH_GameOver) {
