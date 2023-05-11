@@ -12,6 +12,8 @@ The horrendously overloaded draw() calls got a bit out of hand. They should real
 
 The dual-nature of index/pointer identifiers for stars and planets (depending on whether the references need to be written as serialisable data) became a bit fiddly in places and should have been better-managed.
 
+I really misused SDL2 here, which really expects to be used with modern accelerated graphics techniques, rather than CPU blitting (which - again - is specifically how I wanted it to work). SDL1.2 would have been the more appropriate choice here.
+
 
 # Code structure overview
 
