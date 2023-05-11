@@ -172,7 +172,6 @@ void ExodusState::init(GameConfig config) {
         }
     }
 
-    // TODO: Check whether any initial alliances are set up
     // TODO: Check all references to alliance matrix in orig code have been carried over
     for (int j = 0; j < N_PLAYERS; ++j) {
         for (int i = 0; i < N_PLAYERS; ++i) {
@@ -269,8 +268,7 @@ void ExodusState::init_cpu_lords() {
 
         chosen_planet->set_name(chosen_planet->get_name_suggestion());
 
-        // TODO: PROCstart_the_lords sets 'firstplanet' here
-        // Check the meaning and a suitable representation
+        // PROCstart_the_lords sets 'firstplanet' here - we refer to owns_a_planet()
 
         players[i].get_location().set(get_random_star_idx());
         players[i].get_location().unset_target();
@@ -715,7 +713,7 @@ int ExodusState::get_n_planets(Player* player) {
 /*
  * TODO: This serves as firstplanet() from orig, but orig only resets
  * the flag to 0 in PROCcheck_alive - whereas we always return an
- * up-to-date value - which means our behaviour might * deviate during
+ * up-to-date value - which means our behaviour might deviate during
  * month pass.
  */
 bool ExodusState::owns_a_planet(Player* player) {

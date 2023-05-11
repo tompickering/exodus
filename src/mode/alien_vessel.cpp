@@ -478,7 +478,7 @@ void AlienVessel::set_comm_text() {
             comm_text[1] = "Have a nice day, space fleet.";
             break;
         case VESSEL_Trading:
-            // TODO: Use player referece
+            // TODO: Use player reference
             comm_text[0] = "Mylord!";
             comm_text[1] = "We are very sorry to disturb your flight.";
             comm_text[2] = "You shall move on with our best wishes!";

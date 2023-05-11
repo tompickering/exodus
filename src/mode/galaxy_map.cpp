@@ -814,7 +814,6 @@ bool GalaxyMap::first_spaceport_update(float delta) {
     if (cls == Artificial)   y = 153;
 
     // Ship animations
-    // TODO: Polish (smoother anims etc)
 
     float t = first_spaceport_time;
 
@@ -1627,7 +1626,7 @@ ExodusMode GalaxyMap::month_pass_update() {
 
                     mission_state = MS_None;
                 } else {
-                    // TODO: Would be good to see when the dream influence system was actually helpful
+                    // SUGGEST: Would be good to see when the dream influence system was actually helpful
                     if (owner->is_human()) {
                         bulletin_set_next_text("Maybe he wants to cooperate.");
                         bulletin_set_next_text("");
@@ -3161,8 +3160,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 if (p && p->exists() && !p->is_owned()) {
                     if (player->attempt_spend_cpuforce(190)) {
                         p->set_owner(player_idx);
-                        // FIXME: Set to 0 properly...
-                        p->adjust_unrest(-99);
+                        p->reset_unrest();
                         p->prepare_for_cpu_lord();
                         if (!p->is_named()) {
                             // TODO: Ensure unique name here. Orig suffixes ' 2', ' 3' etc

@@ -1387,7 +1387,7 @@ bool Planet::may_be_attacked_by(int player_idx) {
 }
 
 void Planet::this_month_prevent_attacks_by(int player_idx) {
-    // TODO: This should be called when we are paid to cease an attack
+    // TODO: This functionality is duplicated by ExodusState::prevent_attack(), which is currently used
     paid_to_leave |= (1 << player_idx);
 }
 
