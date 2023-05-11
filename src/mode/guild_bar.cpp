@@ -669,8 +669,8 @@ ExodusMode GuildBar::update(float delta) {
 void SheriffShip::init(SheriffShip::InitType t) {
     //x = RND(375);
     //y = RND(225);
-    x = 30 + RND(345);
-    y = 30 + RND(195);
+    x = 60 + RND(345);
+    y = 60 + RND(195);
     z = 200;
     switch (t) {
         case SheriffShip::InitType::Demo:
@@ -680,8 +680,8 @@ void SheriffShip::init(SheriffShip::InitType t) {
             delay = 10.f * (float)(rand() % 1000)/1000.f;
             break;
         case SheriffShip::InitType::Respawn:
-            x = 30 + RND(270);
-            y = 30 + RND(120);
+            x = 60 + RND(290);
+            y = 60 + RND(120);
             delay = 2.f * (float)(rand() % 1000)/1000.f;
             break;
         default:
