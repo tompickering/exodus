@@ -6,6 +6,7 @@
 #include "util/value.h"
 
 #include "assetpaths.h"
+#include "exodus_features.h"
 
 #define FAIL_SPRITES 3
 
@@ -317,6 +318,50 @@ void SpaceBattle::draw() {
             fail_battle_readout_this_frame ? nullptr : s.spr_label,
             {draw_x + 24, draw_y - 10,
              .5f, .5f, 1, 1});
+
+        bool draw_full_detail = full_detail && !fail_battle_readout_this_frame;
+
+        if (draw_full_detail) {
+            char t[4];
+            snprintf(t, sizeof(t), "%03d", s.hp);
+
+            draw_manager.draw_text(
+                s.spr_id_label_hp,
+                Font::Tiny,
+                t,
+                Justify::Left,
+                draw_x + 40,
+                draw_y - 18,
+                COL_TEXT2);
+
+            const char* act = nullptr;
+            switch (s.action) {
+                case BSA_Idle:
+                    act = IMG_RD1_ACT0;
+                    break;
+                case BSA_AttackSlow:
+                    act = IMG_RD1_ACT1;
+                    break;
+                case BSA_AttackFast:
+                    act = IMG_RD1_ACT3;
+                    break;
+                case BSA_Report:
+                    act = IMG_RD1_ACT4;
+                    break;
+                case BSA_Move:
+                    act = IMG_RD1_ACT5;
+                    break;
+            }
+
+            draw_manager.draw(
+                s.spr_id_label_action,
+                act,
+                {draw_x + 24, draw_y + 2,
+                 .5f, .5f, 1, 1});
+        } else {
+            draw_manager.draw(s.spr_id_label_hp, nullptr);
+            draw_manager.draw(s.spr_id_label_action, nullptr);
+        }
     }
 
     // Draw rockets
@@ -446,13 +491,22 @@ void SpaceBattle::draw() {
     }
 
     // Draw buttons
+
+#if FEATURE_FLIP_BUTTONS
+    const char* button_detail = full_detail ? nullptr : IMG_RD1_F1 ;
+    const char* button_auto = auto_battle ? IMG_RD1_A1 : nullptr;
+#else
+    const char* button_detail = full_detail ? IMG_RD1_F1 : nullptr;
+    const char* button_auto = auto_battle ? nullptr : IMG_RD1_A1;
+#endif
+
     draw_manager.draw(
         id(ID::BUTTON_DETAIL),
-        full_detail ? IMG_RD1_F1 : nullptr,
+        button_detail,
         {AREA_DETAIL.x, AREA_DETAIL.y, 0, 0, 1, 1});
     draw_manager.draw(
         id(ID::BUTTON_AUTO),
-        auto_battle ? nullptr : IMG_RD1_A1,
+        button_auto,
         {AREA_AUTO.x, AREA_AUTO.y, 0, 0, 1, 1});
 }
 
@@ -491,7 +545,6 @@ SpaceBattle::Stage SpaceBattle::update_buttons() {
     }
 
     if (draw_manager.mouse_in_area(AREA_DETAIL)) {
-        // TODO: Implement this
         full_detail = !full_detail;
         return stage;
     }
@@ -1494,6 +1547,8 @@ void BattleShip::init(BattleShipType _type, bool _enemy, float _x, float _y, int
 
     spr_id = draw_manager.new_sprite_id();
     spr_id_label = draw_manager.new_sprite_id();
+    spr_id_label_hp = draw_manager.new_sprite_id();
+    spr_id_label_action = draw_manager.new_sprite_id();
 
     spr = IMG_RD1_SYMBOL3;
     spr_sel = IMG_RD1_SYMBOL3S;
@@ -1531,9 +1586,13 @@ void BattleShip::init(BattleShipType _type, bool _enemy, float _x, float _y, int
 void BattleShip::cleanup() {
     draw_manager.draw(spr_id, nullptr);
     draw_manager.draw(spr_id_label, nullptr);
+    draw_manager.draw(spr_id_label_hp, nullptr);
+    draw_manager.draw(spr_id_label_action, nullptr);
     if (exists) {
         draw_manager.release_sprite_id(spr_id);
         draw_manager.release_sprite_id(spr_id_label);
+        draw_manager.release_sprite_id(spr_id_label_hp);
+        draw_manager.release_sprite_id(spr_id_label_action);
     }
     exists = false;
 }

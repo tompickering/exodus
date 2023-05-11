@@ -28,10 +28,12 @@ enum BattleShipType {
 };
 
 enum BattleShipAction {
-    BSA_Idle,
-    BSA_AttackSlow,
-    BSA_AttackFast,
-    BSA_Report,
+    BSA_Idle,        // Orig: 0
+    BSA_AttackSlow,  // Orig: 1
+                     // Orig: 2 is not used
+    BSA_AttackFast,  // Orig: 3
+    BSA_Report,      // Orig: 4
+    BSA_Move,        // Orig: 5
 };
 
 struct BattleShip {
@@ -55,6 +57,8 @@ struct BattleShip {
 
     SprID spr_id;
     SprID spr_id_label;
+    SprID spr_id_label_hp;
+    SprID spr_id_label_action;
 };
 
 struct Rocket {
