@@ -285,6 +285,8 @@ void SpaceBattle::prepare() {
 }
 
 void SpaceBattle::draw() {
+    bool draw_full_detail = full_detail && !fail_battle_readout_this_frame;
+
     // Draw ships
     for (int i = 0; i < MAX_SHIPS; ++i) {
         BattleShip& s = ships[i];
@@ -319,48 +321,64 @@ void SpaceBattle::draw() {
             {draw_x + 24, draw_y - 10,
              .5f, .5f, 1, 1});
 
-        bool draw_full_detail = full_detail && !fail_battle_readout_this_frame;
+        if (s.enemy) {
+            if (s.draw_hp) {
+                char t[4];
+                snprintf(t, sizeof(t), "%03d", s.hp);
 
-        if (draw_full_detail) {
-            char t[4];
-            snprintf(t, sizeof(t), "%03d", s.hp);
-
-            draw_manager.draw_text(
-                s.spr_id_label_hp,
-                Font::Tiny,
-                t,
-                Justify::Left,
-                draw_x + 40,
-                draw_y - 18,
-                COL_TEXT2);
-
-            const char* act = nullptr;
-            switch (s.action) {
-                case BSA_Idle:
-                    act = IMG_RD1_ACT0;
-                    break;
-                case BSA_AttackSlow:
-                    act = IMG_RD1_ACT1;
-                    break;
-                case BSA_AttackFast:
-                    act = IMG_RD1_ACT3;
-                    break;
-                case BSA_Report:
-                    act = IMG_RD1_ACT4;
-                    break;
-                case BSA_Move:
-                    act = IMG_RD1_ACT5;
-                    break;
+                draw_manager.draw_text(
+                    s.spr_id_label_hp,
+                    Font::Tiny,
+                    t,
+                    Justify::Right,
+                    draw_x - 20,
+                    draw_y - 18,
+                    COL_TEXT_BAD);
+            } else {
+                draw_manager.draw(s.spr_id_label_hp, nullptr);
             }
-
-            draw_manager.draw(
-                s.spr_id_label_action,
-                act,
-                {draw_x + 24, draw_y + 2,
-                 .5f, .5f, 1, 1});
         } else {
-            draw_manager.draw(s.spr_id_label_hp, nullptr);
-            draw_manager.draw(s.spr_id_label_action, nullptr);
+            if (draw_full_detail) {
+                char t[4];
+                snprintf(t, sizeof(t), "%03d", s.hp);
+
+                draw_manager.draw_text(
+                    s.spr_id_label_hp,
+                    Font::Tiny,
+                    t,
+                    Justify::Left,
+                    draw_x + 40,
+                    draw_y - 18,
+                    COL_TEXT2);
+
+                const char* act = nullptr;
+                switch (s.action) {
+                    case BSA_Idle:
+                        act = IMG_RD1_ACT0;
+                        break;
+                    case BSA_AttackSlow:
+                        act = IMG_RD1_ACT1;
+                        break;
+                    case BSA_AttackFast:
+                        act = IMG_RD1_ACT3;
+                        break;
+                    case BSA_Report:
+                        act = IMG_RD1_ACT4;
+                        break;
+                    case BSA_Move:
+                        act = IMG_RD1_ACT5;
+                        break;
+                }
+
+                draw_manager.draw(
+                    s.spr_id_label_action,
+                    act,
+                    {draw_x + 24, draw_y + 2,
+                     .5f, .5f, 1, 1});
+            } else {
+                draw_manager.draw(s.spr_id_label_hp, nullptr);
+                draw_manager.draw(s.spr_id_label_action, nullptr);
+            }
         }
     }
 
@@ -730,7 +748,34 @@ void SpaceBattle::ships_act() {
                 do_attack(s);
             }
         } else if (s->action == BSA_Report) {
-            // TODO: PROCr_report
+            // PROCr_report
+
+            if (fail_battle_readout_this_frame) {
+                continue;
+            }
+
+            BattleShip *t = s->target;
+
+            if (!t) {
+                continue;
+            }
+
+            if (t->hp <= 0) {
+                s->target = nullptr;
+                continue;
+            }
+
+            int dx = abs(s->x - t->x);
+            int dy = abs(s->y - t->y);
+
+            // This is what the original does...!
+            int dist = sqrt(dx) + sqrt(dy);
+
+            if (dist > 20) {
+                continue;
+            }
+
+            s->target->draw_hp = true;
         }
     }
 }
@@ -894,6 +939,7 @@ void SpaceBattle::update_battle() {
     fail_battle_readout_this_frame = fail_battle_readout && onein(4);
 
     for (int i = 0; i < MAX_SHIPS; ++i) {
+        ships[i].draw_hp = false;
         ships[i].draw_hit = false;
     }
 
@@ -1550,6 +1596,7 @@ void BattleShip::init(BattleShipType _type, bool _enemy, float _x, float _y, int
     shield_max = _shield;
     shield = shield_max;
     target = nullptr;
+    draw_hp = false;
     draw_hit = false;
 
     spr_id = draw_manager.new_sprite_id();

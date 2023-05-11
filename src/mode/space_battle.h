@@ -53,6 +53,7 @@ struct BattleShip {
     int shield_max;
     BattleShipAction action;
     BattleShip* target;
+    bool draw_hp;
     bool draw_hit;
     const char *spr;
     const char *spr_sel;
