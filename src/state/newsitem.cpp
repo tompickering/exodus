@@ -84,6 +84,9 @@ const char* NewsItem::get_string() const {
              return "Geological change of surface";
         case NI_BombAttack:
              return "Bomb attack";
+        case NI_PlanetClaimed:
+             snprintf(b, sizeof(b), "%s has claimed a new planet.", p0->get_full_name() );
+             return b;
         case NI_Debug:
             return "TEST NEWS ITEM";
     }

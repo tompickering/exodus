@@ -3176,7 +3176,9 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                             player->transfer_gli(-(cap - p_gli)),
                             player->transfer_art(-(cap - p_art)));
 
-                        // TODO: Orig writes a news item here with PROCnpmessage
+                        // PROCnpmessage
+                        NewsItem& news = exostate.register_news_force(NI_PlanetClaimed);
+                        news.player_0 = player_idx;
 
                         L.debug("[%s] PROCe_tact5 : CLAIMED %s AT %s", player->get_full_name(), p->get_name(), s->name);
 

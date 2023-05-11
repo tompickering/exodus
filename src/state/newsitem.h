@@ -31,6 +31,7 @@ enum NewsItemType {
     NI_BattleMachinesDestructed,
     NI_GeologicalChange,
     NI_BombAttack,
+    NI_PlanetClaimed,
     NI_Debug
 };
 
