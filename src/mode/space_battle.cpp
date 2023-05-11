@@ -368,6 +368,8 @@ void SpaceBattle::draw() {
                     case BSA_Move:
                         act = IMG_RD1_ACT5;
                         break;
+                    case BSA_MAX:
+                        break;
                 }
 
                 draw_manager.draw(

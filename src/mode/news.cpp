@@ -11,7 +11,6 @@ News::News() : ModeBase("News") {
 
 void News::enter() {
     ModeBase::enter();
-    Player *player = exostate.get_active_player();
 
     draw_manager.draw(IMG_BG_NEWS);
     draw_manager.fill({0, 0, RES_X, HEADER_HEIGHT}, COL_BORDERS);

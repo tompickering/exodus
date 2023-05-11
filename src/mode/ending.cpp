@@ -271,7 +271,7 @@ ExodusMode Ending::update(float dt) {
                                 break;
                             default:
                                 L.error("Unknown trace in bad deeds: %d", t);
-                                snprintf(bad_things[ctr], DEED_CHARS, "");
+                                bad_things[ctr][0] = '\0';
                                 break;
                         }
 
@@ -371,7 +371,7 @@ ExodusMode Ending::update(float dt) {
                                 break;
                             default:
                                 L.error("Unknown trace in good deeds: %d", t);
-                                snprintf(good_things[ctr], DEED_CHARS, "");
+                                good_things[ctr][0] = '\0';
                                 break;
                         }
 

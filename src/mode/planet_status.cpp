@@ -134,7 +134,7 @@ void PlanetStatus::enter() {
 
     int text_y = 90;
 
-    char mins[10];
+    char mins[16];
     bool see_minerals = false;
 
     if (p->is_owned() && player == exostate.get_player(p->get_owner())) {
@@ -148,12 +148,12 @@ void PlanetStatus::enter() {
     if (see_minerals) {
         int m = p->get_minerals();
         if (m > 0) {
-            snprintf(mins, 10, "%d", m);
+            snprintf(mins, sizeof(mins), "%d", m);
         } else {
-            snprintf(mins, 10, "None");
+            snprintf(mins, sizeof(mins), "None");
         }
     } else {
-        snprintf(mins, 10, "?");
+        snprintf(mins, sizeof(mins), "?");
     }
 
     char airdef[10];

@@ -924,7 +924,6 @@ static NewsItem mock;
 
 NewsItem& ExodusState::register_news(NewsItemType type) {
     int s = get_active_star_idx();
-    int p = get_active_planet_idx();
 
     bool ok = false;
     for (int i = 0; i < N_PLAYERS; ++i) {

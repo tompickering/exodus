@@ -601,8 +601,8 @@ void MenuDrawer::menu_open_specific_mode() {
                     total_unrest += pi.get()->get_unrest();
                 }
 
-                char nplans_str[8];
-                snprintf(nplans_str, sizeof(nplans), "%d", nplans);
+                char nplans_str[16];
+                snprintf(nplans_str, sizeof(nplans_str), "%d", nplans);
                 menu_set_txt(6, COL_TEXT, "Planets:");
                 draw_manager.draw_text(
                     nplans_str,
@@ -1357,7 +1357,7 @@ void MenuDrawer::menu_open_specific_mode() {
                 menu_set_txt(4, COL_TEXT2, "Internal systems:");
 
                 int x = MENU_X + 190;
-                char n[8];
+                char n[16];
 
                 menu_set_txt(6, COL_TEXT, "Thrust engines");
                 snprintf(n, sizeof(n), "%d%%", 100 - s.pct_damage_thrust);
@@ -1636,7 +1636,7 @@ bool MenuDrawer::menu_specific_update() {
 
                 if (redraw_scitax) {
                     t = p->get_tax();
-                    char pct[5];
+                    char pct[16];
                     snprintf(pct, sizeof(pct), "%d%%", t);
                     draw_manager.draw_text(
                         id_menu_sci,

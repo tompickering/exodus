@@ -29,7 +29,6 @@ bool BattleReport::batrpt_draw(bool reset) {
     LunarBattleReport &rpt = ephstate.lunar_battle_report;
 
     Planet *p = exostate.get_active_planet();
-    Player *owner = exostate.get_player(p->get_owner());
     Player *aggressor = nullptr;
     if (b.aggressor_type == AGG_Player) {
         aggressor = exostate.get_player(b.aggressor_idx);

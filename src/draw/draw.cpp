@@ -168,7 +168,7 @@ SpriteClick DrawManager::query_click(SprID query, bool right) {
                 bool clicked_on_button = false;
                 // This sprite has button regions defined inside it
                 // Iterate over them
-                for (int j = 0; j < buttons[spr].size(); ++j) {
+                for (int j = 0; j < (int)buttons[spr].size(); ++j) {
                     DrawArea btn_area = buttons[spr][j];
                     if (btn_area.x < 0 && btn_area.y < 0) {
                         clicked_on_button = true;
