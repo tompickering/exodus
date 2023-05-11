@@ -338,7 +338,7 @@ ExodusMode GalaxyMap::update(float delta) {
                 bool month_pass = input_manager.consume(K_Space);
 
 #ifdef DBG
-                month_pass = month_pass || input_manager.read(K_M);
+                month_pass = month_pass || input_manager.read(K_N);
 #endif
 
                 if (month_pass) {
@@ -348,6 +348,16 @@ ExodusMode GalaxyMap::update(float delta) {
 
             if (input_manager.consume(K_D)) {
                 return ExodusMode::MODE_Distances;
+            }
+
+            if (input_manager.consume(K_E)) {
+                return ExodusMode::MODE_ShipEquip;
+            }
+
+            if (input_manager.consume(K_M)) {
+                stage = GM_Menu;
+                menu_open(MM_StarMarker);
+                return ExodusMode::MODE_None;
             }
 
             // Orig is 'R' for 'Recall' but 'N' seems more intuitive

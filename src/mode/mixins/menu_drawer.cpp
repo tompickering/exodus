@@ -386,15 +386,11 @@ void MenuDrawer::menu_open_specific_mode() {
             menu_set_txt(0, COL_TEXT2, "Please select, %s", p->get_ref());
             menu_set_opt(2, "Change Officers & Taxes");
             menu_set_opt(3, "Secret Service", service_ok);
-            // TODO: Hotkey
             menu_set_opt(4, "Set / Replace Star Markers (M)");
-            // TODO: Hotkey
             menu_set_opt(5, "Equip Starship (E)");
             menu_set_opt(6, "Build Artificial Planet (" STR(COST_ART) "MC)", art_ok);
             menu_set_opt(8, "Wait One Month (Spc)");
-            // TODO: Hotkey
             menu_set_opt(10, "Show Distances (D)");
-            // TODO: Hotkey
             menu_set_opt(11, "Save Game (S for last)");
             menu_set_opt(12, "Quit Game");
             menu_set_opt(14, "Exit Menu");

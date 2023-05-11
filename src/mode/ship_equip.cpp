@@ -219,7 +219,7 @@ ExodusMode ShipEquip::update(float delta) {
             COL_TEXT);
     }
 
-    if (draw_manager.query_click(id(ID::EXIT)).id) {
+    if (draw_manager.query_click(id(ID::EXIT)).id || input_manager.consume(K_E)) {
         if (p->attempt_spend(total_cost())) {
             Starship &s = p->get_starship();
             s.shield_generators += rows[0].produce;
