@@ -31,3 +31,5 @@ However, here are a few crucial pointers for those preferring to dive right in:
 Thanks go to Artex Software for having originally created this excellent game, and to Jan Klose for granting permission to use the original graphical and audio assets, and for his support of this project.
 
 All graphical and audio assets are copyright Artex Software, and are included in this GPLv3-licensed package with kind permission.
+
+Note that the original game is archived by the Archimedes Software Preservation Project (JASPP) here: https://forums.jaspp.org.uk/forum/viewtopic.php?t=229
