@@ -1099,8 +1099,6 @@ void DrawManagerSDL::draw_flag_vfx() {
 
         repair_dirty_area(id, REPAIR_Below, 10);
 
-        DrawArea area = spr->area;
-
         float interp = fmin(1.0, it->second / FLAGVFX_TIME);
         uint32_t r4_max = (uint8_t)((float)0xFF * interp);
 
