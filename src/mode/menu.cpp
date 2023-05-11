@@ -475,29 +475,29 @@ ExodusMode Menu::update(float delta) {
                 draw_manager.show_cursor(false);
                 draw_manager.draw(IMG_BG_MENU0);
 
-                char *txt;
+                const char *txt = nullptr;
 
 #if DISABLE_MULTIPLAYER
-                txt = (char*) "Please identify yourself.";
+                txt = "Please identify yourself.";
 #else
                 switch (current_player) {
                     case 0:
-                        txt = (char*) "Player One, please identify yourself.";
+                        txt = "Player One, please identify yourself.";
                         break;
                     case 1:
-                        txt = (char*) "Player Two, please identify yourself.";
+                        txt = "Player Two, please identify yourself.";
                         break;
                     case 2:
-                        txt = (char*) "Player Three, please identify yourself.";
+                        txt = "Player Three, please identify yourself.";
                         break;
                     case 3:
-                        txt = (char*) "Player Four, please identify yourself.";
+                        txt = "Player Four, please identify yourself.";
                         break;
                     case 4:
-                        txt = (char*) "Player Five, please identify yourself.";
+                        txt = "Player Five, please identify yourself.";
                         break;
                     default:
-                        txt = (char*) "-";
+                        txt = "-";
                         break;
                 }
 #endif
