@@ -34,11 +34,14 @@ enum BattleShipAction {
     BSA_AttackFast,  // Orig: 3
     BSA_Report,      // Orig: 4
     BSA_Move,        // Orig: 5
+    BSA_MAX,
 };
 
 struct BattleShip {
     void init(BattleShipType, bool, float, float, int, int);
     void cleanup();
+
+    void cycle_action();
 
     BattleShipType type;
     bool exists;

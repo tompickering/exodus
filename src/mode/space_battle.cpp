@@ -511,7 +511,6 @@ void SpaceBattle::draw() {
 }
 
 void SpaceBattle::update_mouse() {
-    // TODO: PROCr_cycleaction
     for (int i = 0; i < MAX_SHIPS; ++i) {
         if (!ships[i].exists) {
             continue;
@@ -531,6 +530,14 @@ void SpaceBattle::update_mouse() {
                     L.debug("Targeting ship %d", i);
                 }
             }
+        }
+
+        // FIXME: This isn't a good trigger, because labels flicker during fail_battle_readout
+        if (draw_manager.query_click(ships[i].spr_id_label).id) {
+            ships[i].cycle_action();
+        }
+        if (draw_manager.query_click(ships[i].spr_id_label_action).id) {
+            ships[i].cycle_action();
         }
     }
 }
@@ -1595,6 +1602,36 @@ void BattleShip::cleanup() {
         draw_manager.release_sprite_id(spr_id_label_action);
     }
     exists = false;
+}
+
+void BattleShip::cycle_action() {
+    // PROCr_cycleaction
+    bool ok = false;
+    do {
+        action = (BattleShipAction)(((int)action + 1) % (int)BSA_MAX);
+
+        switch (type) {
+            case SHIP_Starship:
+                ok = (action == BSA_AttackSlow);
+                break;
+            case SHIP_Warship:
+                ok = (action == BSA_AttackSlow || action == BSA_AttackFast);
+                break;
+            case SHIP_Bomber:
+                ok = (action == BSA_AttackSlow || action == BSA_AttackFast);
+                break;
+            case SHIP_Scout:
+                ok = (action == BSA_Report);
+                break;
+            case SHIP_Transporter:
+                ok = (action == BSA_Move);
+                break;
+        }
+
+        if (action == BSA_Idle) {
+            ok = true;
+        }
+    } while (!ok);
 }
 
 void Rocket::init(float _x, float _y, float _dx, float _dy) {
