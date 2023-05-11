@@ -2,6 +2,8 @@
 
 #include "state/exodus_state.h"
 
+#include "exodus_features.h"
+
 #include "assetpaths.h"
 
 #define OPT_0_X (RES_X - 295)
@@ -415,6 +417,11 @@ ExodusMode Menu::update(float delta) {
 
             break;
         case NPlayers:
+#if DISABLE_MULTIPLAYER
+            config.n_players = 1;
+            current_player = 0;
+            set_stage(Name);
+#else
             if (trans_state == None) {
                 draw_manager.draw(IMG_BG_MENU0);
                 draw_manager.draw_text(
@@ -460,6 +467,7 @@ ExodusMode Menu::update(float delta) {
                     Justify::Centre,
                     280, 240,
                     COL_TEXT);
+#endif
 
             break;
         case Name:
@@ -468,6 +476,10 @@ ExodusMode Menu::update(float delta) {
                 draw_manager.draw(IMG_BG_MENU0);
 
                 char *txt;
+
+#if DISABLE_MULTIPLAYER
+                txt = (char*) "Please identify yourself.";
+#else
                 switch (current_player) {
                     case 0:
                         txt = (char*) "Player One, please identify yourself.";
@@ -488,6 +500,7 @@ ExodusMode Menu::update(float delta) {
                         txt = (char*) "-";
                         break;
                 }
+#endif
 
                 draw_manager.draw_text(
                     txt, Justify::Centre, RES_X/2, 90, COL_TEXT);

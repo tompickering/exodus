@@ -32,4 +32,6 @@
 // Fixes bug meaning some AI terrorist actions are never taken
 #define FIX_AI_TERROR 1
 
+#define DISABLE_MULTIPLAYER 1
+
 #endif
