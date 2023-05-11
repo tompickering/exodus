@@ -2091,6 +2091,7 @@ bool MenuDrawer::menu_specific_update() {
             for (int i = 0; i < MAX_SLOTS; ++i) {
                 if (menu_row_clicked(i+2)) {
                     save_manager.save(i);
+                    QUICKSAVE_SLOT = i;
                     menu_open(MM_Save);
                     return true;
                 }

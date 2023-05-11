@@ -25,6 +25,8 @@
 
 #include "exodus_debug.h"
 
+extern int QUICKSAVE_SLOT;
+
 extern const char* flags[];
 
 enum GalaxySize {

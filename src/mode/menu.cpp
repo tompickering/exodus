@@ -287,6 +287,7 @@ ExodusMode Menu::update(float delta) {
 
                         if (draw_manager.query_click(load_game_ids[i]).id) {
                             L.debug("LOAD GAME: %s", savemeta[i].name);
+                            QUICKSAVE_SLOT = i;
                             save_manager.load(i);
 
                             draw_manager.draw(IMG_BG_STARS2);

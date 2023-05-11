@@ -713,6 +713,11 @@ void CommPanelDrawer::comm_init(CommSend input) {
                 }
             }
             break;
+        case DIA_S_NoFirstSave:
+            comm_set_title("Message from counsellor");
+            comm_set_img(CI_HumanThoughtful);
+            comm_set_img_caption("COUNSELLOR");
+            break;
         case DIA_S_FirstPlanetAdvice:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_HumanThoughtful);
@@ -1598,6 +1603,14 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_show_buttons(true);
                 comm_recv(DIA_R_ProceedOrAbort);
             } else {
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_NoFirstSave:
+            {
+                comm_prepare(6);
+                comm_set_text(0, "For the first game saving, please");
+                comm_set_text(1, "use the CTRL-menu.");
                 comm_recv(DIA_R_Close);
             }
             break;

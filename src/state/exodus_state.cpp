@@ -10,6 +10,8 @@
 #include "assetpaths.h"
 #include "shared.h"
 
+int QUICKSAVE_SLOT = -1;
+
 const char* flags[] = {
     IMG_TS1_FLAG13,
     IMG_TS1_FLAG14,

@@ -4,6 +4,8 @@
 
 #include "exodus_features.h"
 
+#include "save/save.h"
+
 #include "util/iter.h"
 #include "util/str.h"
 #include "util/value.h"
@@ -13,6 +15,8 @@
 #ifdef DBG
 extern ExodusDebug exodebug;
 #endif
+
+extern SAVEMANAGER save_manager;
 
 enum ID {
     SELECTED,
@@ -349,6 +353,16 @@ ExodusMode GalaxyMap::update(float delta) {
             // Orig is 'R' for 'Recall' but 'N' seems more intuitive
             if (input_manager.consume(K_R) || input_manager.consume(K_N)) {
                 return ExodusMode::MODE_News;
+            }
+
+            if (input_manager.consume(K_S)) {
+                if (QUICKSAVE_SLOT < 0) {
+                    comm_open(DIA_S_NoFirstSave);
+                    stage = GM_Counsellor;
+                    return ExodusMode::MODE_None;
+                } else {
+                    save_manager.save(QUICKSAVE_SLOT);
+                }
             }
 
             break;
