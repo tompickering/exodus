@@ -22,3 +22,15 @@ popd
 
 make clean
 make -j7 windows
+
+cp lib/SDL2-2.26.5/x86_64-w64-mingw32/bin/SDL2.dll .
+cp lib/SDL2_image-2.6.3/x86_64-w64-mingw32/bin/SDL2_image.dll .
+cp lib/SDL2_mixer-2.6.3/x86_64-w64-mingw32/bin/SDL2_mixer.dll .
+cp lib/SDL2_ttf-2.20.2/x86_64-w64-mingw32/bin/SDL2_ttf.dll .
+
+name=$(basename "$(pwd)")
+
+pushd ..
+zip -r exodus.zip "${name}" --include "${name}/assets/*" "${name}/exodus.exe" "${name}/LICENSE" "${name}/manual.pdf" "${name}/README.md" "${name}/supplement.pdf" "${name}/*.dll"
+mv exodus.zip "${name}"
+popd
