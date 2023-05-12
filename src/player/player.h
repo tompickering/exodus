@@ -195,6 +195,12 @@ typedef struct {
     MissionType type;
     int star_idx;
     int planet_idx;
+
+    void reset() {
+        type = MT_None;
+        star_idx = -1;
+        planet_idx = -1;
+    }
 } Mission;
 
 enum Gender {

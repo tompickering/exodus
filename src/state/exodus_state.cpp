@@ -170,6 +170,8 @@ void ExodusState::init(GameConfig config) {
         for (int j = 0; j < N_MARKERS; ++j) {
             players[i].star_markers[j].reset();
         }
+
+        players[i].mission.reset();
     }
 
     // TODO: Check all references to alliance matrix in orig code have been carried over
