@@ -27,4 +27,9 @@
 #define SAVEMANAGER SaveManagerLinux
 #endif
 
+#ifdef WINDOWS
+#define TIMER TimerChrono
+#define SAVEMANAGER SaveManagerWindows
+#endif
+
 #endif

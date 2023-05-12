@@ -1,5 +1,3 @@
-#ifdef LINUX
-
 #define D_SUB "assets/img/sub/"
 
 const char *FONT_AUDIOWIDE = "assets/font/audiowide/Audiowide-Regular.ttf";
@@ -1031,8 +1029,6 @@ const char *IMG_VS5_VESSEL       = D_GRA "vs5_vessel";
 const char *IMG_VS6_VESSEL       = D_GRA "vs6_vessel";
 const char *IMG_WD1_DONE         = D_GRA "wd1_done";
 const char *IMG_WD1_WELL         = D_GRA "wd1_well";
-
-#endif  // LINUX
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.

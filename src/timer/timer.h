@@ -14,4 +14,8 @@ class Timer {
 #include "timer.chrono.h"
 #endif
 
+#ifdef WINDOWS
+#include "timer.chrono.h"
+#endif
+
 #endif

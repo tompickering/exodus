@@ -1,3 +1,5 @@
+#ifdef LINUX
+
 #include "save.linux.h"
 
 #include <string>
@@ -94,3 +96,5 @@ bool SaveManagerLinux::load_data(int slot, char *data) {
 
     return true;
 }
+
+#endif

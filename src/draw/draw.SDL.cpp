@@ -284,7 +284,7 @@ void DrawManagerSDL::pixelswap_update() {
         const int PX_H = (int)(.5f + 2.f * UPSCALE_Y);
         for (int y = 0; y < pixelswap_region.h / PX_H; ++y) {
             for (int x = 0; x < pixelswap_region.w / PX_W; ++x) {
-                bool swap = (random() % pixelswap_stage) == 0;
+                bool swap = (rand() % pixelswap_stage) == 0;
                 if (swap) {
                     SDL_Rect r = {pixelswap_region.x + (x * PX_W),
                                   pixelswap_region.y + (y * PX_H), PX_W, PX_H};
