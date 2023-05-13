@@ -3228,8 +3228,12 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                             player->set_tactic(1);
                             mp_state.mpai_substage = 100;
                         } else {
-                            // TODO: Orig bails if planet is aritificial and lord has artificial world
-                            mp_state.mpai_substage = 1;
+                            // Bail if planet is aritificial and lord has artificial world
+                            if ((p->get_class() == Artificial) && (exostate.has_artificial_planet(player_idx))) {
+                                mp_state.mpai_substage = 100;
+                            } else {
+                                mp_state.mpai_substage = 1;
+                            }
                         }
                     } else {
                         mp_state.mpai_substage = 100;
