@@ -3216,8 +3216,6 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 Star *s = &stars[star_idx];
                 Planet *p = s->get_planet(planet_idx);
 
-                // TODO: Things in this function from PROCenemyattack
-
                 // Resolve to attack a planet
                 if (mp_state.mpai_substage == 0) {
                     mp_state.mpai_substage_player_idx = 0;
