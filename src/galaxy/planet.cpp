@@ -517,6 +517,13 @@ int Planet::get_owner() {
 void Planet::set_owner(int new_owner) {
     L.info("[%s] owner: %d -> %d", is_named() ? get_name() : "NEW PLANET", owner, new_owner);
     owner = new_owner;
+    /*
+     * When an artificial planet is taken over, ensure any scheduled moves are cleared.
+     * In original, this is part of PROCenemyattack and PROCenemyplayerattack; i.e. it
+     * is only cleared when the CPU takes over a planet.
+     * However, we clear it on any owner change.
+     */
+    clear_star_target();
 }
 
 void Planet::unset_owner() {
