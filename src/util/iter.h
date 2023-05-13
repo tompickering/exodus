@@ -19,6 +19,7 @@ class StarIterator : public Iterator {
         StarIterator();
         Star* get();
         int get_idx();
+        Star* operator->() { return get(); }
     private:
         int n_stars;
         Star* s;
@@ -34,6 +35,7 @@ class PlanetIterator : public Iterator {
         Star* get_star();
         int get_idx();
         int get_star_idx();
+        Planet* operator->() { return get(); }
     private:
         StarIterator star_iter;
         int owner;
