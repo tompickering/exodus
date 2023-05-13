@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <cstring>
 
+#include "util/iter.h"
 #include "util/value.h"
 
 #include "assetpaths.h"
@@ -990,6 +991,16 @@ bool ExodusState::get_star_planet_idx(Planet* planet, int& _star_idx, int& _plan
     }
 
     L.error("Unable to find requested planet at %x", planet);
+    return false;
+}
+
+bool ExodusState::has_artificial_planet(int player_idx) {
+    for (PlanetIterator piter(player_idx); !piter.complete(); ++piter) {
+        if (piter.get()->get_class() == Artificial) {
+            return true;
+        }
+    }
+
     return false;
 }
 
