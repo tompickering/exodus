@@ -478,7 +478,7 @@ void AlienVessel::set_comm_text() {
             comm_text[1] = "Have a nice day, space fleet.";
             break;
         case VESSEL_Trading:
-            // TODO: Use player reference
+            // SUGGEST: Use player reference
             comm_text[0] = "Mylord!";
             comm_text[1] = "We are very sorry to disturb your flight.";
             comm_text[2] = "You shall move on with our best wishes!";
@@ -497,7 +497,7 @@ void AlienVessel::set_comm_text() {
             comm_text[1] = "Please continue your flight; we will not interfere.";
             break;
         case VESSEL_Mining:
-            // TODO: Use player reference
+            // SUGGEST: Use player reference
             comm_text[0] = "What do you want, Mylord?";
             comm_text[2] = "This mining vessel is on a registered flight.";
             comm_text[3] = "I hope you do not complain if we move on.";

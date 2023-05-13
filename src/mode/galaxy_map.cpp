@@ -2260,7 +2260,6 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
         bool resume = false;
 
         if (mp_state.mpai_substage == 4) {
-            // TODO: Respond to lunar battle report
             ephstate.clear_ephemeral_state();
             mp_state.mpai_substage = 0;
             resume = true;
@@ -2384,7 +2383,8 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 } else if (player->get_flag(1) == AI_Lo) {
                     r = 10;
                 }
-                // FIXME: Randomly lose alliances - should exclude player?
+                // Randomly lose alliances
+                // SUGGEST: Should exclude player?
                 for (int i = 0; i < N_PLAYERS; ++i) {
                     if (onein(r)) {
                         exostate.unset_alliances(player_idx, i);
