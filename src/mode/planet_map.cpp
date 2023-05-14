@@ -2309,8 +2309,6 @@ void PlanetMap::draw_frame_unrest() {
         108, 320,
         {0x90, 0x90, 0x90});
 
-    // TODO: Graph draw needs cleaning up
-
     for (int y = 0; y <= 4; y++) {
         draw_manager.draw_line(graph_x, graph_y+(y*graph_h)/4, graph_x + graph_w, graph_y+(y*graph_h)/4, 4, {0x90, 0x90, 0x90});
     }
