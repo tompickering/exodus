@@ -4575,6 +4575,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     return ExodusMode::MODE_None;
                 } else {
                     owner->attempt_spend_cpuforce(cost);
+                    n = 0;
                 }
             }
         }
