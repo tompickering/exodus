@@ -1565,17 +1565,66 @@ void LunarBattle::place_units(bool def) {
         }
     }
 
-    if (false) {
-        // TODO: We use a particular placement strategy 2/3 of the time...
-    } else {
-        BattleUnit u_inf = UNIT_Inf;
-        if (!def) {
-            if (b.aggressor_type == AGG_Aliens) u_inf = UNIT_AInf;
-            if (b.aggressor_type == AGG_Rebels) u_inf = UNIT_Rebel;
+    BattleUnit u_inf = UNIT_Inf;
+    if (!def) {
+        if (b.aggressor_type == AGG_Aliens) u_inf = UNIT_AInf;
+        if (b.aggressor_type == AGG_Rebels) u_inf = UNIT_Rebel;
+    }
+
+    BattleUnit u_gli = UNIT_Gli;
+
+    if (!onein(3)) {
+        // We use a particular inf/gli placement strategy 2/3 of the time...
+        int lim = onein(3) ? 1 : 0;
+        int g = onein(3) ? 5 : 7;
+        bool done = (inf <= 0) && (gli <= 0) && (art <= 0);
+        for (int x = g-1; g >= 0; --g) {
+            int _x = x;
+            if (def) {
+                _x = BG_WIDTH - x;
+            }
+            for (int y = 0; y < 11; ++y) {
+                int l = 0;
+                if (lim == 1 && (y == 4 || y == 5)) {
+                    l = 1;
+                }
+
+                if (l == 0 && !unit_at(_x, y)) {
+                    bool tel = false;
+                    for (int i = 0; i < n_tele; ++i) {
+                        if (tele[i].x == _x && tele[i].y == y) {
+                            tel = true;
+                            break;
+                        }
+                    }
+
+                    if (tel) {
+                        continue;
+                    }
+
+                    if (inf > 0) {
+                        place_unit(BattleUnit(u_inf).init(_x, y, min(stack, inf), def));
+                        inf -= min(stack, inf);
+                    } else if (gli > 0) {
+                        place_unit(BattleUnit(u_gli).init(_x, y, min(stack, gli), def));
+                        gli -= min(stack, gli);
+                    } else if (art > 0) {
+                        // Shouldn't happen, as we already placed artillery...
+                        place_unit(BattleUnit(UNIT_Art).init(_x, y, min(stack, art), def));
+                        art -= min(stack, art);
+                    }
+
+                    done = (inf <= 0) && (gli <= 0) && (art <= 0);
+                }
+                if (done) {
+                    break;
+                }
+            }
+            if (done) {
+                break;
+            }
         }
-
-        BattleUnit u_gli = UNIT_Gli;
-
+    } else {
         while (inf > 0) {
             int x = rand() % 7;
             int y = rand() % 11;
