@@ -296,22 +296,25 @@ ExodusMode Menu::update(float delta) {
                         if (draw_manager.query_click(load_game_ids[i]).id) {
                             L.debug("LOAD GAME: %s", savemeta[i].name);
                             QUICKSAVE_SLOT = i;
-                            save_manager.load(i);
 
-                            draw_manager.draw(IMG_BG_STARS2);
+                            if (save_manager.load(i)) {
+                                draw_manager.draw(IMG_BG_STARS2);
 
-                            Player *p = exostate.get_player(0);
-                            char welcome[64];
-                            snprintf(welcome, sizeof(welcome), "Welcome, %s.", p->get_full_name());
-                            draw_manager.draw_text(
-                                    Font::Large,
-                                    welcome,
-                                    Justify::Centre,
-                                    RES_X/2, 200,
-                                    COL_TEXT2);
+                                Player *p = exostate.get_player(0);
+                                char welcome[64];
+                                snprintf(welcome, sizeof(welcome), "Welcome, %s.", p->get_full_name());
+                                draw_manager.draw_text(
+                                        Font::Large,
+                                        welcome,
+                                        Justify::Centre,
+                                        RES_X/2, 200,
+                                        COL_TEXT2);
 
-                            set_stage(LoadWelcome);
-                            return ExodusMode::MODE_None;
+                                set_stage(LoadWelcome);
+                                return ExodusMode::MODE_None;
+                            } else {
+                                L.error("Load failed");
+                            }
                         }
                     }
                 }
