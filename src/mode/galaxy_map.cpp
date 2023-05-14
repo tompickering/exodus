@@ -4559,7 +4559,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 }
             }
 
-            if (n > 0) {
+            if (owner && (n > 0)) {
                 int cost = n*repair_cost;
 
                 // PROCcs_repair
@@ -4586,7 +4586,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         int& n = mp_state.mp_production_shutdown;
 
         if (n > 0) {
-            if (owner->is_human()) {
+            if (owner && owner->is_human()) {
                 if (bulletin_was_yesno_yes()) {
                     while (n > 0 && owner->attempt_spend(repair_cost)) {
                         n--;
