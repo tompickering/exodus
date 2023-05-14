@@ -43,6 +43,8 @@ ExodusMode EphemeralState::get_appropriate_mode() {
             return ExodusMode::MODE_PlanetMap;
         case EPH_ResearchCheck:
             return ExodusMode::MODE_None;
+        case EPH_AlienResearch:
+            return ExodusMode::MODE_None;
         case EPH_ResumeFly:
             // Hacky - but applies in all cases we want to use it
             return ExodusMode::MODE_Pop;
