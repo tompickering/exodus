@@ -89,27 +89,7 @@ bool Planet::exists() {
 void Planet::destroy() {
     L.info("PLANET DESTROYED");
     _exists = false;
-    for (int i = 0; i < N_PLAYERS; ++i) {
-        Player *p = exostate.get_player(i);
-        if (!p->is_human() && p->is_participating()) {
-            PlayerLocation &loc = p->get_location();
-            int tgt_s = loc.get_target();
-            int tgt_p = loc.get_planet_target();
-            if (tgt_s < 0 || tgt_p < 0) {
-                continue;
-            }
-            Galaxy *gal = exostate.get_galaxy();
-            if (this == gal->get_stars()[tgt_s].get_planet(tgt_p)) {
-                L.warn("Planet that %s was targeting has been destroyed", p->get_full_name());
-                /*
-                 * Original doesn't really handle this case.
-                 * Setting AI tactic back to the default seems reasonable.
-                 */
-                loc.unset_target();
-                p->set_tactic(0);
-            }
-        }
-    }
+    exostate.stabilise_disappeared_planet(this);
 }
 
 int Planet::get_construction_phase() {

@@ -1030,6 +1030,30 @@ bool ExodusState::planet_name_taken(const char* name) {
     return false;
 }
 
+void ExodusState::stabilise_disappeared_planet(Planet* planet) {
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        Player *p = get_player(i);
+        if (!p->is_human() && p->is_participating()) {
+            PlayerLocation &loc = p->get_location();
+            int tgt_s = loc.get_target();
+            int tgt_p = loc.get_planet_target();
+            if (tgt_s < 0 || tgt_p < 0) {
+                continue;
+            }
+            Galaxy *gal = get_galaxy();
+            if (planet == gal->get_stars()[tgt_s].get_planet(tgt_p)) {
+                L.warn("Planet that %s was targeting is no longer there", p->get_full_name());
+                /*
+                 * Original doesn't really handle this case.
+                 * Setting AI tactic back to the default seems reasonable.
+                 */
+                loc.unset_target();
+                p->set_tactic(0);
+            }
+        }
+    }
+}
+
 void ExodusState::prevent_attack(Planet* p) {
     int s_idx, p_idx;
     if (get_star_planet_idx(p, s_idx, p_idx)) {
