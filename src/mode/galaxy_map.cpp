@@ -1388,8 +1388,11 @@ ExodusMode GalaxyMap::month_pass_update() {
         next_mp_stage();
     }
 
-    // TODO: Orig calls PROCfillstatus (counsellor messages and month report)
-    // in between PROCenemytactics and PROCeta - is it OK to run it after both instead?
+    /*
+     * Orig calls PROCfillstatus (counsellor messages and month report)
+     * in between PROCenemytactics and PROCeta.
+     * We run it after processing both - is this OK?
+     */
 
     if (mp_state.mp_stage == MP_NoPlanetsCounsellor) {
         if (comm_is_open()) {
