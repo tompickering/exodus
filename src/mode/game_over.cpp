@@ -1,6 +1,10 @@
 #include "game_over.h"
 
+#include "audio/audio.h"
+
 #include "assetpaths.h"
+
+extern AUDIOMANAGER audio_manager;
 
 enum ID {
     LEAVE,
@@ -47,7 +51,8 @@ void GameOver::enter() {
     draw_manager.draw_text("who tried to gain the absolute power.",
         Justify::Centre, RES_X/2, 260, COL_TEXT);
 
-    // TODO: Music
+    // TODO: This isn't the right music, though unused in orig
+    audio_manager.target_music(MUS_ST1_10);
 
     stage = GO_FailMessage;
     quit = false;
