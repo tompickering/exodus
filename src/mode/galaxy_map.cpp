@@ -2395,10 +2395,15 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     r = 10;
                 }
                 // Randomly lose alliances
-                // SUGGEST: Should exclude player?
-                for (int i = 0; i < N_PLAYERS; ++i) {
+                int j = 0;
+
+#if FEATURE_HUMAN_NO_RANDOM_ALLY_LOSS
+                j = exostate.get_n_human_players();
+#endif
+
+                for (; j < N_PLAYERS; ++j) {
                     if (onein(r)) {
-                        exostate.unset_alliances(player_idx, i);
+                        exostate.unset_alliances(player_idx, j);
                     }
                 }
             }
