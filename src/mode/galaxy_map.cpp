@@ -4934,7 +4934,25 @@ bool GalaxyMap::update_research(Planet *p) {
                 bulletin_set_text_col(COL_TEXT_SPEECH);
                 bulletin_set_next_text("(%s Research)", owner->get_invention_type_str(inv));
                 // TODO: Descriptions
-                // TODO: "This makes possible:"
+
+                bulletin_set_next_text("");
+
+                bool unlocks = false;
+                for (int i = 0; i < (int)INV_MAX; ++i) {
+                    Invention _inv = (Invention)i;
+                    if (_inv == inv) {
+                        continue;
+                    }
+
+                    // FIXME: We report 'unlocks' even if these have other unmet dependencies
+                    if (owner->get_invention_prerequisites(_inv) & (1 << (int)inv)) {
+                        if (!unlocks) {
+                            bulletin_set_next_text("This makes possible:");
+                            unlocks = true;
+                        }
+                        bulletin_set_next_text("  %s", owner->get_invention_str(_inv));
+                    }
+                }
                 if (inv >= INV_OrbitalBombs) {
                     // Changed phraseology slightly here - original "...Planet X earns therefore Y MC"
                     bulletin_set_next_text("The owner of Planet %s therefore", p->get_name());
