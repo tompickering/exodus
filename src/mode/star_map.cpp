@@ -549,7 +549,7 @@ ExodusMode StarMap::update(float delta) {
             } else if (action == CA_BionicProbe) {
                 comm_close();
                 ephstate.set_ephemeral_state(EPH_ProbePlanet);
-                return ExodusMode::MODE_PlanetMap;
+                return ephstate.get_appropriate_mode();;
             }
             break;
         case SM_PlanSettleFade:
