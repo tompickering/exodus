@@ -7,6 +7,8 @@
 #include <unistd.h> // For getuid()
 #include <pwd.h>
 
+#include <sys/stat.h>
+
 #include "shared.h"
 
 using std::string;
@@ -16,15 +18,20 @@ using std::ios;
 
 #define MAX_PATH 255
 
-const char* SaveManagerLinux::get_save_dir() {
-    const char *savedir = getenv("HOME");
+static char save_dir[MAX_PATH];
 
-    if (!savedir) {
-        savedir = getpwuid(getuid())->pw_dir;
+const char* SaveManagerLinux::get_save_dir() {
+    const char *home = getenv("HOME");
+
+    if (!home) {
+        home = getpwuid(getuid())->pw_dir;
     }
 
-    // Safe to return this; getenv result already in our memory space
-    return savedir;
+    snprintf(save_dir, sizeof(save_dir), "%s/%s", home, ".exodus_saves");
+
+    mkdir(save_dir, S_IRUSR | S_IWUSR | S_IXUSR);
+
+    return save_dir;
 }
 
 bool SaveManagerLinux::save_data(int slot, const char *data) {
@@ -35,9 +42,8 @@ bool SaveManagerLinux::save_data(int slot, const char *data) {
         return false;
     }
 
-    char file[MAX_PATH+1];
-    snprintf(file, MAX_PATH, "%s/%d", dir, slot);
-    file[MAX_PATH] = '\0';
+    char file[MAX_PATH];
+    snprintf(file, sizeof(file), "%s/%d", dir, slot);
 
     ofstream out(string(file), ios::out | ios::binary);
 
@@ -71,8 +77,7 @@ bool SaveManagerLinux::load_data(int slot, char *data) {
     }
 
     char file[MAX_PATH+1];
-    snprintf(file, MAX_PATH, "%s/%d", dir, slot);
-    file[MAX_PATH] = '\0';
+    snprintf(file, sizeof(file), "%s/%d", dir, slot);
 
     ifstream in(string(file), ios::in | ios::binary);
 
