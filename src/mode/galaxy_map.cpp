@@ -699,73 +699,55 @@ ExodusMode GalaxyMap::update(float delta) {
 
                 if (ft && (ft != gal->get_guild())) {
                     exostate.set_active_flytarget(ft);
-                    if (ft == selected_ft) {
-                        if (!player->get_location().has_visited(exostate.tgt2loc(ft))) {
-                            /*
-                             * I'm not sure if the original prevented this - but I don't
-                             * think you'd want to create a planet in a system that you
-                             * can't even view to access the planet map!
-                             */
-                            // FIXME: Bit hacky to reuse DIA_S_ZoomButNotVisited
-                            comm_open(DIA_S_ZoomButNotVisited);
+                    if (!player->get_location().has_visited(exostate.tgt2loc(ft))) {
+                        /*
+                         * I'm not sure if the original prevented this - but I don't
+                         * think you'd want to create a planet in a system that you
+                         * can't even view to access the planet map!
+                         */
+                        // FIXME: Bit hacky to reuse DIA_S_ZoomButNotVisited
+                        comm_open(DIA_S_ZoomButNotVisited);
+                        stage = GM_ArtificialWorldStarSelectInvalid;
+                        break;
+                    }
+
+                    Star *s = (Star*) ft;
+                    int player_idx = exostate.get_active_player_idx();
+
+                    if (artificial_planet_to_move) {
+                        // Moving a planet
+                        ArtificialPlanetViable apv = exostate.artificial_planet_viable(s);
+                        if (apv == APV_Yes) {
+                            int tgt_idx = exostate.tgt2loc(s);
+                            artificial_planet_to_move->set_star_target(tgt_idx);
+                            artificial_planet_to_move = nullptr;
+                            stage = GM_Idle;
+                        } else {
+                            if (apv == APV_No_StarFull) {
+                                comm_open(DIA_S_ArtificialPlanetStarInvalid);
+                            } else if (apv == APV_No_MoveDest) {
+                                comm_open(DIA_S_ArtificialPlanetStarMoveDest);
+                            } else {
+                                L.error("Unknown ArtificialPlanetViable result %d", apv);
+                                comm_open(DIA_S_ArtificialPlanetStarInvalid);
+                            }
                             stage = GM_ArtificialWorldStarSelectInvalid;
                             break;
                         }
+                    } else {
+                        // Constructing a planet
+                        // FIXME: It's a bit hacky to rely on the input system to remember this...
+                        const char* name = input_manager.get_input_text(PLANET_MAX_NAME);
 
-                        Star *s = (Star*) ft;
-                        int player_idx = exostate.get_active_player_idx();
-
-                        if (artificial_planet_to_move) {
-                            // Moving a planet
-                            ArtificialPlanetViable apv = exostate.artificial_planet_viable(s);
-                            if (apv == APV_Yes) {
-                                int tgt_idx = exostate.tgt2loc(s);
-                                artificial_planet_to_move->set_star_target(tgt_idx);
-                                artificial_planet_to_move = nullptr;
-                                stage = GM_Idle;
-                            } else {
-                                if (apv == APV_No_StarFull) {
-                                    comm_open(DIA_S_ArtificialPlanetStarInvalid);
-                                } else if (apv == APV_No_MoveDest) {
-                                    comm_open(DIA_S_ArtificialPlanetStarMoveDest);
-                                } else {
-                                    L.error("Unknown ArtificialPlanetViable result %d", apv);
-                                    comm_open(DIA_S_ArtificialPlanetStarInvalid);
-                                }
-                                stage = GM_ArtificialWorldStarSelectInvalid;
-                                break;
-                            }
+                        if (exostate.construct_artificial_planet(s, player_idx, name)) {
+                            stage = GM_Idle;
+                            break;
                         } else {
-                            // Constructing a planet
-                            // FIXME: It's a bit hacky to rely on the input system to remember this...
-                            const char* name = input_manager.get_input_text(PLANET_MAX_NAME);
-
-                            if (exostate.construct_artificial_planet(s, player_idx, name)) {
-                                stage = GM_Idle;
-                                break;
-                            } else {
-                                comm_open(DIA_S_ArtificialPlanetStarInvalid);
-                                stage = GM_ArtificialWorldStarSelectInvalid;
-                                break;
-                            }
+                            comm_open(DIA_S_ArtificialPlanetStarInvalid);
+                            stage = GM_ArtificialWorldStarSelectInvalid;
+                            break;
                         }
                     }
-                }
-
-                if (ft && ft != selected_ft) {
-                    draw_manager.draw(id(ID::SELECTED), nullptr);
-                    selected_ft = ft;
-                    selected_ft_blink = BLINK_TIME;
-                }
-
-                if (selected_ft && selected_ft_blink >= BLINK_TIME) {
-                    get_draw_position(selected_ft, draw_x, draw_y);
-                    draw_manager.draw(
-                            id(ID::SELECTED),
-                            IMG_TS1_MK1,
-                            {draw_x, draw_y, 0.5, 0.5, 1, 1});
-                } else {
-                    draw_manager.draw(id(ID::SELECTED), nullptr);
                 }
 
                 panel_set_text("SELECT A STAR");
