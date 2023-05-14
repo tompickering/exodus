@@ -243,6 +243,7 @@ enum ID {
     EXIT,
     TARGET,
     EXPLOSION,
+    REPLAY,
     FRAME,
     FRAME_BG,
     LAW_PANEL,
@@ -330,6 +331,7 @@ PlanetMap::PlanetMap() : ModeBase("PlanetMap") {
     construct_y = 0;
     construct_stone = STONE_Clear;
     destruction_time = 0;
+    replay_timer = 0;
     targeting_interp = 0;
     explosion_interp = 0;
     destruction_done = false;
@@ -364,6 +366,7 @@ void PlanetMap::enter() {
     construct_stone = STONE_Clear;
 
     destruction_time = 0;
+    replay_timer = 0;
     targeting_interp = 0;
     explosion_interp = 0;
     destruction_done = false;
@@ -1906,6 +1909,20 @@ ExodusMode PlanetMap::update_destruction(float delta) {
 
     if (d.draw) {
         destruction_time += delta;
+
+        if (d.show_replay) {
+            replay_timer += delta;
+            if (fmod(replay_timer, 1.6f) < 0.8f) {
+                draw_manager.draw_text(
+                    id(ID::REPLAY),
+                    "REPLAY",
+                    Justify::Right,
+                    RES_X - 4, 4,
+                    COL_TEXT_BAD);
+            } else {
+                draw_manager.draw(id(ID::REPLAY), nullptr);
+            }
+        }
 
         draw_stones();
         if (!d.enable_explosion_anims || explosion_interp >= 1) {

@@ -112,6 +112,7 @@ class PlanetMap : ModeBase {
         ExodusMode update_destruction(float);
         bool destruction_done;
         float destruction_time;
+        float replay_timer;
         float targeting_interp;
         float explosion_interp;
         ExplodeState exploding;
