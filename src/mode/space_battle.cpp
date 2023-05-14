@@ -860,7 +860,7 @@ void SpaceBattle::do_attack(BattleShip* s) {
             }
         }
 
-        // TODO: Orig had a half-implemented screen wobble here - maybe experiment with that
+        // SUGGEST: Orig had a half-implemented screen wobble here - maybe experiment with that
     } else {
         L.info("%s ship type %d HP: %d->%d", t->enemy?"CPU":"Human", (int)t->type, t->hp, t->hp - hits);
         t->hp = max(t->hp - hits, 0);
@@ -895,7 +895,6 @@ void SpaceBattle::do_attack(BattleShip* s) {
             if (selected && selected->target == t) {
                 selected->target = nullptr;
             }
-            // TODO: Is there any sort of explosion effect on death?
             t->cleanup();
         }
     }
