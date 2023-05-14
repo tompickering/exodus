@@ -430,7 +430,7 @@ ExodusMode GalaxyMap::update(float delta) {
                     return ExodusMode::MODE_Reload;
                 }
 
-                // TODO: "SELECT A STAR" message
+                panel_set_text("SELECT A STAR");
                 // SUGGEST: (Show star name on mouseover?)
                 // SUGGEST: Some way to highlight available stars
                 ft = get_clicked_flytarget();
