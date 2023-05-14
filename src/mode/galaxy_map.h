@@ -116,6 +116,7 @@ enum MonthPassPlanetStage {
     // Can use excess plu in production / mining, but not trade
     MPP_ResourceCap1,
     MPP_MilitaryFacilityShutdown,
+    MPP_MilitaryFacilityShutdown2,
     MPP_Trade,
     MPP_VillageGifts,
     MPP_FoodPerishes,
@@ -142,6 +143,8 @@ typedef struct {
     int mp_star_idx;
     int mp_planet_idx;
     Officer mp_officer;
+    int mp_production_shutdown;
+
     int mpai_player_idx;
     int mpai_star_idx;
     int mpai_planet_idx;

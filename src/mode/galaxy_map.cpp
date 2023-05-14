@@ -4626,8 +4626,83 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
+    const int repair_cost = 5;
+
     if (mp_state.mpp_stage == MPP_MilitaryFacilityShutdown) {
-        // TODO
+        int &n = mp_state.mp_production_shutdown;
+        n = 0;
+
+        if (exostate.get_orig_month() > 10) {
+            StoneSet produce_set;
+            produce_set.add(STONE_Inf);
+            produce_set.add(STONE_Gli);
+            produce_set.add(STONE_Art);
+
+            int production = p->count_stones(produce_set);
+
+            for (int i = 0; i < production; ++i) {
+                if (onein(50)) {
+                    ++n;
+                }
+            }
+
+            if (n > 0) {
+                int cost = n*repair_cost;
+
+                // PROCcs_repair
+                if (owner->is_human()) {
+                    bulletin_start_new(true);
+                    bulletin_set_bg(p->sprites()->bulletin_bg);
+                    bulletin_set_active_player_flag();
+                    bulletin_write_planet_info(s, p);
+                    bulletin_set_next_text("%d production unit%s need%s to be repaired.", n, n>1?"s":"", n>1?"":"s");
+                    bulletin_set_next_text("Cost: %dMC. Do you wish to pay?", cost);
+                    bulletin_set_yesno();
+                    next_mpp_stage();
+                    return ExodusMode::MODE_None;
+                } else {
+                    owner->attempt_spend_cpuforce(cost);
+                }
+            }
+        }
+        next_mpp_stage();
+    }
+
+    if (mp_state.mpp_stage == MPP_MilitaryFacilityShutdown2) {
+        int& n = mp_state.mp_production_shutdown;
+
+        if (n > 0) {
+            if (owner->is_human()) {
+                if (bulletin_was_yesno_yes()) {
+                    while (n > 0 && owner->attempt_spend(repair_cost)) {
+                        n--;
+                    }
+                }
+            }
+        }
+
+        if (n > 0) {
+            report.add_line("%d production unit%s ha%s stopped.", n, n>1?"s":"", n>1?"ve":"s");
+
+            while (n > 0) {
+                StoneSet set;
+                set.add(STONE_Inf);
+                set.add(STONE_Gli);
+                set.add(STONE_Art);
+
+                Stone s;
+                int x, y;
+                if (p->find_random_stone(set, s, x, y)) {
+                    p->set_stone(x, y, STONE_Rubble);
+                    --n;
+                } else {
+                    L.error("Could not find production unit we verified must exist");
+                    break;
+                }
+            }
+        }
+
+        n = 0;
         next_mpp_stage();
     }
 
