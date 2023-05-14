@@ -15,6 +15,7 @@ const SaveMeta* SaveManager::get_all_meta(bool refresh) {
         L.info("Reading save metadata");
         char data[SAVE_SIZE];
         for (int i = 0; i < MAX_SLOTS; ++i) {
+            metadata[i].version = 0;
             metadata[i].exists = false;
             if (load_data(i, data)) {
                 memcpy(&metadata[i], data, sizeof(SaveMeta));
@@ -30,6 +31,14 @@ bool SaveManager::load(int slot) {
     if (!load_data(slot, data)) {
         return false;
     }
+
+    SaveMeta meta;
+    memcpy(&meta, data, sizeof(SaveMeta));
+    if (meta.version != EXODUS_VERSION) {
+        L.error("SAVE DATA IS INCORRECT VERSION: %d vs %d", meta.version, EXODUS_VERSION);
+        return false;
+    }
+
     memcpy(&exostate, data+sizeof(SaveMeta), sizeof(ExodusState));
     return true;
 }
@@ -39,6 +48,7 @@ bool SaveManager::save(int slot) {
     SaveMeta meta;
     Player *player = exostate.get_player(0);
     strncpy(meta.name, player->get_name(), MAX_PLAYER_NAME);
+    meta.version = EXODUS_VERSION;
     meta.exists = true;
     meta.name[MAX_PLAYER_NAME] = '\0';
     meta.month = exostate.get_month();

@@ -1,6 +1,8 @@
 #ifndef GUARD_SAVE_H
 #define GUARD_SAVE_H
 
+#include "exodus.h"
+
 #include "state/exodus_state.h"
 #include "player/player.h"
 
@@ -8,6 +10,7 @@
 #define SAVE_SIZE (sizeof(SaveMeta) + sizeof(ExodusState))
 
 typedef struct {
+    ExodusVersion version;
     bool exists;
     char name[MAX_PLAYER_NAME+1];
     int month;

@@ -1,6 +1,11 @@
 #ifndef GUARD_EXODUS_H
 #define GUARD_EXODUS_H
 
+#include <cstdint>
+
+typedef uint32_t ExodusVersion;
+extern const ExodusVersion EXODUS_VERSION;
+
 #include <map>
 
 #define MODE_STACK_SIZE 256

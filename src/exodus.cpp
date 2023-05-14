@@ -1,5 +1,7 @@
 #include "exodus.h"
 
+const ExodusVersion EXODUS_VERSION = 1;
+
 #include "shared.h"
 
 #include "platform.h"
