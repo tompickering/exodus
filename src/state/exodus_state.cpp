@@ -724,7 +724,7 @@ int ExodusState::get_n_planets(Player* player) {
 }
 
 /*
- * TODO: This serves as firstplanet() from orig, but orig only resets
+ * FIXME: This serves as firstplanet() from orig, but orig only resets
  * the flag to 0 in PROCcheck_alive - whereas we always return an
  * up-to-date value - which means our behaviour might deviate during
  * month pass.
