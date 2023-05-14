@@ -1015,7 +1015,7 @@ ExodusMode LunarBattle::update(float delta) {
                 break;
             } else if (damage_to_apply > 0) {
                 exp_interp = 1;
-                // TODO: Louder if mine_damage?
+                // SUGGEST: Louder if mine_damage?
                 audio_manager.play_sfx(SFX_EXPLOSION);
                 break;
             }
@@ -1081,7 +1081,7 @@ ExodusMode LunarBattle::update(float delta) {
                      * of the opponent's units as possible...
                      */
 
-                    // TODO: Give surrendering some advantage?
+                    // SUGGEST: Give surrendering some advantage?
 
                     if (aggressor && aggressor->is_human()) {
                         rpt.agg_lost = rpt.agg_init;
