@@ -1004,6 +1004,21 @@ bool ExodusState::has_artificial_planet(int player_idx) {
     return false;
 }
 
+/*
+ * Best avoided - inefficient and if we don't already know the star
+ * when we need to, that's probably an architectural issue.
+ */
+Star* ExodusState::get_star_for_planet(Planet* p) {
+    for (PlanetIterator piter; !piter.complete(); ++piter) {
+        if (piter.get() == p) {
+            return piter.get_star();
+        }
+    }
+
+    L.error("Could not find star for planet %s", p->get_name());
+    return nullptr;
+}
+
 void ExodusState::prevent_attack(Planet* p) {
     int s_idx, p_idx;
     if (get_star_planet_idx(p, s_idx, p_idx)) {

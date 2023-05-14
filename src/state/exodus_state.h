@@ -144,6 +144,7 @@ class ExodusState {
         const NewsItem& get_news(int);
         bool get_star_planet_idx(Planet*, int&, int&);
         bool has_artificial_planet(int);
+        Star* get_star_for_planet(Planet*);
 
         void prevent_attack(Planet*);
         bool attack_prevented(Planet*);
