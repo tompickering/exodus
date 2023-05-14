@@ -27,6 +27,9 @@ const char** get_names_for_class(PlanetClass cls) {
     if (cls == Rock)       return PLANET_NAMES_ROCK;
     if (cls == Ice)        return PLANET_NAMES_ICE;
     if (cls == Terra)      return PLANET_NAMES_TERRA;
+
+    if (cls == Artificial) return PLANET_NAMES_ART;
+
     L.fatal("Can't get names for invalid class %d", (int)cls);
     return nullptr;
 }
@@ -225,6 +228,10 @@ const char* Planet::get_name_suggestion() {
     if (cls == Artificial)
         return "Genesis";
     return get_names_for_class(cls)[rand() % N_PLANET_NAMES];
+}
+
+const char* Planet::get_art_name_suggestion() {
+    return get_names_for_class(Artificial)[rand() % N_ART_PLANET_NAMES];
 }
 
 void Planet::init() {

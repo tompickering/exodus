@@ -179,6 +179,7 @@ class Planet {
         void set_name(const char*);
         bool is_named();
         const char* get_name_suggestion();
+        const char* get_art_name_suggestion();
         const PlanetSpriteSet* sprites();
         const MoonSpriteSet* moon_sprites();
         bool is_owned();

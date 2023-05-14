@@ -6,3 +6,6 @@ extern const char* PLANET_NAMES_VOLCANO[];
 extern const char* PLANET_NAMES_ROCK[];
 extern const char* PLANET_NAMES_ICE[];
 extern const char* PLANET_NAMES_TERRA[];
+
+#define N_ART_PLANET_NAMES 15
+extern const char* PLANET_NAMES_ART[];

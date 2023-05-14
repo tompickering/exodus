@@ -53,3 +53,10 @@ const char* PLANET_NAMES_TERRA[] = {
     "Isis", "Manticore", "Colony", "Pacifica", "Excalibur",
     "Apollo", "Colony", "Destiny", "Eureka", "Misery"
 };
+
+// Not in orig
+const char* PLANET_NAMES_ART[] = {
+    "Tron", "Transistor", "Arc", "Ark", "Omen",
+    "Despair", "Gateway", "Oddball", "Irondawn", "Volta",
+    "X", "Z", "Eon", "Legion", "Matrix"
+};
