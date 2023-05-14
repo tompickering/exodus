@@ -18,7 +18,7 @@ static const char* text[] = {
     "to lead and to protect them in this",
     "time of uncertainty and anxiety.",
     "We have chosen you because you have",
-    "proved your skills before.",
+    "proven your skills before.",
     "",
     "We will call you '%s' as it is usual",
     "in this galaxy.",
