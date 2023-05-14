@@ -18,6 +18,8 @@ GameOver::GameOver() : ModeBase("GameOver") {
 void GameOver::enter() {
     ModeBase::enter(ID::END);
 
+    time = 0;
+
     draw_manager.draw(IMG_GAMEOVER);
     const char *reason = "";
 
@@ -59,11 +61,13 @@ void GameOver::enter() {
 }
 
 ExodusMode GameOver::update(float delta) {
+    time += delta;
+
     switch (stage) {
         case GO_FailMessage:
             {
-                if (draw_manager.clicked()) {
-                    // TODO: Fade music
+                if (time > 40 || draw_manager.clicked()) {
+                    audio_manager.fade_out(3000);
                     draw_manager.draw(TGT_Secondary, IMG_GAMEOVER);
                     draw_manager.draw_text(
                         TGT_Secondary,

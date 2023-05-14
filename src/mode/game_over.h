@@ -24,6 +24,8 @@ class GameOver : ModeBase {
 
         Stage stage;
 
+        float time;
+
         bool quit;
 };
 

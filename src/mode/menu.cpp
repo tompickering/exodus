@@ -2,6 +2,8 @@
 
 #include "state/exodus_state.h"
 
+#include "audio/audio.h"
+
 #include "exodus_features.h"
 
 #include "assetpaths.h"
@@ -23,6 +25,8 @@
 #define TXT_1_Y 250
 #define TXT_2_X 95
 #define TXT_2_Y 383
+
+extern AUDIOMANAGER audio_manager;
 
 const int LOADFRAME_W = 436;
 const int LOADFRAME_H = 306;
@@ -120,6 +124,8 @@ void Menu::enter() {
     ModeBase::enter(ID::END);
     stage = Main;
     trans_state = None;
+
+    audio_manager.target_music(MUS_INTRO);
 
     for (int i = 0; i < MAX_SLOTS; ++i) {
         load_game_ids[i] = draw_manager.new_sprite_id();

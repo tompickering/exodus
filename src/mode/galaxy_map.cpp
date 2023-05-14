@@ -469,7 +469,8 @@ ExodusMode GalaxyMap::update(float delta) {
                     if (ephstate.get_ephemeral_state() != EPH_GameOver) {
                         ephstate.set_ephemeral_state(EPH_GameOver);
                         ephstate.game_over_reason = GAMEOVER_Failed;
-                        draw_manager.fade_black(1.2f, 24);
+                        audio_manager.fade_out(1200);
+                        draw_manager.fade_black(2.4f, 24);
                     } else if (!draw_manager.fade_active()) {
                         return ephstate.get_appropriate_mode();
                     }
