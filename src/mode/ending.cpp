@@ -43,7 +43,7 @@ static const char* end_text_0[] = {
     "The galaxy is yours.",
     "None of your opponents",
     "has shown the skill and faith",
-    "that lead to your success.",
+    "that led to your success.",
     "Now we will look at your past.",
 };
 
