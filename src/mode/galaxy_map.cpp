@@ -4935,8 +4935,10 @@ bool GalaxyMap::update_research(Planet *p) {
                 bulletin_set_next_text("(%s Research)", owner->get_invention_type_str(inv));
                 // TODO: Descriptions
                 // TODO: "This makes possible:"
-                if (inv > INV_UniversalVaccine) {
-                    // TODO: Show awarded credits
+                if (inv >= INV_OrbitalBombs) {
+                    // Changed phraseology slightly here - original "...Planet X earns therefore Y MC"
+                    bulletin_set_next_text("The owner of Planet %s therefore", p->get_name());
+                    bulletin_set_next_text("receives %dMC.", mc_reward);
                     owner->give_mc(mc_reward);
                 }
                 next_mpp_stage();
