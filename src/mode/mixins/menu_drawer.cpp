@@ -1142,86 +1142,8 @@ void MenuDrawer::menu_open_specific_mode() {
                     menu_set_txt(2, COL_TEXT, "(Not invented yet)");
                 }
 
-                const char* t0 = "";
-                const char* t1 = "";
-                const char* t2 = "";
-
-                switch (menu_inv) {
-                    case INV_MassProduction:
-                        t0 = "This system enables the industry";
-                        t1 = "to produce gigantic masses of material";
-                        t2 = "in a very short time.";
-                        break;
-                    case INV_UltraRangeScanner:
-                        t0 = "This system makes it possible to scan";
-                        t1 = "an entire globe's atmosphere and surface";
-                        t2 = "in less than four seconds.";
-                        break;
-                    case INV_FusionEngine:
-                        t0 = "This engine needs much less power";
-                        t1 = "than any other fusion engines constructed";
-                        t2 = "in the past.";
-                        break;
-                    case INV_MicroMechanicElements:
-                        t0 = "These elements allow a complex machine";
-                        t1 = "to be stored in minimal space. This";
-                        t2 = "invention is most important.";
-                        break;
-                    case INV_UniversalVaccine:
-                        t0 = "This vaccine's molecular structure is";
-                        t1 = "very easy to manipulate and can be used";
-                        t2 = "both to inoculate and to damage.";
-                        break;
-                    case INV_OrbitalBombs:
-                        t0 = "These bombs can be dropped onto a planet";
-                        t1 = "from orbit which means that it is";
-                        t2 = "impossible to avoid an attack.";
-                        break;
-                    case INV_OrbitalMassConstruction:
-                        t0 = "This is an improvement to the Mass";
-                        t1 = "Production System and can even be used";
-                        t2 = "to construct entire planets.";
-                        break;
-                    case INV_OrbitalMassThrust:
-                        t0 = "This can be used for Spaceship High Speed";
-                        t1 = "Flights (SHSF) and for the moving of an";
-                        t2 = "artificial planet.";
-                        break;
-                    case INV_WeatherInfluence:
-                        t0 = "This invention makes it possible to control";
-                        t1 = "the planet's weather by thermal manipulation.";
-                        t2 = "This can result in a global geological change.";
-                        break;
-                    case INV_MultiFunctionalVaccine:
-                        t0 = "This vaccine can inoculate against previously";
-                        t1 = "unknown viral strains that could lead to city-wide";
-                        t2 = "epidemics and closures.";
-                        break;
-                    case INV_Acid:
-                        t0 = "This acid can prevent sudden and unknown";
-                        t1 = "plagues that lead to the destruction of";
-                        t2 = "important agricultural areas.";
-                        break;
-                    case INV_IndustryGuard:
-                        t0 = "These machines will be installed in every";
-                        t1 = "important industry area to detect and kill";
-                        t2 = "enemy (or rebel) terrorists.";
-                        break;
-                    case INV_DreamInfluence:
-                        t0 = "This DIS is a top-secret invention and is";
-                        t1 = "used to extract information from captured";
-                        t2 = "terrorists by manipulating their dreams.";
-                        break;
-                    case INV_RadarExtension:
-                        t0 = "This system can prevent damage caused by";
-                        t1 = "meteor fragments, and can also cloak the";
-                        t2 = "space fleet from alien radars.";
-                        break;
-                    default:
-                        L.error("No invention: %d", (int)menu_inv);
-                        break;
-                }
-
+                const char *t0, *t1, *t2;
+                p->get_invention_description(menu_inv, t0, t1, t2);
                 menu_set_txt(4, COL_TEXT, t0);
                 menu_set_txt(5, COL_TEXT, t1);
                 menu_set_txt(6, COL_TEXT, t2);

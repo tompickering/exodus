@@ -456,6 +456,87 @@ const char* Player::get_invention_type_str(Invention inv) {
     return "<NO INVENTION TYPE>";
 }
 
+void Player::get_invention_description(Invention inv, const char*& d0, const char*& d1, const char*& d2) {
+    const char* empty = nullptr;
+    d0 = d1 = d2 = empty;
+
+    switch (inv) {
+        case INV_MassProduction:
+            d0 = "This system enables the industry";
+            d1 = "to produce gigantic masses of material";
+            d2 = "in a very short time.";
+            break;
+        case INV_UltraRangeScanner:
+            d0 = "This system makes it possible to scan";
+            d1 = "an entire globe's atmosphere and surface";
+            d2 = "in less than four seconds.";
+            break;
+        case INV_FusionEngine:
+            d0 = "This engine needs much less power";
+            d1 = "than any other fusion engines constructed";
+            d2 = "in the past.";
+            break;
+        case INV_MicroMechanicElements:
+            d0 = "These elements allow a complex machine";
+            d1 = "to be stored in minimal space. This";
+            d2 = "invention is most important.";
+            break;
+        case INV_UniversalVaccine:
+            d0 = "This vaccine's molecular structure is";
+            d1 = "very easy to manipulate and can be used";
+            d2 = "both to inoculate and to damage.";
+            break;
+        case INV_OrbitalBombs:
+            d0 = "These bombs can be dropped onto a planet";
+            d1 = "from orbit which means that it is";
+            d2 = "impossible to avoid an attack.";
+            break;
+        case INV_OrbitalMassConstruction:
+            d0 = "This is an improvement to the Mass";
+            d1 = "Production System and can even be used";
+            d2 = "to construct entire planets.";
+            break;
+        case INV_OrbitalMassThrust:
+            d0 = "This can be used for Spaceship High Speed";
+            d1 = "Flights (SHSF) and for the moving of an";
+            d2 = "artificial planet.";
+            break;
+        case INV_WeatherInfluence:
+            d0 = "This invention makes it possible to control";
+            d1 = "the planet's weather by thermal manipulation.";
+            d2 = "This can result in a global geological change.";
+            break;
+        case INV_MultiFunctionalVaccine:
+            d0 = "This vaccine can inoculate against previously";
+            d1 = "unknown viral strains that could lead to city-wide";
+            d2 = "epidemics and closures.";
+            break;
+        case INV_Acid:
+            d0 = "This acid can prevent sudden and unknown";
+            d1 = "plagues that lead to the destruction of";
+            d2 = "important agricultural areas.";
+            break;
+        case INV_IndustryGuard:
+            d0 = "These machines will be installed in every";
+            d1 = "important industry area to detect and kill";
+            d2 = "enemy (or rebel) terrorists.";
+            break;
+        case INV_DreamInfluence:
+            d0 = "This DIS is a top-secret invention and is";
+            d1 = "used to extract information from captured";
+            d2 = "terrorists by manipulating their dreams.";
+            break;
+        case INV_RadarExtension:
+            d0 = "This system can prevent damage caused by";
+            d1 = "meteor fragments, and can also cloak the";
+            d2 = "space fleet from alien radars.";
+            break;
+        default:
+            L.error("No invention: %d", (int)inv);
+            break;
+    }
+}
+
 uint32_t Player::get_invention_prerequisites(Invention inv) {
     uint32_t pre = 0;
 

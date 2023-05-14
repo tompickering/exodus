@@ -4933,7 +4933,14 @@ bool GalaxyMap::update_research(Planet *p) {
                 bulletin_set_next_text("New invention: %s", owner->get_invention_str(inv));
                 bulletin_set_text_col(COL_TEXT_SPEECH);
                 bulletin_set_next_text("(%s Research)", owner->get_invention_type_str(inv));
-                // TODO: Descriptions
+
+                bulletin_set_next_text("");
+
+                const char *d0, *d1, *d2;
+                owner->get_invention_description(inv, d0, d1, d2);
+                bulletin_set_next_text(d0);
+                bulletin_set_next_text(d1);
+                bulletin_set_next_text(d2);
 
                 bulletin_set_next_text("");
 
