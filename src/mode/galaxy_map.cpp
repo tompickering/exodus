@@ -4489,7 +4489,6 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     // TODO: Check whether each subsequent stage should happen with no owner
 
     if (mp_state.mpp_stage == MPP_Income) {
-        // TODO - Check the weird case in PROCcal_plan based on the t% DIM
         if (owner) {
             int income = p->get_net_income();
             // If income is 1, we allow it to remain at 1 if taxes are <50%
