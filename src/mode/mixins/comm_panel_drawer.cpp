@@ -696,7 +696,6 @@ void CommPanelDrawer::comm_init(CommSend input) {
                     } else {
                         comm_set_img(CI_Human);
                     }
-                    // TODO: Check text layout against orig
                     comm_set_text(0, "Attack %s", comm_planet->get_name());
                     const char *odds = "good";
                     if (army_enemy >= army) odds = "not good";
@@ -816,7 +815,6 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_race(comm_other->get_race());
             break;
         case DIA_S_B_CPU_OpenCommsRebels:
-            // TODO: Check this is correct
             comm_set_img_caption_upper("REBELS");
             comm_set_img_caption_lower("REBELS");
             comm_set_img(CI_Rebels);
@@ -1322,7 +1320,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     comm_other->set_hostile_to(comm_player_idx);
                 }
             } else {
-                // TODO: This seems like a weird thing to say...
+                // SUGGEST: This seems like a weird thing to say...
                 comm_set_speech("Why should I do so?");
             }
             comm_exit_anim_action = CA_Abort;
@@ -1449,7 +1447,6 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 //       but they don't go to the other lord! More important
                 //       in multiplayer.
                 exostate.set_alliance(comm_player_idx, comm_other_idx, comm_ctx.alliance_type);
-                // TODO: Orig sets 'san=1' here - why?
                 comm_player->add_trace(TRACE_AlliancesCreated);
                 comm_set_speech("I accept this.");
                 comm_exit_anim_action = CA_Abort;
