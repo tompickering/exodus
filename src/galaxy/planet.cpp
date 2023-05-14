@@ -9,6 +9,7 @@
 
 #include "assetpaths.h"
 #include "shared.h"
+#include "exodus_features.h"
 
 #include "util/value.h"
 
@@ -2259,13 +2260,22 @@ void Planet::ai_update() {
             case 13:
                 // BUILD PLUTONIUM
                 {
-                    // TODO: It appears PROCeta13 doesn't account for the extra
-                    // plutonium produced on volcanic planets, as get_plu_production()
-                    // does, and just takes the number of plutonium reactors.
-                    // Should we preserve this behaviour?
                     int to_build = get_plu_consumption() - get_plu_production();
                     owner->cpu_write_off_debt();
-                    // FIXME: Should we halve (rounding up) build count of volcano worlds?
+
+#ifdef FEATURE_CPU_EXPLOITS_VOLCANO
+                    /*
+                     * PROCeta13 doesn't account for the extra plutonium produced on
+                     * volcanic planets, as get_plu_production() does, and just takes
+                     * the number of plutonium reactors. Optional fix.
+                     */
+
+                    // Halve (rounding up) build count of volcano worlds
+                    if (get_class() == Volcano) {
+                        to_build = (to_build+1)/2;
+                    }
+#endif
+
                     int crd = owner->get_mc();
                     int cost = stone_cost(STONE_Plu);
                     if (to_build > (crd/cost)+3) {

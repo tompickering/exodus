@@ -29,6 +29,9 @@
 
 #define FEATURE_FLIP_BUTTONS 1
 
+// CPU accounts for volcano plutonium bonus when building reactors
+#define FEATURE_CPU_EXPLOITS_VOLCANO 1
+
 // Fixes bug meaning some AI terrorist actions are never taken
 #define FIX_AI_TERROR 1
 
