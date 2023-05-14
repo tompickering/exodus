@@ -501,7 +501,6 @@ ExodusMode GalaxyMap::update(float delta) {
                     } else if (do_meteor) {
                         do_meteor = false;
                         bulletin_ensure_closed();
-                        // TODO: PlanetMap should show number of strikes
                         return ephstate.get_appropriate_mode();
                     } else if (do_meltdown) {
                         do_meltdown = false;
@@ -1736,6 +1735,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                             ephstate.destruction.type = DESTROY_NRandom;
                             ephstate.destruction.tgt_stones.reset();
                             ephstate.destruction.n_strikes = mission_n_strikes;
+                            ephstate.destruction.show_n_strikes = false;
                             ephstate.destruction.enable_explosions = true;
                             ephstate.destruction.enable_explosion_anims = true;
                             ephstate.destruction.irradiated = false;
@@ -1752,6 +1752,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                             ephstate.destruction.type = DESTROY_NRandom;
                             ephstate.destruction.tgt_stones.reset();
                             ephstate.destruction.n_strikes = 400;
+                            ephstate.destruction.show_n_strikes = false;
                             ephstate.destruction.enable_explosions = false;
                             ephstate.destruction.enable_explosion_anims = false;
                             ephstate.destruction.irradiated = true;
@@ -1900,6 +1901,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                                             ephstate.set_ephemeral_state(EPH_Destruction);
                                             ephstate.destruction.type = DESTROY_NStones;
                                             ephstate.destruction.n_strikes = 1;
+                                            ephstate.destruction.show_n_strikes = false;
                                             ephstate.destruction.enable_explosions = true;
                                             ephstate.destruction.enable_explosion_anims = true;
                                             ephstate.destruction.irradiated = false;
@@ -4009,6 +4011,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 ephstate.destruction.type = DESTROY_NRandom;
                 ephstate.destruction.tgt_stones.reset();
                 ephstate.destruction.n_strikes = RND(7) + 1; // 2-8 hits
+                ephstate.destruction.show_n_strikes = true;
                 ephstate.destruction.enable_explosions = true;
                 ephstate.destruction.enable_explosion_anims = true;
                 ephstate.destruction.irradiated = false;
@@ -4394,6 +4397,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 ephstate.destruction.tgt_stones.reset();
                 ephstate.destruction.tgt_stones.add(STONE_Plu);
                 ephstate.destruction.n_strikes = 1;
+                ephstate.destruction.show_n_strikes = false;
                 ephstate.destruction.enable_explosions = true;
                 ephstate.destruction.enable_explosion_anims = true;
                 ephstate.destruction.irradiated = true;

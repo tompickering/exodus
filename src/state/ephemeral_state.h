@@ -105,6 +105,7 @@ typedef struct {
     DestructionType type;
     StoneSet tgt_stones;
     int n_strikes;
+    bool show_n_strikes;
     bool enable_explosions;
     bool enable_explosion_anims;
     bool draw;

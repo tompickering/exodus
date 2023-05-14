@@ -50,6 +50,7 @@ void Bombing::bomb_planet(StoneSet targets, bool bomb_guns, int& att, int& bombe
     ephstate.destruction.type = DESTROY_NStones;
     ephstate.destruction.tgt_stones = targets;
     ephstate.destruction.n_strikes = att;
+    ephstate.destruction.show_n_strikes = false;
     ephstate.destruction.enable_explosions = true;
     ephstate.destruction.enable_explosion_anims = true;
     ephstate.destruction.irradiated = false;

@@ -424,6 +424,23 @@ void PlanetMap::enter() {
                     500, y+40,
                     COL_TEXT);
             }
+
+            // TODO: Check this is rendered correctly
+            if (d.show_n_strikes) {
+                int y = 320;
+                char t [32];
+                snprintf(t, sizeof(t), "taken %d hits.", d.n_strikes);
+                draw_manager.draw_text(
+                    "The planet has",
+                    Justify::Left,
+                    500, y,
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    t,
+                    Justify::Left,
+                    500, y+20,
+                    COL_TEXT);
+            }
         } else {
             play_music = false;
         }
