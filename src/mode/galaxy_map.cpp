@@ -3313,6 +3313,11 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
                         Player *other = exostate.get_player(i);
 
+                        // Defender (owner) doesn't request support from player attacking them
+                        if (other == player) {
+                            continue;
+                        }
+
                         if (!(other && other->is_participating())) {
                             continue;
                         }
@@ -3321,8 +3326,6 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                             // CPUs never provide war ally support
                             continue;
                         }
-
-                        // TODO: Have alliances been unset? We should not process attacker!
 
                         if (exostate.has_alliance(owner_idx, i, ALLY_War)) {
                             Planet *army_planet = nullptr;
@@ -3373,6 +3376,11 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 // Launching attack
                 if (mp_state.mpai_substage == 5) {
                     L.debug("[%s] PROCe_tact6 : LAUNCHING ATTACK ON %s AT %s ", player->get_full_name(), p->get_name(), s->name);
+
+                    // SUGGEST: Does orig unset CPU<->CPU alliances? We will here.
+                    int owner_idx = p->get_owner();
+                    exostate.unset_alliances(owner_idx, player_idx);
+
                     mp_state.mpai_substage = 6;
                     ephstate.set_ephemeral_state(EPH_LunarBattlePrep);
                     ephstate.lunar_battle.aggressor_type = AGG_Player;
