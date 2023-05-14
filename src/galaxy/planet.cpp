@@ -101,7 +101,12 @@ void Planet::destroy() {
             Galaxy *gal = exostate.get_galaxy();
             if (this == gal->get_stars()[tgt_s].get_planet(tgt_p)) {
                 L.warn("Planet that %s was targeting has been destroyed", p->get_full_name());
-                // TODO: Handle this case
+                /*
+                 * Original doesn't really handle this case.
+                 * Setting AI tactic back to the default seems reasonable.
+                 */
+                loc.unset_target();
+                p->set_tactic(0);
             }
         }
     }
