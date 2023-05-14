@@ -147,6 +147,7 @@ class ExodusState {
         Star* get_star_for_planet(Planet*);
         bool planet_name_taken(const char*);
         void stabilise_disappeared_planet(Planet*);
+        void cancel_worlds_under_construction(int);
 
         void prevent_attack(Planet*);
         bool attack_prevented(Planet*);

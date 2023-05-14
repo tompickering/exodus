@@ -1363,8 +1363,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                 if (p && p->finalise_construction()) {
                     Player *owner = exostate.get_player(p->get_owner());
                     if (!owner) {
-                        // Possible if lord completed planet and then was defeated?
-                        // TODO: Check that this case is made impossible when player is removed from the game
+                        // Shouldn't be possible - we scrap worlds under construction on defeat
                         L.error("No owner on completed artificial world");
                         continue;
                     }
@@ -2141,20 +2140,23 @@ ExodusMode GalaxyMap::month_pass_update() {
                         p->set_tactic(9);
                         // Ensure CPU is at destination
                         p->get_location().advance();
-                    } else if (p->leave_galaxy()) {
+                    } else {
                         // ...and can't afford to colonise a new one.
-                        audio_manager.target_music(mpart2mus(9));
-                        bulletin_start_new(false);
-                        bulletin_set_flag(IMG_TS1_FLAG16);
-                        bulletin_set_text_col(COL_TEXT3);
-                        bulletin_set_next_text("%s FAILED", tmp_caps(p->get_name()));
-                        bulletin_set_next_text("");
-                        bulletin_set_next_text("%s has lost all planets and", p->get_full_name());
-                        bulletin_set_next_text("left the galaxy.");
-                        // This is a special newsitem which isn't planet-associated
-                        NewsItem &news = exostate.register_news_force(NI_LeftGalaxy);
-                        news.player_0 = mp_state.mp_player_idx;
-                        return ExodusMode::MODE_None;
+                        exostate.cancel_worlds_under_construction(mp_state.mp_player_idx);
+                        if (p->leave_galaxy()) {
+                            audio_manager.target_music(mpart2mus(9));
+                            bulletin_start_new(false);
+                            bulletin_set_flag(IMG_TS1_FLAG16);
+                            bulletin_set_text_col(COL_TEXT3);
+                            bulletin_set_next_text("%s FAILED", tmp_caps(p->get_name()));
+                            bulletin_set_next_text("");
+                            bulletin_set_next_text("%s has lost all planets and", p->get_full_name());
+                            bulletin_set_next_text("left the galaxy.");
+                            // This is a special newsitem which isn't planet-associated
+                            NewsItem &news = exostate.register_news_force(NI_LeftGalaxy);
+                            news.player_0 = mp_state.mp_player_idx;
+                            return ExodusMode::MODE_None;
+                        }
                     }
                 }
             }

@@ -1068,6 +1068,14 @@ void ExodusState::stabilise_disappeared_planet(Planet* planet) {
     }
 }
 
+void ExodusState::cancel_worlds_under_construction(int player_idx) {
+    Planet* p = ExodusState::get_planet_under_construction(player_idx);
+    if (p) {
+        // Wipe it
+        new (p) Planet();
+    }
+}
+
 void ExodusState::prevent_attack(Planet* p) {
     int s_idx, p_idx;
     if (get_star_planet_idx(p, s_idx, p_idx)) {
