@@ -1470,7 +1470,7 @@ ExodusMode SpaceBattle::update(float delta) {
                 }
 
                 ephstate.set_ephemeral_state(EPH_ResumeFly);
-                return ExodusMode::MODE_Pop;
+                return ephstate.get_appropriate_mode();
             }
             break;
     }

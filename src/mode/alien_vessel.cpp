@@ -433,7 +433,7 @@ ExodusMode AlienVessel::update(float delta) {
         case AV_Exit:
             {
                 ephstate.set_ephemeral_state(EPH_ResumeFly);
-                return ExodusMode::MODE_Pop;
+                return ephstate.get_appropriate_mode();
             }
             break;
     }
