@@ -865,7 +865,6 @@ void MenuDrawer::menu_open_specific_mode() {
                 char n[4];
                 for (int i = 0; i < MAX_SLOTS; ++i) {
                     if (meta[i].exists) {
-                        // TODO: Position these elements nicely
                         menu_set_opt(i+2, "%d: %s / Month %d / Planets %d",
                                      i+1, meta[i].name, meta[i].month, meta[i].planets);
                     } else {
@@ -882,7 +881,6 @@ void MenuDrawer::menu_open_specific_mode() {
             menu_set_txt(0, COL_TEXT2, "Please select, %s", p->get_ref());
             menu_set_opt(2, "General Information");
             menu_set_opt(3, "Fleet Information");
-            // TODO: Hotkey
             menu_set_opt(4, "Recall Latest News (R)");
             menu_set_opt(5, "List Planets");
             menu_set_opt(6, "List Inventions");
@@ -1450,8 +1448,7 @@ bool MenuDrawer::menu_specific_update() {
             }
             // 6: Build Artificial Planet
             if (menu_row_clicked(6)) {
-                // TODO: When creating artificial planet, cost should be incurred
-                //       on placement or refunded on cancel
+                // Cost is refunded on cancel
                 if (p->attempt_spend(COST_ART)) {
                     menu_art_planet_phase = 0;
                     menu_art_planet_named = false;
