@@ -338,7 +338,7 @@ ExodusMode GalaxyMap::update(float delta) {
                 bool month_pass = input_manager.consume(K_Space);
 
 #ifdef DBG
-                month_pass = month_pass || input_manager.read(K_N);
+                month_pass = month_pass || input_manager.read(K_B);
 #endif
 
                 if (month_pass) {
