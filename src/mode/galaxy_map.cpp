@@ -4168,120 +4168,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     threshold += 2*q - 2;
                     threshold += owner->get_tax() / 20;
                     if (RND(50) <= threshold) {
-                        if (owner->is_human()) {
-                            audio_manager.target_music(mpart2mus(10));
-                        }
-
-                        bulletin_start_new(true);
-                        bulletin_set_bg(p->sprites()->bulletin_bg);
-                        bulletin_set_active_player_flag();
-                        bulletin_write_planet_info(s, p);
-
-                        if (onein(2)) {
-                            exostate.register_news(NI_NewAnimal);
-                            bulletin_set_next_text("NEW ANIMAL DISCOVERED");
-                            bulletin_set_next_text("");
-                            bulletin_set_next_text("The animal has been given the name");
-
-                            static const char* d0[] {
-                                "fu", "nuk", "tak", "kik", "neknek", "som", "rok", "dar",
-                                "gle", "ath", "um", "not", "pi", "si", "efith", "anith",
-                                "gnog", "sni", "mis", "ryk"};
-
-                            char name[64];
-                            int w = 0;
-                            int lim = (1 + RND(2));
-                            for (int i = 0; i < lim; ++i) {
-                                w += snprintf(name+w, sizeof(name)-w, d0[rand()%20]);
-                                if (onein(4) && (i+1 < lim)) {
-                                    w += snprintf(name+w, sizeof(name)-w, "-");
-                                }
-                            }
-                            name[0] -= ('a'-'A');
-
-                            bulletin_set_next_text("'%s'.", name);
-                            bulletin_set_next_text("");
-
-                            static const char* d1[] {
-                                "fuzzy", "hairy", "slimy", "ugly",
-                                "strange", "funny", "ugly", "fearsome",
-                                "gigantic", "little", "small", "three-eyed",
-                                "two-legged", "five-legged", "fish-like", "dog-like",
-                                "horse-like", "frog-like", "stupid", "wicked"};
-
-                            static const char* d2[] {
-                                "red", "brown", "black", "green", "blue",
-                                "white", "grey", "violet", "yellow", "striped"};
-
-                            static const char* d3[] {
-                                "in water", "in swamps", "in the sky", "on the ground",
-                                "in woods", "in deserts", "in forests", "in the earth",
-                                "in caves", "on trees"};
-
-                            static const char* d4[] {
-                                "flesh", "wood", "earth", "plants", "grass"};
-
-                            const char* s1 = d1[rand() % (sizeof(d1)/sizeof(const char*))];
-                            const char* s2 = d2[rand() % (sizeof(d2)/sizeof(const char*))];
-                            const char* s3 = d3[rand() % (sizeof(d3)/sizeof(const char*))];
-                            const char* s4 = d4[rand() % (sizeof(d4)/sizeof(const char*))];
-
-                            bulletin_set_next_text("This is a %s %s creature that", s1, s2);
-                            bulletin_set_next_text("lives %s and eats %s.", s3, s4);
-                            bulletin_set_next_text("");
-                            int reward = RND(5)*5;
-                            bulletin_set_next_text("The owner of planet %s therefore", p->get_name());
-                            bulletin_set_next_text("receives %d Mega Credits.", reward);
-                            owner->give_mc(reward);
-                        } else {
-                            exostate.register_news(NI_NewPlant);
-                            bulletin_set_next_text("NEW PLANT DISCOVERED");
-                            bulletin_set_next_text("");
-                            bulletin_set_next_text("The plant has been given the name");
-
-                            static const char* d0[] {
-                                "som", "tor", "ras", "rak", "rek", "rik", "rok", "ruk",
-                                "pha", "sta", "ana", "kus", "nos", "ron", "dat", "abi",
-                                "niri", "deri", "ared", "nodo"};
-
-                            char name[64];
-                            int w = 0;
-                            int lim = (1 + RND(2));
-                            for (int i = 0; i < lim; ++i) {
-                                w += snprintf(name+w, sizeof(name)-w, d0[rand()%20]);
-                                if (onein(4) && (i+1 < lim)) {
-                                    w += snprintf(name+w, sizeof(name)-w, "-");
-                                }
-                            }
-                            name[0] -= ('a'-'A');
-
-                            bulletin_set_next_text("'%s'.", name);
-                            bulletin_set_next_text("");
-
-                            static const char* d1[] {
-                                "slimy", "ugly", "strange", "nice", "intelligent",
-                                "gigantic", "little", "small", "beautiful", "frightening"};
-
-                            static const char* d2[] {
-                                "red", "brown", "black", "green", "blue",
-                                "white", "grey", "violet", "yellow", "striped"};
-
-                            static const char* d3[] {
-                                "water", "swamps", "tropical zones", "deserts", "woods",
-                                "dark zones", "forests", "large caves", "mountain areas", "rubble"};
-
-                            const char* s1 = d1[rand() % (sizeof(d1)/sizeof(const char*))];
-                            const char* s2 = d2[rand() % (sizeof(d2)/sizeof(const char*))];
-                            const char* s3 = d3[rand() % (sizeof(d3)/sizeof(const char*))];
-
-                            bulletin_set_next_text("This is a %s plant with %s", s1, s2);
-                            bulletin_set_next_text("flowers. It grows in %s.", s3);
-                            bulletin_set_next_text("");
-                            int reward = RND(4)*5;
-                            bulletin_set_next_text("The owner of planet %s therefore", p->get_name());
-                            bulletin_set_next_text("receives %d Mega Credits.", reward);
-                            owner->give_mc(reward);
-                        }
+                        discover_species_bulletin(p);
                         next_mpp_stage();
                         return ExodusMode::MODE_None;
                     }
@@ -4973,11 +4860,141 @@ bool GalaxyMap::update_research(Planet *p) {
                 owner->give_mc(mc_reward);
             }
         } else {
-            // TODO: New species discovery if all inventions researched
+            // New species discovery if all inventions researched
+            discover_species_bulletin(p);
+            return true;
         }
     }
 
     return false;
+}
+
+void GalaxyMap::discover_species_bulletin(Planet* p) {
+    // PROCnewexplored
+
+    if (!p->is_owned()) {
+        L.error("Discover species invalid on unowned planet %s", p->get_name());
+        return;
+    }
+
+    Star* s = exostate.get_star_for_planet(p);
+
+    Player* owner = exostate.get_player(p->get_owner());
+
+    if (owner->is_human()) {
+        audio_manager.target_music(mpart2mus(10));
+    }
+
+    bulletin_start_new(true);
+    bulletin_set_bg(p->sprites()->bulletin_bg);
+    bulletin_set_active_player_flag();
+    bulletin_write_planet_info(s, p);
+
+    if (onein(2)) {
+        exostate.register_news(NI_NewAnimal);
+        bulletin_set_next_text("NEW ANIMAL DISCOVERED");
+        bulletin_set_next_text("");
+        bulletin_set_next_text("The animal has been given the name");
+
+        static const char* d0[] {
+            "fu", "nuk", "tak", "kik", "neknek", "som", "rok", "dar",
+                "gle", "ath", "um", "not", "pi", "si", "efith", "anith",
+                "gnog", "sni", "mis", "ryk"};
+
+        char name[64];
+        int w = 0;
+        int lim = (1 + RND(2));
+        for (int i = 0; i < lim; ++i) {
+            w += snprintf(name+w, sizeof(name)-w, d0[rand()%20]);
+            if (onein(4) && (i+1 < lim)) {
+                w += snprintf(name+w, sizeof(name)-w, "-");
+            }
+        }
+        name[0] -= ('a'-'A');
+
+        bulletin_set_next_text("'%s'.", name);
+        bulletin_set_next_text("");
+
+        static const char* d1[] {
+            "fuzzy", "hairy", "slimy", "ugly",
+                "strange", "funny", "ugly", "fearsome",
+                "gigantic", "little", "small", "three-eyed",
+                "two-legged", "five-legged", "fish-like", "dog-like",
+                "horse-like", "frog-like", "stupid", "wicked"};
+
+        static const char* d2[] {
+            "red", "brown", "black", "green", "blue",
+                "white", "grey", "violet", "yellow", "striped"};
+
+        static const char* d3[] {
+            "in water", "in swamps", "in the sky", "on the ground",
+                "in woods", "in deserts", "in forests", "in the earth",
+                "in caves", "on trees"};
+
+        static const char* d4[] {
+            "flesh", "wood", "earth", "plants", "grass"};
+
+        const char* s1 = d1[rand() % (sizeof(d1)/sizeof(const char*))];
+        const char* s2 = d2[rand() % (sizeof(d2)/sizeof(const char*))];
+        const char* s3 = d3[rand() % (sizeof(d3)/sizeof(const char*))];
+        const char* s4 = d4[rand() % (sizeof(d4)/sizeof(const char*))];
+
+        bulletin_set_next_text("This is a %s %s creature that", s1, s2);
+        bulletin_set_next_text("lives %s and eats %s.", s3, s4);
+        bulletin_set_next_text("");
+        int reward = RND(5)*5;
+        bulletin_set_next_text("The owner of planet %s therefore", p->get_name());
+        bulletin_set_next_text("receives %d Mega Credits.", reward);
+        owner->give_mc(reward);
+    } else {
+        exostate.register_news(NI_NewPlant);
+        bulletin_set_next_text("NEW PLANT DISCOVERED");
+        bulletin_set_next_text("");
+        bulletin_set_next_text("The plant has been given the name");
+
+        static const char* d0[] {
+            "som", "tor", "ras", "rak", "rek", "rik", "rok", "ruk",
+                "pha", "sta", "ana", "kus", "nos", "ron", "dat", "abi",
+                "niri", "deri", "ared", "nodo"};
+
+        char name[64];
+        int w = 0;
+        int lim = (1 + RND(2));
+        for (int i = 0; i < lim; ++i) {
+            w += snprintf(name+w, sizeof(name)-w, d0[rand()%20]);
+            if (onein(4) && (i+1 < lim)) {
+                w += snprintf(name+w, sizeof(name)-w, "-");
+            }
+        }
+        name[0] -= ('a'-'A');
+
+        bulletin_set_next_text("'%s'.", name);
+        bulletin_set_next_text("");
+
+        static const char* d1[] {
+            "slimy", "ugly", "strange", "nice", "intelligent",
+                "gigantic", "little", "small", "beautiful", "frightening"};
+
+        static const char* d2[] {
+            "red", "brown", "black", "green", "blue",
+                "white", "grey", "violet", "yellow", "striped"};
+
+        static const char* d3[] {
+            "water", "swamps", "tropical zones", "deserts", "woods",
+                "dark zones", "forests", "large caves", "mountain areas", "rubble"};
+
+        const char* s1 = d1[rand() % (sizeof(d1)/sizeof(const char*))];
+        const char* s2 = d2[rand() % (sizeof(d2)/sizeof(const char*))];
+        const char* s3 = d3[rand() % (sizeof(d3)/sizeof(const char*))];
+
+        bulletin_set_next_text("This is a %s plant with %s", s1, s2);
+        bulletin_set_next_text("flowers. It grows in %s.", s3);
+        bulletin_set_next_text("");
+        int reward = RND(4)*5;
+        bulletin_set_next_text("The owner of planet %s therefore", p->get_name());
+        bulletin_set_next_text("receives %d Mega Credits.", reward);
+        owner->give_mc(reward);
+    }
 }
 
 void GalaxyMap::ai_planet_update(Planet* p) {
