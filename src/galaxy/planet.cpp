@@ -2086,22 +2086,20 @@ void Planet::ai_update() {
             case 1:
                 {
                     // BUILD CITIES + AGRI
-                    /*
-                     * TODO: There are two apparent bugs in PROCeta1.
-                     *         * The charge is 45MC regardless of agri_needed
-                     *         * This happens when >=42 MC are avaiable, allowing -ve MC
-                     *
-                     *       These two issues are redressed here, but this could impact
-                     *       the balance of the game. Consider restoring these issues.
-                     */
                     int agri_needed = 4;
                     if (cls == Desert || cls == Volcano) {
                         agri_needed = 7;
                     }
                     int cost = stone_cost(STONE_City) + agri_needed*stone_cost(STONE_Agri);
                     for (int i = 0; i < RND(5); ++i) {
-                        if (free >= agri_needed+1) {
-                            if (owner->attempt_spend(cost)) {
+                        /*
+                         * Orig is a bit weird here - it hard-codes a cost of 45MC
+                         * and charges it if the lord has 42MC, allowing -ve MC for
+                         * CPU lords. This can happen elsewhere also - we implement
+                         * the same behaviour...
+                         */
+                        if (owner->can_afford(cost-3) && free >= agri_needed+1) {
+                            if (owner->attempt_spend_cpuforce(cost)) {
                                 free -= ai_place_stone(1, STONE_City, STONE_City);
                                 free -= ai_place_stone(agri_needed, STONE_Agri, STONE_Agri);
                             }
