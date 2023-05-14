@@ -40,7 +40,6 @@ void MonthReport::monthreport_open() {
     Player *player = exostate.get_player(0);
     int player_idx = exostate.get_player_idx(player);
 
-    // TODO: Complete this
     for (int row = 0; row < 5; ++row) {
         const int b = BORDER;
         const int real_h = (h+2+2*b);
