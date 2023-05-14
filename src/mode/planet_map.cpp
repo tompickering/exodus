@@ -469,7 +469,6 @@ void PlanetMap::enter() {
         stage = PM_Idle;
     }
 
-    // TODO: Music for scouts / bomb planning (mode 2) - mpart 4
     if (play_music) {
         audio_manager.target_music(mus);
     }
