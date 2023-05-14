@@ -46,7 +46,12 @@
 const float MAX_FPS = 60.f;
 const float MIN_FRAME_DELTA = 1.f / MAX_FPS;
 
+#ifdef DBG
 Log::Logger L(Log::Level::DEBUG);
+#else
+Log::Logger L(Log::Level::WARN);
+#endif
+
 AUDIOMANAGER audio_manager;
 DRAWMANAGER draw_manager;
 INPUTMANAGER input_manager;
