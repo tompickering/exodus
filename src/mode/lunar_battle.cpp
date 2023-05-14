@@ -1609,10 +1609,8 @@ void LunarBattle::place_units(bool def) {
 
     // Clear up cover with a unit on it
     for (int i = 0; i < COVER_MAX; ++i) {
-        for (int j = 0; j < n_units; ++j) {
-            if (units[j].x == cover[i].x && units[j].y == cover[i].y) {
-                cover[i].exists = false;
-            }
+        if (unit_at(cover[i].x, cover[i].y)) {
+            cover[i].exists = false;
         }
     }
 
