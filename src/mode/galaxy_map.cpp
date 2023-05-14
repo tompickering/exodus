@@ -431,7 +431,12 @@ ExodusMode GalaxyMap::update(float delta) {
                 }
 
                 panel_set_text("SELECT A STAR");
-                // SUGGEST: (Show star name on mouseover?)
+
+                FlyTarget* mouseover_ft = get_mouseover_flytarget();
+                if (mouseover_ft) {
+                    update_panel_info_ft(TGT_Primary, exostate.get_player(0), mouseover_ft);
+                }
+
                 // SUGGEST: Some way to highlight available stars
                 ft = get_clicked_flytarget();
                 if (ft && ft != exostate.get_galaxy()->get_guild()) {
@@ -763,10 +768,12 @@ ExodusMode GalaxyMap::update(float delta) {
                     draw_manager.draw(id(ID::SELECTED), nullptr);
                 }
 
-                // SUGGEST: Perhaps this should be indicated elsewhere, so the player
-                //          can still use the usual readout to help decide where to
-                //          select.
                 panel_set_text("SELECT A STAR");
+
+                FlyTarget* mouseover_ft = get_mouseover_flytarget();
+                if (mouseover_ft) {
+                    update_panel_info_ft(TGT_Primary, exostate.get_player(0), mouseover_ft);
+                }
             }
             break;
         case GM_ArtificialWorldStarSelectInvalid:
