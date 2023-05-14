@@ -1880,7 +1880,6 @@ bool MenuDrawer::menu_specific_update() {
 
                 //  4: random bombing
                 if (menu_row_clicked(4)) {
-                    // TODO: Invetion check?
                     if (p->can_afford(COST_ATT_BOMB)) {
                         ephstate.select_planet(&star_idx, &planet_idx);
                         ephstate.selectplanet_mc = COST_ATT_BOMB;
@@ -1892,7 +1891,6 @@ bool MenuDrawer::menu_specific_update() {
 
                 //  5: nuclear extermination
                 if (menu_row_clicked(5)) {
-                    // TODO: Invetion check?
                     if (p->can_afford(COST_ATT_NUKE)) {
                         ephstate.select_planet(&star_idx, &planet_idx);
                         ephstate.selectplanet_mc = COST_ATT_NUKE;
