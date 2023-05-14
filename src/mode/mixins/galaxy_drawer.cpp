@@ -67,6 +67,27 @@ FlyTarget* GalaxyDrawer::get_clicked_flytarget() {
     return nullptr;
 }
 
+FlyTarget* GalaxyDrawer::get_mouseover_flytarget() {
+    SpriteClick click;
+    Galaxy *gal = exostate.get_galaxy();
+
+    for (int i = 0; i < GALAXY_MAX_STARS; ++i) {
+        if (!star_ids[i])
+            break;
+        click = draw_manager.query_mouseover(star_ids[i]);
+        if (click.id) {
+            return &(gal->get_stars()[i]);
+        }
+    }
+
+    click = draw_manager.query_click(guild_id);
+    if (click.id) {
+        return gal->get_guild();
+    }
+
+    return nullptr;
+}
+
 void GalaxyDrawer::get_draw_position(const FlyTarget* ft, int& draw_x, int& draw_y) {
     draw_x = PAD_X + SEP_X * ft->x;
     draw_y = PAD_Y + SEP_Y * ft->y;
