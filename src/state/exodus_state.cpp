@@ -155,12 +155,17 @@ void ExodusState::init(GameConfig config) {
 
     // PLAYER INIT: Everyone (not overridable)
     for (i = 0; i < N_PLAYERS; ++i) {
+        char fullname[MAX_PLAYER_FULLNAME+1];
         snprintf(
-            players[i].full_name,
+            fullname,
             MAX_PLAYER_FULLNAME + 1,
             "%s %s",
             players[i].title,
             players[i].name);
+        snprintf(
+            players[i].full_name,
+            MAX_PLAYER_FULLNAME + 1,
+            fullname);
         players[i].guild_title = GUILDTITLE_None;
         players[i].dead = false;
         players[i].reputation = 3;
