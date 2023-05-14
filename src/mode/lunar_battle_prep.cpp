@@ -493,7 +493,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
             if (!stage_started) {
                 stage_started = true;
 
-                // TODO: Check if these need to be subtracted after battle
+                // These do not get subtracted after battle
                 b.aggressor_inf += 5;
                 b.aggressor_gli += 5;
                 b.aggressor_art += 10;
