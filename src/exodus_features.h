@@ -27,6 +27,7 @@
 // Display the name of an unpaid officer in bulletin
 #define FEATURE_OFFICER_COST_INFO 1
 
+// In orig, toggle buttons show current state rather than effect-when-clicked, which seems unnatural
 #define FEATURE_FLIP_BUTTONS 1
 
 // CPU accounts for volcano plutonium bonus when building reactors
