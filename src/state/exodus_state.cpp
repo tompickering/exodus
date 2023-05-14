@@ -74,15 +74,24 @@ void ExodusState::init(GameConfig config) {
         players[i].fleet.freight.gliders = 0;
         players[i].fleet.freight.artillery = 0;
 
-        // TODO: Set to false for CPU players in a
-        // multiplayer game with no other races.
-        players[i].exists = true;
+        /*
+         * TODO: Probably needs something to say "this player doesn't exist
+         * *at all*; as opposed to 'has left the galaxy' or 'might return'.
+         * At the moment, non-existent players still appear under relationship menu.
+         */
+        if (config.enemy_start == ENEMY_None) {
+            players[i].exists = false;
+        } else {
+            players[i].exists = true;
+        }
+
         players[i].left_galaxy = false;
     }
 
     // PLAYER INIT: Human
     for (i = 0; i < n_human_players; ++i) {
         players[i].init_race(RACE_Human);
+        players[i].exists = true;
         players[i]._intro_seen = false;
         players[i].fleet_marker_idx = i;
 
