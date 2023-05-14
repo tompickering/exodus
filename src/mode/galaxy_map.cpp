@@ -1079,6 +1079,14 @@ void GalaxyMap::month_pass_end() {
 
     Player *p;
 
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        p = exostate.get_player(i);
+        if (p && p->is_participating()) {
+            // We fix trade charge per player per month, so can't re-roll by re-trying
+            p->set_trade_charge();
+        }
+    }
+
     // Reset to the first active player
     bool reset;
     for (int i = 0; i < N_PLAYERS; ++i) {

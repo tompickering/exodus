@@ -360,6 +360,9 @@ class Player {
         void get_ai_attack(int&, int&);
         void set_ai_attack(int, int);
 
+        void set_trade_charge();
+        int get_trade_charge();
+
         int get_trace(Trace);
         void add_trace(Trace);
         void add_trace(Trace, int);
@@ -400,6 +403,8 @@ class Player {
         int ai_hostile_to;
         int ai_attack_star;   // Orig: lordvar(), lower 8 bits
         int ai_attack_planet; // Orig: lordvar(), upper 8 bits
+
+        int trade_charge;
 
         int trace[TRACE_MAX];
     // The ExodusState sets up the player data during game init.

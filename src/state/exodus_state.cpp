@@ -173,6 +173,7 @@ void ExodusState::init(GameConfig config) {
         }
 
         players[i].mission.reset();
+        players[i].set_trade_charge();
     }
 
     // TODO: Check all references to alliance matrix in orig code have been carried over

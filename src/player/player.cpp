@@ -851,6 +851,14 @@ void Player::set_ai_attack(int s, int p) {
     ai_attack_planet = p;
 }
 
+void Player::set_trade_charge() {
+    trade_charge = RND(3) * 10;
+}
+
+int Player::get_trade_charge() {
+    return trade_charge;
+}
+
 int Player::get_trace(Trace t) {
     return trace[t];
 }
