@@ -145,7 +145,6 @@ void LunarBattle::enter() {
     shot_interp = 0;
     exp_interp = 0;
     fire_time = 0;
-    n_cover = 0;
     n_mines = 0;
     n_tele = 0;
 
@@ -223,7 +222,7 @@ void LunarBattle::enter() {
             place_units(defending);
         }
 
-        for (int i = 0; i < n_cover; ++i) {
+        for (int i = 0; i < COVER_MAX; ++i) {
             cover[i].spr_id = draw_manager.new_sprite_id();
         }
 
@@ -266,7 +265,10 @@ void LunarBattle::draw_ground() {
 
     draw_manager.save_background({SURF_X, SURF_Y, RES_X, RES_Y});
 
-    for (int i = 0; i < n_cover; ++i) {
+    for (int i = 0; i < COVER_MAX; ++i) {
+        if (!cover[i].exists) {
+            continue;
+        }
         const char *spr = p->moon_sprites()->cover0;
         if (cover[i].alt) spr = p->moon_sprites()->cover1;
         draw_manager.draw(
@@ -293,7 +295,7 @@ void LunarBattle::exit() {
         for (int i = 0; i < BATTLE_UNITS_MAX; ++i) {
             units[i].release_spr_id();
         }
-        for (int i = 0; i < n_cover; ++i) {
+        for (int i = 0; i < COVER_MAX; ++i) {
             draw_manager.release_sprite_id(cover[i].spr_id);
         }
     }
@@ -1480,9 +1482,13 @@ void LunarBattle::auto_kill(bool agg) {
 }
 
 void LunarBattle::place_cover() {
-    n_cover = RND(COVER_MAX); // 1 - 10 cover obstacles
-    for (int i = 0; i < n_cover; ++i) {
+    int n_cover = RND(COVER_MAX); // 1 - 10 cover obstacles
+    int i;
+    for (i = 0; i < n_cover; ++i) {
         cover[i] = Cover(rand() % BG_WIDTH, rand() % BG_HEIGHT, (bool)(rand() % 2));
+    }
+    for (; i < COVER_MAX; ++i) {
+        cover[i].exists = false;
     }
 }
 
@@ -1601,7 +1607,14 @@ void LunarBattle::place_units(bool def) {
         }
     }
 
-    // TODO: Clear up ground (cover etc) with a unit on it
+    // Clear up cover with a unit on it
+    for (int i = 0; i < COVER_MAX; ++i) {
+        for (int j = 0; j < n_units; ++j) {
+            if (units[j].x == cover[i].x && units[j].y == cover[i].y) {
+                cover[i].exists = false;
+            }
+        }
+    }
 
     // Place defender mines
     if (def) {
@@ -1611,8 +1624,8 @@ void LunarBattle::place_units(bool def) {
                 int mine_y = RND(11) - 1;
                 bool is_suitable = valid_placement(mine_x, mine_y);
                 if (is_suitable) {
-                    for (int j = 0; j < n_cover; ++j) {
-                        if (cover[j].x == mine_x && cover[j].y == mine_y) {
+                    for (int j = 0; j < COVER_MAX; ++j) {
+                        if (cover[j].exists && cover[j].x == mine_x && cover[j].y == mine_y) {
                             is_suitable = false;
                             break;
                         }
@@ -1641,8 +1654,8 @@ void LunarBattle::place_units(bool def) {
                 int tele_y = RND(11) - 1;
                 bool is_suitable = valid_placement(tele_x, tele_y);
                 if (is_suitable) {
-                    for (int j = 0; j < n_cover; ++j) {
-                        if (cover[j].x == tele_x && cover[j].y == tele_y) {
+                    for (int j = 0; j < COVER_MAX; ++j) {
+                        if (cover[j].exists && cover[j].x == tele_x && cover[j].y == tele_y) {
                             is_suitable = false;
                             break;
                         }
@@ -2689,8 +2702,8 @@ bool LunarBattle::is_in_cover(BattleUnit* u) {
         return false;
     }
 
-    for (int i = 0; i < n_cover; ++i) {
-        if (cover[i].x == u->x && cover[i].y == u->y) {
+    for (int i = 0; i < COVER_MAX; ++i) {
+        if (cover[i].exists && cover[i].x == u->x && cover[i].y == u->y) {
             return true;
         }
     }

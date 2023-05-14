@@ -93,7 +93,8 @@ class BattleUnit {
 class Cover {
     public:
         Cover() {};
-        Cover(int _x, int _y, bool _alt) : x(_x), y(_y), alt(_alt) {};
+        Cover(int _x, int _y, bool _alt) : x(_x), y(_y), alt(_alt) { exists = true; };
+        bool exists;
         int x;
         int y;
         bool alt;
@@ -165,7 +166,6 @@ class LunarBattle : ModeBase, CommPanelDrawer, BattleReport {
         int to_place_msc;
         SprID fog_ids[88];
 
-        int n_cover;
         Cover cover[COVER_MAX];
 
         int n_mines;
