@@ -145,6 +145,7 @@ class ExodusState {
         bool get_star_planet_idx(Planet*, int&, int&);
         bool has_artificial_planet(int);
         Star* get_star_for_planet(Planet*);
+        bool planet_name_taken(const char*);
 
         void prevent_attack(Planet*);
         bool attack_prevented(Planet*);

@@ -1019,6 +1019,16 @@ Star* ExodusState::get_star_for_planet(Planet* p) {
     return nullptr;
 }
 
+bool ExodusState::planet_name_taken(const char* name) {
+    for (PlanetIterator piter; !piter.complete(); ++piter) {
+        if (!strncmp(name, piter->get_name(), PLANET_MAX_NAME)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void ExodusState::prevent_attack(Planet* p) {
     int s_idx, p_idx;
     if (get_star_planet_idx(p, s_idx, p_idx)) {
