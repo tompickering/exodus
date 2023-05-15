@@ -1818,7 +1818,7 @@ void PlanetMap::set_build_button(bool on) {
 void PlanetMap::hide_lunar_base_tool() {
     draw_manager.draw(
         IMG_SU1_STONEXX,
-        {541, 199,
+        {540, 198,
         0, 0, 1, 1});
 }
 
