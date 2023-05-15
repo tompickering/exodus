@@ -9,9 +9,15 @@ class Iterator {
         // FIXME: Should really return Iterator&
         virtual void operator++();
         virtual bool complete();
+        virtual void set_random();
     protected:
+        void reset_idx();
+        int get_effective_idx();
         int idx;
         int end;
+        bool randomise;
+    private:
+        int* random_data;
 };
 
 class StarIterator : public Iterator {
@@ -36,10 +42,23 @@ class PlanetIterator : public Iterator {
         int get_idx();
         int get_star_idx();
         Planet* operator->() { return get(); }
-    private:
+    protected:
         StarIterator star_iter;
-        int owner;
         bool valid();
+    private:
+        int owner;
+};
+
+class StarIteratorRandom : public StarIterator {
+    public:
+        StarIteratorRandom() : StarIterator() { set_random(); }
+};
+
+class PlanetIteratorRandom : public PlanetIterator {
+    public:
+        PlanetIteratorRandom() : PlanetIterator() { star_iter.set_random(); set_random(); }
+        PlanetIteratorRandom(int x) : PlanetIterator(x) { star_iter.set_random(); set_random(); }
+        virtual void set_random() override;
 };
 
 #endif

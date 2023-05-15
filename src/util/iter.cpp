@@ -1,8 +1,11 @@
 #include "iter.h"
 
+#include <algorithm>
+#include <cstdlib>
+
 extern ExodusState exostate;
 
-Iterator::Iterator() : idx(0), end(0) {
+Iterator::Iterator() : idx(0), end(0), randomise(false), random_data(nullptr) {
 }
 
 void Iterator::operator++() {
@@ -13,6 +16,35 @@ bool Iterator::complete() {
     return idx >= end;
 }
 
+void Iterator::reset_idx() {
+    idx = 0;
+    if (randomise) {
+        set_random();
+    }
+}
+
+void Iterator::set_random() {
+    randomise = true;
+
+    if (!random_data) {
+        random_data = (int*)malloc(end * sizeof(int));
+    }
+
+    for (int i = 0; i < end; ++i) {
+        random_data[i] = i;
+    }
+
+    std::random_shuffle(random_data, random_data+end);
+}
+
+int Iterator::get_effective_idx() {
+    if (randomise) {
+        return random_data[idx];
+    }
+
+    return idx;
+}
+
 StarIterator::StarIterator() : Iterator() {
     Galaxy *gal = exostate.get_galaxy();
     s = gal->get_stars(end);
@@ -20,12 +52,12 @@ StarIterator::StarIterator() : Iterator() {
 
 Star* StarIterator::get() {
     if (complete()) return nullptr;
-    return &s[idx];
+    return &s[get_effective_idx()];
 }
 
 int StarIterator::get_idx() {
     if (complete()) return -1;
-    return idx;
+    return get_effective_idx();
 }
 
 PlanetIterator::PlanetIterator() : PlanetIterator(-1) {
@@ -48,7 +80,7 @@ void PlanetIterator::operator++() {
 
         if (++idx >= end) {
             ++star_iter;
-            idx = 0;
+            reset_idx();;
         }
 
         if (valid()) {
@@ -64,7 +96,7 @@ bool PlanetIterator::complete() {
 Planet* PlanetIterator::get() {
     if (complete()) return nullptr;
     Star *s = star_iter.get();
-    return s->get_planet(idx);
+    return s->get_planet(get_effective_idx());
 }
 
 Star* PlanetIterator::get_star() {
@@ -74,7 +106,7 @@ Star* PlanetIterator::get_star() {
 
 int PlanetIterator::get_idx() {
     if (complete()) return -1;
-    return idx;
+    return get_effective_idx();
 }
 
 int PlanetIterator::get_star_idx() {
@@ -91,4 +123,12 @@ bool PlanetIterator::valid() {
         return false;
     }
     return true;
+}
+
+void PlanetIteratorRandom::set_random() {
+    PlanetIterator::set_random();
+
+    if (!valid()) {
+        ++(*this);
+    }
 }
