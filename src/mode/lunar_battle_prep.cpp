@@ -576,19 +576,22 @@ ExodusMode LunarBattlePrep::update(float delta) {
                     PANEL_X + 50, PANEL_Y + 84,
                     COL_TEXT2);
 
-                // TODO: Orig in PROCb_ready looks like it can allow us to
-                // buy one more mine than we can afford - check this
                 SpriteClick clk = draw_manager.query_click(id(ID::MINES_ADJUST));
                 if (clk.id) {
+                    int cost = mines_price * mines_to_buy;
                     if (clk.y > .5f) {
-                        if (owner->attempt_spend(mines_price * mines_to_buy)) {
+                        // PROCb_ready allows us to buy one more mine than we can afford
+                        if (owner->attempt_spend_allowing_writeoff(cost, mines_price)) {
                             b.defender_mines = mines_to_buy;
                             set_stage(LBP_CommandOrWait);
                         }
                     } else if (clk.x < .5f) {
                         mines_to_buy = max(mines_to_buy-1, 0);
                     } else {
-                        mines_to_buy = min(mines_to_buy+1, mines_available);
+                        // If we can afford the current cost, permit adding at least one more
+                        if (owner->can_afford(cost)) {
+                            mines_to_buy = min(mines_to_buy+1, mines_available);
+                        }
                     }
                 }
             }
