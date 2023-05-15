@@ -3042,73 +3042,73 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     int army_size = f.infantry + f.gliders + 2*f.artillery;
                     bool ok = false;
                     for (int j = 0; j < 2; ++j) {
-                        for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
-                            Star *s = &stars[star_idx];
-                            for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
-                                Planet *p = s->get_planet(planet_idx);
-                                if (!(p && p->exists() && p->is_owned())) {
-                                    continue;
-                                }
-                                int owner = p->get_owner();
-                                if (owner == player_idx) {
-                                    continue;
-                                }
-                                // We prioritise attacks on the player we're hostile to
-                                if (j == 0 && !player->is_hostile_to(owner)) {
-                                    continue;
-                                }
-                                int p_inf, p_gli, p_art;
-                                p->get_army(p_inf, p_gli, p_art);
-                                int p_army_size = p_inf + p_gli + 2*p_art;
+                        for (PLANETITER piter; !piter.complete(); ++piter) {
+                            Planet *p = piter.get();
+                            if (!p->is_owned()) {
+                                continue;
+                            }
+                            int owner = p->get_owner();
+                            if (owner == player_idx) {
+                                continue;
+                            }
+                            // We prioritise attacks on the player we're hostile to
+                            if (j == 0 && !player->is_hostile_to(owner)) {
+                                continue;
+                            }
+                            int p_inf, p_gli, p_art;
+                            p->get_army(p_inf, p_gli, p_art);
+                            int p_army_size = p_inf + p_gli + 2*p_art;
 
-                                /*
-                                 * FIXME: Lunar bases are ignored in the planet's army size,
-                                 * but it seems like they should factor in heavily!
-                                 * OTOH maybe this would interfere with strong_star/strong_planet
-                                 */
-                                if (3*p_army_size >= 2*army_size) {
-                                    continue;
+                            /*
+                             * FIXME: Lunar bases are ignored in the planet's army size,
+                             * but it seems like they should factor in heavily!
+                             * OTOH maybe this would interfere with strong_star/strong_planet
+                             */
+                            if (3*p_army_size >= 2*army_size) {
+                                continue;
+                            }
+
+                            ok = true;
+
+                            /*
+                             * FIXME: Strange that orig doesn't like alliance combinations here!
+                             * I suspect this may not have been intentional, and may reflect
+                             * and earlier design in which multiple alliances weren't possible.
+                             */
+                            AIFlag f = player->get_flag(1);
+                            if (f == AI_Hi || (f == AI_Md && onein(2))) {
+                                if (exostate.has_only_alliance(player_idx, owner, ALLY_NonAttack)) {
+                                    ok = false;
                                 }
-
-                                ok = true;
-
-                                /*
-                                 * FIXME: Strange that orig doesn't like alliance combinations here!
-                                 * I suspect this may not have been intentional, and may reflect
-                                 * and earlier design in which multiple alliances weren't possible.
-                                 */
-                                AIFlag f = player->get_flag(1);
-                                if (f == AI_Hi || (f == AI_Md && onein(2))) {
-                                    if (exostate.has_only_alliance(player_idx, owner, ALLY_NonAttack)) {
-                                        ok = false;
-                                    }
-                                    if (exostate.has_only_alliance(player_idx, owner, ALLY_War)) {
-                                        ok = false;
-                                    }
+                                if (exostate.has_only_alliance(player_idx, owner, ALLY_War)) {
+                                    ok = false;
                                 }
+                            }
 
-                                if (ok) {
-                                    if (p_army_size < weakdef && onein(2)) {
-                                        weakdef = p_army_size;
-                                        weak_star = star_idx;
-                                        weak_planet = planet_idx;
-                                    }
-                                    if (p_army_size > strongdef && onein(2)) {
-                                        strongdef = p_army_size;
-                                        strong_star = star_idx;
-                                        strong_planet = planet_idx;
-                                    }
-                                    if (p_army_size == 0) {
-                                        nodef = true;
-                                        nodef_star = star_idx;
-                                        nodef_planet = planet_idx;
-                                    }
-                                    int cities = p->get_n_cities();
-                                    if (cities > mostcities && onein(2)) {
-                                        mostcities = cities;
-                                        mostcities_star = star_idx;
-                                        mostcities_planet = planet_idx;
-                                    }
+                            int star_idx = piter.get_star_idx();
+                            int planet_idx = piter.get_idx();
+
+                            if (ok) {
+                                if (p_army_size < weakdef && onein(2)) {
+                                    weakdef = p_army_size;
+                                    weak_star = star_idx;
+                                    weak_planet = planet_idx;
+                                }
+                                if (p_army_size > strongdef && onein(2)) {
+                                    strongdef = p_army_size;
+                                    strong_star = star_idx;
+                                    strong_planet = planet_idx;
+                                }
+                                if (p_army_size == 0) {
+                                    nodef = true;
+                                    nodef_star = star_idx;
+                                    nodef_planet = planet_idx;
+                                }
+                                int cities = p->get_n_cities();
+                                if (cities > mostcities && onein(2)) {
+                                    mostcities = cities;
+                                    mostcities_star = star_idx;
+                                    mostcities_planet = planet_idx;
                                 }
                             }
                         }
