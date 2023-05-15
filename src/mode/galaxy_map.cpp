@@ -2739,29 +2739,21 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
             int army = player->get_fleet().freight.army_size();
             if (army > 0) {
-                bool done = false;
-                for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
-                    Star *s = &stars[star_idx];
-                    for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
-                        Planet *p = s->get_planet(planet_idx);
-                        if (p && p->exists() && p->is_owned()) {
-                            if (p->get_owner() == player_idx) {
-                                continue;
-                            }
-                            if (p->get_army_size() > 0) {
-                                continue;
-                            }
+                for (PLANETITER piter; !piter.complete(); ++piter) {
+                    Planet *p = piter.get();
+                    if (p->is_owned()) {
+                        if (p->get_owner() == player_idx) {
+                            continue;
                         }
-                        player->set_tactic(4);
-                        // CPU journeys are always 1 month
-                        player->get_location().set_target(star_idx, 1);
-                        player->get_location().set_planet_target(planet_idx);
-                        done = true;
-                        break;
+                        if (p->get_army_size() > 0) {
+                            continue;
+                        }
                     }
-                    if (done) {
-                        break;
-                    }
+                    player->set_tactic(4);
+                    // CPU journeys are always 1 month
+                    player->get_location().set_target(piter.get_star_idx(), 1);
+                    player->get_location().set_planet_target(piter.get_idx());
+                    break;
                 }
             }
 
