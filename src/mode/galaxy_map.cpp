@@ -2605,8 +2605,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 Planet *p = pi.get();
                 if (p->get_class() == Artificial && onein(10)) {
                     // AI have absolutely no tactical decision-making on where to move...
-                    // FIXME: Randomise this order...
-                    for (StarIterator si; !si.complete(); ++si) {
+                    for (STARITER si; !si.complete(); ++si) {
                         Star *tgt = si.get();
                         Planet *tgt_slot = tgt->get_artificial_world_slot();
                         if (tgt_slot == p) {
