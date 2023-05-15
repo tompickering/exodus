@@ -582,16 +582,10 @@ int ExodusState::get_n_unowned_planets() {
 
 int ExodusState::_get_n_owned_planets(bool owned) {
     int n_planets = 0;
-    Galaxy *gal = get_galaxy();
-    int n_stars;
-    Star *stars = gal->get_stars(n_stars);
-    for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
-        Star *s = &stars[star_idx];
-        for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
-            Planet *p = s->get_planet(planet_idx);
-            if (p && p->exists() && (p->is_owned() == owned)) {
-                ++n_planets;
-            }
+    for (PlanetIterator piter; !piter.complete(); ++piter) {
+        Planet *p = piter.get();
+        if (p->is_owned() == owned) {
+            ++n_planets;
         }
     }
     return n_planets;
