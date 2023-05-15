@@ -278,6 +278,7 @@ class Player {
         bool can_afford(int);
         bool attempt_spend(int);
         bool attempt_spend_with_remaining(int, int);
+        bool attempt_spend_allowing_writeoff(int, int);
         bool attempt_spend_cpuforce(int);
         void cpu_write_off_debt();
         int get_fleet_marker_idx();

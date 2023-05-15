@@ -296,6 +296,21 @@ bool Player::attempt_spend_with_remaining(int cost, int remaining) {
     return false;
 }
 
+bool Player::attempt_spend_allowing_writeoff(int cost, int lim) {
+    if (cost <= mc) {
+        return attempt_spend(cost);
+    }
+
+    // We're trying to overspend, but within the accepted limit
+    // Zero MC and write off difference
+    if (cost <= mc+lim) {
+        mc = 0;
+        return true;
+    }
+
+    return false;
+}
+
 bool Player::attempt_spend_cpuforce(int cost) {
     if (is_human()) {
         return attempt_spend(cost);
