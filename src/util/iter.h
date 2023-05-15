@@ -3,6 +3,16 @@
 
 #include "state/exodus_state.h"
 
+#include "exodus_features.h"
+
+#if FEATURE_PLANET_ITERATION_RANDOMISE
+#define STARITER StarIteratorRandom
+#define PLANETITER PlanetIteratorRandom
+#else
+#define STARITER StarIterator
+#define PLANETITER PlanetIterator
+#endif
+
 class Iterator {
     public:
         Iterator();

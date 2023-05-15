@@ -36,6 +36,8 @@
 // Humans don't lose allies randomly
 #define FEATURE_HUMAN_NO_RANDOM_ALLY_LOSS 1
 
+#define FEATURE_PLANET_ITERATION_RANDOMISE 1
+
 // Fixes bug meaning some AI terrorist actions are never taken
 #define FIX_AI_TERROR 1
 
