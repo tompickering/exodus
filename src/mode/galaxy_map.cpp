@@ -2428,11 +2428,10 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
                 bool target_found = false;
 
-                for (PlanetIterator pi(hostile_to); !pi.complete(); ++pi) {
+                for (PLANETITER pi(hostile_to); !pi.complete(); ++pi) {
                     L.info("[%s]: PLANNING MISSION", player->get_full_name());
                     player->get_mission_star_ref() = pi.get_star_idx();
                     player->get_mission_planet_ref() = pi.get_idx();
-                    // FIXME: Always picking the first one - should ideally be random!
                     target_found = true;
                     break;
                 }
