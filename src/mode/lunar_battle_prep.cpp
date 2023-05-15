@@ -379,13 +379,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
                     int support_gli = 0;
                     int support_art = 0;
 
-                    /*
-                     * FIXME: As in orig, but this is consistently biased towards the
-                     * same planets, as they are always iterated in the same order. It
-                     * would be nicer to randomise or select planet dynamically based
-                     * on heuristics.
-                     */
-                    for (PlanetIterator piter(i); !piter.complete(); ++piter) {
+                    for (PLANETITER piter(i); !piter.complete(); ++piter) {
                         int supp_inf = 0;
                         int supp_gli = 0;
                         int supp_art = 0;
