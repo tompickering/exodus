@@ -404,18 +404,10 @@ bool ExodusState::mission_complete() {
                 bool artificial_owned = false;
                 int n_planets = 0;
 
-                for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
-                    Star *s = &stars[star_idx];
-                    for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
-                        Planet *p = s->get_planet(planet_idx);
-                        if (p && p->exists() && p->is_owned()) {
-                            if (p->get_owner() == player_idx) {
-                                n_planets++;
-                                if (p->get_class() == Artificial) {
-                                    artificial_owned = true;
-                                }
-                            }
-                        }
+                for (PlanetIterator piter(player_idx); !piter.complete(); ++piter) {
+                    n_planets++;
+                    if (piter->get_class() == Artificial) {
+                        artificial_owned = true;
                     }
                 }
 
