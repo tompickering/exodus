@@ -721,15 +721,9 @@ int ExodusState::get_n_planets(Player* player) {
  * month pass.
  */
 bool ExodusState::owns_a_planet(Player* player) {
-    Galaxy *gal = get_galaxy();
-    int n_stars;
-    Star *stars = gal->get_stars(n_stars);
-    for (int i = 0; i < n_stars; ++i) {
-        for (int j = 0; j < STAR_MAX_PLANETS; ++j) {
-            Planet *p = stars[i].get_planet(j);
-            if (p && p->exists() && p->is_owned() && get_player(p->get_owner()) == player) {
-                return true;
-            }
+    for (PlanetIterator piter; !piter.complete(); ++piter) {
+        if (piter->is_owned() && get_player(piter->get_owner()) == player) {
+            return true;
         }
     }
     return false;
