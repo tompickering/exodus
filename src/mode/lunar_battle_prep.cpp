@@ -654,6 +654,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
             if (draw_manager.query_click(id(ID::OPT_GROUP_AUTO)).id) {
                 set_stage(LBP_OptionPlacement);
             } else if (draw_manager.query_click(id(ID::OPT_GROUP_MAN)).id) {
+                input_manager.enable_repeating_clicks(true);
                 set_stage(LBP_GroupSize);
             }
             break;
@@ -708,6 +709,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
                 SpriteClick clk = draw_manager.query_click(id(ID::OPT_GROUP_ADJUST));
                 if (clk.id) {
                     if (clk.y > .5f) {
+                        input_manager.enable_repeating_clicks(false);
                         set_stage(LBP_OptionPlacement);
                     } else if (clk.x < .5f) {
                         size = max(size-1, 2);
