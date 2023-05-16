@@ -7,6 +7,8 @@
 
 #include "assetpaths.h"
 
+#include "util/iter.h"
+
 #define PAD_X 30
 #define PAD_Y 30
 #define DRAW_W RES_X
@@ -101,17 +103,15 @@ void GalaxyDrawer::draw_galaxy(bool pixelswap) {
 
     draw_manager.clear_sprite_ids();
     draw_manager.draw(tgt, BG_SPR);
-    int n_stars;
-    Galaxy *gal = exostate.get_galaxy();
-    const Star *stars = gal->get_stars(n_stars);
-    for (int i = 0; i < n_stars; ++i) {
-        const Star *s = &stars[i];
+    for (StarIterator siter; !siter.complete(); ++siter) {
+        const Star *s = siter.get();
         spr = STAR_SPRITES[s->get_size()];
         get_draw_position(s, x, y);
-        star_ids[i] = draw_manager.new_sprite_id();
-        draw_manager.draw(tgt, star_ids[i], spr, {x, y, 0.5, 0.5, 1, 1});
+        star_ids[siter.get_idx()] = draw_manager.new_sprite_id();
+        draw_manager.draw(tgt, star_ids[siter.get_idx()], spr, {x, y, 0.5, 0.5, 1, 1});
     }
 
+    Galaxy *gal = exostate.get_galaxy();
     Guild *guild = gal->get_guild();
     spr = GUILD_SPRITE;
     get_draw_position(guild, x, y);
