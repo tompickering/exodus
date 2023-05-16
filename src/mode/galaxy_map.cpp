@@ -2914,53 +2914,47 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     // Orig repeats forever - we cancel eventually and use the one we already faound
                     for (int attempts = 0; attempts < 1000; ++attempts) {
                         int quality = 0;
-                        for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
-                            Star *s = &stars[star_idx];
-                            for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
-                                Planet *p = s->get_planet(planet_idx);
-                                if (!(p && p->exists()) || p->is_owned()) {
-                                    continue;
-                                }
-
-                                int a = 0;
-                                PlanetClass cls = p->get_class();
-                                if (cls == Forest)  a = 4;
-                                if (cls == Desert)  a = 2;
-                                if (cls == Volcano) a = 1;
-                                if (cls == Rock)    a = 3;
-                                if (cls == Ice)     a = 2;
-                                if (cls == Terra)   a = 4;
-                                // Orig doesn't check artificial planets - we'll just skip these
-                                if (a == 0) {
-                                    continue;
-                                }
-
-                                if (a > quality && onein(7)) {
-                                    bool ok = true;
-                                    for (int i = 0; i < N_PLAYERS; ++i) {
-                                        Player *pl = exostate.get_player(i);
-                                        if (!(pl && pl->is_participating() && pl != player)) {
-                                            continue;
-                                        }
-                                        int ts = pl->get_location().get_target();
-                                        int tp = pl->get_location().get_planet_target();
-                                        if (ts == star_idx && tp == planet_idx) {
-                                            ok = false;
-                                            break;
-                                        }
-                                    }
-                                    if (ok) {
-                                        set_star = star_idx;
-                                        set_planet = planet_idx;
-                                        found = true;
-                                        break;
-                                    } else {
-                                        quality = 0;
-                                    }
-                                }
+                        for (PLANETITER piter; !piter.complete(); ++piter) {
+                            Planet *p = piter.get();
+                            if (p->is_owned()) {
+                                continue;
                             }
-                            if (found) {
-                                break;
+
+                            int a = 0;
+                            PlanetClass cls = p->get_class();
+                            if (cls == Forest)  a = 4;
+                            if (cls == Desert)  a = 2;
+                            if (cls == Volcano) a = 1;
+                            if (cls == Rock)    a = 3;
+                            if (cls == Ice)     a = 2;
+                            if (cls == Terra)   a = 4;
+                            // Orig doesn't check artificial planets - we'll just skip these
+                            if (a == 0) {
+                                continue;
+                            }
+
+                            if (a > quality && onein(7)) {
+                                bool ok = true;
+                                for (int i = 0; i < N_PLAYERS; ++i) {
+                                    Player *pl = exostate.get_player(i);
+                                    if (!(pl && pl->is_participating() && pl != player)) {
+                                        continue;
+                                    }
+                                    int ts = pl->get_location().get_target();
+                                    int tp = pl->get_location().get_planet_target();
+                                    if (ts == piter.get_star_idx() && tp == piter.get_idx()) {
+                                        ok = false;
+                                        break;
+                                    }
+                                }
+                                if (ok) {
+                                    set_star = piter.get_star_idx();
+                                    set_planet = piter.get_idx();
+                                    found = true;
+                                    break;
+                                } else {
+                                    quality = 0;
+                                }
                             }
                         }
                         if (found) {
