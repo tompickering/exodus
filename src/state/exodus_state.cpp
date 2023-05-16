@@ -190,7 +190,6 @@ void ExodusState::init(GameConfig config) {
         players[i].set_trade_charge();
     }
 
-    // TODO: Check all references to alliance matrix in orig code have been carried over
     for (int j = 0; j < N_PLAYERS; ++j) {
         for (int i = 0; i < N_PLAYERS; ++i) {
             alliance_matrix[j*N_PLAYERS + i] = 0;
