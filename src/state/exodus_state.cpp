@@ -681,17 +681,9 @@ int ExodusState::get_n_planets() {
 }
 
 int ExodusState::get_n_planets(Player* player) {
-    Galaxy *gal = get_galaxy();
-    int n_stars;
-    Star *stars = gal->get_stars(n_stars);
     int count = 0;
-    for (int i = 0; i < n_stars; ++i) {
-        for (int j = 0; j < STAR_MAX_PLANETS; ++j) {
-            Planet *p = stars[i].get_planet(j);
-            if (p && p->exists() && p->is_owned() && get_player(p->get_owner()) == player) {
-                ++count;
-            }
-        }
+    for (PlanetIterator piter(get_player_idx(player)); !piter.complete(); ++piter) {
+        ++count;
     }
     return count;
 }
