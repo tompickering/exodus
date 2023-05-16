@@ -357,22 +357,12 @@ bool ExodusState::mission_complete() {
     Player *player = get_active_player();
     int player_idx = get_player_idx(player);
 
-    Galaxy *gal = get_galaxy();
-    int n_stars;
-    Star *stars = gal->get_stars(n_stars);
-
     switch (aim) {
         case AIM_Might:
             {
-                for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
-                    Star *s = &stars[star_idx];
-                    for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
-                        Planet *p = s->get_planet(planet_idx);
-                        if (p && p->exists() && p->is_owned()) {
-                            if (p->get_owner() != player_idx) {
-                                return false;
-                            }
-                        }
+                for (PlanetIterator piter; !piter.complete(); ++piter) {
+                    if (piter->is_owned() && piter->get_owner() != player_idx) {
+                        return false;
                     }
                 }
             }
