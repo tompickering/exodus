@@ -212,10 +212,6 @@ void ExodusState::init(GameConfig config) {
 }
 
 void ExodusState::init_cpu_lords() {
-    Galaxy *gal = get_galaxy();
-    int n_stars;
-    Star *stars = gal->get_stars(n_stars);
-
     for (int i = n_human_players; i < N_PLAYERS; ++i) {
         // Assign initial planet to CPU lords. Orig: PROCstart_the_lords
         // We follow the original's logic of iterating over stars in the
@@ -228,45 +224,41 @@ void ExodusState::init_cpu_lords() {
         L.verb("Choosing initial planet for CPU lord %d", i);
         while(!initial_planet_selected) {
             int quality = 0;
-            for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
-                L.verb("Considering star %d", star_idx);
-                Star *s = &stars[star_idx];
-                for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
-                    Planet *p = s->get_planet(planet_idx);
-                    if (p && p->exists() && !p->is_owned()) {
-                        L.verb("Considering planet %d", planet_idx);
-                        int planet_quality = 0;
-                        if (p->get_class() == Forest)  planet_quality = 4;
-                        if (p->get_class() == Desert)  planet_quality = 2;
-                        if (p->get_class() == Volcano) planet_quality = 1;
-                        if (p->get_class() == Rock)    planet_quality = 3;
-                        if (p->get_class() == Ice)     planet_quality = 2;
-                        if (p->get_class() == Terra)   planet_quality = 5;
-                        if (planet_quality > quality && RND(7) != 1) {
-                            L.verb("Checking existing ownership");
-                            // TODO: Can we just check planet->is_owned() at this point?
-                            bool ok = true;
-                            for (int other_idx = n_human_players; other_idx < i; other_idx++) {
-                                Player *other = &players[other_idx];
-                                FlyTarget *other_ts = loc2tgt(other->get_location().get_target());
-                                int other_tp = other->get_location().get_planet_target();
-                                if (other_ts == s && other_tp == planet_idx) {
-                                    ok = false;
-                                    break;
-                                }
+            for (PlanetIterator piter; !piter.complete(); ++piter) {
+                Planet *p = piter.get();
+                if (!p->is_owned()) {
+                    L.verb("Considering star %d planet %d", piter.get_star_idx(), piter.get_idx());
+                    int planet_quality = 0;
+                    if (p->get_class() == Forest)  planet_quality = 4;
+                    if (p->get_class() == Desert)  planet_quality = 2;
+                    if (p->get_class() == Volcano) planet_quality = 1;
+                    if (p->get_class() == Rock)    planet_quality = 3;
+                    if (p->get_class() == Ice)     planet_quality = 2;
+                    if (p->get_class() == Terra)   planet_quality = 5;
+                    if (planet_quality > quality && RND(7) != 1) {
+                        L.verb("Checking existing ownership");
+                        // TODO: Can we just check planet->is_owned() at this point?
+                        bool ok = true;
+                        for (int other_idx = n_human_players; other_idx < i; other_idx++) {
+                            Player *other = &players[other_idx];
+                            FlyTarget *other_ts = loc2tgt(other->get_location().get_target());
+                            int other_tp = other->get_location().get_planet_target();
+                            if (other_ts == piter.get_star() && other_tp == piter.get_idx()) {
+                                ok = false;
+                                break;
                             }
-                            if (ok) {
-                                L.verb("Updated planet candidate!");
-                                quality = planet_quality;
-                                chosen_star = s;
-                                chosen_planet_idx = planet_idx;
-                                initial_planet_selected = true;
-                                // N.B. we don't break here - we continue iterating
-                                // over stars, and are liable to change our mind if
-                                // we find a better offer!
-                            } else {
-                                L.verb("Can't choose this planet");
-                            }
+                        }
+                        if (ok) {
+                            L.verb("Updated planet candidate!");
+                            quality = planet_quality;
+                            chosen_star = piter.get_star();
+                            chosen_planet_idx = piter.get_idx();
+                            initial_planet_selected = true;
+                            // N.B. we don't break here - we continue iterating
+                            // over stars, and are liable to change our mind if
+                            // we find a better offer!
+                        } else {
+                            L.verb("Can't choose this planet");
                         }
                     }
                 }
