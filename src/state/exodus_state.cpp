@@ -236,18 +236,7 @@ void ExodusState::init_cpu_lords() {
                     if (p->get_class() == Terra)   planet_quality = 5;
                     if (planet_quality > quality && RND(7) != 1) {
                         L.verb("Checking existing ownership");
-                        // TODO: Can we just check planet->is_owned() at this point?
-                        bool ok = true;
-                        for (int other_idx = n_human_players; other_idx < i; other_idx++) {
-                            Player *other = &players[other_idx];
-                            FlyTarget *other_ts = loc2tgt(other->get_location().get_target());
-                            int other_tp = other->get_location().get_planet_target();
-                            if (other_ts == piter.get_star() && other_tp == piter.get_idx()) {
-                                ok = false;
-                                break;
-                            }
-                        }
-                        if (ok) {
+                        if (!p->is_owned()) {
                             L.verb("Updated planet candidate!");
                             quality = planet_quality;
                             chosen_star = piter.get_star();
