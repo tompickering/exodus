@@ -3572,18 +3572,13 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 int resources = 0;
                 int most_resources_star = -1;
                 int most_resources_planet = -1;
-                for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
-                    Star *s = &stars[star_idx];
-                    for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
-                        Planet *p = s->get_planet(planet_idx);
-                        if (p && p->exists() && p->get_owner() == player_idx) {
-                            if (p->get_total_reserves() > resources) {
-                                resources = p->get_total_reserves();
-                                most_resources_star = star_idx;
-                                most_resources_planet = planet_idx;
-                                L.debug("[%s] PROCe_tact7 : Targeting", player->get_full_name(), p->get_name());
-                            }
-                        }
+                for (PlanetIterator piter(player_idx); !piter.complete(); ++piter) {
+                    Planet *p = piter.get();
+                    if (p->get_total_reserves() > resources) {
+                        resources = p->get_total_reserves();
+                        most_resources_star = piter.get_star_idx();
+                        most_resources_planet = piter.get_idx();
+                        L.debug("[%s] PROCe_tact7 : Targeting", player->get_full_name(), p->get_name());
                     }
                 }
                 if (resources > 3) {
