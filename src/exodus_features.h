@@ -36,6 +36,9 @@
 // Humans don't lose allies randomly
 #define FEATURE_HUMAN_NO_RANDOM_ALLY_LOSS 1
 
+// 'Money' aim ignores army funds - the player could win without this by manually adjusting all planets
+#define FEATURE_AIM_MONEY_EXCLUDE_ARMY 1
+
 #define FEATURE_PLANET_ITERATION_RANDOMISE 1
 
 // Fixes bug meaning some AI terrorist actions are never taken

@@ -370,7 +370,15 @@ bool ExodusState::mission_complete() {
         case AIM_Money:
             {
                 // FIXME: We should really exclude army funding here
-                if (get_total_net_income(player_idx) < 1000) {
+                int income = 0;
+
+#if FEATURE_AIM_MONEY_EXCLUDE_ARMY
+                income = get_total_income_ignoring_army(player_idx);
+#else
+                income = get_total_net_income(player_idx);
+#endif
+
+                if (income < 1000) {
                     return false;
                 }
             }
@@ -829,6 +837,14 @@ void ExodusState::unset_alliance(int a, int b, AllianceType t) {
 
 void ExodusState::unset_alliances(int a, int b) {
     set_alliances(a, b, 0);
+}
+
+int ExodusState::get_total_income_ignoring_army(int player_idx) {
+    int total = 0;
+    for (PlanetIterator piter(player_idx); !piter.complete(); ++piter) {
+        total += piter->get_income();
+    }
+    return total;
 }
 
 int ExodusState::get_total_net_income(int player_idx) {
