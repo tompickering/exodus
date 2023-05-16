@@ -2757,16 +2757,10 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
             if (player->get_tactic() == 6) {
                 bool ok = false;
-                for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
-                    Star *s = &stars[star_idx];
-                    for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
-                        Planet *p = s->get_planet(planet_idx);
-                        if (p && p->exists() && !p->is_owned()) {
-                            ok = true;
-                            break;
-                        }
-                    }
-                    if (ok) {
+                for (PlanetIterator piter; !piter.complete(); ++piter) {
+                    Planet *p = piter.get();
+                    if (!p->is_owned()) {
+                        ok = true;
                         break;
                     }
                 }
