@@ -2485,7 +2485,6 @@ void CommPanelDrawer::comm_process_responses() {
                     }
                     break;
                 case 3:
-                    // TODO: Add this to any other comms that need it
                     comm_exit_anim(CA_Abort);
                     break;
             }
