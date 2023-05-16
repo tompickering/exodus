@@ -934,18 +934,12 @@ const NewsItem& ExodusState::get_news(int i) {
 }
 
 bool ExodusState::get_star_planet_idx(Planet* planet, int& _star_idx, int& _planet_idx) {
-    Galaxy *gal = get_galaxy();
-    int n_stars;
-    Star *stars = gal->get_stars(n_stars);
-    for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
-        Star *s = &stars[star_idx];
-        for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
-            Planet *p = s->get_planet(planet_idx);
-            if (p && p->exists() && p == planet) {
-                _star_idx = star_idx;
-                _planet_idx = planet_idx;
-                return true;
-            }
+    for (PlanetIterator piter; !piter.complete(); ++piter) {
+        Planet *p = piter.get();
+        if (p == planet) {
+            _star_idx = piter.get_star_idx();
+            _planet_idx = piter.get_idx();
+            return true;
         }
     }
 
