@@ -6,6 +6,7 @@
 #include "assetpaths.h"
 #include "galaxy/flytarget.h"
 
+#include "util/iter.h"
 #include "util/value.h"
 
 #define RUMOUR_LINE_MAX 64
@@ -224,11 +225,7 @@ void GuildBar::update_pin_and_rumours() {
         ++rumour_indices[1];
     }
 
-    Galaxy *gal = exostate.get_galaxy();
-    int n_stars;
-    Star *stars = gal->get_stars(n_stars);
     Player *player;
-    Star *star;
     Planet *planet;
     PlanetInfo planet_info;
 
@@ -252,17 +249,14 @@ void GuildBar::update_pin_and_rumours() {
         min_army_size = 100;
     }
     planet_info = exostate.get_random_owned_planet_info();
-    for (int i = 0; i < n_stars; ++i) {
-        star = &stars[i];
-        for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
-            planet = star->get_planet(planet_idx);
-            if (planet && planet->exists() && planet->is_owned()) {
-                if (planet->get_army_size() < min_army_size) {
-                    min_army_size = planet->get_army_size();
-                    planet_info.planet = planet;
-                    planet_info.star = star;
-                    planet_info.index = planet_idx;
-                }
+    for (PlanetIterator piter; !piter.complete(); ++piter) {
+        planet = piter.get();
+        if (planet->is_owned()) {
+            if (planet->get_army_size() < min_army_size) {
+                min_army_size = planet->get_army_size();
+                planet_info.planet = planet;
+                planet_info.star = piter.get_star();
+                planet_info.index = piter.get_idx();
             }
         }
     }
@@ -281,18 +275,13 @@ void GuildBar::update_pin_and_rumours() {
         max_reserves = RND(200);
     }
     planet_info = exostate.get_random_owned_planet_info();
-    for (int i = 0; i < n_stars; ++i) {
-        star = &stars[i];
-        for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
-            planet = star->get_planet(planet_idx);
-            if (planet && planet->exists()) {
-                if (planet->get_total_reserves() > max_reserves) {
-                    max_reserves = planet->get_total_reserves();
-                    planet_info.planet = planet;
-                    planet_info.star = star;
-                    planet_info.index = planet_idx;
-                }
-            }
+    for (PlanetIterator piter; !piter.complete(); ++piter) {
+        planet = piter.get();
+        if (planet->get_total_reserves() > max_reserves) {
+            max_reserves = planet->get_total_reserves();
+            planet_info.planet = planet;
+            planet_info.star = piter.get_star();
+            planet_info.index = piter.get_idx();
         }
     }
     snprintf(rumours[2].line0,
@@ -310,18 +299,13 @@ void GuildBar::update_pin_and_rumours() {
         max_pop = RND(20);
     }
     planet_info = exostate.get_random_owned_planet_info();
-    for (int i = 0; i < n_stars; ++i) {
-        star = &stars[i];
-        for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
-            planet = star->get_planet(planet_idx);
-            if (planet && planet->exists()) {
-                if (planet->get_n_cities() > max_pop) {
-                    max_pop = planet->get_n_cities();
-                    planet_info.planet = planet;
-                    planet_info.star = star;
-                    planet_info.index = planet_idx;
-                }
-            }
+    for (PlanetIterator piter; !piter.complete(); ++piter) {
+        planet = piter.get();
+        if (planet->get_n_cities() > max_pop) {
+            max_pop = planet->get_n_cities();
+            planet_info.planet = planet;
+            planet_info.star = piter.get_star();
+            planet_info.index = piter.get_idx();
         }
     }
     snprintf(rumours[3].line0,
