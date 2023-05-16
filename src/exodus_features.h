@@ -39,6 +39,7 @@
 // 'Money' aim ignores army funds - the player could win without this by manually adjusting all planets
 #define FEATURE_AIM_MONEY_EXCLUDE_ARMY 1
 
+// Randomise certain loops-over-planets in the game to mitigate order bias
 #define FEATURE_PLANET_ITERATION_RANDOMISE 1
 
 // Fixes bug meaning some AI terrorist actions are never taken
