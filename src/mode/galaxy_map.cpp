@@ -3844,19 +3844,14 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                  */
                 L.debug("[%s] PROCe_tact12 : FLEET -> LARGE ARMY", player->get_full_name());
                 int quality = 0;
-                for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
-                    Star *s = &stars[star_idx];
-                    for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
-                        Planet *p = s->get_planet(planet_idx);
-                        if (p && p->exists() && p->get_owner() == player_idx) {
-                            int army = p->get_army_size();
-                            if (army > quality) {
-                                quality = army;
-                                player->get_location().set_target(star_idx, 1);
-                                player->get_location().set_planet_target(planet_idx);
-                                L.debug("[%s] PROCe_tact12 : TARGETING %s AT %s", player->get_full_name(), p->get_name(), s->name);
-                            }
-                        }
+                for (PlanetIterator piter(player_idx); !piter.complete(); ++piter) {
+                    Planet *p = piter.get();
+                    int army = p->get_army_size();
+                    if (army > quality) {
+                        quality = army;
+                        player->get_location().set_target(piter.get_star_idx(), 1);
+                        player->get_location().set_planet_target(piter.get_idx());
+                        L.debug("[%s] PROCe_tact12 : TARGETING %s AT %s", player->get_full_name(), p->get_name(), piter.get_star()->name);
                     }
                 }
                 L.debug("[%s] PROCe_tact12 END", player->get_full_name());
