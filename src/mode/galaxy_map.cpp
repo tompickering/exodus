@@ -3641,17 +3641,11 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                  */
                 L.debug("[%s] PROCe_tact9 : CHECK ENEMY-OWNED PLANETS", player->get_full_name());
                 bool other_owned_planets = false;
-                for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
-                    Star *s = &stars[star_idx];
-                    for (int planet_idx = 0; planet_idx < STAR_MAX_PLANETS; ++planet_idx) {
-                        Planet *p = s->get_planet(planet_idx);
-                        if (p && p->exists() && p->is_owned() && p->get_owner() != player_idx) {
-                            L.debug("[%s] PROCe_tact9 : YES", player->get_full_name());
-                            other_owned_planets = true;
-                            break;
-                        }
-                    }
-                    if (other_owned_planets) {
+                for (PlanetIterator piter; !piter.complete(); ++piter) {
+                    Planet *p = piter.get();
+                    if (p->is_owned() && p->get_owner() != player_idx) {
+                        L.debug("[%s] PROCe_tact9 : YES", player->get_full_name());
+                        other_owned_planets = true;
                         break;
                     }
                 }
