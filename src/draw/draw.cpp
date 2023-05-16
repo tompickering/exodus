@@ -8,7 +8,7 @@
 
 const SprID ID_NONE = 0;
 
-const RGB col_pulse_0 {0x90, 0x90, 0xFF}; // TODO: Check this
+const RGB col_pulse_0 {0x90, 0x90, 0xFF};
 const RGB col_pulse_1 {0xFF, 0xFF, 0xFF};
 
 DrawManager::DrawManager() {
