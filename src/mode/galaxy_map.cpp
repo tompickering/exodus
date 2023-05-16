@@ -2580,8 +2580,8 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
         if (!art && player->has_invention(INV_OrbitalMassConstruction)) {
             if (onein(5) && player->can_afford(1000)) {
                 // PROClorddwp: Begin an artificial planet
-                for (int star_idx = 0; star_idx < n_stars; ++star_idx) {
-                    Star *s = &stars[star_idx];
+                for (StarIterator siter; !siter.complete(); ++siter) {
+                    Star *s = siter.get();
                     if (exostate.artificial_planet_viable(s) == APV_Yes) {
                         if (player->attempt_spend(1000)) {
                             if (!exostate.construct_artificial_planet(s, player_idx, nullptr)) {
