@@ -1752,7 +1752,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                             ephstate.destruction.enable_explosion_anims = true;
                             ephstate.destruction.irradiated = false;
                             ephstate.destruction.show_target = false;
-                            // Enemy doesn't know you've attacked them (TODO: Check this)
+                            // Enemy doesn't know you've attacked them
                             ephstate.destruction.destroyer_idx = -1;
                             ephstate.destruction.terror = false;
                             ephstate.destruction.nuke = false;
@@ -1770,7 +1770,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                             ephstate.destruction.enable_explosion_anims = false;
                             ephstate.destruction.irradiated = true;
                             ephstate.destruction.show_target = false;
-                            // Enemy doesn't know you've attacked them (TODO: Check this)
+                            // Enemy doesn't know you've attacked them
                             ephstate.destruction.destroyer_idx = -1;
                             ephstate.destruction.terror = false;
                             ephstate.destruction.nuke = true;
@@ -1920,7 +1920,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                                             ephstate.destruction.enable_explosion_anims = true;
                                             ephstate.destruction.irradiated = false;
                                             ephstate.destruction.show_target = true;
-                                            // Enemy doesn't know you've attacked them (TODO: Check this)
+                                            // Enemy doesn't know you've attacked them
                                             ephstate.destruction.destroyer_idx = -1;
                                             ephstate.destruction.terror = true;
                                             ephstate.destruction.nuke = false;
