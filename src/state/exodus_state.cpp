@@ -673,17 +673,9 @@ PlanetInfo ExodusState::get_random_owned_planet_info() {
 }
 
 int ExodusState::get_n_planets() {
-    Galaxy *gal = get_galaxy();
-    int n_stars;
-    Star *stars = gal->get_stars(n_stars);
     int count = 0;
-    for (int i = 0; i < n_stars; ++i) {
-        for (int j = 0; j < STAR_MAX_PLANETS; ++j) {
-            Planet *p = stars[i].get_planet(j);
-            if (p && p->exists()) {
-                ++count;
-            }
-        }
+    for (PlanetIterator piter; !piter.complete(); ++piter) {
+        ++count;
     }
     return count;
 }
