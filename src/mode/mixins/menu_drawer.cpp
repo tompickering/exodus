@@ -1209,7 +1209,7 @@ void MenuDrawer::menu_open_specific_mode() {
                         relcol = COL_TEXT_GREYED;
                     }
 
-                    // TODO: Multiplayer relations here - may be 'friendly' as per 'verhalten'
+                    // TODO_MP: Multiplayer relations here - may be 'friendly' as per 'verhalten'
 
                     menu_set_txt(line_idx, lordcol, other->get_full_name());
                     draw_manager.draw_text(rel, Justify::Left, MENU_X+200, menu_get_y(line_idx), relcol);

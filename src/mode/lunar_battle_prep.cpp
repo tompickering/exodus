@@ -104,7 +104,7 @@ void LunarBattlePrep::enter() {
         b.human_attacking = aggressor->is_human();
     }
 
-    // TODO: How does all this work in multiplayer PvP?
+    // TODO_MP: How does all this work in multiplayer PvP?
 
     b.human_defending = owner->is_human();
     b.human_battle = b.human_attacking || b.human_defending;
@@ -170,7 +170,7 @@ void LunarBattlePrep::enter() {
             } while (RND(30) != 1);
         }
     }
-    // TODO: Check this condition. Orig was 'If attacker is human'.
+    // TODO_MP: Check this condition. Orig was 'If attacker is human'.
     // I think the idea is if attacker is not human, then defender is human,
     // and therefore will have received guild support in LBP_GuildSupport.
     // This doesn't account for multiplayer however, where the ACTIVE player
@@ -353,7 +353,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
                     }
 
                     /*
-                     * TODO: What should we do about human players here?
+                     * TODO_MP: What should we do about human players here?
                      * Orig makes no special case - but does read AI flags,
                      * which don't really apply to other humans.
                      */

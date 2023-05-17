@@ -459,7 +459,7 @@ ExodusMode GalaxyMap::update(float delta) {
                 update_panel_info_player(TGT_Primary, exostate.get_player(0));
                 update_panel_info_ft(TGT_Primary, exostate.get_player(0), selected_ft);
 
-                // TODO: In multiplayer, check this happens at end of each player's turn
+                // TODO_MP: In multiplayer, check this happens at end of each player's turn
                 {
                     exostate.reset_alliance_requests();
                     exostate.clear_attack_preventions();
@@ -2129,7 +2129,7 @@ ExodusMode GalaxyMap::month_pass_update() {
 
     if (mp_state.mp_stage == MP_AlienExile) {
         // PROCcheckalive
-        // TODO: In a multiplayer game, check if all humans are dead, or one winner remains
+        // TODO_MP: In a multiplayer game, check if all humans are dead, or one winner remains
         for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
             Player *p = exostate.set_active_player(mp_state.mp_player_idx);
             // Check all CPU lords participating...

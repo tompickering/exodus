@@ -187,7 +187,7 @@ void LunarBattle::enter() {
             fog_ids[i] = draw_manager.new_sprite_id();
         }
 
-        // TODO: If we never support true multiplayer battles, coalesce into one flag
+        // TODO_MP: If we never support true multiplayer battles, coalesce into one flag
         manual_placement = defending ? b.defender_manual_placement
                                      : b.aggressor_manual_placement;
 

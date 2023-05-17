@@ -75,7 +75,7 @@ void ExodusState::init(GameConfig config) {
         players[i].fleet.freight.artillery = 0;
 
         /*
-         * TODO: Probably needs something to say "this player doesn't exist
+         * TODO_MP: Probably needs something to say "this player doesn't exist
          * *at all*; as opposed to 'has left the galaxy' or 'might return'.
          * At the moment, non-existent players still appear under relationship menu.
          */

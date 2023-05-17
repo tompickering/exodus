@@ -1437,15 +1437,15 @@ void CommPanelDrawer::comm_send(CommSend input) {
             if (exostate.get_n_planets(comm_player) <= 0) {
                 comm_ctx.alliance_prob = 99;
             }
-            // TODO: Multiplayer - 'verhalten'
+            // TODO_MP: Multiplayer - 'verhalten'
             if (onein(max(comm_ctx.alliance_prob, 1))) {
                 if (!comm_player->attempt_spend(comm_ctx.mc)) {
                     // Shouldn't be able to set value higher than we can afford
                     L.fatal("We offered more than we could afford");
                 }
-                // TODO: It looks like the player is charged these credits -
-                //       but they don't go to the other lord! More important
-                //       in multiplayer.
+                // TODO_MP: It looks like the player is charged these credits -
+                //          but they don't go to the other lord! More important
+                //          in multiplayer.
                 exostate.set_alliance(comm_player_idx, comm_other_idx, comm_ctx.alliance_type);
                 comm_player->add_trace(TRACE_AlliancesCreated);
                 comm_set_speech("I accept this.");
