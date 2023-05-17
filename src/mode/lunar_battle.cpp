@@ -2316,7 +2316,7 @@ bool LunarBattle::ai_can_move_to(BattleUnit *u, int x, int y) {
         return false;
     }
 
-    // TODO: AI never use their own teleporters - is this correct?
+    // AI never use their own teleporters
     for (int i = 0; i < n_tele; ++i) {
         if (tele[i].x == x && tele[i].y == y) {
             return false;
@@ -3029,7 +3029,6 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             break;
         case UNIT_Rebel:
             name = STR_Inf;
-            // TODO: Check these
             move = 3;
             fire_range = 3;
             fire_power = 1;
@@ -3065,7 +3064,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             move = 0;
             fire_range = 7;
             fire_power = 3;
-            shot_sfx = SFX_HEAVYSHOT; // TODO: Check this
+            shot_sfx = SFX_HEAVYSHOT;
             is_alien = true;
             can_shoot_behind = false;
             defending = false;
