@@ -3665,7 +3665,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 // FIXME: PROCe_tact9 proves there exists a planet to find, but this is horrible...
                 int a = 0;
                 while (a == 0) {
-                    for (PlanetIterator piter; !piter.complete(); ++piter) {
+                    for (PLANETITER piter; !piter.complete(); ++piter) {
                         Planet *p = piter.get();
                         if (p->is_owned() && p->get_owner() != player_idx) {
                             int owner_idx = p->get_owner();
