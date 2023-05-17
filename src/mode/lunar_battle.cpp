@@ -1054,6 +1054,9 @@ ExodusMode LunarBattle::update(float delta) {
                         units[i].hp = 0;
                     }
                 }
+
+                // The base guns are destroyed permanently
+                p->destroy_lunar_base();
             }
 
             stage = LB_CheckWon;

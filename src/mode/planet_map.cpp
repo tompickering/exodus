@@ -203,7 +203,6 @@ static const char* tool_desc_lunar_base[] = {
     "unit with four towers. Its fire range",
     "is not limited.",
     "",
-    // TODO: Does the original behave like this? If so needs implementing - otherwise needs correcting!
     "If the control unit of the base is not",
     "destroyed during battle, the base is",
     "able to recreate its destroyed units",
