@@ -3803,7 +3803,6 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         player->give_mc(a*player->transfer_min(-f.minerals));
                         player->give_mc(b*player->transfer_fd(-f.food));
                         player->give_mc(c*player->transfer_plu(-f.plutonium));
-                        player->set_tactic(0);
 
                         // PROClordbuy
                         if (!tradebuy_start(sold_food, rand()%6, rand()%5, rand()%4)) {
@@ -3817,6 +3816,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                             return ExodusMode::MODE_None;
                         }
 
+                        player->set_tactic(0);
                     } else {
                         player->set_tactic(22);
                     }
@@ -3828,6 +3828,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                  */
                 if (mp_state.mpai_substage == 3) {
                     if (tradebuy_update()) {
+                        player->set_tactic(0);
                         mp_state.mpai_substage = 0;
                     } else {
                         return ExodusMode::MODE_None;
