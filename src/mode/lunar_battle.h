@@ -187,6 +187,7 @@ class LunarBattle : ModeBase, CommPanelDrawer, BattleReport {
         bool is_in_cover(BattleUnit*);
 
         BattleUnit* unit_at(int, int);
+        bool cover_at(int, int);
 
         void calc_force_strength(int&, int&);
 

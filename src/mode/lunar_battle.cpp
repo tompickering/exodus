@@ -1536,11 +1536,9 @@ void LunarBattle::place_units(bool def) {
                 if (def) {
                     x = (rand() % 8) + 8;
                 }
-                if (unit_at(x, y)) {
+                if (unit_at(x, y) || cover_at(x, y)) {
                     continue;
                 }
-                // TODO: Orig also checks gr%() (cover, mines, teleporters) here,
-                // but not in the previous placements.
                 place_unit(BattleUnit(u).init(x, y, min(stack, art), def));
                 art -= min(stack, art);
             }
@@ -1631,11 +1629,9 @@ void LunarBattle::place_units(bool def) {
             if (def) {
                 x = (rand() % 8) + 8;
             }
-            if (unit_at(x, y)) {
+            if (unit_at(x, y) || cover_at(x, y)) {
                 continue;
             }
-            // TODO: Orig also checks gr%() (cover, mines, teleporters) here,
-            // but not in the previous placements.
             place_unit(BattleUnit(u_inf).init(x, y, min(stack, inf), def));
             inf -= min(stack, inf);
         }
@@ -1646,11 +1642,9 @@ void LunarBattle::place_units(bool def) {
             if (def) {
                 x = (rand() % 8) + 8;
             }
-            if (unit_at(x, y)) {
+            if (unit_at(x, y) || cover_at(x, y)) {
                 continue;
             }
-            // TODO: Orig also checks gr%() (cover, mines, teleporters) here,
-            // but not in the previous placements.
             place_unit(BattleUnit(u_gli).init(x, y, min(stack, gli), def));
             gli -= min(stack, gli);
         }
@@ -1737,6 +1731,16 @@ BattleUnit* LunarBattle::unit_at(int x, int y) {
     }
 
     return nullptr;
+}
+
+bool LunarBattle::cover_at(int x, int y) {
+    for (int i = 0; i < COVER_MAX; ++i) {
+        if (cover[i].exists && cover[i].x == x && cover[i].y == y) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 // Commonly-used force stength metric
@@ -2749,10 +2753,8 @@ bool LunarBattle::is_in_cover(BattleUnit* u) {
         return false;
     }
 
-    for (int i = 0; i < COVER_MAX; ++i) {
-        if (cover[i].exists && cover[i].x == u->x && cover[i].y == u->y) {
-            return true;
-        }
+    if (cover_at(u->x, u->y)) {
+        return true;
     }
 
 #if FEATURE_WRECKAGE_COVER
