@@ -849,27 +849,23 @@ void StarMap::draw_planets(float delta) {
             Player *player = exostate.get_active_player();
             PlayerLocation &loc = player->get_location();
             int s_idx = exostate.tgt2loc(exostate.get_active_star());
-            // Check if we are in this system
-            // TODO: Does orig perform this check?
-            if (!loc.in_flight() && loc.get_target() == s_idx) {
-                if (planet->is_owned()) {
-                    uint32_t drawn_fleets = 0;
+            if (planet->is_owned()) {
+                uint32_t drawn_fleets = 0;
 
-                    int owner_idx = planet->get_owner();
-                    Player *owner = exostate.get_player(owner_idx);
+                int owner_idx = planet->get_owner();
+                Player *owner = exostate.get_player(owner_idx);
 
-                    if (!(drawn_fleets & (1 << owner_idx))) {
-                        PlayerLocation &owner_loc = owner->get_location();
-                        if (!owner_loc.in_flight() && owner_loc.get_target() == s_idx) {
-                            drawn_fleets |= (1 << owner_idx);
+                if (!(drawn_fleets & (1 << owner_idx))) {
+                    PlayerLocation &owner_loc = owner->get_location();
+                    if (!owner_loc.in_flight() && owner_loc.get_target() == s_idx) {
+                        drawn_fleets |= (1 << owner_idx);
 
-                            draw_manager.draw(
-                                id_fleet_markers[i],
-                                IMG_TS1_SHICON,
-                                {draw_x,
-                                 draw_y + 100,
-                                 .5f, .5f, 1, 1});
-                        }
+                        draw_manager.draw(
+                            id_fleet_markers[i],
+                            IMG_TS1_SHICON,
+                            {draw_x,
+                             draw_y + 100,
+                             .5f, .5f, 1, 1});
                     }
                 }
             }
