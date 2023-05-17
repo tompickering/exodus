@@ -80,6 +80,7 @@ enum MenuAction {
     MA_EquipShip,
     MA_BuildArtificialWorld,
     MA_Close,
+    MA_WaitOneMonth,
     MA_Quit
 };
 

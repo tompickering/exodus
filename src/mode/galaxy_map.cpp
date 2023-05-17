@@ -669,6 +669,10 @@ ExodusMode GalaxyMap::update(float delta) {
                         artificial_planet_to_move = nullptr;
                         stage = GM_ArtificialWorldStarSelect;
                         break;
+                    case MA_WaitOneMonth:
+                        menu_close();
+                        stage = GM_MonthPassing;
+                        break;
                     case MA_Quit:
                         menu_close();
                         comm_open(DIA_S_Quit);

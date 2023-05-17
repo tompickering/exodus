@@ -1459,6 +1459,9 @@ bool MenuDrawer::menu_specific_update() {
                 }
             }
             // 8: Wait One Month
+            if (menu_row_clicked(8)) {
+                menu_action = MA_WaitOneMonth;
+            }
             // 10: Show Distances
             if (menu_row_clicked(10)) {
                 menu_new_mode = MODE_Distances;
