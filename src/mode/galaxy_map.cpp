@@ -4456,7 +4456,6 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     // 'owner' can be null after this point
-    // TODO: Check whether each subsequent stage should happen with no owner
 
     if (mp_state.mpp_stage == MPP_Income) {
         if (owner) {
