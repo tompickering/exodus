@@ -373,7 +373,7 @@ bool ExodusState::mission_complete() {
             break;
         case AIM_Civilization:
             {
-                // TODO: Actually let players know what the requirements are!
+                // SUGGEST: Actually let players know what the requirements are!
 
                 if (!player->has_all_inventions()) {
                     return false;
