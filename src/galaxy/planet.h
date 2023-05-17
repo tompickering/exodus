@@ -237,8 +237,6 @@ class Planet {
         bool can_collect_taxes();
         void collect_taxes();
         int get_tax_amount();
-        bool may_be_attacked_by(int);
-        void this_month_prevent_attacks_by(int);
         void set_law(Law, bool);
         bool has_law(Law);
         void toggle_law(Law);
@@ -301,7 +299,8 @@ class Planet {
         // SIu & 1: Tracks whether a player has been paid to cease an attack.
         // SIu & 2: Tracks whether a planet has been charged additional taxes this month.
         // I believe the former should be per-player, but the second should be per-month.
-        uint16_t paid_to_leave; // Orig: SIu & 1 - but made per-player, like SIt/traded.
+        // We use ExodusState::prevent_attack() to implement SIu & 1
+        // uint16_t paid_to_leave; // Orig: SIu & 1 - but made per-player, like SIt/traded.
         bool taxes_collected;   // Orig: SIu & 2
 
         uint16_t laws;         // Orig: SIl

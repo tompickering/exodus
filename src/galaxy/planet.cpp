@@ -254,7 +254,6 @@ void Planet::init() {
     owner = -1;
     traded = 0;
     taxes_collected = false;
-    paid_to_leave = 0;
 
     pspeed = (RND(5) + 5);
     lunar_base = false;
@@ -1348,7 +1347,6 @@ void Planet::month_reset() {
     // Reset trade records and tax collection status
     traded = 0;
     taxes_collected = false;
-    paid_to_leave = 0;
     festival_this_month = false;
     surfchange_this_month = false;
     processing_in_progress = false;
@@ -1380,15 +1378,6 @@ void Planet::collect_taxes() {
 
 int Planet::get_tax_amount() {
     return get_income() / 2;
-}
-
-bool Planet::may_be_attacked_by(int player_idx) {
-    return !((bool)(paid_to_leave & (1 << player_idx)));
-}
-
-void Planet::this_month_prevent_attacks_by(int player_idx) {
-    // TODO: This functionality is duplicated by ExodusState::prevent_attack(), which is currently used
-    paid_to_leave |= (1 << player_idx);
 }
 
 void Planet::set_law(Law law, bool legal) {
