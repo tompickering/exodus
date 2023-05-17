@@ -846,8 +846,6 @@ void StarMap::draw_planets(float delta) {
             }
 
             // Fleet markers
-            Player *player = exostate.get_active_player();
-            PlayerLocation &loc = player->get_location();
             int s_idx = exostate.tgt2loc(exostate.get_active_star());
             if (planet->is_owned()) {
                 uint32_t drawn_fleets = 0;
