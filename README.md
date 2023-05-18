@@ -34,7 +34,7 @@ Install [Homebrew](https://brew.sh/).
 
 ```bash
 # Install dependencies
-brew install sdl2 sdl2_image sdl2_mixer sdl2_ttf
+brew install g++ sdl2 sdl2_image sdl2_mixer sdl2_ttf
 
 # Build using Makefile, which is OS-agnostic and supports Mac M1.
 make install
