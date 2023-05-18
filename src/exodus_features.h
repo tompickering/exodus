@@ -42,6 +42,9 @@
 // Randomise certain loops-over-planets in the game to mitigate order bias
 #define FEATURE_PLANET_ITERATION_RANDOMISE 1
 
+// There is a chance rebels won't adopt a new ruler after a successful revolution
+#define FEATURE_REBEL_REPUBLIC_CHANCE 1
+
 // Fixes bug meaning some AI terrorist actions are never taken
 #define FIX_AI_TERROR 1
 

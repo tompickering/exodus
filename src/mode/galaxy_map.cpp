@@ -4282,10 +4282,16 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             bulletin_set_next_text("The revolution of %s", p->get_name());
             bulletin_set_next_text("");
             if (rpt.aggressor_won) {
+                bool republic = !new_owner;
+
+#if FEATURE_REBEL_REPUBLIC_CHANCE
+                republic = republic || onein(5);
+#endif
+
                 exostate.register_news(NI_SuccessfulRevolution);
                 bulletin_set_next_text("The rebels have succeeded. So the");
                 bulletin_set_next_text("planet needs a new leader. The people");
-                if (new_owner) {
+                if (!republic) {
                     const char *new_owner_name = new_owner->get_full_name();
                     bulletin_set_next_text("have chosen %s to rule it!", new_owner_name);
                     p->set_owner(new_owner_idx);
