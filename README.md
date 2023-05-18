@@ -22,10 +22,28 @@ However, here are a few crucial pointers for those preferring to dive right in:
 * After achieving your chosen aim, you must become Guildmaster to win the game.
 
 ## Dependencies
+
 * libsdl2
 * libsdl2-image
 * libsdl2-mixer
 * libsdl2-ttf
+
+### Mac
+
+Install [Homebrew](https://brew.sh/).
+
+```bash
+# Install dependencies
+brew install sdl2 sdl2_image sdl2_mixer sdl2_ttf
+
+# Build using Makefile, which is OS-agnostic and supports Mac M1.
+make install
+
+# Installed in /usr/local, which should be added to PATH.
+
+# Run
+exodus
+```
 
 ## Credits
 Thanks go to Artex Software for having originally created this excellent game, and to Jan Klose for granting permission to use the original graphical and audio assets, and for his support of this project.
