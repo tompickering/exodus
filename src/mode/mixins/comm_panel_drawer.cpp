@@ -71,6 +71,8 @@ CommPanelDrawer::CommPanelDrawer() {
     _comm_is_open = false;
 
     comm_other = nullptr;
+
+    comm_is_counsellor = false;
 }
 
 CommAction CommPanelDrawer::comm_update(float dt) {
@@ -335,6 +337,7 @@ void CommPanelDrawer::comm_open(CommSend input) {
     comm_time_since_open = 0;
     comm_enable_distort = false;
     comm_enable_throbber = false;
+    comm_is_counsellor = false;
 
     comm_init(input);
 
@@ -441,7 +444,7 @@ void CommPanelDrawer::comm_open(CommSend input) {
 }
 
 void CommPanelDrawer::comm_draw_over_img_elements() {
-    if (comm_other) {
+    if (comm_other && !comm_is_counsellor) {
         int x = 4;
         int p_idx = exostate.get_player_idx(comm_player);
         int o_idx = exostate.get_player_idx(comm_other);
@@ -633,35 +636,42 @@ void CommPanelDrawer::comm_init(CommSend input) {
 
     switch (input) {
         case DIA_S_ThrustBroken:
+            comm_is_counsellor = false;
             comm_set_img(CI_HumanThoughtful);
             comm_set_title("Message from counsellor");
             comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
             break;
         case DIA_S_PlanFly:
             comm_set_img(CI_Human);
             comm_set_title("Message from counsellor");
             comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
             break;
         case DIA_S_PlanSettle:
         case DIA_S_PlanProbe:
             comm_set_img(CI_Human);
             comm_set_title("Message from counsellor");
             comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
             break;
         case DIA_S_LookAgainBadLaws:
             comm_set_img(CI_HumanThoughtful);
             comm_set_title("Message from counsellor");
             comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
             break;
         case DIA_S_LookAgainNoEssentials:
             comm_set_img(CI_HumanThoughtful);
             comm_set_title("Message from counsellor");
             comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
             break;
         case DIA_S_CommsBroken:
             comm_set_img(CI_HumanThoughtful);
             comm_set_title("Message from counsellor");
             comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
             break;
         case DIA_S_PlanetComm:
             comm_set_img(CI_HumanPlanet);
@@ -679,6 +689,7 @@ void CommPanelDrawer::comm_init(CommSend input) {
             {
                 comm_set_title("Message from counsellor");
                 comm_set_img_caption("COUNSELLOR");
+                comm_is_counsellor = true;
                 comm_prepare(6);
                 int army = comm_player->get_fleet().freight.army_size_weighted();
                 if (army <= 0) {
@@ -716,66 +727,79 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_title("Message from counsellor");
             comm_set_img(CI_HumanThoughtful);
             comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
             break;
         case DIA_S_FirstPlanetAdvice:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_HumanThoughtful);
             comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
             break;
         case DIA_S_FirstPlanetAdviceUrgent:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_HumanThoughtful);
             comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
             break;
         case DIA_S_FleetNotInSystem:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_HumanThoughtful);
             comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
             break;
         case DIA_S_NoScouts:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_HumanThoughtful);
             comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
             break;
         case DIA_S_NoCoverBombers:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_HumanThoughtful);
             comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
             break;
         case DIA_S_NoBombers:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_HumanThoughtful);
             comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
             break;
         case DIA_S_ArtificialPlanetStarInvalid:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_HumanThoughtful);
             comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
             break;
         case DIA_S_ArtificialPlanetStarMoveDest:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_HumanThoughtful);
             comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
             break;
         case DIA_S_FlyAlreadyFlying:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_HumanThoughtful);
             comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
             break;
         case DIA_S_FlyAlreadyThere:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_Human);
             comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
             break;
         case DIA_S_ZoomButNotVisited:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_HumanThoughtful);
             comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
             break;
         case DIA_S_Quit:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_HumanThoughtful);
             comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
             break;
         case DIA_S_CPU_Attack:
             comm_set_img_caption_upper(comm_player->get_full_name());
