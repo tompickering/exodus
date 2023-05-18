@@ -4258,10 +4258,11 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             bulletin_set_active_player_flag();
             bulletin_write_planet_info(s, p);
 
+            int star_idx = exostate.get_active_star_idx();
             Player *new_owner = nullptr;
             int new_owner_idx = -1;
             int attempts = 0;
-            while (attempts < 500 && !new_owner) {
+            while (attempts < 200 && !new_owner) {
                 attempts++;
                 int idx = rand() % N_PLAYERS;
                 Player *pl = exostate.get_player(idx);
@@ -4271,9 +4272,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     continue;
                 if (!pl->is_participating())
                     continue;
-                // Orig enforces has_visited (SunE), but will get stuck if no candidates
-                int star_idx = exostate.get_active_star_idx();
-                if (attempts < 250 && !pl->get_location().has_visited(star_idx))
+                if (!pl->get_location().has_visited(star_idx))
                     continue;
                 new_owner_idx = idx;
                 new_owner = pl;
@@ -4286,7 +4285,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 exostate.register_news(NI_SuccessfulRevolution);
                 bulletin_set_next_text("The rebels have succeeded. So the");
                 bulletin_set_next_text("planet needs a new leader. The people");
-                if (false) {
+                if (new_owner) {
                     const char *new_owner_name = new_owner->get_full_name();
                     bulletin_set_next_text("have chosen %s to rule it!", new_owner_name);
                     p->set_owner(new_owner_idx);
