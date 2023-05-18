@@ -173,7 +173,7 @@ void ExodusState::init(GameConfig config) {
         players[i].set_tactic(0);
         players[i].nopirates = 0;
         set_random_hostility(players[i]);
-        for (int j = 0; j < OFF_MAX; ++j) {
+        for (int j = 0; j < OFFICER_MAX; ++j) {
             players[i].set_officer((Officer)j, OFFQ_Poor);
         }
         players[i].infraction_mask = 0;
