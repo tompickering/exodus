@@ -357,7 +357,6 @@ bool ExodusState::mission_complete() {
             break;
         case AIM_Money:
             {
-                // FIXME: We should really exclude army funding here
                 int income = 0;
 
 #if FEATURE_AIM_MONEY_EXCLUDE_ARMY
