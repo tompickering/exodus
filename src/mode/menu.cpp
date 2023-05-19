@@ -196,6 +196,8 @@ ExodusMode Menu::update(float delta) {
             }
 
             if (draw_manager.query_click(id(NEWGAME_TXT)).id) {
+                new (&exostate) ExodusState();
+                new (&ephstate) EphemeralState();
                 set_stage(Size);
                 draw_manager.fade_black(1.2f, 24);
             }
