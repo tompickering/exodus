@@ -31,7 +31,15 @@ void Distances::enter() {
     {
         int r = i*DIST_STEP;
         draw_manager.draw_circle(cx, cy, r, COL_TEXT2);
-        snprintf(n, sizeof(n), "%d", i+1);
+
+        int months = i+1;
+
+        if (p->has_invention(INV_OrbitalMassThrust)) {
+            months = 1;
+        }
+
+        snprintf(n, sizeof(n), "%d", months);
+
         int off = r+4;
         draw_manager.draw_text(
             n,
