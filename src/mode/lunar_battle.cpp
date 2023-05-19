@@ -1947,7 +1947,7 @@ void LunarBattle::update_cursor() {
 
     if (mouseover.id) {
         cursor_x = min((int)(mouseover.x * BG_WIDTH), BG_WIDTH - 1);
-        cursor_y = min((int)(mouseover.y * BG_HEIGHT), BG_HEIGHT - 1);;
+        cursor_y = min((int)(mouseover.y * BG_HEIGHT), BG_HEIGHT - 1);
     } else {
         cursor_x = -1;
         cursor_y = -1;

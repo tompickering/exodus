@@ -908,7 +908,7 @@ NewsItem& ExodusState::register_news_force(NewsItemType type) {
 
     NewsItem &ni = newsitems[newsitem_head++];
     new (&ni) NewsItem(s, p, type);
-    ni.player_owned = owner ? owner->is_human() : false;;
+    ni.player_owned = owner ? owner->is_human() : false;
     return ni;
 }
 

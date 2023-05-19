@@ -80,7 +80,7 @@ void PlanetIterator::operator++() {
 
         if (++idx >= end) {
             ++star_iter;
-            reset_idx();;
+            reset_idx();
         }
 
         if (valid()) {

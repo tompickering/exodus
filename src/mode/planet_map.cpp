@@ -2337,7 +2337,7 @@ void PlanetMap::draw_frame_unrest() {
         108, 360,
         COL_TEXT2);
 
-    int scale_y = graph_h/10;;
+    int scale_y = graph_h/10;
     int x0 = graph_x;
     for (int m = N_UNREST-1; m > 0; --m) {
         int x1 = (int)((float)x0 + (float)graph_w/(float)(N_UNREST-1) + .5f);

@@ -549,7 +549,7 @@ ExodusMode StarMap::update(float delta) {
             } else if (action == CA_BionicProbe) {
                 comm_close();
                 ephstate.set_ephemeral_state(EPH_ProbePlanet);
-                return ephstate.get_appropriate_mode();;
+                return ephstate.get_appropriate_mode();
             }
             break;
         case SM_PlanSettleFade:
@@ -579,7 +579,7 @@ ExodusMode StarMap::update(float delta) {
                 case CA_MovePlanet:
                     comm_close();
                     ephstate.set_ephemeral_state(EPH_MovePlanet);
-                    return ephstate.get_appropriate_mode();;
+                    return ephstate.get_appropriate_mode();
                 default:
                     L.error("Unexpected comm action in SM_PlanetComm: %d", (int)action);
             }
