@@ -325,6 +325,19 @@ bool Player::attempt_spend_cpuforce(int cost) {
     return true;
 }
 
+int Player::remove_all_mc() {
+    if (mc < 0) {
+        return 0;
+    }
+
+    int mc_removed = mc;
+    mc = 0;
+
+    L.debug("[%s]: Funds zeroed (was %dMC)", get_full_name(), mc_removed);
+
+    return mc_removed;
+}
+
 void Player::cpu_write_off_debt() {
     if (!is_human()) {
         L.error("Attempt to write off debt of human player, who should never be in debt");

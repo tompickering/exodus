@@ -280,6 +280,7 @@ class Player {
         bool attempt_spend_with_remaining(int, int);
         bool attempt_spend_allowing_writeoff(int, int);
         bool attempt_spend_cpuforce(int);
+        int remove_all_mc();
         void cpu_write_off_debt();
         int get_fleet_marker_idx();
         PlayerLocation& get_location();
