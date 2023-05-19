@@ -17,6 +17,7 @@ class GalaxyIntro : ModeBase {
     private:
         char title_text[64];
         float time;
+        bool fade_started;
 };
 
 #endif

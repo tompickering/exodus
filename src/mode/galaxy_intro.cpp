@@ -4,7 +4,7 @@
 
 #include "assetpaths.h"
 
-#define GALAXY_INTRO_TIME 8
+#define GALAXY_INTRO_TIME 10
 
 static const int n_lines = 14;
 static const char* text[] = {
@@ -65,6 +65,7 @@ void GalaxyIntro::enter() {
     snprintf(title_text, sizeof(title_text), text[12], player->get_title());
 
     time = 0;
+    fade_started = false;
 }
 
 const int INDENT_X = RES_X / 2;
@@ -127,7 +128,12 @@ ExodusMode GalaxyIntro::update(float delta) {
             {grey, grey, grey});
     }
 
-    if (time > 16) {
+    if (time > 20 && !fade_started) {
+        fade_started = true;
+        audio_manager.fade_out(1000);
+    }
+
+    if (time > 21) {
         return ExodusMode::MODE_Pop;
     }
 
