@@ -1307,11 +1307,7 @@ ExodusMode SpaceBattle::update(float delta) {
                         Justify::Left, 40, 40,
                         COL_TEXT2);
 
-                    int mc = player->get_mc();
-                    // FIXME: Maybe a force_spend() call or zero_funds()?
-                    if (!player->attempt_spend(mc)) {
-                        L.error("We should have been able to spend the MC we have");
-                    }
+                    int mc = player->remove_all_mc();
 
                     Fleet &fl = player->get_fleet_nonconst();
                     int stolen_transporters = min(RND(7), fl.transporters);
