@@ -6,6 +6,9 @@
 
 #define DESC_SIZE 13
 
+#define GUILD_COST 5000
+#define GUILD_COST_STR "5000"
+
 static const DrawArea AREA_BOT  = {100, 200, 120, 120};
 static const DrawArea AREA_DOOR = {200, 200, 120, 120};
 static const DrawArea AREA_EXIT = {RES_X - 120, 0, 120, RES_Y};
@@ -402,11 +405,10 @@ ExodusMode GuildHQ::update(float delta) {
                     Justify::Left,
                     PANEL_X + 4, PANEL_Y + 84,
                     COL_TEXT);
-                // FIXME: Don't hard-code guild cost
-                const char* text0 = "Guild Membership costs 5000";
+                const char* text0 = "Guild Membership costs " GUILD_COST_STR;
                 const char* text1 = "Mega Credits.";
-                if (player->can_afford(5000)) {
-                    text0 = "Are you willing to pay 5000";
+                if (player->can_afford(GUILD_COST)) {
+                    text0 = "Are you willing to pay " GUILD_COST_STR;
                     text1 = "Mega Credits?";
                 }
                 draw_manager.draw_text(
@@ -532,8 +534,7 @@ ExodusMode GuildHQ::update(float delta) {
                 SpriteClick click = draw_manager.query_click(id(ID::MEMBER_CHOICE));
                 if (click.id) {
                     if (click.x < .5f) {
-                        // FIXME: Don't hard-code guild cost
-                        if (player->attempt_spend(5000)) {
+                        if (player->attempt_spend(GUILD_COST)) {
                             player->set_guild_member(true);
                             draw_panel();
                             draw_manager.draw_text(
