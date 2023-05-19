@@ -14,6 +14,10 @@ class Timer {
 #include "timer.chrono.h"
 #endif
 
+#ifdef MAC
+#include "timer.chrono.h"
+#endif
+
 #ifdef WINDOWS
 #include "timer.chrono.h"
 #endif

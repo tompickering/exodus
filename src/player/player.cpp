@@ -636,8 +636,8 @@ void Player::set_tax(int t) {
 }
 
 OfficerQuality Player::get_officer(Officer off) {
-    if (off >= OFF_MAX) {
-        L.fatal("Requested invalid officer %d (max is %d)", off, OFF_MAX-1);
+    if (off >= OFFICER_MAX) {
+        L.fatal("Requested invalid officer %d (max is %d)", off, OFFICER_MAX-1);
     }
     return officers[off];
 }
@@ -660,15 +660,15 @@ int Player::get_officer_initial_cost(OfficerQuality q) {
 
 int Player::get_total_officer_costs() {
     int total = 0;
-    for (int i = 0; i < (int)OFF_MAX; ++i) {
+    for (int i = 0; i < (int)OFFICER_MAX; ++i) {
         total += get_officer_cost((Officer)i);
     }
     return total;
 }
 
 void Player::set_officer(Officer off, OfficerQuality off_q) {
-    if (off >= OFF_MAX) {
-        L.fatal("Setting invalid officer %d (max is %d)", off, OFF_MAX-1);
+    if (off >= OFFICER_MAX) {
+        L.fatal("Setting invalid officer %d (max is %d)", off, OFFICER_MAX-1);
     }
     if (off_q >= OFFQ_MAX) {
         L.fatal("Setting invalid officer quality %d (max is %d)", off, OFFQ_MAX-1);

@@ -162,7 +162,7 @@ enum Officer {
     OFF_Battle,
     OFF_Secret,
     OFF_Counsellor,
-    OFF_MAX
+    OFFICER_MAX
 };
 
 enum OfficerQuality {
@@ -390,7 +390,7 @@ class Player {
         void refresh_full_name();
         bool guild_member;
         int tax;  // Orig: t%
-        OfficerQuality officers[OFF_MAX];  // Orig: Ps%
+        OfficerQuality officers[OFFICER_MAX];  // Orig: Ps%
         Mission mission;
         StarMarker star_markers[N_MARKERS];
 

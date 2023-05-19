@@ -1991,7 +1991,7 @@ ExodusMode GalaxyMap::month_pass_update() {
             Player *p = exostate.set_active_player(mp_state.mp_player_idx);
             if (p && p->is_participating()) {
                 Officer &o = mp_state.mp_officer;
-                for (; o < OFF_MAX; o = (Officer)((int)o + 1)) {
+                for (; o < OFFICER_MAX; o = (Officer)((int)o + 1)) {
                     int cost = p->get_officer_cost(o);
                     if (cost <= 0) {
                         continue;

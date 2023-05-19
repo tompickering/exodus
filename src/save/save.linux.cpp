@@ -1,4 +1,4 @@
-#ifdef LINUX
+#if defined(LINUX) || defined(MAC)
 
 #include "save.linux.h"
 
