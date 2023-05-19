@@ -696,7 +696,6 @@ void SpaceBattle::update_ships() {
         if (s->type == SHIP_Starship) {
             if (s->target && s->target->exists && s->target->hp > 0) {
                 // FIXME: Orig does this outside of the loop - and ends up using the wrong dx / dy! We'll fix this...
-                // FIXME: This is true to orig, but shouldn't this be missile_launchers...?
                 for (int i = 0; i < player->get_starship().laser_guns; ++i) {
                     if (onein(15)) {
                         spawn_rocket(s, dx*4, dy*4);
