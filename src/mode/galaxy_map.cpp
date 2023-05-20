@@ -3959,7 +3959,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     if (mp_state.mpp_stage == MPP_Meteors) {
         if (onein(200)) {
             exostate.register_news(NI_Meteor);
-            bulletin_start_new(false);
+            bulletin_start_new(false, s);
             bulletin_set_bg(IMG_ME5_MENU);
             bulletin_set_active_player_flag();
             bulletin_write_planet_info(s, p);
@@ -4014,7 +4014,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 int kill_gli = RND(10);
                 int kill_art = RND(10);
                 p->adjust_army(-1*kill_inf, -1*kill_gli, -1*kill_art);
-                bulletin_start_new(true);
+                bulletin_start_new(true, s);
                 bulletin_set_bg(p->sprites()->bulletin_bg);
                 bulletin_set_active_player_flag();
                 bulletin_write_planet_info(s, p);
@@ -4037,7 +4037,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             const char* before = p->get_class_str_lower();
             p->surfchange();
             const char* after = p->get_class_str_lower();
-            bulletin_start_new(true);
+            bulletin_start_new(true, s);
             bulletin_set_bg(p->sprites()->bulletin_bg);
             bulletin_set_active_player_flag();
             bulletin_write_planet_info(s, p);
@@ -4074,7 +4074,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 p->adjust_unrest(2);
                 audio_manager.target_music(mpart2mus(9));
                 exostate.register_news(NI_Plague);
-                bulletin_start_new(true);
+                bulletin_start_new(true, s);
                 bulletin_set_bg(p->sprites()->bulletin_bg);
                 bulletin_set_active_player_flag();
                 bulletin_write_planet_info(s, p);
@@ -4094,7 +4094,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         if (onein(200) && exostate.get_orig_month() >= 10) {
             audio_manager.target_music(mpart2mus(8));
             exostate.register_news(NI_AlienAttack);
-            bulletin_start_new(false);
+            bulletin_start_new(false, s);
             bulletin_set_bg(p->sprites()->bulletin_bg);
             bulletin_set_active_player_flag();
             bulletin_write_planet_info(s, p);
@@ -4117,7 +4117,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         if (ephstate.get_ephemeral_state() == EPH_LunarBattleReport) {
             LunarBattleReport &rpt = ephstate.lunar_battle_report;
             ephstate.clear_ephemeral_state();
-            bulletin_start_new(true);
+            bulletin_start_new(true, s);
             bulletin_set_bg(p->sprites()->bulletin_bg);
             bulletin_set_active_player_flag();
             bulletin_write_planet_info(s, p);
@@ -4191,7 +4191,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                         }
                         audio_manager.target_music(mpart2mus(8));
                         exostate.register_news(NI_Epidemic);
-                        bulletin_start_new(true);
+                        bulletin_start_new(true, s);
                         bulletin_set_bg(p->sprites()->bulletin_bg);
                         bulletin_set_active_player_flag();
                         bulletin_write_planet_info(s, p);
@@ -4224,7 +4224,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     }
 
                     audio_manager.target_music(mpart2mus(8));
-                    bulletin_start_new(false);
+                    bulletin_start_new(false, s);
                     bulletin_set_bg(p->sprites()->bulletin_bg);
                     bulletin_set_active_player_flag();
                     bulletin_write_planet_info(s, p);
@@ -4252,7 +4252,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         if (ephstate.get_ephemeral_state() == EPH_LunarBattleReport) {
             LunarBattleReport &rpt = ephstate.lunar_battle_report;
             ephstate.clear_ephemeral_state();
-            bulletin_start_new(true);
+            bulletin_start_new(true, s);
             bulletin_set_bg(p->sprites()->bulletin_bg);
             bulletin_set_active_player_flag();
             bulletin_write_planet_info(s, p);
@@ -4357,7 +4357,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         if (onein(200)) {
             if (p->has_stone(STONE_Plu)) {
                 audio_manager.target_music(mpart2mus(8));
-                bulletin_start_new(false);
+                bulletin_start_new(false, s);
                 bulletin_set_bg(p->sprites()->bulletin_bg);
                 bulletin_set_active_player_flag();
                 bulletin_write_planet_info(s, p);
@@ -4398,7 +4398,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 if (p->count_stones(STONE_Agri) >= threshold) {
                     p->change_class(Terra);
                     exostate.register_news(NI_SurfChangeCultivation);
-                    bulletin_start_new(true);
+                    bulletin_start_new(true, s);
                     bulletin_set_bg(p->sprites()->bulletin_bg);
                     bulletin_set_active_player_flag();
                     bulletin_write_planet_info(s, p);
@@ -4425,7 +4425,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 if (p->count_stones(STONE_NaturalLarge) < threshold) {
                     p->change_class(Rock);
                     exostate.register_news(NI_SurfChangeClearing);
-                    bulletin_start_new(true);
+                    bulletin_start_new(true, s);
                     bulletin_set_bg(p->sprites()->bulletin_bg);
                     bulletin_set_active_player_flag();
                     bulletin_write_planet_info(s, p);
@@ -4446,7 +4446,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         if (p->count_stones(STONE_Base) == 0) {
             audio_manager.target_music(mpart2mus(9));
             // FIXME: No PROCdonotice here? (Orig doesn't...)
-            bulletin_start_new(true);
+            bulletin_start_new(true, s);
             bulletin_set_bg(p->sprites()->bulletin_bg);
             bulletin_set_active_player_flag();
             bulletin_write_planet_info(s, p);
