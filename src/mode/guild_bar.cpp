@@ -651,10 +651,8 @@ ExodusMode GuildBar::update(float delta) {
 }
 
 void SheriffShip::init(SheriffShip::InitType t) {
-    //x = RND(375);
-    //y = RND(225);
-    x = 60 + RND(345);
-    y = 60 + RND(195);
+    x = 60 + RND(315);
+    y = 60 + RND(165);
     z = 200;
     switch (t) {
         case SheriffShip::InitType::Demo:
