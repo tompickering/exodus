@@ -1823,7 +1823,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                                 // PROCspyspot
                                 int r = RND(owner->has_invention(INV_IndustryGuard) ? 5 : 10);
                                 r += 2*(int)p->get_officer(OFF_Secret);
-                                r = 0;
+
                                 if (r < 4) {
                                     L.info("[%s] SPY CAPTURED - %s", p->get_full_name(), pl->get_name());
 
