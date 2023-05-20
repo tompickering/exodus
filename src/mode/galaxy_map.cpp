@@ -1604,20 +1604,22 @@ ExodusMode GalaxyMap::month_pass_update() {
             }
 
             if (mission_state == MS_AssassinCaptured || mission_state == MS_AssassinCapturedDead) {
-                if (!draw_manager.clicked()) {
-                    return ExodusMode::MODE_None;
+                Star *st = (Star*)exostate.get_active_flytarget();
+                Planet *pl = exostate.get_active_planet();
+
+                int owner_idx = pl->get_owner();
+                Player *owner = exostate.get_player(owner_idx);
+
+                if (p->is_human() || (owner && owner->is_human())) {
+                    if (!draw_manager.clicked()) {
+                        return ExodusMode::MODE_None;
+                    }
                 }
 
                 draw_manager.draw(
                     id(ID::FRAMED_IMG),
                     nullptr);
                 frame_remove();
-
-                Star *st = (Star*)exostate.get_active_flytarget();
-                Planet *pl = exostate.get_active_planet();
-
-                int owner_idx = pl->get_owner();
-                Player *owner = exostate.get_player(owner_idx);
 
                 exostate.register_news(NI_AssassinCaptured);
                 bulletin_start_new(false, st);
@@ -1828,22 +1830,24 @@ ExodusMode GalaxyMap::month_pass_update() {
                                     // Cancel bulletin in this case...
                                     bulletin_ensure_closed();
 
-                                    audio_manager.target_music(mpart2mus(9));
+                                    if (p->is_human() || (owner && owner->is_human())) {
+                                        audio_manager.target_music(mpart2mus(9));
 
-                                    draw_manager.draw(
-                                        id(ID::FRAMED_IMG),
-                                        IMG_CT3_EXPORT,
-                                        {5, 7, 0, 0, 1, 1});
+                                        draw_manager.draw(
+                                            id(ID::FRAMED_IMG),
+                                            IMG_CT3_EXPORT,
+                                            {5, 7, 0, 0, 1, 1});
 
-                                    char t[64];
-                                    snprintf(t, sizeof(t), "Assassin captured at %s", pl->get_name());
-                                    draw_manager.draw_text(
-                                        t,
-                                        Justify::Left,
-                                        12, 378,
-                                        COL_TEXT2);
+                                        char t[64];
+                                        snprintf(t, sizeof(t), "Assassin captured at %s", pl->get_name());
+                                        draw_manager.draw_text(
+                                            t,
+                                            Justify::Left,
+                                            12, 378,
+                                            COL_TEXT2);
 
-                                    frame_draw();
+                                        frame_draw();
+                                    }
 
                                     // Clear mission now - this does not go ahead
                                     // This also means we do not re-process this player again when we return after the bulletin
