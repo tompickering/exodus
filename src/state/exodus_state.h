@@ -108,6 +108,7 @@ class ExodusState {
         int get_n_active_cpu_players();
         Player* get_random_active_player();
         uint32_t get_active_cpu_player_mask();
+        int get_star_idx(Star*);
         int get_random_star_idx();
         int get_n_owned_planets();
         int get_n_unowned_planets();

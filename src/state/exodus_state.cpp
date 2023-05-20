@@ -542,6 +542,17 @@ uint32_t ExodusState::get_active_cpu_player_mask() {
     return res;
 }
 
+int ExodusState::get_star_idx(Star* star) {
+    for (StarIterator siter; !siter.complete(); ++siter) {
+        if (siter.get() == star) {
+            return siter.get_idx();
+        }
+    }
+
+    L.warn("Could not find index of star at %x", star);
+    return -1;
+}
+
 int ExodusState::get_random_star_idx() {
     Galaxy *gal = get_galaxy();
     int n_stars;
