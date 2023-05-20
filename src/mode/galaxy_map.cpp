@@ -2309,6 +2309,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     break;
                 case CA_Attack:
                     comm_close();
+                    audio_manager.target_music(mpart2mus(8));
                     comm_open(DIA_S_CPU_Attack);
                     mp_state.mpai_substage = 3;
                     return ExodusMode::MODE_None;
@@ -2319,6 +2320,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
         if (mp_state.mpai_substage == 1) {
             // Arrival cutscene finished
+            audio_manager.target_music(mpart2mus(13));
             comm_open(DIA_S_CPU_Offer);
             mp_state.mpai_substage = 2;
             return ExodusMode::MODE_None;
@@ -3268,6 +3270,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 // Attacking human - arrived, opening comms
                 if (mp_state.mpai_substage == 2) {
                     mp_state.mpai_substage = 3;
+                    audio_manager.target_music(mpart2mus(8));
                     comm_open(DIA_S_CPU_Attack);
                     return ExodusMode::MODE_None;
                 }
@@ -3747,6 +3750,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
                 if (mp_state.mpai_substage == 1) {
                     mp_state.mpai_substage = 2;
+                    audio_manager.target_music(mpart2mus(6));
                     comm_open(DIA_S_CPU_Trade);
                     return ExodusMode::MODE_None;
                 }
