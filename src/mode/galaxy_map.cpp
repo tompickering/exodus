@@ -1578,7 +1578,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                 int owner_idx = pl->get_owner();
                 Player *owner = exostate.get_player(owner_idx);
 
-                bulletin_start_new(false);
+                bulletin_start_new(false, st);
                 bulletin_set_bg(pl->sprites()->bulletin_bg);
                 bulletin_set_flag(flags[owner->get_flag_idx()]);
                 bulletin_write_planet_info(st, pl);
@@ -1620,7 +1620,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                 Player *owner = exostate.get_player(owner_idx);
 
                 exostate.register_news(NI_AssassinCaptured);
-                bulletin_start_new(false);
+                bulletin_start_new(false, st);
                 bulletin_set_bg(pl->sprites()->bulletin_bg);
                 bulletin_set_flag(flags[owner->get_flag_idx()]);
                 bulletin_write_planet_info(st, pl);
@@ -1798,7 +1798,7 @@ ExodusMode GalaxyMap::month_pass_update() {
 
                     exostate.set_active_player(mp_state.mp_player_idx);
                     L.info("[%s] MISSION - %s (%s)", p->get_full_name(), pl->get_name(), owner->get_full_name());
-                    bulletin_start_new(false);
+                    bulletin_start_new(false, st);
                     bulletin_set_bg(pl->sprites()->bulletin_bg);
                     bulletin_set_active_player_flag();
                     bulletin_write_planet_info(st, pl);
@@ -1862,7 +1862,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                                     if (mission.type == MT_TerrorAgri) {
                                         L.debug("Mission type: Poison plants");
                                         exostate.register_news(NI_PlantsPoisoned);
-                                        bulletin_start_new(true);
+                                        bulletin_start_new(true, st);
                                         bulletin_set_bg(pl->sprites()->bulletin_bg);
                                         bulletin_set_active_player_flag();
                                         bulletin_write_planet_info(st, pl);
@@ -1934,7 +1934,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                                         }
 
                                         exostate.register_news(NI_TerroristAttack);
-                                        bulletin_start_new(true);
+                                        bulletin_start_new(true, st);
                                         bulletin_set_bg(pl->sprites()->bulletin_bg);
                                         bulletin_set_active_player_flag();
                                         bulletin_write_planet_info(st, pl);
