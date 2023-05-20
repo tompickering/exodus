@@ -38,9 +38,29 @@ BulletinDrawer::BulletinDrawer() {
     bulletin_bg_preserve = nullptr;
 }
 
-void BulletinDrawer::bulletin_start_new(bool transition) {
+bool BulletinDrawer::bulletin_start_new(bool transition) {
+    return bulletin_start_new(transition, -1);
+}
+
+bool BulletinDrawer::bulletin_start_new(bool transition, Star* star) {
+    int star_idx = -1;
+
+    if (star) {
+        star_idx = exostate.get_star_idx(star);
+    }
+
+    return bulletin_start_new(transition, star_idx);
+}
+
+bool BulletinDrawer::bulletin_start_new(bool transition, int star_idx) {
     for (int i = 0; i < bulletin_text_idx; ++i) {
         draw_manager.draw(id_bulletin_text[i], nullptr);
+    }
+
+    if (star_idx >= 0) {
+        if (!exostate.any_human_has_visited(star_idx)) {
+            return false;
+        }
     }
 
     if (!bulletin_is_open())
@@ -57,6 +77,8 @@ void BulletinDrawer::bulletin_start_new(bool transition) {
     }
 
     bulletin_set_active_player_flag();
+
+    return true;
 }
 
 void BulletinDrawer::bulletin_update(float dt) {

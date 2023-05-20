@@ -18,7 +18,9 @@ extern ExodusState exostate;
 class BulletinDrawer {
     public:
         BulletinDrawer();
-        void bulletin_start_new(bool);
+        bool bulletin_start_new(bool);
+        bool bulletin_start_new(bool, Star*);
+        bool bulletin_start_new(bool, int);
         void bulletin_update(float);
         void bulletin_set_next_text(const char*, ...);
         void bulletin_set_text_col(RGB);
