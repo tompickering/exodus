@@ -568,6 +568,10 @@ void BulletinDrawer::bulletin_update_bg() {
 }
 
 void BulletinDrawer::bulletin_set_flag(const char* img) {
+    if (!bulletin_is_open()) {
+        return;
+    }
+
     draw_manager.draw(
         img,
         {BULLETIN_FLAG_BG_X + BULLETIN_BORDER,
