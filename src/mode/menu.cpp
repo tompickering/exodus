@@ -782,10 +782,11 @@ ExodusMode Menu::update(float delta) {
                     for (int i = 0; i < 3; ++i) {
                         int flag_idx = (j*3) + i;
 
-                        draw_border_flag(flag_idx, {0, 0, 0x0});
-
                         int x, y;
                         get_flag_pos(flag_idx, x, y);
+
+                        draw_manager.fill({x - 52, y - 32, 104, 64}, COL_BORDERS);
+                        draw_border_flag(flag_idx, {0, 0, 0x0});
 
                         draw_manager.draw(
                             id(ID::FLAG_0 + flag_idx),
