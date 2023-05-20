@@ -1817,7 +1817,7 @@ bool Planet::expand(Stone st) {
 }
 
 bool Planet::agri_collapse() {
-    // Lakes and oases on Forest, Terra and Rock protect agri
+    // Lakes and oases on Forest, Terra and Desert protect agri
     bool natural_protection = false;
     int r = 0;
     switch (cls) {
