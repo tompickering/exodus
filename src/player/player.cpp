@@ -72,7 +72,8 @@ void Player::init_alien_name() {
 
 void Player::init_race(Race _race) {
     race = _race;
-    const AIFlag *flags;
+    const AIFlag *flags = ai_hum;
+
     switch (race) {
         case RACE_Human:
             flags = ai_hum;
