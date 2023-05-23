@@ -18,23 +18,20 @@ DBGFLAGS=-g -DDBG
 
 PREFIX = /usr/local
 
-UNAME_S := $(shell uname -s)
-ifeq ($(UNAME_S),Linux)
-	CXXFLAGS += -DLINUX
-endif
-ifeq ($(UNAME_S),Darwin)
-	CXX=g++-13 -std=c++11
-	CXXFLAGS += -DMAC
-	INCFLAGS += -I/opt/homebrew/include -L/opt/homebrew/lib
-endif
-
 %.d: %.cpp
 	$(CXX) $(INCFLAGS) -MM -MF $@ -MT $@ -MT $*.o $<
 
 all: linux
 
 linux: ext=
+linux: CXXFLAGS += -DLINUX
 linux: bin
+
+mac: CXX=g++-13 -std=c++11
+mac: ext=
+mac: CXXFLAGS += -DMAC
+mac: INCFLAGS += -I/opt/homebrew/include -L/opt/homebrew/lib
+mac: bin
 
 # Requires mingw-w64
 windows: CXX = x86_64-w64-mingw32-g++
