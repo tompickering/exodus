@@ -13,7 +13,7 @@ CLEAN = $(BIN) $(OBJS) $(DEPS)
 
 INCFLAGS=-Isrc
 LDLIBS=-lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
-CXXFLAGS=-Wall -Wno-reorder -Wno-class-memaccess -pedantic -DSDL $(INCFLAGS)
+CXXFLAGS=-Wall -Wno-reorder -Wno-class-memaccess -Wno-format-truncation -pedantic -DSDL $(INCFLAGS)
 DBGFLAGS=-g -DDBG
 
 PREFIX = /usr/local
