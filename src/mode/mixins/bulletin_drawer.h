@@ -11,6 +11,8 @@
 #define BULLETIN_LINES     20
 #define BULLETIN_MAX_TEXT 256
 
+#define BULLETIN_WAR_ALLY_IDS 15
+
 extern DRAWMANAGER draw_manager;
 
 extern ExodusState exostate;
@@ -83,7 +85,7 @@ class BulletinDrawer {
         void bulletin_war_ally_init();
         void bulletin_war_ally_update();
 
-        SprID bulletin_war_ally_ids_army[15];
+        SprID bulletin_war_ally_ids_army[BULLETIN_WAR_ALLY_IDS];
         SprID bulletin_war_ally_id_exit;
 };
 

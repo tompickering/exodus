@@ -152,7 +152,7 @@ void BulletinDrawer::bulletin_draw_text() {
 }
 
 void BulletinDrawer::bulletin_war_ally_init() {
-    for (long unsigned int i = 0; i < sizeof(bulletin_war_ally_ids_army); ++i) {
+    for (int i = 0; i < BULLETIN_WAR_ALLY_IDS; ++i) {
         bulletin_war_ally_ids_army[i] = draw_manager.new_sprite_id();
     }
     bulletin_war_ally_id_exit = draw_manager.new_sprite_id();
@@ -205,7 +205,7 @@ void BulletinDrawer::bulletin_war_ally_init() {
 
 void BulletinDrawer::bulletin_war_ally_update() {
     if (draw_manager.query_click(bulletin_war_ally_id_exit).id) {
-        for (long unsigned int i = 0; i < sizeof(bulletin_war_ally_ids_army); ++i) {
+        for (int i = 0; i < BULLETIN_WAR_ALLY_IDS; ++i) {
             draw_manager.draw(bulletin_war_ally_ids_army[i], nullptr);
             draw_manager.release_sprite_id(bulletin_war_ally_ids_army[i]);
         }
