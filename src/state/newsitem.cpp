@@ -21,7 +21,9 @@ static char b[128];
 
 // Orig registers with PROCdonotice
 const char* NewsItem::get_string() const {
-    Player *p0, *p1 = nullptr;
+    Player *p0 = nullptr;
+    Player *p1 = nullptr;
+
     if (player_0 >= 0) {
         p0 = exostate.get_player(player_0);
     }
