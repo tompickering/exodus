@@ -22,6 +22,7 @@ PREFIX = /usr/local
 	$(CXX) $(INCFLAGS) -MM -MF $@ -MT $@ -MT $*.o $<
 
 all: linux
+all: CXXFLAGS += -O3
 
 linux: ext=
 linux: CXXFLAGS += -DLINUX
@@ -29,14 +30,14 @@ linux: bin
 
 mac: CXX=g++-13 -std=c++11
 mac: ext=
-mac: CXXFLAGS += -DMAC
+mac: CXXFLAGS += -O3 -DMAC
 mac: INCFLAGS += -I/opt/homebrew/include -L/opt/homebrew/lib
 mac: bin
 
 # Requires mingw-w64
 windows: CXX = x86_64-w64-mingw32-g++
 windows: ext=.exe
-windows: CXXFLAGS += -DWINDOWS
+windows: CXXFLAGS += -O3 -DWINDOWS
 windows: INCFLAGS += -Iinclude -Iinclude/x86_64-linux-gnu
 windows: LDLIBS := -Llib -static -l:libSDL2.dll.a -l:libSDL2_image.dll.a -l:libSDL2_mixer.dll.a -l:libSDL2_ttf.dll.a
 windows: bin
@@ -45,7 +46,7 @@ bin: $(BIN)
 	mv $(BIN)$(ext) $(NAME)$(ext)
 
 debug: CXXFLAGS += $(DBGFLAGS)
-debug: all
+debug: linux
 
 $(BIN):
 	$(LINK.cpp) $^ $(LOADLIBES) $(LDLIBS) -o $@
