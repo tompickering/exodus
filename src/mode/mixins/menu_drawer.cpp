@@ -1381,7 +1381,7 @@ void MenuDrawer::menu_open_specific_mode() {
                     }
                 }
 
-                Player* most_awards;
+                Player *most_awards = exostate.get_player(0);
                 int most_awards_ctr = 0;
 
                 for (int i = 0; i < N_PLAYERS; ++i) {
