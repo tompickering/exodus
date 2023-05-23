@@ -111,7 +111,7 @@ bool DrawManagerSDL::init() {
 }
 
 SDL_Surface* DrawManagerSDL::load_normalised_image(const char* path) {
-    char img_path[ASSET_PATH_LEN_MAX];
+    char img_path[ASSET_PATH_LEN_MAX+1];
     SDL_Surface *load_surf;
     SDL_Surface *normalised;
     strncpy(img_path, path, ASSET_PATH_LEN_MAX);

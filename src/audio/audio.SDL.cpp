@@ -26,7 +26,7 @@ void AudioManagerSDL::load_resources() {
     if (!enabled)
         return;
 
-    char mus_path[ASSET_PATH_LEN_MAX];
+    char mus_path[ASSET_PATH_LEN_MAX+1];
 
     for (unsigned int i = 0;; ++i) {
         if (ASSETS_MUS[i][0] == '\0')
