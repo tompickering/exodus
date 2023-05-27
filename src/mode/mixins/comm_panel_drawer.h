@@ -85,6 +85,8 @@ enum CommSend {
     DIA_S_CommentThreaten,
     DIA_S_PlanAttack,
     DIA_S_NoFirstSave,
+    DIA_S_SaveSuccess,
+    DIA_S_SaveFailure,
     DIA_S_FirstPlanetAdvice,
     DIA_S_FirstPlanetAdviceUrgent,
     DIA_S_FleetNotInSystem,

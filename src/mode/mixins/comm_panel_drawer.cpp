@@ -729,6 +729,18 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img_caption("COUNSELLOR");
             comm_is_counsellor = true;
             break;
+        case DIA_S_SaveSuccess:
+            comm_set_title("Message from counsellor");
+            comm_set_img(CI_Human);
+            comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
+            break;
+        case DIA_S_SaveFailure:
+            comm_set_title("Message from counsellor");
+            comm_set_img(CI_HumanThoughtful);
+            comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
+            break;
         case DIA_S_FirstPlanetAdvice:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_HumanThoughtful);
@@ -1631,6 +1643,22 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_prepare(6);
                 comm_set_text(0, "For the first game saving, please");
                 comm_set_text(1, "use the CTRL-menu.");
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_SaveSuccess:
+            {
+                comm_prepare(6);
+                comm_set_text(0, "The save operation was a success,");
+                comm_set_text(1, "%s.", comm_player->get_ref());
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_SaveFailure:
+            {
+                comm_prepare(6);
+                comm_set_text(0, "The save operation resulted in,");
+                comm_set_text(1, "failure, %s.", comm_player->get_ref());
                 comm_recv(DIA_R_Close);
             }
             break;

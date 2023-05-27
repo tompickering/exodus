@@ -373,7 +373,13 @@ ExodusMode GalaxyMap::update(float delta) {
                     stage = GM_Counsellor;
                     return ExodusMode::MODE_None;
                 } else {
-                    save_manager.save(QUICKSAVE_SLOT);
+                    if (save_manager.save(QUICKSAVE_SLOT)) {
+                        comm_open(DIA_S_SaveSuccess);
+                    } else {
+                        comm_open(DIA_S_SaveFailure);
+                    }
+                    stage = GM_Counsellor;
+                    return ExodusMode::MODE_None;
                 }
             }
 
