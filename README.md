@@ -4,6 +4,17 @@ This is a clone of Exodus - a game released by Artex Software for RISC OS in 199
 
 It is the year 3011. Civilization has failed. Can you guide what remains of humanity to a glorious new age, out in space? This is the beginning of a long and dangerous journey...
 
+![Screenshot 0](screenshots/screenshot_00.png)
+![Screenshot 1](screenshots/screenshot_01.png)
+![Screenshot 2](screenshots/screenshot_02.png)
+![Screenshot 3](screenshots/screenshot_03.png)
+![Screenshot 4](screenshots/screenshot_04.png)
+![Screenshot 5](screenshots/screenshot_05.png)
+![Screenshot 6](screenshots/screenshot_06.png)
+![Screenshot 7](screenshots/screenshot_07.png)
+![Screenshot 8](screenshots/screenshot_08.png)
+![Screenshot 9](screenshots/screenshot_09.png)
+
 ## Instructions
 Exodus is a complex game; the original manual is supplied under manual.pdf - this will be highly useful!
 
