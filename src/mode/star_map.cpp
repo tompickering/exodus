@@ -248,13 +248,22 @@ ExodusMode StarMap::update(float delta) {
                         }
 
                         if (planet->is_owned()) {
-                            if (planet->get_owner() == player_idx) {
+                            int owner_idx = planet->get_owner();
+                            Player *owner = exostate.get_player(owner_idx);
+                            if (owner_idx == player_idx) {
                                 // Comms with own planet
                                 comm_open(DIA_S_PlanetComm);
                                 stage = SM_PlanetComm;
                                 return ExodusMode::MODE_None;
                             } else {
                                 // Comms with enemy planet
+                                if (exostate.is_allied(player_idx, owner_idx)) {
+                                    audio_manager.target_music(mpart2mus(13));
+                                } else if (owner->is_hostile_to(player_idx)) {
+                                    audio_manager.target_music(mpart2mus(8));
+                                } else {
+                                    audio_manager.target_music(mpart2mus(4));
+                                }
                                 comm_open(DIA_S_HailPlanet);
                                 stage = SM_EnemyComm;
                                 return ExodusMode::MODE_None;
