@@ -1,5 +1,12 @@
 #!/bin/bash
 
+git diff --exit-code >/dev/null 2>&1
+
+if [ $? -ne 0 ]; then
+    echo "There are uncommitted changes; please resolve these before running"
+    exit
+fi
+
 mkdir -p include/x86_64-linux-gnu
 ln -sf /usr/include/SDL2 include
 ln -sf /usr/include/x86_64-linux-gnu/SDL2 include/x86_64-linux-gnu
