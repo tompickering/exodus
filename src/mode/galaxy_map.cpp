@@ -3392,6 +3392,10 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     ephstate.clear_ephemeral_state();
 
                     if (vis) {
+                        /*
+                         * TODO: I believe the original presents the 'under attack' notification
+                         * and outcome as 2 separate bulletins with a dramatic pause between.
+                         */
                         audio_manager.target_music(mpart2mus(8));
                         bulletin_start_new(false);
                         bulletin_set_bg(p->sprites()->bulletin_bg);
