@@ -46,6 +46,10 @@ const char *IMG_CURSOR_BATTLE0  = "assets/img/cursor_battle0";
 const char *IMG_CURSOR_BATTLE1  = "assets/img/cursor_battle1";
 const char *IMG_CURSOR_XHAIR    = "assets/img/cursor_crosshair";
 const char *IMG_CURSOR_HG       = "assets/img/cursor_hourglass";
+const char *IMG_DARKARROW_UP    = "assets/img/gf2_ma1_dark";
+const char *IMG_DARKARROW_DOWN  = "assets/img/gf2_ma2_dark";
+const char *IMG_DARKARROW_LEFT  = "assets/img/gf2_ma3_dark";
+const char *IMG_DARKARROW_RIGHT = "assets/img/gf2_ma4_dark";
 const char *IMG_SHIP_FLIPPED    = "assets/img/SH3_cruiser1_flipped";
 const char *IMG_BUTTON_OTHER    = "assets/img/button_other";
 
@@ -1087,6 +1091,10 @@ const char *ASSETS_IMG[] = {
     IMG_CURSOR_BATTLE1,
     IMG_CURSOR_XHAIR,
     IMG_CURSOR_HG,
+    IMG_DARKARROW_UP,
+    IMG_DARKARROW_DOWN,
+    IMG_DARKARROW_LEFT,
+    IMG_DARKARROW_RIGHT,
     IMG_SHIP_FLIPPED,
     IMG_BUTTON_OTHER,
 

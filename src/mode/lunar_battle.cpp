@@ -253,6 +253,18 @@ void LunarBattle::enter() {
     panel_unit = nullptr;
 
     fast = false;
+
+    img_arrow_up = IMG_GF4_MA1;
+    img_arrow_down = IMG_GF4_MA2;
+    img_arrow_left = IMG_GF4_MA3;
+    img_arrow_right = IMG_GF4_MA4;
+
+    if (p->get_moon_class() == MOON_Ice) {
+        img_arrow_up = IMG_DARKARROW_UP;
+        img_arrow_down = IMG_DARKARROW_DOWN;
+        img_arrow_left = IMG_DARKARROW_LEFT;
+        img_arrow_right = IMG_DARKARROW_RIGHT;
+    }
 }
 
 void LunarBattle::draw_ground() {
@@ -2654,7 +2666,7 @@ void LunarBattle::update_arrows() {
         if (valid_dirs & 0x8) {
             draw_manager.draw(
                 id(ID::ARROW_UP),
-                IMG_GF4_MA1,
+                img_arrow_up,
                 {base_x, base_y - BLK_SZ, 0.5, 0.5, 1, 1});
         }
 
@@ -2662,7 +2674,7 @@ void LunarBattle::update_arrows() {
         if (valid_dirs & 0x4) {
             draw_manager.draw(
                 id(ID::ARROW_DOWN),
-                IMG_GF4_MA2,
+                img_arrow_down,
                 {base_x, base_y + BLK_SZ, 0.5, 0.5, 1, 1});
         }
 
@@ -2670,7 +2682,7 @@ void LunarBattle::update_arrows() {
         if (valid_dirs & 0x2) {
             draw_manager.draw(
                 id(ID::ARROW_LEFT),
-                IMG_GF4_MA3,
+                img_arrow_left,
                 {base_x - BLK_SZ, base_y, 0.5, 0.5, 1, 1});
         }
 
@@ -2678,7 +2690,7 @@ void LunarBattle::update_arrows() {
         if (valid_dirs & 0x1) {
             draw_manager.draw(
                 id(ID::ARROW_RIGHT),
-                IMG_GF4_MA4,
+                img_arrow_right,
                 {base_x + BLK_SZ, base_y, 0.5, 0.5, 1, 1});
         }
     } else {

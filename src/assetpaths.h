@@ -53,6 +53,10 @@ extern const char *IMG_CURSOR_BATTLE0;
 extern const char *IMG_CURSOR_BATTLE1;
 extern const char *IMG_CURSOR_XHAIR;
 extern const char *IMG_CURSOR_HG;
+extern const char *IMG_DARKARROW_UP;
+extern const char *IMG_DARKARROW_DOWN;
+extern const char *IMG_DARKARROW_LEFT;
+extern const char *IMG_DARKARROW_RIGHT;
 extern const char *IMG_SHIP_FLIPPED;
 extern const char *IMG_BUTTON_OTHER;
 

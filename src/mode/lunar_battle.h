@@ -254,6 +254,11 @@ class LunarBattle : ModeBase, CommPanelDrawer, BattleReport {
         void hide_info();
 
         float surrender_timer;
+
+        const char* img_arrow_up;
+        const char* img_arrow_down;
+        const char* img_arrow_left;
+        const char* img_arrow_right;
 };
 
 #endif
