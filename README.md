@@ -36,13 +36,11 @@ Install [Homebrew](https://brew.sh/).
 # Install dependencies
 brew install g++ sdl2 sdl2_image sdl2_mixer sdl2_ttf
 
-# Build using Makefile, which is OS-agnostic and supports Mac M1.
-make install
-
-# Installed in /usr/local, which should be added to PATH.
+# Build using Makefile
+make mac
 
 # Run
-exodus
+./exodus
 ```
 
 ## Credits
