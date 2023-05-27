@@ -1879,11 +1879,12 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 if (accept && comm_player->attempt_spend(comm_ctx.mc)) {
                     comm_other->give_mc(comm_ctx.mc);
                     comm_set_speech("I accept this.");
+                    comm_exit_anim_action = CA_Trade;
                 } else {
                     comm_set_speech("I will not trade then.");
+                    comm_exit_anim_action = CA_Abort;
                 }
 
-                comm_exit_anim_action = CA_Abort;
                 comm_recv(DIA_R_Close);
             }
             break;
