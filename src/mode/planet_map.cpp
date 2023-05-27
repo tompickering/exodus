@@ -475,6 +475,8 @@ void PlanetMap::enter() {
     for (ID i = LAW_JUSTICE; i <= LAW_EXIT; i = (ID)((int)i+1)) {
         draw_manager.set_selectable(id(i));
     }
+
+    law_changed = false;
 }
 
 void PlanetMap::exit() {
@@ -700,7 +702,7 @@ ExodusMode PlanetMap::update(float delta) {
             if (draw_manager.query_click(id(ID::EXIT)).id) {
                 // 'lookagain' in orig
 
-                if (planet->laws_cause_unrest() && onein(3)) {
+                if (law_changed && planet->laws_cause_unrest() && onein(3)) {
                     ephstate.set_ephemeral_state(EPH_PostPlanet);
                     ephstate.set_postplanet(PPA_BadLaws);
                 }
@@ -1025,21 +1027,27 @@ ExodusMode PlanetMap::update(float delta) {
                      1, 0, 1, 1});
 
                 if (draw_manager.query_click(id(ID::LAW_FREESPEECH)).id) {
+                    law_changed = true;
                     planet->toggle_law(LAW_FreeSpeech);
                 }
                 if (draw_manager.query_click(id(ID::LAW_PRIVATEINDUSTRY)).id) {
+                    law_changed = true;
                     planet->toggle_law(LAW_PrivateIndustry);
                 }
                 if (draw_manager.query_click(id(ID::LAW_DRUGS)).id) {
+                    law_changed = true;
                     planet->toggle_law(LAW_DrugLegalisation);
                 }
                 if (draw_manager.query_click(id(ID::LAW_SYSENEMIES)).id) {
+                    law_changed = true;
                     planet->toggle_law(LAW_AllowSystemEnemies);
                 }
                 if (draw_manager.query_click(id(ID::LAW_RELIGION)).id) {
+                    law_changed = true;
                     planet->toggle_law(LAW_DifferentReligions);
                 }
                 if (draw_manager.query_click(id(ID::LAW_CIVARMS)).id) {
+                    law_changed = true;
                     planet->toggle_law(LAW_CivilianWeapons);
                 }
 
@@ -1095,12 +1103,15 @@ ExodusMode PlanetMap::update(float delta) {
                      1, 0, 1, 1});
 
                 if (draw_manager.query_click(id(ID::LAW_SELLMIN)).id) {
+                    law_changed = true;
                     planet->toggle_law(LAW_TradeMinerals);
                 }
                 if (draw_manager.query_click(id(ID::LAW_SELLFD)).id) {
+                    law_changed = true;
                     planet->toggle_law(LAW_TradeFood);
                 }
                 if (draw_manager.query_click(id(ID::LAW_SELLPLU)).id) {
+                    law_changed = true;
                     planet->toggle_law(LAW_TradePlutonium);
                 }
 

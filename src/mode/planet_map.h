@@ -135,6 +135,8 @@ class PlanetMap : ModeBase {
         void draw_law_panel();
         void clear_law_ids();
 
+        bool law_changed;
+
         SprID id_stones[MAX_STONES];
 };
 
