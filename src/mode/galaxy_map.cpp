@@ -4828,6 +4828,7 @@ bool GalaxyMap::update_research(Planet *p) {
                 NewsItem& news = exostate.register_news(NI_NewInvention);
                 news.player_0 = p->get_owner();
                 news.inv = inv;
+                audio_manager.target_music(mpart2mus(5));
                 bulletin_start_new(false);
                 bulletin_set_bg(IMG_ME7_MENU);
                 bulletin_set_active_player_flag();
