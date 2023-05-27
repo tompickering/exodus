@@ -146,6 +146,7 @@ enum GameOverReason {
 
 enum EphState {
     EPH_None,
+    EPH_MonthPass,
     EPH_LunarBattlePrep,
     EPH_LunarBattle,
     EPH_LunarBattleReport,

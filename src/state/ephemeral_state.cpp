@@ -26,6 +26,8 @@ ExodusMode EphemeralState::get_appropriate_mode() {
     switch (eph_state) {
         case EPH_None:
             return ExodusMode::MODE_None;
+        case EPH_MonthPass:
+            return ExodusMode::MODE_GalaxyMap;
         case EPH_LunarBattlePrep:
             return ExodusMode::MODE_LunarBattlePrep;
         case EPH_LunarBattle:

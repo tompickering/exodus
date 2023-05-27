@@ -144,6 +144,11 @@ ExodusMode StarMap::update(float delta) {
 
     switch (stage) {
         case SM_Idle:
+            if (input_manager.consume(K_Space)) {
+                ephstate.set_ephemeral_state(EPH_MonthPass);
+                return ephstate.get_appropriate_mode();
+            }
+
             draw_planets(delta);
 
             update_panel_info_player(TGT_Primary, player);

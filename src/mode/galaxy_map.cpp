@@ -74,7 +74,10 @@ void GalaxyMap::enter() {
 
     artificial_planet_to_move = nullptr;
 
-    if (ephstate.get_ephemeral_state() == EPH_ResumeFly) {
+    if (ephstate.get_ephemeral_state() == EPH_MonthPass) {
+        ephstate.clear_ephemeral_state();
+        stage = GM_MonthPassing;
+    } else if (ephstate.get_ephemeral_state() == EPH_ResumeFly) {
         ephstate.clear_ephemeral_state();
         stage = GM_Fly;
     } else if (ephstate.get_ephemeral_state() == EPH_SelectPlanet) {
