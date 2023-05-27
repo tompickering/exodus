@@ -3392,6 +3392,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     ephstate.clear_ephemeral_state();
 
                     if (vis) {
+                        audio_manager.target_music(mpart2mus(8));
                         bulletin_start_new(false);
                         bulletin_set_bg(p->sprites()->bulletin_bg);
                         bulletin_set_active_player_flag();
