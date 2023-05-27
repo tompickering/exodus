@@ -4082,9 +4082,10 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     if (to_die <= 0) break;
                 }
                 p->adjust_unrest(2);
-                audio_manager.target_music(mpart2mus(9));
                 exostate.register_news(NI_Plague);
-                bulletin_start_new(true, s);
+                if (bulletin_start_new(true, s)) {
+                    audio_manager.target_music(mpart2mus(9));
+                }
                 bulletin_set_bg(p->sprites()->bulletin_bg);
                 bulletin_set_active_player_flag();
                 bulletin_write_planet_info(s, p);
@@ -4102,9 +4103,10 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     // Doesn't cause planet loss - only damage
     if (mp_state.mpp_stage == MPP_AlienAttack) {
         if (onein(200) && exostate.get_orig_month() >= 10) {
-            audio_manager.target_music(mpart2mus(8));
             exostate.register_news(NI_AlienAttack);
-            bulletin_start_new(false, s);
+            if (bulletin_start_new(false, s)) {
+                audio_manager.target_music(mpart2mus(8));
+            }
             bulletin_set_bg(p->sprites()->bulletin_bg);
             bulletin_set_active_player_flag();
             bulletin_write_planet_info(s, p);
@@ -4199,9 +4201,10 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                             p->find_random_stone(STONE_City, x, y);
                             p->set_stone(x, y, STONE_Rubble);
                         }
-                        audio_manager.target_music(mpart2mus(8));
                         exostate.register_news(NI_Epidemic);
-                        bulletin_start_new(true, s);
+                        if (bulletin_start_new(true, s)) {
+                            audio_manager.target_music(mpart2mus(8));
+                        }
                         bulletin_set_bg(p->sprites()->bulletin_bg);
                         bulletin_set_active_player_flag();
                         bulletin_write_planet_info(s, p);
@@ -4233,8 +4236,9 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                         owner->add_trace(TRACE_RevolutionsCaused);
                     }
 
-                    audio_manager.target_music(mpart2mus(8));
-                    bulletin_start_new(false, s);
+                    if (bulletin_start_new(false, s)) {
+                        audio_manager.target_music(mpart2mus(8));
+                    }
                     bulletin_set_bg(p->sprites()->bulletin_bg);
                     bulletin_set_active_player_flag();
                     bulletin_write_planet_info(s, p);
@@ -4366,8 +4370,9 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     if (mp_state.mpp_stage == MPP_ReactorMeltdown) {
         if (onein(200)) {
             if (p->has_stone(STONE_Plu)) {
-                audio_manager.target_music(mpart2mus(8));
-                bulletin_start_new(false, s);
+                if (bulletin_start_new(false, s)) {
+                    audio_manager.target_music(mpart2mus(8));
+                }
                 bulletin_set_bg(p->sprites()->bulletin_bg);
                 bulletin_set_active_player_flag();
                 bulletin_write_planet_info(s, p);
@@ -4408,11 +4413,12 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 if (p->count_stones(STONE_Agri) >= threshold) {
                     p->change_class(Terra);
                     exostate.register_news(NI_SurfChangeCultivation);
-                    bulletin_start_new(true, s);
+                    if (bulletin_start_new(true, s)) {
+                        audio_manager.target_music(mpart2mus(5));
+                    }
                     bulletin_set_bg(p->sprites()->bulletin_bg);
                     bulletin_set_active_player_flag();
                     bulletin_write_planet_info(s, p);
-                    audio_manager.target_music(mpart2mus(5));
                     bulletin_set_next_text("SURFACE CHANGE due to cultivation");
                     bulletin_set_next_text("");
                     bulletin_set_next_text("Due to global cultivation,");
@@ -4435,11 +4441,12 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 if (p->count_stones(STONE_NaturalLarge) < threshold) {
                     p->change_class(Rock);
                     exostate.register_news(NI_SurfChangeClearing);
-                    bulletin_start_new(true, s);
+                    if (bulletin_start_new(true, s)) {
+                        audio_manager.target_music(mpart2mus(9));
+                    }
                     bulletin_set_bg(p->sprites()->bulletin_bg);
                     bulletin_set_active_player_flag();
                     bulletin_write_planet_info(s, p);
-                    audio_manager.target_music(mpart2mus(9));
                     bulletin_set_next_text("SURFACE CHANGE due to clearing");
                     bulletin_set_next_text("");
                     bulletin_set_next_text("Too much forest has been cleared.");
@@ -4454,9 +4461,10 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     if (mp_state.mpp_stage == MPP_LosePlanetControl) {
         if (p->count_stones(STONE_Base) == 0) {
-            audio_manager.target_music(mpart2mus(9));
             // FIXME: No PROCdonotice here? (Orig doesn't...)
-            bulletin_start_new(true, s);
+            if (bulletin_start_new(true, s)) {
+                audio_manager.target_music(mpart2mus(9));
+            }
             bulletin_set_bg(p->sprites()->bulletin_bg);
             bulletin_set_active_player_flag();
             bulletin_write_planet_info(s, p);
