@@ -1044,7 +1044,12 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_set_title("Claim a planet");
             comm_set_text(0, "Please name the new planet.");
             input_manager.start_text_input();
-            input_manager.set_input_text(comm_planet->get_name_suggestion());
+
+            if (comm_planet->is_named()) {
+                input_manager.set_input_text(comm_planet->get_name());
+            } else {
+                input_manager.set_input_text(comm_planet->get_name_suggestion());
+            }
 
             draw_manager.fill(
                 id_comm_input_frame,
