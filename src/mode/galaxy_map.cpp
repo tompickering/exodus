@@ -3967,7 +3967,9 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     if (mp_state.mpp_stage == MPP_Meteors) {
         if (onein(200)) {
             exostate.register_news(NI_Meteor);
-            bulletin_start_new(false, s);
+            if (bulletin_start_new(false, s)) {
+                audio_manager.target_music(mpart2mus(8));
+            }
             bulletin_set_bg(IMG_ME5_MENU);
             bulletin_set_active_player_flag();
             bulletin_write_planet_info(s, p);
