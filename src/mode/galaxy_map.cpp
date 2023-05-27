@@ -3734,7 +3734,6 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                  *
                  * Request trade with target planet
                  */
-                L.debug("[%s] PROCe_tact11 : REQUEST TRADE", player->get_full_name());
                 int star_idx = player->get_location().get_target();
                 int planet_idx = player->get_location().get_planet_target();
                 Star *star = &stars[star_idx];
@@ -3758,6 +3757,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 exostate.set_active_planet(planet_idx);
 
                 if (mp_state.mpai_substage == 0) {
+                    L.debug("[%s] PROCe_tact11 : REQUEST TRADE", player->get_full_name());
                     if (owner->is_human()) {
                         mp_state.mpai_substage = 1;
                         return ExodusMode::MODE_Arrive;
