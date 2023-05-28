@@ -122,9 +122,23 @@ static const char* off_desc_good_clr[] = {
     "",
 };
 
-MenuDrawer::MenuDrawer() {
-    _menu_is_open = false;
-    menu_new_officer = (Officer)0;
+MenuDrawer::MenuDrawer()
+    : _menu_is_open(false)
+    , menu_new_officer((Officer)0)
+    , menu_mode(MM_Ctrl)
+    , menu_new_mode(ExodusMode::MODE_None)
+    , menu_action(MA_None)
+    , menu_new_officer_quality(OFFQ_Poor)
+    , menu_clickable_rows(0)
+    , menu_selected_player(nullptr)
+    , menu_player_select_mode(MM_SecPersonalFile)
+    , first_update(true)
+    , menu_inv(INV_MassProduction)
+    , menu_art_planet_phase(0)
+    , menu_art_planet_named(false)
+    , menu_planets_start(0)
+    , menu_planets_more(false)
+    , marker_being_set(0) {
 }
 
 bool MenuDrawer::menu_is_open() {
