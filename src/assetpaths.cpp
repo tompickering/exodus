@@ -14,7 +14,11 @@ const char *SFX_WALK1           = D_SFX "6_1C00";
 const char *SFX_WALK2           = D_SFX "7_1C00";
 const char *SFX_BEEP            = D_SFX "8_2500";
 
+#ifdef MONO
+#define D_MUS "assets/music/mono/"
+#else
 #define D_MUS "assets/music/"
+#endif
 const char *MUS_INTRO           = D_MUS "ST1_1";
 const char *MUS_ST1_10          = D_MUS "ST1_10";
 const char *MUS_END             = D_MUS "ST2_1";
