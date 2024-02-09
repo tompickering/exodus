@@ -407,7 +407,7 @@ void Exodus::register_buttons() {
     draw_manager.register_button(IMG_BR10_EXPORT, {0, 0, 108, 26});
     draw_manager.register_button(IMG_BR10_EXPORT, {109, 0, 108, 26});
     draw_manager.register_button(IMG_BR10_EXPORT, {218, 0, 108, 26});
-    draw_manager.register_button(IMG_BR10_EXPORT, {325, 0, 108, 26});
+    draw_manager.register_button(IMG_BR10_EXPORT, {326, 0, 108, 26});
 
     draw_manager.register_button(IMG_BR11_DEF);
     draw_manager.register_button(IMG_BR11_LR, {0, 0, 32, 26});
@@ -472,9 +472,9 @@ void Exodus::register_buttons() {
     draw_manager.register_button(IMG_BR8_EXPORT, {240, 0, 119, 26});
 
     draw_manager.register_button(IMG_BR9_EXPORT, {0, 0, 108, 26});
-    draw_manager.register_button(IMG_BR9_EXPORT, {109, 0, 108, 26});
+    draw_manager.register_button(IMG_BR9_EXPORT, {108, 0, 108, 26});
     draw_manager.register_button(IMG_BR9_EXPORT, {218, 0, 108, 26});
-    draw_manager.register_button(IMG_BR9_EXPORT, {327, 0, 108, 26});
+    draw_manager.register_button(IMG_BR9_EXPORT, {326, 0, 108, 26});
 
     draw_manager.register_button(IMG_GF4_HMENU1);
     draw_manager.register_button(IMG_GF4_HMENU2);
