@@ -22,7 +22,7 @@ enum Repair : uint8_t {
 class DrawManagerSDL : public DrawManager {
     public:
         DrawManagerSDL();
-        virtual bool init() override;
+        virtual bool init(const DrawManagerOptions&) override;
         virtual void load_resources() override;
         virtual void update(float, MousePos, MousePos, MousePos) override;
         virtual void clear() override;

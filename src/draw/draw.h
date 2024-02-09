@@ -40,6 +40,10 @@ using std::vector;
  * Passing nullptr with the ID will terminate this behaviour.
  */
 
+typedef struct {
+    bool fullscreen = true;
+} DrawManagerOptions;
+
 typedef unsigned int SprID;
 
 extern const SprID ID_NONE;
@@ -143,7 +147,7 @@ enum DrawTarget {
 class DrawManager {
     public:
         DrawManager();
-        virtual bool init() = 0;
+        virtual bool init(const DrawManagerOptions&) = 0;
         virtual void load_resources() = 0;
         virtual void update(float, MousePos, MousePos, MousePos);
         virtual void save_background() = 0;

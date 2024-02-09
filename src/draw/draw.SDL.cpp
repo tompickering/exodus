@@ -30,14 +30,14 @@ DrawManagerSDL::DrawManagerSDL() {
     cursor_underlay = nullptr;
 }
 
-bool DrawManagerSDL::init() {
+bool DrawManagerSDL::init(const DrawManagerOptions& options) {
     L.info("DrawManager Init...");
     win = SDL_CreateWindow(PROG_NAME,
                            SDL_WINDOWPOS_UNDEFINED,
                            SDL_WINDOWPOS_UNDEFINED,
                            SCREEN_WIDTH,
                            SCREEN_HEIGHT,
-                           SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN);
+                           SDL_WINDOW_SHOWN | (options.fullscreen ? SDL_WINDOW_FULLSCREEN : 0));
     if (!win) {
         L.error("Could not create SDL window");
         return false;

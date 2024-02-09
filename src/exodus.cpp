@@ -98,7 +98,9 @@ bool Exodus::init() {
     L.info("Initialising Exodus...");
     signal(SIGINT, signal_handler);
 
-    bool ok = draw_manager.init();
+    DrawManagerOptions draw_manager_options;
+    draw_manager_options.fullscreen = !has_option("windowed");
+    bool ok = draw_manager.init(draw_manager_options);
 
     if (ok) {
         register_buttons();
