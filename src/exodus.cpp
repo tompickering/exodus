@@ -82,6 +82,18 @@ Exodus::Exodus() {
 Exodus::~Exodus() {
 }
 
+bool Exodus::has_option(const char* opt) {
+    for (int i = 0; i < _argc; ++i) {
+        if (!strncmp(_argv[i], "--", 2)) {
+            if (!strcmp(_argv[i] + 2, opt)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 bool Exodus::init() {
     L.info("Initialising Exodus...");
     signal(SIGINT, signal_handler);
@@ -104,6 +116,9 @@ bool Exodus::init() {
 }
 
 int Exodus::run(int argc, char** argv) {
+    _argc = argc;
+    _argv = argv;
+
     if (!init()) {
         return 1;
     }
@@ -187,26 +202,24 @@ int Exodus::run(int argc, char** argv) {
     MousePos click_pos_r = {-1, -1};
 
 #ifdef DBG
-    for (int i = 0; i < argc; ++i) {
-        if (!strcmp(argv[i], "--setup")) {
-            GameConfig config;
-            config.n_players = 1;
-            config.size = GAL_Medium;
-            config.players[0].set_name("Debug");
-            config.players[0].set_gender(GENDER_Female);
-            config.players[0].set_title("Lady");
-            config.players[0].set_ref("milady");
-            config.players[0].set_flag_idx(0);
-            config.aim = AIM_Might;
-            config.enemy_start = ENEMY_Weak;
-            exostate.init(config);
-            exostate.get_player(0)->set_intro_seen();
-            srand(0);
-            exostate.generate_galaxy();
-            exostate.finalise_galaxy();
-            reset_mode_stack();
-            push_mode(MODE_GalaxyMap);
-        }
+    if (has_option("setup")) {
+        GameConfig config;
+        config.n_players = 1;
+        config.size = GAL_Medium;
+        config.players[0].set_name("Debug");
+        config.players[0].set_gender(GENDER_Female);
+        config.players[0].set_title("Lady");
+        config.players[0].set_ref("milady");
+        config.players[0].set_flag_idx(0);
+        config.aim = AIM_Might;
+        config.enemy_start = ENEMY_Weak;
+        exostate.init(config);
+        exostate.get_player(0)->set_intro_seen();
+        srand(0);
+        exostate.generate_galaxy();
+        exostate.finalise_galaxy();
+        reset_mode_stack();
+        push_mode(MODE_GalaxyMap);
     }
 #endif
 

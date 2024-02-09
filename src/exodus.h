@@ -57,9 +57,13 @@ class Exodus {
         int run(int argc, char** argv);
         ExodusMode get_prev_mode();
     protected:
+        virtual bool has_option(const char*);
         virtual bool init() = 0;
         virtual void cleanup() = 0;
     private:
+        int _argc;
+        char** _argv;
+
         void register_buttons();
         ModeBase *mode;
         ExodusMode current_mode;
