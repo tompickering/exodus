@@ -507,18 +507,6 @@ ExodusMode GalaxyMap::update(float delta) {
                         frame_draw();
                         stage = GM_MP_FirstCity;
                         return ExodusMode::MODE_None;
-                    } else if (do_meteor) {
-                        do_meteor = false;
-                        bulletin_ensure_closed();
-                        return ephstate.get_appropriate_mode();
-                    } else if (do_meltdown) {
-                        do_meltdown = false;
-                        bulletin_ensure_closed();
-                        return ephstate.get_appropriate_mode();
-                    } else if (do_lunar_battle) {
-                        do_lunar_battle = false;
-                        bulletin_ensure_closed();
-                        return ephstate.get_appropriate_mode();
                     } else if (ephstate.get_ephemeral_state() == EPH_ResearchCheck) {
                         ephstate.research.done = bulletin_was_yesno_yes();
                         bulletin_ensure_closed();
@@ -580,6 +568,24 @@ ExodusMode GalaxyMap::update(float delta) {
                         do_guild_title = GUILDTITLE_None;
                         return ExodusMode::MODE_None;
                     }
+                }
+
+                if (do_meteor) {
+                    do_meteor = false;
+                    bulletin_ensure_closed();
+                    return ephstate.get_appropriate_mode();
+                }
+
+                if (do_meltdown) {
+                    do_meltdown = false;
+                    bulletin_ensure_closed();
+                    return ephstate.get_appropriate_mode();
+                }
+
+                if (do_lunar_battle) {
+                    do_lunar_battle = false;
+                    bulletin_ensure_closed();
+                    return ephstate.get_appropriate_mode();
                 }
 
                 if (comm_is_open()) {
