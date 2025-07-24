@@ -32,6 +32,12 @@ const char* SaveManagerLinux::get_save_dir() {
             home = getpwuid(getuid())->pw_dir;
         }
 
+        snprintf(save_dir, sizeof(save_dir), "%s/.local", home);
+        mkdir(save_dir, S_IRUSR | S_IWUSR | S_IXUSR);
+
+        snprintf(save_dir, sizeof(save_dir), "%s/.local/share", home);
+        mkdir(save_dir, S_IRUSR | S_IWUSR | S_IXUSR);
+
         snprintf(save_dir, sizeof(save_dir), "%s/.local/share/%s", home, "exodus");
     }
 
