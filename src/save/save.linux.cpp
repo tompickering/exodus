@@ -21,13 +21,19 @@ using std::ios;
 static char save_dir[MAX_PATH];
 
 const char* SaveManagerLinux::get_save_dir() {
-    const char *home = getenv("HOME");
+    const char *data_home = getenv("XDG_DATA_HOME");
 
-    if (!home) {
-        home = getpwuid(getuid())->pw_dir;
+    if (data_home) {
+        snprintf(save_dir, sizeof(save_dir), data_home);
+    } else {
+        const char *home = getenv("XDG_DATA_HOME");
+
+        if (!home) {
+            home = getpwuid(getuid())->pw_dir;
+        }
+
+        snprintf(save_dir, sizeof(save_dir), "%s/.local/share/%s", home, "exodus");
     }
-
-    snprintf(save_dir, sizeof(save_dir), "%s/%s", home, ".exodus_saves");
 
     mkdir(save_dir, S_IRUSR | S_IWUSR | S_IXUSR);
 
