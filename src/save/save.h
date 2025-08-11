@@ -9,6 +9,7 @@
 #include "player/player.h"
 
 #define MAX_SLOTS 11
+#define MAX_PATH 255
 
 class SaveMeta : public Saveable {
     public:
@@ -38,9 +39,9 @@ class SaveManager {
         virtual bool save(int);
         virtual bool load(int);
     protected:
-        virtual bool save_data(uint32_t, int, const char*, const char*) = 0;
-        virtual bool load_data(uint32_t, int, char**, char**) = 0;
         virtual const char* get_save_dir() = 0;
+        virtual bool save_data(uint32_t, int, const char*, const char*);
+        virtual bool load_data(uint32_t, int, char**, char**);
 };
 
 #ifdef LINUX
