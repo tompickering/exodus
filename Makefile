@@ -11,8 +11,8 @@ OBJS := $(patsubst %.cpp,%.o,$(wildcard *.cpp */*.cpp */*/*.cpp */*/*/*.cpp))
 DEPS = $(OBJS:%.o=%.d)
 CLEAN = $(BIN) $(OBJS) $(DEPS)
 
-INCFLAGS=-Isrc
-LDLIBS=-lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lcjson
+INCFLAGS=-Isrc -Isrc/deps
+LDLIBS=-lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
 CXXFLAGS=-Wall -Wno-reorder -Wno-class-memaccess -Wno-format-truncation -pedantic -DMONO -DSDL $(INCFLAGS)
 DBGFLAGS=-g -DDBG
 
@@ -35,6 +35,7 @@ mac: INCFLAGS += -I/opt/homebrew/include -L/opt/homebrew/lib
 mac: bin
 
 # Requires mingw-w64
+windows: CC = x86_64-w64-mingw32-gcc
 windows: CXX = x86_64-w64-mingw32-g++
 windows: ext=.exe
 windows: CXXFLAGS += -O3 -DWINDOWS

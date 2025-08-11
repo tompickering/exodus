@@ -38,7 +38,6 @@ However, here are a few crucial pointers for those preferring to dive right in:
 * libsdl2-image
 * libsdl2-mixer
 * libsdl2-ttf
-* libcjson-dev
 
 ### Mac
 
