@@ -1,6 +1,8 @@
 #ifndef GUARD_NEWSITEM_H
 #define GUARD_NEWSITEM_H
 
+#include "save/saveable.h"
+
 #include "player/player.h"
 
 #define MAX_NEWSITEMS 20
@@ -35,14 +37,36 @@ enum NewsItemType {
     NI_Debug
 };
 
-class NewsItem {
+class NewsItem : public Saveable {
     public:
+        virtual void save(cJSON* j) const override {
+            SAVE_ENUM(j, type);
+            SAVE_NUM(j, star_idx);
+            SAVE_NUM(j, planet_idx);
+            SAVE_BOOL(j, player_owned);
+            SAVE_NUM(j, player_0);
+            SAVE_NUM(j, player_1);
+            SAVE_ENUM(j, inv);
+        }
+
+        virtual void load(cJSON* j) override {
+            LOAD_ENUM(j, type);
+            LOAD_NUM(j, star_idx);
+            LOAD_NUM(j, planet_idx);
+            LOAD_BOOL(j, player_owned);
+            LOAD_NUM(j, player_0);
+            LOAD_NUM(j, player_1);
+            LOAD_ENUM(j, inv);
+        }
+
         NewsItem();
         NewsItem(int, int, NewsItemType);
-        const NewsItemType type;
-        const int star_idx;
-        const int planet_idx;
+
         const char* get_string() const;
+
+        NewsItemType type;
+        int star_idx;
+        int planet_idx;
 
         bool player_owned;
 

@@ -900,3 +900,77 @@ void Player::add_trace(Trace t, int n) {
     trace[t] += n;
     L.debug("%s: TRACE %d -> %d", get_full_name(), (int)t, trace[t]);
 }
+
+void Player::save(cJSON* j) const
+{
+    SAVE_NUM(j, nopirates);
+    SAVE_ENUM(j, race);
+    SAVE_ENUM(j, gender);
+    SAVE_STR(j, name);
+    SAVE_STR(j, title);
+    SAVE_STR(j, ref);
+    SAVE_STR(j, full_name);
+    SAVE_ENUM(j, guild_title);
+    SAVE_BOOL(j, exists);
+    SAVE_BOOL(j, dead);
+    SAVE_BOOL(j, left_galaxy);
+    SAVE_NUM(j, flag_idx);
+    SAVE_NUM(j, mc);
+    SAVE_BOOL(j, _intro_seen);
+    SAVE_NUM(j, fleet_marker_idx);
+    SAVE_SAVEABLE(j, location);
+    SAVE_SAVEABLE(j, starship);
+    SAVE_SAVEABLE(j, fleet);
+    SAVE_NUM(j, inventions);
+    SAVE_NUM(j, reputation);
+    SAVE_BOOL(j, guild_member);
+    SAVE_NUM(j, tax);
+    SAVE_ARRAY_OF_ENUM(j, officers);
+    SAVE_SAVEABLE(j, mission);
+    SAVE_ARRAY_OF_SAVEABLE(j, star_markers);
+    SAVE_NUM(j, infraction_mask);
+    SAVE_ARRAY_OF_ENUM(j, ai_flags);
+    SAVE_NUM(j, ai_tactic);
+    SAVE_NUM(j, ai_hostile_to);
+    SAVE_NUM(j, ai_attack_star);
+    SAVE_NUM(j, ai_attack_planet);
+    SAVE_NUM(j, trade_charge);
+    SAVE_ARRAY_OF_NUM(j, trace);
+}
+
+void Player::load(cJSON* j)
+{
+    LOAD_NUM(j, nopirates);
+    LOAD_ENUM(j, race);
+    LOAD_ENUM(j, gender);
+    LOAD_STR(j, name);
+    LOAD_STR(j, title);
+    LOAD_STR(j, ref);
+    LOAD_STR(j, full_name);
+    LOAD_ENUM(j, guild_title);
+    LOAD_BOOL(j, exists);
+    LOAD_BOOL(j, dead);
+    LOAD_BOOL(j, left_galaxy);
+    LOAD_NUM(j, flag_idx);
+    LOAD_NUM(j, mc);
+    LOAD_BOOL(j, _intro_seen);
+    LOAD_NUM(j, fleet_marker_idx);
+    LOAD_SAVEABLE(j, location);
+    LOAD_SAVEABLE(j, starship);
+    LOAD_SAVEABLE(j, fleet);
+    LOAD_NUM(j, inventions);
+    LOAD_NUM(j, reputation);
+    LOAD_BOOL(j, guild_member);
+    LOAD_NUM(j, tax);
+    LOAD_ARRAY_OF_ENUM(j, officers);
+    LOAD_SAVEABLE(j, mission);
+    LOAD_ARRAY_OF_SAVEABLE(j, star_markers);
+    LOAD_NUM(j, infraction_mask);
+    LOAD_ARRAY_OF_ENUM(j, ai_flags);
+    LOAD_NUM(j, ai_tactic);
+    LOAD_NUM(j, ai_hostile_to);
+    LOAD_NUM(j, ai_attack_star);
+    LOAD_NUM(j, ai_attack_planet);
+    LOAD_NUM(j, trade_charge);
+    LOAD_ARRAY_OF_NUM(j, trace);
+}

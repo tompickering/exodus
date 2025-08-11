@@ -101,3 +101,17 @@ StarSize Star::expand() {
     }
     return size;
 }
+
+void Star::save(cJSON* j) const {
+    FlyTarget::save(j);
+    SAVE_ENUM(j, size);
+    SAVE_NUM(j, n_planets);
+    SAVE_ARRAY_OF_SAVEABLE(j, planets);
+}
+
+void Star::load(cJSON* j) {
+    FlyTarget::load(j);
+    LOAD_ENUM(j, size);
+    LOAD_NUM(j, n_planets);
+    LOAD_ARRAY_OF_SAVEABLE(j, planets);
+}

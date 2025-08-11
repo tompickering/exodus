@@ -38,6 +38,7 @@ However, here are a few crucial pointers for those preferring to dive right in:
 * libsdl2-image
 * libsdl2-mixer
 * libsdl2-ttf
+* libcjson-dev
 
 ### Mac
 
@@ -60,3 +61,10 @@ Thanks go to Artex Software for having originally created this excellent game, a
 All graphical and audio assets are copyright Artex Software, and are included in this GPLv3-licensed package with kind permission.
 
 Note that the original game is archived by the Archimedes Software Preservation Project (JASPP) here: https://forums.jaspp.org.uk/forum/viewtopic.php?t=229
+
+Thanks to the following dependency projects, licensed as follows:
+* SDL2 (zlib): https://wiki.libsdl.org/SDL2/FrontPage
+* SDL2_image (zlib): https://wiki.libsdl.org/SDL2_image/FrontPage
+* SDL2_mixer (zlib): https://wiki.libsdl.org/SDL2_mixer/FrontPage
+* SDL2_ttf (zlib): https://wiki.libsdl.org/SDL2_ttf/FrontPage
+* cJSON by Dave Gamble (MIT): https://github.com/DaveGamble/cJSON

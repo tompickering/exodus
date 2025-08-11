@@ -5,6 +5,8 @@
 #include <cstdio>
 #include <cstring>
 
+#include "save/saveable.h"
+
 #include "location.h"
 
 #define MAX_PLAYER_NAME      12
@@ -44,7 +46,33 @@ enum Race {
     RACE_Gordoon, // 4 -
 };
 
-typedef struct {
+struct Starship : public Saveable {
+    virtual void save(cJSON* j) const override {
+        SAVE_NUM(j, shield_generators);
+        SAVE_NUM(j, laser_guns);
+        SAVE_NUM(j, missile_launchers);
+        SAVE_NUM(j, crew);
+        SAVE_NUM(j, bionic_probes);
+        SAVE_BOOL(j, escape_capsule);
+        SAVE_BOOL(j, repair_hangar);
+        SAVE_NUM(j, pct_damage_thrust);
+        SAVE_NUM(j, pct_damage_comms);
+        SAVE_NUM(j, pct_damage_struct);
+    }
+
+    virtual void load(cJSON* j) override {
+        LOAD_NUM(j, shield_generators);
+        LOAD_NUM(j, laser_guns);
+        LOAD_NUM(j, missile_launchers);
+        LOAD_NUM(j, crew);
+        LOAD_NUM(j, bionic_probes);
+        LOAD_BOOL(j, escape_capsule);
+        LOAD_BOOL(j, repair_hangar);
+        LOAD_NUM(j, pct_damage_thrust);
+        LOAD_NUM(j, pct_damage_comms);
+        LOAD_NUM(j, pct_damage_struct);
+    }
+
     int shield_generators;   // 1  -
     int laser_guns;          // 2   |
     int missile_launchers;   // 3   |
@@ -70,9 +98,29 @@ typedef struct {
         pct_damage_comms = 0;
         pct_damage_struct = 0;
     }
-} Starship;
+};
 
-typedef struct {
+struct Freight : public Saveable {
+    virtual void save(cJSON* j) const override {
+        SAVE_NUM(j, minerals);
+        SAVE_NUM(j, food);
+        SAVE_NUM(j, plutonium);
+        SAVE_NUM(j, robots);
+        SAVE_NUM(j, infantry);
+        SAVE_NUM(j, gliders);
+        SAVE_NUM(j, artillery);
+    }
+
+    virtual void load(cJSON* j) override {
+        LOAD_NUM(j, minerals);
+        LOAD_NUM(j, food);
+        LOAD_NUM(j, plutonium);
+        LOAD_NUM(j, robots);
+        LOAD_NUM(j, infantry);
+        LOAD_NUM(j, gliders);
+        LOAD_NUM(j, artillery);
+    }
+
     int minerals;
     int food;
     int plutonium;
@@ -98,9 +146,25 @@ typedef struct {
     int army_size_weighted() const {
         return infantry + gliders*2 + artillery*3;
     }
-} Freight;
+};
 
-typedef struct {
+struct Fleet : public Saveable {
+    virtual void save(cJSON* j) const override {
+        SAVE_NUM(j, scouts);
+        SAVE_NUM(j, transporters);
+        SAVE_NUM(j, warships);
+        SAVE_NUM(j, bombers);
+        SAVE_SAVEABLE(j, freight);
+    }
+
+    virtual void load(cJSON* j) override {
+        LOAD_NUM(j, scouts);
+        LOAD_NUM(j, transporters);
+        LOAD_NUM(j, warships);
+        LOAD_NUM(j, bombers);
+        LOAD_SAVEABLE(j, freight);
+    }
+
     int scouts;
     int transporters;
     int warships;
@@ -109,9 +173,19 @@ typedef struct {
     int size() const {
         return scouts + transporters + warships + bombers;
     }
-} Fleet;
+};
 
-typedef struct {
+struct StarMarker : public Saveable {
+    virtual void save(cJSON* j) const override {
+        SAVE_NUM(j, idx);
+        SAVE_STR(j, tag);
+    }
+
+    virtual void load(cJSON* j) override {
+        LOAD_NUM(j, idx);
+        LOAD_STR(j, tag);
+    }
+
     int idx;
     char tag[MAX_MARKER+1];
 
@@ -127,7 +201,7 @@ typedef struct {
     void set_tag(const char* new_marker) {
         snprintf(tag, MAX_MARKER, new_marker);
     }
-} StarMarker;
+};
 
 // N.B. This is sensitive to order
 enum Invention {
@@ -191,7 +265,19 @@ enum MissionType {
     MT_Nuclear,
 };
 
-typedef struct {
+struct Mission : public Saveable {
+    virtual void save(cJSON* j) const override {
+        SAVE_ENUM(j, type);
+        SAVE_NUM(j, star_idx);
+        SAVE_NUM(j, planet_idx);
+    }
+
+    virtual void load(cJSON* j) override {
+        LOAD_ENUM(j, type);
+        LOAD_NUM(j, star_idx);
+        LOAD_NUM(j, planet_idx);
+    }
+
     MissionType type;
     int star_idx;
     int planet_idx;
@@ -201,7 +287,7 @@ typedef struct {
         star_idx = -1;
         planet_idx = -1;
     }
-} Mission;
+};
 
 enum Gender {
     GENDER_Female,
@@ -242,8 +328,11 @@ enum Trace {
     TRACE_MAX
 };
 
-class Player {
+class Player : public Saveable {
     public:
+        virtual void save(cJSON*) const override;
+        virtual void load(cJSON*) override;
+
         Player();
         void init_alien_name();
         void init_race(Race);
@@ -309,7 +398,6 @@ class Player {
         int get_officer_initial_cost(OfficerQuality);
         int get_total_officer_costs();
         void set_officer(Officer, OfficerQuality);
-        int nopirates;
 
         int get_freight_capacity();
         void cap_freight_randomly();
@@ -368,7 +456,13 @@ class Player {
         int get_trace(Trace);
         void add_trace(Trace);
         void add_trace(Trace, int);
+
+        int nopirates;
+
     private:
+        void refresh_full_name();
+        int transfer(int, int*);
+
         Race race;
         Gender gender;
         char name[MAX_PLAYER_NAME + 1];
@@ -388,16 +482,14 @@ class Player {
         Fleet fleet;
         uint16_t inventions;
         int reputation;
-        void refresh_full_name();
         bool guild_member;
         int tax;  // Orig: t%
         OfficerQuality officers[OFFICER_MAX];  // Orig: Ps%
         Mission mission;
         StarMarker star_markers[N_MARKERS];
-
         uint32_t infraction_mask;
-
-        int transfer(int, int*);
+        int trade_charge;
+        int trace[TRACE_MAX];
 
         // AI
         AIFlag ai_flags[9];
@@ -406,9 +498,6 @@ class Player {
         int ai_attack_star;   // Orig: lordvar(), lower 8 bits
         int ai_attack_planet; // Orig: lordvar(), upper 8 bits
 
-        int trade_charge;
-
-        int trace[TRACE_MAX];
     // The ExodusState sets up the player data during game init.
     friend class ExodusState;
 };

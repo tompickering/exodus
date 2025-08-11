@@ -86,3 +86,23 @@ void PlayerLocation::unset_target() {
 bool PlayerLocation::is_target_set() {
     return target != location;
 }
+
+void PlayerLocation::save(cJSON* j) const {
+    SAVE_NUM(j, nopirates);
+    SAVE_NUM(j, location);
+    SAVE_NUM(j, target);
+    SAVE_NUM(j, planet_target);
+    SAVE_NUM(j, months_to_arrive);
+    SAVE_BOOL(j, just_arrived);
+    SAVE_NUM(j, visited);
+}
+
+void PlayerLocation::load(cJSON* j) {
+    LOAD_NUM(j, nopirates);
+    LOAD_NUM(j, location);
+    LOAD_NUM(j, target);
+    LOAD_NUM(j, planet_target);
+    LOAD_NUM(j, months_to_arrive);
+    LOAD_BOOL(j, just_arrived);
+    LOAD_NUM(j, visited);
+}

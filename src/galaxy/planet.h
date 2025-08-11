@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+#include "save/saveable.h"
+
 #define PLANET_MAX_NAME 12
 #define PLANET_BLOCKS_SM 12
 #define PLANET_BLOCKS_MD 14
@@ -140,8 +142,11 @@ typedef struct {
     int mc;
 } TradeReport;
 
-class Planet {
+class Planet : public Saveable {
     public:
+        virtual void save(cJSON* j) const override;
+        virtual void load(cJSON* j) override;
+
         static int stone_cost(Stone);
 
         Planet();
@@ -273,12 +278,24 @@ class Planet {
         bool monthly_processing_in_progress();
         void plunder();
         void ai_update();
+
     private:
         void init();
+        bool expand(Stone);
+
+        void cull_stones_to_size();
+        Stone _get_stone(int, int);
+        void _set_stone(int, int, Stone);
+        void _to_real(int, int, int&, int&);
+        bool _real_in_bounds(int, int);
+
+        void _ai_make_space();
+
+        bool _ai_place_random(Stone);
+        bool _ai_place_tactical(Stone, Stone);
+        int ai_place_stone(int, Stone, Stone);  // Orig: PROCpl_stone
 
         bool _exists;
-
-        bool expand(Stone);
 
         PlanetClass cls;
         MoonClass moon_cls;    // Determines battle background. Orig was random each time.
@@ -324,18 +341,6 @@ class Planet {
         bool festival_this_month;
         bool surfchange_this_month;
         bool processing_in_progress;
-
-        void cull_stones_to_size();
-        Stone _get_stone(int, int);
-        void _set_stone(int, int, Stone);
-        void _to_real(int, int, int&, int&);
-        bool _real_in_bounds(int, int);
-
-        void _ai_make_space();
-
-        bool _ai_place_random(Stone);
-        bool _ai_place_tactical(Stone, Stone);
-        int ai_place_stone(int, Stone, Stone);  // Orig: PROCpl_stone
 };
 
 #endif

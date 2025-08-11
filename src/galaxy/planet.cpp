@@ -2411,3 +2411,71 @@ int Planet::ai_place_stone(int n, Stone to_place, Stone target_neighbour) {
     }
     return placed;
 }
+
+void Planet::save(cJSON* j) const {
+    SAVE_BOOL(j, _exists);
+    SAVE_ENUM(j, cls);
+    SAVE_ENUM(j, moon_cls);
+    SAVE_ENUM(j, moon_cls);
+    SAVE_STR(j, name);
+    SAVE_ARRAY_OF_ENUM(j, surf);
+    SAVE_NUM(j, construction_phase);
+    SAVE_NUM(j, star_target);
+    SAVE_NUM(j, pspeed);
+    SAVE_NUM(j, diameter);
+    SAVE_NUM(j, minerals);
+    SAVE_NUM(j, sim);
+    SAVE_ENUM(j, trade);
+    SAVE_NUM(j, traded);
+    SAVE_BOOL(j, taxes_collected);
+    SAVE_NUM(j, laws);
+    SAVE_NUM(j, owner);
+    SAVE_BOOL(j, lunar_base);
+    SAVE_ARRAY_OF_NUM(j, unrest);
+    SAVE_NUM(j, army_funding);
+    SAVE_NUM(j, airdef_guns);
+    SAVE_NUM(j, robots);
+    SAVE_NUM(j, reserves_min);
+    SAVE_NUM(j, reserves_food);
+    SAVE_NUM(j, reserves_plu);
+    SAVE_NUM(j, army_inf);
+    SAVE_NUM(j, army_gli);
+    SAVE_NUM(j, army_art);
+    SAVE_BOOL(j, festival_this_month);
+    SAVE_BOOL(j, surfchange_this_month);
+    SAVE_BOOL(j, processing_in_progress);
+}
+
+void Planet::load(cJSON* j) {
+    LOAD_BOOL(j, _exists);
+    LOAD_ENUM(j, cls);
+    LOAD_ENUM(j, moon_cls);
+    LOAD_ENUM(j, moon_cls);
+    LOAD_STR(j, name);
+    LOAD_ARRAY_OF_ENUM(j, surf);
+    LOAD_NUM(j, construction_phase);
+    LOAD_NUM(j, star_target);
+    LOAD_NUM(j, pspeed);
+    LOAD_NUM(j, diameter);
+    LOAD_NUM(j, minerals);
+    LOAD_NUM(j, sim);
+    LOAD_ENUM(j, trade);
+    LOAD_NUM(j, traded);
+    LOAD_BOOL(j, taxes_collected);
+    LOAD_NUM(j, laws);
+    LOAD_NUM(j, owner);
+    LOAD_BOOL(j, lunar_base);
+    LOAD_ARRAY_OF_NUM(j, unrest);
+    LOAD_NUM(j, army_funding);
+    LOAD_NUM(j, airdef_guns);
+    LOAD_NUM(j, robots);
+    LOAD_NUM(j, reserves_min);
+    LOAD_NUM(j, reserves_food);
+    LOAD_NUM(j, reserves_plu);
+    LOAD_NUM(j, army_inf);
+    LOAD_NUM(j, army_gli);
+    LOAD_NUM(j, army_art);
+    LOAD_BOOL(j, festival_this_month);
+    LOAD_BOOL(j, surfchange_this_month);
+    LOAD_BOOL(j, processing_in_progress);
+}

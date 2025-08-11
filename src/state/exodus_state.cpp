@@ -1055,3 +1055,47 @@ void ExodusState::set_alliances(int a, int b, uint8_t alliances) {
         alliance_matrix[b*N_PLAYERS + a] = alliances;
     }
 }
+
+void ExodusState::save(cJSON* j) const {
+    SAVE_BOOL(j, first_city_done);
+    SAVE_BOOL(j, first_spaceport_done);
+    SAVE_ENUM(j, size);
+    SAVE_NUM(j, n_human_players);
+    SAVE_NUM(j, month);
+    SAVE_NUM(j, active_player);
+    SAVE_NUM(j, active_star);
+    SAVE_NUM(j, active_planet);
+    SAVE_ARRAY_OF_SAVEABLE(j, players);
+    SAVE_ENUM(j, aim);
+    SAVE_ENUM(j, enemy_start);
+    SAVE_SAVEABLE(j, galaxy);
+    SAVE_BOOL(j, galaxy_finalised);
+    SAVE_BOOL(j, active_flytarget_is_guild);
+    SAVE_ARRAY_OF_NUM(j, alliance_matrix);
+    SAVE_ARRAY_OF_NUM(j, alliance_requests);
+    SAVE_NUM(j, newsitem_head);
+    SAVE_ARRAY_OF_SAVEABLE(j, newsitems);
+    SAVE_ARRAY_OF_NUM(j, attack_preventions);
+}
+
+void ExodusState::load(cJSON* j) {
+    LOAD_BOOL(j, first_city_done);
+    LOAD_BOOL(j, first_spaceport_done);
+    LOAD_ENUM(j, size);
+    LOAD_NUM(j, n_human_players);
+    LOAD_NUM(j, month);
+    LOAD_NUM(j, active_player);
+    LOAD_NUM(j, active_star);
+    LOAD_NUM(j, active_planet);
+    LOAD_ARRAY_OF_SAVEABLE(j, players);
+    LOAD_ENUM(j, aim);
+    LOAD_ENUM(j, enemy_start);
+    LOAD_SAVEABLE(j, galaxy);
+    LOAD_BOOL(j, galaxy_finalised);
+    LOAD_BOOL(j, active_flytarget_is_guild);
+    LOAD_ARRAY_OF_NUM(j, alliance_matrix);
+    LOAD_ARRAY_OF_NUM(j, alliance_requests);
+    LOAD_NUM(j, newsitem_head);
+    LOAD_ARRAY_OF_SAVEABLE(j, newsitems);
+    LOAD_ARRAY_OF_NUM(j, attack_preventions);
+}

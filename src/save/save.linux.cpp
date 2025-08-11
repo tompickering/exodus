@@ -46,7 +46,7 @@ const char* SaveManagerLinux::get_save_dir() {
     return save_dir;
 }
 
-bool SaveManagerLinux::save_data(int slot, const char *data) {
+bool SaveManagerLinux::save_data(uint32_t version, int slot, const char *data_meta, const char* data_game) {
     const char *dir = get_save_dir();
 
     if (!dir) {
@@ -64,7 +64,22 @@ bool SaveManagerLinux::save_data(int slot, const char *data) {
         return false;
     }
 
-    out.write(data, SAVE_SIZE);
+    char buf[64];
+    int bytes;
+
+    bytes = snprintf(buf, sizeof(buf), "%u\n", version);
+    out.write(buf, bytes);
+
+    uint64_t size_meta = (uint64_t)strlen(data_meta);
+    bytes = snprintf(buf, sizeof(buf), "%lu\n", size_meta);
+    out.write(buf, bytes);
+
+    uint64_t size_game = (uint64_t)strlen(data_game);
+    bytes = snprintf(buf, sizeof(buf), "%lu\n", size_game);
+    out.write(buf, bytes);
+
+    out.write(data_meta, size_meta);
+    out.write(data_game, size_game);
 
     if (out.fail()) {
         L.error("Could not write to file %s", file);
@@ -80,7 +95,7 @@ bool SaveManagerLinux::save_data(int slot, const char *data) {
     return true;
 }
 
-bool SaveManagerLinux::load_data(int slot, char *data) {
+bool SaveManagerLinux::load_data(uint32_t expected_version, int slot, char** data_meta, char** data_game) {
     const char *dir = get_save_dir();
 
     if (!dir) {
@@ -98,7 +113,31 @@ bool SaveManagerLinux::load_data(int slot, char *data) {
         return false;
     }
 
-    in.read(data, SAVE_SIZE);
+    string line;
+
+    std::getline(in, line);
+
+    uint32_t version = strtoul(line.c_str(), NULL, 10);
+
+    if (version != expected_version) {
+        L.error("SAVE DATA IS INCORRECT VERSION: %d (expected %d)", version, expected_version);
+        return false;
+    }
+
+    std::getline(in, line);
+    uint64_t size_meta = strtoul(line.c_str(), NULL, 10);
+
+    std::getline(in, line);
+    uint64_t size_game = strtoul(line.c_str(), NULL, 10);
+
+    (*data_meta) = (char*)malloc(size_meta);
+    in.read(*data_meta, size_meta);
+
+    if (data_game != nullptr)
+    {
+        (*data_game) = (char*)malloc(size_game);
+        in.read(*data_game, size_game);
+    }
 
     if (in.fail()) {
         L.error("Could not read from file %s", file);

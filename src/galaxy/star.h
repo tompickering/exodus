@@ -20,6 +20,9 @@ enum StarSize {
 
 class Star : public FlyTarget {
     public:
+        virtual void save(cJSON*) const override;
+        virtual void load(cJSON*) override;
+
         Star() : Star(-1, -1, (char*)"NONAME") {};
         Star(int, int, const char*);
         StarSize get_size() const;
@@ -29,6 +32,7 @@ class Star : public FlyTarget {
         Planet* get_artificial_world_slot();
         Planet* construct_artificial_world(int, const char*);
         StarSize expand();
+
     private:
         StarSize size;
         int n_planets;

@@ -5,8 +5,8 @@
 
 class SaveManagerLinux : public SaveManager {
     protected:
-        virtual bool save_data(int, const char*) override;
-        virtual bool load_data(int, char*) override;
+        virtual bool save_data(uint32_t, int, const char*, const char*) override;
+        virtual bool load_data(uint32_t, int, char**, char**) override;
         virtual const char* get_save_dir() override;
 };
 

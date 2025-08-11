@@ -11,6 +11,8 @@
  * present in a save file, and should be shallow-serialisable.
  */
 
+#include "save/saveable.h"
+
 #include "newsitem.h"
 
 #include "player/player.h"
@@ -74,8 +76,11 @@ enum ArtificialPlanetViable : uint8_t {
     APV_Yes,
 };
 
-class ExodusState {
+class ExodusState : public Saveable {
     public:
+        virtual void save(cJSON*) const override;
+        virtual void load(cJSON*) override;
+
         ExodusState();
         void init(GameConfig);
         void generate_galaxy();
@@ -124,8 +129,6 @@ class ExodusState {
         PlanetInfo recommend_planet();
         Player* get_hostile_to(Player&);
         void set_random_hostility(Player&);
-        bool first_city_done;
-        bool first_spaceport_done;
         int get_total_income_ignoring_army(int);
         int get_total_net_income(int);
         bool is_allied(int, int);
@@ -155,7 +158,14 @@ class ExodusState {
         bool attack_prevented(Planet*);
         void clear_attack_preventions();
 
+        bool first_city_done;
+        bool first_spaceport_done;
+
     private:
+        int _get_n_owned_planets(bool);
+        uint8_t get_alliances(int, int);
+        void set_alliances(int, int, uint8_t);
+
         GalaxySize size;
         int n_human_players;
         int month;
@@ -168,18 +178,10 @@ class ExodusState {
         Galaxy galaxy;
         bool galaxy_finalised;
         bool active_flytarget_is_guild;
-
-        int _get_n_owned_planets(bool);
-
-        uint8_t get_alliances(int, int);
-        void set_alliances(int, int, uint8_t);
         uint8_t alliance_matrix[N_PLAYERS * N_PLAYERS];
-
         char alliance_requests[N_PLAYERS];
-
         int newsitem_head;
         NewsItem newsitems[MAX_NEWSITEMS];
-
         uint8_t attack_preventions[GALAXY_MAX_STARS];
 
     friend class ExodusDebug;

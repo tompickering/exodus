@@ -12,7 +12,7 @@ DEPS = $(OBJS:%.o=%.d)
 CLEAN = $(BIN) $(OBJS) $(DEPS)
 
 INCFLAGS=-Isrc
-LDLIBS=-lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
+LDLIBS=-lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lcjson
 CXXFLAGS=-Wall -Wno-reorder -Wno-class-memaccess -Wno-format-truncation -pedantic -DMONO -DSDL $(INCFLAGS)
 DBGFLAGS=-g -DDBG
 

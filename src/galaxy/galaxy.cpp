@@ -137,3 +137,15 @@ Star* Galaxy::get_stars(int &_n_stars) {
 Guild* Galaxy::get_guild() {
     return &guild;
 }
+
+void Galaxy::save(cJSON* j) const {
+    SAVE_SAVEABLE(j, guild);
+    SAVE_ARRAY_OF_SAVEABLE(j, stars);
+    SAVE_NUM(j, n_stars);
+}
+
+void Galaxy::load(cJSON* j) {
+    LOAD_SAVEABLE(j, guild);
+    LOAD_ARRAY_OF_SAVEABLE(j, stars);
+    LOAD_NUM(j, n_stars);
+}

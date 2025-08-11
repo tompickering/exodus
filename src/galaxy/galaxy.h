@@ -1,6 +1,8 @@
 #ifndef GUARD_GALAXY_H
 #define GUARD_GALAXY_H
 
+#include "save/saveable.h"
+
 #include "guild.h"
 #include "star.h"
 
@@ -11,8 +13,11 @@
 #define GUILD_POS_X 14
 #define GUILD_POS_Y 9
 
-class Galaxy {
+class Galaxy : public Saveable {
     public:
+        virtual void save(cJSON* json) const override;
+        virtual void load(cJSON* json) override;
+
         Galaxy() {};
         Galaxy(int);
         Star* get_stars();
