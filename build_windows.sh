@@ -30,6 +30,11 @@ popd
 make clean
 make -j7 windows
 
+if [ $? -ne 0 ]; then
+    echo "Build failed"
+    exit
+fi
+
 cp lib/SDL2-2.26.5/x86_64-w64-mingw32/bin/SDL2.dll .
 cp lib/SDL2_image-2.6.3/x86_64-w64-mingw32/bin/SDL2_image.dll .
 cp lib/SDL2_mixer-2.6.3/x86_64-w64-mingw32/bin/SDL2_mixer.dll .
