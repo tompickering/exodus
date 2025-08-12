@@ -79,6 +79,9 @@ class DrawManagerSDL : public DrawManager {
     protected:
         virtual void* get_sprite_data(const char*) override;
     private:
+        bool fullscreen;
+        int win_w;
+        int win_h;
         SDL_Window *win;
         SDL_Surface *win_surf; // Upscaled
         SDL_Surface *surf;     // Not upscaled
@@ -101,6 +104,9 @@ class DrawManagerSDL : public DrawManager {
         // Special VFX
         virtual void draw_flag_vfx() override;
         virtual void draw_button_vfx() override;
+
+        SDL_Rect fullscreen_area;
+        void blit_surf_to_window();
 };
 
 #endif

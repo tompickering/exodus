@@ -32,16 +32,34 @@ DrawManagerSDL::DrawManagerSDL() {
 
 bool DrawManagerSDL::init(const DrawManagerOptions& options) {
     L.info("DrawManager Init...");
+
+    fullscreen = options.fullscreen;
+
     win = SDL_CreateWindow(PROG_NAME,
                            SDL_WINDOWPOS_UNDEFINED,
                            SDL_WINDOWPOS_UNDEFINED,
                            SCREEN_WIDTH,
                            SCREEN_HEIGHT,
-                           SDL_WINDOW_SHOWN | (options.fullscreen ? SDL_WINDOW_FULLSCREEN : 0));
+                           SDL_WINDOW_SHOWN | (fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
+
     if (!win) {
         L.error("Could not create SDL window");
         return false;
     }
+
+    SDL_GetWindowSize(win, &win_w, &win_h);
+
+    int cx = win_w >> 1;
+    int cy = win_h >> 1;
+
+    float scale_x = (float)win_w / SCREEN_WIDTH;
+    float scale_y = (float)win_h / SCREEN_HEIGHT;
+    float scale = (scale_x < scale_y) ? scale_x : scale_y;
+
+    int fullscreen_w = (int)((float)SCREEN_WIDTH * scale);
+    int fullscreen_h = (int)((float)SCREEN_HEIGHT * scale);
+    fullscreen_area = {cx - fullscreen_w/2, cy - fullscreen_h/2,
+                       fullscreen_w, fullscreen_h};
 
     // Draw operations are to 'surf'.
     // If we're upscaling each operation, 'surf' *is* the window surface.
@@ -136,7 +154,7 @@ void DrawManagerSDL::draw_init_image() {
     clear();
     draw(INIT_IMG, {RES_X/2, RES_Y/2, 0.5, 0.5, 1, 1});
 #ifndef CONTINUOUS_UPSCALING
-    SDL_BlitScaled(surf, nullptr, win_surf, nullptr);
+    blit_surf_to_window();
 #endif
     SDL_UpdateWindowSurface(win);
 }
@@ -261,7 +279,7 @@ void DrawManagerSDL::update(float delta, MousePos mouse_pos, MousePos new_click_
     // If we're not upscaling continuously, we upscale here, at the
     // very end of the draw pipeline.
 #ifndef CONTINUOUS_UPSCALING
-    SDL_BlitScaled(surf, nullptr, win_surf, nullptr);
+    blit_surf_to_window();
 #endif
 
     SDL_UpdateWindowSurface(win);
@@ -1224,6 +1242,18 @@ void DrawManagerSDL::draw_button_vfx() {
             }
             press.drawn = true;
         }
+    }
+}
+
+void DrawManagerSDL::blit_surf_to_window()
+{
+    if (fullscreen)
+    {
+        SDL_BlitScaled(surf, nullptr, win_surf, &fullscreen_area);
+    }
+    else
+    {
+        SDL_BlitScaled(surf, nullptr, win_surf, nullptr);
     }
 }
 
