@@ -19,6 +19,8 @@ using std::ios;
 
 static SaveMeta metadata[MAX_SLOTS];
 
+static uint8_t obfuscation_byte = 0xFA;
+
 extern ExodusState exostate;
 
 const SaveMeta* SaveManager::get_all_meta(bool refresh) {
@@ -93,7 +95,7 @@ bool SaveManager::save(int slot) {
     return save_data(EXODUS_VERSION, slot, meta_str, game_str);
 }
 
-bool SaveManager::save_data(uint32_t version, int slot, const char *data_meta, const char* data_game) {
+bool SaveManager::save_data(uint32_t version, int slot, char *data_meta, char* data_game) {
     const char *dir = get_save_dir();
 
     if (!dir) {
@@ -115,15 +117,21 @@ bool SaveManager::save_data(uint32_t version, int slot, const char *data_meta, c
     int bytes;
 
     bytes = snprintf(buf, sizeof(buf), "%u\n", version);
+    for (size_t i = 0; i < bytes; ++i) buf[i] ^= obfuscation_byte;
     out.write(buf, bytes);
 
     uint64_t size_meta = (uint64_t)strlen(data_meta);
     bytes = snprintf(buf, sizeof(buf), "%lu\n", size_meta);
+    for (size_t i = 0; i < bytes; ++i) buf[i] ^= obfuscation_byte;
     out.write(buf, bytes);
 
     uint64_t size_game = (uint64_t)strlen(data_game);
     bytes = snprintf(buf, sizeof(buf), "%lu\n", size_game);
+    for (size_t i = 0; i < bytes; ++i) buf[i] ^= obfuscation_byte;
     out.write(buf, bytes);
+
+    for (size_t i = 0; i < size_meta; ++i) data_meta[i] ^= obfuscation_byte;
+    for (size_t i = 0; i < size_game; ++i) data_game[i] ^= obfuscation_byte;
 
     out.write(data_meta, size_meta);
     out.write(data_game, size_game);
@@ -160,30 +168,52 @@ bool SaveManager::load_data(uint32_t expected_version, int slot, char** data_met
         return false;
     }
 
-    string line;
+    char buf[64];
 
-    std::getline(in, line);
+    size_t head = 0;
 
-    uint32_t version = strtoul(line.c_str(), NULL, 10);
+    do {
+        in.read(buf+head, 1);
+        buf[head] ^= obfuscation_byte;
+        ++head;
+    } while(buf[head-1] != '\n');
+
+    uint32_t version = strtoul(buf, NULL, 10);
 
     if (version != expected_version) {
         L.error("SAVE DATA IS INCORRECT VERSION: %d (expected %d)", version, expected_version);
         return false;
     }
 
-    std::getline(in, line);
-    uint64_t size_meta = strtoul(line.c_str(), NULL, 10);
+    head = 0;
 
-    std::getline(in, line);
-    uint64_t size_game = strtoul(line.c_str(), NULL, 10);
+    do {
+        in.read(buf+head, 1);
+        buf[head] ^= obfuscation_byte;
+        ++head;
+    } while(buf[head-1] != '\n');
+
+    uint64_t size_meta = strtoul(buf, NULL, 10);
+
+    head = 0;
+
+    do {
+        in.read(buf+head, 1);
+        buf[head] ^= obfuscation_byte;
+        ++head;
+    } while(buf[head-1] != '\n');
+
+    uint64_t size_game = strtoul(buf, NULL, 10);
 
     (*data_meta) = (char*)malloc(size_meta);
     in.read(*data_meta, size_meta);
+    for (size_t i = 0; i < size_meta; ++i) (*data_meta)[i] ^= obfuscation_byte;
 
     if (data_game != nullptr)
     {
         (*data_game) = (char*)malloc(size_game);
         in.read(*data_game, size_game);
+        for (size_t i = 0; i < size_game; ++i) (*data_game)[i] ^= obfuscation_byte;
     }
 
     if (in.fail()) {

@@ -40,7 +40,7 @@ class SaveManager {
         virtual bool load(int);
     protected:
         virtual const char* get_save_dir() = 0;
-        virtual bool save_data(uint32_t, int, const char*, const char*);
+        virtual bool save_data(uint32_t, int, char*, char*);
         virtual bool load_data(uint32_t, int, char**, char**);
 };
 
