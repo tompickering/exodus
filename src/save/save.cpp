@@ -114,7 +114,7 @@ bool SaveManager::save_data(uint32_t version, int slot, char *data_meta, char* d
     }
 
     char buf[64];
-    int bytes;
+    size_t bytes;
 
     bytes = snprintf(buf, sizeof(buf), "%u\n", version);
     for (size_t i = 0; i < bytes; ++i) buf[i] ^= obfuscation_byte;
