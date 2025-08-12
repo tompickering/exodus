@@ -32,6 +32,7 @@ const SaveMeta* SaveManager::get_all_meta(bool refresh) {
             if (load_data(EXODUS_VERSION, i, &data, nullptr)) {
                 cJSON *j = cJSON_Parse(data);
                 metadata[i].load(j);
+                cJSON_Delete(j);
             }
 
             if (data != nullptr)
@@ -56,6 +57,7 @@ bool SaveManager::load(int slot) {
         success = true;
         cJSON *json_game = cJSON_Parse(data_game);
         exostate.load(json_game);
+        cJSON_Delete(json_game);
     }
 
     if (data_meta != nullptr)
