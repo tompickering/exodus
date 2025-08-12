@@ -74,6 +74,7 @@ class Exodus {
         void push_mode(ExodusMode);
         void pop_mode();
         void reset_mode_stack();
+        void reset_all_modes();
         bool mode_updated_since_enter;
 };
 

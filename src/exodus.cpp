@@ -249,6 +249,7 @@ int Exodus::run(int argc, char** argv) {
                 continue;
             } else if (next == ExodusMode::MODE_NewGame) {
                 reset_mode_stack();
+                reset_all_modes();
                 push_mode(MODE_Menu);
             } else {
                 if (next == ExodusMode::MODE_GalaxyMap) {
@@ -395,6 +396,37 @@ void Exodus::pop_mode() {
 void Exodus::reset_mode_stack() {
     L.debug("Resetting mode stack");
     mode_stack_head = 0;
+}
+
+void Exodus::reset_all_modes() {
+    L.debug("Resetting modes");
+
+    new (mode_map[MODE_Intro]) Intro();
+    new (mode_map[MODE_Menu]) Menu();
+    new (mode_map[MODE_GalaxyGen]) GalaxyGen();
+    new (mode_map[MODE_GalaxyMap]) GalaxyMap();
+    new (mode_map[MODE_GalaxyIntro]) GalaxyIntro();
+    new (mode_map[MODE_Distances]) Distances();
+    new (mode_map[MODE_GuildExterior]) GuildExterior();
+    new (mode_map[MODE_GuildHQ]) GuildHQ();
+    new (mode_map[MODE_GuildBar]) GuildBar();
+    new (mode_map[MODE_Fly]) Fly();
+    new (mode_map[MODE_StarMap]) StarMap();
+    new (mode_map[MODE_PlanetMap]) PlanetMap();
+    new (mode_map[MODE_PlanetStatus]) PlanetStatus();
+    new (mode_map[MODE_PlanetColonise]) PlanetColonise();
+    new (mode_map[MODE_PlanetTransfer]) PlanetTransfer();
+    new (mode_map[MODE_LunarBattlePrep]) LunarBattlePrep();
+    new (mode_map[MODE_LunarBattle]) LunarBattle();
+    new (mode_map[MODE_Trade]) Trade();
+    new (mode_map[MODE_FleetProduction]) FleetProduction();
+    new (mode_map[MODE_ShipEquip]) ShipEquip();
+    new (mode_map[MODE_News]) News();
+    new (mode_map[MODE_Arrive]) Arrive();
+    new (mode_map[MODE_AlienVessel]) AlienVessel();
+    new (mode_map[MODE_SpaceBattle]) SpaceBattle();
+    new (mode_map[MODE_GameOver]) GameOver();
+    new (mode_map[MODE_Ending]) Ending();
 }
 
 ExodusMode Exodus::get_prev_mode() {
