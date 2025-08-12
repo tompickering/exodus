@@ -10,6 +10,7 @@
 // Pros: Less blitting, more efficient.
 // Cons: Individual upscales can cause clipping of individual sprites.
 //       Text looks terrible.
+// N.B. THIS IS CURRENTLY BROKEN IN FULLSCREEN MODE
 //#define CONTINUOUS_UPSCALING
 
 enum Repair : uint8_t {
