@@ -30,7 +30,9 @@ class AchievementManager {
     public:
         AchievementManager() {}
         virtual bool init() = 0;
-        virtual void unlock(Achievement) = 0;
+        virtual bool achievements_enabled() final;
+        virtual void unlock(Achievement) final;
+        virtual void enact_unlock(Achievement) = 0;
 };
 
 #ifdef STEAM

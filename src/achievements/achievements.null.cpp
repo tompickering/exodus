@@ -6,6 +6,6 @@ bool AchievementManagerNull::init() {
     return true;
 }
 
-void AchievementManagerNull::unlock(Achievement achievement) {
+void AchievementManagerNull::enact_unlock(Achievement achievement) {
     L.info("[ACHIEVEMENT UNLOCKED] %d", (int)achievement);
 }

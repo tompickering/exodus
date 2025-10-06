@@ -6,7 +6,7 @@
 class AchievementManagerNull : public AchievementManager {
     public:
         virtual bool init() override;
-        virtual void unlock(Achievement) override;
+        virtual void enact_unlock(Achievement) override;
 };
 
 #endif
