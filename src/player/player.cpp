@@ -239,6 +239,34 @@ void Player::set_guild_title(GuildTitle newtitle) {
         newtitle = GUILDTITLE_Emperor;
     }
     guild_title = newtitle;
+
+    switch (newtitle)
+    {
+        case GUILDTITLE_Warrior:
+            achievement_manager.unlock(ACH_GuildWarrior);
+            break;
+        case GUILDTITLE_Strong:
+            achievement_manager.unlock(ACH_GuildStrong);
+            break;
+        case GUILDTITLE_Conqueror:
+            achievement_manager.unlock(ACH_GuildConqueror);
+            break;
+        case GUILDTITLE_Mighty:
+            achievement_manager.unlock(ACH_GuildMighty);
+            break;
+        case GUILDTITLE_Great:
+            achievement_manager.unlock(ACH_GuildGreat);
+            break;
+        case GUILDTITLE_Warlord:
+            achievement_manager.unlock(ACH_GuildWarlord);
+            break;
+        case GUILDTITLE_Emperor:
+            achievement_manager.unlock(ACH_GuildEmperor);
+            break;
+        default:
+            break;
+    }
+
     L.info("%s: SET TITLE %d", get_full_name(), (int)guild_title);
 }
 
