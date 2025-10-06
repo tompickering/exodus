@@ -4,15 +4,16 @@
 #include <stdint.h>
 
 enum Achievement : uint8_t {
+    ACH_None,
     ACH_MightEasy,
     ACH_MightMedium,
     ACH_MightHard,
     ACH_MoneyEasy,
     ACH_MoneyMedium,
     ACH_MoneyHard,
-    ACH_TechEasy,
-    ACH_TechMedium,
-    ACH_TechHard,
+    ACH_CivEasy,
+    ACH_CivMedium,
+    ACH_CivHard,
     ACH_GuildWarrior,
     ACH_GuildStrong,
     ACH_GuildConqueror,

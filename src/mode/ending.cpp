@@ -555,6 +555,58 @@ ExodusMode Ending::update(float dt) {
             break;
         case ForNow:
             {
+                switch (exostate.get_aim())
+                {
+                    case AIM_Might:
+                        switch (exostate.get_enemy_start())
+                        {
+                            case ENEMY_None:
+                                break;
+                            case ENEMY_Weak:
+                                achievement_manager.unlock(ACH_MightEasy);
+                                break;
+                            case ENEMY_Medium:
+                                achievement_manager.unlock(ACH_MightMedium);
+                                break;
+                            case ENEMY_Strong:
+                                achievement_manager.unlock(ACH_MightHard);
+                                break;
+                        }
+                        break;
+                    case AIM_Money:
+                        switch (exostate.get_enemy_start())
+                        {
+                            case ENEMY_None:
+                                break;
+                            case ENEMY_Weak:
+                                achievement_manager.unlock(ACH_MoneyEasy);
+                                break;
+                            case ENEMY_Medium:
+                                achievement_manager.unlock(ACH_MoneyMedium);
+                                break;
+                            case ENEMY_Strong:
+                                achievement_manager.unlock(ACH_MoneyHard);
+                                break;
+                        }
+                        break;
+                    case AIM_Civilization:
+                        switch (exostate.get_enemy_start())
+                        {
+                            case ENEMY_None:
+                                break;
+                            case ENEMY_Weak:
+                                achievement_manager.unlock(ACH_CivEasy);
+                                break;
+                            case ENEMY_Medium:
+                                achievement_manager.unlock(ACH_CivMedium);
+                                break;
+                            case ENEMY_Strong:
+                                achievement_manager.unlock(ACH_CivHard);
+                                break;
+                        }
+                        break;
+                }
+
                 return ExodusMode::MODE_Menu;
             }
             break;

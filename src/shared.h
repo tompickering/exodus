@@ -10,6 +10,9 @@
 
 #include "exodus.h"
 
+#include "achievements/achievements.h"
+extern ACHIEVEMENTMANAGER achievement_manager;
+
 #define PROG_NAME "Exodus"
 
 #define STRINGIFY(x) #x

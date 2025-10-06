@@ -323,6 +323,10 @@ Aim ExodusState::get_aim() {
     return aim;
 }
 
+EnemyStart ExodusState::get_enemy_start() {
+    return enemy_start;
+}
+
 void ExodusState::advance_month() {
     ++month;
     newsitem_head = 0;
