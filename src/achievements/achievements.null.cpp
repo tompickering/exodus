@@ -1,0 +1,11 @@
+#include "achievements.null.h"
+
+#include "shared.h"
+
+bool AchievementManagerNull::init() {
+    return true;
+}
+
+void AchievementManagerNull::unlock(Achievement achievement) {
+    L.info("[ACHIEVEMENT UNLOCKED] %d", (int)achievement);
+}

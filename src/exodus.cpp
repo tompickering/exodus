@@ -10,6 +10,7 @@ const ExodusVersion EXODUS_VERSION = 2;
 #include "draw/draw.h"
 #include "input/input.h"
 #include "save/save.h"
+#include "achievements/achievements.h"
 
 #include "state/exodus_state.h"
 #include "state/ephemeral_state.h"
@@ -58,6 +59,7 @@ AUDIOMANAGER audio_manager;
 DRAWMANAGER draw_manager;
 INPUTMANAGER input_manager;
 SAVEMANAGER save_manager;
+ACHIEVEMENTMANAGER achievement_manager;
 
 ExodusState exostate;
 EphemeralState ephstate;

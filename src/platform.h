@@ -37,4 +37,10 @@
 #define SAVEMANAGER SaveManagerWindows
 #endif
 
+#ifdef STEAM
+#define ACHIEVEMENTMANAGER AchievementManagerSteam
+#else
+#define ACHIEVEMENTMANAGER AchievementManagerNull
+#endif
+
 #endif
