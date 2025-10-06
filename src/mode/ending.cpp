@@ -607,6 +607,19 @@ ExodusMode Ending::update(float dt) {
                         break;
                 }
 
+                switch (exostate.get_galaxy_size())
+                {
+                    case GAL_Small:
+                        achievement_manager.unlock(ACH_WinSmallGalaxy);
+                        break;
+                    case GAL_Medium:
+                        achievement_manager.unlock(ACH_WinMediumGalaxy);
+                        break;
+                    case GAL_Large:
+                        achievement_manager.unlock(ACH_WinLargeGalaxy);
+                        break;
+                }
+
                 return ExodusMode::MODE_Menu;
             }
             break;

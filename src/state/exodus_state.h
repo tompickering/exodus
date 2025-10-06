@@ -92,6 +92,7 @@ class ExodusState : public Saveable {
         int get_month();
         int get_orig_month();
         Aim get_aim();
+        GalaxySize get_galaxy_size();
         EnemyStart get_enemy_start();
         void advance_month();
         bool final_month();

@@ -323,6 +323,10 @@ Aim ExodusState::get_aim() {
     return aim;
 }
 
+GalaxySize ExodusState::get_galaxy_size() {
+    return size;
+}
+
 EnemyStart ExodusState::get_enemy_start() {
     return enemy_start;
 }
