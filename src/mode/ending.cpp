@@ -558,52 +558,27 @@ ExodusMode Ending::update(float dt) {
                 switch (exostate.get_aim())
                 {
                     case AIM_Might:
-                        switch (exostate.get_enemy_start())
-                        {
-                            case ENEMY_None:
-                                break;
-                            case ENEMY_Weak:
-                                achievement_manager.unlock(ACH_MightEasy);
-                                break;
-                            case ENEMY_Medium:
-                                achievement_manager.unlock(ACH_MightMedium);
-                                break;
-                            case ENEMY_Strong:
-                                achievement_manager.unlock(ACH_MightHard);
-                                break;
-                        }
+                        achievement_manager.unlock(ACH_WinMight);
                         break;
                     case AIM_Money:
-                        switch (exostate.get_enemy_start())
-                        {
-                            case ENEMY_None:
-                                break;
-                            case ENEMY_Weak:
-                                achievement_manager.unlock(ACH_MoneyEasy);
-                                break;
-                            case ENEMY_Medium:
-                                achievement_manager.unlock(ACH_MoneyMedium);
-                                break;
-                            case ENEMY_Strong:
-                                achievement_manager.unlock(ACH_MoneyHard);
-                                break;
-                        }
+                        achievement_manager.unlock(ACH_WinMoney);
                         break;
                     case AIM_Civilization:
-                        switch (exostate.get_enemy_start())
-                        {
-                            case ENEMY_None:
-                                break;
-                            case ENEMY_Weak:
-                                achievement_manager.unlock(ACH_CivEasy);
-                                break;
-                            case ENEMY_Medium:
-                                achievement_manager.unlock(ACH_CivMedium);
-                                break;
-                            case ENEMY_Strong:
-                                achievement_manager.unlock(ACH_CivHard);
-                                break;
-                        }
+                        achievement_manager.unlock(ACH_WinCiv);
+                        break;
+                }
+
+                switch (exostate.get_enemy_start())
+                {
+                    case ENEMY_None:
+                        break;
+                    case ENEMY_Weak:
+                        break;
+                    case ENEMY_Medium:
+                        achievement_manager.unlock(ACH_WinMedium);
+                        break;
+                    case ENEMY_Strong:
+                        achievement_manager.unlock(ACH_WinHard);
                         break;
                 }
 
