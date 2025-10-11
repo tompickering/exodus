@@ -591,6 +591,12 @@ ExodusMode GuildBar::update(float delta) {
                 if (done) {
                     sheriff_insert_high_score({exostate.get_active_player_idx(), sheriff_score});
 
+                    if (sheriff_high_scores[0].player_idx == exostate.get_active_player_idx()) {
+                        if (sheriff_high_scores[0].score == sheriff_score) {
+                            achievement_manager.unlock(ACH_SheriffHighScore);
+                        }
+                    }
+
                     draw_manager.draw(
                         id(ID::SHERIFF_BG),
                         IMG_GM1_PICTURE,
