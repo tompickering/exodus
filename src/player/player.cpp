@@ -39,6 +39,10 @@ Player::Player() {
     guild_member = false;
     nopirates = 0;
     ai_tactic = 0;
+
+    infraction_mask = 0;
+    ever_committed_infraction = false;
+
     clear_hostility();
     clear_ai_attack();
 
