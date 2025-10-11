@@ -23,6 +23,7 @@ enum Achievement : uint8_t {
     ACH_GuildMember,
     ACH_VeryGoodRep,
     ACH_WinNoInfractions,
+    ACH_RepairsComplete,
 };
 
 class AchievementManager {

@@ -1164,6 +1164,7 @@ ExodusMode GalaxyMap::month_pass_update() {
         for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
             Player *p = exostate.set_active_player(mp_state.mp_player_idx);
             Starship &ship = p->get_starship();
+            bool damaged = ship.damaged();
             int crew = ship.crew;
             ship.pct_damage_thrust -= (int)(crew / 5);
             ship.pct_damage_comms  -= (int)(crew / 5);
@@ -1171,6 +1172,10 @@ ExodusMode GalaxyMap::month_pass_update() {
             if (ship.pct_damage_thrust < 0) ship.pct_damage_thrust = 0;
             if (ship.pct_damage_comms  < 0) ship.pct_damage_comms  = 0;
             if (ship.pct_damage_struct < 0) ship.pct_damage_struct = 0;
+
+            if (p->is_human() && damaged && !ship.damaged()) {
+                achievement_manager.unlock(ACH_RepairsComplete);
+            }
         }
         next_mp_stage();
     }
