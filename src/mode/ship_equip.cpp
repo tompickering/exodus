@@ -168,6 +168,32 @@ void ShipEquip::enter() {
 }
 
 void ShipEquip::exit() {
+    bool crew_recruited = false;
+    bool crew_below_max = false;
+
+    bool equip_produced = false;
+    bool equip_below_max = false;
+
+    for (int i = 0; i < 7; ++i) {
+        if (i == 3) {
+            crew_recruited = (rows[i].produce > 0);
+            crew_below_max = ((rows[i].own + rows[i].produce) < rows[i].max);
+        } else {
+            equip_produced = equip_produced || (rows[i].produce > 0);
+            equip_below_max = equip_below_max || ((rows[i].own + rows[i].produce) < rows[i].max);
+        }
+    }
+
+    if (crew_recruited && !crew_below_max)
+    {
+        achievement_manager.unlock(ACH_FullCrew);
+    }
+
+    if (equip_produced && !equip_below_max)
+    {
+        achievement_manager.unlock(ACH_ShipEquipped);
+    }
+
     for (int i = 0; i < 7; ++i) {
         draw_manager.release_sprite_id(rows[i].id_produce);
         draw_manager.release_sprite_id(rows[i].id_adj);
