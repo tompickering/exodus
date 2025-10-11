@@ -207,6 +207,10 @@ bool Player::is_guild_member() {
 
 void Player::set_guild_member(bool member) {
     guild_member = member;
+
+    if (is_human() && member) {
+        achievement_manager.unlock(ACH_GuildMember);
+    }
 }
 
 GuildTitle Player::get_guild_title() {
@@ -398,6 +402,10 @@ int Player::get_reputation() {
 void Player::adjust_reputation(int adjustment) {
     reputation += adjustment;
     L.debug("%s: +%d REP (%d)", get_full_name(), adjustment, reputation);
+
+    if (is_human() && reputation >= 3) {
+        achievement_manager.unlock(ACH_VeryGoodRep);
+    }
 }
 
 bool Player::can_research(Invention inv) {

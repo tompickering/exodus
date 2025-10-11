@@ -19,7 +19,9 @@ enum Achievement : uint8_t {
     ACH_GuildMighty,
     ACH_GuildGreat,
     ACH_GuildWarlord,
-    ACH_GuildEmperor
+    ACH_GuildEmperor,
+    ACH_GuildMember,
+    ACH_VeryGoodRep
 };
 
 class AchievementManager {
