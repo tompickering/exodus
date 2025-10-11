@@ -477,6 +477,8 @@ void PlanetMap::enter() {
     }
 
     law_changed = false;
+
+    bomb_achievements_done = false;
 }
 
 void PlanetMap::exit() {
@@ -2079,6 +2081,20 @@ ExodusMode PlanetMap::update_destruction(float delta) {
     }
 
     if (d.n_strikes <= 0) {
+        if (!bomb_achievements_done) {
+            bomb_achievements_done = true;
+
+            if (d.real_destroyer_idx >= 0) {
+                Player *destroyer = exostate.get_player(d.real_destroyer_idx);
+
+                if (destroyer->is_human()) {
+                    if (d.nuke) {
+                        achievement_manager.unlock(ACH_NukeAPlanet);
+                    }
+                }
+            }
+        }
+
         destruction_done = true;
     }
 

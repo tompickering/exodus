@@ -1779,6 +1779,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                             ephstate.destruction.show_target = false;
                             // Enemy doesn't know you've attacked them
                             ephstate.destruction.destroyer_idx = -1;
+                            ephstate.destruction.real_destroyer_idx = exostate.get_active_player_idx();
                             ephstate.destruction.terror = false;
                             ephstate.destruction.nuke = false;
                             ephstate.destruction.draw = owner->is_human();
@@ -1797,6 +1798,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                             ephstate.destruction.show_target = false;
                             // Enemy doesn't know you've attacked them
                             ephstate.destruction.destroyer_idx = -1;
+                            ephstate.destruction.real_destroyer_idx = exostate.get_active_player_idx();
                             ephstate.destruction.terror = false;
                             ephstate.destruction.nuke = true;
                             ephstate.destruction.draw = true;

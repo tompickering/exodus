@@ -112,9 +112,11 @@ typedef struct {
     bool draw;
     bool irradiated;
     bool show_target;
-    // If -1 then blameless destruction (meteor etc)
+    // If -1 then blameless destruction (meteor etc) or the enemy isn't supposed to know who is attacking them
     // If >=0 then this player's attacking
     int destroyer_idx;
+    // Used if the game - rather than the attacked player - needs to know who *really* attacked
+    int real_destroyer_idx;
     bool terror;
     bool nuke;
 } PlanetDestruction;

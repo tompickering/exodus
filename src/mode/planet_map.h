@@ -137,6 +137,8 @@ class PlanetMap : ModeBase {
 
         bool law_changed;
 
+        bool bomb_achievements_done;
+
         SprID id_stones[MAX_STONES];
 };
 
