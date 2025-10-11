@@ -595,6 +595,10 @@ ExodusMode Ending::update(float dt) {
                         break;
                 }
 
+                if (!(exostate.get_active_player()->ever_committed_any_infractions())) {
+                    achievement_manager.unlock(ACH_WinNoInfractions);
+                }
+
                 return ExodusMode::MODE_Menu;
             }
             break;

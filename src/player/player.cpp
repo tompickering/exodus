@@ -842,6 +842,7 @@ void Player::set_marker_tag(int i, const char* new_marker) {
 }
 
 void Player::commit_infraction(Infraction inf) {
+    ever_committed_infraction = true;
     infraction_mask |= (1 << inf);
 }
 
@@ -851,6 +852,10 @@ bool Player::committed_infraction(Infraction inf) {
 
 bool Player::committed_any_infractions() {
     return infraction_mask > 0;
+}
+
+bool Player::ever_committed_any_infractions() {
+    return ever_committed_infraction;
 }
 
 void Player::clear_infractions() {
@@ -965,6 +970,7 @@ void Player::save(cJSON* j) const
     SAVE_SAVEABLE(j, mission);
     SAVE_ARRAY_OF_SAVEABLE(j, star_markers);
     SAVE_NUM(j, infraction_mask);
+    SAVE_BOOL(j, ever_committed_infraction);
     SAVE_ARRAY_OF_ENUM(j, ai_flags);
     SAVE_NUM(j, ai_tactic);
     SAVE_NUM(j, ai_hostile_to);
@@ -1002,6 +1008,7 @@ void Player::load(cJSON* j)
     LOAD_SAVEABLE(j, mission);
     LOAD_ARRAY_OF_SAVEABLE(j, star_markers);
     LOAD_NUM(j, infraction_mask);
+    LOAD_BOOL(j, ever_committed_infraction);
     LOAD_ARRAY_OF_ENUM(j, ai_flags);
     LOAD_NUM(j, ai_tactic);
     LOAD_NUM(j, ai_hostile_to);

@@ -434,6 +434,7 @@ class Player : public Saveable {
         void commit_infraction(Infraction);
         bool committed_infraction(Infraction);
         bool committed_any_infractions();
+        bool ever_committed_any_infractions();
         void clear_infractions();
 
         // AI
@@ -488,6 +489,7 @@ class Player : public Saveable {
         Mission mission;
         StarMarker star_markers[N_MARKERS];
         uint32_t infraction_mask;
+        bool ever_committed_infraction;
         int trade_charge;
         int trace[TRACE_MAX];
 
