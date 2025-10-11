@@ -457,6 +457,9 @@ ExodusMode GuildBar::update(float delta) {
                         char planet_line[16 + FT_MAX_NAME + PLANET_MAX_NAME];
                         if (exostate.get_n_human_players() == 1) {
                             PlanetInfo info = exostate.recommend_planet();
+
+                            exostate.save_recommended_planet(info);
+
                             if (info.planet->is_named()) {
                                 snprintf(
                                     planet_line,

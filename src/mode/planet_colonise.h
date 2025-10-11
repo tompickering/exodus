@@ -4,14 +4,17 @@
 #include "mode_base.h"
 
 #include "galaxy/planet.h"
+#include "player/player.h"
 
 class PlanetColonise : ModeBase {
     public:
         PlanetColonise();
         virtual void enter() override;
+        virtual void exit() override;
         virtual ExodusMode update(float) override;
     private:
         Planet *planet;
+        Player *player;
         float time;
 
         enum Stage {

@@ -199,6 +199,10 @@ void ExodusState::init(GameConfig config) {
 
     aim = config.aim;
     enemy_start = config.enemy_start;
+
+    recommended_planet_star_idx = -1;
+    recommended_planet_idx = -1;
+
     L.debug("ExodusState init");
     L.debug("      Size: %d", size);
     L.debug("   Players: %d", n_human_players);
@@ -749,14 +753,28 @@ PlanetInfo ExodusState::recommend_planet() {
                 break;
             }
         }
+
         if (this_quality > quality) {
             quality = this_quality;
             info.planet = p;
             info.star = s;
+            info.planet_idx = piter.get_idx();
+            info.star_idx = piter.get_star_idx();
             info.index = piter.get_idx();
         }
     }
     return info;
+}
+
+void ExodusState::save_recommended_planet(const PlanetInfo& info) {
+    recommended_planet_star_idx = info.star_idx;
+    recommended_planet_idx = info.planet_idx;
+}
+
+bool ExodusState::is_recommended_planet(Planet* p) {
+    int p_idx, s_idx;
+    get_star_planet_idx(p, s_idx, p_idx);
+    return (recommended_planet_star_idx = s_idx && recommended_planet_idx == p_idx);
 }
 
 Player* ExodusState::get_hostile_to(Player& p) {
@@ -1084,6 +1102,8 @@ void ExodusState::save(cJSON* j) const {
     SAVE_NUM(j, newsitem_head);
     SAVE_ARRAY_OF_SAVEABLE(j, newsitems);
     SAVE_ARRAY_OF_NUM(j, attack_preventions);
+    SAVE_NUM(j, recommended_planet_star_idx);
+    SAVE_NUM(j, recommended_planet_idx);
 }
 
 void ExodusState::load(cJSON* j) {
@@ -1106,4 +1126,6 @@ void ExodusState::load(cJSON* j) {
     LOAD_NUM(j, newsitem_head);
     LOAD_ARRAY_OF_SAVEABLE(j, newsitems);
     LOAD_ARRAY_OF_NUM(j, attack_preventions);
+    LOAD_NUM(j, recommended_planet_star_idx);
+    LOAD_NUM(j, recommended_planet_idx);
 }

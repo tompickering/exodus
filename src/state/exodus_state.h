@@ -61,6 +61,8 @@ typedef struct {
 typedef struct {
     Planet* planet;
     Star* star;
+    int planet_idx;
+    int star_idx;
     int index;
 } PlanetInfo;
 
@@ -160,6 +162,9 @@ class ExodusState : public Saveable {
         bool attack_prevented(Planet*);
         void clear_attack_preventions();
 
+        void save_recommended_planet(const PlanetInfo& info);
+        bool is_recommended_planet(Planet* p);
+
         bool first_city_done;
         bool first_spaceport_done;
 
@@ -185,6 +190,9 @@ class ExodusState : public Saveable {
         int newsitem_head;
         NewsItem newsitems[MAX_NEWSITEMS];
         uint8_t attack_preventions[GALAXY_MAX_STARS];
+
+        int recommended_planet_star_idx;
+        int recommended_planet_idx;
 
     friend class ExodusDebug;
 };
