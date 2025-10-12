@@ -64,6 +64,10 @@ bool BattleReport::batrpt_draw(bool reset) {
                     achievement_manager.unlock(ACH_RebelsSuppressed);
                 }
             }
+
+            if (b.aggressor_type == AGG_Aliens) {
+                achievement_manager.unlock(ACH_AliensDefeated);
+            }
         }
     }
 

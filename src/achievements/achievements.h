@@ -43,6 +43,7 @@ enum Achievement : uint8_t {
     ACH_DefenseWon,
     ACH_RebelsAppeased,
     ACH_RebelsSuppressed,
+    ACH_AliensDefeated,
     ACH_MAX
 };
 
