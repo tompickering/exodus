@@ -29,6 +29,8 @@ enum Achievement : uint8_t {
     ACH_SheriffHighScore,
     ACH_NukeAPlanet,
     ACH_BestStartWorld,
+    ACH_FirstCity,
+    ACH_FirstStarport,
 };
 
 class AchievementManager {

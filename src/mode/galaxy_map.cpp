@@ -506,6 +506,7 @@ ExodusMode GalaxyMap::update(float delta) {
                             {5, 7, 0, 0, 1, 1});
                         frame_draw();
                         stage = GM_MP_FirstCity;
+                        achievement_manager.unlock(ACH_FirstCity);
                         return ExodusMode::MODE_None;
                     } else if (ephstate.get_ephemeral_state() == EPH_ResearchCheck) {
                         ephstate.research.done = bulletin_was_yesno_yes();
@@ -613,6 +614,7 @@ ExodusMode GalaxyMap::update(float delta) {
                         COL_TEXT2);
                     frame_draw();
                     first_spaceport_time = 0;
+                    achievement_manager.unlock(ACH_FirstStarport);
                     stage = GM_MP_FirstSpaceport;
                     return ExodusMode::MODE_None;
                 }
