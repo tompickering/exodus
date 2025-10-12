@@ -649,6 +649,10 @@ ExodusMode PlanetMap::update(float delta) {
                                 }
                                 // Clearing villages increases unrest
                                 if (existing == STONE_Village) {
+                                    if (planet->count_stones(STONE_Village) == 1) {
+                                        achievement_manager.unlock(ACH_NativesDestroyed);
+                                    }
+
                                     planet->adjust_unrest(2);
                                     player->add_trace(TRACE_VillagesAnnihilated);
                                 }
