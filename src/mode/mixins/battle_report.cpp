@@ -52,8 +52,18 @@ bool BattleReport::batrpt_draw(bool reset) {
             achievement_manager.unlock(ACH_AttackWon);
         }
 
-        if (defending && aggressor != nullptr) {
-            achievement_manager.unlock(ACH_DefenseWon);
+        if (defending) {
+            if (aggressor != nullptr) {
+                achievement_manager.unlock(ACH_DefenseWon);
+            }
+
+            if (b.aggressor_type == AGG_Rebels) {
+                if (rpt.rebel_peace) {
+                    achievement_manager.unlock(ACH_RebelsAppeased);
+                } else {
+                    achievement_manager.unlock(ACH_RebelsSuppressed);
+                }
+            }
         }
     }
 
