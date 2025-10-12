@@ -376,6 +376,7 @@ ExodusMode AlienVessel::update(float delta) {
 
                 // Launch battle
                 SpaceBattleParams &b = ephstate.space_battle;
+                b.enemy_hostile = will_attack;
                 b.enemy_ships = enemy_ships;
                 b.enemy_cargo = enemy_cargo;
                 b.enemy_scouts = enemy_scouts;

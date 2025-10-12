@@ -953,6 +953,7 @@ void SpaceBattle::update_battle() {
 }
 
 ExodusMode SpaceBattle::update(float delta) {
+    SpaceBattleParams &b = ephstate.space_battle;
 
     switch (stage) {
         case SB_Setup:
@@ -969,6 +970,11 @@ ExodusMode SpaceBattle::update(float delta) {
                     if (!find_ship(SHIP_Warship, true)) {
                         resolution_delay = 0;
                         resolution = SBRES_Won;
+
+                        if (b.enemy_hostile) {
+                            achievement_manager.unlock(ACH_DefeatHostileFleet);
+                        }
+
                         L.info("BATTLE WON");
                     }
                 }

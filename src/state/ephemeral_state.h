@@ -91,6 +91,7 @@ typedef struct {
 } LunarBattleReport;
 
 typedef struct {
+    bool enemy_hostile;
     int enemy_ships;
     int enemy_cargo;
     int enemy_scouts;
