@@ -4445,6 +4445,9 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 if (p->get_size() == PLANET_Large)  threshold = 153;
                 if (p->count_stones(STONE_Agri) >= threshold) {
                     p->change_class(Terra);
+                    if (owner && owner->is_human()) {
+                        achievement_manager.unlock(ACH_ParadiseGained);
+                    }
                     exostate.register_news(NI_SurfChangeCultivation);
                     if (bulletin_start_new(true, s)) {
                         audio_manager.target_music(mpart2mus(5));
@@ -4473,6 +4476,9 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 if (p->get_size() == PLANET_Large)  threshold = 51;
                 if (p->count_stones(STONE_NaturalLarge) < threshold) {
                     p->change_class(Rock);
+                    if (owner && owner->is_human()) {
+                        achievement_manager.unlock(ACH_ParadiseLost);
+                    }
                     exostate.register_news(NI_SurfChangeClearing);
                     if (bulletin_start_new(true, s)) {
                         audio_manager.target_music(mpart2mus(9));
