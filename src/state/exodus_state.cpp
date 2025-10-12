@@ -1085,10 +1085,18 @@ uint8_t ExodusState::get_alliances(int a, int b) {
     return alliance_matrix[b*N_PLAYERS + a];
 }
 void ExodusState::set_alliances(int a, int b, uint8_t alliances) {
+    Player *pa = get_player(a);
+    Player *pb = get_player(b);
+    bool human_involved = pa->is_human() || pb->is_human();
+
     if (b > a) {
         alliance_matrix[a*N_PLAYERS + b] = alliances;
     } else {
         alliance_matrix[b*N_PLAYERS + a] = alliances;
+    }
+
+    if (human_involved && has_all_alliances(a, b)) {
+        achievement_manager.unlock(ACH_AllAlliances);
     }
 }
 

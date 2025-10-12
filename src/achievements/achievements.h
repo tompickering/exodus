@@ -37,6 +37,7 @@ enum Achievement : uint8_t {
     ACH_ParadiseGained,
     ACH_NativesDestroyed,
     ACH_DefeatHostileFleet,
+    ACH_AllAlliances,
 };
 
 class AchievementManager {
