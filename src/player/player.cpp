@@ -436,6 +436,10 @@ bool Player::research_invention(Invention inv) {
 
     inventions |= (1 << (int)inv);
 
+    if (is_human() && has_all_inventions()) {
+        achievement_manager.unlock(ACH_AllInventions);
+    }
+
     return true;
 }
 
