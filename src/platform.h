@@ -43,4 +43,8 @@
 #define ACHIEVEMENTMANAGER AchievementManagerNull
 #endif
 
+bool platform_init();
+void platform_poll();
+bool platform_shutdown();
+
 #endif

@@ -7,7 +7,7 @@ BIN=src/exodus
 
 all:
 
-OBJS := $(patsubst %.cpp,%.o,$(wildcard *.cpp */*.cpp */*/*.cpp */*/*/*.cpp))
+OBJS := $(patsubst %.cpp,%.o,$(wildcard src/*.cpp src/*/*.cpp src/*/*/*.cpp src/*/*/*/*.cpp))
 DEPS = $(OBJS:%.o=%.d)
 CLEAN = $(BIN) $(OBJS) $(DEPS)
 
@@ -48,6 +48,18 @@ bin: $(BIN)
 
 debug: CXXFLAGS += $(DBGFLAGS)
 debug: linux
+
+STEAMFLAGS_COMMON=-DSTEAM -Isteamworks_sdk/sdk/public
+
+steam-linux: CXXFLAGS += $(STEAMFLAGS_COMMON)
+steam-linux: LDLIBS += -Lsteamworks_sdk/sdk/redistributable_bin/linux64 -lsteam_api
+steam-linux: linux
+
+steam-mac: CXXFLAGS += $(STEAMFLAGS_COMMON)
+steam-mac: mac
+
+steam-windows: CXXFLAGS += $(STEAMFLAGS_COMMON)
+steam-windows: windows
 
 $(BIN):
 	$(LINK.cpp) $^ $(LOADLIBES) $(LDLIBS) -o $@

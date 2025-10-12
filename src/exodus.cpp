@@ -100,6 +100,13 @@ bool Exodus::init() {
     L.info("Initialising Exodus...");
     signal(SIGINT, signal_handler);
 
+    L.info("Initialising platform...");
+    if (platform_init()) {
+        L.info("Platform initialised");
+    } else {
+        L.fatal("Failed to initialise platform");
+    }
+
     DrawManagerOptions draw_manager_options;
     draw_manager_options.fullscreen = !has_option("windowed");
     bool ok = draw_manager.init(draw_manager_options);
@@ -283,6 +290,8 @@ int Exodus::run(int argc, char** argv) {
         }
         */
 
+        platform_poll();
+
         mouse_pos = input_manager.get_mouse_pos();
         click_pos = input_manager.read_click();
         click_pos_r = input_manager.read_click_r();
@@ -352,6 +361,13 @@ int Exodus::run(int argc, char** argv) {
     }
 
     cleanup();
+
+    L.info("Shutting down platform...");
+    if (platform_shutdown()) {
+        L.info("Platform shut down");
+    } else {
+        L.fatal("Failed to shut down platform");
+    }
 
     return 0;
 }
