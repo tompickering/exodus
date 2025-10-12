@@ -729,6 +729,19 @@ void Player::set_officer(Officer off, OfficerQuality off_q) {
     }
     L.debug("%s: NEW OFFICER %d: %d->%d", get_full_name(), off, officers[off], off_q);
     officers[off] = off_q;
+
+    bool all_good = true;
+
+    for (int i = 0; i < (int)OFFICER_MAX; ++i) {
+        if (officers[i] != OFFQ_Good) {
+            all_good = false;
+            break;
+        }
+    }
+
+    if (all_good) {
+        achievement_manager.unlock(ACH_AllGoodOfficers);
+    }
 }
 
 int Player::get_freight_capacity() {

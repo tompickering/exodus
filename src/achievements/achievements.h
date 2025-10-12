@@ -38,6 +38,7 @@ enum Achievement : uint8_t {
     ACH_NativesDestroyed,
     ACH_DefeatHostileFleet,
     ACH_AllAlliances,
+    ACH_AllGoodOfficers,
 };
 
 class AchievementManager {
