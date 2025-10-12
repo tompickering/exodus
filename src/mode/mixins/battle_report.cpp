@@ -47,6 +47,16 @@ bool BattleReport::batrpt_draw(bool reset) {
 
     audio_manager.target_music(mpart2mus(won ? 5 : 9));
 
+    if (won) {
+        if (!defending) {
+            achievement_manager.unlock(ACH_AttackWon);
+        }
+
+        if (defending && aggressor != nullptr) {
+            achievement_manager.unlock(ACH_DefenseWon);
+        }
+    }
+
     char l0[32];
     char l1[32];
     char l2[32];

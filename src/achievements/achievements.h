@@ -39,6 +39,8 @@ enum Achievement : uint8_t {
     ACH_DefeatHostileFleet,
     ACH_AllAlliances,
     ACH_AllGoodOfficers,
+    ACH_AttackWon,
+    ACH_DefenseWon,
     ACH_MAX
 };
 
