@@ -1626,6 +1626,12 @@ void Planet::mine() {
         reserves_min = get_resource_cap();
     reserves_plu -= (units_to_mine - madd);
     minerals -= units_to_mine;
+
+    if (minerals <= 0) {
+        if (is_owned() && exostate.get_player(get_owner())->is_human()) {
+            achievement_manager.unlock(ACH_PlanetMined);
+        }
+    }
 }
 
 void Planet::perish_food() {

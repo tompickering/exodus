@@ -31,6 +31,7 @@ enum Achievement : uint8_t {
     ACH_BestStartWorld,
     ACH_FirstCity,
     ACH_FirstStarport,
+    ACH_PlanetMined,
 };
 
 class AchievementManager {
