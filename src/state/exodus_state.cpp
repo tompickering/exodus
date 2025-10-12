@@ -496,6 +496,16 @@ FlyTarget* ExodusState::loc2tgt(int loc) {
     return &get_galaxy()->get_stars()[loc];
 }
 
+bool ExodusState::player_has_visited_all_stars(Player* player) {
+    for (StarIterator siter; !siter.complete(); ++siter) {
+        if (!player->get_location().has_visited(siter.get_idx())) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 Player* ExodusState::get_player(int idx) {
     if (idx < 0 || idx >= N_PLAYERS) {
         L.fatal("Request for invalid player %d", idx);

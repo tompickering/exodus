@@ -32,6 +32,7 @@ enum Achievement : uint8_t {
     ACH_FirstCity,
     ACH_FirstStarport,
     ACH_PlanetMined,
+    ACH_AllExplored,
 };
 
 class AchievementManager {

@@ -2200,7 +2200,11 @@ ExodusMode GalaxyMap::month_pass_update() {
         for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
             Player *p = exostate.set_active_player(mp_state.mp_player_idx);
             if (p && p->is_participating() && p->is_human()) {
+                bool all_visited = exostate.player_has_visited_all_stars(p);
                 if (p->get_location().advance()) {
+                    if (!all_visited && exostate.player_has_visited_all_stars(p)) {
+                        achievement_manager.unlock(ACH_AllExplored);
+                    }
                     // Show arrival animation for human players
                     if (p->is_human()) {
                         return ExodusMode::MODE_Fly;
