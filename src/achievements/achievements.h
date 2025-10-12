@@ -39,15 +39,21 @@ enum Achievement : uint8_t {
     ACH_DefeatHostileFleet,
     ACH_AllAlliances,
     ACH_AllGoodOfficers,
+    ACH_MAX
 };
+
+static_assert(ACH_MAX <= 64);
 
 class AchievementManager {
     public:
-        AchievementManager() {}
+        AchievementManager() : unlocked_this_session(0) {}
         virtual bool init() = 0;
         virtual bool achievements_enabled() final;
         virtual void unlock(Achievement) final;
         virtual void enact_unlock(Achievement) = 0;
+
+    private:
+        uint64_t unlocked_this_session;
 };
 
 #ifdef STEAM

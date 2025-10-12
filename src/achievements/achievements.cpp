@@ -17,5 +17,11 @@ void AchievementManager::unlock(Achievement achievement) {
         return;
     }
 
+    if (unlocked_this_session & (1 << achievement)) {
+        return;
+    }
+
+    unlocked_this_session = unlocked_this_session | (1 << achievement);
+
     enact_unlock(achievement);
 }
