@@ -45,6 +45,9 @@ enum Achievement : uint8_t {
     ACH_RebelsSuppressed,
     ACH_AliensDefeated,
     ACH_AllInventions,
+    ACH_ArtPlanetP1,
+    ACH_ArtPlanetP2,
+    ACH_ArtPlanetP3,
     ACH_MAX
 };
 

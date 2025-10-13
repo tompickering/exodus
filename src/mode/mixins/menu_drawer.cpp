@@ -788,7 +788,15 @@ void MenuDrawer::menu_open_specific_mode() {
                     L.debug("Advancing artificial planet");
                     menu_art_planet_phase = planet->get_construction_phase();
                     menu_art_planet_named = true;
-                    if (!planet->advance_construction_phase()) {
+                    if (planet->advance_construction_phase()) {
+                        if (menu_art_planet_phase == 1) {
+                            achievement_manager.unlock(ACH_ArtPlanetP2);
+                        }
+
+                        if (menu_art_planet_phase == 2) {
+                            achievement_manager.unlock(ACH_ArtPlanetP3);
+                        }
+                    } else {
                         L.error("Attempt to advance non-advanceable planet");
                     }
                     /*
@@ -797,6 +805,9 @@ void MenuDrawer::menu_open_specific_mode() {
                      */
                 } else {
                     L.debug("Constructing artificial planet");
+
+                    achievement_manager.unlock(ACH_ArtPlanetP1);
+
                     menu_action = MA_BuildArtificialWorld;
                 }
 
