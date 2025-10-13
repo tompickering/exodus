@@ -1585,6 +1585,10 @@ TradeReport Planet::monthly_trade() {
     if (rpt.pl > 0) {
         // punish%(1,0)=1
         o->commit_infraction(INF_TradePlu);
+
+        if (o->is_human()) {
+            achievement_manager.unlock(ACH_IllicitTrade);
+        }
     }
 
     o->add_trace(TRACE_MineralsSold, rpt.mi);

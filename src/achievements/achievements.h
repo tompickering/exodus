@@ -51,6 +51,7 @@ enum Achievement : uint8_t {
     ACH_PlanetFried,
     ACH_AllianceNoMC,
     ACH_AllianceForced,
+    ACH_IllicitTrade,
     ACH_MAX
 };
 
