@@ -1275,13 +1275,32 @@ ExodusMode GalaxyMap::month_pass_update() {
                     if (snd && snd->exists()) snd->change_class(Desert);
                     break;
                 case STAR_Expand3:
-                    if (fst && fst->exists()) fst->destroy();
+                    if (fst && fst->exists()) {
+                        if (fst->is_owned()) {
+                            int owner_idx = fst->get_owner();
+                            Player *owner = exostate.get_player(owner_idx);
+                            if (owner->is_human()) {
+                                achievement_manager.unlock(ACH_PlanetFried);
+                            }
+                        }
+
+                        fst->destroy();
+                    }
+
                     if (snd && snd->exists()) snd->change_class(Volcano);
                     break;
                 case STAR_Expand4:
                     for (int i = 0; i < 3; ++i) {
                         Planet *pl = s->get_planet(i);
                         if (pl && pl->exists()) {
+                            if (pl->is_owned()) {
+                                int owner_idx = pl->get_owner();
+                                Player *owner = exostate.get_player(owner_idx);
+                                if (owner->is_human()) {
+                                    achievement_manager.unlock(ACH_PlanetFried);
+                                }
+                            }
+
                             pl->destroy();
                         }
                     }
