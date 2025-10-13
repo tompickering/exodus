@@ -1615,6 +1615,24 @@ TradeReport Planet::monthly_trade() {
         }
     }
 
+    if (o->is_human()) {
+        if (rpt.mc >= 20) {
+            achievement_manager.unlock(ACH_TradeGood);
+        }
+
+        if (rpt.mc >= 50) {
+            achievement_manager.unlock(ACH_TradeVGood);
+        }
+
+        if (rpt.mc >= 100) {
+            achievement_manager.unlock(ACH_TradeExcellent);
+        }
+
+        if (rpt.pl == 0 && rpt.mc >= 50) {
+            achievement_manager.unlock(ACH_TradeClean);
+        }
+    }
+
     o->add_trace(TRACE_MineralsSold, rpt.mi);
     o->add_trace(TRACE_FoodSold, rpt.fd);
     o->add_trace(TRACE_PlutoniumSold, rpt.pl);
