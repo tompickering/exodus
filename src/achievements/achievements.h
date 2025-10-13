@@ -50,6 +50,7 @@ enum Achievement : uint8_t {
     ACH_ArtPlanetP3,
     ACH_PlanetFried,
     ACH_AllianceNoMC,
+    ACH_AllianceForced,
     ACH_MAX
 };
 

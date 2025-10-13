@@ -1445,6 +1445,11 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     comm_set_speech("But we have an ALLIANCE!");
                     exostate.set_all_alliances(comm_player_idx, comm_other_idx);
                     comm_player->add_trace(TRACE_AlliancesCreated);
+
+                    if (comm_player->is_human()) {
+                        achievement_manager.unlock(ACH_AllianceForced);
+                    }
+
                     comm_recv(DIA_R_Close);
                 } else {
                     if ((comm_other->get_flag(0) == AI_Hi) || onein(4)) {
