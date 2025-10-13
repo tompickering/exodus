@@ -1488,6 +1488,11 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 //          but they don't go to the other lord! More important
                 //          in multiplayer.
                 exostate.set_alliance(comm_player_idx, comm_other_idx, comm_ctx.alliance_type);
+
+                if (comm_ctx.mc == 0 && comm_player->is_human()) {
+                    achievement_manager.unlock(ACH_AllianceNoMC);
+                }
+
                 comm_player->add_trace(TRACE_AlliancesCreated);
                 comm_set_speech("I accept this.");
                 comm_exit_anim_action = CA_Abort;
