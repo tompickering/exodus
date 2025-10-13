@@ -1442,7 +1442,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 int army = f.infantry + f.gliders + f.artillery*2;
                 if ((army > comm_planet->get_army_size()) && (comm_other->get_flag(3) != AI_Lo)) {
                     // FIXME: Should this say something else...?
-                    comm_set_speech("But we have an ALLIANCE!");
+                    comm_set_speech("I... have to accept this.");
                     exostate.set_all_alliances(comm_player_idx, comm_other_idx);
                     comm_player->add_trace(TRACE_AlliancesCreated);
 
