@@ -1245,10 +1245,34 @@ void Planet::reset_unrest() {
 
 void Planet::adjust_unrest(int adjustment) {
     L.debug("%s: Unrest %d + %d", name, unrest[0], adjustment);
+
+    int initial_unrest = unrest[0];
+
     unrest[0] += adjustment;
     if (unrest[0] < 0) unrest[0] = 0;
     // Can't see any ref to a maximum in the original
     // Riots happen when >8, rebel attacks at >9
+
+    if (initial_unrest != unrest[0] && unrest[0] <= 3) {
+        bool population_angry_recently = false;
+
+        if (is_owned()) {
+            Player *owner = exostate.get_player(get_owner());
+
+            if (owner->is_human()) {
+                for (int i = 0; i < N_UNREST; ++i) {
+                    if (unrest[i] >= 8) {
+                        population_angry_recently = true;
+                        break;
+                    }
+                }
+            }
+
+            if (population_angry_recently) {
+                achievement_manager.unlock(ACH_PopulationAppeased);
+            }
+        }
+    }
 }
 
 void Planet::surfchange() {
