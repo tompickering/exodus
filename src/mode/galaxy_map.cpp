@@ -1980,6 +1980,10 @@ ExodusMode GalaxyMap::month_pass_update() {
                                             ephstate.destruction.tgt_stones.reset();
                                         }
 
+                                        if (p->is_human()) {
+                                            achievement_manager.unlock(ACH_SecretMission);
+                                        }
+
                                         exostate.register_news(NI_TerroristAttack);
                                         bulletin_start_new(true, st);
                                         bulletin_set_bg(pl->sprites()->bulletin_bg);

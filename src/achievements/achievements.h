@@ -60,6 +60,7 @@ enum Achievement : uint8_t {
     ACH_ManyEnemies,
     ACH_ManyAllies,
     ACH_BombingMission,
+    ACH_SecretMission,
     ACH_MAX
 };
 
