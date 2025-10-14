@@ -59,6 +59,7 @@ enum Achievement : uint8_t {
     ACH_TradeClean,
     ACH_ManyEnemies,
     ACH_ManyAllies,
+    ACH_BombingMission,
     ACH_MAX
 };
 

@@ -512,6 +512,10 @@ ExodusMode StarMap::update(float delta) {
                             FLEET_PANEL_X+4, FLEET_PANEL_Y+224,
                             COL_TEXT);
 
+                        if (hits > 0) {
+                            achievement_manager.unlock(ACH_BombingMission);
+                        }
+
                         stage = SM_MissionBomb;
                         return ExodusMode::MODE_None;
                     }
