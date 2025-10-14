@@ -818,6 +818,24 @@ void ExodusState::set_random_hostility(Player& p) {
     }
 }
 
+int ExodusState::count_hostile_players(int p_idx) {
+    int count = 0;
+
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        if (i == p_idx) {
+            continue;
+        }
+
+        Player *other_player = get_player(i);
+
+        if (other_player->is_participating() && other_player->get_hostile_to() == p_idx) {
+            ++count;
+        }
+    }
+
+    return count;
+}
+
 bool ExodusState::is_allied(int a, int b) {
     return get_alliances(a, b) > 0;
 }

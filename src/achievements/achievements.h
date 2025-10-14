@@ -57,6 +57,7 @@ enum Achievement : uint8_t {
     ACH_TradeVGood,
     ACH_TradeExcellent,
     ACH_TradeClean,
+    ACH_ManyEnemies,
     ACH_MAX
 };
 

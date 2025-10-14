@@ -134,6 +134,7 @@ class ExodusState : public Saveable {
         PlanetInfo recommend_planet();
         Player* get_hostile_to(Player&);
         void set_random_hostility(Player&);
+        int count_hostile_players(int);
         int get_total_income_ignoring_army(int);
         int get_total_net_income(int);
         bool is_allied(int, int);
