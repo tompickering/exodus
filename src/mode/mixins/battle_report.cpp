@@ -50,6 +50,14 @@ bool BattleReport::batrpt_draw(bool reset) {
     if (won) {
         if (!defending) {
             achievement_manager.unlock(ACH_AttackWon);
+
+            if (rpt.agg_odds == ODDS_Bad) {
+                achievement_manager.unlock(ACH_WinBadOdds);
+            }
+
+            if (rpt.agg_odds == ODDS_VBad) {
+                achievement_manager.unlock(ACH_WinVBadOdds);
+            }
         }
 
         if (defending) {

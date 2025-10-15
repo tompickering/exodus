@@ -5,6 +5,7 @@
 
 #include "anim.h"
 #include "state/exodus_state.h"
+#include "state/ephemeral_state.h"
 
 #define COMM_MAX_TEXT 256
 
@@ -205,6 +206,7 @@ typedef struct {
     int months;
     int battle_strength_att;
     int battle_strength_def;
+    BattleOdds att_odds;
 } CommContext;
 
 class CommPanelDrawer {

@@ -22,9 +22,18 @@ enum AggressorType {
     AGG_Aliens,
 };
 
+enum BattleOdds {
+    ODDS_None,
+    ODDS_VBad,
+    ODDS_Bad,
+    ODDS_Good,
+    ODDS_VGood
+};
+
 typedef struct {
     AggressorType aggressor_type;
     int aggressor_idx;
+    BattleOdds aggressor_odds;
     bool human_battle;
     bool human_attacking;  // Separate to support
     bool human_defending;  // multiplayer PvP.
@@ -68,6 +77,7 @@ typedef struct {
     // FIXME: These two would be better as a BattleResolution enum, since retreated => !won
     bool aggressor_won;
     bool aggressor_retreated;
+    BattleOdds agg_odds;
     bool rebel_peace;
     bool human_surrendered;
     UnitCount agg_init; // \ Units that were taken into battle.
@@ -79,6 +89,7 @@ typedef struct {
     void clear() {
         aggressor_won = false;
         aggressor_retreated = false;
+        agg_odds = ODDS_None;
         rebel_peace = false;
         human_surrendered = false;
         agg_init.clear();

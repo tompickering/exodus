@@ -122,6 +122,7 @@ void LunarBattle::enter() {
     rpt.clear();
     rpt.defender_idx = p->get_owner();
     rpt.agg_type     = b.aggressor_type;
+    rpt.agg_odds     = b.aggressor_odds;
     rpt.agg_init.inf = b.aggressor_inf;
     rpt.agg_init.gli = b.aggressor_gli;
     rpt.agg_init.art = b.aggressor_art;

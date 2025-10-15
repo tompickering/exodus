@@ -708,10 +708,32 @@ void CommPanelDrawer::comm_init(CommSend input) {
                         comm_set_img(CI_Human);
                     }
                     comm_set_text(0, "Attack %s", comm_planet->get_name());
-                    const char *odds = "good";
-                    if (army_enemy >= army) odds = "not good";
-                    if (army > army_enemy*2) odds = "very good";
-                    if (army_enemy > army*2) odds = "extremely bad";
+
+                    comm_ctx.att_odds = ODDS_Good;
+                    if (army_enemy >= army) comm_ctx.att_odds = ODDS_Bad;
+                    if (army > army_enemy*2) comm_ctx.att_odds = ODDS_VGood;
+                    if (army_enemy > army*2) comm_ctx.att_odds = ODDS_VBad;
+
+                    const char *odds = "";
+
+                    switch (comm_ctx.att_odds) {
+                        case ODDS_VBad:
+                            odds = "extremely bad";
+                            break;
+                        case ODDS_Bad:
+                            odds = "not good";
+                            break;
+                        case ODDS_Good:
+                            odds = "good";
+                            break;
+                        case ODDS_VGood:
+                            odds = "very good";
+                            break;
+                        default:
+                            L.error("Unknown odds %d", (int)(comm_ctx.att_odds));
+                            break;
+                    }
+
                     comm_set_text(2, "The winning chances are %s.", odds);
                     if (base) {
                         comm_set_text(4, "%s owns a lunar base.", comm_planet->get_name());
