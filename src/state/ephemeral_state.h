@@ -86,6 +86,7 @@ typedef struct {
     UnitCount def_lost; // /
     UnitCount agg_surf; // \ Units that are still on the surface and
     UnitCount def_surf; // / may need to be moved to planet or fleet.
+    bool agg_one_inf_stack;
     void clear() {
         aggressor_won = false;
         aggressor_retreated = false;
@@ -98,6 +99,7 @@ typedef struct {
         def_lost.clear();
         agg_surf.clear();
         def_surf.clear();
+        agg_one_inf_stack = false;
     }
 } LunarBattleReport;
 

@@ -58,6 +58,10 @@ bool BattleReport::batrpt_draw(bool reset) {
             if (rpt.agg_odds == ODDS_VBad) {
                 achievement_manager.unlock(ACH_WinVBadOdds);
             }
+
+            if (rpt.agg_one_inf_stack) {
+                achievement_manager.unlock(ACH_OneInfantry);
+            }
         }
 
         if (defending) {

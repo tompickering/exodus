@@ -140,6 +140,12 @@ void LunarBattle::enter() {
         rpt.def_surf.base = LUNAR_BASE_GUN_HP*4;
     }
 
+    if (b.aggressor_gli == 0 && b.aggressor_art == 0) {
+        if (b.aggressor_inf <= b.aggressor_group_size) {
+            rpt.agg_one_inf_stack = true;
+        }
+    }
+
     n_units = 0;
     unit_moving = false;
     move_interp = 0;
