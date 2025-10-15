@@ -1,5 +1,13 @@
-N.B. The code copyright holder grants any and all permissions to Jan Klose and to Artex Software to modify, distribute, sell or otherwise use this game implementation (which may be found at https://github.com/tompickering/exodus) in whatever way they wish - including integration with other third party platforms (such as Steam) - without limitation. To anyone else, the following license terms apply.
+N.B. The code copyright holder grants any and all permissions to Jan Klose and
+to Artex Software to modify, distribute, sell or otherwise use this game
+implementation (which may be found at https://github.com/tompickering/exodus) in
+whatever way they wish - including integration with other third party platforms
+(such as Steam) - without limitation. To anyone else, the following license
+terms apply.
+
     -- Tom Pickering, 2025
+
+
 
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
