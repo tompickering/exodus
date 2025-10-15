@@ -43,6 +43,6 @@ cp lib/SDL2_ttf-2.20.2/x86_64-w64-mingw32/bin/SDL2_ttf.dll .
 name=$(basename "$(pwd)")
 
 pushd ..
-zip -r exodus.zip "${name}" --include "${name}/assets/*" "${name}/exodus.exe" "${name}/LICENSE" "${name}/manual.pdf" "${name}/README.md" "${name}/supplement.pdf" "${name}/*.dll"
+zip -r exodus.zip "${name}" --include "${name}/assets/*" "${name}/exodus.exe" "${name}/LICENSE" "${name}/manual.pdf" "${name}/README.md" "${name}/supplement.pdf" "${name}/*.dll" "licenses/*"
 mv exodus.zip "${name}"
 popd
