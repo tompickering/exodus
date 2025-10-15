@@ -9,5 +9,4 @@ bool AchievementManagerSteam::init() {
 
 void AchievementManagerSteam::enact_unlock(Achievement achievement) {
     // TODO
-    L.info("[STEAM ACHIEVEMENT UNLOCKED] %d", (int)achievement);
 }

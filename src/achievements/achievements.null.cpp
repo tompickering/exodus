@@ -7,5 +7,4 @@ bool AchievementManagerNull::init() {
 }
 
 void AchievementManagerNull::enact_unlock(Achievement achievement) {
-    L.info("[ACHIEVEMENT UNLOCKED] %d", (int)achievement);
 }
