@@ -39,12 +39,24 @@
 
 #ifdef STEAM
 #define ACHIEVEMENTMANAGER AchievementManagerSteam
+#define PLATFORM PlatformSteam
 #else
 #define ACHIEVEMENTMANAGER AchievementManagerNull
+#define PLATFORM PlatformNull
 #endif
 
-bool platform_init();
-void platform_poll();
-bool platform_shutdown();
+class Platform {
+    public:
+        Platform() {}
+        virtual bool init() = 0;
+        virtual void poll() = 0;
+        virtual bool shutdown() = 0;
+};
+
+#ifdef STEAM
+#include "platform.steam.h"
+#else
+#include "platform.null.h"
+#endif
 
 #endif

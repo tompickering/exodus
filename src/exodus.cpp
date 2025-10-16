@@ -55,6 +55,7 @@ Log::Logger L(Log::Level::DEBUG);
 Log::Logger L(Log::Level::WARN);
 #endif
 
+PLATFORM platform;
 AUDIOMANAGER audio_manager;
 DRAWMANAGER draw_manager;
 INPUTMANAGER input_manager;
@@ -101,7 +102,7 @@ bool Exodus::init() {
     signal(SIGINT, signal_handler);
 
     L.info("Initialising platform...");
-    if (platform_init()) {
+    if (platform.init()) {
         L.info("Platform initialised");
     } else {
         L.fatal("Failed to initialise platform");
@@ -290,7 +291,7 @@ int Exodus::run(int argc, char** argv) {
         }
         */
 
-        platform_poll();
+        platform.poll();
 
         mouse_pos = input_manager.get_mouse_pos();
         click_pos = input_manager.read_click();
@@ -363,7 +364,7 @@ int Exodus::run(int argc, char** argv) {
     cleanup();
 
     L.info("Shutting down platform...");
-    if (platform_shutdown()) {
+    if (platform.shutdown()) {
         L.info("Platform shut down");
     } else {
         L.fatal("Failed to shut down platform");
