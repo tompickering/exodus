@@ -2,7 +2,7 @@
 #define GUARD_MODE_BASE_H
 
 #include "exodus.h"
-#include "platform.h"
+#include "platform/platform.h"
 #include "timer/timer.h"
 
 #include "draw/draw.h"

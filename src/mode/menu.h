@@ -3,7 +3,7 @@
 
 #include "mode_base.h"
 
-#include "platform.h"
+#include "platform/platform.h"
 #include "draw/draw.h"
 #include "save/save.h"
 

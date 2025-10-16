@@ -4,7 +4,7 @@
 #include "mode_base.h"
 #include "mixins/galaxy_drawer.h"
 
-#include "platform.h"
+#include "platform/platform.h"
 #include "draw/draw.h"
 
 #include "state/exodus_state.h"

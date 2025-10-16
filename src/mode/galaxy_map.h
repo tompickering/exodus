@@ -12,7 +12,7 @@
 #include "mixins/trade_buy.h"
 #include "mixins/bombing.h"
 
-#include "platform.h"
+#include "platform/platform.h"
 #include "draw/draw.h"
 
 #include "state/exodus_state.h"

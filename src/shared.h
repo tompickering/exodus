@@ -5,7 +5,7 @@
 #include <cstdint>
 
 #include "logger.h"
-#include "platform.h"
+#include "platform/platform.h"
 #include "assetpaths.h"
 
 #include "exodus.h"

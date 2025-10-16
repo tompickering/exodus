@@ -3,7 +3,7 @@
 
 #include "mode_base.h"
 
-#include "platform.h"
+#include "platform/platform.h"
 
 class Intro : ModeBase {
     public:

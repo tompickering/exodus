@@ -4,7 +4,7 @@ const ExodusVersion EXODUS_VERSION = 2;
 
 #include "shared.h"
 
-#include "platform.h"
+#include "platform/platform.h"
 #include "timer/timer.h"
 #include "audio/audio.h"
 #include "draw/draw.h"
