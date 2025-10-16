@@ -12,6 +12,19 @@ DEPS = $(OBJS:%.o=%.d)
 CLEAN = $(BIN) $(OBJS) $(DEPS)
 
 INCFLAGS=-Isrc -Isrc/deps
+
+ifeq ($(MAKECMDGOALS),steam-linux)
+INCFLAGS += -Isteamworks_sdk/sdk/public
+endif
+
+ifeq ($(MAKECMDGOALS),steam-mac)
+INCFLAGS += -Isteamworks_sdk/sdk/public
+endif
+
+ifeq ($(MAKECMDGOALS),steam-windows)
+INCFLAGS += -Isteamworks_sdk/sdk/public
+endif
+
 LDLIBS=-lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
 CXXFLAGS=-Wall -Wno-reorder -Wno-class-memaccess -Wno-format-truncation -pedantic -DMONO -DSDL $(INCFLAGS)
 DBGFLAGS=-g -DDBG
@@ -49,7 +62,7 @@ bin: $(BIN)
 debug: CXXFLAGS += $(DBGFLAGS)
 debug: linux
 
-STEAMFLAGS_COMMON=-DSTEAM -Isteamworks_sdk/sdk/public
+STEAMFLAGS_COMMON=-DSTEAM
 
 steam-linux: CXXFLAGS += $(STEAMFLAGS_COMMON)
 steam-linux: LDLIBS += -Lsteamworks_sdk/sdk/redistributable_bin/linux64 -lsteam_api
