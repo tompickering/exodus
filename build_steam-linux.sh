@@ -38,6 +38,6 @@ zipname="exodus_steam-linux.zip"
 name="$(basename "$(pwd)")"
 
 pushd ..
-zip -r "${zipname}" "${name}" --include "${name}/assets/*" "${name}/exodus" "${name}/LICENSE" "${name}/manual.pdf" "${name}/README.md" "${name}/supplement.pdf" "${name}/*.so.0" "${name}/libsteam_api.so" "${name}/licenses/*" "${name}/steam_appid.txt"
+zip -r "${zipname}" "${name}" --include "${name}/assets/*" "${name}/exodus" "${name}/LICENSE" "${name}/manual.pdf" "${name}/README.md" "${name}/supplement.pdf" "${name}/libSDL2-2.0.so.0" "${name}/libSDL2_image-2.0.so.0" "${name}/libSDL2_mixer-2.0.so.0" "${name}/libSDL2_ttf-2.0.so.0" "${name}/libsteam_api.so" "${name}/licenses/*" "${name}/steam_appid.txt"
 mv "${zipname}" "${name}"
 popd

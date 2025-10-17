@@ -55,6 +55,6 @@ zipname="exodus_steam-windows.zip"
 name="$(basename "$(pwd)")"
 
 pushd ..
-zip -r "${zipname}" "${name}" --include "${name}/assets/*" "${name}/exodus.exe" "${name}/LICENSE" "${name}/manual.pdf" "${name}/README.md" "${name}/supplement.pdf" "${name}/*.dll" "${name}/licenses/*" "${name}/steam_appid.txt"
+zip -r "${zipname}" "${name}" --include "${name}/assets/*" "${name}/exodus.exe" "${name}/LICENSE" "${name}/manual.pdf" "${name}/README.md" "${name}/supplement.pdf" "${name}/SDL2.dll" "${name}/SDL2_image.dll" "${name}/SDL2_mixer.dll" "${name}/SDL2_ttf.dll" "${name}/steam_api64.dll" "${name}/licenses/*" "${name}/steam_appid.txt"
 mv "${zipname}" "${name}"
 popd

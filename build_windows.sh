@@ -44,6 +44,6 @@ zipname="exodus_windows.zip"
 name="$(basename "$(pwd)")"
 
 pushd ..
-zip -r "${zipname}" "${name}" --include "${name}/assets/*" "${name}/exodus.exe" "${name}/LICENSE" "${name}/manual.pdf" "${name}/README.md" "${name}/supplement.pdf" "${name}/*.dll" "licenses/*"
+zip -r "${zipname}" "${name}" --include "${name}/assets/*" "${name}/exodus.exe" "${name}/LICENSE" "${name}/manual.pdf" "${name}/README.md" "${name}/supplement.pdf" "${name}/SDL2.dll" "${name}/SDL2_image.dll" "${name}/SDL2_mixer.dll" "${name}/SDL2_ttf.dll" "licenses/*"
 mv "${zipname}" "${name}"
 popd
