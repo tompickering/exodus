@@ -9,6 +9,8 @@ class SteamInternals {
     public:
         SteamInternals();
 
+        bool load_achievements();
+
     protected:
         ISteamUser *user;
         ISteamUserStats *user_stats;
