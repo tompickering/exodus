@@ -1304,6 +1304,8 @@ ExodusMode GalaxyMap::month_pass_update() {
                             pl->destroy();
                         }
                     }
+                    break;
+                case STAR_Dwarf:
                     for (int i = 3; i < 5; ++i) {
                         Planet *pl = s->get_planet(i);
                         if (pl && pl->exists() && pl->get_class() != Artificial) {
