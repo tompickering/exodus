@@ -2,10 +2,17 @@
 
 #ifdef STEAM
 
-#include "steam/steam_api.h"
+PlatformSteam::~PlatformSteam() {
+    if (internals != nullptr) {
+        delete internals;
+        internals = nullptr;
+    }
+}
 
 bool PlatformSteam::init() {
-    return SteamAPI_Init();
+    const bool init_result = SteamAPI_Init();
+    internals = new SteamInternals();
+    return init_result;
 }
 
 void PlatformSteam::poll() {
@@ -15,6 +22,11 @@ void PlatformSteam::poll() {
 bool PlatformSteam::shutdown() {
     SteamAPI_Shutdown();
     return true;
+}
+
+SteamInternals::SteamInternals() {
+    user = SteamUser();
+    user_stats = SteamUserStats();
 }
 
 #endif
