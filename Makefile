@@ -54,6 +54,8 @@ windows: ext=.exe
 windows: CXXFLAGS += -O3 -DWINDOWS
 windows: INCFLAGS += -Iinclude -Iinclude/x86_64-linux-gnu
 windows: LDLIBS := -Llib -static -l:libSDL2.dll.a -l:libSDL2_image.dll.a -l:libSDL2_mixer.dll.a -l:libSDL2_ttf.dll.a
+# Replace the above line with this when building Windows
+# windows: LDLIBS := -Llib -Lsteamworks_sdk/sdk/redistributable_bin/win64 -lsteam_api64 -static -l:libSDL2.dll.a -l:libSDL2_image.dll.a -l:libSDL2_mixer.dll.a -l:libSDL2_ttf.dll.a
 windows: bin
 
 bin: $(BIN)

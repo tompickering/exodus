@@ -1,11 +1,5 @@
 #!/bin/bash
 
-git diff --exit-code >/dev/null 2>&1
-
-if [ $? -ne 0 ]; then
-    echo "There are uncommitted changes; please resolve these before running"
-    exit
-fi
 
 echo "PREREQUISITE STEPS:"
 echo "Download the Steam SDK from https://partner.steamgames.com/downloads/list"
@@ -19,6 +13,9 @@ if [[ ! -d "steamworks_sdk" ]]; then
     echo "Error: steamworks_sdk directory not found"
     exit
 fi
+
+echo "N.B. Currently, a line needs to be manually replaced in the Makefile before running this build - is that done?"
+sleep 3
 
 mkdir -p include/x86_64-linux-gnu
 ln -sf /usr/include/SDL2 include
