@@ -14,6 +14,8 @@ class SteamInternals {
         bool load_achievements();
         void unlock_achievement(Achievement);
 
+        void store_stats();
+
     protected:
         ISteamUser *user;
         ISteamUserStats *user_stats;
@@ -30,6 +32,7 @@ class PlatformSteam : public Platform {
         void unlock_achievement(Achievement);
 
     private:
+        bool do_store_stats;
         SteamInternals *internals;
 };
 

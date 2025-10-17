@@ -10,6 +10,8 @@ PlatformSteam::~PlatformSteam() {
 }
 
 bool PlatformSteam::init() {
+    do_store_stats = false;
+
     const bool init_result = SteamAPI_Init();
     internals = new SteamInternals();
     internals->load_achievements();
@@ -17,7 +19,14 @@ bool PlatformSteam::init() {
 }
 
 void PlatformSteam::poll() {
-    SteamAPI_RunCallbacks();
+    if (internals) {
+        if (do_store_stats) {
+            do_store_stats = false;
+            internals->store_stats();
+        }
+
+        SteamAPI_RunCallbacks();
+    }
 }
 
 bool PlatformSteam::shutdown() {
@@ -29,6 +38,8 @@ void PlatformSteam::unlock_achievement(Achievement achievement) {
     if (internals != nullptr) {
         internals->unlock_achievement(achievement);
     }
+
+    do_store_stats = true;
 }
 
 // SteamInternals
@@ -60,6 +71,12 @@ bool SteamInternals::load_achievements() {
 void SteamInternals::unlock_achievement(Achievement achievement) {
     if (user_stats != nullptr) {
         user_stats->SetAchievement(ACHIEVEMENT_IDS[(int)achievement]);
+    }
+}
+
+void SteamInternals::store_stats() {
+    if (user_stats != nullptr) {
+        user_stats->StoreStats();
     }
 }
 
