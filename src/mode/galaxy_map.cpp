@@ -1288,6 +1288,13 @@ ExodusMode GalaxyMap::month_pass_update() {
                     }
 
                     if (snd && snd->exists()) snd->change_class(Volcano);
+
+                    {
+                        Planet *pl = s->get_planet(2);
+                        if (pl && pl->exists() && pl->get_class() != Artificial) {
+                            pl->change_class(Desert);
+                        }
+                    }
                     break;
                 case STAR_Expand4:
                     for (int i = 0; i < 3; ++i) {
@@ -1302,6 +1309,20 @@ ExodusMode GalaxyMap::month_pass_update() {
                             }
 
                             pl->destroy();
+                        }
+                    }
+
+                    {
+                        Planet *pl = s->get_planet(3);
+                        if (pl && pl->exists() && pl->get_class() != Artificial) {
+                            pl->change_class(Volcano);
+                        }
+                    }
+
+                    {
+                        Planet *pl = s->get_planet(4);
+                        if (pl && pl->exists() && pl->get_class() != Artificial) {
+                            pl->change_class(Desert);
                         }
                     }
                     break;
