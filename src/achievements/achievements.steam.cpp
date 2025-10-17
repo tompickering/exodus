@@ -1,12 +1,15 @@
 #include "achievements.steam.h"
 
+#include "platform/platform.steam.h"
+
 #include "shared.h"
 
+extern PLATFORM platform;
+
 bool AchievementManagerSteam::init() {
-    // TODO
     return true;
 }
 
 void AchievementManagerSteam::enact_unlock(Achievement achievement) {
-    // TODO
+    platform.unlock_achievement(achievement);
 }

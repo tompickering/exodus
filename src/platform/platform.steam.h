@@ -5,11 +5,14 @@
 
 #include "steam/steam_api.h"
 
+#include "achievements/achievements.h"
+
 class SteamInternals {
     public:
         SteamInternals();
 
         bool load_achievements();
+        void unlock_achievement(Achievement);
 
     protected:
         ISteamUser *user;
@@ -23,6 +26,8 @@ class PlatformSteam : public Platform {
         virtual bool init() override;
         virtual void poll() override;
         virtual bool shutdown() override;
+
+        void unlock_achievement(Achievement);
 
     private:
         SteamInternals *internals;

@@ -25,9 +25,13 @@ bool PlatformSteam::shutdown() {
     return true;
 }
 
-// SteamInternals
+void PlatformSteam::unlock_achievement(Achievement achievement) {
+    if (internals != nullptr) {
+        internals->unlock_achievement(achievement);
+    }
+}
 
-#include "achievements/achievements.h"
+// SteamInternals
 
 extern ACHIEVEMENTMANAGER achievement_manager;
 
@@ -51,6 +55,12 @@ bool SteamInternals::load_achievements() {
     }
 
     return true;
+}
+
+void SteamInternals::unlock_achievement(Achievement achievement) {
+    if (user_stats != nullptr) {
+        user_stats->SetAchievement(ACHIEVEMENT_IDS[(int)achievement]);
+    }
 }
 
 #endif
