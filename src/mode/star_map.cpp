@@ -68,7 +68,30 @@ void StarMap::enter() {
 
     DrawTarget tgt = TGT_Primary;
 
-    draw_manager.draw(tgt, IMG_MAP_SOLAR);
+    const char *bg = IMG_MAP_SOLAR;
+
+    switch (star->get_size()) {
+        case STAR_Expand1:
+            bg = IMG_MAP_SOLAR_SN1;
+            break;
+        case STAR_Expand2:
+            bg = IMG_MAP_SOLAR_SN2;
+            break;
+        case STAR_Expand3:
+            bg = IMG_MAP_SOLAR_SN3;
+            break;
+        case STAR_Expand4:
+            bg = IMG_MAP_SOLAR_SN4;
+            break;
+        case STAR_Dwarf:
+            bg = IMG_MAP_SOLAR_SN5;
+            break;
+        default:
+            break;
+    }
+
+    draw_manager.draw(tgt, bg);
+
     draw_panel_bg(tgt);
     draw_planets(0.f);
     draw_manager.save_background();

@@ -603,7 +603,7 @@ const char *IMG_OP1_OPEN3        = D_GRA "op1_open3";
 const char *IMG_OP1_OPEN4        = D_GRA "op1_open4";
 const char *IMG_OP1_OPEN5        = D_GRA "op1_open5";
 const char *IMG_OP1_OPEN6        = D_GRA "op1_open6";
-const char *IMG_PA_ROT           = D_SUB "pa_rot";
+const char *IMG_PA_ROT           = D_SUB "pa_rot_transparent";
 const char *IMG_PL1_PLANET1      = D_GRA "pl1_planet1";
 const char *IMG_PL2_PLANET2      = D_GRA "pl2_planet2";
 const char *IMG_PL3_PLANET3      = D_GRA "pl3_planet3";
@@ -1037,6 +1037,13 @@ const char *IMG_VS5_VESSEL       = D_GRA "vs5_vessel";
 const char *IMG_VS6_VESSEL       = D_GRA "vs6_vessel";
 const char *IMG_WD1_DONE         = D_GRA "wd1_done";
 const char *IMG_WD1_WELL         = D_GRA "wd1_well";
+
+#define D_NEW "assets/img/new/"
+const char *IMG_MAP_SOLAR_SN1    = D_NEW "supernova_1";
+const char *IMG_MAP_SOLAR_SN2    = D_NEW "supernova_2";
+const char *IMG_MAP_SOLAR_SN3    = D_NEW "supernova_3";
+const char *IMG_MAP_SOLAR_SN4    = D_NEW "supernova_4";
+const char *IMG_MAP_SOLAR_SN5    = D_NEW "supernova_5";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2076,6 +2083,12 @@ const char *ASSETS_IMG[] = {
     IMG_VS6_VESSEL,
     IMG_WD1_DONE,
     IMG_WD1_WELL,
+
+    IMG_MAP_SOLAR_SN1,
+    IMG_MAP_SOLAR_SN2,
+    IMG_MAP_SOLAR_SN3,
+    IMG_MAP_SOLAR_SN4,
+    IMG_MAP_SOLAR_SN5,
 
     "",
 };
