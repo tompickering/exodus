@@ -70,6 +70,8 @@ enum Achievement : uint8_t {
 
 static_assert(ACH_MAX <= 64);
 
+extern const char* ACHIEVEMENT_IDS[];
+
 class AchievementManager {
     public:
         AchievementManager() : unlocked_this_session(0) {}
