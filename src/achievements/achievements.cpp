@@ -76,16 +76,24 @@ bool AchievementManager::achievements_enabled() {
     return true;
 }
 
+bool AchievementManager::is_unlocked(Achievement achievement) {
+    return (unlocked_achievements & (1 << achievement));
+}
+
+void AchievementManager::set_unlocked(Achievement achievement) {
+    unlocked_achievements = unlocked_achievements | (1 << achievement);
+}
+
 void AchievementManager::unlock(Achievement achievement) {
     if (!achievements_enabled()) {
         return;
     }
 
-    if (unlocked_this_session & (1 << achievement)) {
+    if (is_unlocked(achievement)) {
         return;
     }
 
-    unlocked_this_session = unlocked_this_session | (1 << achievement);
+    set_unlocked(achievement);
 
     L.info("[ACHIEVEMENT UNLOCKED] %d", (int)achievement);
 

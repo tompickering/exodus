@@ -74,14 +74,16 @@ extern const char* ACHIEVEMENT_IDS[];
 
 class AchievementManager {
     public:
-        AchievementManager() : unlocked_this_session(0) {}
+        AchievementManager() : unlocked_achievements(0) {}
         virtual bool init() = 0;
         virtual bool achievements_enabled() final;
+        virtual bool is_unlocked(Achievement) final;
+        virtual void set_unlocked(Achievement) final;
         virtual void unlock(Achievement) final;
         virtual void enact_unlock(Achievement) = 0;
 
     private:
-        uint64_t unlocked_this_session;
+        uint64_t unlocked_achievements;
 };
 
 #ifdef STEAM
