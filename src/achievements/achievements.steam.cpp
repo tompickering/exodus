@@ -1,5 +1,7 @@
 #include "achievements.steam.h"
 
+#ifdef STEAM
+
 #include "platform/platform.steam.h"
 
 #include "shared.h"
@@ -13,3 +15,5 @@ bool AchievementManagerSteam::init() {
 void AchievementManagerSteam::enact_unlock(Achievement achievement) {
     platform.unlock_achievement(achievement);
 }
+
+#endif

@@ -1,6 +1,8 @@
 #ifndef GUARD_PLATFORM_STEAM_H
 #define GUARD_PLATFORM_STEAM_H
 
+#ifdef STEAM
+
 #include "platform.h"
 
 #include "steam/steam_api.h"
@@ -35,5 +37,7 @@ class PlatformSteam : public Platform {
         bool do_store_stats;
         SteamInternals *internals;
 };
+
+#endif
 
 #endif
