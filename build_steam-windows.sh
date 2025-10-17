@@ -54,7 +54,7 @@ cp lib/SDL2_mixer-2.6.3/x86_64-w64-mingw32/bin/SDL2_mixer.dll .
 cp lib/SDL2_ttf-2.20.2/x86_64-w64-mingw32/bin/SDL2_ttf.dll .
 cp steamworks_sdk/sdk/redistributable_bin/win64/steam_api64.dll .
 
-zipname="exodus_windows.zip"
+zipname="exodus_steam-windows.zip"
 name="$(basename "$(pwd)")"
 
 pushd ..
