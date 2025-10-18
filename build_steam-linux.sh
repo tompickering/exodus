@@ -61,41 +61,11 @@ cp "README.md" "$target_dir"
 cp "LICENSE" "$target_dir"
 cp -r "licenses" "$target_dir"
 
-exodus_build='''
-"AppBuild"
-{
-    "AppID" "4098020"
-    "Desc" "Linux"
-    "Preview" "0"
-    "ContentRoot" "../content/"
-    "verbose" "1"
-    "Depots"
-    {
-        "4098021" "exodus_depot_build_4098021.vdf"
-        "4098022" "exodus_depot_build_4098022.vdf"
-    }
-}
-'''
-
-depot_build='''
-"DepotBuild"
-{
-    "DepotID" "4098021"
-
-    "FileMapping"
-    {
-        "LocalPath" "./linux/*"
-        "DepotPath" "."
-        "Recursive" "1"
-    }
-}
-'''
-
-echo "$exodus_build" > "steamworks_sdk/sdk/tools/ContentBuilder/scripts/exodus_build_4098020.vdf"
-echo "$depot_build" > "steamworks_sdk/sdk/tools/ContentBuilder/scripts/exodus_depot_build_4098021.vdf"
+cp steam/exodus_*.vdf "steamworks_sdk/sdk/tools/ContentBuilder/scripts"
 
 echo ""
 echo "Next steps:"
+echo "  * Run build_steam-*.sh scripts for any other platforms required"
 echo "  * Verify everything is present and correct under $target_dir"
 echo "  * cd steamworks_sdk/sdk/tools/ContentBuilder/builder_linux"
 echo "  * chmod +x steamcmd.sh"
