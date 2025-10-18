@@ -88,6 +88,7 @@ exodus_build='''
     "verbose" "1"
     "Depots"
     {
+        "4098021" "exodus_depot_build_4098021.vdf"
         "4098022" "exodus_depot_build_4098022.vdf"
     }
 }
