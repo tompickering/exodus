@@ -48,6 +48,9 @@
 // Prevents AI from moving battle units against the direction they've just moved
 #define FEATURE_PREVENT_AI_BATTLE_BACKTRACK 1
 
+// Only allows one bombing mission per planet for human players
+#define FEATURE_BOMBING_LIMIT_HUMAN 1
+
 // Fixes bug meaning some AI terrorist actions are never taken
 #define FIX_AI_TERROR 1
 

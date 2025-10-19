@@ -164,6 +164,10 @@ class ExodusState : public Saveable {
         bool attack_prevented(Planet*);
         void clear_attack_preventions();
 
+        void prevent_bombing(Planet*);
+        bool bombing_prevented(Planet*);
+        void clear_bombing_preventions();
+
         void save_recommended_planet(const PlanetInfo& info);
         bool is_recommended_planet(Planet* p);
 
@@ -192,6 +196,7 @@ class ExodusState : public Saveable {
         int newsitem_head;
         NewsItem newsitems[MAX_NEWSITEMS];
         uint8_t attack_preventions[GALAXY_MAX_STARS];
+        uint8_t bombing_preventions[GALAXY_MAX_STARS];
 
         int recommended_planet_star_idx;
         int recommended_planet_idx;

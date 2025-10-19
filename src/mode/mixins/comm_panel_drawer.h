@@ -91,6 +91,7 @@ enum CommSend {
     DIA_S_FirstPlanetAdvice,
     DIA_S_FirstPlanetAdviceUrgent,
     DIA_S_FleetNotInSystem,
+    DIA_S_AlreadyBombed,
     DIA_S_NoScouts,
     DIA_S_NoCoverBombers,
     DIA_S_NoBombers,

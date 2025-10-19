@@ -1087,6 +1087,27 @@ void ExodusState::clear_attack_preventions() {
     }
 }
 
+void ExodusState::prevent_bombing(Planet* p) {
+    int s_idx, p_idx;
+    if (get_star_planet_idx(p, s_idx, p_idx)) {
+        bombing_preventions[s_idx] |= (1 << p_idx);
+    }
+}
+
+bool ExodusState::bombing_prevented(Planet* p) {
+    int s_idx, p_idx;
+    if (get_star_planet_idx(p, s_idx, p_idx)) {
+        return bombing_preventions[s_idx] & (1 << p_idx);
+    }
+    return false;
+}
+
+void ExodusState::clear_bombing_preventions() {
+    for (int i = 0; i < GALAXY_MAX_STARS; ++i) {
+        bombing_preventions[i] = 0;
+    }
+}
+
 /*
  * These two functions are the *only* places outside init
  * alliance_matrix is read or written.
@@ -1145,6 +1166,7 @@ void ExodusState::save(cJSON* j) const {
     SAVE_NUM(j, newsitem_head);
     SAVE_ARRAY_OF_SAVEABLE(j, newsitems);
     SAVE_ARRAY_OF_NUM(j, attack_preventions);
+    SAVE_ARRAY_OF_NUM(j, bombing_preventions);
     SAVE_NUM(j, recommended_planet_star_idx);
     SAVE_NUM(j, recommended_planet_idx);
 }
@@ -1169,6 +1191,7 @@ void ExodusState::load(cJSON* j) {
     LOAD_NUM(j, newsitem_head);
     LOAD_ARRAY_OF_SAVEABLE(j, newsitems);
     LOAD_ARRAY_OF_NUM(j, attack_preventions);
+    LOAD_ARRAY_OF_NUM(j, bombing_preventions);
     LOAD_NUM(j, recommended_planet_star_idx);
     LOAD_NUM(j, recommended_planet_idx);
 }

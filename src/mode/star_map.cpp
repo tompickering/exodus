@@ -234,6 +234,14 @@ ExodusMode StarMap::update(float delta) {
                         } else {
                             bool owned = planet->is_owned();
 
+#if FEATURE_BOMBING_LIMIT_HUMAN
+                            if (exostate.bombing_prevented(planet)) {
+                                comm_open(DIA_S_AlreadyBombed);
+                                stage = SM_Counsellor;
+                                return ExodusMode::MODE_None;
+                            }
+#endif
+
                             draw_manager.fill(
                                 id(ID::FLEET_PANEL),
                                 {FLEET_PANEL_X-BORDER, FLEET_PANEL_Y-BORDER,
@@ -350,6 +358,7 @@ ExodusMode StarMap::update(float delta) {
                     } else {
                         if (!owned) {
                             ephstate.set_ephemeral_state(EPH_ScoutPlanet);
+                            exostate.prevent_bombing(planet);
                             return ExodusMode::MODE_PlanetMap;
                         }
 
@@ -560,6 +569,7 @@ ExodusMode StarMap::update(float delta) {
         case SM_MissionScout:
             {
                 if (draw_manager.clicked()) {
+                    exostate.prevent_bombing(planet);
                     const Fleet &fleet = player->get_fleet();
                     if (fleet.scouts) {
                         ephstate.set_ephemeral_state(EPH_ScoutPlanet);
@@ -575,6 +585,7 @@ ExodusMode StarMap::update(float delta) {
         case SM_MissionBomb:
             {
                 if (draw_manager.clicked()) {
+                    exostate.prevent_bombing(planet);
                     return ephstate.get_appropriate_mode();
                 }
             }

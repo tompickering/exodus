@@ -471,6 +471,7 @@ ExodusMode GalaxyMap::update(float delta) {
                 {
                     exostate.reset_alliance_requests();
                     exostate.clear_attack_preventions();
+                    exostate.clear_bombing_preventions();
                 }
 
                 if (exostate.final_month()) {

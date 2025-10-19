@@ -781,6 +781,12 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img_caption("COUNSELLOR");
             comm_is_counsellor = true;
             break;
+        case DIA_S_AlreadyBombed:
+            comm_set_title("Message from counsellor");
+            comm_set_img(CI_HumanThoughtful);
+            comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
+            break;
         case DIA_S_NoScouts:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_HumanThoughtful);
@@ -1725,6 +1731,15 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_set_text(0, "Our fleet is not in this");
                 comm_set_text(1, "system, so orbital flights");
                 comm_set_text(2, "are impossible.");
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_AlreadyBombed:
+            {
+                comm_prepare(6);
+                comm_set_text(0, "It's too risky to launch");
+                comm_set_text(1, "a second mission against");
+                comm_set_text(2, "this planet in one month.");
                 comm_recv(DIA_R_Close);
             }
             break;
