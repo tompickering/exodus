@@ -45,6 +45,9 @@
 // There is a chance rebels won't adopt a new ruler after a successful revolution
 #define FEATURE_REBEL_REPUBLIC_CHANCE 1
 
+// Prevents AI from moving battle units against the direction they've just moved
+#define FEATURE_PREVENT_AI_BATTLE_BACKTRACK 1
+
 // Fixes bug meaning some AI terrorist actions are never taken
 #define FIX_AI_TERROR 1
 

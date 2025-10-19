@@ -697,6 +697,24 @@ ExodusMode LunarBattle::update(float delta) {
                 } else {
                     move_dir = ai_decide_move_direction();
 
+#if FEATURE_PREVENT_AI_BATTLE_BACKTRACK
+                    if (move_dir == DIR_Up && active_unit->last_move == DIR_Down) {
+                        move_dir = DIR_None;
+                    }
+
+                    if (move_dir == DIR_Down && active_unit->last_move == DIR_Up) {
+                        move_dir = DIR_None;
+                    }
+
+                    if (move_dir == DIR_Left && active_unit->last_move == DIR_Right) {
+                        move_dir = DIR_None;
+                    }
+
+                    if (move_dir == DIR_Right && active_unit->last_move == DIR_Left) {
+                        move_dir = DIR_None;
+                    }
+#endif
+
                     if (move_dir == DIR_None) {
                         // DIR_None from AI function indicates we can't move
                         active_unit->moves_remaining = 0;
@@ -2759,6 +2777,7 @@ bool LunarBattle::select_unit() {
 
     active_unit->moves_remaining = active_unit->move;
     active_unit->shots_remaining = active_unit->hp;
+    active_unit->last_move = DIR_None;
 
     return true;
 }
@@ -2951,6 +2970,7 @@ BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     teleported = false;
     spr_id_set = false;
     dying_timer = 0;
+    last_move = DIR_None;
 }
 
 BattleUnit& BattleUnit::init(int _x, int _y) {
@@ -3137,4 +3157,5 @@ void BattleUnit::do_move(Direction d) {
     if (d == DIR_Down)  tgt_y++;
     if (d == DIR_Left)  tgt_x--;
     if (d == DIR_Right) tgt_x++;
+    last_move = d;
 }

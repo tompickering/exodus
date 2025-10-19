@@ -86,6 +86,7 @@ class BattleUnit {
         SprID fire_spr_id;
         bool spr_id_set;
         float dying_timer;
+        Direction last_move;
 
         static bool use_alt_aliens;
 };
