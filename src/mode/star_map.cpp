@@ -358,7 +358,6 @@ ExodusMode StarMap::update(float delta) {
                     } else {
                         if (!owned) {
                             ephstate.set_ephemeral_state(EPH_ScoutPlanet);
-                            exostate.prevent_bombing(planet);
                             return ExodusMode::MODE_PlanetMap;
                         }
 
@@ -569,7 +568,9 @@ ExodusMode StarMap::update(float delta) {
         case SM_MissionScout:
             {
                 if (draw_manager.clicked()) {
-                    exostate.prevent_bombing(planet);
+                    if (planet->is_owned()) {
+                        exostate.prevent_bombing(planet);
+                    }
                     const Fleet &fleet = player->get_fleet();
                     if (fleet.scouts) {
                         ephstate.set_ephemeral_state(EPH_ScoutPlanet);
@@ -585,7 +586,9 @@ ExodusMode StarMap::update(float delta) {
         case SM_MissionBomb:
             {
                 if (draw_manager.clicked()) {
-                    exostate.prevent_bombing(planet);
+                    if (planet->is_owned()) {
+                        exostate.prevent_bombing(planet);
+                    }
                     return ephstate.get_appropriate_mode();
                 }
             }
