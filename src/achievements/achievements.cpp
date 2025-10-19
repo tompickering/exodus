@@ -43,7 +43,7 @@ const char* ACHIEVEMENT_IDS[] = {
     "ACH_GuildConqueror",
     "ACH_GuildMighty",
     "ACH_GuildGreat",
-    "ACH_GuildWarlord",
+    "ACH_GuildSovereign",
     "ACH_GuildEmperor",
     "ACH_VeryGoodRep",
     "ACH_NukeAPlanet",

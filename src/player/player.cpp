@@ -271,7 +271,7 @@ void Player::set_guild_title(GuildTitle newtitle) {
             achievement_manager.unlock(ACH_GuildGreat);
             break;
         case GUILDTITLE_Warlord:
-            achievement_manager.unlock(ACH_GuildWarlord);
+            achievement_manager.unlock(ACH_GuildSovereign);
             break;
         case GUILDTITLE_Emperor:
             achievement_manager.unlock(ACH_GuildEmperor);
