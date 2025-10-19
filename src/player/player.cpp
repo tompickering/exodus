@@ -241,7 +241,7 @@ const char* Player::get_guild_title_str_with_space() {
     if (t == GUILDTITLE_Conqueror) return " The Conqueror";
     if (t == GUILDTITLE_Mighty)    return " The Mighty";
     if (t == GUILDTITLE_Great)     return " The Great";
-    if (t == GUILDTITLE_Warlord)   return " The Warlord";
+    if (t == GUILDTITLE_Warlord)   return " The Sovereign";
     if (t == GUILDTITLE_Emperor)   return " The Emperor";
     return "";
 }
