@@ -39,6 +39,9 @@ However, here are a few crucial pointers for those preferring to dive right in:
 * libsdl2-mixer
 * libsdl2-ttf
 
+## Build
+See the BUILD.txt file for further details on building
+
 ### Mac
 
 Install [Homebrew](https://brew.sh/).

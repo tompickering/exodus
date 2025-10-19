@@ -1,0 +1,47 @@
+-- Linux
+* Install development libraries for SDL2, SDL2_image, SDL2_mixer and SDL2_ttf
+* make
+
+
+-- Windows
+* N.B. The Windows build is cross-compiled from Linux - if you want to build natively on Windows, you'll need to figure that out yourself!
+* Install the appropriate mingw for x64 Windows (e.g. mingw-w64-x86-64-dev)
+* Run build_windows.sh
+* (This should download required libraries automatically - again, if there's a problem with this, you're on your own!)
+* This should result in a file called exodus_windows.zip being created
+
+
+-- Steam
+* PREREQUISITE SETUP:
+* Ensure the correct appid is specified in steam_appid.txt
+* Configure the supported platforms (Linux and Win64) on the Steam product
+* Ensure one depot exists for each platform
+* Ensure each depot is added to each of the 3 packages (dev, beta and store)
+* Publish these changes
+* Check the .vdf files int eh steam subdirectory are correct
+* There should be one for the build itself, and one for each depot
+
+* BUILDING:
+* Download the Steamworks SDK
+* Check steam/STEAMSDK_VERSION for the expected version
+* From the top directory of this repo:
+* mkdir steamworks_sdk
+* cd steamworks_sdk
+* unzip /path/to/steamworks_sdk_xxx.zip
+* Run build_steam-linux.sh
+* Open Makefile and find the comment regarding a line which needs changing when building steam-windows - make this edit
+* Run build_steam-windows.sh
+* Check steamworks_sdk/sdk/tools/ContentBuilder/content
+* This should contain 'linux' and 'windows' folders which will contain the exact content that Steam will in its game package
+* cd steamworks_sdk/sdk/tools/ContentBuilder/builder_linux"
+* chmod +x steamcmd.sh"
+* chmod +x linux32/steamcmd"
+* ./steamcmd
+* At the Steam prompt:
+  * login <YOUR STEAM USERNAME>
+  * Enter your password
+  * run_app_build ../scripts/exodus_build_4098020.vdf
+* Go to the Steamworks web frontend
+* Go to Steampipe > Builds
+* Set the build live on the desired branch
+* (N.B. It's correct that this one "build" should reference BOTH the Linux and Windows repos

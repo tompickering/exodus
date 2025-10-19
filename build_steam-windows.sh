@@ -3,7 +3,7 @@
 
 echo "PREREQUISITE STEPS:"
 echo "Download the Steam SDK from https://partner.steamgames.com/downloads/list"
-echo "*** CURRENTLY EXPECTS v1.62 ***"
+echo "See steam/STEAMSDK_VERSION for the expected version"
 echo "mkdir steamworks_sdk"
 echo "cd steamworks_sdk"
 echo "unzip ~/Downloads/steamworks_sdk_xxx.zip"
