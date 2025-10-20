@@ -51,6 +51,9 @@
 // Only allows one bombing mission per planet for human players
 #define FEATURE_BOMBING_LIMIT_HUMAN 1
 
+// Recallable, navigable planet summaries
+#define FEATURE_PLANET_RECALLABLE_SUMMARIES 1
+
 // Fixes bug meaning some AI terrorist actions are never taken
 #define FIX_AI_TERROR 1
 

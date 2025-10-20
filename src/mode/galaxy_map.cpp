@@ -4835,6 +4835,9 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     if (mp_state.mpp_stage == MPP_DisplayPlanetReport) {
         if (owner && owner->is_human()) {
+#if FEATURE_PLANET_RECALLABLE_SUMMARIES
+            exostate.save_planet_report(report);
+#else
             // Skip any reports which don't have content
             if (report.items > 0) {
                 bulletin_start_new(true);
@@ -4848,6 +4851,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 next_mpp_stage();
                 return ExodusMode::MODE_None;
             }
+#endif
         }
         next_mpp_stage();
     }
