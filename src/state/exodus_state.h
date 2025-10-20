@@ -14,6 +14,7 @@
 #include "save/saveable.h"
 
 #include "newsitem.h"
+#include "planet_report.h"
 
 #include "player/player.h"
 
@@ -195,6 +196,8 @@ class ExodusState : public Saveable {
         char alliance_requests[N_PLAYERS];
         int newsitem_head;
         NewsItem newsitems[MAX_NEWSITEMS];
+        int planet_reports_head;
+        PlanetReport planet_reports[MAX_REPORTS];
         uint8_t attack_preventions[GALAXY_MAX_STARS];
         uint8_t bombing_preventions[GALAXY_MAX_STARS];
 

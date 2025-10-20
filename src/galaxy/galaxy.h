@@ -7,6 +7,7 @@
 #include "star.h"
 
 #define GALAXY_MAX_STARS 40
+#define GALAXY_MAX_PLANETS (GALAXY_MAX_STARS * STAR_MAX_PLANETS)
 
 #define GALAXY_COLS 27
 #define GALAXY_ROWS 17

@@ -338,6 +338,7 @@ EnemyStart ExodusState::get_enemy_start() {
 void ExodusState::advance_month() {
     ++month;
     newsitem_head = 0;
+    planet_report_head = 0;
 }
 
 bool ExodusState::final_month() {
@@ -1165,6 +1166,8 @@ void ExodusState::save(cJSON* j) const {
     SAVE_ARRAY_OF_NUM(j, alliance_requests);
     SAVE_NUM(j, newsitem_head);
     SAVE_ARRAY_OF_SAVEABLE(j, newsitems);
+    SAVE_NUM(j, planet_reports_head);
+    SAVE_ARRAY_OF_SAVEABLE(j, planet_reports);
     SAVE_ARRAY_OF_NUM(j, attack_preventions);
     SAVE_ARRAY_OF_NUM(j, bombing_preventions);
     SAVE_NUM(j, recommended_planet_star_idx);
@@ -1190,6 +1193,8 @@ void ExodusState::load(cJSON* j) {
     LOAD_ARRAY_OF_NUM(j, alliance_requests);
     LOAD_NUM(j, newsitem_head);
     LOAD_ARRAY_OF_SAVEABLE(j, newsitems);
+    LOAD_NUM(j, planet_reports_head);
+    LOAD_ARRAY_OF_SAVEABLE(j, planet_reports);
     LOAD_ARRAY_OF_NUM(j, attack_preventions);
     LOAD_ARRAY_OF_NUM(j, bombing_preventions);
     LOAD_NUM(j, recommended_planet_star_idx);

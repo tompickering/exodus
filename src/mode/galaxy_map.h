@@ -19,25 +19,6 @@
 
 extern ExodusState exostate;
 
-#define REPORT_LINES 20
-#define REPORT_LINE_MAX 256
-
-typedef struct {
-    int items;
-    char content[REPORT_LINES][REPORT_LINE_MAX];
-    void add_line(const char* msg, ...) {
-        if (items >= REPORT_LINES)
-            return;
-
-        content[items][REPORT_LINE_MAX - 1] = '\0';
-        va_list args;
-        va_start(args, msg);
-        vsnprintf(content[items], REPORT_LINE_MAX - 2, msg, args);
-        va_end(args);
-        items++;
-    }
-} PlanetReport;
-
 // Enum order determines order of processing
 enum MonthPassStage {
     MP_None,
