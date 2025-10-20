@@ -1044,6 +1044,7 @@ const char *IMG_MAP_SOLAR_SN2    = D_NEW "supernova_2";
 const char *IMG_MAP_SOLAR_SN3    = D_NEW "supernova_3";
 const char *IMG_MAP_SOLAR_SN4    = D_NEW "supernova_4";
 const char *IMG_MAP_SOLAR_SN5    = D_NEW "supernova_5";
+const char *IMG_PRBUTTONS        = D_NEW "prbuttons";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2089,6 +2090,7 @@ const char *ASSETS_IMG[] = {
     IMG_MAP_SOLAR_SN3,
     IMG_MAP_SOLAR_SN4,
     IMG_MAP_SOLAR_SN5,
+    IMG_PRBUTTONS,
 
     "",
 };
