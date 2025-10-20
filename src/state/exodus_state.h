@@ -107,6 +107,7 @@ class ExodusState : public Saveable {
         int get_active_star_idx();
         Planet* get_active_planet();
         int get_active_planet_idx();
+        Planet* get_planet(int, int);
         FlyTarget* get_active_flytarget();
         void set_active_flytarget(FlyTarget*);
         void set_active_planet(int);
@@ -119,6 +120,7 @@ class ExodusState : public Saveable {
         int get_n_active_cpu_players();
         Player* get_random_active_player();
         uint32_t get_active_cpu_player_mask();
+        Star* get_star(int);
         int get_star_idx(Star*);
         int get_random_star_idx();
         int get_n_owned_planets();

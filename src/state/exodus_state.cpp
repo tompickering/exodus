@@ -449,6 +449,10 @@ int ExodusState::get_active_planet_idx() {
     return active_planet;
 }
 
+Planet* ExodusState::get_planet(int star_idx, int planet_idx) {
+    return get_galaxy()->get_stars()[star_idx].get_planet(planet_idx);
+}
+
 FlyTarget* ExodusState::get_active_flytarget() {
     if (active_flytarget_is_guild) {
         return get_galaxy()->get_guild();
@@ -563,6 +567,10 @@ uint32_t ExodusState::get_active_cpu_player_mask() {
         }
     }
     return res;
+}
+
+Star* ExodusState::get_star(int star_idx) {
+    return &(get_galaxy()->get_stars()[star_idx]);
 }
 
 int ExodusState::get_star_idx(Star* star) {
