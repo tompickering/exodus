@@ -195,6 +195,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
         PlanetReport report;
         void reset_planet_report();
         void planet_report_bulletin(bool, int);
+        int planet_report_current;
 
         bool do_first_city;
         bool do_first_spaceport;

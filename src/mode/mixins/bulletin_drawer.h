@@ -17,6 +17,13 @@ extern DRAWMANAGER draw_manager;
 
 extern ExodusState exostate;
 
+enum BulletinPRAction : uint8_t {
+    BPR_None,
+    BPR_Back,
+    BPR_Forward,
+    BPR_Close,
+};
+
 class BulletinDrawer {
     public:
         BulletinDrawer();
@@ -37,6 +44,8 @@ class BulletinDrawer {
         void bulletin_set_player_flag(Player*);
         void bulletin_set_active_player_flag();
         void bulletin_set_yesno();
+        void bulletin_set_prbuttons();
+        BulletinPRAction bulletin_get_praction();
 
         void bulletin_set_war_ally(Planet*, int);
         int bulletin_get_war_ally_result(int&, int&, int&);
@@ -62,6 +71,7 @@ class BulletinDrawer {
         SprID id_bulletin_bg_scan;
         SprID id_bulletin_text[BULLETIN_LINES];
         SprID id_bulletin_yesno;
+        SprID id_bulletin_prbuttons;
 
         void bulletin_draw_text();
         int bulletin_text_y(int);
@@ -74,6 +84,9 @@ class BulletinDrawer {
 
         bool bulletin_is_yesno;
         bool bulletin_yesno_was_yes;
+
+        bool bulletin_use_prbuttons;
+        BulletinPRAction bulletin_praction;
 
         bool bulletin_is_war_ally;
         Planet* bulletin_war_ally_planet;

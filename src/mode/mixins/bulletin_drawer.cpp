@@ -33,6 +33,8 @@ BulletinDrawer::BulletinDrawer() {
     bulletin_redraws_needed = true;
     bulletin_is_yesno = false;
     bulletin_yesno_was_yes = false;
+    bulletin_use_prbuttons = false;
+    bulletin_praction = BPR_None;
     _bulletin_is_open = false;
 
     bulletin_bg_preserve = nullptr;
@@ -108,6 +110,18 @@ void BulletinDrawer::bulletin_update(float dt) {
             }
             bulletin_has_been_acknowledged = true;
         }
+    } else if (bulletin_use_prbuttons) {
+        SpriteClick clk = draw_manager.query_click(id_bulletin_prbuttons);
+        if (clk.id) {
+            if (clk.x <= 0.33) {
+                bulletin_praction = BPR_Back;
+            } else if (clk.x < 0.67) {
+                bulletin_praction = BPR_Forward;
+            } else {
+                bulletin_praction = BPR_Close;
+                bulletin_has_been_acknowledged = true;
+            }
+        }
     } else if (bulletin_is_war_ally) {
         bulletin_war_ally_update();
     } else if (draw_manager.clicked()) {
@@ -144,6 +158,14 @@ void BulletinDrawer::bulletin_draw_text() {
                 {RES_X / 2,
                  BULLETIN_Y + BULLETIN_H - BULLETIN_BORDER - 2,
                  0.5f, 1, 1, 1});
+        }
+        if (bulletin_use_prbuttons) {
+            draw_manager.draw(
+                id_bulletin_prbuttons,
+                IMG_PRBUTTONS,
+                {RES_X - 10,
+                 10,
+                 1.0f, 0.0f, 1, 1});
         }
         if (bulletin_is_war_ally) {
             bulletin_war_ally_init();
@@ -344,6 +366,7 @@ void BulletinDrawer::bulletin_open() {
     id_bulletin_bg_preserve = draw_manager.new_sprite_id();
     id_bulletin_bg_scan = draw_manager.new_sprite_id();
     id_bulletin_yesno = draw_manager.new_sprite_id();
+    id_bulletin_prbuttons = draw_manager.new_sprite_id();
 
     bulletin_bg_preserve = nullptr;
 
@@ -407,6 +430,7 @@ void BulletinDrawer::bulletin_close() {
     draw_manager.draw(id_bulletin_bg, nullptr);
     draw_manager.draw(id_bulletin_bg_preserve, nullptr);
     draw_manager.draw(id_bulletin_bg_scan, nullptr);
+    draw_manager.draw(id_bulletin_prbuttons, nullptr);
 
     draw_manager.release_sprite_id(id_bulletin_header_flag);
     draw_manager.release_sprite_id(id_bulletin_header_l);
@@ -417,6 +441,7 @@ void BulletinDrawer::bulletin_close() {
     draw_manager.release_sprite_id(id_bulletin_bg_preserve);
     draw_manager.release_sprite_id(id_bulletin_bg_scan);
     draw_manager.release_sprite_id(id_bulletin_yesno);
+    draw_manager.release_sprite_id(id_bulletin_prbuttons);
 
 
     // Wipe all info
@@ -437,6 +462,8 @@ void BulletinDrawer::bulletin_reset() {
     bulletin_text_idx = 0;
     bulletin_is_yesno = false;
     bulletin_yesno_was_yes = false;
+    bulletin_use_prbuttons = false;
+    bulletin_praction = BPR_None;
 
     bulletin_is_war_ally = false;
 
@@ -477,6 +504,15 @@ void BulletinDrawer::bulletin_set_bg(const char* img) {
 void BulletinDrawer::bulletin_set_yesno() {
     bulletin_is_yesno = true;
     bulletin_yesno_was_yes = false;
+}
+
+void BulletinDrawer::bulletin_set_prbuttons() {
+    bulletin_use_prbuttons = true;
+    bulletin_praction = BPR_None;
+}
+
+BulletinPRAction BulletinDrawer::bulletin_get_praction() {
+    return bulletin_praction;
 }
 
 void BulletinDrawer::bulletin_set_war_ally(Planet* p, int mc) {

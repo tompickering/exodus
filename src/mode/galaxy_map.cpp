@@ -795,7 +795,8 @@ ExodusMode GalaxyMap::update(float delta) {
             if (exostate.planet_report_count() == 0) {
                 stage = GM_Idle;
             } else {
-                planet_report_bulletin(true, 0);
+                planet_report_current = 0;
+                planet_report_bulletin(false, planet_report_current);
                 stage = GM_PlanetReports;
             }
             break;
@@ -803,8 +804,24 @@ ExodusMode GalaxyMap::update(float delta) {
             if (bulletin_is_open()) {
                 bulletin_update(delta);
 
-                if (draw_manager.clicked()) {
-                    bulletin_ensure_closed();
+                switch (bulletin_get_praction()) {
+                    case BPR_Back:
+                        if (planet_report_current > 0) {
+                            --planet_report_current;
+                            planet_report_bulletin(false, planet_report_current);
+                        }
+                        break;
+                    case BPR_Forward:
+                        if ((planet_report_current + 1) < exostate.planet_report_count()) {
+                            ++planet_report_current;
+                            planet_report_bulletin(false, planet_report_current);
+                        }
+                        break;
+                    case BPR_Close:
+                        bulletin_ensure_closed();
+                        break;
+                    default:
+                        break;
                 }
             } else {
                 bulletin_ensure_closed();
@@ -5204,6 +5221,7 @@ void GalaxyMap::planet_report_bulletin(bool transition, int idx) {
     Player *player = exostate.get_player(report.player_idx);
 
     bulletin_start_new(transition);
+    bulletin_set_prbuttons();
     bulletin_set_bg(p->sprites()->bulletin_bg);
     bulletin_set_player_flag(player);
     bulletin_write_planet_info(s, p);
