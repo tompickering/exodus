@@ -338,7 +338,7 @@ EnemyStart ExodusState::get_enemy_start() {
 void ExodusState::advance_month() {
     ++month;
     newsitem_head = 0;
-    planet_report_head = 0;
+    planet_reports_head = 0;
 }
 
 bool ExodusState::final_month() {

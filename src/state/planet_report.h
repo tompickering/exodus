@@ -28,6 +28,10 @@ struct PlanetReport : public Saveable {
         items++;
     }
 
+    void reset() {
+        items = 0;
+    }
+
     virtual void save(cJSON* j) const override {
         SAVE_NUM(j, items);
         SAVE_ARRAY_OF_STR(j, content);

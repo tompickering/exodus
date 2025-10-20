@@ -5153,5 +5153,5 @@ void GalaxyMap::ai_planet_update(Planet* p) {
 }
 
 void GalaxyMap::reset_planet_report() {
-    report.items = 0;
+    report.reset();
 }
