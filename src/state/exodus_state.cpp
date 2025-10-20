@@ -338,7 +338,7 @@ EnemyStart ExodusState::get_enemy_start() {
 void ExodusState::advance_month() {
     ++month;
     newsitem_head = 0;
-    planet_reports_head = 0;
+    reset_planet_reports();
 }
 
 bool ExodusState::final_month() {
@@ -1107,6 +1107,14 @@ void ExodusState::clear_bombing_preventions() {
     for (int i = 0; i < GALAXY_MAX_STARS; ++i) {
         bombing_preventions[i] = 0;
     }
+}
+
+void ExodusState::reset_planet_reports() {
+    for (int i = 0; i < planet_reports_head; ++i) {
+        planet_reports[i].reset();
+    }
+
+    planet_reports_head = 0;
 }
 
 /*

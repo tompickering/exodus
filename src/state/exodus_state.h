@@ -172,6 +172,8 @@ class ExodusState : public Saveable {
         void save_recommended_planet(const PlanetInfo& info);
         bool is_recommended_planet(Planet* p);
 
+        void reset_planet_reports();
+
         bool first_city_done;
         bool first_spaceport_done;
 

@@ -14,6 +14,10 @@
 #define MAX_REPORTS (GALAXY_MAX_PLANETS)
 
 struct PlanetReport : public Saveable {
+    PlanetReport() : items(0) {
+        reset();
+    }
+
     int items;
     char content[REPORT_LINES][REPORT_LINE_MAX];
     void add_line(const char* msg, ...) {
@@ -29,6 +33,10 @@ struct PlanetReport : public Saveable {
     }
 
     void reset() {
+        for (int i = 0; i < REPORT_LINES; ++i) {
+            content[i][0] = '\0';
+        }
+
         items = 0;
     }
 
