@@ -1117,6 +1117,19 @@ void ExodusState::clear_bombing_preventions() {
     }
 }
 
+int ExodusState::planet_report_count() {
+    return planet_reports_head;
+}
+
+const PlanetReport& ExodusState::get_planet_report(int idx) {
+    if (idx >= planet_report_count()) {
+        L.error("Attempt to index invalid planet report");
+        return planet_reports[0];
+    }
+
+    return planet_reports[idx];
+}
+
 void ExodusState::reset_planet_reports() {
     for (int i = 0; i < planet_reports_head; ++i) {
         planet_reports[i].reset();

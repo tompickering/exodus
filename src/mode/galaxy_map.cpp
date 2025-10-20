@@ -627,7 +627,11 @@ ExodusMode GalaxyMap::update(float delta) {
                 if (mp_state.mp_stage == MP_None) {
                     bulletin_ensure_closed();
                     // The only place we emerge from month-pass-specific stages...
+#if FEATURE_PLANET_RECALLABLE_SUMMARIES
+                    stage = GM_OpenPlanetReports;
+#else
                     stage = GM_Idle;
+#endif
 
                     // This is mainly to redraw stars in case a sun expansion occurred
                     draw_galaxy(false);
@@ -785,6 +789,26 @@ ExodusMode GalaxyMap::update(float delta) {
                     comm_ensure_closed();
                     stage = GM_ArtificialWorldStarSelect;
                 }
+            }
+            break;
+        case GM_OpenPlanetReports:
+            if (exostate.planet_report_count() == 0) {
+                stage = GM_Idle;
+            } else {
+                planet_report_bulletin(true, 0);
+                stage = GM_PlanetReports;
+            }
+            break;
+        case GM_PlanetReports:
+            if (bulletin_is_open()) {
+                bulletin_update(delta);
+
+                if (draw_manager.clicked()) {
+                    bulletin_ensure_closed();
+                }
+            } else {
+                bulletin_ensure_closed();
+                stage = GM_Idle;
             }
             break;
         case GM_QuitConfirm:
@@ -3958,6 +3982,10 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 ExodusMode GalaxyMap::month_pass_planet_update() {
     Star *s = (Star*)exostate.get_active_flytarget();
     Planet *p  = exostate.get_active_planet();
+
+    int s_idx = exostate.get_active_star_idx();
+    int p_idx = exostate.get_active_planet_idx();
+
     Player *owner = nullptr;
 
     // At the start of processing, planets will always be owned.
@@ -3968,6 +3996,14 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     if (p->is_owned()) {
         exostate.set_active_player(p->get_owner());
         owner = exostate.get_player(p->get_owner());
+    }
+
+    if (mp_state.mpp_stage == MPP_InitialiseReport) {
+        report.reset();
+        report.star_idx = s_idx;
+        report.planet_idx = p_idx;
+        report.player_idx = exostate.get_active_player_idx();
+        next_mpp_stage();
     }
 
     if (mp_state.mpp_stage == MPP_ShuffleTrade) {
@@ -5158,4 +5194,21 @@ void GalaxyMap::ai_planet_update(Planet* p) {
 
 void GalaxyMap::reset_planet_report() {
     report.reset();
+}
+
+void GalaxyMap::planet_report_bulletin(bool transition, int idx) {
+    const PlanetReport& report = exostate.get_planet_report(idx);
+
+    Star *s = exostate.get_star(report.star_idx);
+    Planet *p = exostate.get_planet(report.star_idx, report.planet_idx);
+    Player *player = exostate.get_player(report.player_idx);
+
+    bulletin_start_new(transition);
+    bulletin_set_bg(p->sprites()->bulletin_bg);
+    bulletin_set_player_flag(player);
+    bulletin_write_planet_info(s, p);
+    for (int i = 0; i < report.items; ++i) {
+        bulletin_set_next_text(report.content[i]);
+    }
+    bulletin_set_next_text("Report ends.");
 }

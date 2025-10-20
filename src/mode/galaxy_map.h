@@ -66,6 +66,7 @@ enum MonthPassAIStage {
 };
 
 enum MonthPassPlanetStage {
+    MPP_InitialiseReport,
     MPP_ShuffleTrade,
     MPP_FirstCity,
     MPP_FirstSpaceport,
@@ -168,6 +169,8 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
             GM_Menu,
             GM_ArtificialWorldStarSelect,
             GM_ArtificialWorldStarSelectInvalid,
+            GM_OpenPlanetReports,
+            GM_PlanetReports,
             GM_QuitConfirm,
         };
 
@@ -191,6 +194,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
 
         PlanetReport report;
         void reset_planet_report();
+        void planet_report_bulletin(bool, int);
 
         bool do_first_city;
         bool do_first_spaceport;
