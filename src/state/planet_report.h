@@ -40,6 +40,17 @@ struct PlanetReport : public Saveable {
         items = 0;
     }
 
+    PlanetReport& operator=(const PlanetReport& other) {
+        reset();
+
+        items = other.items;
+        for (int i = 0; i < other.items; ++i) {
+            snprintf(content[i], REPORT_LINE_MAX, other.content[i]);
+        }
+
+        return *this;
+    }
+
     virtual void save(cJSON* j) const override {
         SAVE_NUM(j, items);
         SAVE_ARRAY_OF_STR(j, content);

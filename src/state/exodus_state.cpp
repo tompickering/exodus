@@ -1117,6 +1117,15 @@ void ExodusState::reset_planet_reports() {
     planet_reports_head = 0;
 }
 
+void ExodusState::save_planet_report(const PlanetReport& report) {
+    if (planet_reports_head >= MAX_REPORTS) {
+        L.error("Should not be possible to create this many reports");
+        return;
+    }
+
+    planet_reports[planet_reports_head++] = report;
+}
+
 /*
  * These two functions are the *only* places outside init
  * alliance_matrix is read or written.
