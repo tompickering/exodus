@@ -24,6 +24,15 @@
     cJSON_AddItemToObject(j, #k, arr); \
 }
 
+#define SAVE_ARRAY_OF_STR(j, k) { \
+    cJSON* arr = cJSON_CreateArray(); \
+    for (int i = 0; i < (int)(sizeof(k)/sizeof(*k)); ++i) { \
+        cJSON *o = cJSON_CreateString(k[i]); \
+        cJSON_AddItemToArray(arr, o); \
+    } \
+    cJSON_AddItemToObject(j, #k, arr); \
+}
+
 #define SAVE_ARRAY_OF_ENUM(j, k) { \
     cJSON* arr = cJSON_CreateArray(); \
     for (int i = 0; i < (int)(sizeof(k)/sizeof(*k)); ++i) { \
@@ -58,6 +67,18 @@
     for (int i = 0; i < cJSON_GetArraySize(arr); ++i) { \
         cJSON *o = cJSON_GetArrayItem(arr, i); \
         k[i] = (decltype(k[i]))(o->valueint); \
+    } \
+}
+
+#define LOAD_ARRAY_OF_STR(j, k) { \
+    cJSON* arr = cJSON_GetObjectItemCaseSensitive(j, #k); \
+    for (int i = 0; i < cJSON_GetArraySize(arr); ++i) { \
+        cJSON *o = cJSON_GetArrayItem(arr, i); \
+        int j = 0; \
+        for (; o->valuestring[j] != '\0'; ++j) { \
+            k[i][j] = (decltype(k[i][j]))(o->valuestring[j]); \
+        } \
+        k[i][j] = '\0'; \
     } \
 }
 
