@@ -1045,6 +1045,20 @@ const char *IMG_MAP_SOLAR_SN3    = D_NEW "supernova_3";
 const char *IMG_MAP_SOLAR_SN4    = D_NEW "supernova_4";
 const char *IMG_MAP_SOLAR_SN5    = D_NEW "supernova_5";
 const char *IMG_PRBUTTONS        = D_NEW "prbuttons";
+const char *IMG_PREVENT1         = D_NEW "event_1";
+const char *IMG_PREVENT2         = D_NEW "event_2";
+const char *IMG_PREVENT3         = D_NEW "event_3";
+const char *IMG_PREVENT4         = D_NEW "event_4";
+const char *IMG_PREVENT5         = D_NEW "event_5";
+const char *IMG_PREVENT6         = D_NEW "event_6";
+const char *IMG_PREVENT7         = D_NEW "event_7";
+const char *IMG_PREVENT8         = D_NEW "event_8";
+const char *IMG_PREVENT9         = D_NEW "event_9";
+const char *IMG_PREVENT10        = D_NEW "event_10";
+const char *IMG_PREVENT11        = D_NEW "event_11";
+const char *IMG_PREVENT12        = D_NEW "event_12";
+const char *IMG_PREVENT13        = D_NEW "event_13";
+const char *IMG_PREVENT14        = D_NEW "event_14";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2091,6 +2105,20 @@ const char *ASSETS_IMG[] = {
     IMG_MAP_SOLAR_SN4,
     IMG_MAP_SOLAR_SN5,
     IMG_PRBUTTONS,
+    IMG_PREVENT1,
+    IMG_PREVENT2,
+    IMG_PREVENT3,
+    IMG_PREVENT4,
+    IMG_PREVENT5,
+    IMG_PREVENT6,
+    IMG_PREVENT7,
+    IMG_PREVENT8,
+    IMG_PREVENT9,
+    IMG_PREVENT10,
+    IMG_PREVENT11,
+    IMG_PREVENT12,
+    IMG_PREVENT13,
+    IMG_PREVENT14,
 
     "",
 };
