@@ -35,6 +35,7 @@ BulletinDrawer::BulletinDrawer() {
     bulletin_yesno_was_yes = false;
     bulletin_use_prbuttons = false;
     bulletin_praction = BPR_None;
+    bulletin_report = nullptr;
     _bulletin_is_open = false;
 
     bulletin_bg_preserve = nullptr;
@@ -94,6 +95,7 @@ void BulletinDrawer::bulletin_update(float dt) {
 
     if (bulletin_redraws_needed && !bulletin_has_been_acknowledged) {
         bulletin_update_bg();
+        bulletin_draw_events();
         bulletin_draw_text();
     }
 
@@ -129,6 +131,78 @@ void BulletinDrawer::bulletin_update(float dt) {
             bulletin_transition = 1;
         } else {
             bulletin_has_been_acknowledged = true;
+        }
+    }
+}
+
+void BulletinDrawer::bulletin_draw_events() {
+    if (!bulletin_report) {
+        return;
+    }
+
+    int event_count = 0;
+
+    for (int event_idx = 0; event_idx < (int)PRE_MAX; ++event_idx) {
+        PlanetReportEvent event = (PlanetReportEvent)event_idx;
+
+        if (bulletin_report->has_event(event)) {
+            const char* icon = nullptr;
+
+            switch (event) {
+                case PRE_Meteor:
+                    icon = IMG_PREVENT1;
+                    break;
+                case PRE_Defects:
+                    icon = IMG_PREVENT2;
+                    break;
+                case PRE_Climate:
+                    icon = IMG_PREVENT3;
+                    break;
+                case PRE_Plague:
+                    icon = IMG_PREVENT4;
+                    break;
+                case PRE_Aliens:
+                    icon = IMG_PREVENT5;
+                    break;
+                case PRE_NewSpecies:
+                    icon = IMG_PREVENT6;
+                    break;
+                case PRE_Epidemic:
+                    icon = IMG_PREVENT7;
+                    break;
+                case PRE_Rebels:
+                    icon = IMG_PREVENT8;
+                    break;
+                case PRE_Meltdown:
+                    icon = IMG_PREVENT9;
+                    break;
+                case PRE_SurfChangeCultivation:
+                    icon = IMG_PREVENT10;
+                    break;
+                case PRE_SurfChangeClearing:
+                    icon = IMG_PREVENT11;
+                    break;
+                case PRE_HQDestroyed:
+                    icon = IMG_PREVENT12;
+                    break;
+                case PRE_ArmyProductionStopped:
+                    icon = IMG_PREVENT13;
+                    break;
+                case PRE_ArmyProductionSaved:
+                    icon = IMG_PREVENT14;
+                    break;
+                default:
+                    L.error("No icon for event %d", event_idx);
+                    break;
+            }
+
+            draw_manager.draw(
+                icon,
+                {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4,
+                 BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
+                 1.0f, 0.0f, 1, 1});
+
+            ++event_count;
         }
     }
 }
@@ -464,6 +538,7 @@ void BulletinDrawer::bulletin_reset() {
     bulletin_yesno_was_yes = false;
     bulletin_use_prbuttons = false;
     bulletin_praction = BPR_None;
+    bulletin_report = nullptr;
 
     bulletin_is_war_ally = false;
 
@@ -513,6 +588,10 @@ void BulletinDrawer::bulletin_set_prbuttons() {
 
 BulletinPRAction BulletinDrawer::bulletin_get_praction() {
     return bulletin_praction;
+}
+
+void BulletinDrawer::bulletin_set_report(const PlanetReport *report) {
+    bulletin_report = report;
 }
 
 void BulletinDrawer::bulletin_set_war_ally(Planet* p, int mc) {

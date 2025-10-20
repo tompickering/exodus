@@ -4100,6 +4100,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     if (mp_state.mpp_stage == MPP_Meteors) {
         if (onein(200)) {
             exostate.register_news(NI_Meteor);
+            report.add_event(PRE_Meteor);
             if (bulletin_start_new(false, s)) {
                 audio_manager.target_music(mpart2mus(8));
             }
@@ -4153,6 +4154,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         // true, we know that *something* is going to die. >:D
         if (onein(90)) {
             if (p->has_army()) {
+                report.add_event(PRE_Defects);
                 int kill_inf = RND(10);
                 int kill_gli = RND(10);
                 int kill_art = RND(10);
@@ -4177,6 +4179,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     if (mp_state.mpp_stage == MPP_ClimateChange) {
         if (onein(250)) {
             exostate.register_news(NI_GeologicalChange);
+            report.add_event(PRE_Climate);
             const char* before = p->get_class_str_lower();
             p->surfchange();
             const char* after = p->get_class_str_lower();
@@ -4216,6 +4219,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 }
                 p->adjust_unrest(2);
                 exostate.register_news(NI_Plague);
+                report.add_event(PRE_Plague);
                 if (bulletin_start_new(true, s)) {
                     audio_manager.target_music(mpart2mus(9));
                 }
@@ -4237,6 +4241,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     if (mp_state.mpp_stage == MPP_AlienAttack) {
         if (onein(200) && exostate.get_orig_month() >= 10) {
             exostate.register_news(NI_AlienAttack);
+            report.add_event(PRE_Aliens);
             if (bulletin_start_new(false, s)) {
                 audio_manager.target_music(mpart2mus(8));
             }
@@ -4312,6 +4317,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     threshold += 2*q - 2;
                     threshold += owner->get_tax() / 20;
                     if (RND(50) <= threshold) {
+                        report.add_event(PRE_NewSpecies);
                         discover_species_bulletin(p);
                         next_mpp_stage();
                         return ExodusMode::MODE_None;
@@ -4335,6 +4341,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                             p->set_stone(x, y, STONE_Rubble);
                         }
                         exostate.register_news(NI_Epidemic);
+                        report.add_event(PRE_Epidemic);
                         if (bulletin_start_new(true, s)) {
                             audio_manager.target_music(mpart2mus(8));
                         }
@@ -4368,6 +4375,8 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     if (owner) {
                         owner->add_trace(TRACE_RevolutionsCaused);
                     }
+
+                    report.add_event(PRE_Rebels);
 
                     if (bulletin_start_new(false, s)) {
                         audio_manager.target_music(mpart2mus(8));
@@ -4503,6 +4512,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     if (mp_state.mpp_stage == MPP_ReactorMeltdown) {
         if (onein(200)) {
             if (p->has_stone(STONE_Plu)) {
+                report.add_event(PRE_Meltdown);
                 if (bulletin_start_new(false, s)) {
                     audio_manager.target_music(mpart2mus(8));
                 }
@@ -4549,6 +4559,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                         achievement_manager.unlock(ACH_ParadiseGained);
                     }
                     exostate.register_news(NI_SurfChangeCultivation);
+                    report.add_event(PRE_SurfChangeCultivation);
                     if (bulletin_start_new(true, s)) {
                         audio_manager.target_music(mpart2mus(5));
                     }
@@ -4580,6 +4591,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                         achievement_manager.unlock(ACH_ParadiseLost);
                     }
                     exostate.register_news(NI_SurfChangeClearing);
+                    report.add_event(PRE_SurfChangeClearing);
                     if (bulletin_start_new(true, s)) {
                         audio_manager.target_music(mpart2mus(9));
                     }
@@ -4601,6 +4613,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     if (mp_state.mpp_stage == MPP_LosePlanetControl) {
         if (p->count_stones(STONE_Base) == 0) {
             // FIXME: No PROCdonotice here? (Orig doesn't...)
+            report.add_event(PRE_HQDestroyed);
             if (bulletin_start_new(true, s)) {
                 audio_manager.target_music(mpart2mus(9));
             }
@@ -4731,6 +4744,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         }
 
         if (n > 0) {
+            report.add_event(PRE_ArmyProductionStopped);
             report.add_line("%d production unit%s ha%s stopped.", n, n>1?"s":"", n>1?"ve":"s");
 
             while (n > 0) {
@@ -4749,6 +4763,8 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     break;
                 }
             }
+        } else {
+            report.add_event(PRE_ArmyProductionSaved);
         }
 
         n = 0;
@@ -5222,6 +5238,7 @@ void GalaxyMap::planet_report_bulletin(bool transition, int idx) {
 
     bulletin_start_new(transition);
     bulletin_set_prbuttons();
+    bulletin_set_report(&report);
     bulletin_set_bg(p->sprites()->bulletin_bg);
     bulletin_set_player_flag(player);
     bulletin_write_planet_info(s, p);

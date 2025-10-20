@@ -46,6 +46,7 @@ class BulletinDrawer {
         void bulletin_set_yesno();
         void bulletin_set_prbuttons();
         BulletinPRAction bulletin_get_praction();
+        void bulletin_set_report(const PlanetReport* report);
 
         void bulletin_set_war_ally(Planet*, int);
         int bulletin_get_war_ally_result(int&, int&, int&);
@@ -73,6 +74,7 @@ class BulletinDrawer {
         SprID id_bulletin_yesno;
         SprID id_bulletin_prbuttons;
 
+        void bulletin_draw_events();
         void bulletin_draw_text();
         int bulletin_text_y(int);
 
@@ -87,6 +89,8 @@ class BulletinDrawer {
 
         bool bulletin_use_prbuttons;
         BulletinPRAction bulletin_praction;
+
+        const PlanetReport *bulletin_report;
 
         bool bulletin_is_war_ally;
         Planet* bulletin_war_ally_planet;

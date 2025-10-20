@@ -13,6 +13,24 @@
 
 #define MAX_REPORTS (GALAXY_MAX_PLANETS)
 
+enum PlanetReportEvent {
+    PRE_Meteor,
+    PRE_Defects,
+    PRE_Climate,
+    PRE_Plague,
+    PRE_Aliens,
+    PRE_NewSpecies,
+    PRE_Epidemic,
+    PRE_Rebels,
+    PRE_Meltdown,
+    PRE_SurfChangeCultivation,
+    PRE_SurfChangeClearing,
+    PRE_HQDestroyed,
+    PRE_ArmyProductionSaved,
+    PRE_ArmyProductionStopped,
+    PRE_MAX,
+};
+
 struct PlanetReport : public Saveable {
     PlanetReport() : items(0) {
         reset();
@@ -24,6 +42,17 @@ struct PlanetReport : public Saveable {
 
     int items;
     char content[REPORT_LINES][REPORT_LINE_MAX];
+
+    uint32_t event_mask;
+
+    void add_event(PlanetReportEvent event) {
+        event_mask = (event_mask | (1 << (int)event));
+    }
+
+    bool has_event(PlanetReportEvent event) const {
+        return (event_mask & (1 << (int)event));
+    }
+
     void add_line(const char* msg, ...) {
         if (items >= REPORT_LINES)
             return;
@@ -46,6 +75,8 @@ struct PlanetReport : public Saveable {
         }
 
         items = 0;
+
+        event_mask = 0;
     }
 
     PlanetReport& operator=(const PlanetReport& other) {
@@ -60,6 +91,8 @@ struct PlanetReport : public Saveable {
             snprintf(content[i], REPORT_LINE_MAX, other.content[i]);
         }
 
+        event_mask = other.event_mask;
+
         return *this;
     }
 
@@ -69,6 +102,7 @@ struct PlanetReport : public Saveable {
         SAVE_NUM(j, player_idx);
         SAVE_NUM(j, items);
         SAVE_ARRAY_OF_STR(j, content);
+        SAVE_NUM(j, event_mask);
     }
 
     virtual void load(cJSON* j) override {
@@ -77,6 +111,7 @@ struct PlanetReport : public Saveable {
         LOAD_NUM(j, player_idx);
         LOAD_NUM(j, items);
         LOAD_ARRAY_OF_STR(j, content);
+        LOAD_NUM(j, event_mask);
     }
 };
 
