@@ -1056,6 +1056,13 @@ extern const char *IMG_PREVENT11;
 extern const char *IMG_PREVENT12;
 extern const char *IMG_PREVENT13;
 extern const char *IMG_PREVENT14;
+extern const char *IMG_PL1_TRANS;
+extern const char *IMG_PL2_TRANS;
+extern const char *IMG_PL3_TRANS;
+extern const char *IMG_PL4_TRANS;
+extern const char *IMG_PL5_TRANS;
+extern const char *IMG_PL6_TRANS;
+extern const char *IMG_PL8_TRANS;
 
 extern const char *INIT_IMG;
 extern const char *CURSOR_IMG;

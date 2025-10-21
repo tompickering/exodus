@@ -1059,6 +1059,13 @@ const char *IMG_PREVENT11        = D_NEW "event_11";
 const char *IMG_PREVENT12        = D_NEW "event_12";
 const char *IMG_PREVENT13        = D_NEW "event_13";
 const char *IMG_PREVENT14        = D_NEW "event_14";
+const char *IMG_PL1_TRANS        = D_NEW "pl1";
+const char *IMG_PL2_TRANS        = D_NEW "pl2";
+const char *IMG_PL3_TRANS        = D_NEW "pl3";
+const char *IMG_PL4_TRANS        = D_NEW "pl4";
+const char *IMG_PL5_TRANS        = D_NEW "pl5";
+const char *IMG_PL6_TRANS        = D_NEW "pl6";
+const char *IMG_PL8_TRANS        = D_NEW "pl8";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2119,6 +2126,13 @@ const char *ASSETS_IMG[] = {
     IMG_PREVENT12,
     IMG_PREVENT13,
     IMG_PREVENT14,
+    IMG_PL1_TRANS,
+    IMG_PL2_TRANS,
+    IMG_PL3_TRANS,
+    IMG_PL4_TRANS,
+    IMG_PL5_TRANS,
+    IMG_PL6_TRANS,
+    IMG_PL8_TRANS,
 
     "",
 };
