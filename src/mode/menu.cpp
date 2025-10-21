@@ -225,7 +225,7 @@ ExodusMode Menu::update(float delta) {
             }
 
             if (draw_manager.query_click(id(NEWGAME_TXT)).id) {
-                new (&exostate) ExodusState();
+                new (&exostate()) ExodusState();
                 new (&ephstate) EphemeralState();
                 set_stage(Size);
                 draw_manager.fade_black(1.2f, 24);
@@ -331,7 +331,7 @@ ExodusMode Menu::update(float delta) {
                             if (save_manager.load(i)) {
                                 draw_manager.draw(IMG_BG_STARS2);
 
-                                Player *p = exostate.get_player(0);
+                                Player *p = exostate().get_player(0);
                                 char welcome[64];
                                 snprintf(welcome, sizeof(welcome), "Welcome, %s.", p->get_full_name());
                                 draw_manager.draw_text(
@@ -1172,7 +1172,7 @@ ExodusMode Menu::update(float delta) {
             }
             break;
         case End:
-            exostate.init(config);
+            exostate().init(config);
             return ExodusMode::MODE_GalaxyGen;
     }
 

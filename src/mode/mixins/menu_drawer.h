@@ -36,7 +36,7 @@
 
 extern DRAWMANAGER draw_manager;
 
-extern ExodusState exostate;
+
 
 enum MenuMode {
     MM_Ctrl,

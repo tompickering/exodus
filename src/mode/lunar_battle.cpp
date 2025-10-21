@@ -111,11 +111,11 @@ void LunarBattle::enter() {
 
     LunarBattleParams &b = ephstate.lunar_battle;
 
-    Planet *p = exostate.get_active_planet();
+    Planet *p = exostate().get_active_planet();
 
     aggressor = nullptr;
     if (b.aggressor_type == AGG_Player) {
-        aggressor = exostate.get_player(b.aggressor_idx);
+        aggressor = exostate().get_player(b.aggressor_idx);
     }
 
     LunarBattleReport &rpt = ephstate.lunar_battle_report;
@@ -275,7 +275,7 @@ void LunarBattle::enter() {
 }
 
 void LunarBattle::draw_ground() {
-    Planet *p = exostate.get_active_planet();
+    Planet *p = exostate().get_active_planet();
 
     draw_manager.draw(
         id(ID::BG),
@@ -326,8 +326,8 @@ ExodusMode LunarBattle::update(float delta) {
     LunarBattleParams &b = ephstate.lunar_battle;
     LunarBattleReport &rpt = ephstate.lunar_battle_report;
 
-    Planet *p = exostate.get_active_planet();
-    Player *defender = exostate.get_player(p->get_owner());
+    Planet *p = exostate().get_active_planet();
+    Player *defender = exostate().get_player(p->get_owner());
 
     bool defending = !(aggressor && aggressor->is_human());
 
@@ -513,7 +513,7 @@ ExodusMode LunarBattle::update(float delta) {
             {
                 audio_manager.fade_out(1000);
                 Player *owner = nullptr;
-                if (p->is_owned()) owner = exostate.get_player(p->get_owner());
+                if (p->is_owned()) owner = exostate().get_player(p->get_owner());
                 defender_turn = (bool)(owner && owner->is_human());
                 reset_round();
                 stage = LB_SelectUnit;
@@ -1158,7 +1158,7 @@ ExodusMode LunarBattle::update(float delta) {
                                     int adf = 0;
                                     calc_force_strength(aat, adf);
 
-                                    if ((aat*2 > adf*3) && (exostate.get_n_planets(defender) == 1)) {
+                                    if ((aat*2 > adf*3) && (exostate().get_n_planets(defender) == 1)) {
                                         comm_open(DIA_S_B_CPU_OpenCommsDefender);
                                         stage = LB_CommAI;
                                         // Skip battle drawing etc
@@ -1246,7 +1246,7 @@ void LunarBattle::auto_run() {
     LunarBattleParams &b = ephstate.lunar_battle;
     LunarBattleReport &rpt = ephstate.lunar_battle_report;
 
-    Planet *p = exostate.get_active_planet();
+    Planet *p = exostate().get_active_planet();
     /*
      * FIXME: Should this be 12 or 24?
      * Base constitutes 4*LUNAR_BASE_GUN_HP = 4*6 = 24 units
@@ -1384,8 +1384,8 @@ void LunarBattle::auto_act(bool agg) {
             power = 1;
         }
 
-        Planet *p = exostate.get_active_planet();
-        Player *defender = exostate.get_player(p->get_owner());
+        Planet *p = exostate().get_active_planet();
+        Player *defender = exostate().get_player(p->get_owner());
 
         /*
          * Slight deviation from orig here - when CPU attacks us,
@@ -2002,7 +2002,7 @@ void LunarBattle::update_cursor() {
         return;
     }
 
-    Planet *p = exostate.get_active_planet();
+    Planet *p = exostate().get_active_planet();
     bool ice = p->get_moon_class() == MOON_Ice;
 
     if (cursor_x >= 0 && cursor_y >= 0) {
@@ -2033,7 +2033,7 @@ void LunarBattle::update_panel() {
         }
 
         if (target_mode == LBPM_Battle) {
-            Planet *p = exostate.get_active_planet();
+            Planet *p = exostate().get_active_planet();
 
             draw_manager.fill_pattern({  8, 12, 160, 50});
 
@@ -2818,8 +2818,8 @@ bool LunarBattle::is_in_cover(BattleUnit* u) {
 }
 
 void LunarBattle::show_info() {
-    Planet *p = exostate.get_active_planet();
-    Player *defender = exostate.get_player(p->get_owner());
+    Planet *p = exostate().get_active_planet();
+    Player *defender = exostate().get_player(p->get_owner());
     LunarBattleReport &rpt = ephstate.lunar_battle_report;
 
     draw_manager.fill(

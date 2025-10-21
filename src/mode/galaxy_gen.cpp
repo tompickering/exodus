@@ -43,7 +43,7 @@ ExodusMode GalaxyGen::update(float delta) {
 
     switch (stage) {
         case GGSTG_Gen:
-            exostate.generate_galaxy();
+            exostate().generate_galaxy();
             draw_galaxy(true);
             draw_manager.fill(
                 TGT_Secondary,
@@ -105,7 +105,7 @@ ExodusMode GalaxyGen::update(float delta) {
                     galaxy_panel_area,
                     {0, 0, 0});
                 if (accepted) {
-                    exostate.finalise_galaxy();
+                    exostate().finalise_galaxy();
                     stage = GGSTG_ToGame;
                 } else {
                     stage = GGSTG_Gen;

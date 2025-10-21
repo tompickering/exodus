@@ -11,6 +11,23 @@
 #include "assetpaths.h"
 #include "shared.h"
 
+ExodusState *exostate_ptr = nullptr;
+
+ExodusState& exostate() {
+    if (exostate_ptr == nullptr) {
+        exostate_ptr = new ExodusState();
+    }
+
+    return *exostate_ptr;
+}
+
+void exostate_destroy() {
+    if (exostate_ptr != nullptr) {
+        delete exostate_ptr;
+        exostate_ptr = nullptr;
+    }
+}
+
 int QUICKSAVE_SLOT = -1;
 
 const char* flags[] = {

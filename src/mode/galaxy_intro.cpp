@@ -61,7 +61,7 @@ void GalaxyIntro::enter() {
 
     audio_manager.target_music(MUS_GAMESTART);
 
-    Player *player = exostate.get_active_player();
+    Player *player = exostate().get_active_player();
     snprintf(title_text, sizeof(title_text), text[12], player->get_title());
 
     time = 0;
@@ -81,7 +81,7 @@ ExodusMode GalaxyIntro::update(float delta) {
         draw_manager.save_background();
     }
 
-    Player *player = exostate.get_active_player();
+    Player *player = exostate().get_active_player();
     player->set_intro_seen();
 
     if (input_manager.consume(K_Space)) {

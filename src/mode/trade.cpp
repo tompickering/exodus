@@ -12,7 +12,7 @@ static const int PANEL_H = 200;
 static const int PANEL_X = RES_X/2 - PANEL_W/2;
 static const int PANEL_Y = 150;
 
-extern ExodusState exostate;
+
 
 static const int cost_data[3][8] = {
     {5, 2, 4, 4, 6, 8, 10, 20},
@@ -64,26 +64,26 @@ void Trade::enter() {
 
     stage = Overview;
 
-    Planet *p = exostate.get_active_planet();
+    Planet *p = exostate().get_active_planet();
 
     if (!(p && p->is_owned())) {
         L.fatal("Entered trade with unowned planet");
     }
 
-    Player *p0 = exostate.get_active_player();
-    Player *p1 = exostate.get_player(p->get_owner());
-    int p0idx = exostate.get_player_idx(p0);
-    int p1idx = exostate.get_player_idx(p1);
+    Player *p0 = exostate().get_active_player();
+    Player *p1 = exostate().get_player(p->get_owner());
+    int p0idx = exostate().get_player_idx(p0);
+    int p1idx = exostate().get_player_idx(p1);
 
     if (p0 == p1) {
         L.fatal("Entered trade with own planet");
     }
 
-    int player_idx = exostate.get_player_idx(p0);
+    int player_idx = exostate().get_player_idx(p0);
     quality = p->initiate_trade(player_idx);
 
     food_needed = (p->get_n_agri() < p->get_food_consumption());
-    arms_offered = exostate.is_allied(p0idx, p1idx);
+    arms_offered = exostate().is_allied(p0idx, p1idx);
 
     draw_manager.draw(p->sprites()->map_bg);
     draw_manager.show_cursor(true);
@@ -250,7 +250,7 @@ void Trade::exit() {
 }
 
 ExodusMode Trade::update(float delta) {
-    Player *p = exostate.get_active_player();
+    Player *p = exostate().get_active_player();
 
     switch (stage) {
         case Overview:
@@ -500,7 +500,7 @@ int Trade::get_buy(TradeQuality q, int idx) {
 }
 
 int Trade::get_freight(int row) {
-    Player *p = exostate.get_active_player();
+    Player *p = exostate().get_active_player();
     const Fleet fleet = p->get_fleet();
     const Freight &freight = fleet.freight;
     if (row == 0) return freight.minerals;
@@ -605,7 +605,7 @@ void Trade::start_trade(bool _sell) {
 }
 
 void Trade::adjust_trade(bool inc) {
-    Player *p = exostate.get_active_player();
+    Player *p = exostate().get_active_player();
     TradeRow &r = rows[active_row];
 
     int price = sell ? r.buy : r.cost;
@@ -671,7 +671,7 @@ void Trade::adjust_trade(bool inc) {
 }
 
 void Trade::adjust_freight(int row, bool inc) {
-    Player *p = exostate.get_active_player();
+    Player *p = exostate().get_active_player();
     Fleet &fleet = p->get_fleet_nonconst();
     int off = inc ? 1 : -1;
     bool ok = false;

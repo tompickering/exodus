@@ -11,7 +11,7 @@
 #include "shared.h"
 #include "assetpaths.h"
 
-extern ExodusState exostate;
+
 extern EphemeralState ephstate;
 extern SAVEMANAGER save_manager;
 extern INPUTMANAGER input_manager;
@@ -203,7 +203,7 @@ void MenuDrawer::menu_open(MenuMode mode) {
 
         draw_manager.draw(
             id_menu_header_flag,
-            flags[exostate.get_active_player()->get_flag_idx()],
+            flags[exostate().get_active_player()->get_flag_idx()],
             {MENU_FLAG_BG_X + MENU_BORDER,
              MENU_FLAG_BG_Y + MENU_BORDER,
              0, 0, 1, 1});
@@ -379,21 +379,21 @@ void MenuDrawer::menu_set_opt(int idx, const char* in_text, bool enabled) {
 }
 
 void MenuDrawer::menu_open_specific_mode() {
-    Player *p = exostate.get_active_player();
-    int p_idx = exostate.get_player_idx(p);
+    Player *p = exostate().get_active_player();
+    int p_idx = exostate().get_player_idx(p);
     bool art_ok = true;
     first_update = true;
 
     if (!p->can_afford(COST_ART)) art_ok = false;
     if (!p->has_invention(INV_OrbitalMassConstruction)) art_ok = false;
 
-    Planet *art = exostate.get_planet_under_construction(p_idx);
+    Planet *art = exostate().get_planet_under_construction(p_idx);
     if (art && art->get_construction_phase() >= 3) {
         // Artificial planet is awaiting finalisation
         art_ok = false;
     }
 
-    bool service_ok = exostate.get_n_active_cpu_players() > 0;
+    bool service_ok = exostate().get_n_active_cpu_players() > 0;
 
     switch(menu_mode) {
         case MM_Ctrl:
@@ -540,11 +540,11 @@ void MenuDrawer::menu_open_specific_mode() {
                 menu_set_txt(0, COL_TEXT2, "The allies of %s are:", pl->get_full_name());
                 int row = 2;
                 menu_set_txt(row, COL_TEXT, "None");
-                int pl_idx = exostate.get_player_idx(pl);
+                int pl_idx = exostate().get_player_idx(pl);
                 for (int i = 0; i < N_PLAYERS; ++i) {
                     if (i == pl_idx) continue;
-                    if (exostate.is_allied(i, pl_idx)) {
-                        Player *ally = exostate.get_player(i);
+                    if (exostate().is_allied(i, pl_idx)) {
+                        Player *ally = exostate().get_player(i);
                         menu_set_txt(row++, COL_TEXT, ally->get_full_name());
                     }
                 }
@@ -555,7 +555,7 @@ void MenuDrawer::menu_open_specific_mode() {
                 Player *pl = menu_selected_player;
                 menu_set_txt(0, COL_TEXT2, "Information about %s", pl->get_full_name());
                 menu_set_txt(2, COL_TEXT, "This is the desired information:");
-                int n = exostate.get_n_planets(pl);
+                int n = exostate().get_n_planets(pl);
                 menu_set_txt(3, COL_TEXT, "%s owns %d planets.", pl->get_full_name(), n);
             }
             break;
@@ -606,7 +606,7 @@ void MenuDrawer::menu_open_specific_mode() {
                 int nplans = 0;
                 int total_unrest = 0;
 
-                for (PlanetIterator pi(exostate.get_player_idx(pl)); !pi.complete(); ++pi) {
+                for (PlanetIterator pi(exostate().get_player_idx(pl)); !pi.complete(); ++pi) {
                     nplans++;
                     total_unrest += pi.get()->get_unrest();
                 }
@@ -782,8 +782,8 @@ void MenuDrawer::menu_open_specific_mode() {
             break;
         case MM_ArtificialWorld:
             {
-                int player_idx = exostate.get_active_player_idx();
-                Planet *planet = exostate.get_planet_under_construction(player_idx);
+                int player_idx = exostate().get_active_player_idx();
+                Planet *planet = exostate().get_planet_under_construction(player_idx);
                 if (planet) {
                     L.debug("Advancing artificial planet");
                     menu_art_planet_phase = planet->get_construction_phase();
@@ -919,7 +919,7 @@ void MenuDrawer::menu_open_specific_mode() {
             {
                 char txt[64 + FT_MAX_NAME];
 
-                menu_set_txt(0, COL_TEXT2, "Status file, Month %d", exostate.get_month());
+                menu_set_txt(0, COL_TEXT2, "Status file, Month %d", exostate().get_month());
 
                 menu_set_txt(2, COL_TEXT, "Money:");
                 snprintf(txt, sizeof(txt), "%dMC", p->get_mc());
@@ -1009,8 +1009,8 @@ void MenuDrawer::menu_open_specific_mode() {
 
                 if (p->get_location().in_flight()) {
                     int tgt = p->get_location().get_target();
-                    FlyTarget *ft = exostate.loc2tgt(tgt);
-                    bool star = (ft != exostate.get_galaxy()->get_guild());
+                    FlyTarget *ft = exostate().loc2tgt(tgt);
+                    bool star = (ft != exostate().get_galaxy()->get_guild());
                     snprintf(txt, sizeof(txt),
                              "The fleet is flying to the %s%s.",
                              (star?"star ":""),
@@ -1198,7 +1198,7 @@ void MenuDrawer::menu_open_specific_mode() {
                     if (other_idx == p_idx)
                         continue;
 
-                    Player *other = exostate.get_player(other_idx);
+                    Player *other = exostate().get_player(other_idx);
 
                     RGB lordcol = COL_TEXT;
                     RGB relcol = COL_TEXT;
@@ -1212,17 +1212,17 @@ void MenuDrawer::menu_open_specific_mode() {
                         const char* sep = "";
 
                         int relidx = 0;
-                        if (exostate.has_alliance(p_idx, other_idx, ALLY_Trade)) {
+                        if (exostate().has_alliance(p_idx, other_idx, ALLY_Trade)) {
                             relidx += snprintf(rel+relidx, sizeof(rel)-relidx, "%sTrade", sep);
                             relcol = COL_TEXT2;
                             sep = " / ";
                         }
-                        if (exostate.has_alliance(p_idx, other_idx, ALLY_NonAttack)) {
+                        if (exostate().has_alliance(p_idx, other_idx, ALLY_NonAttack)) {
                             relidx += snprintf(rel+relidx, sizeof(rel)-relidx, "%sNo Att", sep);
                             relcol = COL_TEXT2;
                             sep = " / ";
                         }
-                        if (exostate.has_alliance(p_idx, other_idx, ALLY_War)) {
+                        if (exostate().has_alliance(p_idx, other_idx, ALLY_War)) {
                             relidx += snprintf(rel+relidx, sizeof(rel)-relidx, "%sWar Ally", sep);
                             relcol = COL_TEXT2;
                             sep = " / ";
@@ -1336,7 +1336,7 @@ void MenuDrawer::menu_open_specific_mode() {
                 int most_ships_ctr = 0;
 
                 for (int i = 0; i < N_PLAYERS; ++i) {
-                    Player *pl = exostate.get_player(i);
+                    Player *pl = exostate().get_player(i);
 
                     if (!pl->is_participating())
                         continue;
@@ -1358,11 +1358,11 @@ void MenuDrawer::menu_open_specific_mode() {
                     for (int j = 0; j < N_PLAYERS; ++j) {
                         if (i == j)
                             continue;
-                        if (!exostate.get_player(j)->is_participating())
+                        if (!exostate().get_player(j)->is_participating())
                             continue;
-                        if (exostate.has_alliance(i, j, ALLY_Trade))     ++alliances;
-                        if (exostate.has_alliance(i, j, ALLY_NonAttack)) ++alliances;
-                        if (exostate.has_alliance(i, j, ALLY_War))       ++alliances;
+                        if (exostate().has_alliance(i, j, ALLY_Trade))     ++alliances;
+                        if (exostate().has_alliance(i, j, ALLY_NonAttack)) ++alliances;
+                        if (exostate().has_alliance(i, j, ALLY_War))       ++alliances;
                     }
 
                     for (int inv = 0; inv < INV_MAX; ++inv) {
@@ -1406,11 +1406,11 @@ void MenuDrawer::menu_open_specific_mode() {
                     }
                 }
 
-                Player *most_awards = exostate.get_player(0);
+                Player *most_awards = exostate().get_player(0);
                 int most_awards_ctr = 0;
 
                 for (int i = 0; i < N_PLAYERS; ++i) {
-                    Player *pl = exostate.get_player(i);
+                    Player *pl = exostate().get_player(i);
                     int awards = 0;
                     if (pl == most_planets)    ++awards;
                     if (pl == most_mc)         ++awards;
@@ -1447,8 +1447,8 @@ void MenuDrawer::menu_open_specific_mode() {
 
 // Return true if there was a user interaction and we need to redraw
 bool MenuDrawer::menu_specific_update() {
-    Player *p = exostate.get_active_player();
-    int player_idx = exostate.get_player_idx(p);
+    Player *p = exostate().get_active_player();
+    int player_idx = exostate().get_player_idx(p);
 
     switch(menu_mode) {
         case MM_Ctrl:
@@ -2180,12 +2180,12 @@ void MenuDrawer::menu_open_player_select(MenuMode mode) {
 }
 
 void MenuDrawer::menu_print_other_players() {
-    int player_idx = exostate.get_active_player_idx();
+    int player_idx = exostate().get_active_player_idx();
     menu_set_txt(0, COL_TEXT2, "Please select the desired lord.");
     int row = 1;
     for (int i = 0; i < N_PLAYERS; ++i) {
         if (i == player_idx) continue;
-        Player *tgt = exostate.get_player(i);
+        Player *tgt = exostate().get_player(i);
         menu_line_players[row] = i;
         menu_set_opt(row, tgt->get_full_name(), tgt->is_participating());
         row++;
@@ -2197,7 +2197,7 @@ bool MenuDrawer::menu_player_selected() {
     // FIXME: Need a way to go back if no options available
     for (int row = 1; row < MENU_LINES; ++row) {
         if (draw_manager.query_click(id_menu_lines[row]).id) {
-            Player *pl = exostate.get_player(menu_line_players[row]);
+            Player *pl = exostate().get_player(menu_line_players[row]);
             if (pl->is_participating()) {
                 menu_selected_player = pl;
                 return true;

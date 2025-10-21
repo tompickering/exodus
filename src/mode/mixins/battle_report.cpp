@@ -14,7 +14,7 @@ static const int PANEL_Y = 150;
 
 extern AUDIOMANAGER audio_manager;
 extern DRAWMANAGER draw_manager;
-extern ExodusState exostate;
+
 extern EphemeralState ephstate;
 
 BattleReport::BattleReport() {
@@ -28,10 +28,10 @@ bool BattleReport::batrpt_draw(bool reset) {
     LunarBattleParams &b = ephstate.lunar_battle;
     LunarBattleReport &rpt = ephstate.lunar_battle_report;
 
-    Planet *p = exostate.get_active_planet();
+    Planet *p = exostate().get_active_planet();
     Player *aggressor = nullptr;
     if (b.aggressor_type == AGG_Player) {
-        aggressor = exostate.get_player(b.aggressor_idx);
+        aggressor = exostate().get_player(b.aggressor_idx);
     }
 
     bool defending = !(aggressor && aggressor->is_human());

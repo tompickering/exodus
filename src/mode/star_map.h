@@ -12,7 +12,7 @@
 #include "galaxy/star.h"
 #include "state/exodus_state.h"
 
-extern ExodusState exostate;
+
 
 class StarMap : ModeBase, PanelDrawer, CommPanelDrawer, FrameDrawer, Bombing {
     public:

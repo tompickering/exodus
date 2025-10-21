@@ -7,7 +7,7 @@
 
 #define NUM_MONTHREPORT_IDS 11
 
-extern ExodusState exostate;
+
 extern DRAWMANAGER draw_manager;
 
 static SprID monthreport_ids[NUM_MONTHREPORT_IDS];
@@ -37,8 +37,8 @@ void MonthReport::monthreport_open() {
     const int lw = 120;
 
     // FIXME: Should probably have a 'get_primary_player()' function or similar
-    Player *player = exostate.get_player(0);
-    int player_idx = exostate.get_player_idx(player);
+    Player *player = exostate().get_player(0);
+    int player_idx = exostate().get_player_idx(player);
 
     for (int row = 0; row < 5; ++row) {
         const int b = BORDER;
@@ -51,7 +51,7 @@ void MonthReport::monthreport_open() {
             draw_manager.fill_pattern({x, y, w, h});
 
             char heading[32];
-            snprintf(heading, sizeof(heading), "STATUS REPORT: MONTH %d", exostate.get_month());
+            snprintf(heading, sizeof(heading), "STATUS REPORT: MONTH %d", exostate().get_month());
             draw_manager.draw_text(heading, Justify::Centre, x+w/2, y+16, COL_TEXT);
         } else {
             SprID box_id_l = monthreport_ids[1 + 2*(row-1)];
@@ -78,14 +78,14 @@ void MonthReport::monthreport_open() {
                         int allies = 0;
                         int enemies = 0;
                         for (int i = 0; i < N_PLAYERS; ++i) {
-                            Player *other = exostate.get_player(i);
+                            Player *other = exostate().get_player(i);
                             if (other == player) {
                                 continue;
                             }
                             if (!other->is_participating()) {
                                 continue;
                             }
-                            if (exostate.is_allied(player_idx, i)) {
+                            if (exostate().is_allied(player_idx, i)) {
                                 ++allies;
                             }
                             if (other->is_hostile_to(player_idx)) {
@@ -142,7 +142,7 @@ void MonthReport::monthreport_open() {
                             int n_planets = 0;
                             for (PlanetIterator piter(player_idx); !piter.complete(); ++piter) {
                                 n_planets++;
-                                if (piter.get()->get_army_size() < exostate.get_orig_month()) {
+                                if (piter.get()->get_army_size() < exostate().get_orig_month()) {
                                     ok = false;
                                 }
                             }

@@ -341,8 +341,8 @@ PlanetMap::PlanetMap() : ModeBase("PlanetMap") {
 
 void PlanetMap::enter() {
     ModeBase::enter(ID::END);
-    planet = exostate.get_active_planet();
-    player = exostate.get_active_player();
+    planet = exostate().get_active_planet();
+    player = exostate().get_active_player();
 
     if (!planet) {
         L.fatal("Entered PlanetMap mode with no active planet");
@@ -449,8 +449,8 @@ void PlanetMap::enter() {
 
         if (planet->is_owned() && d.destroyer_idx >= 0) {
             int owner_idx = planet->get_owner();
-            exostate.unset_alliances(planet->get_owner(), d.destroyer_idx);
-            Player *owner = exostate.get_player(owner_idx);
+            exostate().unset_alliances(planet->get_owner(), d.destroyer_idx);
+            Player *owner = exostate().get_player(owner_idx);
             if (!owner->is_human() && (owner->get_flag(0) != AI_Lo)) {
                 owner->set_hostile_to(d.destroyer_idx);
             }
@@ -2089,7 +2089,7 @@ ExodusMode PlanetMap::update_destruction(float delta) {
             bomb_achievements_done = true;
 
             if (d.real_destroyer_idx >= 0) {
-                Player *destroyer = exostate.get_player(d.real_destroyer_idx);
+                Player *destroyer = exostate().get_player(d.real_destroyer_idx);
 
                 if (destroyer->is_human()) {
                     if (d.nuke) {

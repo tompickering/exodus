@@ -12,7 +12,7 @@
 
 #define MAX_COMM_LINES 10
 
-extern ExodusState exostate;
+
 extern EphemeralState ephstate;
 
 class AlienVessel : ModeBase, PanelDrawer, FrameDrawer {

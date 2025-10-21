@@ -17,7 +17,7 @@ void News::enter() {
     draw_manager.fill_pattern({4, 4, RES_X-8, HEADER_HEIGHT - 8});
 
     char heading[32];
-    int m = max(1, exostate.get_month() - 1);
+    int m = max(1, exostate().get_month() - 1);
     snprintf(heading, sizeof(heading), "News of month %d", m);
     draw_manager.draw_text(
         Font::Large,
@@ -37,7 +37,7 @@ void News::draw_news() {
     char text[256];
 
     for (int i = 0; i < MAX_NEWSITEMS; ++i) {
-        const NewsItem& news = exostate.get_news(i);
+        const NewsItem& news = exostate().get_news(i);
         if (news.type == NI_None) {
             break;
         }
@@ -47,7 +47,7 @@ void News::draw_news() {
             continue;
         }
 
-        Galaxy *gal = exostate.get_galaxy();
+        Galaxy *gal = exostate().get_galaxy();
         Star *s = &(gal->get_stars()[news.star_idx]);
         Planet *p = s->get_planet(news.planet_idx);
 

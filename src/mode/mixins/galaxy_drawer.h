@@ -8,7 +8,7 @@
 
 extern DRAWMANAGER draw_manager;
 
-extern ExodusState exostate;
+
 
 class GalaxyDrawer {
     public:

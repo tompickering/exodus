@@ -64,7 +64,7 @@ void StarMap::enter() {
         ephstate.clear_ephemeral_state();
     }
 
-    star = exostate.get_active_star();
+    star = exostate().get_active_star();
 
     DrawTarget tgt = TGT_Primary;
 
@@ -98,10 +98,10 @@ void StarMap::enter() {
     draw_manager.show_cursor(true);
 
     bool planet_set = false;
-    Planet *active_planet = exostate.get_active_planet();
+    Planet *active_planet = exostate().get_active_planet();
     if (active_planet && active_planet->exists()) {
         // Ensures fleet button is updated etc
-        planet_set = select_planet(exostate.get_active_planet_idx());
+        planet_set = select_planet(exostate().get_active_planet_idx());
     }
     if (!planet_set) {
         for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
@@ -161,9 +161,9 @@ ExodusMode StarMap::update(float delta) {
         return ExodusMode::MODE_None;
     }
 
-    Player *player = exostate.get_active_player();
-    Planet *planet = exostate.get_active_planet();
-    int player_idx = exostate.get_active_player_idx();
+    Player *player = exostate().get_active_player();
+    Planet *planet = exostate().get_active_planet();
+    int player_idx = exostate().get_active_player_idx();
 
     switch (stage) {
         case SM_Idle:
@@ -227,7 +227,7 @@ ExodusMode StarMap::update(float delta) {
                     if (planet) {
                         if (planet->get_owner() == player_idx) {
                             return ExodusMode::MODE_PlanetMap;
-                        } else if (exostate.get_active_star_idx() != player->get_location().get_target()) {
+                        } else if (exostate().get_active_star_idx() != player->get_location().get_target()) {
                             comm_open(DIA_S_FleetNotInSystem);
                             stage = SM_Counsellor;
                             return ExodusMode::MODE_None;
@@ -235,7 +235,7 @@ ExodusMode StarMap::update(float delta) {
                             bool owned = planet->is_owned();
 
 #if FEATURE_BOMBING_LIMIT_HUMAN
-                            if (exostate.bombing_prevented(planet)) {
+                            if (exostate().bombing_prevented(planet)) {
                                 comm_open(DIA_S_AlreadyBombed);
                                 stage = SM_Counsellor;
                                 return ExodusMode::MODE_None;
@@ -271,7 +271,7 @@ ExodusMode StarMap::update(float delta) {
                     // Comm
                     if (planet && planet->exists()) {
                         PlayerLocation &loc = player->get_location();
-                        if (loc.in_flight() || loc.get_target() != exostate.get_active_star_idx()) {
+                        if (loc.in_flight() || loc.get_target() != exostate().get_active_star_idx()) {
                             panel_set_text("Your fleet is not in this system.");
                             return ExodusMode::MODE_None;
                         }
@@ -285,7 +285,7 @@ ExodusMode StarMap::update(float delta) {
 
                         if (planet->is_owned()) {
                             int owner_idx = planet->get_owner();
-                            Player *owner = exostate.get_player(owner_idx);
+                            Player *owner = exostate().get_player(owner_idx);
                             if (owner_idx == player_idx) {
                                 // Comms with own planet
                                 comm_open(DIA_S_PlanetComm);
@@ -293,7 +293,7 @@ ExodusMode StarMap::update(float delta) {
                                 return ExodusMode::MODE_None;
                             } else {
                                 // Comms with enemy planet
-                                if (exostate.is_allied(player_idx, owner_idx)) {
+                                if (exostate().is_allied(player_idx, owner_idx)) {
                                     audio_manager.target_music(mpart2mus(13));
                                 } else if (owner->is_hostile_to(player_idx)) {
                                     audio_manager.target_music(mpart2mus(8));
@@ -362,7 +362,7 @@ ExodusMode StarMap::update(float delta) {
                         }
 
                         int owner = planet->get_owner();
-                        exostate.unset_alliances(player_idx, owner);
+                        exostate().unset_alliances(player_idx, owner);
 
                         int guns = planet->get_airdef_guns();
                         int def = 0;
@@ -569,7 +569,7 @@ ExodusMode StarMap::update(float delta) {
             {
                 if (draw_manager.clicked()) {
                     if (planet->is_owned()) {
-                        exostate.prevent_bombing(planet);
+                        exostate().prevent_bombing(planet);
                     }
                     const Fleet &fleet = player->get_fleet();
                     if (fleet.scouts) {
@@ -587,7 +587,7 @@ ExodusMode StarMap::update(float delta) {
             {
                 if (draw_manager.clicked()) {
                     if (planet->is_owned()) {
-                        exostate.prevent_bombing(planet);
+                        exostate().prevent_bombing(planet);
                     }
                     return ephstate.get_appropriate_mode();
                 }
@@ -841,12 +841,12 @@ void StarMap::draw_planets(float delta) {
     for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
         Planet *planet = star->get_planet_nocheck(i);
         if (planet && planet->exists()) {
-            bool active = planet == exostate.get_active_planet();
+            bool active = planet == exostate().get_active_planet();
             int draw_x, draw_y;
             get_planet_draw_pos(i, draw_x, draw_y);
             if (delta == 0 || active) {
                 if (active) {
-                    int p = exostate.get_active_planet_idx();
+                    int p = exostate().get_active_planet_idx();
                     planet_progress[p] += delta * PLANET_ROTATE_SPD;
                     planet_progress[p] = fmod(planet_progress[p], 1.f);
                 }
@@ -882,7 +882,7 @@ void StarMap::draw_planets(float delta) {
                     RGB col = COL_TEXT_GREYED;
                     if (planet->is_owned()) {
                         bool enemy = planet->is_owned() &&
-                            planet->get_owner() != exostate.get_active_player_idx();
+                            planet->get_owner() != exostate().get_active_player_idx();
                         if (enemy) {
                             col = COL_TEXT_BAD;
                         } else {
@@ -902,12 +902,12 @@ void StarMap::draw_planets(float delta) {
             }
 
             // Fleet markers
-            int s_idx = exostate.tgt2loc(exostate.get_active_star());
+            int s_idx = exostate().tgt2loc(exostate().get_active_star());
             if (planet->is_owned()) {
                 uint32_t drawn_fleets = 0;
 
                 int owner_idx = planet->get_owner();
-                Player *owner = exostate.get_player(owner_idx);
+                Player *owner = exostate().get_player(owner_idx);
 
                 if (!(drawn_fleets & (1 << owner_idx))) {
                     PlayerLocation &owner_loc = owner->get_location();
@@ -949,9 +949,9 @@ void StarMap::get_planet_draw_pos(int i, int& x, int& y) {
 bool StarMap::select_planet(int index) {
     Planet *p = star->get_planet(index);
     if (p && p->exists()) {
-        exostate.set_active_planet(index);
-        set_fleet_button(!(p->is_owned() && exostate.get_active_player_idx() == p->get_owner()));
-        update_panel_info_planet(TGT_Primary, exostate.get_active_player(), p);
+        exostate().set_active_planet(index);
+        set_fleet_button(!(p->is_owned() && exostate().get_active_player_idx() == p->get_owner()));
+        update_panel_info_planet(TGT_Primary, exostate().get_active_player(), p);
         return true;
     }
     return false;
@@ -970,7 +970,7 @@ void StarMap::set_fleet_button(bool on) {
 }
 
 void StarMap::update_fleet_menu() {
-    Planet *planet = exostate.get_active_planet();
+    Planet *planet = exostate().get_active_planet();
     bool owned = planet->is_owned();
 
     draw_manager.draw_text(

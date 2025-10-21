@@ -6,7 +6,7 @@
 
 #include "shared.h"
 
-extern ExodusState exostate;
+
 
 Star::Star(int _x, int _y, const char* _name) : FlyTarget(_x, _y, true, _name) {
     size = (StarSize)(rand() % (STAR_Huge + 1));
@@ -72,13 +72,13 @@ Planet* Star::construct_artificial_world(int player_idx, const char* name) {
         outer->set_name(name);
     } else {
         const char* name = "Genesis";
-        if (!exostate.planet_name_taken(name)) {
+        if (!exostate().planet_name_taken(name)) {
             outer->set_name(name);
         } else {
             bool set = false;
             for (int x = 0; x < 10; ++x) {
                 const char* name2 = outer->get_art_name_suggestion();
-                if (!exostate.planet_name_taken(name2)) {
+                if (!exostate().planet_name_taken(name2)) {
                     outer->set_name(name2);
                     set = true;
                     break;

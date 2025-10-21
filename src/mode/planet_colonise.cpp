@@ -49,8 +49,8 @@ PlanetColonise::PlanetColonise() : ModeBase("PlanetColonise") {
 void PlanetColonise::enter() {
     ModeBase::enter(ID::END);
 
-    planet = exostate.get_active_planet();
-    player = exostate.get_active_player();
+    planet = exostate().get_active_planet();
+    player = exostate().get_active_player();
 
     if (!planet || !planet->exists()) {
         L.fatal("Entered PlanetColonise mode with invalid planet!");
@@ -77,8 +77,8 @@ void PlanetColonise::enter() {
 }
 
 void PlanetColonise::exit() {
-    if (exostate.get_n_planets(player) == 1) {
-        if (exostate.is_recommended_planet(planet)) {
+    if (exostate().get_n_planets(player) == 1) {
+        if (exostate().is_recommended_planet(planet)) {
             achievement_manager.unlock(ACH_BestStartWorld);
         }
     }

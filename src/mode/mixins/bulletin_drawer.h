@@ -15,7 +15,7 @@
 
 extern DRAWMANAGER draw_manager;
 
-extern ExodusState exostate;
+
 
 enum BulletinPRAction : uint8_t {
     BPR_None,

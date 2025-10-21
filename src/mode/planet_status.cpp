@@ -16,10 +16,10 @@ PlanetStatus::PlanetStatus() : ModeBase("PlanetStatus") {
 
 void PlanetStatus::enter() {
     ModeBase::enter(ID::END);
-    Planet *p = exostate.get_active_planet();
-    Player *player = exostate.get_active_player();
+    Planet *p = exostate().get_active_planet();
+    Player *player = exostate().get_active_player();
 
-    bool local = exostate.active_player_local();
+    bool local = exostate().active_player_local();
 
     if (!p) {
         L.fatal("Entered PlanetStatus mode with no active planet!");
@@ -33,7 +33,7 @@ void PlanetStatus::enter() {
     char heading[12 + PLANET_MAX_NAME];
 
     int text_x = 30;
-    Player *owner = p->is_owned() ? exostate.get_player(p->get_owner()) : nullptr;
+    Player *owner = p->is_owned() ? exostate().get_player(p->get_owner()) : nullptr;
 
     char ownership[PLANET_MAX_NAME + MAX_PLAYER_FULLNAME + 31];
 
@@ -137,7 +137,7 @@ void PlanetStatus::enter() {
     char mins[16];
     bool see_minerals = false;
 
-    if (p->is_owned() && player == exostate.get_player(p->get_owner())) {
+    if (p->is_owned() && player == exostate().get_player(p->get_owner())) {
         see_minerals = true;
     }
 
@@ -160,7 +160,7 @@ void PlanetStatus::enter() {
     char robots[10];
     bool see_airdef_and_robots = false;
 
-    if (p->is_owned() && player == exostate.get_player(p->get_owner())) {
+    if (p->is_owned() && player == exostate().get_player(p->get_owner())) {
         see_airdef_and_robots = true;
     }
 
@@ -352,7 +352,7 @@ void PlanetStatus::enter() {
         COL_TEXT2);
 
     bool see_resources = false;
-    if (p->is_owned() && player == exostate.get_player(p->get_owner())) {
+    if (p->is_owned() && player == exostate().get_player(p->get_owner())) {
         see_resources = true;
     }
 

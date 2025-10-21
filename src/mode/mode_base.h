@@ -18,7 +18,7 @@ extern DRAWMANAGER draw_manager;
 extern AUDIOMANAGER audio_manager;
 extern INPUTMANAGER input_manager;
 
-extern ExodusState exostate;
+
 extern EphemeralState ephstate;
 
 class ModeBase {

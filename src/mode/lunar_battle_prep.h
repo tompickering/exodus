@@ -9,7 +9,7 @@
 
 #include "mixins/battle_report.h"
 
-extern ExodusState exostate;
+
 
 class LunarBattlePrep : ModeBase, BattleReport {
     public:

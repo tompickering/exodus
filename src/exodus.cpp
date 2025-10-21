@@ -62,7 +62,6 @@ INPUTMANAGER input_manager;
 SAVEMANAGER save_manager;
 ACHIEVEMENTMANAGER achievement_manager;
 
-ExodusState exostate;
 EphemeralState ephstate;
 
 #ifdef DBG
@@ -225,11 +224,11 @@ int Exodus::run(int argc, char** argv) {
         config.players[0].set_flag_idx(0);
         config.aim = AIM_Might;
         config.enemy_start = ENEMY_Weak;
-        exostate.init(config);
-        exostate.get_player(0)->set_intro_seen();
+        exostate().init(config);
+        exostate().get_player(0)->set_intro_seen();
         srand(0);
-        exostate.generate_galaxy();
-        exostate.finalise_galaxy();
+        exostate().generate_galaxy();
+        exostate().finalise_galaxy();
         reset_mode_stack();
         push_mode(MODE_GalaxyMap);
     }
@@ -320,10 +319,10 @@ int Exodus::run(int argc, char** argv) {
             exodebug.show_player_markers = !exodebug.show_player_markers;
             L.debug("--- PLAYER LOCATIONS ---");
             for (int i = 0; i < N_PLAYERS; ++i) {
-                Player *p = exostate.get_player(i);
+                Player *p = exostate().get_player(i);
                 if (p->is_participating()) {
                     PlayerLocation &loc = p->get_location();
-                    FlyTarget *ft = exostate.loc2tgt(loc.get_target());
+                    FlyTarget *ft = exostate().loc2tgt(loc.get_target());
                     L.debug("%s%s%s", p->get_name(), loc.in_flight()?" F ":"   ", ft->name);
                 }
             }
@@ -369,6 +368,8 @@ int Exodus::run(int argc, char** argv) {
     } else {
         L.fatal("Failed to shut down platform");
     }
+
+    exostate_destroy();
 
     return 0;
 }

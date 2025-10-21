@@ -10,7 +10,7 @@
 #include "mixins/frame_drawer.h"
 #include "mixins/panel_drawer.h"
 
-extern ExodusState exostate;
+
 
 class Fly : ModeBase, PanelDrawer, FrameDrawer {
     public:

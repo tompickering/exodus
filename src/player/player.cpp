@@ -3,13 +3,13 @@
 #include <cstdio>
 #include <cstring>
 
-// FIXME: Cyclic dependency - used for achievement checking - best solution probably to set hostility via exostate in the first place
+// FIXME: Cyclic dependency - used for achievement checking - best solution probably to set hostility via exostate() in the first place
 #include "state/exodus_state.h"
 
 #include "alien_names.h"
 #include "shared.h"
 
-extern ExodusState exostate;
+
 
 static bool alien_names_offsets_initialised = false;
 static int alien_names_offsets[N_RACES];
@@ -928,7 +928,7 @@ void Player::set_hostile_to(int p) {
     ai_hostile_to = p;
 
     if (p >= 0) {
-        if (exostate.count_hostile_players(p) >= 5) {
+        if (exostate().count_hostile_players(p) >= 5) {
             achievement_manager.unlock(ACH_ManyEnemies);
         }
     }

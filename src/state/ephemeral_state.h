@@ -14,7 +14,7 @@
 
 #include "exodus_debug.h"
 
-extern ExodusState exostate;
+
 
 enum AggressorType {
     AGG_Player,
@@ -229,8 +229,8 @@ class EphemeralState {
             selectplanet_reason = SPR_None;
             switch (reason) {
                 case SPR_PlanetSurface:
-                    exostate.set_active_flytarget(exostate.loc2tgt(selectplanet_star_internal));
-                    exostate.set_active_planet(selectplanet_planet_internal);
+                    exostate().set_active_flytarget(exostate().loc2tgt(selectplanet_star_internal));
+                    exostate().set_active_planet(selectplanet_planet_internal);
                     set_ephemeral_state(EPH_ScoutPlanet);
                     return get_appropriate_mode();
                 default:

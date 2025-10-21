@@ -446,9 +446,9 @@ void CommPanelDrawer::comm_open(CommSend input) {
 void CommPanelDrawer::comm_draw_over_img_elements() {
     if (comm_other && !comm_is_counsellor) {
         int x = 4;
-        int p_idx = exostate.get_player_idx(comm_player);
-        int o_idx = exostate.get_player_idx(comm_other);
-        if (exostate.has_alliance(p_idx, o_idx, ALLY_Trade)) {
+        int p_idx = exostate().get_player_idx(comm_player);
+        int o_idx = exostate().get_player_idx(comm_other);
+        if (exostate().has_alliance(p_idx, o_idx, ALLY_Trade)) {
             draw_manager.draw(
                 id_comm_ally_trade,
                 IMG_TS1_ALL1,
@@ -457,7 +457,7 @@ void CommPanelDrawer::comm_draw_over_img_elements() {
                  0, 0, 1, 1});
             x += 32;
         }
-        if (exostate.has_alliance(p_idx, o_idx, ALLY_NonAttack)) {
+        if (exostate().has_alliance(p_idx, o_idx, ALLY_NonAttack)) {
             draw_manager.draw(
                 id_comm_ally_nonattack,
                 IMG_TS1_ALL2,
@@ -466,7 +466,7 @@ void CommPanelDrawer::comm_draw_over_img_elements() {
                  0, 0, 1, 1});
             x += 32;
         }
-        if (exostate.has_alliance(p_idx, o_idx, ALLY_War)) {
+        if (exostate().has_alliance(p_idx, o_idx, ALLY_War)) {
             draw_manager.draw(
                 id_comm_ally_war,
                 IMG_TS1_ALL3,
@@ -626,12 +626,12 @@ void CommPanelDrawer::comm_show_adj(bool show) {
 
 
 void CommPanelDrawer::comm_init(CommSend input) {
-    comm_player = exostate.get_active_player();
-    comm_planet = exostate.get_active_planet();
+    comm_player = exostate().get_active_player();
+    comm_planet = exostate().get_active_planet();
     comm_other = nullptr;
 
     if (comm_planet && comm_planet->is_owned()) {
-        comm_other = exostate.get_player(comm_planet->get_owner());
+        comm_other = exostate().get_player(comm_planet->get_owner());
     }
 
     switch (input) {
@@ -895,11 +895,11 @@ void CommPanelDrawer::comm_send(CommSend input) {
     int comm_other_idx  = -1;
 
     if (comm_player) {
-        comm_player_idx = exostate.get_player_idx(comm_player);
+        comm_player_idx = exostate().get_player_idx(comm_player);
     }
 
     if (comm_other) {
-        comm_other_idx = exostate.get_player_idx(comm_other);
+        comm_other_idx = exostate().get_player_idx(comm_other);
     }
 
     switch (input) {
@@ -916,8 +916,8 @@ void CommPanelDrawer::comm_send(CommSend input) {
         case DIA_S_PlanFly:
             {
                 comm_prepare(6);
-                Galaxy *gal = exostate.get_galaxy();
-                FlyTarget *loc = exostate.loc2tgt(comm_ctx.location);
+                Galaxy *gal = exostate().get_galaxy();
+                FlyTarget *loc = exostate().loc2tgt(comm_ctx.location);
                 const char *pl = (comm_ctx.months==1)?"":"s";
                 if (loc == gal->get_guild()) {
                     comm_set_text(0, "For our flight to the space");
@@ -928,7 +928,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     comm_set_text(1, "%s, we need %d month%s.", st->name, comm_ctx.months, pl);
                 }
 
-                FlyTarget *curr = exostate.loc2tgt(comm_player->get_location().get_target());
+                FlyTarget *curr = exostate().loc2tgt(comm_player->get_location().get_target());
                 const char* prob_str = "unlikely";
                 if (curr->pirates == 1) prob_str = "possible";
                 if (curr->pirates == 2) prob_str = "likely";
@@ -1098,7 +1098,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     const char *name = input_manager.get_input_text(PLANET_MAX_NAME);
                     if (comm_player->attempt_spend(comm_planet->get_settlement_cost())) {
                         comm_planet->set_name(name);
-                        comm_planet->set_owner(exostate.get_player_idx(comm_player));
+                        comm_planet->set_owner(exostate().get_player_idx(comm_player));
                         comm_player->add_trace(TRACE_PlanetsClaimed);
                         comm_set_text(4, "%s is now yours.", name);
                         comm_recv(DIA_R_SettleNamePlanetProceed);
@@ -1154,7 +1154,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             if (comm_player->get_location().in_flight()) {
                 comm_text_disabled_mask |= 0x3;
             }
-            if (comm_player->get_location().get_target() != exostate.get_active_star_idx()) {
+            if (comm_player->get_location().get_target() != exostate().get_active_star_idx()) {
                 comm_text_disabled_mask |= 0x3;
             }
             if (!comm_planet->has_spaceport()) {
@@ -1183,7 +1183,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             break;
         case DIA_S_HailPlanet:
             comm_prepare(4);
-            if (exostate.is_allied(comm_player_idx, comm_other_idx)){
+            if (exostate().is_allied(comm_player_idx, comm_other_idx)){
                 comm_set_speech("Welcome to %s, %s!",
                                  comm_planet->get_name(),
                                  comm_player->get_name());
@@ -1197,20 +1197,20 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_text_disabled_mask |= 2;
             }
             comm_set_text(2, "I have an interesting offer.");
-            if (exostate.has_all_alliances(comm_player_idx, comm_other_idx)) {
+            if (exostate().has_all_alliances(comm_player_idx, comm_other_idx)) {
                 comm_text_disabled_mask |= 4;
             }
             comm_set_text(3, "I have something to say.");
             comm_text_interactive_mask = 0xF;
 
-            if (exostate.attack_prevented(comm_planet)) {
+            if (exostate().attack_prevented(comm_planet)) {
                 comm_text_disabled_mask |= 1;
             }
 
             comm_recv(DIA_R_Greeting);
             break;
         case DIA_S_Attack:
-            if (exostate.has_alliance(comm_player_idx, comm_other_idx, ALLY_NonAttack)) {
+            if (exostate().has_alliance(comm_player_idx, comm_other_idx, ALLY_NonAttack)) {
                 comm_prepare(4);
                 if (onein(2)) {
                     comm_set_speech("But we have an ALLIANCE!");
@@ -1232,11 +1232,11 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_text_interactive_mask = 0xF;
                 comm_recv(DIA_R_AttackAlly);
             } else {
-                exostate.unset_alliances(comm_player_idx, comm_other_idx);
+                exostate().unset_alliances(comm_player_idx, comm_other_idx);
                 if (comm_other->get_flag(0) == AI_Hi) {
                     comm_other->set_hostile_to(comm_player_idx);
                 }
-                int n_planets = exostate.get_n_planets(comm_other);
+                int n_planets = exostate().get_n_planets(comm_other);
                 int army_size = comm_player->get_fleet().freight.army_size();
                 if (army_size>30 && onein(5) && comm_other->can_afford(50) && n_planets<2) {
                     comm_prepare(4);
@@ -1297,7 +1297,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             }
             comm_prepare(1);
             if ((comm_other->get_flag(0) == AI_Hi) || onein(5)) {
-                exostate.unset_alliances(comm_player_idx, comm_other_idx);
+                exostate().unset_alliances(comm_player_idx, comm_other_idx);
                 comm_set_speech("There is no more alliance!");
             } else {
                 comm_set_speech("I am deeply disappointed.");
@@ -1308,7 +1308,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
         case DIA_S_AttackAllyApology:
             comm_prepare(1);
             if ((comm_other->get_flag(0) == AI_Hi) || onein(2)) {
-                exostate.unset_alliances(comm_player_idx, comm_other_idx);
+                exostate().unset_alliances(comm_player_idx, comm_other_idx);
                 comm_set_speech("There is no more alliance!");
             } else {
                 comm_set_speech("I am deeply disappointed.");
@@ -1319,7 +1319,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
         case DIA_S_AttackAllyProceed:
             {
                 comm_prepare(1);
-                exostate.unset_alliances(comm_player_idx, comm_other_idx);
+                exostate().unset_alliances(comm_player_idx, comm_other_idx);
                 comm_player->adjust_reputation(-1);
                 comm_player->add_trace(TRACE_AlliancesBroken);
                 int r = RND(3);
@@ -1344,12 +1344,12 @@ void CommPanelDrawer::comm_send(CommSend input) {
             break;
         case DIA_S_Trade:
             {
-                if (exostate.has_alliance(comm_player_idx, comm_other_idx, ALLY_Trade)) {
+                if (exostate().has_alliance(comm_player_idx, comm_other_idx, ALLY_Trade)) {
                     comm_prepare(1);
                     comm_set_speech("You may trade.");
                     comm_recv(DIA_R_TradeOK);
                 } else {
-                    int player_idx = exostate.get_player_idx(comm_player);
+                    int player_idx = exostate().get_player_idx(comm_player);
                     if (comm_other->is_hostile_to(player_idx)) {
                         if (comm_other->get_flag(0) == AI_Hi) {
                             comm_prepare(4);
@@ -1407,29 +1407,29 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_set_text(2, "I propose a war alliance.");
             comm_set_text(3, "Become my ally or I attack.");
             comm_set_text(4, "Never mind...");
-            if (exostate.has_alliance(comm_player_idx, comm_other_idx, ALLY_Trade)) {
+            if (exostate().has_alliance(comm_player_idx, comm_other_idx, ALLY_Trade)) {
                 comm_text_disabled_mask |= 1;
             }
-            if (exostate.has_alliance(comm_player_idx, comm_other_idx, ALLY_NonAttack)) {
+            if (exostate().has_alliance(comm_player_idx, comm_other_idx, ALLY_NonAttack)) {
                 comm_text_disabled_mask |= 2;
             }
-            if (exostate.has_alliance(comm_player_idx, comm_other_idx, ALLY_War)) {
+            if (exostate().has_alliance(comm_player_idx, comm_other_idx, ALLY_War)) {
                 comm_text_disabled_mask |= 4;
             }
 
-            if (!exostate.can_request_alliance(comm_other_idx, ALLY_Trade)) {
+            if (!exostate().can_request_alliance(comm_other_idx, ALLY_Trade)) {
                 comm_text_disabled_mask |= 1;
             }
-            if (!exostate.can_request_alliance(comm_other_idx, ALLY_NonAttack)) {
+            if (!exostate().can_request_alliance(comm_other_idx, ALLY_NonAttack)) {
                 comm_text_disabled_mask |= 2;
             }
-            if (!exostate.can_request_alliance(comm_other_idx, ALLY_War)) {
+            if (!exostate().can_request_alliance(comm_other_idx, ALLY_War)) {
                 comm_text_disabled_mask |= 4;
             }
 
             comm_text_interactive_mask = 0x1F;
 
-            if (exostate.attack_prevented(comm_planet)) {
+            if (exostate().attack_prevented(comm_planet)) {
                 comm_text_disabled_mask |= 8;
             }
 
@@ -1437,7 +1437,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             break;
         case DIA_S_ProposeAlliance:
             {
-                int idx = exostate.get_player_idx(comm_player);
+                int idx = exostate().get_player_idx(comm_player);
                 if (comm_other->is_hostile_to(idx) || comm_player->get_reputation() < 1) {
                     comm_prepare(1);
                     comm_set_speech("I am not interested.");
@@ -1471,7 +1471,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 if ((army > comm_planet->get_army_size()) && (comm_other->get_flag(3) != AI_Lo)) {
                     // FIXME: Should this say something else...?
                     comm_set_speech("I... have to accept this.");
-                    exostate.set_all_alliances(comm_player_idx, comm_other_idx);
+                    exostate().set_all_alliances(comm_player_idx, comm_other_idx);
                     comm_player->add_trace(TRACE_AlliancesCreated);
 
                     if (comm_player->is_human()) {
@@ -1508,7 +1508,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
         case DIA_S_OfferAllianceResponse:
             comm_prepare(1);
             // Alliance very unlikely if we don't have a planet
-            if (exostate.get_n_planets(comm_player) <= 0) {
+            if (exostate().get_n_planets(comm_player) <= 0) {
                 comm_ctx.alliance_prob = 99;
             }
             // TODO_MP: Multiplayer - 'verhalten'
@@ -1520,7 +1520,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 // TODO_MP: It looks like the player is charged these credits -
                 //          but they don't go to the other lord! More important
                 //          in multiplayer.
-                exostate.set_alliance(comm_player_idx, comm_other_idx, comm_ctx.alliance_type);
+                exostate().set_alliance(comm_player_idx, comm_other_idx, comm_ctx.alliance_type);
 
                 if (comm_ctx.mc == 0 && comm_player->is_human()) {
                     achievement_manager.unlock(ACH_AllianceNoMC);
@@ -1631,7 +1631,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     // FIXME: Should we clear hostilities that aren't against us?!
                     comm_other->clear_hostility();
                 }
-                bool allied = exostate.is_allied(comm_player_idx, comm_other_idx);
+                bool allied = exostate().is_allied(comm_player_idx, comm_other_idx);
                 if (comm_other->is_hostile_to(comm_player_idx) && !allied) {
                     comm_set_speech("I do not wish you as my friend.");
                 } else {
@@ -1644,7 +1644,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
         case DIA_S_CommentInsult:
             {
                 comm_prepare(1);
-                exostate.unset_alliances(comm_player_idx, comm_other_idx);
+                exostate().unset_alliances(comm_player_idx, comm_other_idx);
                 if (onein(2)) {
                     comm_set_speech("You will pay for this.");
                 } else {
@@ -1658,7 +1658,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
         case DIA_S_CommentThreaten:
             {
                 comm_prepare(1);
-                exostate.unset_alliances(comm_player_idx, comm_other_idx);
+                exostate().unset_alliances(comm_player_idx, comm_other_idx);
                 if (comm_other->get_flag(0) != AI_Lo || onein(3)) {
                     if (onein(2)) {
                         comm_set_speech("You will pay for this.");
@@ -1837,10 +1837,10 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_set_speech("Let us not talk. I want %s.", comm_planet->get_name());
 
                 bool ally = false;
-                if (exostate.has_alliance(comm_player_idx, comm_other_idx, ALLY_NonAttack)) {
+                if (exostate().has_alliance(comm_player_idx, comm_other_idx, ALLY_NonAttack)) {
                     ally = true;
                 }
-                if (exostate.has_alliance(comm_player_idx, comm_other_idx, ALLY_War)) {
+                if (exostate().has_alliance(comm_player_idx, comm_other_idx, ALLY_War)) {
                     ally = true;
                 }
                 if (ally) {
@@ -1869,7 +1869,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_set_speech("I herewith quit the alliance.");
             }
 
-            exostate.unset_alliances(comm_player_idx, comm_other_idx);
+            exostate().unset_alliances(comm_player_idx, comm_other_idx);
             comm_player->adjust_reputation(-1);
 
             comm_set_text(0, "You will pay for this.");
@@ -1891,7 +1891,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             {
                 comm_prepare(1);
                 bool accept = false;
-                if (comm_ctx.mc > (int)((float)exostate.get_orig_month()*2.5f)) {
+                if (comm_ctx.mc > (int)((float)exostate().get_orig_month()*2.5f)) {
                     accept = true;
                 }
                 if (comm_ctx.mc < 15) {
@@ -1923,7 +1923,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             break;
         case DIA_S_CPU_TradeRequestFee:
             {
-                if (exostate.has_alliance(comm_player_idx, comm_other_idx, ALLY_Trade)) {
+                if (exostate().has_alliance(comm_player_idx, comm_other_idx, ALLY_Trade)) {
                     comm_prepare(1);
                     comm_set_speech("I will not trade then.");
                     comm_exit_anim_action = CA_Abort;
@@ -1971,7 +1971,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
         case DIA_S_CPU_TradeInsult:
             {
                 comm_prepare(4);
-                exostate.unset_alliances(comm_player_idx, comm_other_idx);
+                exostate().unset_alliances(comm_player_idx, comm_other_idx);
                 int r = rand() % 3;
                 if (r == 2 && comm_player->get_flag(0) == AI_Hi) {
                     r = 0;
@@ -2037,7 +2037,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_prepare(4);
             comm_ctx.mc = 0;
             if (comm_player->get_flag(3) == AI_Lo) {
-                comm_ctx.mc = exostate.get_orig_month()*3;
+                comm_ctx.mc = exostate().get_orig_month()*3;
                 if (comm_ctx.mc > 100) {
                     comm_ctx.mc = 100 - RND(3)*10;
                 }
@@ -2103,13 +2103,13 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 int &a = comm_ctx.battle_strength_att;
                 int &d = comm_ctx.battle_strength_def;
 
-                int p = exostate.get_n_planets(comm_other);
+                int p = exostate().get_n_planets(comm_other);
 
                 if (p <= 1 && a*2 > d*3 && comm_other->attempt_spend(comm_ctx.mc)) {
                     comm_set_speech("I think I will accept this.");
 
                     // Prevent further attacks this month (orig doesn't do this)
-                    exostate.prevent_attack(comm_planet);
+                    exostate().prevent_attack(comm_planet);
 
                     comm_player->give_mc(comm_ctx.mc);
                     comm_exit_anim_action = CA_CallOffAttack;
@@ -2319,7 +2319,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_player->give_mc(comm_ctx.mc);
 
             // Prevent further attacks this month (orig doesn't do this)
-            exostate.prevent_attack(comm_planet);
+            exostate().prevent_attack(comm_planet);
 
             comm_prepare(1);
             comm_set_speech("You are a worthy enemy.");
@@ -2454,11 +2454,11 @@ void CommPanelDrawer::comm_process_responses() {
     int comm_other_idx  = -1;
 
     if (comm_player) {
-        comm_player_idx = exostate.get_player_idx(comm_player);
+        comm_player_idx = exostate().get_player_idx(comm_player);
     }
 
     if (comm_other) {
-        comm_other_idx = exostate.get_player_idx(comm_other);
+        comm_other_idx = exostate().get_player_idx(comm_other);
     }
 
     bool proceed = false;
@@ -2645,7 +2645,7 @@ void CommPanelDrawer::comm_process_responses() {
                     comm_player->give_mc(comm_ctx.mc);
 
                     // Prevent further attacks this month (orig doesn't do this)
-                    exostate.prevent_attack(comm_planet);
+                    exostate().prevent_attack(comm_planet);
 
                     comm_report_action = CA_Abort;
                     break;
@@ -2663,7 +2663,7 @@ void CommPanelDrawer::comm_process_responses() {
                     comm_player->give_mc(comm_ctx.mc);
 
                     // Prevent further attacks this month (orig doesn't do this)
-                    exostate.prevent_attack(comm_planet);
+                    exostate().prevent_attack(comm_planet);
 
                     comm_report_action = CA_Abort;
                     break;
@@ -2713,19 +2713,19 @@ void CommPanelDrawer::comm_process_responses() {
                 case 0:
                     // Trading alliance
                     comm_ctx.alliance_type = ALLY_Trade;
-                    exostate.register_request_alliance(comm_other_idx, comm_ctx.alliance_type);
+                    exostate().register_request_alliance(comm_other_idx, comm_ctx.alliance_type);
                     comm_send(DIA_S_ProposeAlliance);
                     break;
                 case 1:
                     // Non-attack alliance
                     comm_ctx.alliance_type = ALLY_NonAttack;
-                    exostate.register_request_alliance(comm_other_idx, comm_ctx.alliance_type);
+                    exostate().register_request_alliance(comm_other_idx, comm_ctx.alliance_type);
                     comm_send(DIA_S_ProposeAlliance);
                     break;
                 case 2:
                     // War alliance
                     comm_ctx.alliance_type = ALLY_War;
-                    exostate.register_request_alliance(comm_other_idx, comm_ctx.alliance_type);
+                    exostate().register_request_alliance(comm_other_idx, comm_ctx.alliance_type);
                     comm_send(DIA_S_ProposeAlliance);
                     break;
                 case 3:
@@ -2779,7 +2779,7 @@ void CommPanelDrawer::comm_process_responses() {
 
                 if (draw_manager.query_click(id_comm_adj_ok).id) {
                     input_manager.enable_repeating_clicks(false);
-                    if (comm_ctx.mc >= 5 && comm_ctx.mc >= exostate.get_orig_month()/2) {
+                    if (comm_ctx.mc >= 5 && comm_ctx.mc >= exostate().get_orig_month()/2) {
                         comm_ctx.alliance_prob -= 2;
                     }
                     if (comm_ctx.mc < 5) {
@@ -2822,18 +2822,18 @@ void CommPanelDrawer::comm_process_responses() {
         case DIA_R_CPU_AttackResponse:
             switch (opt) {
                 case 0:
-                    exostate.unset_alliances(comm_player_idx, comm_other_idx);
+                    exostate().unset_alliances(comm_player_idx, comm_other_idx);
                     comm_report_action = CA_Attack;
                     break;
                 case 1:
                     comm_send(DIA_S_CPU_AttackPayOff);
                     break;
                 case 2:
-                    exostate.unset_alliances(comm_player_idx, comm_other_idx);
+                    exostate().unset_alliances(comm_player_idx, comm_other_idx);
                     comm_report_action = CA_Attack;
                     break;
                 case 3:
-                    exostate.unset_alliances(comm_player_idx, comm_other_idx);
+                    exostate().unset_alliances(comm_player_idx, comm_other_idx);
                     comm_report_action = CA_Attack;
                     break;
             }
@@ -2881,7 +2881,7 @@ void CommPanelDrawer::comm_process_responses() {
             break;
         case DIA_R_CPU_AttackPayOffReject:
             if (clicked) {
-                exostate.unset_alliances(comm_player_idx, comm_other_idx);
+                exostate().unset_alliances(comm_player_idx, comm_other_idx);
                 comm_exit_anim(CA_Attack);
             }
             break;
@@ -2950,7 +2950,7 @@ void CommPanelDrawer::comm_process_responses() {
                                 t = ALLY_War;
                                 break;
                         }
-                        if (!exostate.has_alliance(comm_player_idx, comm_other_idx, t)) {
+                        if (!exostate().has_alliance(comm_player_idx, comm_other_idx, t)) {
                             break;
                         }
                     }
@@ -2974,7 +2974,7 @@ void CommPanelDrawer::comm_process_responses() {
                     break;
                 case 3:
                     // I accept this
-                    exostate.set_alliance(comm_player_idx, comm_other_idx, comm_ctx.alliance_type);
+                    exostate().set_alliance(comm_player_idx, comm_other_idx, comm_ctx.alliance_type);
                     comm_report_action = CA_Abort;
                     break;
             }
@@ -2985,7 +2985,7 @@ void CommPanelDrawer::comm_process_responses() {
                     // I accept this
                     // FIXME: Orig doesn't subtract MC from CPU lord, so neither do we
                     comm_other->give_mc(comm_ctx.mc);
-                    exostate.set_alliance(comm_player_idx, comm_other_idx, comm_ctx.alliance_type);
+                    exostate().set_alliance(comm_player_idx, comm_other_idx, comm_ctx.alliance_type);
                     comm_exit_anim(CA_Abort);
                     break;
                 case 1:
@@ -3000,7 +3000,7 @@ void CommPanelDrawer::comm_process_responses() {
                     comm_exit_anim(CA_Attack);
                     break;
                 case 1:
-                    exostate.set_all_alliances(comm_player_idx, comm_other_idx);
+                    exostate().set_all_alliances(comm_player_idx, comm_other_idx);
                     comm_exit_anim(CA_Abort);
                     break;
             }
@@ -3061,7 +3061,7 @@ void CommPanelDrawer::comm_process_responses() {
 
                 if (draw_manager.query_click(id_comm_adj_ok).id) {
                     input_manager.enable_repeating_clicks(false);
-                    if (comm_ctx.mc > exostate.get_orig_month()/2) {
+                    if (comm_ctx.mc > exostate().get_orig_month()/2) {
                         if (comm_other->attempt_spend(comm_ctx.mc)) {
                             // FIXME: Orig doesn't give MC to CPU player either
                             comm_send(DIA_S_B_OfferMoneyDefenderAccept);

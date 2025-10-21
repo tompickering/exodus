@@ -15,7 +15,7 @@
 #define ROCKET_TTL 20
 #define N_EXPLOSIONS 8
 
-extern ExodusState exostate;
+
 extern EphemeralState ephstate;
 extern DRAWMANAGER draw_manager;
 

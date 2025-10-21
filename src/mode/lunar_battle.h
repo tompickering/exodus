@@ -15,7 +15,7 @@
 #define TELE_MAX 3
 #define BATTLE_UNITS_MAX 176    // Battlefield is 16x11
 
-extern ExodusState exostate;
+
 
 enum LBPanelMode {
     LBPM_None,

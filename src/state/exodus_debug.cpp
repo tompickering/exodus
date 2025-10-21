@@ -7,7 +7,7 @@
 
 #include "player/player.h"
 
-extern ExodusState exostate;
+
 extern DRAWMANAGER draw_manager;
 
 void ExodusDebug::init() {
@@ -18,14 +18,14 @@ void ExodusDebug::init() {
 }
 
 void ExodusDebug::add_mc(int mc) {
-    Player* p = exostate.get_active_player();
+    Player* p = exostate().get_active_player();
     if (p) {
         p->give_mc(mc);
     }
 }
 
 void ExodusDebug::add_units(int n) {
-    Player* p = exostate.get_active_player();
+    Player* p = exostate().get_active_player();
     if (p) {
         p->transfer_inf(n);
         p->transfer_gli(n);
@@ -34,7 +34,7 @@ void ExodusDebug::add_units(int n) {
 }
 
 void ExodusDebug::add_goods(int n) {
-    Player* p = exostate.get_active_player();
+    Player* p = exostate().get_active_player();
     if (p) {
         p->transfer_fd(n);
         p->transfer_min(n);
@@ -43,7 +43,7 @@ void ExodusDebug::add_goods(int n) {
 }
 
 void ExodusDebug::unlock_all_inventions() {
-    Player *p = exostate.get_active_player();
+    Player *p = exostate().get_active_player();
     if (p) {
         L.debug("*CHEAT* ALL INVENTIONS");
         uint32_t unlocked_prev = 0;
@@ -63,14 +63,14 @@ void ExodusDebug::unlock_all_inventions() {
 }
 
 void ExodusDebug::set_all_alliances() {
-    Player *p = exostate.get_active_player();
+    Player *p = exostate().get_active_player();
     if (p) {
         L.debug("*CHEAT* ALL ALLIANCES");
-        int idx = exostate.get_player_idx(p);
+        int idx = exostate().get_player_idx(p);
         for (int i = 0; i < N_PLAYERS; ++i) {
             if (i == idx)
                 continue;
-            exostate.set_all_alliances(i, idx);
+            exostate().set_all_alliances(i, idx);
         }
     }
 }

@@ -67,13 +67,13 @@ void GuildBar::enter() {
     screen_loop = 0.f;
     stage = GB_Idle;
 
-    if (exostate.get_month() != last_update_month) {
+    if (exostate().get_month() != last_update_month) {
         update_pin_and_rumours();
-        last_update_month = exostate.get_month();
+        last_update_month = exostate().get_month();
     }
 
     // These get refreshed every time you enter the bar in the original
-    uint32_t cpu_player_mask = exostate.get_active_cpu_player_mask();
+    uint32_t cpu_player_mask = exostate().get_active_cpu_player_mask();
     int num_cpu_players = 0;
     for (int i = 0; i < N_PLAYERS; ++i) {
         if (cpu_player_mask & (1 << i)) {
@@ -230,8 +230,8 @@ void GuildBar::update_pin_and_rumours() {
     PlanetInfo planet_info;
 
     // Rumour 0: Number of planets
-    player = exostate.get_random_active_player();
-    int n_planets = exostate.get_n_planets(player);
+    player = exostate().get_random_active_player();
+    int n_planets = exostate().get_n_planets(player);
     if (onein(3)) {
         n_planets = RND(5);
     }
@@ -248,7 +248,7 @@ void GuildBar::update_pin_and_rumours() {
     if (onein(3)) {
         min_army_size = 100;
     }
-    planet_info = exostate.get_random_owned_planet_info();
+    planet_info = exostate().get_random_owned_planet_info();
     for (PlanetIterator piter; !piter.complete(); ++piter) {
         planet = piter.get();
         if (planet->is_owned()) {
@@ -274,7 +274,7 @@ void GuildBar::update_pin_and_rumours() {
     if (onein(3)) {
         max_reserves = RND(200);
     }
-    planet_info = exostate.get_random_owned_planet_info();
+    planet_info = exostate().get_random_owned_planet_info();
     for (PlanetIterator piter; !piter.complete(); ++piter) {
         planet = piter.get();
         if (planet->get_total_reserves() > max_reserves) {
@@ -298,7 +298,7 @@ void GuildBar::update_pin_and_rumours() {
     if (onein(3)) {
         max_pop = RND(20);
     }
-    planet_info = exostate.get_random_owned_planet_info();
+    planet_info = exostate().get_random_owned_planet_info();
     for (PlanetIterator piter; !piter.complete(); ++piter) {
         planet = piter.get();
         if (planet->get_n_cities() > max_pop) {
@@ -318,7 +318,7 @@ void GuildBar::update_pin_and_rumours() {
              "has the largest population.");
 
     // Rumour 4: Reputation
-    player = exostate.get_random_active_player();
+    player = exostate().get_random_active_player();
     int rep = player->get_reputation();
     if (onein(3)) {
         rep = RND(5);
@@ -455,10 +455,10 @@ ExodusMode GuildBar::update(float delta) {
                     {
                         const char* report_text[3];
                         char planet_line[16 + FT_MAX_NAME + PLANET_MAX_NAME];
-                        if (exostate.get_n_human_players() == 1) {
-                            PlanetInfo info = exostate.recommend_planet();
+                        if (exostate().get_n_human_players() == 1) {
+                            PlanetInfo info = exostate().recommend_planet();
 
-                            exostate.save_recommended_planet(info);
+                            exostate().save_recommended_planet(info);
 
                             if (info.planet->is_named()) {
                                 snprintf(
@@ -592,9 +592,9 @@ ExodusMode GuildBar::update(float delta) {
                 bool done = update_star_sheriff(delta);
 
                 if (done) {
-                    sheriff_insert_high_score({exostate.get_active_player_idx(), sheriff_score});
+                    sheriff_insert_high_score({exostate().get_active_player_idx(), sheriff_score});
 
-                    if (sheriff_high_scores[0].player_idx == exostate.get_active_player_idx()) {
+                    if (sheriff_high_scores[0].player_idx == exostate().get_active_player_idx()) {
                         if (sheriff_high_scores[0].score == sheriff_score) {
                             achievement_manager.unlock(ACH_SheriffHighScore);
                         }
@@ -611,7 +611,7 @@ ExodusMode GuildBar::update(float delta) {
                     for (int i = 0; i < SHERIFF_N_HIGHSCORES; ++i) {
                         const char* name = "Barkeeper";
                         if (sheriff_high_scores[i].player_idx >= 0) {
-                            name = exostate.get_player(sheriff_high_scores[i].player_idx)->get_full_name();
+                            name = exostate().get_player(sheriff_high_scores[i].player_idx)->get_full_name();
                         }
 
                         char str[12];

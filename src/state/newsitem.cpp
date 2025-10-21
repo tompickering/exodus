@@ -2,7 +2,7 @@
 
 #include "exodus_state.h"
 
-extern ExodusState exostate;
+
 
 NewsItem::NewsItem()
     : star_idx(-1), planet_idx(-1), type(NI_None) {
@@ -25,10 +25,10 @@ const char* NewsItem::get_string() const {
     Player *p1 = nullptr;
 
     if (player_0 >= 0) {
-        p0 = exostate.get_player(player_0);
+        p0 = exostate().get_player(player_0);
     }
     if (player_1 >= 0) {
-        p1 = exostate.get_player(player_1);
+        p1 = exostate().get_player(player_1);
     }
 
     switch (type) {

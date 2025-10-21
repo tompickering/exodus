@@ -85,6 +85,7 @@ class ExodusState : public Saveable {
         virtual void load(cJSON*) override;
 
         ExodusState();
+        virtual ~ExodusState() {}
         void init(GameConfig);
         void generate_galaxy();
         void finalise_galaxy();
@@ -213,5 +214,8 @@ class ExodusState : public Saveable {
 
     friend class ExodusDebug;
 };
+
+ExodusState& exostate();
+void exostate_destroy();
 
 #endif

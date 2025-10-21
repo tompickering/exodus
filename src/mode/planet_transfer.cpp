@@ -2,7 +2,7 @@
 
 #include "assetpaths.h"
 
-extern ExodusState exostate;
+
 
 static const int PLANET_X = 250;
 static const int FREIGHT_X = 350;
@@ -103,8 +103,8 @@ void PlanetTransfer::enter() {
 }
 
 ExodusMode PlanetTransfer::update(float delta) {
-    Player *player = exostate.get_active_player();
-    Planet *planet = exostate.get_active_planet();
+    Player *player = exostate().get_active_player();
+    Planet *planet = exostate().get_active_planet();
 
     char cargo[32];
     snprintf(cargo, 32, "%d", player->get_freight_capacity());

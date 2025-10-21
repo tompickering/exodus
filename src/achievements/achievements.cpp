@@ -2,7 +2,7 @@
 
 #include "state/exodus_state.h"
 
-extern ExodusState exostate;
+
 
 const char* ACHIEVEMENT_IDS[] = {
     "ACH_None",
@@ -69,7 +69,7 @@ const char* ACHIEVEMENT_IDS[] = {
 };
 
 bool AchievementManager::achievements_enabled() {
-    if (exostate.multiplayer()) {
+    if (exostate().multiplayer()) {
         return false;
     }
 

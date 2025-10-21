@@ -12,7 +12,7 @@
 
 #define MAX_CHAINED_EXPLOSIONS 256
 
-extern ExodusState exostate;
+
 
 enum Tool {
     TOOL_HQ,

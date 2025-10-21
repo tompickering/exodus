@@ -9,7 +9,7 @@
 
 #include "state/exodus_state.h"
 
-extern ExodusState exostate;
+
 
 class GalaxyGen : ModeBase, GalaxyDrawer {
     public:

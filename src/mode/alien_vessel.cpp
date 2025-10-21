@@ -46,8 +46,8 @@ AlienVessel::AlienVessel() : ModeBase("AlienVessel"), PanelDrawer(PNL_Galaxy), F
 
 void AlienVessel::enter() {
     ModeBase::enter(ID::END);
-    Player *player = exostate.get_active_player();
-    FlyTarget *tgt = exostate.get_active_flytarget();
+    Player *player = exostate().get_active_player();
+    FlyTarget *tgt = exostate().get_active_flytarget();
 
     for (int i = 0; i < MAX_COMM_LINES; ++i) {
         comm_ids[i] = draw_manager.new_sprite_id();
@@ -91,7 +91,7 @@ void AlienVessel::enter() {
     else if (r < 23) type = VESSEL_Religious;
     else             type = VESSEL_Unknown;
 
-    int m = exostate.get_orig_month();
+    int m = exostate().get_orig_month();
 
     switch (type) {
         case VESSEL_NoID:
@@ -185,7 +185,7 @@ void AlienVessel::exit() {
 }
 
 ExodusMode AlienVessel::update(float delta) {
-    Player *player = exostate.get_active_player();
+    Player *player = exostate().get_active_player();
 
     switch (stage) {
         case AV_Approach:

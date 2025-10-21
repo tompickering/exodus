@@ -43,7 +43,7 @@ void LunarBattlePrep::enter() {
     LunarBattleParams &b = ephstate.lunar_battle;
     LunarBattleReport &rpt = ephstate.lunar_battle_report;
 
-    Planet *p = exostate.get_active_planet();
+    Planet *p = exostate().get_active_planet();
 
     if (ephstate.get_ephemeral_state() == EPH_LunarBattleReport) {
         // LunarBattlePrep does NOT clear ephemeral state - that's the
@@ -59,13 +59,13 @@ void LunarBattlePrep::enter() {
                 break;
             case AGG_Player:
                 {
-                    Player *p_agg = exostate.get_player(b.aggressor_idx);
+                    Player *p_agg = exostate().get_player(b.aggressor_idx);
                     inv = p_agg->get_full_name();
                 }
                 break;
         }
 
-        Player *owner = exostate.get_player(p->get_owner());
+        Player *owner = exostate().get_player(p->get_owner());
         L.info("%s ATTACKING %s (%s)", inv, p->get_name(), owner->get_full_name());
         L.info("");
         L.info("AGG INIT: %d %d %d", rpt.agg_init.inf, rpt.agg_init.gli, rpt.agg_init.art);
@@ -89,7 +89,7 @@ void LunarBattlePrep::enter() {
         L.fatal("Entered lunar battle prep with an unowned planet");
     }
 
-    Player *owner = exostate.get_player(p->get_owner());
+    Player *owner = exostate().get_player(p->get_owner());
     Player *aggressor = nullptr;
 
     b.human_attacking = false;
@@ -97,7 +97,7 @@ void LunarBattlePrep::enter() {
     b.defender_manual_placement = false;
 
     if (b.aggressor_type == AGG_Player) {
-        aggressor = exostate.get_player(b.aggressor_idx);
+        aggressor = exostate().get_player(b.aggressor_idx);
         if (aggressor == owner) {
             L.fatal("%s is attacking own planet!", owner->get_full_name());
         }
@@ -127,7 +127,7 @@ void LunarBattlePrep::enter() {
     p->get_army(b.defender_inf, b.defender_gli, b.defender_art);
     p->clear_army();
 
-    int m = exostate.get_orig_month();
+    int m = exostate().get_orig_month();
 
     // Orig: PROCb_gpr
     int def_mc = owner->get_mc();
@@ -256,12 +256,12 @@ void LunarBattlePrep::exit() {
 ExodusMode LunarBattlePrep::update(float delta) {
     LunarBattleParams &b = ephstate.lunar_battle;
 
-    Planet *p = exostate.get_active_planet();
+    Planet *p = exostate().get_active_planet();
     int owner_idx = p->get_owner();
-    Player *owner = exostate.get_player(owner_idx);
+    Player *owner = exostate().get_player(owner_idx);
     Player *aggressor = nullptr;
     if (b.aggressor_type == AGG_Player) {
-        aggressor = exostate.get_player(b.aggressor_idx);
+        aggressor = exostate().get_player(b.aggressor_idx);
     }
 
     bool defending = !(aggressor && aggressor->is_human());
@@ -336,7 +336,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
                     set_stage(LBP_CommandOrWait);
                 }
 
-                int m = exostate.get_orig_month();
+                int m = exostate().get_orig_month();
                 int s = 11;
                 if      (m <  30) s =  4;
                 else if (m <  50) s =  6;
@@ -346,7 +346,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
                 Player *player;
                 for (; war_ally_idx < N_PLAYERS; ++war_ally_idx) {
                     int &i = war_ally_idx;
-                    player = exostate.get_player(i);
+                    player = exostate().get_player(i);
 
                     if (player == owner || !(player->is_participating())) {
                         continue;
@@ -361,7 +361,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
                         continue;
                     }
 
-                    if (!exostate.has_alliance(owner_idx, i, ALLY_War)) {
+                    if (!exostate().has_alliance(owner_idx, i, ALLY_War)) {
                         continue;
                     }
 
@@ -840,20 +840,20 @@ ExodusMode LunarBattlePrep::update(float delta) {
                 // Handle battle outcome
                 LunarBattleReport &rpt = ephstate.lunar_battle_report;
 
-                Planet *p = exostate.get_active_planet();
+                Planet *p = exostate().get_active_planet();
                 int cap = p->get_resource_cap();
 
                 // Station surviving defending units back on the planet
                 p->adjust_army(rpt.def_surf.inf, rpt.def_surf.gli, rpt.def_surf.art);
 
                 if (b.aggressor_type == AGG_Player) {
-                    Player *agg = exostate.get_player(b.aggressor_idx);
+                    Player *agg = exostate().get_player(b.aggressor_idx);
                     int i = rpt.agg_surf.inf;
                     int g = rpt.agg_surf.gli;
                     int a = rpt.agg_surf.art;
 
                     if (rpt.aggressor_won) {
-                        NewsItem& news = exostate.register_news(NI_PlanetTakeover);
+                        NewsItem& news = exostate().register_news(NI_PlanetTakeover);
                         news.player_0 = b.aggressor_idx;
                         news.player_1 = p->get_owner();
 
@@ -867,7 +867,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
                         p->clear_army();
                         p->adjust_army(i, g, a);
                     } else {
-                        NewsItem& news = exostate.register_news(NI_FailedTakeover);
+                        NewsItem& news = exostate().register_news(NI_FailedTakeover);
                         news.player_0 = b.aggressor_idx;
                         news.player_1 = p->get_owner();
 

@@ -161,7 +161,7 @@ ExodusMode GuildHQ::update(float delta) {
         }
     }
 
-    Player *player = exostate.get_active_player();
+    Player *player = exostate().get_active_player();
 
     switch (stage) {
         case HQ_Idle:
@@ -191,7 +191,7 @@ ExodusMode GuildHQ::update(float delta) {
                         PANEL_X + 4, PANEL_Y + 4,
                         COL_TEXT2);
 
-                    bool worthy = exostate.mission_complete();
+                    bool worthy = exostate().mission_complete();
                     bool member = player->is_guild_member();
                     bool punish = player->committed_any_infractions();
                     int line = 60;
@@ -331,10 +331,10 @@ ExodusMode GuildHQ::update(float delta) {
                     COL_TEXT2);
 
                 const char** desc = &DESC_AIM_MIGHT[0];
-                if (exostate.multiplayer()) {
+                if (exostate().multiplayer()) {
                     desc = &DESC_AIM_MULTIPLAYER[0];
                 } else {
-                    switch (exostate.get_aim()) {
+                    switch (exostate().get_aim()) {
                         case AIM_Might:
                             desc = &DESC_AIM_MIGHT[0];
                             break;

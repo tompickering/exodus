@@ -50,7 +50,7 @@ GalaxyDrawer::GalaxyDrawer() {
 
 FlyTarget* GalaxyDrawer::get_clicked_flytarget() {
     SpriteClick click;
-    Galaxy *gal = exostate.get_galaxy();
+    Galaxy *gal = exostate().get_galaxy();
 
     for (int i = 0; i < GALAXY_MAX_STARS; ++i) {
         if (!star_ids[i])
@@ -71,7 +71,7 @@ FlyTarget* GalaxyDrawer::get_clicked_flytarget() {
 
 FlyTarget* GalaxyDrawer::get_mouseover_flytarget() {
     SpriteClick click;
-    Galaxy *gal = exostate.get_galaxy();
+    Galaxy *gal = exostate().get_galaxy();
 
     for (int i = 0; i < GALAXY_MAX_STARS; ++i) {
         if (!star_ids[i])
@@ -111,7 +111,7 @@ void GalaxyDrawer::draw_galaxy(bool pixelswap) {
         draw_manager.draw(tgt, star_ids[siter.get_idx()], spr, {x, y, 0.5, 0.5, 1, 1});
     }
 
-    Galaxy *gal = exostate.get_galaxy();
+    Galaxy *gal = exostate().get_galaxy();
     Guild *guild = gal->get_guild();
     spr = GUILD_SPRITE;
     get_draw_position(guild, x, y);
@@ -133,12 +133,12 @@ void GalaxyDrawer::draw_galaxy(bool pixelswap) {
 
 void GalaxyDrawer::draw_markers(bool pixelswap, bool names_only) {
     int x, y;
-    Player *p = exostate.get_active_player();
+    Player *p = exostate().get_active_player();
 
     DrawTarget tgt = pixelswap ? TGT_Secondary : TGT_Primary;
 
     int n_stars;
-    Galaxy *gal = exostate.get_galaxy();
+    Galaxy *gal = exostate().get_galaxy();
     const Star *stars = gal->get_stars(n_stars);
 
     if (!names_only) {

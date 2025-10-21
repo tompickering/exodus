@@ -49,7 +49,7 @@ bool BulletinDrawer::bulletin_start_new(bool transition, Star* star) {
     int star_idx = -1;
 
     if (star) {
-        star_idx = exostate.get_star_idx(star);
+        star_idx = exostate().get_star_idx(star);
     }
 
     return bulletin_start_new(transition, star_idx);
@@ -69,7 +69,7 @@ bool BulletinDrawer::bulletin_start_new_internal(bool transition, int star_idx, 
     }
 
     if (star_idx >= 0) {
-        if (!exostate.any_human_has_visited(star_idx)) {
+        if (!exostate().any_human_has_visited(star_idx)) {
             return false;
         }
     }
@@ -420,7 +420,7 @@ void BulletinDrawer::bulletin_write_planet_info(Star* s, Planet* p) {
     }
 
     Player *owner = nullptr;
-    if (p->is_owned()) owner = exostate.get_player(p->get_owner());
+    if (p->is_owned()) owner = exostate().get_player(p->get_owner());
 
     RGB col = COL_TEXT_BAD;
     if (owner && owner->is_human())
@@ -712,5 +712,5 @@ void BulletinDrawer::bulletin_set_player_flag(Player* player) {
 }
 
 void BulletinDrawer::bulletin_set_active_player_flag() {
-    bulletin_set_player_flag(exostate.get_active_player());
+    bulletin_set_player_flag(exostate().get_active_player());
 }

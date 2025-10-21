@@ -17,7 +17,7 @@
 
 #include "state/exodus_state.h"
 
-extern ExodusState exostate;
+
 
 // Enum order determines order of processing
 enum MonthPassStage {

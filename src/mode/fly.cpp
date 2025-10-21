@@ -132,8 +132,8 @@ Fly::Fly() : ModeBase("Fly"), PanelDrawer(PNL_Galaxy), FrameDrawer() {
 void Fly::enter() {
     ModeBase::enter(ID::END);
     time = 0;
-    Player *player = exostate.get_active_player();
-    FlyTarget *tgt = exostate.loc2tgt(player->get_location().get_target());
+    Player *player = exostate().get_active_player();
+    FlyTarget *tgt = exostate().loc2tgt(player->get_location().get_target());
     arriving = !(player->get_location().in_flight());
 
     draw_manager.draw(IMG_STARTGR_FL6_STARS);
@@ -146,7 +146,7 @@ void Fly::enter() {
 
     if (arriving) {
         char text[MAX_PLAYER_NAME + FT_MAX_NAME + 40];
-        if (tgt == exostate.get_galaxy()->get_guild()) {
+        if (tgt == exostate().get_galaxy()->get_guild()) {
             snprintf(
                 text,
                 MAX_PLAYER_NAME + FT_MAX_NAME + 40,

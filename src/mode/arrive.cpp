@@ -30,20 +30,20 @@ void Arrive::enter() {
     ModeBase::enter(ID::END);
     time = 0;
     stage = ARR_Spaceport;
-    player = exostate.get_active_player();
-    planet = exostate.get_active_planet();
+    player = exostate().get_active_player();
+    planet = exostate().get_active_planet();
 
     if (!(planet && planet->exists() && planet->is_owned())) {
         L.fatal("Entered arrival mode for invalid planet");
     }
 
-    owner = exostate.get_player(planet->get_owner());
+    owner = exostate().get_player(planet->get_owner());
 
     base_draw(planet->sprites()->spaceport);
 }
 
 void Arrive::base_draw(const char* bg) {
-    FlyTarget *tgt = exostate.loc2tgt(player->get_location().get_target());
+    FlyTarget *tgt = exostate().loc2tgt(player->get_location().get_target());
 
     draw_manager.draw(bg);
 

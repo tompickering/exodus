@@ -25,7 +25,7 @@ const int TRADEBUY_TEXT_Y_OFF = -8;
 
 extern DRAWMANAGER draw_manager;
 extern INPUTMANAGER input_manager;
-extern ExodusState exostate;
+
 
 const char* CORP_NAMES[] = {
     " Corporation", " Industries", " Systems", " Technics", " Productions",
@@ -49,8 +49,8 @@ TradeBuy::TradeBuy() {
  * If player, set up UI and return false. tradebuy_update() calls needed.
  */
 bool TradeBuy::tradebuy_start(int fd, int inf, int gli, int art) {
-    Planet *p = exostate.get_active_planet();
-    Player *owner = exostate.get_player(p->get_owner());
+    Planet *p = exostate().get_active_planet();
+    Player *owner = exostate().get_player(p->get_owner());
 
     L.debug("[%s]: Available: %dfd %dinf %dgli %dart",
             owner->get_full_name(), fd, inf, gli, art);
@@ -167,8 +167,8 @@ bool TradeBuy::tradebuy_start(int fd, int inf, int gli, int art) {
 }
 
 void TradeBuy::tradebuy_open() {
-    Planet *p = exostate.get_active_planet();
-    int owner_idx = exostate.get_active_player_idx();
+    Planet *p = exostate().get_active_planet();
+    int owner_idx = exostate().get_active_player_idx();
 
     input_manager.enable_repeating_clicks(true);
 
@@ -399,8 +399,8 @@ int TradeBuy::tradebuy_row_y(int idx) {
 
 // Return true when we're done
 bool TradeBuy::tradebuy_update() {
-    Planet *p = exostate.get_active_planet();
-    Player *owner = exostate.get_player(p->get_owner());
+    Planet *p = exostate().get_active_planet();
+    Player *owner = exostate().get_player(p->get_owner());
 
     char text[8];
 

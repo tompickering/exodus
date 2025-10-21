@@ -15,7 +15,7 @@ extern const int PNL_Y_SEP;
 
 extern DRAWMANAGER draw_manager;
 
-extern ExodusState exostate;
+
 
 extern const DrawArea galaxy_panel_area;
 

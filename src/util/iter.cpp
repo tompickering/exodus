@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <cstdlib>
 
-extern ExodusState exostate;
+
 
 Iterator::Iterator() : idx(0), end(0), randomise(false), random_data(nullptr) {
 }
@@ -46,7 +46,7 @@ int Iterator::get_effective_idx() {
 }
 
 StarIterator::StarIterator() : Iterator() {
-    Galaxy *gal = exostate.get_galaxy();
+    Galaxy *gal = exostate().get_galaxy();
     s = gal->get_stars(end);
 }
 

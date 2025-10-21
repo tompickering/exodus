@@ -2,7 +2,7 @@
 
 #include "assetpaths.h"
 
-extern ExodusState exostate;
+
 
 enum ID {
     MC,
@@ -14,8 +14,8 @@ FleetProduction::FleetProduction() : ModeBase("FleetProduction") {
 }
 
 void FleetProduction::enter() {
-    Player *p = exostate.get_active_player();
-    Planet *planet = exostate.get_active_planet();
+    Player *p = exostate().get_active_player();
+    Planet *planet = exostate().get_active_planet();
     const Fleet &fleet = p->get_fleet();
 
     ModeBase::enter(ID::END);
@@ -150,8 +150,8 @@ void FleetProduction::exit() {
 }
 
 ExodusMode FleetProduction::update(float delta) {
-    Player *p = exostate.get_active_player();
-    Planet *planet = exostate.get_active_planet();
+    Player *p = exostate().get_active_player();
+    Planet *planet = exostate().get_active_planet();
 
     char mc[32];
     snprintf(mc, 32, "%d", p->get_mc() - total_cost());

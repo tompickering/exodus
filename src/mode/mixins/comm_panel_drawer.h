@@ -15,7 +15,7 @@ extern const int PNL_BORDER;
 
 extern DRAWMANAGER draw_manager;
 
-extern ExodusState exostate;
+
 
 enum CommAction {
     CA_None,

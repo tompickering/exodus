@@ -86,7 +86,7 @@ void GalaxyMap::enter() {
         set_stage(GM_SelectStar);
     } else if (ephstate.get_ephemeral_state() == EPH_MovePlanet) {
         ephstate.clear_ephemeral_state();
-        artificial_planet_to_move = exostate.get_active_planet();
+        artificial_planet_to_move = exostate().get_active_planet();
         set_stage(GM_ArtificialWorldStarSelect);
     } else if (mp_state.mp_stage == MP_None) {
         set_stage(GM_SwapIn);
@@ -95,7 +95,7 @@ void GalaxyMap::enter() {
     }
 
     // PROCbackmusic
-    if (exostate.get_orig_month() >= 2) {
+    if (exostate().get_orig_month() >= 2) {
         ephstate.default_music = onein(4) ? MUS_OVERVIEW : mpart2mus(17);
         if (audio_manager.get_playing() == mpart2mus(1)) {
             if (onein(3)) {
@@ -137,8 +137,8 @@ ExodusMode GalaxyMap::update(float delta) {
         return ExodusMode::MODE_None;
     }
 
-    Galaxy *gal = exostate.get_galaxy();
-    Player *player = exostate.get_active_player();
+    Galaxy *gal = exostate().get_galaxy();
+    Player *player = exostate().get_active_player();
 
     selected_ft_blink += delta;
     while (selected_ft_blink > 2*BLINK_TIME)
@@ -153,7 +153,7 @@ ExodusMode GalaxyMap::update(float delta) {
             return update(0);
         case GM_Idle:
             if (player->get_race() == RACE_Human && !player->intro_seen()) {
-                exostate.set_active_flytarget(gal->get_guild());
+                exostate().set_active_flytarget(gal->get_guild());
                 return ExodusMode::MODE_GalaxyIntro;
             }
 
@@ -168,11 +168,11 @@ ExodusMode GalaxyMap::update(float delta) {
             ft = get_clicked_flytarget();
 
             if (ft) {
-                exostate.set_active_flytarget(ft);
+                exostate().set_active_flytarget(ft);
             }
 
             if (!selected_ft) {
-                ft = exostate.get_active_flytarget();
+                ft = exostate().get_active_flytarget();
             }
 
             if (ft && ft != selected_ft) {
@@ -195,7 +195,7 @@ ExodusMode GalaxyMap::update(float delta) {
             update_panel_info_ft(TGT_Primary, player, selected_ft);
 
             {
-                FlyTarget *fleet_pos = exostate.loc2tgt(player->get_location().get_target());
+                FlyTarget *fleet_pos = exostate().loc2tgt(player->get_location().get_target());
                 const char* marker_icon = IMG_TS1_DEST;
                 get_draw_position(fleet_pos, draw_x, draw_y);
 
@@ -231,8 +231,8 @@ ExodusMode GalaxyMap::update(float delta) {
                 if (exodebug.show_player_markers) {
                     char text[3];
                     for (int i = 0; i < N_PLAYERS; ++i) {
-                        Player *p = exostate.get_player(i);
-                        FlyTarget *fleet_pos = exostate.loc2tgt(p->get_location().get_target());
+                        Player *p = exostate().get_player(i);
+                        FlyTarget *fleet_pos = exostate().loc2tgt(p->get_location().get_target());
                         get_draw_position(fleet_pos, draw_x, draw_y);
                         snprintf(text, sizeof(text), "%d", i);
                         RGB col = {0, 0xFF, 0};
@@ -255,7 +255,7 @@ ExodusMode GalaxyMap::update(float delta) {
             if (click.id) {
                 if (click.x < 0.25) {
                     // Fly
-                    FlyTarget *tgt = exostate.loc2tgt(player->get_location().get_target());
+                    FlyTarget *tgt = exostate().loc2tgt(player->get_location().get_target());
                     if (selected_ft != tgt) {
                         if (!player->get_location().in_flight()) {
                             if (player->get_starship().pct_damage_thrust > 50) {
@@ -264,7 +264,7 @@ ExodusMode GalaxyMap::update(float delta) {
                                 return ExodusMode::MODE_None;
                             }
 
-                            comm_ctx.location = exostate.tgt2loc(selected_ft);
+                            comm_ctx.location = exostate().tgt2loc(selected_ft);
                             // Orig stores pixel locations instead of low-res grid values
                             // See PROC_Csunpos for original's multiplaication by 43
                             int dx = (selected_ft->x - tgt->x) * 43;
@@ -298,9 +298,9 @@ ExodusMode GalaxyMap::update(float delta) {
                     menu_open(MM_Stat);
                 } else {
                     // Zoom
-                    if (player->get_location().has_visited(exostate.tgt2loc(selected_ft))) {
+                    if (player->get_location().has_visited(exostate().tgt2loc(selected_ft))) {
                         bool ok = true;
-                        FlyTarget *guild = exostate.get_galaxy()->get_guild();
+                        FlyTarget *guild = exostate().get_galaxy()->get_guild();
                         if (selected_ft == guild) {
                             if (player->get_location().in_flight()) {
                                 L.debug("Can't zoom to guild - in flight");
@@ -308,7 +308,7 @@ ExodusMode GalaxyMap::update(float delta) {
                             }
                             if (ok) {
                                 int loc = player->get_location().get_target();
-                                FlyTarget *tgt = exostate.loc2tgt(loc);
+                                FlyTarget *tgt = exostate().loc2tgt(loc);
                                 if (tgt != guild) {
                                     L.debug("Can't zoom to guild - elsewhere");
                                     ok = false;
@@ -316,8 +316,8 @@ ExodusMode GalaxyMap::update(float delta) {
                             }
                         }
                         if (ok) {
-                            exostate.set_active_flytarget(selected_ft);
-                            exostate.set_active_planet(-1);
+                            exostate().set_active_flytarget(selected_ft);
+                            exostate().set_active_planet(-1);
                             draw_manager.show_cursor(false);
                             draw_manager.fade_black(1.2f, 24);
                             if (selected_ft == gal->get_guild()) {
@@ -405,10 +405,10 @@ ExodusMode GalaxyMap::update(float delta) {
                 ephstate.fly_plan.loc = comm_ctx.location;
                 ephstate.fly_plan.months = comm_ctx.months;
                 // Decide if pirate attack happens
-                if (exostate.get_orig_month() < 7) {
+                if (exostate().get_orig_month() < 7) {
                     player->nopirates = 0;
                 }
-                FlyTarget *loc = exostate.loc2tgt(player->get_location().get_target());
+                FlyTarget *loc = exostate().loc2tgt(player->get_location().get_target());
                 if (loc != gal->get_guild()) {
                     int r = 2;
                     if (loc->pirates == 0) {
@@ -416,7 +416,7 @@ ExodusMode GalaxyMap::update(float delta) {
                     } else if (loc->pirates == 1) {
                         r = 3;
                     }
-                    if ((exostate.get_orig_month() > 5 && onein(r)) || (player->nopirates > 5)) {
+                    if ((exostate().get_orig_month() > 5 && onein(r)) || (player->nopirates > 5)) {
                         // Alien encounter
                         L.info("ALIEN ENCOUNTER");
                         loc->pirates = 0;
@@ -453,16 +453,16 @@ ExodusMode GalaxyMap::update(float delta) {
 
                 FlyTarget* mouseover_ft = get_mouseover_flytarget();
                 if (mouseover_ft) {
-                    update_panel_info_ft(TGT_Primary, exostate.get_player(0), mouseover_ft);
+                    update_panel_info_ft(TGT_Primary, exostate().get_player(0), mouseover_ft);
                 }
 
                 // SUGGEST: Some way to highlight available stars
                 ft = get_clicked_flytarget();
-                if (ft && ft != exostate.get_galaxy()->get_guild()) {
-                    int ft_idx = exostate.tgt2loc(ft);
+                if (ft && ft != exostate().get_galaxy()->get_guild()) {
+                    int ft_idx = exostate().tgt2loc(ft);
                     if (player->get_location().has_visited(ft_idx)) {
                         *(ephstate.selectplanet_star) = ft_idx;
-                        exostate.set_active_flytarget(ft);
+                        exostate().set_active_flytarget(ft);
                         if (ephstate.selectplanet_planet) {
                             return ExodusMode::MODE_StarMap;
                         } else {
@@ -475,17 +475,17 @@ ExodusMode GalaxyMap::update(float delta) {
             break;
         case GM_MonthPassing:
             {
-                update_panel_info_player(TGT_Primary, exostate.get_player(0));
-                update_panel_info_ft(TGT_Primary, exostate.get_player(0), selected_ft);
+                update_panel_info_player(TGT_Primary, exostate().get_player(0));
+                update_panel_info_ft(TGT_Primary, exostate().get_player(0), selected_ft);
 
                 // TODO_MP: In multiplayer, check this happens at end of each player's turn
                 {
-                    exostate.reset_alliance_requests();
-                    exostate.clear_attack_preventions();
-                    exostate.clear_bombing_preventions();
+                    exostate().reset_alliance_requests();
+                    exostate().clear_attack_preventions();
+                    exostate().clear_bombing_preventions();
                 }
 
-                if (exostate.final_month()) {
+                if (exostate().final_month()) {
                     if (ephstate.get_ephemeral_state() != EPH_GameOver) {
                         ephstate.set_ephemeral_state(EPH_GameOver);
                         ephstate.game_over_reason = GAMEOVER_Failed;
@@ -502,8 +502,8 @@ ExodusMode GalaxyMap::update(float delta) {
             break;
         case GM_MonthPassMain:
             {
-                update_panel_info_player(TGT_Primary, exostate.get_player(0));
-                update_panel_info_ft(TGT_Primary, exostate.get_player(0), selected_ft);
+                update_panel_info_player(TGT_Primary, exostate().get_player(0));
+                update_panel_info_ft(TGT_Primary, exostate().get_player(0), selected_ft);
 
                 if (bulletin_is_open()) {
                     bulletin_update(delta);
@@ -608,7 +608,7 @@ ExodusMode GalaxyMap::update(float delta) {
                 }
 
                 if (do_first_spaceport) {
-                    Planet *p = exostate.get_active_planet();
+                    Planet *p = exostate().get_active_planet();
                     do_first_spaceport = false;
                     bulletin_ensure_closed();
                     DrawArea a = {0, 0, RES_X, 404};
@@ -729,13 +729,13 @@ ExodusMode GalaxyMap::update(float delta) {
                     break;
                 }
 
-                Galaxy *gal = exostate.get_galaxy();
+                Galaxy *gal = exostate().get_galaxy();
 
                 ft = get_clicked_flytarget();
 
                 if (ft && (ft != gal->get_guild())) {
-                    exostate.set_active_flytarget(ft);
-                    if (!player->get_location().has_visited(exostate.tgt2loc(ft))) {
+                    exostate().set_active_flytarget(ft);
+                    if (!player->get_location().has_visited(exostate().tgt2loc(ft))) {
                         /*
                          * I'm not sure if the original prevented this - but I don't
                          * think you'd want to create a planet in a system that you
@@ -748,13 +748,13 @@ ExodusMode GalaxyMap::update(float delta) {
                     }
 
                     Star *s = (Star*) ft;
-                    int player_idx = exostate.get_active_player_idx();
+                    int player_idx = exostate().get_active_player_idx();
 
                     if (artificial_planet_to_move) {
                         // Moving a planet
-                        ArtificialPlanetViable apv = exostate.artificial_planet_viable(s);
+                        ArtificialPlanetViable apv = exostate().artificial_planet_viable(s);
                         if (apv == APV_Yes) {
-                            int tgt_idx = exostate.tgt2loc(s);
+                            int tgt_idx = exostate().tgt2loc(s);
                             artificial_planet_to_move->set_star_target(tgt_idx);
                             artificial_planet_to_move = nullptr;
                             set_stage(GM_Idle);
@@ -775,7 +775,7 @@ ExodusMode GalaxyMap::update(float delta) {
                         // FIXME: It's a bit hacky to rely on the input system to remember this...
                         const char* name = input_manager.get_input_text(PLANET_MAX_NAME);
 
-                        if (exostate.construct_artificial_planet(s, player_idx, name)) {
+                        if (exostate().construct_artificial_planet(s, player_idx, name)) {
                             set_stage(GM_Idle);
                             break;
                         } else {
@@ -790,7 +790,7 @@ ExodusMode GalaxyMap::update(float delta) {
 
                 FlyTarget* mouseover_ft = get_mouseover_flytarget();
                 if (mouseover_ft) {
-                    update_panel_info_ft(TGT_Primary, exostate.get_player(0), mouseover_ft);
+                    update_panel_info_ft(TGT_Primary, exostate().get_player(0), mouseover_ft);
                 }
             }
             break;
@@ -803,7 +803,7 @@ ExodusMode GalaxyMap::update(float delta) {
             }
             break;
         case GM_OpenPlanetReports:
-            if (exostate.planet_report_count() == 0) {
+            if (exostate().planet_report_count() == 0) {
                 set_stage(GM_Idle);
             } else {
                 planet_report_current = 0;
@@ -823,7 +823,7 @@ ExodusMode GalaxyMap::update(float delta) {
                         }
                         break;
                     case BPR_Forward:
-                        if ((planet_report_current + 1) < exostate.planet_report_count()) {
+                        if ((planet_report_current + 1) < exostate().planet_report_count()) {
                             ++planet_report_current;
                             planet_report_bulletin(true, planet_report_current);
                         }
@@ -877,7 +877,7 @@ void GalaxyMap::set_stage(Stage new_stage) {
                 IMG_BTNGUIDE,
                 {RES_X-4, 4, 1, 0, 1, 1});
 
-            if (exostate.planet_report_count() > 0) {
+            if (exostate().planet_report_count() > 0) {
                 draw_manager.draw(
                     id(ID::BTN_REPORT),
                     IMG_BTNREPORT,
@@ -893,7 +893,7 @@ void GalaxyMap::set_stage(Stage new_stage) {
 }
 
 bool GalaxyMap::first_spaceport_update(float delta) {
-    Planet *p = exostate.get_active_planet();
+    Planet *p = exostate().get_active_planet();
     PlanetClass cls = p->get_class();
 
     int x = 5;
@@ -1103,7 +1103,7 @@ void GalaxyMap::next_mp_stage() {
 
 void GalaxyMap::next_mpai_stage() {
     mp_state.mpai_stage = (MonthPassAIStage)((int)mp_state.mpai_stage + 1);
-    Player *p = exostate.get_active_player();
+    Player *p = exostate().get_active_player();
     L.verb("[%s] MPAI stage %d", p->get_full_name(), mp_state.mpai_stage);
     // Reset all mpai-stage state tracking
     mp_state.mpai_player_idx = 0;
@@ -1114,8 +1114,8 @@ void GalaxyMap::next_mpai_stage() {
 
 void GalaxyMap::next_mpp_stage() {
     mp_state.mpp_stage = (MonthPassPlanetStage)((int)mp_state.mpp_stage + 1);
-    Star *s = exostate.get_active_star();
-    Planet *p = exostate.get_active_planet();
+    Star *s = exostate().get_active_star();
+    Planet *p = exostate().get_active_planet();
     L.verb("[%s/%s] MPP stage %d", s->name, p->get_name(), mp_state.mpp_stage);
 
 }
@@ -1164,7 +1164,7 @@ void GalaxyMap::month_pass_start() {
     }
 
     reset_planet_report();
-    exostate.advance_month();
+    exostate().advance_month();
 }
 
 void GalaxyMap::month_pass_end() {
@@ -1177,7 +1177,7 @@ void GalaxyMap::month_pass_end() {
     Player *p;
 
     for (int i = 0; i < N_PLAYERS; ++i) {
-        p = exostate.get_player(i);
+        p = exostate().get_player(i);
         if (p && p->is_participating()) {
             // We fix trade charge per player per month, so can't re-roll by re-trying
             p->set_trade_charge();
@@ -1187,7 +1187,7 @@ void GalaxyMap::month_pass_end() {
     // Reset to the first active player
     bool reset;
     for (int i = 0; i < N_PLAYERS; ++i) {
-        p = exostate.set_active_player(i);
+        p = exostate().set_active_player(i);
         if (p && p->is_participating() && p->is_human()) {
             reset = true;
             break;
@@ -1198,7 +1198,7 @@ void GalaxyMap::month_pass_end() {
         L.fatal("No viable human player to resume play!");
     }
 
-    exostate.set_active_flytarget(exostate.loc2tgt(p->get_location().get_target()));
+    exostate().set_active_flytarget(exostate().loc2tgt(p->get_location().get_target()));
 }
 
 ExodusMode GalaxyMap::month_pass_update() {
@@ -1211,7 +1211,7 @@ ExodusMode GalaxyMap::month_pass_update() {
     // We *cannot* enter GM_Idle until all month pass logic is complete!
 
     int n_stars;
-    Galaxy *gal = exostate.get_galaxy();
+    Galaxy *gal = exostate().get_galaxy();
     Star *stars = gal->get_stars(n_stars);
 
     if (mp_state.mp_stage == MP_None) {
@@ -1240,7 +1240,7 @@ ExodusMode GalaxyMap::month_pass_update() {
 
     if (mp_state.mp_stage == MP_StarshipRepairs) {
         for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
-            Player *p = exostate.set_active_player(mp_state.mp_player_idx);
+            Player *p = exostate().set_active_player(mp_state.mp_player_idx);
             Starship &ship = p->get_starship();
             bool damaged = ship.damaged();
             int crew = ship.crew;
@@ -1260,7 +1260,7 @@ ExodusMode GalaxyMap::month_pass_update() {
 
     if (mp_state.mp_stage == MP_UpdateReputation) {
         for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
-            Player *p = exostate.set_active_player(mp_state.mp_player_idx);
+            Player *p = exostate().set_active_player(mp_state.mp_player_idx);
             if (p->get_reputation() < 3 && onein(20)) {
                 p->adjust_reputation(1);
             }
@@ -1271,8 +1271,8 @@ ExodusMode GalaxyMap::month_pass_update() {
     if (mp_state.mp_stage == MP_SunExpansion) {
         // PROCsunexpand
         for (; mp_state.mp_star_idx < n_stars; ++mp_state.mp_star_idx) {
-            exostate.set_active_flytarget(&stars[mp_state.mp_star_idx]);
-            Star *s = exostate.get_active_star();
+            exostate().set_active_flytarget(&stars[mp_state.mp_star_idx]);
+            Star *s = exostate().get_active_star();
 
             Planet *fst = s->get_planet(0);
             Planet *snd = s->get_planet(1);
@@ -1354,7 +1354,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                     if (fst && fst->exists()) {
                         if (fst->is_owned()) {
                             int owner_idx = fst->get_owner();
-                            Player *owner = exostate.get_player(owner_idx);
+                            Player *owner = exostate().get_player(owner_idx);
                             if (owner->is_human()) {
                                 achievement_manager.unlock(ACH_PlanetFried);
                             }
@@ -1378,7 +1378,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                         if (pl && pl->exists()) {
                             if (pl->is_owned()) {
                                 int owner_idx = pl->get_owner();
-                                Player *owner = exostate.get_player(owner_idx);
+                                Player *owner = exostate().get_player(owner_idx);
                                 if (owner->is_human()) {
                                     achievement_manager.unlock(ACH_PlanetFried);
                                 }
@@ -1446,7 +1446,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                     L.warn("Non-artificial planet scheduled to move: %s", p->get_name());
                 }
                 Star *current = pi.get_star();
-                Star *tgt = &(exostate.get_galaxy()->get_stars()[tgt_idx]);
+                Star *tgt = &(exostate().get_galaxy()->get_stars()[tgt_idx]);
                 if (current == tgt) {
                     L.warn("Planet scheduled to move to its own star: %s", p->get_name());
                     continue;
@@ -1469,7 +1469,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                 new (p) Planet();
 
                 // Handle any CPUs which were targeting this planet
-                exostate.stabilise_disappeared_planet(p);
+                exostate().stabilise_disappeared_planet(p);
             }
         }
         next_mp_stage();
@@ -1477,7 +1477,7 @@ ExodusMode GalaxyMap::month_pass_update() {
 
     if (mp_state.mp_stage == MP_EnemyTactics) {
         for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
-            Player *p = exostate.set_active_player(mp_state.mp_player_idx);
+            Player *p = exostate().set_active_player(mp_state.mp_player_idx);
             if (p->is_human()) {
                 continue;
             }
@@ -1504,7 +1504,7 @@ ExodusMode GalaxyMap::month_pass_update() {
             for (; mp_state.mp_planet_idx < STAR_MAX_PLANETS; ++mp_state.mp_planet_idx) {
                 Planet *p = stars[mp_state.mp_star_idx].get_planet_nocheck(mp_state.mp_planet_idx);
                 if (p && p->finalise_construction()) {
-                    Player *owner = exostate.get_player(p->get_owner());
+                    Player *owner = exostate().get_player(p->get_owner());
                     if (!owner) {
                         // Shouldn't be possible - we scrap worlds under construction on defeat
                         L.error("No owner on completed artificial world");
@@ -1551,9 +1551,9 @@ ExodusMode GalaxyMap::month_pass_update() {
         if (comm_is_open()) {
             comm_ensure_closed();
         } else {
-            Player *player = exostate.get_player(0);
-            if (!exostate.multiplayer() && (exostate.get_n_planets(player) <= 0)) {
-                int m = exostate.get_orig_month();
+            Player *player = exostate().get_player(0);
+            if (!exostate().multiplayer() && (exostate().get_n_planets(player) <= 0)) {
+                int m = exostate().get_orig_month();
                 // TODO: Orig thresholds here are 7 and 5 - not 5 and 3 - but these values
                 // get the same behaviour. Check that other month thresholds are OK.
                 if (m < 5) {
@@ -1573,8 +1573,8 @@ ExodusMode GalaxyMap::month_pass_update() {
                 return ExodusMode::MODE_None;
             }
         } else {
-            Player *player = exostate.get_player(0);
-            if (!exostate.multiplayer() && (exostate.get_n_planets(player) > 0)) {
+            Player *player = exostate().get_player(0);
+            if (!exostate().multiplayer() && (exostate().get_n_planets(player) > 0)) {
                 monthreport_open();
                 return ExodusMode::MODE_None;
             }
@@ -1652,7 +1652,7 @@ ExodusMode GalaxyMap::month_pass_update() {
      */
     if (mp_state.mp_stage == MP_PlanetMainUpdate) {
         for (; mp_state.mp_star_idx < n_stars; ++mp_state.mp_star_idx) {
-            exostate.set_active_flytarget(&stars[mp_state.mp_star_idx]);
+            exostate().set_active_flytarget(&stars[mp_state.mp_star_idx]);
             for (; mp_state.mp_planet_idx < STAR_MAX_PLANETS; ++mp_state.mp_planet_idx) {
                 Planet *p = stars[mp_state.mp_star_idx].get_planet(mp_state.mp_planet_idx);
                 if (!(p && p->exists())) {
@@ -1670,7 +1670,7 @@ ExodusMode GalaxyMap::month_pass_update() {
 
                 p->monthly_processing_start();
 
-                exostate.set_active_planet(mp_state.mp_planet_idx);
+                exostate().set_active_planet(mp_state.mp_planet_idx);
                 ExodusMode next_mode = month_pass_planet_update();
 
                 if (mp_state.mpp_stage != MPP_End) {
@@ -1687,7 +1687,7 @@ ExodusMode GalaxyMap::month_pass_update() {
 
     if (mp_state.mp_stage == MP_UpdateAlienFly) {
         for (int i = 0; i < N_PLAYERS; ++i) {
-            Player *p = exostate.get_player(i);
+            Player *p = exostate().get_player(i);
             if (p && p->is_participating() && (!p->is_human())) {
                 if (p->get_location().in_flight()) {
                     if (!p->get_location().advance()) {
@@ -1704,7 +1704,7 @@ ExodusMode GalaxyMap::month_pass_update() {
 
     if (mp_state.mp_stage == MP_Missions) {
         for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
-            Player *p = exostate.set_active_player(mp_state.mp_player_idx);
+            Player *p = exostate().set_active_player(mp_state.mp_player_idx);
             const Mission mission = p->get_mission();
 
             if (mission_state == MS_AssassinCapturedKillChoice) {
@@ -1712,11 +1712,11 @@ ExodusMode GalaxyMap::month_pass_update() {
 
                 mission_state = MS_None;
 
-                Star *st = (Star*)exostate.get_active_flytarget();
-                Planet *pl = exostate.get_active_planet();
+                Star *st = (Star*)exostate().get_active_flytarget();
+                Planet *pl = exostate().get_active_planet();
 
                 int owner_idx = pl->get_owner();
-                Player *owner = exostate.get_player(owner_idx);
+                Player *owner = exostate().get_player(owner_idx);
 
                 bulletin_start_new(false, st);
                 bulletin_set_bg(pl->sprites()->bulletin_bg);
@@ -1727,7 +1727,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                 if (killed) {
                     bulletin_set_next_text("The assassin has been shot.");
                 } else {
-                    int n = exostate.get_n_planets(p);
+                    int n = exostate().get_n_planets(p);
                     const Fleet& f = p->get_fleet();
 
                     bulletin_set_next_text("The assassin co-operates.");
@@ -1744,11 +1744,11 @@ ExodusMode GalaxyMap::month_pass_update() {
             }
 
             if (mission_state == MS_AssassinCaptured || mission_state == MS_AssassinCapturedDead) {
-                Star *st = (Star*)exostate.get_active_flytarget();
-                Planet *pl = exostate.get_active_planet();
+                Star *st = (Star*)exostate().get_active_flytarget();
+                Planet *pl = exostate().get_active_planet();
 
                 int owner_idx = pl->get_owner();
-                Player *owner = exostate.get_player(owner_idx);
+                Player *owner = exostate().get_player(owner_idx);
 
                 if (p->is_human() || (owner && owner->is_human())) {
                     if (!draw_manager.clicked()) {
@@ -1761,7 +1761,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                     nullptr);
                 frame_remove();
 
-                exostate.register_news(NI_AssassinCaptured);
+                exostate().register_news(NI_AssassinCaptured);
                 bulletin_start_new(false, st);
                 bulletin_set_bg(pl->sprites()->bulletin_bg);
                 bulletin_set_flag(flags[owner->get_flag_idx()]);
@@ -1813,9 +1813,9 @@ ExodusMode GalaxyMap::month_pass_update() {
                     mission_state = MS_None;
                     L.debug("[%s] EXECUTE MISSION", p->get_full_name());
 
-                    Planet *pl = exostate.get_active_planet();
+                    Planet *pl = exostate().get_active_planet();
                     int owner_idx = pl->get_owner();
-                    Player *owner = exostate.get_player(owner_idx);
+                    Player *owner = exostate().get_player(owner_idx);
 
                     switch (mission.type) {
                         case MT_None:
@@ -1899,7 +1899,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                             ephstate.destruction.show_target = false;
                             // Enemy doesn't know you've attacked them
                             ephstate.destruction.destroyer_idx = -1;
-                            ephstate.destruction.real_destroyer_idx = exostate.get_active_player_idx();
+                            ephstate.destruction.real_destroyer_idx = exostate().get_active_player_idx();
                             ephstate.destruction.terror = false;
                             ephstate.destruction.nuke = false;
                             ephstate.destruction.draw = owner->is_human();
@@ -1918,7 +1918,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                             ephstate.destruction.show_target = false;
                             // Enemy doesn't know you've attacked them
                             ephstate.destruction.destroyer_idx = -1;
-                            ephstate.destruction.real_destroyer_idx = exostate.get_active_player_idx();
+                            ephstate.destruction.real_destroyer_idx = exostate().get_active_player_idx();
                             ephstate.destruction.terror = false;
                             ephstate.destruction.nuke = true;
                             ephstate.destruction.draw = true;
@@ -1933,14 +1933,14 @@ ExodusMode GalaxyMap::month_pass_update() {
             L.debug("CHECK MISSION %d", mp_state.mp_player_idx);
             if (p->has_mission()) {
                 Star *st = &stars[mission.star_idx];
-                exostate.set_active_flytarget(st);
-                exostate.set_active_planet(mission.planet_idx);
-                Planet *pl = exostate.get_active_planet();
+                exostate().set_active_flytarget(st);
+                exostate().set_active_planet(mission.planet_idx);
+                Planet *pl = exostate().get_active_planet();
                 if (pl && pl->is_owned()) {
                     int owner_idx = pl->get_owner();
-                    Player *owner = exostate.get_player(owner_idx);
+                    Player *owner = exostate().get_player(owner_idx);
 
-                    exostate.set_active_player(mp_state.mp_player_idx);
+                    exostate().set_active_player(mp_state.mp_player_idx);
                     L.info("[%s] MISSION - %s (%s)", p->get_full_name(), pl->get_name(), owner->get_full_name());
                     bulletin_start_new(false, st);
                     bulletin_set_bg(pl->sprites()->bulletin_bg);
@@ -2007,7 +2007,7 @@ ExodusMode GalaxyMap::month_pass_update() {
 
                                     if (mission.type == MT_TerrorAgri) {
                                         L.debug("Mission type: Poison plants");
-                                        exostate.register_news(NI_PlantsPoisoned);
+                                        exostate().register_news(NI_PlantsPoisoned);
                                         bulletin_start_new(true, st);
                                         bulletin_set_bg(pl->sprites()->bulletin_bg);
                                         bulletin_set_active_player_flag();
@@ -2083,7 +2083,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                                             achievement_manager.unlock(ACH_SecretMission);
                                         }
 
-                                        exostate.register_news(NI_TerroristAttack);
+                                        exostate().register_news(NI_TerroristAttack);
                                         bulletin_start_new(true, st);
                                         bulletin_set_bg(pl->sprites()->bulletin_bg);
                                         bulletin_set_active_player_flag();
@@ -2138,7 +2138,7 @@ ExodusMode GalaxyMap::month_pass_update() {
 
     if (mp_state.mp_stage == MP_PayOfficers) {
         for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
-            Player *p = exostate.set_active_player(mp_state.mp_player_idx);
+            Player *p = exostate().set_active_player(mp_state.mp_player_idx);
             if (p && p->is_participating()) {
                 Officer &o = mp_state.mp_officer;
                 for (; o < OFFICER_MAX; o = (Officer)((int)o + 1)) {
@@ -2198,16 +2198,16 @@ ExodusMode GalaxyMap::month_pass_update() {
     }
 
     if (mp_state.mp_stage == MP_GuildCommendations) {
-        Galaxy *gal = exostate.get_galaxy();
+        Galaxy *gal = exostate().get_galaxy();
         int n_stars;
         gal->get_stars(n_stars);
         int ab = 2 + (n_stars / 20);
         for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
-            Player *p = exostate.set_active_player(mp_state.mp_player_idx);
+            Player *p = exostate().set_active_player(mp_state.mp_player_idx);
             if (p && p->is_participating() && p->is_human()) {
                 GuildTitle title = p->get_guild_title();
                 int title_int = (int)title;
-                int planets = exostate.get_n_planets(p);
+                int planets = exostate().get_n_planets(p);
                 int ac = planets / ab;
                 if (ac < (int)GUILDTITLE_MAX) {
                     if (ac > title_int) {
@@ -2284,18 +2284,18 @@ ExodusMode GalaxyMap::month_pass_update() {
         // PROCcheckalive
         // TODO_MP: In a multiplayer game, check if all humans are dead, or one winner remains
         for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
-            Player *p = exostate.set_active_player(mp_state.mp_player_idx);
+            Player *p = exostate().set_active_player(mp_state.mp_player_idx);
             // Check all CPU lords participating...
             if (p && p->is_participating() && !p->is_human()) {
                 // ...who don't have a planet...
-                if (exostate.get_n_planets(p) == 0) {
+                if (exostate().get_n_planets(p) == 0) {
                     if (p->can_afford(150)) {
                         p->set_tactic(9);
                         // Ensure CPU is at destination
                         p->get_location().advance();
                     } else {
                         // ...and can't afford to colonise a new one.
-                        exostate.cancel_worlds_under_construction(mp_state.mp_player_idx);
+                        exostate().cancel_worlds_under_construction(mp_state.mp_player_idx);
                         if (p->leave_galaxy()) {
                             audio_manager.target_music(mpart2mus(9));
                             bulletin_start_new(false);
@@ -2306,7 +2306,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                             bulletin_set_next_text("%s has lost all planets and", p->get_full_name());
                             bulletin_set_next_text("left the galaxy.");
                             // This is a special newsitem which isn't planet-associated
-                            NewsItem &news = exostate.register_news_force(NI_LeftGalaxy);
+                            NewsItem &news = exostate().register_news_force(NI_LeftGalaxy);
                             news.player_0 = mp_state.mp_player_idx;
                             return ExodusMode::MODE_None;
                         }
@@ -2320,11 +2320,11 @@ ExodusMode GalaxyMap::month_pass_update() {
 
     if (mp_state.mp_stage == MP_UpdateHumanFly) {
         for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
-            Player *p = exostate.set_active_player(mp_state.mp_player_idx);
+            Player *p = exostate().set_active_player(mp_state.mp_player_idx);
             if (p && p->is_participating() && p->is_human()) {
-                bool all_visited = exostate.player_has_visited_all_stars(p);
+                bool all_visited = exostate().player_has_visited_all_stars(p);
                 if (p->get_location().advance()) {
-                    if (!all_visited && exostate.player_has_visited_all_stars(p)) {
+                    if (!all_visited && exostate().player_has_visited_all_stars(p)) {
                         achievement_manager.unlock(ACH_AllExplored);
                     }
                     // Show arrival animation for human players
@@ -2347,20 +2347,20 @@ ExodusMode GalaxyMap::month_pass_update() {
 }
 
 ExodusMode GalaxyMap::month_pass_ai_update() {
-    Player *player = exostate.get_active_player();
-    int player_idx = exostate.get_player_idx(player);
+    Player *player = exostate().get_active_player();
+    int player_idx = exostate().get_player_idx(player);
 
-    Galaxy *gal = exostate.get_galaxy();
+    Galaxy *gal = exostate().get_galaxy();
     int n_stars;
     Star *stars = gal->get_stars(n_stars);
 
     if (mp_state.mpai_stage == MPAI_Return) {
-        if (exostate.get_n_active_cpu_players() > 0) {
-            if (onein(400) && (exostate.get_n_unowned_planets() > 0) && player->return_to_galaxy()) {
-                int m = exostate.get_orig_month();
+        if (exostate().get_n_active_cpu_players() > 0) {
+            if (onein(400) && (exostate().get_n_unowned_planets() > 0) && player->return_to_galaxy()) {
+                int m = exostate().get_orig_month();
                 player->give_mc(RND(300) + (m*50));
                 player->set_tactic(9);
-                player->get_location().set_target(exostate.get_random_star_idx(), 1);
+                player->get_location().set_target(exostate().get_random_star_idx(), 1);
                 player->get_location().advance();
                 player->transfer_inf(m/2);
                 player->transfer_gli(m/2);
@@ -2381,14 +2381,14 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     }
 
     if (mp_state.mpai_stage == MPAI_Die) {
-        if (exostate.get_n_active_cpu_players() > 0 && exostate.get_orig_month() > 50) {
+        if (exostate().get_n_active_cpu_players() > 0 && exostate().get_orig_month() > 50) {
             if (onein(1000)) {
                 char oldname[MAX_PLAYER_NAME];
                 char oldfullname[MAX_PLAYER_FULLNAME];
                 snprintf(oldname, MAX_PLAYER_NAME, player->get_name());
                 snprintf(oldfullname, MAX_PLAYER_FULLNAME, player->get_full_name());
                 Gender oldgender = player->get_gender();
-                if (exostate.kill(player)) {
+                if (exostate().kill(player)) {
                     audio_manager.target_music(mpart2mus(9));
                     bulletin_start_new(false);
                     bulletin_set_flag(IMG_TS1_FLAG16);
@@ -2414,11 +2414,11 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
         if (onein(40)) {
             // If we're hostile to someone, 1/40 chance we forgive them
             // If we're hostile to no-one, 1/40 chance we gain a hostility
-            Player *hostile_to = exostate.get_hostile_to(*player);
+            Player *hostile_to = exostate().get_hostile_to(*player);
             if (hostile_to) {
                 player->clear_hostility();
             } else {
-                exostate.set_random_hostility(*player);
+                exostate().set_random_hostility(*player);
             }
         }
         next_mpai_stage();
@@ -2434,7 +2434,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
         }
 
         if (mp_state.mpai_substage == 3) {
-            Planet *planet = exostate.get_active_planet();
+            Planet *planet = exostate().get_active_planet();
             switch (comm_action_check()) {
                 case CA_Abort:
                     comm_close();
@@ -2482,7 +2482,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
         if (!player->get_location().in_flight()) {
             int r = 20;
-            if (exostate.count_alliances(player_idx) <= 2) {
+            if (exostate().count_alliances(player_idx) <= 2) {
                 switch (player->get_flag(2)) {
                     case AI_Hi:
                         r = 4;
@@ -2498,7 +2498,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
             if (resume || onein(r)) {
                 // PROCet_alliances
                 // Can cast - AI never visit the guild
-                Star *s = (Star*)exostate.loc2tgt(player->get_location().get_target());
+                Star *s = (Star*)exostate().loc2tgt(player->get_location().get_target());
                 int &i = mp_state.mpai_planet_idx;
                 for (; i < STAR_MAX_PLANETS; ++i) {
                     Planet *p = s->get_planet(i);
@@ -2506,14 +2506,14 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         continue;
                     }
 
-                    exostate.set_active_flytarget(s);
-                    exostate.set_active_planet(i);
+                    exostate().set_active_flytarget(s);
+                    exostate().set_active_planet(i);
 
                     int owner_idx = p->get_owner();
                     if (owner_idx == player_idx) {
                         continue;
                     }
-                    Player *owner = exostate.get_player(owner_idx);
+                    Player *owner = exostate().get_player(owner_idx);
 
                     if (player->is_hostile_to(owner_idx)) {
                         continue;
@@ -2523,7 +2523,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         if (!onein(10)) {
                             continue;
                         }
-                        if (exostate.has_all_alliances(player_idx, owner_idx)) {
+                        if (exostate().has_all_alliances(player_idx, owner_idx)) {
                             continue;
                         }
                         if (owner->get_reputation() <= 0) {
@@ -2537,13 +2537,13 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         if (!onein(16)) {
                             continue;
                         }
-                        if (exostate.is_allied(player_idx, owner_idx)) {
+                        if (exostate().is_allied(player_idx, owner_idx)) {
                             continue;
                         }
                         if (player->get_reputation() <= 0) {
                             continue;
                         }
-                        exostate.set_all_alliances(player_idx, owner_idx);
+                        exostate().set_all_alliances(player_idx, owner_idx);
                     }
                 }
 
@@ -2557,12 +2557,12 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 int j = 0;
 
 #if FEATURE_HUMAN_NO_RANDOM_ALLY_LOSS
-                j = exostate.get_n_human_players();
+                j = exostate().get_n_human_players();
 #endif
 
                 for (; j < N_PLAYERS; ++j) {
                     if (onein(r)) {
-                        exostate.unset_alliances(player_idx, j);
+                        exostate().unset_alliances(player_idx, j);
                     }
                 }
             }
@@ -2571,7 +2571,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     }
 
     if (mp_state.mpai_stage == MPAI_UpdateTaxes) {
-        if (exostate.get_orig_month() < 25) {
+        if (exostate().get_orig_month() < 25) {
             player->set_tax(0);
         } else if (player->get_tactic() != 6) {
             player->init_tax();
@@ -2582,7 +2582,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     if (mp_state.mpai_stage == MPAI_DecideTerrorAttacks) {
         int hostile_to = player->get_hostile_to();
         if (!player->has_mission() && hostile_to >= 0 && onein(20)) {
-            if (exostate.get_orig_month() > 15 && player->can_afford(70)) {
+            if (exostate().get_orig_month() > 15 && player->can_afford(70)) {
                 // PROCet_terror
 
                 bool target_found = false;
@@ -2605,7 +2605,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     int cost = 100;
 
 #if FIX_AI_TERROR
-                    bool nuke_possible = player->has_invention(INV_OrbitalBombs) && exostate.get_orig_month() > 50;
+                    bool nuke_possible = player->has_invention(INV_OrbitalBombs) && exostate().get_orig_month() > 50;
                     if (nuke_possible && player->can_afford(1500)) {
                         plan = MT_Nuclear;
                         cost = 1000;
@@ -2633,7 +2633,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     }
 
     if (mp_state.mpai_stage == MPAI_FleetPurchase) {
-        if (exostate.get_orig_month() > 8 && player->can_afford(11) && player->get_tactic() != 6) {
+        if (exostate().get_orig_month() > 8 && player->can_afford(11) && player->get_tactic() != 6) {
             Fleet &fleet = player->get_fleet_nonconst();
 
             int n = RND(7);
@@ -2677,7 +2677,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     }
 
     if (mp_state.mpai_stage == MPAI_NewOfficers) {
-        if (exostate.get_orig_month() > 20 && onein(2)) {
+        if (exostate().get_orig_month() > 20 && onein(2)) {
             for (int i = 0; i < 3; ++i) {
                 Officer off = OFF_Battle;
                 if (i == 1) off = OFF_Science;
@@ -2700,7 +2700,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     }
 
     if (mp_state.mpai_stage == MPAI_DevelopArtificialPlanet) {
-        Planet *art = exostate.get_planet_under_construction(player_idx);
+        Planet *art = exostate().get_planet_under_construction(player_idx);
         int phase = art ? art->get_construction_phase() : 0;
         if (art && phase < 3) {
             if (   (phase == 2 && player->can_afford(1500))
@@ -2741,9 +2741,9 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 // PROClorddwp: Begin an artificial planet
                 for (StarIterator siter; !siter.complete(); ++siter) {
                     Star *s = siter.get();
-                    if (exostate.artificial_planet_viable(s) == APV_Yes) {
+                    if (exostate().artificial_planet_viable(s) == APV_Yes) {
                         if (player->attempt_spend(1000)) {
-                            if (!exostate.construct_artificial_planet(s, player_idx, nullptr)) {
+                            if (!exostate().construct_artificial_planet(s, player_idx, nullptr)) {
                                 L.error("Should be possible - viability check returned true");
                             }
                             L.debug("[%s]: BEGIN ARTIFICIAL PLANET", player->get_full_name());
@@ -2770,9 +2770,9 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         if (tgt_slot == p) {
                             continue;
                         }
-                        if (exostate.artificial_planet_viable(tgt) == APV_Yes) {
+                        if (exostate().artificial_planet_viable(tgt) == APV_Yes) {
                             // Move planet here
-                            p->set_star_target(exostate.tgt2loc(tgt));
+                            p->set_star_target(exostate().tgt2loc(tgt));
                             break;
                         }
                     }
@@ -2783,7 +2783,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
     }
 
     if (mp_state.mpai_stage == MPAI_CheckArmy) {
-        if (exostate.owns_a_planet(player)) {
+        if (exostate().owns_a_planet(player)) {
             int biggest_army = 0;
             for (PlanetIterator piter; !piter.complete(); ++piter) {
                 Planet *p = piter.get();
@@ -2803,10 +2803,10 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     if (!(t == 0 || t == 1)) {
                         continue;
                     }
-                    if (exostate.get_orig_month() <= 9) {
+                    if (exostate().get_orig_month() <= 9) {
                         continue;
                     }
-                    if (exostate.has_alliance(p->get_owner(), player_idx, ALLY_War)) {
+                    if (exostate().has_alliance(p->get_owner(), player_idx, ALLY_War)) {
                         continue;
                     }
                     if (biggest_army/3 >= p->get_army_size()) {
@@ -2849,7 +2849,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     break;
             }
 
-            int m = exostate.get_orig_month();
+            int m = exostate().get_orig_month();
             if (t == 2 && m < 12) {
                 t = 0;
             }
@@ -2872,8 +2872,8 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
             bool afford = player->can_afford(130);
             if (t == 2) {
-                if (afford || exostate.get_total_net_income(player_idx) >= 9) {
-                    int m = exostate.get_orig_month();
+                if (afford || exostate().get_total_net_income(player_idx) >= 9) {
+                    int m = exostate().get_orig_month();
                     if (player->can_afford(m > 30 ? 31 : 61)) {
                         player->set_tactic(6);
                         player->get_location().unset_target();
@@ -2910,7 +2910,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 }
             }
 
-            if (!exostate.owns_a_planet(player)) {
+            if (!exostate().owns_a_planet(player)) {
                 player->set_tactic(9);
             }
 
@@ -2938,7 +2938,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
             if (p->get_tactic() == 6) {
                 p->set_tax(0);
             }
-            if (p->get_tactic() != 6 && exostate.get_orig_month() > 25) {
+            if (p->get_tactic() != 6 && exostate().get_orig_month() > 25) {
                 p->init_tax();
             }
             if (p->get_tactic() == 6 && p->can_afford(191)) {
@@ -3023,7 +3023,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     L.debug("[%s] PROCe_tact2 : PLANET %d/%d/%d", player->get_full_name(), planet_inf, planet_gli, planet_art);
                     L.debug("[%s] PROCe_tact2 : FLEET %d/%d/%d", player->get_full_name(), f.infantry, f.gliders, f.artillery);
 
-                    int n = exostate.get_n_planets(player);
+                    int n = exostate().get_n_planets(player);
                     if ((n > 1 && onein(2)) || (n == 1 && onein(5))) {
                         player->prev_tactic();
                     } else {
@@ -3050,7 +3050,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     }
                     bool ok = true;
                     for (int i = 0; i < N_PLAYERS; ++i) {
-                        Player *pl = exostate.get_player(i);
+                        Player *pl = exostate().get_player(i);
                         if (!(pl && pl->is_participating() && pl != player)) {
                             continue;
                         }
@@ -3095,7 +3095,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                             if (a > quality && onein(7)) {
                                 bool ok = true;
                                 for (int i = 0; i < N_PLAYERS; ++i) {
-                                    Player *pl = exostate.get_player(i);
+                                    Player *pl = exostate().get_player(i);
                                     if (!(pl && pl->is_participating() && pl != player)) {
                                         continue;
                                     }
@@ -3213,10 +3213,10 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                              */
                             AIFlag f = player->get_flag(1);
                             if (f == AI_Hi || (f == AI_Md && onein(2))) {
-                                if (exostate.has_only_alliance(player_idx, owner, ALLY_NonAttack)) {
+                                if (exostate().has_only_alliance(player_idx, owner, ALLY_NonAttack)) {
                                     ok = false;
                                 }
-                                if (exostate.has_only_alliance(player_idx, owner, ALLY_War)) {
+                                if (exostate().has_only_alliance(player_idx, owner, ALLY_War)) {
                                     ok = false;
                                 }
                             }
@@ -3317,7 +3317,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                             for (int i = 0; i < 20; ++i) {
                                 name = p->get_name_suggestion();
 
-                                if (!exostate.planet_name_taken(name)) {
+                                if (!exostate().planet_name_taken(name)) {
                                     p->set_name(name);
                                     named = true;
                                     break;
@@ -3327,7 +3327,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                                     char name2[PLANET_MAX_NAME];
                                     snprintf(name2, sizeof(name2), "%s2", name);
 
-                                    if (!exostate.planet_name_taken(name2)) {
+                                    if (!exostate().planet_name_taken(name2)) {
                                         p->set_name(name2);
                                         named = true;
                                         break;
@@ -3350,7 +3350,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                             player->transfer_art(-(cap - p_art)));
 
                         // PROCnpmessage
-                        NewsItem& news = exostate.register_news_force(NI_PlanetClaimed);
+                        NewsItem& news = exostate().register_news_force(NI_PlanetClaimed);
                         news.player_0 = player_idx;
 
                         L.debug("[%s] PROCe_tact5 : CLAIMED %s AT %s", player->get_full_name(), p->get_name(), s->name);
@@ -3392,7 +3392,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                             mp_state.mpai_substage = 100;
                         } else {
                             // Bail if planet is aritificial and lord has artificial world
-                            if ((p->get_class() == Artificial) && (exostate.has_artificial_planet(player_idx))) {
+                            if ((p->get_class() == Artificial) && (exostate().has_artificial_planet(player_idx))) {
                                 mp_state.mpai_substage = 100;
                             } else {
                                 mp_state.mpai_substage = 1;
@@ -3406,12 +3406,12 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 // Attack a planet
                 if (mp_state.mpai_substage == 1) {
                     L.debug("[%s] PROCe_tact6 : ANNOUNCING ATTACK ON %s AT %s ", player->get_full_name(), p->get_name(), s->name);
-                    exostate.set_active_flytarget(s);
-                    exostate.set_active_planet(planet_idx);
+                    exostate().set_active_flytarget(s);
+                    exostate().set_active_planet(planet_idx);
                     // Unrest increases even before MODE_Arrive, if we're attacking a human planet
                     p->adjust_unrest(1);
                     int owner_idx = p->get_owner();
-                    Player *owner = exostate.get_player(owner_idx);
+                    Player *owner = exostate().get_player(owner_idx);
                     if (owner->is_human()) {
                         mp_state.mpai_substage = 2;
                         // PROCenemyplayerattack from this point
@@ -3448,7 +3448,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 // Attacking CPU, requesting support from war allies
                 if (mp_state.mpai_substage == 4) {
                     int owner_idx = p->get_owner();
-                    Player *owner = exostate.get_player(owner_idx);
+                    Player *owner = exostate().get_player(owner_idx);
 
                     int &i = mp_state.mpai_substage_player_idx;
                     for (; i < N_PLAYERS; ++i) {
@@ -3456,7 +3456,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                             continue;
                         }
 
-                        Player *other = exostate.get_player(i);
+                        Player *other = exostate().get_player(i);
 
                         // Defender (owner) doesn't request support from player attacking them
                         if (other == player) {
@@ -3472,7 +3472,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                             continue;
                         }
 
-                        if (exostate.has_alliance(owner_idx, i, ALLY_War)) {
+                        if (exostate().has_alliance(owner_idx, i, ALLY_War)) {
                             Planet *army_planet = nullptr;
                             int army_sz = -1;
                             // Iterate defender's war ally's planets
@@ -3524,7 +3524,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
                     // SUGGEST: Does orig unset CPU<->CPU alliances? We will here.
                     int owner_idx = p->get_owner();
-                    exostate.unset_alliances(owner_idx, player_idx);
+                    exostate().unset_alliances(owner_idx, player_idx);
 
                     mp_state.mpai_substage = 6;
                     ephstate.set_ephemeral_state(EPH_LunarBattlePrep);
@@ -3536,9 +3536,9 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 // Handle outcome of battle
                 if (mp_state.mpai_substage == 6) {
                     const LunarBattleReport &b = ephstate.lunar_battle_report;
-                    Player* defender = exostate.get_player(b.defender_idx);
+                    Player* defender = exostate().get_player(b.defender_idx);
                     bool won = b.aggressor_won;
-                    bool vis = exostate.any_human_has_visited(exostate.get_active_star_idx());
+                    bool vis = exostate().any_human_has_visited(exostate().get_active_star_idx());
                     ephstate.clear_ephemeral_state();
 
                     if (vis) {
@@ -3576,8 +3576,8 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     int owner_idx = p->get_owner();
                     int supporter_idx = mp_state.mpai_substage_player_idx;
 
-                    Player *owner = exostate.get_player(owner_idx);
-                    Player *supporter = exostate.get_player(supporter_idx);
+                    Player *owner = exostate().get_player(owner_idx);
+                    Player *supporter = exostate().get_player(supporter_idx);
 
                     // Supporter MC ONLY expended and units added to defender planet when total > 3 - but supporter still loses them
                     int inf, gli, art;
@@ -3590,7 +3590,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         L.info("[%s] Did not receive sufficient support from %s", owner->get_full_name(), supporter->get_full_name());
                         if (onein(2)) {
                             // Player under attack calls off alliance
-                            exostate.unset_alliances(owner_idx, supporter_idx);
+                            exostate().unset_alliances(owner_idx, supporter_idx);
                         }
                     }
 
@@ -3624,7 +3624,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         mp_state.mpai_substage = 100;
                     } else {
                         mp_state.mpai_bombings_remain -= 1;
-                        exostate.register_news(NI_BombAttack);
+                        exostate().register_news(NI_BombAttack);
 
                         L.debug("BOMB (Remaining: %d)", mp_state.mpai_bombings_remain);
 
@@ -3633,9 +3633,9 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         audio_manager.target_music(mpart2mus(8));
 
                         int owner_idx = p->get_owner();
-                        Player *owner = exostate.get_player(owner_idx);
+                        Player *owner = exostate().get_player(owner_idx);
 
-                        Star *s = (Star*)exostate.get_active_flytarget();
+                        Star *s = (Star*)exostate().get_active_flytarget();
 
                         bulletin_start_new(false);
                         bulletin_set_bg(p->sprites()->bulletin_bg);
@@ -3787,7 +3787,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         }
                     }
 
-                    int n = exostate.get_n_planets(player);
+                    int n = exostate().get_n_planets(player);
                     if ((n > 1 && onein(2)) || (n == 1)) {
                         player->next_tactic();
                     } else {
@@ -3834,8 +3834,8 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         Planet *p = piter.get();
                         if (p->is_owned() && p->get_owner() != player_idx) {
                             int owner_idx = p->get_owner();
-                            Player *owner = exostate.get_player(owner_idx);
-                            if (exostate.has_alliance(player_idx, owner_idx, ALLY_Trade)) {
+                            Player *owner = exostate().get_player(owner_idx);
+                            if (exostate().has_alliance(player_idx, owner_idx, ALLY_Trade)) {
                                 a = 2;
                             }
                             if (!(player->is_hostile_to(owner_idx) || owner->is_hostile_to(player_idx))) {
@@ -3892,10 +3892,10 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 }
 
                 int owner_idx = planet->get_owner();
-                Player *owner = exostate.get_player(owner_idx);
+                Player *owner = exostate().get_player(owner_idx);
 
-                exostate.set_active_flytarget(star);
-                exostate.set_active_planet(planet_idx);
+                exostate().set_active_flytarget(star);
+                exostate().set_active_planet(planet_idx);
 
                 if (mp_state.mpai_substage == 0) {
                     L.debug("[%s] PROCe_tact11 : REQUEST TRADE", player->get_full_name());
@@ -3954,7 +3954,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         }
 
                         if (!owner->is_human()) {
-                            if (!exostate.has_alliance(player_idx, owner_idx, ALLY_Trade)) {
+                            if (!exostate().has_alliance(player_idx, owner_idx, ALLY_Trade)) {
                                 if (!player->attempt_spend_cpuforce(n)) {
                                     L.warn("[%s] Preventing trade that was not affordable",
                                             player->get_full_name());
@@ -4031,11 +4031,11 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 }
 
 ExodusMode GalaxyMap::month_pass_planet_update() {
-    Star *s = (Star*)exostate.get_active_flytarget();
-    Planet *p  = exostate.get_active_planet();
+    Star *s = (Star*)exostate().get_active_flytarget();
+    Planet *p  = exostate().get_active_planet();
 
-    int s_idx = exostate.get_active_star_idx();
-    int p_idx = exostate.get_active_planet_idx();
+    int s_idx = exostate().get_active_star_idx();
+    int p_idx = exostate().get_active_planet_idx();
 
     Player *owner = nullptr;
 
@@ -4045,15 +4045,15 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     // This can only happen after the comm station collapses -
     // although the owner can change after a rebellion.
     if (p->is_owned()) {
-        exostate.set_active_player(p->get_owner());
-        owner = exostate.get_player(p->get_owner());
+        exostate().set_active_player(p->get_owner());
+        owner = exostate().get_player(p->get_owner());
     }
 
     if (mp_state.mpp_stage == MPP_InitialiseReport) {
         report.reset();
         report.star_idx = s_idx;
         report.planet_idx = p_idx;
-        report.player_idx = exostate.get_active_player_idx();
+        report.player_idx = exostate().get_active_player_idx();
         next_mpp_stage();
     }
 
@@ -4063,10 +4063,10 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mp_state.mpp_stage == MPP_FirstCity) {
-        if (owner && !exostate.first_city_done) {
+        if (owner && !exostate().first_city_done) {
             if (owner->is_human() && p->count_stones(STONE_City) > 0) {
                 audio_manager.target_music(mpart2mus(10));
-                exostate.first_city_done = true;
+                exostate().first_city_done = true;
                 bulletin_start_new(false);
                 bulletin_set_flag(IMG_TS1_FLAG16);
                 bulletin_set_text_col(COL_TEXT3);
@@ -4091,13 +4091,13 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mp_state.mpp_stage == MPP_FirstSpaceport) {
-        if (!exostate.first_spaceport_done) {
+        if (!exostate().first_spaceport_done) {
             if (owner->is_human()
                 && p->count_stones(STONE_Port0) > 0
                 && p->count_stones(STONE_Port1) > 0
                 && p->count_stones(STONE_Port2) > 0) {
                 audio_manager.target_music(mpart2mus(10));
-                exostate.first_spaceport_done = true;
+                exostate().first_spaceport_done = true;
                 do_first_spaceport = true;
                 next_mpp_stage();
                 return ExodusMode::MODE_None;
@@ -4108,7 +4108,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     if (mp_state.mpp_stage == MPP_ResearchCheck) {
         ephstate.research.done = false;
-        if (exostate.get_orig_month() > 2 && p->has_stone(STONE_City)) {
+        if (exostate().get_orig_month() > 2 && p->has_stone(STONE_City)) {
             int threshold = 1;
             int q = (int)owner->get_officer(OFF_Science);
             // This means threshold can be -ve - I wonder if the -2 here
@@ -4133,7 +4133,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     if (mp_state.mpp_stage == MPP_Meteors) {
         if (onein(200)) {
-            exostate.register_news(NI_Meteor);
+            exostate().register_news(NI_Meteor);
             report.add_event(PRE_Meteor);
             if (bulletin_start_new(false, s)) {
                 audio_manager.target_music(mpart2mus(8));
@@ -4166,7 +4166,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 ephstate.destruction.destroyer_idx = -1;
                 ephstate.destruction.terror = false;
                 ephstate.destruction.nuke = false;
-                ephstate.destruction.draw = exostate.get_active_player()->is_human();
+                ephstate.destruction.draw = exostate().get_active_player()->is_human();
                 do_meteor = true;
 
                 L.debug("METEOR: %d impacts", ephstate.destruction.n_strikes);
@@ -4202,7 +4202,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 bulletin_set_next_text("Defects at %s have caused", p->get_name());
                 bulletin_set_next_text("some battle machines to be destructed.");
                 // SUGGEST: Should we tell the player how many have been destroyed?
-                exostate.register_news(NI_BattleMachinesDestructed);
+                exostate().register_news(NI_BattleMachinesDestructed);
                 next_mpp_stage();
                 return ExodusMode::MODE_None;
             }
@@ -4212,7 +4212,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     if (mp_state.mpp_stage == MPP_ClimateChange) {
         if (onein(250)) {
-            exostate.register_news(NI_GeologicalChange);
+            exostate().register_news(NI_GeologicalChange);
             report.add_event(PRE_Climate);
             const char* before = p->get_class_str_lower();
             p->surfchange();
@@ -4237,7 +4237,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         // PROCepidemic(1) case
         // PROCepidemic(2) case (plants poisoned) is handled as MT_TerrorAgri
         if (onein(150)) {
-            if (exostate.get_orig_month() >= 10 && !owner->has_invention(INV_Acid)) {
+            if (exostate().get_orig_month() >= 10 && !owner->has_invention(INV_Acid)) {
                 int to_die = RND(15);
                 if (p->count_stones(STONE_Agri) < 15) to_die = RND(5);
                 int sz = p->get_size_blocks();
@@ -4252,7 +4252,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     if (to_die <= 0) break;
                 }
                 p->adjust_unrest(2);
-                exostate.register_news(NI_Plague);
+                exostate().register_news(NI_Plague);
                 report.add_event(PRE_Plague);
                 if (bulletin_start_new(true, s)) {
                     audio_manager.target_music(mpart2mus(9));
@@ -4273,8 +4273,8 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     // Doesn't cause planet loss - only damage
     if (mp_state.mpp_stage == MPP_AlienAttack) {
-        if (onein(200) && exostate.get_orig_month() >= 10) {
-            exostate.register_news(NI_AlienAttack);
+        if (onein(200) && exostate().get_orig_month() >= 10) {
+            exostate().register_news(NI_AlienAttack);
             report.add_event(PRE_Aliens);
             if (bulletin_start_new(false, s)) {
                 audio_manager.target_music(mpart2mus(8));
@@ -4342,7 +4342,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mp_state.mpp_stage == MPP_DiscoverSpecies) {
-        if (exostate.get_orig_month() > 2) {
+        if (exostate().get_orig_month() > 2) {
             if (p->count_stones(STONE_City) > 0) {
                 // This is a nice touch - no species left if you've mined all resources!
                 if (p->get_class() != Artificial && p->get_minerals() > 0) {
@@ -4367,14 +4367,14 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             if (!owner->has_invention(INV_MultiFunctionalVaccine)) {
                 int cities = p->count_stones(STONE_City);
                 if (cities > 0) {
-                    if (exostate.get_orig_month() >= 10) {
+                    if (exostate().get_orig_month() >= 10) {
                         int closedown = min(cities, RND(4));
                         for (int i = closedown; i > 0; --i) {
                             int x, y;
                             p->find_random_stone(STONE_City, x, y);
                             p->set_stone(x, y, STONE_Rubble);
                         }
-                        exostate.register_news(NI_Epidemic);
+                        exostate().register_news(NI_Epidemic);
                         report.add_event(PRE_Epidemic);
                         if (bulletin_start_new(true, s)) {
                             audio_manager.target_music(mpart2mus(8));
@@ -4400,7 +4400,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     if (mp_state.mpp_stage == MPP_RebelAttack) {
         int cities = p->get_n_cities();
-        if (cities > 0 && exostate.get_orig_month() > 2) {
+        if (cities > 0 && exostate().get_orig_month() > 2) {
             if (p->get_class() != Artificial && p->get_unrest() > 9) {
                 int robots = p->get_robots();
                 if ((robots < cities*3) || onein(4)) {
@@ -4447,14 +4447,14 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             bulletin_set_active_player_flag();
             bulletin_write_planet_info(s, p);
 
-            int star_idx = exostate.get_active_star_idx();
+            int star_idx = exostate().get_active_star_idx();
             Player *new_owner = nullptr;
             int new_owner_idx = -1;
             int attempts = 0;
             while (attempts < 200 && !new_owner) {
                 attempts++;
                 int idx = rand() % N_PLAYERS;
-                Player *pl = exostate.get_player(idx);
+                Player *pl = exostate().get_player(idx);
                 if (!pl)
                     continue;
                 if (pl == owner)
@@ -4477,7 +4477,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 republic = republic || onein(5);
 #endif
 
-                exostate.register_news(NI_SuccessfulRevolution);
+                exostate().register_news(NI_SuccessfulRevolution);
                 bulletin_set_next_text("The rebels have succeeded. So the");
                 bulletin_set_next_text("planet needs a new leader. The people");
                 if (!republic) {
@@ -4495,7 +4495,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     return ExodusMode::MODE_None;
                 }
             } else {
-                exostate.register_news(NI_Revolution);
+                exostate().register_news(NI_Revolution);
                 bulletin_set_next_text("The rebels did not succeed. The planet");
                 bulletin_set_next_text("remains in %s's hand.", owner->get_full_name());
                 if (!rpt.rebel_peace && onein(2)) {
@@ -4572,7 +4572,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 ephstate.destruction.destroyer_idx = -1;
                 ephstate.destruction.terror = false;
                 ephstate.destruction.nuke = false;
-                ephstate.destruction.draw = exostate.get_active_player()->is_human();
+                ephstate.destruction.draw = exostate().get_active_player()->is_human();
                 do_meltdown = true;
                 next_mpp_stage();
                 return ExodusMode::MODE_None;
@@ -4592,7 +4592,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     if (owner && owner->is_human()) {
                         achievement_manager.unlock(ACH_ParadiseGained);
                     }
-                    exostate.register_news(NI_SurfChangeCultivation);
+                    exostate().register_news(NI_SurfChangeCultivation);
                     report.add_event(PRE_SurfChangeCultivation);
                     if (bulletin_start_new(true, s)) {
                         audio_manager.target_music(mpart2mus(5));
@@ -4624,7 +4624,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     if (owner && owner->is_human()) {
                         achievement_manager.unlock(ACH_ParadiseLost);
                     }
-                    exostate.register_news(NI_SurfChangeClearing);
+                    exostate().register_news(NI_SurfChangeClearing);
                     report.add_event(PRE_SurfChangeClearing);
                     if (bulletin_start_new(true, s)) {
                         audio_manager.target_music(mpart2mus(9));
@@ -4662,7 +4662,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 // Save the report now, since we only save owned planet reports later
                 report.add_line("COMM. STATION DESTROYED");
                 report.add_line("%s lost control of this planet.", owner->get_full_name());
-                exostate.save_planet_report(report);
+                exostate().save_planet_report(report);
             } else {
                 bulletin_set_next_text("%s has lost this planet.", owner->get_full_name());
             }
@@ -4732,7 +4732,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         int &n = mp_state.mp_production_shutdown;
         n = 0;
 
-        if (exostate.get_orig_month() > 10) {
+        if (exostate().get_orig_month() > 10) {
             StoneSet produce_set;
             produce_set.add(STONE_Inf);
             produce_set.add(STONE_Gli);
@@ -4834,7 +4834,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             owner->give_mc(mc);
             report.add_line("The native village inhabitants offer");
             report.add_line("presents that are worth %d MC.", mc);
-            exostate.register_news(NI_NativesOfferPresents);
+            exostate().register_news(NI_NativesOfferPresents);
         }
         next_mpp_stage();
     }
@@ -4863,7 +4863,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 if (p->expand_city()) {
                     report.add_line("A city has expanded.");
                     if (owner && owner->is_human()) {
-                        exostate.register_news(NI_CityExpanded);
+                        exostate().register_news(NI_CityExpanded);
                     }
                 }
                 break;
@@ -4889,7 +4889,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         if (food_needed > 0) {
             report.add_line("There is not enough food for all systems.");
             if (owner && owner->is_human()) {
-                exostate.register_news(NI_NotEnoughFood);
+                exostate().register_news(NI_NotEnoughFood);
             }
             p->adjust_unrest(3);
             int cities_closed = 0;
@@ -4914,7 +4914,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                                 cities_closed == 1 ? "city has" : "cities have");
             }
             if (bases_collapsed) {
-                exostate.register_news(NI_ControlLost);
+                exostate().register_news(NI_ControlLost);
                 report.add_line("COMMAND STATION HAS COLLAPSED");
                 if (owner) {
                     if (owner->is_human()) {
@@ -4948,7 +4948,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     if (mp_state.mpp_stage == MPP_DisplayPlanetReport) {
         if (owner && owner->is_human()) {
 #if FEATURE_PLANET_RECALLABLE_SUMMARIES
-            exostate.save_planet_report(report);
+            exostate().save_planet_report(report);
 #else
             // Skip any reports which don't have content
             if (report.items > 0) {
@@ -4982,7 +4982,7 @@ bool GalaxyMap::update_researchcheck(Star* s, Planet *p) {
     if (!p->is_owned())
         return false;
 
-    Player *owner = exostate.get_player(p->get_owner());
+    Player *owner = exostate().get_player(p->get_owner());
     ephstate.research.done = false;
     if (owner->is_human()) {
         // If we're a human player, we need to exit to ask if
@@ -5018,7 +5018,7 @@ bool GalaxyMap::update_research(Planet *p) {
     if (!p->is_owned())
         return false;
 
-    Player *owner = exostate.get_player(p->get_owner());
+    Player *owner = exostate().get_player(p->get_owner());
     if (ephstate.research.done) {
         ephstate.research.done = false;
         if (ephstate.research.cost > 0 && !owner->attempt_spend(ephstate.research.cost)) {
@@ -5035,7 +5035,7 @@ bool GalaxyMap::update_research(Planet *p) {
             }
             int mc_reward = RND(10) * 10;
             if (owner->is_human()) {
-                NewsItem& news = exostate.register_news(NI_NewInvention);
+                NewsItem& news = exostate().register_news(NI_NewInvention);
                 news.player_0 = p->get_owner();
                 news.inv = inv;
                 audio_manager.target_music(mpart2mus(5));
@@ -5103,9 +5103,9 @@ void GalaxyMap::discover_species_bulletin(Planet* p) {
         return;
     }
 
-    Star* s = exostate.get_star_for_planet(p);
+    Star* s = exostate().get_star_for_planet(p);
 
-    Player* owner = exostate.get_player(p->get_owner());
+    Player* owner = exostate().get_player(p->get_owner());
 
     if (owner->is_human()) {
         audio_manager.target_music(mpart2mus(10));
@@ -5117,7 +5117,7 @@ void GalaxyMap::discover_species_bulletin(Planet* p) {
     bulletin_write_planet_info(s, p);
 
     if (onein(2)) {
-        exostate.register_news(NI_NewAnimal);
+        exostate().register_news(NI_NewAnimal);
         bulletin_set_next_text("NEW ANIMAL DISCOVERED");
         bulletin_set_next_text("");
         bulletin_set_next_text("The animal has been given the name");
@@ -5173,7 +5173,7 @@ void GalaxyMap::discover_species_bulletin(Planet* p) {
         bulletin_set_next_text("receives %d Mega Credits.", reward);
         owner->give_mc(reward);
     } else {
-        exostate.register_news(NI_NewPlant);
+        exostate().register_news(NI_NewPlant);
         bulletin_set_next_text("NEW PLANT DISCOVERED");
         bulletin_set_next_text("");
         bulletin_set_next_text("The plant has been given the name");
@@ -5229,7 +5229,7 @@ void GalaxyMap::ai_planet_update(Planet* p) {
         return;
     }
 
-    Player* owner = exostate.get_player(p->get_owner());
+    Player* owner = exostate().get_player(p->get_owner());
 
     if (owner->is_human()) {
         return;
@@ -5243,14 +5243,14 @@ void GalaxyMap::ai_planet_update(Planet* p) {
         p->collect_taxes();
     }
 
-    bool hunger = (exostate.get_orig_month() > 2) && !(p->agri_sufficient());
+    bool hunger = (exostate().get_orig_month() > 2) && !(p->agri_sufficient());
 
     // If we don't have much money and we're not desperate then do nothing
     if (owner->get_mc() < 30 && !hunger) {
         return;
     }
 
-    int n_planets = exostate.get_n_planets(owner);
+    int n_planets = exostate().get_n_planets(owner);
 
     if (   n_planets > 2
         && (RND(n_planets - 1) != 1)
@@ -5273,11 +5273,11 @@ void GalaxyMap::reset_planet_report() {
 }
 
 void GalaxyMap::planet_report_bulletin(bool transition, int idx) {
-    const PlanetReport& report = exostate.get_planet_report(idx);
+    const PlanetReport& report = exostate().get_planet_report(idx);
 
-    Star *s = exostate.get_star(report.star_idx);
-    Planet *p = exostate.get_planet(report.star_idx, report.planet_idx);
-    Player *player = exostate.get_player(report.player_idx);
+    Star *s = exostate().get_star(report.star_idx);
+    Planet *p = exostate().get_planet(report.star_idx, report.planet_idx);
+    Player *player = exostate().get_player(report.player_idx);
 
     bulletin_start_new_navigable(transition);
     bulletin_set_report(&report);

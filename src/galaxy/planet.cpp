@@ -13,7 +13,7 @@
 
 #include "util/value.h"
 
-extern ExodusState exostate;
+
 
 PlanetSpriteSet sprite_sets[7];
 MoonSpriteSet moon_sprite_sets[3];
@@ -93,7 +93,7 @@ bool Planet::exists() {
 void Planet::destroy() {
     L.info("PLANET DESTROYED");
     _exists = false;
-    exostate.stabilise_disappeared_planet(this);
+    exostate().stabilise_disappeared_planet(this);
 }
 
 int Planet::get_construction_phase() {
@@ -456,7 +456,7 @@ int Planet::get_population() {
     // In the original, there seems to be a bug in PROCstatus
     // whereby we count agri instead of villages!
     int mul = 1;
-    unsigned int month = exostate.get_month();
+    unsigned int month = exostate().get_month();
     if (month > 3) mul = 5;
     if (month > 10) mul = 10;
     if (month > 25) mul = 15;
@@ -941,7 +941,7 @@ bool Planet::is_owned() {
 
     if (owner <0) return false;
 
-    Player *ownerplayer = exostate.get_player(owner);
+    Player *ownerplayer = exostate().get_player(owner);
     return ownerplayer->is_participating();
 }
 
@@ -1264,7 +1264,7 @@ void Planet::adjust_unrest(int adjustment) {
         bool population_angry_recently = false;
 
         if (is_owned()) {
-            Player *owner = exostate.get_player(get_owner());
+            Player *owner = exostate().get_player(get_owner());
 
             if (owner->is_human()) {
                 for (int i = 0; i < N_UNREST; ++i) {
@@ -1401,7 +1401,7 @@ void Planet::collect_taxes() {
         return;
     }
 
-    Player *p = exostate.get_player(get_owner());
+    Player *p = exostate().get_player(get_owner());
     adjust_unrest(4);
     p->give_mc(get_tax_amount());
     taxes_collected = true;
@@ -1580,7 +1580,7 @@ TradeReport Planet::monthly_trade() {
         L.fatal("Trade requested on unowned planet");
     }
 
-    Player *o = exostate.get_player(get_owner());
+    Player *o = exostate().get_player(get_owner());
 
 
     rpt.mi = 0;
@@ -1681,7 +1681,7 @@ void Planet::mine() {
     minerals -= units_to_mine;
 
     if (minerals <= 0) {
-        if (is_owned() && exostate.get_player(get_owner())->is_human()) {
+        if (is_owned() && exostate().get_player(get_owner())->is_human()) {
             achievement_manager.unlock(ACH_PlanetMined);
         }
     }
@@ -1907,7 +1907,7 @@ bool Planet::agri_collapse() {
         return false;
     }
 
-    if (is_owned() && exostate.get_player(get_owner())->has_invention(INV_Acid)) {
+    if (is_owned() && exostate().get_player(get_owner())->has_invention(INV_Acid)) {
         return false;
     }
 
@@ -1973,7 +1973,7 @@ void Planet::ai_update() {
         return;
     }
 
-    Player *owner = exostate.get_player(get_owner());
+    Player *owner = exostate().get_player(get_owner());
 
     if (owner->is_human()) {
         L.warn("AI update on human-owned planet");
@@ -2035,7 +2035,7 @@ void Planet::ai_update() {
 
         int action = 0;
 
-        const int m = exostate.get_orig_month();
+        const int m = exostate().get_orig_month();
 
         // FIXME: Should probably have a method for this
         bool spaceport = (port_a > 0 && port_b > 0 && port_c > 0);
@@ -2388,7 +2388,7 @@ void Planet::_ai_make_space() {
         return;
     }
 
-    Player *owner = exostate.get_player(get_owner());
+    Player *owner = exostate().get_player(get_owner());
 
     if (!owner->is_participating()) {
         L.fatal("Tried to make space on a planet owned by an inert player");

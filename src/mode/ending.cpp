@@ -233,7 +233,7 @@ ExodusMode Ending::update(float dt) {
 
                     for (int i = 0; i < n_bad_things; ++i) {
                         Trace t = (Trace)((int)TRACE_BAD + 1 + i);
-                        int n = exostate.get_active_player()->get_trace(t);
+                        int n = exostate().get_active_player()->get_trace(t);
 
                         if (n == 0) {
                             continue;
@@ -342,7 +342,7 @@ ExodusMode Ending::update(float dt) {
 
                     for (int i = 0; i < n_good_things; ++i) {
                         Trace t = (Trace)((int)TRACE_GOOD + 1 + i);
-                        int n = exostate.get_active_player()->get_trace(t);
+                        int n = exostate().get_active_player()->get_trace(t);
 
                         if (n == 0) {
                             continue;
@@ -555,7 +555,7 @@ ExodusMode Ending::update(float dt) {
             break;
         case ForNow:
             {
-                switch (exostate.get_aim())
+                switch (exostate().get_aim())
                 {
                     case AIM_Might:
                         achievement_manager.unlock(ACH_WinMight);
@@ -568,7 +568,7 @@ ExodusMode Ending::update(float dt) {
                         break;
                 }
 
-                switch (exostate.get_enemy_start())
+                switch (exostate().get_enemy_start())
                 {
                     case ENEMY_None:
                         break;
@@ -582,7 +582,7 @@ ExodusMode Ending::update(float dt) {
                         break;
                 }
 
-                switch (exostate.get_galaxy_size())
+                switch (exostate().get_galaxy_size())
                 {
                     case GAL_Small:
                         achievement_manager.unlock(ACH_WinSmallGalaxy);
@@ -595,7 +595,7 @@ ExodusMode Ending::update(float dt) {
                         break;
                 }
 
-                if (!(exostate.get_active_player()->ever_committed_any_infractions())) {
+                if (!(exostate().get_active_player()->ever_committed_any_infractions())) {
                     achievement_manager.unlock(ACH_WinNoInfractions);
                 }
 

@@ -248,7 +248,7 @@ void SpaceBattle::distribute(BattleShipType type, bool enemy, int n_ships, int s
 }
 
 void SpaceBattle::prepare() {
-    player = exostate.get_active_player();
+    player = exostate().get_active_player();
     SpaceBattleParams &b = ephstate.space_battle;
 
     selected = nullptr;

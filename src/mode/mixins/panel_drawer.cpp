@@ -98,10 +98,10 @@ void PanelDrawer::update_panel_info_player(DrawTarget tgt, Player* player) {
     char mc_string[7];
     char planets_string[4];
 
-    snprintf(month_string, 5, "%u", exostate.get_month());
+    snprintf(month_string, 5, "%u", exostate().get_month());
     if (player) {
         snprintf(mc_string, 7, "%u", player->get_mc());
-        snprintf(planets_string, 4, "%d", exostate.get_n_planets(player));
+        snprintf(planets_string, 4, "%d", exostate().get_n_planets(player));
     } else {
         strcpy(mc_string, "");
         strcpy(planets_string, "");
@@ -144,7 +144,7 @@ void PanelDrawer::update_panel_info_player(DrawTarget tgt, Player* player) {
 }
 
 void PanelDrawer::update_panel_info_ft(DrawTarget tgt, Player* player, FlyTarget* ft) {
-    Galaxy *gal = exostate.get_galaxy();
+    Galaxy *gal = exostate().get_galaxy();
 
     char ft_desc[42];
     ft_desc[0] = '\0';
@@ -174,7 +174,7 @@ void PanelDrawer::update_panel_info_ft(DrawTarget tgt, Player* player, FlyTarget
     }
 
     // Draw '?' or star details
-    if (player->get_location().has_visited(exostate.tgt2loc(ft))) {
+    if (player->get_location().has_visited(exostate().tgt2loc(ft))) {
         draw_manager.draw(
             id_qm,
             nullptr);
@@ -202,7 +202,7 @@ void PanelDrawer::update_panel_info_ft(DrawTarget tgt, Player* player, FlyTarget
                          0.5, 0.5, 1, 1});
 
                     if (p->is_owned()) {
-                        Player *owner = exostate.get_player(p->get_owner());
+                        Player *owner = exostate().get_player(p->get_owner());
                         bool enemy = owner != player;
                         draw_manager.draw(
                             id_marker_icons[STAR_MAX_PLANETS - 1 - planets_drawn],
@@ -216,13 +216,13 @@ void PanelDrawer::update_panel_info_ft(DrawTarget tgt, Player* player, FlyTarget
                 }
             }
 
-            int ftloc = exostate.tgt2loc(ft);
+            int ftloc = exostate().tgt2loc(ft);
             PlayerLocation &loc = player->get_location();
             if (!loc.in_flight() && loc.get_target() == ftloc)
             {
                 int fleets_drawn = 0;
                 for (int i = 0; i < N_PLAYERS && fleets_drawn < PNL_MAX_FLEETS; ++i) {
-                    Player *pl = exostate.get_player(i);
+                    Player *pl = exostate().get_player(i);
 
                     if (pl == player) {
                         continue;
@@ -269,7 +269,7 @@ void PanelDrawer::update_panel_info_planet(DrawTarget tgt, Player *player, Plane
     char planet_desc[41];
     char planet_own[20 + MAX_PLAYER_FULLNAME];
     if (planet->is_owned()) {
-        Player *owner = exostate.get_player(planet->get_owner());
+        Player *owner = exostate().get_player(planet->get_owner());
         snprintf(planet_desc, 40, "This is the planet %s.", planet->get_name());
         snprintf(planet_own, 20 + MAX_PLAYER_FULLNAME, "It belongs to %s.", owner->get_full_name());
     } else {
