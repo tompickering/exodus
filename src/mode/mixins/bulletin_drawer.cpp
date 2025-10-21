@@ -56,14 +56,14 @@ bool BulletinDrawer::bulletin_start_new(bool transition, Star* star) {
 }
 
 bool BulletinDrawer::bulletin_start_new(bool transition, int star_idx) {
-    return bulletin_start_new_internal(transition, star_idx, false);
+    return bulletin_start_new_internal(transition, star_idx, BM_Default);
 }
 
-bool BulletinDrawer::bulletin_start_new_navigable(bool transition) {
-    return bulletin_start_new_internal(transition, -1, true);
+bool BulletinDrawer::bulletin_start_new(bool transition, BulletinMode mode) {
+    return bulletin_start_new_internal(transition, -1, mode);
 }
 
-bool BulletinDrawer::bulletin_start_new_internal(bool transition, int star_idx, bool navigable) {
+bool BulletinDrawer::bulletin_start_new_internal(bool transition, int star_idx, BulletinMode mode) {
     for (int i = 0; i < bulletin_text_idx; ++i) {
         draw_manager.draw(id_bulletin_text[i], nullptr);
     }
@@ -76,7 +76,7 @@ bool BulletinDrawer::bulletin_start_new_internal(bool transition, int star_idx, 
 
     bulletin_reset();
 
-    if (navigable) {
+    if (mode == BM_Report) {
         bulletin_set_prbuttons();
     }
 

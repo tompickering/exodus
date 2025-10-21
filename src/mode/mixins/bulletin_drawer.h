@@ -15,7 +15,10 @@
 
 extern DRAWMANAGER draw_manager;
 
-
+enum BulletinMode : uint8_t {
+    BM_Default,
+    BM_Report,
+};
 
 enum BulletinPRAction : uint8_t {
     BPR_None,
@@ -30,7 +33,7 @@ class BulletinDrawer {
         bool bulletin_start_new(bool);
         bool bulletin_start_new(bool, Star*);
         bool bulletin_start_new(bool, int);
-        bool bulletin_start_new_navigable(bool);
+        bool bulletin_start_new(bool, BulletinMode);
         void bulletin_update(float);
         void bulletin_set_next_text(const char*, ...);
         void bulletin_set_text_col(RGB);
@@ -51,7 +54,7 @@ class BulletinDrawer {
         void bulletin_set_war_ally(Planet*, int);
         int bulletin_get_war_ally_result(int&, int&, int&);
     private:
-        bool bulletin_start_new_internal(bool, int, bool);
+        bool bulletin_start_new_internal(bool, int, BulletinMode);
         void bulletin_open();    // Open using bulletin_start_new()
         void bulletin_close();   // Close using bulletin_ensure_closed()
         void bulletin_reset();

@@ -5279,7 +5279,7 @@ void GalaxyMap::planet_report_bulletin(bool transition, int idx) {
     Planet *p = exostate().get_planet(report.star_idx, report.planet_idx);
     Player *player = exostate().get_player(report.player_idx);
 
-    bulletin_start_new_navigable(transition);
+    bulletin_start_new(transition, BM_Report);
     bulletin_set_report(&report);
     bulletin_set_bg(p->sprites()->bulletin_bg);
     bulletin_set_player_flag(player);
