@@ -197,10 +197,10 @@ void BulletinDrawer::bulletin_draw_events() {
                 case PRE_HQDestroyed:
                     icon = IMG_PREVENT12;
                     break;
-                case PRE_ArmyProductionStopped:
+                case PRE_ArmyProductionSaved:
                     icon = IMG_PREVENT13;
                     break;
-                case PRE_ArmyProductionSaved:
+                case PRE_ArmyProductionStopped:
                     icon = IMG_PREVENT14;
                     break;
                 default:
