@@ -1065,6 +1065,7 @@ extern const char *IMG_PL6_TRANS;
 extern const char *IMG_PL8_TRANS;
 extern const char *IMG_BTNREPORT;
 extern const char *IMG_BTNGUIDE;
+extern const char *IMG_BTNZOOM;
 
 extern const char *INIT_IMG;
 extern const char *CURSOR_IMG;

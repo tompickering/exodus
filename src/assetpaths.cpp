@@ -1068,6 +1068,7 @@ const char *IMG_PL6_TRANS        = D_NEW "pl6";
 const char *IMG_PL8_TRANS        = D_NEW "pl8";
 const char *IMG_BTNREPORT        = D_NEW "btn_report";
 const char *IMG_BTNGUIDE         = D_NEW "btn_guide";
+const char *IMG_BTNZOOM          = D_NEW "btn_zoom";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2137,6 +2138,7 @@ const char *ASSETS_IMG[] = {
     IMG_PL8_TRANS,
     IMG_BTNREPORT,
     IMG_BTNGUIDE,
+    IMG_BTNZOOM,
 
     "",
 };

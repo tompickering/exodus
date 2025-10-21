@@ -54,6 +54,8 @@ class BulletinDrawer {
         void bulletin_set_war_ally(Planet*, int);
         int bulletin_get_war_ally_result(int&, int&, int&);
     private:
+        BulletinMode bulletin_mode;
+
         bool bulletin_start_new_internal(bool, int, BulletinMode);
         void bulletin_open();    // Open using bulletin_start_new()
         void bulletin_close();   // Close using bulletin_ensure_closed()
@@ -78,6 +80,7 @@ class BulletinDrawer {
         SprID id_bulletin_text[BULLETIN_LINES];
         SprID id_bulletin_yesno;
         SprID id_bulletin_prbuttons;
+        SprID id_bulletin_zoom;
 
         void bulletin_draw_events();
         void bulletin_draw_text();
@@ -92,7 +95,6 @@ class BulletinDrawer {
         bool bulletin_is_yesno;
         bool bulletin_yesno_was_yes;
 
-        bool bulletin_use_prbuttons;
         BulletinPRAction bulletin_praction;
 
         const PlanetReport *bulletin_report;

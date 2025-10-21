@@ -26,6 +26,7 @@ BulletinDrawer::BulletinDrawer() {
     for (int i = 0; i < BULLETIN_LINES; ++i) {
         strncpy(bulletin_text[i], "", 1);
     }
+    bulletin_mode = BM_Default;
     bulletin_reset_text_cols();
     bulletin_has_been_acknowledged = false;
     bulletin_text_idx = 0;
@@ -33,7 +34,6 @@ BulletinDrawer::BulletinDrawer() {
     bulletin_redraws_needed = true;
     bulletin_is_yesno = false;
     bulletin_yesno_was_yes = false;
-    bulletin_use_prbuttons = false;
     bulletin_praction = BPR_None;
     bulletin_report = nullptr;
     _bulletin_is_open = false;
@@ -76,8 +76,10 @@ bool BulletinDrawer::bulletin_start_new_internal(bool transition, int star_idx, 
 
     bulletin_reset();
 
-    if (mode == BM_Report) {
-        bulletin_set_prbuttons();
+    bulletin_mode = mode;
+
+    if (bulletin_mode == BM_Report) {
+        bulletin_praction = BPR_None;
     }
 
     if (!bulletin_is_open())
@@ -124,7 +126,12 @@ void BulletinDrawer::bulletin_update(float dt) {
             }
             bulletin_has_been_acknowledged = true;
         }
-    } else if (bulletin_use_prbuttons) {
+    } else if (bulletin_mode == BM_Report) {
+        if (draw_manager.query_click(id_bulletin_zoom).id) {
+            // TODO
+            L.debug("Zoom clicked");
+        }
+
         SpriteClick clk = draw_manager.query_click(id_bulletin_prbuttons);
         if (clk.id) {
             if (clk.x <= 0.33) {
@@ -445,6 +452,7 @@ void BulletinDrawer::bulletin_open() {
     id_bulletin_bg_scan = draw_manager.new_sprite_id();
     id_bulletin_yesno = draw_manager.new_sprite_id();
     id_bulletin_prbuttons = draw_manager.new_sprite_id();
+    id_bulletin_zoom = draw_manager.new_sprite_id();
 
     bulletin_bg_preserve = nullptr;
 
@@ -474,7 +482,13 @@ void BulletinDrawer::bulletin_open() {
          BULLETIN_FLAG_BG_W, BULLETIN_FLAG_BG_H},
          COL_BORDERS);
 
-    if (bulletin_use_prbuttons) {
+    if (bulletin_mode == BM_Report) {
+        draw_manager.draw(
+            id_bulletin_zoom,
+            IMG_BTNZOOM,
+            {BULLETIN_FLAG_BG_X - 2,
+             BULLETIN_Y - 2,
+             1, 1, 1, 1});
         draw_manager.draw(
             id_bulletin_prbuttons,
             IMG_PRBUTTONS,
@@ -519,6 +533,7 @@ void BulletinDrawer::bulletin_close() {
     draw_manager.draw(id_bulletin_bg_scan, nullptr);
     draw_manager.draw(id_bulletin_yesno, nullptr);
     draw_manager.draw(id_bulletin_prbuttons, nullptr);
+    draw_manager.draw(id_bulletin_zoom, nullptr);
 
     draw_manager.release_sprite_id(id_bulletin_header_flag);
     draw_manager.release_sprite_id(id_bulletin_header_l);
@@ -530,6 +545,7 @@ void BulletinDrawer::bulletin_close() {
     draw_manager.release_sprite_id(id_bulletin_bg_scan);
     draw_manager.release_sprite_id(id_bulletin_yesno);
     draw_manager.release_sprite_id(id_bulletin_prbuttons);
+    draw_manager.release_sprite_id(id_bulletin_zoom);
 
 
     // Wipe all info
@@ -543,6 +559,7 @@ void BulletinDrawer::bulletin_reset() {
         strncpy(bulletin_text[i], "", 1);
     }
 
+    bulletin_mode = BM_Default;
     bulletin_reset_text_cols();
     bulletin_transition = 0;
     bulletin_redraws_needed = true;
@@ -550,7 +567,6 @@ void BulletinDrawer::bulletin_reset() {
     bulletin_text_idx = 0;
     bulletin_is_yesno = false;
     bulletin_yesno_was_yes = false;
-    bulletin_use_prbuttons = false;
     bulletin_praction = BPR_None;
     bulletin_report = nullptr;
 
@@ -593,11 +609,6 @@ void BulletinDrawer::bulletin_set_bg(const char* img) {
 void BulletinDrawer::bulletin_set_yesno() {
     bulletin_is_yesno = true;
     bulletin_yesno_was_yes = false;
-}
-
-void BulletinDrawer::bulletin_set_prbuttons() {
-    bulletin_use_prbuttons = true;
-    bulletin_praction = BPR_None;
 }
 
 BulletinPRAction BulletinDrawer::bulletin_get_praction() {
