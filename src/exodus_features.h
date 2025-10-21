@@ -5,6 +5,9 @@
 // Planets in the star map are rendered at scale according to size
 #define FEATURE_MULTISIZE_PLANETS 1
 
+// Planets in the colonise mode are rendered at scale according to size
+#define FEATURE_MULTISIZE_PLANETS_COLONISE 1
+
 // In lunar battles, downed gliders and broken artillery serve as cover
 #define FEATURE_WRECKAGE_COVER 1
 

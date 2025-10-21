@@ -3,6 +3,8 @@
 #include "anim.h"
 #include "util/value.h"
 
+#include "exodus_features.h"
+
 #include "shared.h"
 
 #define TEXT_START_DELAY 0.8f
@@ -56,11 +58,18 @@ void PlanetColonise::enter() {
 
     audio_manager.target_music(MUS_ACHIEVEMENT);
 
+    float planet_scale = 1.f;
+
+#if FEATURE_MULTISIZE_PLANETS_COLONISE
+    if (planet->get_size() == PLANET_Small) planet_scale = 0.6;
+    if (planet->get_size() == PLANET_Medium) planet_scale = 0.8;
+#endif
+
     draw_manager.draw(IMG_INTRO_SPACE);
     draw_manager.draw(
-        planet->sprites()->bulletin_bg,
+        planet->sprites()->bulletin_bg_trans,
         {RES_X/2, RES_Y/2 - 40,
-         .5, .5, 1, 1});
+         .5, .5, planet_scale, planet_scale});
     draw_manager.save_background();
 
     time = 0;
