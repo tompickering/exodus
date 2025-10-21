@@ -875,13 +875,13 @@ void GalaxyMap::set_stage(Stage new_stage) {
             draw_manager.draw(
                 id(ID::BTN_GUIDE),
                 IMG_BTNGUIDE,
-                {RES_X-2, 2, 1, 0, 1, 1});
+                {RES_X-4, 4, 1, 0, 1, 1});
 
             if (exostate.planet_report_count() > 0) {
                 draw_manager.draw(
                     id(ID::BTN_REPORT),
                     IMG_BTNREPORT,
-                    {RES_X-42, 2, 1, 0, 1, 1});
+                    {RES_X-46, 4, 1, 0, 1, 1});
             }
 
             break;
