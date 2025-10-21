@@ -4779,7 +4779,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             }
         }
 
-        if (n_initial > 0 && n <= 0) {
+        if (n_initial > 0 && n < n_initial) {
             report.add_event(PRE_ArmyProductionSaved);
         }
 
