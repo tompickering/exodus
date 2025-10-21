@@ -572,4 +572,7 @@ void Exodus::register_buttons() {
     draw_manager.register_button(IMG_PRBUTTONS, {34, 0, 33, 26});
     draw_manager.register_button(IMG_PRBUTTONS, {67, 0, 33, 26});
 
+    draw_manager.register_button(IMG_BTNREPORT, {0, 0, 38, 26});
+    draw_manager.register_button(IMG_BTNGUIDE, {0, 0, 38, 26});
+
 }
