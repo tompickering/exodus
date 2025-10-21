@@ -30,6 +30,7 @@ class BulletinDrawer {
         bool bulletin_start_new(bool);
         bool bulletin_start_new(bool, Star*);
         bool bulletin_start_new(bool, int);
+        bool bulletin_start_new_navigable(bool);
         void bulletin_update(float);
         void bulletin_set_next_text(const char*, ...);
         void bulletin_set_text_col(RGB);
@@ -44,18 +45,19 @@ class BulletinDrawer {
         void bulletin_set_player_flag(Player*);
         void bulletin_set_active_player_flag();
         void bulletin_set_yesno();
-        void bulletin_set_prbuttons();
         BulletinPRAction bulletin_get_praction();
         void bulletin_set_report(const PlanetReport* report);
 
         void bulletin_set_war_ally(Planet*, int);
         int bulletin_get_war_ally_result(int&, int&, int&);
     private:
+        bool bulletin_start_new_internal(bool, int, bool);
         void bulletin_open();    // Open using bulletin_start_new()
         void bulletin_close();   // Close using bulletin_ensure_closed()
         void bulletin_reset();
         bool _bulletin_is_open;
         void bulletin_update_bg();
+        void bulletin_set_prbuttons();
 
         char bulletin_text[BULLETIN_LINES][BULLETIN_MAX_TEXT];
         RGB bulletin_text_col[BULLETIN_LINES];

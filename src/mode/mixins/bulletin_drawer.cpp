@@ -56,6 +56,14 @@ bool BulletinDrawer::bulletin_start_new(bool transition, Star* star) {
 }
 
 bool BulletinDrawer::bulletin_start_new(bool transition, int star_idx) {
+    return bulletin_start_new_internal(transition, star_idx, false);
+}
+
+bool BulletinDrawer::bulletin_start_new_navigable(bool transition) {
+    return bulletin_start_new_internal(transition, -1, true);
+}
+
+bool BulletinDrawer::bulletin_start_new_internal(bool transition, int star_idx, bool navigable) {
     for (int i = 0; i < bulletin_text_idx; ++i) {
         draw_manager.draw(id_bulletin_text[i], nullptr);
     }
@@ -66,10 +74,14 @@ bool BulletinDrawer::bulletin_start_new(bool transition, int star_idx) {
         }
     }
 
+    bulletin_reset();
+
+    if (navigable) {
+        bulletin_set_prbuttons();
+    }
+
     if (!bulletin_is_open())
         bulletin_open();
-
-    bulletin_reset();
 
     bulletin_transition = transition ? 0 : 1;
 
@@ -232,14 +244,6 @@ void BulletinDrawer::bulletin_draw_text() {
                 {RES_X / 2,
                  BULLETIN_Y + BULLETIN_H - BULLETIN_BORDER - 2,
                  0.5f, 1, 1, 1});
-        }
-        if (bulletin_use_prbuttons) {
-            draw_manager.draw(
-                id_bulletin_prbuttons,
-                IMG_PRBUTTONS,
-                {RES_X - 10,
-                 10,
-                 1.0f, 0.0f, 1, 1});
         }
         if (bulletin_is_war_ally) {
             bulletin_war_ally_init();
@@ -470,19 +474,28 @@ void BulletinDrawer::bulletin_open() {
          BULLETIN_FLAG_BG_W, BULLETIN_FLAG_BG_H},
          COL_BORDERS);
 
-    draw_manager.draw(
-        id_bulletin_header_l,
-        IMG_TS1_HEADER,
-        {BULLETIN_FLAG_BG_X - 2,
-         BULLETIN_Y - 2,
-         1, 1, 1, 1});
+    if (bulletin_use_prbuttons) {
+        draw_manager.draw(
+            id_bulletin_prbuttons,
+            IMG_PRBUTTONS,
+            {BULLETIN_FLAG_BG_X + BULLETIN_FLAG_BG_W + 2,
+             BULLETIN_Y - 2,
+             0, 1, 1, 1});
+    } else {
+        draw_manager.draw(
+            id_bulletin_header_l,
+            IMG_TS1_HEADER,
+            {BULLETIN_FLAG_BG_X - 2,
+             BULLETIN_Y - 2,
+             1, 1, 1, 1});
 
-    draw_manager.draw(
-        id_bulletin_header_r,
-        IMG_TS1_HEADER,
-        {BULLETIN_FLAG_BG_X + BULLETIN_FLAG_BG_W + 2,
-         BULLETIN_Y - 2,
-         0, 1, 1, 1});
+        draw_manager.draw(
+            id_bulletin_header_r,
+            IMG_TS1_HEADER,
+            {BULLETIN_FLAG_BG_X + BULLETIN_FLAG_BG_W + 2,
+             BULLETIN_Y - 2,
+             0, 1, 1, 1});
+    }
 
     _bulletin_is_open = true;
 }
