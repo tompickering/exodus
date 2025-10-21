@@ -65,7 +65,7 @@ rm -rf "$target_dir"
 mkdir -p "$target_dir"
 
 cp "exodus.exe" "$target_dir"
-cp "steam_appid.txt" "$target_dir"
+#cp "steam_appid.txt" "$target_dir"
 cp -r "assets" "$target_dir"
 cp 'lib/SDL2-2.26.5/x86_64-w64-mingw32/bin/SDL2.dll' "$target_dir"
 cp 'lib/SDL2_image-2.6.3/x86_64-w64-mingw32/bin/SDL2_image.dll' "$target_dir"

@@ -48,7 +48,7 @@ rm -rf "$target_dir"
 mkdir -p "$target_dir"
 
 cp "exodus" "$target_dir"
-cp "steam_appid.txt" "$target_dir"
+#cp "steam_appid.txt" "$target_dir"
 cp -r "assets" "$target_dir"
 cp '/usr/lib/x86_64-linux-gnu/libSDL2-2.0.so.0' "$target_dir"
 cp '/usr/lib/x86_64-linux-gnu/libSDL2_image-2.0.so.0' "$target_dir"
