@@ -517,6 +517,7 @@ void BulletinDrawer::bulletin_close() {
     draw_manager.draw(id_bulletin_bg, nullptr);
     draw_manager.draw(id_bulletin_bg_preserve, nullptr);
     draw_manager.draw(id_bulletin_bg_scan, nullptr);
+    draw_manager.draw(id_bulletin_yesno, nullptr);
     draw_manager.draw(id_bulletin_prbuttons, nullptr);
 
     draw_manager.release_sprite_id(id_bulletin_header_flag);
