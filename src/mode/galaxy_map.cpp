@@ -341,7 +341,8 @@ ExodusMode GalaxyMap::update(float delta) {
             }
 
             if (draw_manager.query_click(id(ID::BTN_REPORT)).id) {
-                L.debug("Report clicked");
+                set_stage(GM_OpenPlanetReports);
+                return ExodusMode::MODE_None;
             }
 
             // Hotkeys
