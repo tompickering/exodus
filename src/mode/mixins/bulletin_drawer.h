@@ -25,6 +25,7 @@ enum BulletinPRAction : uint8_t {
     BPR_Back,
     BPR_Forward,
     BPR_Close,
+    BPR_Zoom,
 };
 
 class BulletinDrawer {

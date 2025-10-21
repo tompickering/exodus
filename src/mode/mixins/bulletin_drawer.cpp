@@ -128,8 +128,7 @@ void BulletinDrawer::bulletin_update(float dt) {
         }
     } else if (bulletin_mode == BM_Report) {
         if (draw_manager.query_click(id_bulletin_zoom).id) {
-            // TODO
-            L.debug("Zoom clicked");
+            bulletin_praction = BPR_Zoom;
         }
 
         SpriteClick clk = draw_manager.query_click(id_bulletin_prbuttons);

@@ -831,6 +831,24 @@ ExodusMode GalaxyMap::update(float delta) {
                     case BPR_Close:
                         bulletin_ensure_closed();
                         break;
+                    case BPR_Zoom:
+                        {
+                            const PlanetReport& rpt = exostate().get_planet_report(planet_report_current);
+                            Planet *planet = exostate().get_planet(rpt.star_idx, rpt.planet_idx);
+                            if (planet && planet->is_owned()) {
+                                int owner_idx = planet->get_owner();
+                                Player *player = exostate().get_player(owner_idx);
+
+                                if (player && player->is_human() && owner_idx == exostate().get_active_player_idx()) {
+                                    Star *star = exostate().get_star(rpt.star_idx);
+                                    exostate().set_active_flytarget(star);
+                                    exostate().set_active_planet(rpt.planet_idx);
+                                    bulletin_ensure_closed();
+                                    return ExodusMode::MODE_PlanetMap;
+                                }
+                            }
+                        }
+                        break;
                     default:
                         break;
                 }
