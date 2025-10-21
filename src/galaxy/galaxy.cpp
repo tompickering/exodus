@@ -78,6 +78,12 @@ Galaxy::Galaxy(int _n_stars) {
             star_x = rand() % GALAXY_COLS;
             star_y = rand() % GALAXY_ROWS;
 
+            // We draw the guide and report buttons in this area - we need to keep it clear
+            if (star_y == 0) {
+                if (star_x == GALAXY_COLS - 1) ok = false;
+                if (star_x == GALAXY_COLS - 2) ok = false;
+            }
+
             if (star_x == GUILD_POS_X && star_y == GUILD_POS_Y) {
                 ok = false;
             }
