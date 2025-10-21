@@ -807,7 +807,7 @@ ExodusMode GalaxyMap::update(float delta) {
                 set_stage(GM_Idle);
             } else {
                 planet_report_current = 0;
-                planet_report_bulletin(false, planet_report_current);
+                planet_report_bulletin(true, planet_report_current);
                 set_stage(GM_PlanetReports);
             }
             break;
@@ -819,13 +819,13 @@ ExodusMode GalaxyMap::update(float delta) {
                     case BPR_Back:
                         if (planet_report_current > 0) {
                             --planet_report_current;
-                            planet_report_bulletin(false, planet_report_current);
+                            planet_report_bulletin(true, planet_report_current);
                         }
                         break;
                     case BPR_Forward:
                         if ((planet_report_current + 1) < exostate.planet_report_count()) {
                             ++planet_report_current;
-                            planet_report_bulletin(false, planet_report_current);
+                            planet_report_bulletin(true, planet_report_current);
                         }
                         break;
                     case BPR_Close:
