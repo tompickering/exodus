@@ -4767,6 +4767,8 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     if (mp_state.mpp_stage == MPP_MilitaryFacilityShutdown2) {
         int& n = mp_state.mp_production_shutdown;
 
+        int n_initial = n;
+
         if (n > 0) {
             if (owner && owner->is_human()) {
                 if (bulletin_was_yesno_yes()) {
@@ -4775,6 +4777,10 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     }
                 }
             }
+        }
+
+        if (n_initial > 0 && n <= 0) {
+            report.add_event(PRE_ArmyProductionSaved);
         }
 
         if (n > 0) {
@@ -4797,8 +4803,6 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     break;
                 }
             }
-        } else {
-            report.add_event(PRE_ArmyProductionSaved);
         }
 
         n = 0;
