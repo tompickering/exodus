@@ -28,6 +28,8 @@ enum ID {
     SPACEPORT_SHIP0,
     SPACEPORT_SHIP1,
     SPACEPORT_SHIP2,
+    BTN_REPORT,
+    BTN_GUIDE,
     END,
 };
 
@@ -332,6 +334,14 @@ ExodusMode GalaxyMap::update(float delta) {
                         L.debug("Can't zoom - not visited");
                     }
                 }
+            }
+
+            if (draw_manager.query_click(id(ID::BTN_GUIDE)).id) {
+                L.debug("Guide clicked");
+            }
+
+            if (draw_manager.query_click(id(ID::BTN_REPORT)).id) {
+                L.debug("Report clicked");
             }
 
             // Hotkeys
@@ -859,6 +869,25 @@ void GalaxyMap::exit() {
 }
 
 void GalaxyMap::set_stage(Stage new_stage) {
+    switch (new_stage) {
+        case GM_Idle:
+            draw_manager.draw(
+                id(ID::BTN_GUIDE),
+                IMG_BTNGUIDE,
+                {RES_X-2, 2, 1, 0, 1, 1});
+
+            if (exostate.planet_report_count() > 0) {
+                draw_manager.draw(
+                    id(ID::BTN_REPORT),
+                    IMG_BTNREPORT,
+                    {RES_X-42, 2, 1, 0, 1, 1});
+            }
+
+            break;
+        default:
+            break;
+    }
+
     stage = new_stage;
 }
 
