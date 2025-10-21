@@ -4,6 +4,8 @@
 
 #include "galaxy/star.h"
 
+#include "exodus_features.h"
+
 #include "assetpaths.h"
 #include "shared.h"
 
@@ -194,12 +196,20 @@ void PanelDrawer::update_panel_info_ft(DrawTarget tgt, Player* player, FlyTarget
                 }
 
                 if (drawing) {
+                    float planet_scale = 1.0;
+
+#if FEATURE_MULTISIZE_PLANETS_PANEL
+                    if (p->get_size() == PLANET_Small) planet_scale = 0.6;
+                    if (p->get_size() == PLANET_Medium) planet_scale = 0.8;
+#endif
+
                     draw_manager.draw(
                         id_planet_icons[STAR_MAX_PLANETS - 1 - planets_drawn],
                         p->sprites()->panel_icon,
                         {RES_X - 32 - 22*planets_drawn,
                          area_starinfo.y + 18,
-                         0.5, 0.5, 1, 1});
+                         0.5, 0.5,
+                         planet_scale, planet_scale});
 
                     if (p->is_owned()) {
                         Player *owner = exostate().get_player(p->get_owner());

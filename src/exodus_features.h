@@ -8,6 +8,9 @@
 // Planets in the colonise mode are rendered at scale according to size
 #define FEATURE_MULTISIZE_PLANETS_COLONISE 1
 
+// Planets in the panel are rendered at scale according to size
+#define FEATURE_MULTISIZE_PLANETS_PANEL 1
+
 // In lunar battles, downed gliders and broken artillery serve as cover
 #define FEATURE_WRECKAGE_COVER 1
 
