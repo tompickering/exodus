@@ -1139,6 +1139,10 @@ void ExodusState::reset_planet_reports() {
 }
 
 void ExodusState::save_planet_report(const PlanetReport& report) {
+    if (report.empty()) {
+        return;
+    }
+
     if (planet_reports_head >= MAX_REPORTS) {
         L.error("Should not be possible to create this many reports");
         return;

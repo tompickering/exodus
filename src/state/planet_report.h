@@ -65,6 +65,10 @@ struct PlanetReport : public Saveable {
         items++;
     }
 
+    bool empty() const {
+        return (items == 0) && (event_mask == 0);
+    }
+
     void reset() {
         star_idx = 0;
         planet_idx = 0;
