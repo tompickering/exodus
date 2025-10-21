@@ -32,7 +32,7 @@ enum ID {
 };
 
 GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer(), PanelDrawer(PNL_Galaxy), CommPanelDrawer(), BulletinDrawer(), FrameDrawer() {
-    stage = GM_SwapIn;
+    set_stage(GM_SwapIn);
     selected_ft = nullptr;
     selected_ft_blink = 0;
     first_spaceport_time = 0;
@@ -76,20 +76,20 @@ void GalaxyMap::enter() {
 
     if (ephstate.get_ephemeral_state() == EPH_MonthPass) {
         ephstate.clear_ephemeral_state();
-        stage = GM_MonthPassing;
+        set_stage(GM_MonthPassing);
     } else if (ephstate.get_ephemeral_state() == EPH_ResumeFly) {
         ephstate.clear_ephemeral_state();
-        stage = GM_Fly;
+        set_stage(GM_Fly);
     } else if (ephstate.get_ephemeral_state() == EPH_SelectPlanet) {
-        stage = GM_SelectStar;
+        set_stage(GM_SelectStar);
     } else if (ephstate.get_ephemeral_state() == EPH_MovePlanet) {
         ephstate.clear_ephemeral_state();
         artificial_planet_to_move = exostate.get_active_planet();
-        stage = GM_ArtificialWorldStarSelect;
+        set_stage(GM_ArtificialWorldStarSelect);
     } else if (mp_state.mp_stage == MP_None) {
-        stage = GM_SwapIn;
+        set_stage(GM_SwapIn);
     } else {
-        stage = GM_MonthPassing;
+        set_stage(GM_MonthPassing);
     }
 
     // PROCbackmusic
@@ -145,7 +145,7 @@ ExodusMode GalaxyMap::update(float delta) {
     switch (stage) {
         case GM_SwapIn:
             draw_manager.save_background();
-            stage = GM_Idle;
+            set_stage(GM_Idle);
             // Ensure we prepare the next frame straight away
             // Otherwise causes an annoying flicker e.g. at the end of Fly...
             return update(0);
@@ -258,7 +258,7 @@ ExodusMode GalaxyMap::update(float delta) {
                         if (!player->get_location().in_flight()) {
                             if (player->get_starship().pct_damage_thrust > 50) {
                                 comm_open(DIA_S_ThrustBroken);
-                                stage = GM_FlyConfirm;
+                                set_stage(GM_FlyConfirm);
                                 return ExodusMode::MODE_None;
                             }
 
@@ -274,25 +274,25 @@ ExodusMode GalaxyMap::update(float delta) {
                             }
                             comm_ctx.months = max(1, ftime);
                             comm_open(DIA_S_PlanFly);
-                            stage = GM_FlyConfirm;
+                            set_stage(GM_FlyConfirm);
                             return ExodusMode::MODE_None;
                         } else {
 #if FEATURE_COUNSELLOR_EXTRA
                             comm_open(DIA_S_FlyAlreadyFlying);
-                            stage = GM_Counsellor;
+                            set_stage(GM_Counsellor);
 #endif
                         }
                     } else {
 #if FEATURE_COUNSELLOR_EXTRA
                         comm_open(DIA_S_FlyAlreadyThere);
-                        stage = GM_Counsellor;
+                        set_stage(GM_Counsellor);
 #endif
                     }
                 } else if (click.x < 0.5) {
-                    stage = GM_Menu;
+                    set_stage(GM_Menu);
                     menu_open(MM_Ctrl);
                 } else if (click.x < 0.75) {
-                    stage = GM_Menu;
+                    set_stage(GM_Menu);
                     menu_open(MM_Stat);
                 } else {
                     // Zoom
@@ -319,15 +319,15 @@ ExodusMode GalaxyMap::update(float delta) {
                             draw_manager.show_cursor(false);
                             draw_manager.fade_black(1.2f, 24);
                             if (selected_ft == gal->get_guild()) {
-                                stage = GM_Zoom2Guild;
+                                set_stage(GM_Zoom2Guild);
                             } else {
-                                stage = GM_Zoom2Star;
+                                set_stage(GM_Zoom2Star);
                             }
                         }
                     } else {
 #if FEATURE_COUNSELLOR_EXTRA
                         comm_open(DIA_S_ZoomButNotVisited);
-                        stage = GM_Counsellor;
+                        set_stage(GM_Counsellor);
 #endif
                         L.debug("Can't zoom - not visited");
                     }
@@ -344,7 +344,7 @@ ExodusMode GalaxyMap::update(float delta) {
 #endif
 
                 if (month_pass) {
-                    stage = GM_MonthPassing;
+                    set_stage(GM_MonthPassing);
                 }
             }
 
@@ -357,7 +357,7 @@ ExodusMode GalaxyMap::update(float delta) {
             }
 
             if (input_manager.consume(K_M)) {
-                stage = GM_Menu;
+                set_stage(GM_Menu);
                 menu_open(MM_StarMarker);
                 return ExodusMode::MODE_None;
             }
@@ -370,7 +370,7 @@ ExodusMode GalaxyMap::update(float delta) {
             if (input_manager.consume(K_S)) {
                 if (QUICKSAVE_SLOT < 0) {
                     comm_open(DIA_S_NoFirstSave);
-                    stage = GM_Counsellor;
+                    set_stage(GM_Counsellor);
                     return ExodusMode::MODE_None;
                 } else {
                     if (save_manager.save(QUICKSAVE_SLOT)) {
@@ -378,7 +378,7 @@ ExodusMode GalaxyMap::update(float delta) {
                     } else {
                         comm_open(DIA_S_SaveFailure);
                     }
-                    stage = GM_Counsellor;
+                    set_stage(GM_Counsellor);
                     return ExodusMode::MODE_None;
                 }
             }
@@ -414,11 +414,11 @@ ExodusMode GalaxyMap::update(float delta) {
                         player->nopirates++;
                     }
                 }
-                stage = GM_Fly;
+                set_stage(GM_Fly);
                 break;
             } else if (action == CA_Abort) {
                 comm_close();
-                stage = GM_Idle;
+                set_stage(GM_Idle);
             }
             break;
         case GM_Fly:
@@ -428,7 +428,7 @@ ExodusMode GalaxyMap::update(float delta) {
             action = comm_update(delta);
             if (action != CA_None) {
                 comm_close();
-                stage = GM_Idle;
+                set_stage(GM_Idle);
             }
             break;
         case GM_SelectStar:
@@ -484,7 +484,7 @@ ExodusMode GalaxyMap::update(float delta) {
                         return ephstate.get_appropriate_mode();
                     }
                 } else {
-                    stage = GM_MonthPassMain;
+                    set_stage(GM_MonthPassMain);
                 }
                 return ExodusMode::MODE_None;
             }
@@ -506,7 +506,7 @@ ExodusMode GalaxyMap::update(float delta) {
                             IMG_CT1_EXPORT,
                             {5, 7, 0, 0, 1, 1});
                         frame_draw();
-                        stage = GM_MP_FirstCity;
+                        set_stage(GM_MP_FirstCity);
                         achievement_manager.unlock(ACH_FirstCity);
                         return ExodusMode::MODE_None;
                     } else if (ephstate.get_ephemeral_state() == EPH_ResearchCheck) {
@@ -616,7 +616,7 @@ ExodusMode GalaxyMap::update(float delta) {
                     frame_draw();
                     first_spaceport_time = 0;
                     achievement_manager.unlock(ACH_FirstStarport);
-                    stage = GM_MP_FirstSpaceport;
+                    set_stage(GM_MP_FirstSpaceport);
                     return ExodusMode::MODE_None;
                 }
 
@@ -628,9 +628,9 @@ ExodusMode GalaxyMap::update(float delta) {
                     bulletin_ensure_closed();
                     // The only place we emerge from month-pass-specific stages...
 #if FEATURE_PLANET_RECALLABLE_SUMMARIES
-                    stage = GM_OpenPlanetReports;
+                    set_stage(GM_OpenPlanetReports);
 #else
-                    stage = GM_Idle;
+                    set_stage(GM_Idle);
 #endif
 
                     // This is mainly to redraw stars in case a sun expansion occurred
@@ -649,7 +649,7 @@ ExodusMode GalaxyMap::update(float delta) {
                     id(ID::FRAMED_IMG),
                     nullptr);
                 frame_remove();
-                stage = GM_MonthPassing;
+                set_stage(GM_MonthPassing);
             }
             break;
         case GM_MP_FirstSpaceport:
@@ -659,7 +659,7 @@ ExodusMode GalaxyMap::update(float delta) {
                     id(ID::FRAMED_IMG),
                     nullptr);
                 frame_remove();
-                stage = GM_MonthPassing;
+                set_stage(GM_MonthPassing);
             }
             break;
         case GM_Menu:
@@ -676,7 +676,7 @@ ExodusMode GalaxyMap::update(float delta) {
                 switch (menu_get_action()) {
                     case MA_Close:
                         menu_close();
-                        stage = GM_Idle;
+                        set_stage(GM_Idle);
                         break;
                     case MA_EquipShip:
                         menu_close();
@@ -688,22 +688,22 @@ ExodusMode GalaxyMap::update(float delta) {
                         selected_ft_blink = 0;
                         // Denote that we are constructing; not moving
                         artificial_planet_to_move = nullptr;
-                        stage = GM_ArtificialWorldStarSelect;
+                        set_stage(GM_ArtificialWorldStarSelect);
                         break;
                     case MA_WaitOneMonth:
                         menu_close();
-                        stage = GM_MonthPassing;
+                        set_stage(GM_MonthPassing);
                         break;
                     case MA_Quit:
                         menu_close();
                         comm_open(DIA_S_Quit);
-                        stage = GM_QuitConfirm;
+                        set_stage(GM_QuitConfirm);
                         break;
                     default:
                         break;
                 }
             } else {
-                stage = GM_Idle;
+                set_stage(GM_Idle);
             }
             break;
         case GM_ArtificialWorldStarSelect:
@@ -714,7 +714,7 @@ ExodusMode GalaxyMap::update(float delta) {
                         player->give_mc(COST_ART);
                     }
                     artificial_planet_to_move = nullptr;
-                    stage = GM_Idle;
+                    set_stage(GM_Idle);
                     break;
                 }
 
@@ -732,7 +732,7 @@ ExodusMode GalaxyMap::update(float delta) {
                          */
                         // FIXME: Bit hacky to reuse DIA_S_ZoomButNotVisited
                         comm_open(DIA_S_ZoomButNotVisited);
-                        stage = GM_ArtificialWorldStarSelectInvalid;
+                        set_stage(GM_ArtificialWorldStarSelectInvalid);
                         break;
                     }
 
@@ -746,7 +746,7 @@ ExodusMode GalaxyMap::update(float delta) {
                             int tgt_idx = exostate.tgt2loc(s);
                             artificial_planet_to_move->set_star_target(tgt_idx);
                             artificial_planet_to_move = nullptr;
-                            stage = GM_Idle;
+                            set_stage(GM_Idle);
                         } else {
                             if (apv == APV_No_StarFull) {
                                 comm_open(DIA_S_ArtificialPlanetStarInvalid);
@@ -756,7 +756,7 @@ ExodusMode GalaxyMap::update(float delta) {
                                 L.error("Unknown ArtificialPlanetViable result %d", apv);
                                 comm_open(DIA_S_ArtificialPlanetStarInvalid);
                             }
-                            stage = GM_ArtificialWorldStarSelectInvalid;
+                            set_stage(GM_ArtificialWorldStarSelectInvalid);
                             break;
                         }
                     } else {
@@ -765,11 +765,11 @@ ExodusMode GalaxyMap::update(float delta) {
                         const char* name = input_manager.get_input_text(PLANET_MAX_NAME);
 
                         if (exostate.construct_artificial_planet(s, player_idx, name)) {
-                            stage = GM_Idle;
+                            set_stage(GM_Idle);
                             break;
                         } else {
                             comm_open(DIA_S_ArtificialPlanetStarInvalid);
-                            stage = GM_ArtificialWorldStarSelectInvalid;
+                            set_stage(GM_ArtificialWorldStarSelectInvalid);
                             break;
                         }
                     }
@@ -787,17 +787,17 @@ ExodusMode GalaxyMap::update(float delta) {
             {
                 if (comm_update(delta) != CA_None) {
                     comm_ensure_closed();
-                    stage = GM_ArtificialWorldStarSelect;
+                    set_stage(GM_ArtificialWorldStarSelect);
                 }
             }
             break;
         case GM_OpenPlanetReports:
             if (exostate.planet_report_count() == 0) {
-                stage = GM_Idle;
+                set_stage(GM_Idle);
             } else {
                 planet_report_current = 0;
                 planet_report_bulletin(false, planet_report_current);
-                stage = GM_PlanetReports;
+                set_stage(GM_PlanetReports);
             }
             break;
         case GM_PlanetReports:
@@ -825,7 +825,7 @@ ExodusMode GalaxyMap::update(float delta) {
                 }
             } else {
                 bulletin_ensure_closed();
-                stage = GM_Idle;
+                set_stage(GM_Idle);
             }
             break;
         case GM_QuitConfirm:
@@ -837,7 +837,7 @@ ExodusMode GalaxyMap::update(float delta) {
                     draw_manager.fade_black(1.2f, 24);
                 } else if (action == CA_Abort) {
                     comm_close();
-                    stage = GM_Idle;
+                    set_stage(GM_Idle);
                     break;
                 }
             } else if (!draw_manager.fade_active()) {
@@ -856,6 +856,10 @@ void GalaxyMap::exit() {
     comm_ensure_closed();
     bulletin_ensure_closed();
     ModeBase::exit();
+}
+
+void GalaxyMap::set_stage(Stage new_stage) {
+    stage = new_stage;
 }
 
 bool GalaxyMap::first_spaceport_update(float delta) {
