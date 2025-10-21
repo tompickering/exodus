@@ -115,6 +115,7 @@ typedef struct {
     const char *map_bg;
     const char *surf;
     const char *bulletin_bg;
+    const char *bulletin_bg_trans;
     const char *spaceport;
     const char *spaceport2;
 } PlanetSpriteSet;
