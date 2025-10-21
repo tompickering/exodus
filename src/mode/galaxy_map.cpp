@@ -4661,6 +4661,10 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             } else {
                 bulletin_set_next_text("%s has lost this planet.", owner->get_full_name());
             }
+            // Save the report now, since we only save owned planet reports later
+            report.add_line("COMM STATION DESTROYED");
+            report.add_line("%s lost control of this planet.", owner->get_full_name());
+            exostate.save_planet_report(report);
             p->disown();
             next_mpp_stage();
             return ExodusMode::MODE_None;
