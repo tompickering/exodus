@@ -4660,7 +4660,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 bulletin_set_next_text("You have lost all access to the planet.");
 
                 // Save the report now, since we only save owned planet reports later
-                report.add_line("COMM STATION DESTROYED");
+                report.add_line("COMM. STATION DESTROYED");
                 report.add_line("%s lost control of this planet.", owner->get_full_name());
                 exostate.save_planet_report(report);
             } else {
