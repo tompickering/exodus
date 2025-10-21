@@ -567,4 +567,9 @@ void Exodus::register_buttons() {
     draw_manager.register_button(IMG_VS0_VPIC, {206, 366, 108, 26});
     draw_manager.register_button(IMG_VS0_VPIC, {314, 366, 108, 26});
     draw_manager.register_button(IMG_VS0_VPIC, {422, 366, 108, 26});
+
+    draw_manager.register_button(IMG_PRBUTTONS, {0, 0, 33, 26});
+    draw_manager.register_button(IMG_PRBUTTONS, {34, 0, 33, 26});
+    draw_manager.register_button(IMG_PRBUTTONS, {67, 0, 33, 26});
+
 }
