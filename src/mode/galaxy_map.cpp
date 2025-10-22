@@ -1623,6 +1623,61 @@ ExodusMode GalaxyMap::month_pass_update() {
         next_mp_stage();
     }
 
+    if (mp_state.mp_stage == MP_GenerateLostPlanetReports) {
+        for (PlanetIterator pi; !pi.complete(); ++pi) {
+            Planet *p = pi.get();
+            if (const PlanetOwnerChangedEvent *e = p->get_human_lost_planet_event()) {
+                PlanetReport rpt;
+                rpt.star_idx = pi.get_star_idx();
+                rpt.planet_idx = pi.get_idx();
+                rpt.player_idx = e->prev_owner;
+
+                rpt.add_line("PLANET LOST");
+                rpt.add_line("");
+
+                Player *old_owner = exostate().get_player(e->prev_owner);
+
+                Player *new_owner = nullptr;
+                if (e->new_owner >= 0) {
+                    new_owner = exostate().get_player(e->new_owner);
+                }
+
+                switch (e->reason) {
+                    case POCR_BaseDestroyed:
+                        rpt.add_line("The comm station was destroyed.");
+                        break;
+                    case POCR_Seized:
+                        if (new_owner) {
+                            rpt.add_line("The planet was seized by %s.", new_owner->get_full_name());
+                        } else {
+                            L.error("A planet was seized with no new owner?");
+                            rpt.add_line("The planet was seized.");
+                        }
+                        break;
+                    case POCR_Starved:
+                        rpt.add_line("The inhabitants died of starvation.");
+                        break;
+                    case POCR_RebelAppointed:
+                        if (new_owner) {
+                            rpt.add_line("The rebels handed control to %s.", new_owner->get_full_name());
+                        } else {
+                            rpt.add_line("The rebels declared an independent republic.");
+                        }
+                        break;
+                    default:
+                        L.warn("No report case for planet loss reason %s", e->reason);
+                        break;
+                }
+
+                rpt.add_line("");
+                rpt.add_line("%s lost control of this planet.", old_owner->get_full_name());
+                rpt.add_line("");
+                exostate().save_planet_report(rpt);
+            }
+        }
+        next_mp_stage();
+    }
+
     if (mp_state.mp_stage == MP_PlanetBackgroundUpdate) {
         for (; mp_state.mp_star_idx < n_stars; ++mp_state.mp_star_idx) {
             for (; mp_state.mp_planet_idx < STAR_MAX_PLANETS; ++mp_state.mp_planet_idx) {
