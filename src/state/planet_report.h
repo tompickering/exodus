@@ -52,6 +52,8 @@ struct PlanetReport : public Saveable {
     bool empty() const;
     void reset();
 
+    Planet* get_planet() const;
+
     virtual void save(cJSON* j) const override;
     virtual void load(cJSON* j) override;
 };

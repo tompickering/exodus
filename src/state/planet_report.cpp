@@ -1,5 +1,7 @@
 #include "planet_report.h"
 
+#include "exodus_state.h"
+
 PlanetReport::PlanetReport() {
     reset();
 }
@@ -63,6 +65,10 @@ void PlanetReport::reset() {
 
     items = 0;
     event_mask = 0;
+}
+
+Planet* PlanetReport::get_planet() const {
+    return exostate().get_planet(star_idx, planet_idx);
 }
 
 void PlanetReport::save(cJSON* j) const {

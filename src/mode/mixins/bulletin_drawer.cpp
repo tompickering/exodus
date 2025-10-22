@@ -164,14 +164,16 @@ void BulletinDrawer::bulletin_draw_events() {
         return;
     }
 
-    Planet *p = exostate().get_planet(bulletin_report->star_idx, bulletin_report->planet_idx);
+    const PlanetReport& rpt = *bulletin_report;
+
+    Planet *p = rpt.get_planet();
 
     int event_count = 0;
 
     for (int event_idx = 0; event_idx < (int)PRE_MAX; ++event_idx) {
         PlanetReportEvent event = (PlanetReportEvent)event_idx;
 
-        if (bulletin_report->has_event(event)) {
+        if (rpt.has_event(event)) {
             const char* icon = nullptr;
 
             switch (event) {
