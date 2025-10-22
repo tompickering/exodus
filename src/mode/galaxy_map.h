@@ -34,7 +34,6 @@ enum MonthPassStage {
     MP_NoPlanetsCounsellor,
     MP_EndOfMonthReport,
     MP_UpdatePirateProbabilities,
-    MP_GenerateLostPlanetReports,
     MP_PlanetBackgroundUpdate,
     MP_PlanetMainUpdate, // PROCcal_plan - comprised of MonthPassPlanetStages
     MP_UpdateAlienFly,
@@ -43,6 +42,7 @@ enum MonthPassStage {
     MP_GuildCommendations,
     MP_AlienExile,
     MP_UpdateHumanFly,
+    MP_GenerateLostPlanetReports,
     MP_End,
 };
 

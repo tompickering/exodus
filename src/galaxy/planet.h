@@ -274,6 +274,7 @@ class Planet : public Saveable {
         bool trade_possible(int player_idx);
         TradeQuality initiate_trade(int player_idx);
         void month_reset();
+        void owner_change_event_reset();
         void randomise_trade_quality();
         bool can_collect_taxes();
         void collect_taxes();

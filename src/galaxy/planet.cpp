@@ -1387,10 +1387,19 @@ void Planet::month_reset() {
     // Reset trade records and tax collection status
     traded = 0;
     taxes_collected = false;
-    owner_changes_this_month_head = 0;
     festival_this_month = false;
     surfchange_this_month = false;
     processing_in_progress = false;
+}
+
+void Planet::owner_change_event_reset() {
+    /*
+     * Ideally this would be part of month_reset, but that
+     * doesn't fire at the exact time we need it to, and
+     * I'm reluctant to change the order at this point in
+     * case it has unintended consequences.
+     */
+    owner_changes_this_month_head = 0;
 }
 
 void Planet::randomise_trade_quality() {
