@@ -2362,6 +2362,8 @@ ExodusMode GalaxyMap::month_pass_update() {
                 PlanetReport rpt;
                 rpt.init(pi.get_star_idx(), pi.get_idx(), e->prev_owner);
 
+                rpt.register_critical_problem();
+
                 rpt.add_line("PLANET LOST");
                 rpt.add_line("");
 
@@ -4769,8 +4771,10 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             const char *s0 = (rpt.no_money && (rpt.no_space || rpt.no_plu)) ? sep : empty;
             const char *s1 = (rpt.no_space && rpt.no_plu) ? sep : empty;
             if (rpt.not_produced == 1) {
+                report.register_major_problem();
                 report.add_line("1 battle unit has not been produced.");
             } else {
+                report.register_major_problem();
                 report.add_line("%d battle units have not been produced.",
                                 rpt.not_produced);
             }
@@ -4883,6 +4887,9 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         if (owner) {
             if (p->count_stones(STONE_Trade)) {
                 TradeReport rpt = p->monthly_trade();
+                if (rpt.mc > 0) {
+                    report.register_good_news();
+                }
                 report.add_line("Trading Centre sold:");
                 report.add_line("Mi: %d / Fd: %d / Pl: %d => %d MC",
                                  rpt.mi,  rpt.fd,  rpt.pl, rpt.mc);
@@ -4897,6 +4904,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             int mc = RND(n_villages);
             // FIXME: Should we delay the giving of MC until the bulletin?
             owner->give_mc(mc);
+            report.register_good_news();
             report.add_line("The native village inhabitants offer");
             report.add_line("presents that are worth %d MC.", mc);
             exostate().register_news(NI_NativesOfferPresents);
@@ -4917,6 +4925,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     if (mp_state.mpp_stage == MPP_AgriCollapse) {
         if (p->agri_collapse()) {
+            report.register_minor_problem();
             report.add_line("Some cultivated area has collapsed.");
         }
         next_mpp_stage();
@@ -4926,6 +4935,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         for (int i = 0; i < p->count_stones(STONE_City); ++i) {
             if (onein(20)) {
                 if (p->expand_city()) {
+                    report.register_good_news();
                     report.add_line("A city has expanded.");
                     if (owner && owner->is_human()) {
                         exostate().register_news(NI_CityExpanded);
@@ -4952,6 +4962,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     if (mp_state.mpp_stage == MPP_ConsumeFood) {
         int food_needed = p->consume_food();
         if (food_needed > 0) {
+            report.register_major_problem();
             report.add_line("There is not enough food for all systems.");
             if (owner && owner->is_human()) {
                 exostate().register_news(NI_NotEnoughFood);

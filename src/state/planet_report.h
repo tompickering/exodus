@@ -50,11 +50,20 @@ struct PlanetReport : public Saveable {
     PlanetTrafficLight light_plu;
     PlanetTrafficLight light_unrest;
 
+    int problems_critical;
+    int problems_major;
+    int problems_minor;
+    int good_news;
+
     bool finalised;
 
     void add_event(PlanetReportEvent event);
     bool has_event(PlanetReportEvent event) const;
     void add_line(const char* msg, ...);
+    void register_critical_problem();
+    void register_major_problem();
+    void register_minor_problem();
+    void register_good_news();
     void finalise();
     bool empty() const;
     void reset();

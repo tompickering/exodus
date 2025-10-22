@@ -19,6 +19,10 @@ PlanetReport& PlanetReport::operator=(const PlanetReport& other) {
     }
 
     event_mask = other.event_mask;
+    problems_critical = other.problems_critical;
+    problems_major = other.problems_major;
+    problems_minor = other.problems_minor;
+    good_news = other.good_news;
     finalised = other.finalised;
 
     light_food = other.light_food;
@@ -36,6 +40,27 @@ void PlanetReport::init(int star, int planet, int player) {
 }
 
 void PlanetReport::add_event(PlanetReportEvent event) {
+    switch (event) {
+        case PRE_HQDestroyed:
+            register_critical_problem();
+            break;
+        case PRE_Plague:
+        case PRE_Aliens:
+        case PRE_Epidemic:
+        case PRE_Rebels:
+        case PRE_Meltdown:
+            register_major_problem();
+            break;
+        case PRE_Meteor:
+        case PRE_Defects:
+        case PRE_SurfChangeClearing:
+        case PRE_ArmyProductionStopped:
+            register_minor_problem();
+            break;
+        default:
+            break;
+    }
+
     event_mask = (event_mask | (1 << (int)event));
 }
 
@@ -55,6 +80,22 @@ void PlanetReport::add_line(const char* msg, ...) {
     items++;
 }
 
+void PlanetReport::register_critical_problem() {
+    ++problems_critical;
+}
+
+void PlanetReport::register_major_problem() {
+    ++problems_major;
+}
+
+void PlanetReport::register_minor_problem() {
+    ++problems_minor;
+}
+
+void PlanetReport::register_good_news() {
+    ++good_news;
+}
+
 void PlanetReport::finalise() {
     if (finalised) {
         return;
@@ -64,6 +105,13 @@ void PlanetReport::finalise() {
     light_food = p->get_traffic_light(PTLP_Food);
     light_plu = p->get_traffic_light(PTLP_Plu);
     light_unrest = p->get_traffic_light(PTLP_Unrest);
+
+    if (light_food == PTL_Amber) register_minor_problem();
+    if (light_plu == PTL_Amber) register_minor_problem();
+    if (light_unrest == PTL_Amber) register_minor_problem();
+    if (light_food == PTL_Red) register_major_problem();
+    if (light_plu == PTL_Red) register_major_problem();
+    if (light_unrest == PTL_Red) register_major_problem();
 
     finalised = true;
 }
@@ -92,6 +140,11 @@ void PlanetReport::reset() {
     light_plu = PTL_Green;
     light_unrest = PTL_Green;
 
+    problems_critical = 0;
+    problems_major = 0;
+    problems_minor = 0;
+    good_news = 0;
+
     finalised = false;
 }
 
@@ -109,6 +162,10 @@ void PlanetReport::save(cJSON* j) const {
     SAVE_ENUM(j, light_food);
     SAVE_ENUM(j, light_plu);
     SAVE_ENUM(j, light_unrest);
+    SAVE_NUM(j, problems_critical);
+    SAVE_NUM(j, problems_major);
+    SAVE_NUM(j, problems_minor);
+    SAVE_NUM(j, good_news);
     SAVE_BOOL(j, finalised);
 }
 
@@ -122,5 +179,9 @@ void PlanetReport::load(cJSON* j) {
     LOAD_ENUM(j, light_food);
     LOAD_ENUM(j, light_plu);
     LOAD_ENUM(j, light_unrest);
+    LOAD_NUM(j, problems_critical);
+    LOAD_NUM(j, problems_major);
+    LOAD_NUM(j, problems_minor);
+    LOAD_NUM(j, good_news);
     LOAD_BOOL(j, finalised);
 }
