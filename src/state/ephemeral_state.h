@@ -175,6 +175,7 @@ enum EphState {
     EPH_PostPlanet,
     EPH_SelectPlanet,
     EPH_MovePlanet,
+    EPH_PlanetZoom,
     EPH_GameOver,
 };
 

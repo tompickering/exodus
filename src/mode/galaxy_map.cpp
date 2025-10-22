@@ -844,7 +844,8 @@ ExodusMode GalaxyMap::update(float delta) {
                                     exostate().set_active_flytarget(star);
                                     exostate().set_active_planet(rpt.planet_idx);
                                     bulletin_ensure_closed();
-                                    return ExodusMode::MODE_PlanetMap;
+                                    ephstate.set_ephemeral_state(EPH_PlanetZoom);
+                                    return ephstate.get_appropriate_mode();
                                 }
                             }
                         }

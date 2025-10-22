@@ -64,6 +64,12 @@ void StarMap::enter() {
         ephstate.clear_ephemeral_state();
     }
 
+    // We're here because we want to go directly to a planet
+    if (ephstate.get_ephemeral_state() == EPH_PlanetZoom) {
+        // Skip init - we'll respond to this in our first update()
+        return;
+    }
+
     star = exostate().get_active_star();
 
     DrawTarget tgt = TGT_Primary;
@@ -156,6 +162,12 @@ void StarMap::exit() {
 ExodusMode StarMap::update(float delta) {
     SpriteClick click;
     CommAction action;
+
+    // We're here because we want to go directly to a planet
+    if (ephstate.get_ephemeral_state() == EPH_PlanetZoom) {
+        ephstate.clear_ephemeral_state();
+        return ExodusMode::MODE_PlanetMap;
+    }
 
     if (draw_manager.fade_active()) {
         return ExodusMode::MODE_None;
