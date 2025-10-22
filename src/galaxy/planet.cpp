@@ -1991,6 +1991,25 @@ const PlanetOwnerChangedEvent* Planet::get_human_lost_planet_event() const {
     return nullptr;
 }
 
+PlanetTrafficLight Planet::get_traffic_light(PlanetTrafficLightProperty prop) {
+    switch (prop) {
+        case PTLP_Food:
+            return food_prod_sufficient() ? PTL_Green : PTL_Red;
+        case PTLP_Plu:
+            return plu_prod_sufficient() ? PTL_Green : PTL_Red;
+        case PTLP_Unrest:
+            {
+                int unrest = get_unrest();
+                if (unrest >= 8) return PTL_Red;
+                if (unrest >= 4) return PTL_Amber;
+                return PTL_Green;
+            }
+    }
+
+    L.error("No case for property %d", prop);
+    return PTL_Green;
+}
+
 Stone random_military() {
     int i = rand() % 3;
     if (i == 0) return STONE_Inf;

@@ -35,6 +35,18 @@ enum PlanetClass {
     Artificial,  // 8  -       to represent uninhabitable gas giants).
 };
 
+enum PlanetTrafficLight {
+    PTL_Green,
+    PTL_Amber,
+    PTL_Red,
+};
+
+enum PlanetTrafficLightProperty {
+    PTLP_Food,
+    PTLP_Plu,
+    PTLP_Unrest,
+};
+
 // These are assigned the values that they had in the original.
 // This is inconsequential, but can help with debugging!
 enum Stone : uint8_t {
@@ -315,6 +327,7 @@ class Planet : public Saveable {
         bool monthly_processing_in_progress();
         void plunder();
         const PlanetOwnerChangedEvent* get_human_lost_planet_event() const;
+        PlanetTrafficLight get_traffic_light(PlanetTrafficLightProperty);
         void ai_update();
 
     private:
