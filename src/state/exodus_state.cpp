@@ -1167,6 +1167,17 @@ void ExodusState::save_planet_report(PlanetReport& report) {
         return;
     }
 
+    for (int i = 0; i < planet_reports_head; ++i) {
+        if (report > planet_reports[i]) {
+            for (int j = planet_reports_head; j > i; --j) {
+                planet_reports[j] = planet_reports[j-1];
+            }
+            planet_reports[i] = report;
+            ++planet_reports_head;
+            return;
+        }
+    }
+
     planet_reports[planet_reports_head++] = report;
 }
 
