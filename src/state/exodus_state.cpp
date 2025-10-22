@@ -1162,6 +1162,13 @@ void ExodusState::save_planet_report(PlanetReport& report) {
         return;
     }
 
+    Planet *p = report.get_planet();
+    L.debug("REPORT %s (%d/%d/%d/%d)", p->is_named() ? p->get_name() : "[UNNAMED]"
+                                     , report.problems_critical
+                                     , report.problems_major
+                                     , report.problems_minor
+                                     , report.good_news);
+
     if (planet_reports_head >= MAX_REPORTS) {
         L.error("Should not be possible to create this many reports");
         return;
