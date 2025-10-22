@@ -76,6 +76,7 @@ Planet::Planet() {
     construction_phase = 0;
     traded = 0;
     laws = 0;
+    owner_changes_this_month_head = 0;
     festival_this_month = false;
     surfchange_this_month = false;
     processing_in_progress = false;
@@ -280,6 +281,7 @@ void Planet::init() {
     set_law(LAW_PrivateIndustry,    true);
     set_law(LAW_DifferentReligions, true);
 
+    owner_changes_this_month_head = 0;
     festival_this_month = false;
     surfchange_this_month = false;
     processing_in_progress = false;
@@ -506,8 +508,15 @@ int Planet::get_owner() {
     return owner;
 }
 
-void Planet::set_owner(int new_owner) {
+void Planet::set_owner(int new_owner, PlanetOwnerChangedReason reason) {
     L.info("[%s] owner: %d -> %d", is_named() ? get_name() : "NEW PLANET", owner, new_owner);
+
+    if (owner_changes_this_month_head < MAX_OWNER_CHANGES) {
+        owner_changes_this_month[owner_changes_this_month_head++].set(owner, new_owner, reason);
+    } else {
+        L.error("Too many ownership changes tracked");
+    }
+
     owner = new_owner;
     /*
      * When an artificial planet is taken over, ensure any scheduled moves are cleared.
@@ -518,8 +527,8 @@ void Planet::set_owner(int new_owner) {
     clear_star_target();
 }
 
-void Planet::unset_owner() {
-    set_owner(-1);
+void Planet::unset_owner(PlanetOwnerChangedReason reason) {
+    set_owner(-1, reason);
 }
 
 /*
@@ -1378,6 +1387,7 @@ void Planet::month_reset() {
     // Reset trade records and tax collection status
     traded = 0;
     taxes_collected = false;
+    owner_changes_this_month_head = 0;
     festival_this_month = false;
     surfchange_this_month = false;
     processing_in_progress = false;
@@ -1781,8 +1791,8 @@ int Planet::get_total_reserves() {
     return reserves_min + reserves_food + reserves_plu;
 }
 
-void Planet::disown() {
-    unset_owner();
+void Planet::disown(PlanetOwnerChangedReason reason) {
+    unset_owner(reason);
     army_inf = 0;
     army_gli = 0;
     army_art = 0;
@@ -1956,6 +1966,20 @@ void Planet::plunder() {
         }
     }
 
+}
+
+const PlanetOwnerChangedEvent* Planet::get_human_lost_planet_event() const {
+    for (int i = 0; i < owner_changes_this_month_head; ++i) {
+        const PlanetOwnerChangedEvent& e = owner_changes_this_month[i];
+        if (e.prev_owner >= 0) {
+            Player *prev_owner = exostate().get_player(e.prev_owner);
+            if (prev_owner && prev_owner->is_human()) {
+                return &e;
+            }
+        }
+    }
+
+    return nullptr;
 }
 
 Stone random_military() {
@@ -2500,6 +2524,8 @@ void Planet::save(cJSON* j) const {
     SAVE_NUM(j, army_inf);
     SAVE_NUM(j, army_gli);
     SAVE_NUM(j, army_art);
+    SAVE_ARRAY_OF_SAVEABLE(j, owner_changes_this_month);
+    SAVE_NUM(j, owner_changes_this_month_head);
     SAVE_BOOL(j, festival_this_month);
     SAVE_BOOL(j, surfchange_this_month);
     SAVE_BOOL(j, processing_in_progress);
@@ -2534,6 +2560,8 @@ void Planet::load(cJSON* j) {
     LOAD_NUM(j, army_inf);
     LOAD_NUM(j, army_gli);
     LOAD_NUM(j, army_art);
+    LOAD_ARRAY_OF_SAVEABLE(j, owner_changes_this_month);
+    LOAD_NUM(j, owner_changes_this_month_head);
     LOAD_BOOL(j, festival_this_month);
     LOAD_BOOL(j, surfchange_this_month);
     LOAD_BOOL(j, processing_in_progress);

@@ -858,7 +858,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
                         news.player_1 = p->get_owner();
 
                         // Transfer planet
-                        p->set_owner(b.aggressor_idx);
+                        p->set_owner(b.aggressor_idx, POCR_Seized);
 
                         // Of the units still on the surface, station as many as possible
                         if (a > cap) a += agg->transfer_art(a - cap);

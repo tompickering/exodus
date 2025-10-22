@@ -276,7 +276,7 @@ void ExodusState::init_cpu_lords() {
 
         // We've settled on a planet - now claim it!
         Planet *chosen_planet = chosen_star->get_planet(chosen_planet_idx);
-        chosen_planet->set_owner(i);
+        chosen_planet->set_owner(i, POCR_Init);
         chosen_planet->prepare_for_cpu_lord();
 
         if (players[i].mc >= 190) {

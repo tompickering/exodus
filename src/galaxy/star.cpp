@@ -67,7 +67,7 @@ Planet* Star::construct_artificial_world(int player_idx, const char* name) {
     L.debug("CONSTRUCTING ARTIFICIAL WORLD");
 
     new(outer) Planet(Artificial);
-    outer->set_owner(player_idx);
+    outer->set_owner(player_idx, POCR_Constructed);
     if (name) {
         outer->set_name(name);
     } else {

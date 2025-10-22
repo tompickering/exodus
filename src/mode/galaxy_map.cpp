@@ -3323,7 +3323,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 Planet *p = s->get_planet(planet_idx);
                 if (p && p->exists() && !p->is_owned()) {
                     if (player->attempt_spend_cpuforce(190)) {
-                        p->set_owner(player_idx);
+                        p->set_owner(player_idx, POCR_Settled);
                         p->reset_unrest();
                         p->prepare_for_cpu_lord();
                         if (!p->is_named()) {
@@ -4501,11 +4501,11 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 if (!republic) {
                     const char *new_owner_name = new_owner->get_full_name();
                     bulletin_set_next_text("have chosen %s to rule it!", new_owner_name);
-                    p->set_owner(new_owner_idx);
+                    p->set_owner(new_owner_idx, POCR_RebelAppointed);
                 } else {
                     // Orig doesn't do this, but we can't find a new owner!
                     bulletin_set_next_text("have chosen to establish a republic!");
-                    p->disown();
+                    p->disown(POCR_RebelAppointed);
                     // If there's no owner, jump ahead to after MPP_LosePlanetControl
                     // These are the steps that could previously happen with no owner
                     mp_state.mpp_stage = MPP_LosePlanetControl;
@@ -4684,7 +4684,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             } else {
                 bulletin_set_next_text("%s has lost this planet.", owner->get_full_name());
             }
-            p->disown();
+            p->disown(POCR_BaseDestroyed);
             next_mpp_stage();
             return ExodusMode::MODE_None;
         }
@@ -4941,7 +4941,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                         report.add_line("%s has lost this planet.", owner->get_full_name());
                     }
                 }
-                p->disown();
+                p->disown(POCR_Starved);
             }
 
         }

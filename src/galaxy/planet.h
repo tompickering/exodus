@@ -13,6 +13,7 @@
 #define CITY_FOOD_REQ 3
 #define N_UNREST 8
 #define MAX_STONES (PLANET_BLOCKS_LG * PLANET_BLOCKS_LG)
+#define MAX_OWNER_CHANGES 10
 
 #define COST_LUNAR_BASE 120
 #define COST_AIRDEF 5
@@ -143,6 +144,40 @@ typedef struct {
     int mc;
 } TradeReport;
 
+enum PlanetOwnerChangedReason {
+    POCR_Init,
+    POCR_Settled,
+    POCR_BaseDestroyed,
+    POCR_Constructed,
+    POCR_Seized,
+    POCR_Starved,
+    POCR_RebelAppointed,
+};
+
+struct PlanetOwnerChangedEvent : public Saveable {
+    void set(int _prev, int _new, PlanetOwnerChangedReason _reason) {
+        prev_owner = _prev;
+        new_owner = _new;
+        reason = _reason;
+    }
+
+    int prev_owner;
+    int new_owner;
+    PlanetOwnerChangedReason reason;
+
+    virtual void save(cJSON* j) const override {
+        SAVE_NUM(j, prev_owner);
+        SAVE_NUM(j, new_owner);
+        SAVE_ENUM(j, reason);
+    }
+
+    virtual void load(cJSON* j) override {
+        LOAD_NUM(j, prev_owner);
+        LOAD_NUM(j, new_owner);
+        LOAD_ENUM(j, reason);
+    }
+};
+
 class Planet : public Saveable {
     public:
         virtual void save(cJSON* j) const override;
@@ -190,8 +225,8 @@ class Planet : public Saveable {
         const MoonSpriteSet* moon_sprites();
         bool is_owned();
         int get_owner();
-        void set_owner(int);
-        void unset_owner();
+        void set_owner(int, PlanetOwnerChangedReason);
+        void unset_owner(PlanetOwnerChangedReason);
         Stone get_stone(int, int);
         void set_stone(int, int, Stone);
         Stone get_stone_wrap(int, int);
@@ -271,13 +306,14 @@ class Planet : public Saveable {
         int get_reserves_food();
         int get_reserves_plu();
         int get_total_reserves();
-        void disown();
+        void disown(PlanetOwnerChangedReason);
         bool expand_city();
         bool expand_village();
         bool agri_collapse();
         void monthly_processing_start();
         bool monthly_processing_in_progress();
         void plunder();
+        const PlanetOwnerChangedEvent* get_human_lost_planet_event() const;
         void ai_update();
 
     private:
@@ -338,6 +374,9 @@ class Planet : public Saveable {
         int army_inf;          // Orig: SIk(1)
         int army_gli;          // Orig: SIk(2)
         int army_art;          // Orig: SIk(3)
+
+        PlanetOwnerChangedEvent owner_changes_this_month[MAX_OWNER_CHANGES];
+        int owner_changes_this_month_head;
 
         bool festival_this_month;
         bool surfchange_this_month;

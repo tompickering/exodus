@@ -1098,7 +1098,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     const char *name = input_manager.get_input_text(PLANET_MAX_NAME);
                     if (comm_player->attempt_spend(comm_planet->get_settlement_cost())) {
                         comm_planet->set_name(name);
-                        comm_planet->set_owner(exostate().get_player_idx(comm_player));
+                        comm_planet->set_owner(exostate().get_player_idx(comm_player), POCR_Settled);
                         comm_player->add_trace(TRACE_PlanetsClaimed);
                         comm_set_text(4, "%s is now yours.", name);
                         comm_recv(DIA_R_SettleNamePlanetProceed);
