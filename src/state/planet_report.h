@@ -34,6 +34,8 @@ enum PlanetReportEvent {
 struct PlanetReport : public Saveable {
     PlanetReport();
     PlanetReport& operator=(const PlanetReport& other);
+    bool operator>(const PlanetReport& other) const;
+    bool operator<(const PlanetReport& other) const;
 
     void init(int star, int planet, int player);
 

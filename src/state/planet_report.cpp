@@ -32,6 +32,26 @@ PlanetReport& PlanetReport::operator=(const PlanetReport& other) {
     return *this;
 }
 
+bool PlanetReport::operator>(const PlanetReport& other) const {
+    if (problems_critical != other.problems_critical)
+        return (problems_critical > other.problems_critical);
+
+    if (problems_major != other.problems_major)
+        return (problems_major > other.problems_major);
+
+    if (problems_minor != other.problems_minor)
+        return (problems_minor > other.problems_minor);
+
+    if (good_news != other.good_news)
+        return (good_news > other.good_news);
+
+    return false;
+}
+
+bool PlanetReport::operator<(const PlanetReport& other) const {
+    return !((*this) > other);
+}
+
 void PlanetReport::init(int star, int planet, int player) {
     reset();
     star_idx = star;
