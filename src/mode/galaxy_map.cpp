@@ -2360,9 +2360,7 @@ ExodusMode GalaxyMap::month_pass_update() {
             Planet *p = pi.get();
             if (const PlanetOwnerChangedEvent *e = p->get_human_lost_planet_event()) {
                 PlanetReport rpt;
-                rpt.star_idx = pi.get_star_idx();
-                rpt.planet_idx = pi.get_idx();
-                rpt.player_idx = e->prev_owner;
+                rpt.init(pi.get_star_idx(), pi.get_idx(), e->prev_owner);
 
                 rpt.add_line("PLANET LOST");
                 rpt.add_line("");
@@ -4125,10 +4123,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mp_state.mpp_stage == MPP_InitialiseReport) {
-        report.reset();
-        report.star_idx = s_idx;
-        report.planet_idx = p_idx;
-        report.player_idx = exostate().get_active_player_idx();
+        report.init(s_idx, p_idx, exostate().get_active_player_idx());
         next_mpp_stage();
     }
 

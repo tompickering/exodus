@@ -32,8 +32,15 @@ enum PlanetReportEvent {
 };
 
 struct PlanetReport : public Saveable {
-    PlanetReport() : items(0) {
+    PlanetReport() {
         reset();
+    }
+
+    void init(int star, int planet, int player) {
+        reset();
+        star_idx = star;
+        planet_idx = planet;
+        player_idx = player;
     }
 
     int star_idx;
