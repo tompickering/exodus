@@ -2,6 +2,7 @@
 
 EphemeralState::EphemeralState() {
     clear_ephemeral_state();
+    planet_report_idx = -1;
     default_music = MUS_ST3_4D;
     galaxymap_pixelswap = false;
 }

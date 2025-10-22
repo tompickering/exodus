@@ -336,6 +336,11 @@ ExodusMode GalaxyMap::update(float delta) {
                 }
             }
 
+            if (ephstate.planet_report_idx >= 0) {
+                set_stage(GM_OpenPlanetReports);
+                return ExodusMode::MODE_None;
+            }
+
             if (draw_manager.query_click(id(ID::BTN_GUIDE)).id) {
                 L.debug("Guide clicked");
             }
@@ -803,12 +808,21 @@ ExodusMode GalaxyMap::update(float delta) {
             }
             break;
         case GM_OpenPlanetReports:
-            if (exostate().planet_report_count() == 0) {
-                set_stage(GM_Idle);
-            } else {
-                planet_report_current = 0;
-                planet_report_bulletin(true, planet_report_current);
-                set_stage(GM_PlanetReports);
+            {
+                int report_idx_initial = 0;
+
+                if (ephstate.planet_report_idx >= 0) {
+                    report_idx_initial = ephstate.planet_report_idx;
+                    ephstate.planet_report_idx = -1;
+                }
+
+                if (exostate().planet_report_count() == 0) {
+                    set_stage(GM_Idle);
+                } else {
+                    planet_report_current = report_idx_initial;
+                    planet_report_bulletin(true, planet_report_current);
+                    set_stage(GM_PlanetReports);
+                }
             }
             break;
         case GM_PlanetReports:
@@ -844,6 +858,7 @@ ExodusMode GalaxyMap::update(float delta) {
                                     exostate().set_active_flytarget(star);
                                     exostate().set_active_planet(rpt.planet_idx);
                                     bulletin_ensure_closed();
+                                    ephstate.planet_report_idx = planet_report_current;
                                     ephstate.set_ephemeral_state(EPH_PlanetZoom);
                                     return ephstate.get_appropriate_mode();
                                 }

@@ -249,6 +249,8 @@ class EphemeralState {
         FlyPlan fly_plan;
         GameOverReason game_over_reason;
 
+        int planet_report_idx;
+
         const char* default_music;
 
         bool galaxymap_pixelswap;
