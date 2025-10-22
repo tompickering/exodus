@@ -1300,25 +1300,31 @@ void PlanetMap::draw_stones() {
     }
 }
 
+static const char* get_light_spr(PlanetTrafficLight light) {
+    if (light == PTL_Red) return IMG_SU1_CTA;
+    if (light == PTL_Amber) return IMG_SU1_CTC;
+    return IMG_SU1_CTB;
+}
+
 void PlanetMap::update_gauges() {
+    PlanetTrafficLight l_food = planet->get_traffic_light(PTLP_Food);
+    PlanetTrafficLight l_plu = planet->get_traffic_light(PTLP_Plu);
+    PlanetTrafficLight l_unrest = planet->get_traffic_light(PTLP_Unrest);
+
     draw_manager.draw(
         id(ID::GAUGE_FOOD),
-        planet->food_prod_sufficient() ? IMG_SU1_CTB : IMG_SU1_CTA,
+        get_light_spr(l_food),
         {menu_x + 28, menu_y + 200,
         0, 0, 1, 1});
     draw_manager.draw(
         id(ID::GAUGE_PLU),
-        planet->plu_prod_sufficient() ? IMG_SU1_CTB : IMG_SU1_CTA,
+        get_light_spr(l_plu),
         {menu_x + 70, menu_y + 200,
         0, 0, 1, 1});
 
-    const char* unrest_gauge = IMG_SU1_CTB;
-    if (planet->get_unrest() >= 4) unrest_gauge = IMG_SU1_CTC;
-    if (planet->get_unrest() >= 8) unrest_gauge = IMG_SU1_CTA;
-
     draw_manager.draw(
         id(ID::GAUGE_UNREST),
-        unrest_gauge,
+        get_light_spr(l_unrest),
         {menu_x + 112, menu_y + 200,
         0, 0, 1, 1});
 }
