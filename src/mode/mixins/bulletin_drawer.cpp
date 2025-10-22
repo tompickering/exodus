@@ -153,10 +153,18 @@ void BulletinDrawer::bulletin_update(float dt) {
     }
 }
 
+static const char* get_light_spr(PlanetTrafficLight light) {
+    if (light == PTL_Red) return IMG_SU1_CTA;
+    if (light == PTL_Amber) return IMG_SU1_CTC;
+    return IMG_SU1_CTB;
+}
+
 void BulletinDrawer::bulletin_draw_events() {
     if (!bulletin_report) {
         return;
     }
+
+    Planet *p = exostate().get_planet(bulletin_report->star_idx, bulletin_report->planet_idx);
 
     int event_count = 0;
 
@@ -222,6 +230,53 @@ void BulletinDrawer::bulletin_draw_events() {
 
             ++event_count;
         }
+    }
+
+    // Gauges
+    PlanetTrafficLight l_food = p->get_traffic_light(PTLP_Food);
+    PlanetTrafficLight l_plu = p->get_traffic_light(PTLP_Plu);
+    PlanetTrafficLight l_unrest = p->get_traffic_light(PTLP_Unrest);
+
+    if (l_food != PTL_Green) {
+        draw_manager.draw(
+            IMG_SU1_CTRL1,
+            {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4,
+             BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
+             1.0f, 0.0f, 1, 1});
+        draw_manager.draw(
+            get_light_spr(l_food),
+            {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4 - 24,
+             BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
+             1.0f, 0.0f, 1, 1});
+        ++event_count;
+    }
+
+    if (l_plu != PTL_Green) {
+        draw_manager.draw(
+            IMG_SU1_CTRL2,
+            {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4,
+             BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
+             1.0f, 0.0f, 1, 1});
+        draw_manager.draw(
+            get_light_spr(l_plu),
+            {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4 - 24,
+             BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
+             1.0f, 0.0f, 1, 1});
+        ++event_count;
+    }
+
+    if (l_unrest != PTL_Green) {
+        draw_manager.draw(
+            IMG_SU1_CTRL3,
+            {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4,
+             BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
+             1.0f, 0.0f, 1, 1});
+        draw_manager.draw(
+            get_light_spr(l_unrest),
+            {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4 - 24,
+             BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
+             1.0f, 0.0f, 1, 1});
+        ++event_count;
     }
 }
 
