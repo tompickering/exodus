@@ -19,6 +19,11 @@ PlanetReport& PlanetReport::operator=(const PlanetReport& other) {
     }
 
     event_mask = other.event_mask;
+    finalised = other.finalised;
+
+    light_food = other.light_food;
+    light_plu = other.light_plu;
+    light_unrest = other.light_unrest;
 
     return *this;
 }
@@ -50,8 +55,25 @@ void PlanetReport::add_line(const char* msg, ...) {
     items++;
 }
 
+void PlanetReport::finalise() {
+    if (finalised) {
+        return;
+    }
+
+    Planet *p = get_planet();
+    light_food = p->get_traffic_light(PTLP_Food);
+    light_plu = p->get_traffic_light(PTLP_Plu);
+    light_unrest = p->get_traffic_light(PTLP_Unrest);
+
+    finalised = true;
+}
+
 bool PlanetReport::empty() const {
-    return (items == 0) && (event_mask == 0);
+    return (items == 0)
+        && (event_mask == 0)
+        && (light_food == PTL_Green)
+        && (light_plu == PTL_Green)
+        && (light_unrest == PTL_Green);
 }
 
 void PlanetReport::reset() {
@@ -65,6 +87,12 @@ void PlanetReport::reset() {
 
     items = 0;
     event_mask = 0;
+
+    light_food = PTL_Green;
+    light_plu = PTL_Green;
+    light_unrest = PTL_Green;
+
+    finalised = false;
 }
 
 Planet* PlanetReport::get_planet() const {
@@ -78,6 +106,10 @@ void PlanetReport::save(cJSON* j) const {
     SAVE_NUM(j, items);
     SAVE_ARRAY_OF_STR(j, content);
     SAVE_NUM(j, event_mask);
+    SAVE_ENUM(j, light_food);
+    SAVE_ENUM(j, light_plu);
+    SAVE_ENUM(j, light_unrest);
+    SAVE_BOOL(j, finalised);
 }
 
 void PlanetReport::load(cJSON* j) {
@@ -87,4 +119,8 @@ void PlanetReport::load(cJSON* j) {
     LOAD_NUM(j, items);
     LOAD_ARRAY_OF_STR(j, content);
     LOAD_NUM(j, event_mask);
+    LOAD_ENUM(j, light_food);
+    LOAD_ENUM(j, light_plu);
+    LOAD_ENUM(j, light_unrest);
+    LOAD_BOOL(j, finalised);
 }

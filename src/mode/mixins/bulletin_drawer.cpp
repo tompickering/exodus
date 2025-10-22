@@ -166,7 +166,9 @@ void BulletinDrawer::bulletin_draw_events() {
 
     const PlanetReport& rpt = *bulletin_report;
 
-    Planet *p = rpt.get_planet();
+    if (!rpt.finalised) {
+        L.error("The report should have been finalised by the time we render it");
+    }
 
     int event_count = 0;
 
@@ -235,46 +237,43 @@ void BulletinDrawer::bulletin_draw_events() {
     }
 
     // Gauges
-    PlanetTrafficLight l_food = p->get_traffic_light(PTLP_Food);
-    PlanetTrafficLight l_plu = p->get_traffic_light(PTLP_Plu);
-    PlanetTrafficLight l_unrest = p->get_traffic_light(PTLP_Unrest);
 
-    if (l_food != PTL_Green) {
+    if (rpt.light_food != PTL_Green) {
         draw_manager.draw(
             IMG_SU1_CTRL1,
             {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4,
              BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
              1.0f, 0.0f, 1, 1});
         draw_manager.draw(
-            get_light_spr(l_food),
+            get_light_spr(rpt.light_food),
             {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4 - 24,
              BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
              1.0f, 0.0f, 1, 1});
         ++event_count;
     }
 
-    if (l_plu != PTL_Green) {
+    if (rpt.light_plu != PTL_Green) {
         draw_manager.draw(
             IMG_SU1_CTRL2,
             {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4,
              BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
              1.0f, 0.0f, 1, 1});
         draw_manager.draw(
-            get_light_spr(l_plu),
+            get_light_spr(rpt.light_plu),
             {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4 - 24,
              BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
              1.0f, 0.0f, 1, 1});
         ++event_count;
     }
 
-    if (l_unrest != PTL_Green) {
+    if (rpt.light_unrest != PTL_Green) {
         draw_manager.draw(
             IMG_SU1_CTRL3,
             {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4,
              BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
              1.0f, 0.0f, 1, 1});
         draw_manager.draw(
-            get_light_spr(l_unrest),
+            get_light_spr(rpt.light_unrest),
             {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4 - 24,
              BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
              1.0f, 0.0f, 1, 1});

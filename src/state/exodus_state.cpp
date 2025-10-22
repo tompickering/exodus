@@ -1155,7 +1155,9 @@ void ExodusState::reset_planet_reports() {
     planet_reports_head = 0;
 }
 
-void ExodusState::save_planet_report(const PlanetReport& report) {
+void ExodusState::save_planet_report(PlanetReport& report) {
+    report.finalise();
+
     if (report.empty()) {
         return;
     }

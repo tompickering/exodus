@@ -178,7 +178,7 @@ class ExodusState : public Saveable {
         int planet_report_count();
         const PlanetReport& get_planet_report(int idx);
         void reset_planet_reports();
-        void save_planet_report(const PlanetReport&);
+        void save_planet_report(PlanetReport&);
 
         bool first_city_done;
         bool first_spaceport_done;

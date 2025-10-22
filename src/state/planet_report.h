@@ -46,9 +46,16 @@ struct PlanetReport : public Saveable {
 
     uint32_t event_mask;
 
+    PlanetTrafficLight light_food;
+    PlanetTrafficLight light_plu;
+    PlanetTrafficLight light_unrest;
+
+    bool finalised;
+
     void add_event(PlanetReportEvent event);
     bool has_event(PlanetReportEvent event) const;
     void add_line(const char* msg, ...);
+    void finalise();
     bool empty() const;
     void reset();
 
