@@ -104,11 +104,29 @@ void GalaxyDrawer::draw_galaxy(bool pixelswap) {
     draw_manager.clear_sprite_ids();
     draw_manager.draw(tgt, BG_SPR);
     for (StarIterator siter; !siter.complete(); ++siter) {
-        const Star *s = siter.get();
+        Star *s = siter.get();
         spr = STAR_SPRITES[s->get_size()];
         get_draw_position(s, x, y);
         star_ids[siter.get_idx()] = draw_manager.new_sprite_id();
         draw_manager.draw(tgt, star_ids[siter.get_idx()], spr, {x, y, 0.5, 0.5, 1, 1});
+
+        if (!exostate().multiplayer()) {
+            int drawn = 0;
+            for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+                Planet *p = s->get_planet(i);
+                if (p && p->exists() && p->is_owned()) {
+                    Player *o = exostate().get_player(p->get_owner());
+                    if (o && o->is_human()) {
+                        draw_manager.draw(
+                            tgt,
+                            p->sprites()->marker,
+                            {x+10+6*drawn, y-10,
+                             0.5, 0.5, 1, 1});
+                        ++drawn;
+                    }
+                }
+            }
+        }
     }
 
     Galaxy *gal = exostate().get_galaxy();
