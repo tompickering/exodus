@@ -1737,9 +1737,8 @@ void CommPanelDrawer::comm_send(CommSend input) {
         case DIA_S_AlreadyBombed:
             {
                 comm_prepare(6);
-                comm_set_text(0, "It's too risky to launch");
-                comm_set_text(1, "a second mission against");
-                comm_set_text(2, "this planet in one month.");
+                comm_set_text(0, "Our agents need time to analyse");
+                comm_set_text(1, "the results of our attack.");
                 comm_recv(DIA_R_Close);
             }
             break;
