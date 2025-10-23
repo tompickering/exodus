@@ -1010,6 +1010,7 @@ void init_sprite_sets() {
     sprite_sets[Forest].bulletin_bg_trans              = IMG_PL1_TRANS;
     sprite_sets[Forest].spaceport                      = IMG_HARBOUR_FOREST;
     sprite_sets[Forest].spaceport2                     = IMG_HF1_PICTURE2;
+    sprite_sets[Forest].marker                         = IMG_PLM1;
 
     sprite_sets[Desert].panel_icon                     = IMG_TS1_ST2;
     sprite_sets[Desert].landscape                      = IMG_LS_DESERT;
@@ -1019,6 +1020,7 @@ void init_sprite_sets() {
     sprite_sets[Desert].bulletin_bg_trans              = IMG_PL2_TRANS;
     sprite_sets[Desert].spaceport                      = IMG_HARBOUR_DESERT;
     sprite_sets[Desert].spaceport2                     = IMG_HF2_PICTURE2;
+    sprite_sets[Desert].marker                         = IMG_PLM2;
 
     sprite_sets[Volcano].panel_icon                    = IMG_TS1_ST3;
     sprite_sets[Volcano].landscape                     = IMG_LS_VOLCANO;
@@ -1028,6 +1030,7 @@ void init_sprite_sets() {
     sprite_sets[Volcano].bulletin_bg_trans             = IMG_PL3_TRANS;
     sprite_sets[Volcano].spaceport                     = IMG_HARBOUR_VOLCANO;
     sprite_sets[Volcano].spaceport2                    = IMG_HF3_PICTURE2;
+    sprite_sets[Volcano].marker                        = IMG_PLM3;
 
     sprite_sets[Rock].panel_icon                       = IMG_TS1_ST4;
     sprite_sets[Rock].landscape                        = IMG_LS_ROCK;
@@ -1037,6 +1040,7 @@ void init_sprite_sets() {
     sprite_sets[Rock].bulletin_bg_trans                = IMG_PL4_TRANS;
     sprite_sets[Rock].spaceport                        = IMG_HARBOUR_ROCK;
     sprite_sets[Rock].spaceport2                       = IMG_HF4_PICTURE2;
+    sprite_sets[Rock].marker                           = IMG_PLM4;
 
     sprite_sets[Ice].panel_icon                        = IMG_TS1_ST5;
     sprite_sets[Ice].landscape                         = IMG_LS_ICE;
@@ -1046,6 +1050,7 @@ void init_sprite_sets() {
     sprite_sets[Ice].bulletin_bg_trans                 = IMG_PL5_TRANS;
     sprite_sets[Ice].spaceport                         = IMG_HARBOUR_ICE;
     sprite_sets[Ice].spaceport2                        = IMG_HF5_PICTURE2;
+    sprite_sets[Ice].marker                            = IMG_PLM5;
 
     sprite_sets[Terra].panel_icon                      = IMG_TS1_ST6;
     sprite_sets[Terra].landscape                       = IMG_LS_TERRA;
@@ -1055,6 +1060,7 @@ void init_sprite_sets() {
     sprite_sets[Terra].bulletin_bg_trans               = IMG_PL6_TRANS;
     sprite_sets[Terra].spaceport                       = IMG_HARBOUR_TERRA;
     sprite_sets[Terra].spaceport2                      = IMG_HF6_PICTURE2;
+    sprite_sets[Terra].marker                          = IMG_PLM6;
 
     sprite_sets[Artificial].panel_icon                 = IMG_TS1_ST8;
     sprite_sets[Artificial].landscape                  = IMG_LS_ART;
@@ -1064,6 +1070,7 @@ void init_sprite_sets() {
     sprite_sets[Artificial].bulletin_bg_trans          = IMG_PL8_TRANS;
     sprite_sets[Artificial].spaceport                  = IMG_HARBOUR_ART;
     sprite_sets[Artificial].spaceport2                 = IMG_HF8_PICTURE2;
+    sprite_sets[Artificial].marker                     = IMG_PLM8;
 
     moon_sprite_sets[MOON_Dirt].bg                     = IMG_GF1;
     moon_sprite_sets[MOON_Dirt].cover0                 = IMG_GF1_30;

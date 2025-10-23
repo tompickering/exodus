@@ -1066,6 +1066,13 @@ const char *IMG_PL4_TRANS        = D_NEW "pl4";
 const char *IMG_PL5_TRANS        = D_NEW "pl5";
 const char *IMG_PL6_TRANS        = D_NEW "pl6";
 const char *IMG_PL8_TRANS        = D_NEW "pl8";
+const char *IMG_PLM1             = D_NEW "plm_1";
+const char *IMG_PLM2             = D_NEW "plm_2";
+const char *IMG_PLM3             = D_NEW "plm_3";
+const char *IMG_PLM4             = D_NEW "plm_4";
+const char *IMG_PLM5             = D_NEW "plm_5";
+const char *IMG_PLM6             = D_NEW "plm_6";
+const char *IMG_PLM8             = D_NEW "plm_8";
 const char *IMG_BTNREPORT        = D_NEW "btn_report";
 const char *IMG_BTNGUIDE         = D_NEW "btn_guide";
 const char *IMG_BTNZOOM          = D_NEW "btn_zoom";
@@ -2136,6 +2143,13 @@ const char *ASSETS_IMG[] = {
     IMG_PL5_TRANS,
     IMG_PL6_TRANS,
     IMG_PL8_TRANS,
+    IMG_PLM1,
+    IMG_PLM2,
+    IMG_PLM3,
+    IMG_PLM4,
+    IMG_PLM5,
+    IMG_PLM6,
+    IMG_PLM8,
     IMG_BTNREPORT,
     IMG_BTNGUIDE,
     IMG_BTNZOOM,
