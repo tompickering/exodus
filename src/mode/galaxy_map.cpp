@@ -653,9 +653,8 @@ ExodusMode GalaxyMap::update(float delta) {
                     draw_galaxy(false);
                     draw_panel_bg(TGT_Primary);
 
-                    // Ensure we prepare the next frame straight away
-                    // Otherwise causes an annoying flicker on month pass end
-                    update(0);
+                    update_panel_info_player(TGT_Primary, exostate().get_player(0));
+                    update_panel_info_ft(TGT_Primary, exostate().get_player(0), selected_ft);
                 }
                 return next_mode;
             }
