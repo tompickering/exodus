@@ -1508,6 +1508,30 @@ void Planet::produce_plutonium() {
     reserves_plu += get_plu_production();
 }
 
+static void try_produce(int& prod,
+                        int& plu,
+                        int& army,
+                        const int cap,
+                        int& funds,
+                        int cost,
+                        ProductionReport& rpt) {
+    if (prod > plu) {
+        prod = plu;
+        rpt.no_plu = true;
+    }
+    if (army + prod > cap) {
+        prod = (cap - army);
+        rpt.no_space = true;
+    }
+    while (prod*cost > funds) {
+        prod--;
+        rpt.no_money = true;
+    }
+    army += prod;
+    plu -= prod;
+    funds -= prod*cost;
+}
+
 ProductionReport Planet::produce_military() {
     ProductionReport rpt;
 
@@ -1530,10 +1554,15 @@ ProductionReport Planet::produce_military() {
     int max_gli = count_stones(STONE_Gli);
     int max_art = count_stones(STONE_Art);
 
+    int prod_inf = max_inf;
+    int prod_gli = max_gli;
+    int prod_art = max_art;
+
+    bool optimise = false;
+
+#if FEATURE_OPTIMISE_ARMY_PRODUCTION_PRIORITIES
     /*
-     * SUGGEST:
-     *
-     * It would be kinder to the player to perform these in reverse order:
+     * It's kinder to the player to perform these in reverse order:
      * Artillery -> Gliders -> Infantry
      * This would help to ensure maximum funding utility, as the player isn't
      * receiving this money whatever the case.
@@ -1542,57 +1571,18 @@ ProductionReport Planet::produce_military() {
      * we have one artillery and 0 MC wasted.
      */
 
-    int prod_inf = max_inf;
-    int prod_gli = max_gli;
-    int prod_art = max_art;
+    optimise = exostate().get_player(get_owner())->is_human();
+#endif
 
-    if (prod_inf > reserves_plu) {
-        prod_inf = reserves_plu;
-        rpt.no_plu = true;
+    if (optimise) {
+        try_produce(prod_art, reserves_plu, army_art, cap, funds, 3, rpt);
+        try_produce(prod_gli, reserves_plu, army_gli, cap, funds, 2, rpt);
+        try_produce(prod_inf, reserves_plu, army_inf, cap, funds, 1, rpt);
+    } else {
+        try_produce(prod_inf, reserves_plu, army_inf, cap, funds, 1, rpt);
+        try_produce(prod_gli, reserves_plu, army_gli, cap, funds, 2, rpt);
+        try_produce(prod_art, reserves_plu, army_art, cap, funds, 3, rpt);
     }
-    if (army_inf + prod_inf > cap) {
-        prod_inf = (cap - army_inf);
-        rpt.no_space = true;
-    }
-    while (prod_inf*1 > funds) {
-        prod_inf--;
-        rpt.no_money = true;
-    }
-    army_inf += prod_inf;
-    reserves_plu -= prod_inf;
-    funds -= prod_inf*1;
-
-    if (prod_gli > reserves_plu) {
-        prod_gli = reserves_plu;
-        rpt.no_plu = true;
-    }
-    if (army_gli + prod_gli > cap) {
-        prod_gli = (cap - army_gli);
-        rpt.no_space = true;
-    }
-    while (prod_gli*2 > funds) {
-        prod_gli--;
-        rpt.no_money = true;
-    }
-    army_gli += prod_gli;
-    reserves_plu -= prod_gli;
-    funds -= prod_gli*2;
-
-    if (prod_art > reserves_plu) {
-        prod_art = reserves_plu;
-        rpt.no_plu = true;
-    }
-    if (army_art + prod_art > cap) {
-        prod_art = (cap - army_art);
-        rpt.no_space = true;
-    }
-    while (prod_art*3 > funds) {
-        prod_art--;
-        rpt.no_money = true;
-    }
-    army_art += prod_art;
-    reserves_plu -= prod_art;
-    funds -= prod_art*3;
 
     rpt.inf = prod_inf;
     rpt.gli = prod_gli;

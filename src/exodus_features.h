@@ -63,6 +63,9 @@
 // Display owned planets on the galaxy map
 #define FEATURE_GALAXY_MAP_PLANET_MARKERS 1
 
+// Attempt to purchase more expensive units first, to optimise MC
+#define FEATURE_OPTIMISE_ARMY_PRODUCTION_PRIORITIES 1
+
 // Fixes bug meaning some AI terrorist actions are never taken
 #define FIX_AI_TERROR 1
 
