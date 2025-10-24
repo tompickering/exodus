@@ -93,6 +93,16 @@ Galaxy::Galaxy(int _n_stars) {
                     ok = false;
                     break;
                 }
+
+#if FEATURE_GALAXY_MAP_PLANET_MARKERS
+                // Horizontally-adjacent stars make this look too cluttered
+                if (star_y == stars[j].y) {
+                    if ((star_x+1 == stars[j].x) || (star_x == stars[j].x+1)) {
+                        ok = false;
+                        break;
+                    }
+                }
+#endif
             }
 
             if (ok) break;
