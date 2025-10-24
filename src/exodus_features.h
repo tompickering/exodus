@@ -60,6 +60,9 @@
 // Recallable, navigable planet summaries
 #define FEATURE_PLANET_RECALLABLE_SUMMARIES 1
 
+// Display owned planets on the galaxy map
+#define FEATURE_GALAXY_MAP_PLANET_MARKERS 1
+
 // Fixes bug meaning some AI terrorist actions are never taken
 #define FIX_AI_TERROR 1
 

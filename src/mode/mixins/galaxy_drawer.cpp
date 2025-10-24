@@ -9,6 +9,8 @@
 
 #include "util/iter.h"
 
+#include "shared.h"
+
 #define PAD_X 30
 #define PAD_Y 30
 #define DRAW_W RES_X
@@ -110,6 +112,7 @@ void GalaxyDrawer::draw_galaxy(bool pixelswap) {
         star_ids[siter.get_idx()] = draw_manager.new_sprite_id();
         draw_manager.draw(tgt, star_ids[siter.get_idx()], spr, {x, y, 0.5, 0.5, 1, 1});
 
+#if FEATURE_GALAXY_MAP_PLANET_MARKERS
         if (!exostate().multiplayer()) {
             int drawn = 0;
             for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
@@ -127,6 +130,7 @@ void GalaxyDrawer::draw_galaxy(bool pixelswap) {
                 }
             }
         }
+#endif
     }
 
     Galaxy *gal = exostate().get_galaxy();
