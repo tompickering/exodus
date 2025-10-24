@@ -88,6 +88,17 @@ Galaxy::Galaxy(int _n_stars) {
                 ok = false;
             }
 
+#if FEATURE_GALAXY_MAP_PLANET_MARKERS
+            if ((star_x+1) == GUILD_POS_X && star_y == GUILD_POS_Y) ok = false;
+            if (star_x == (GUILD_POS_X+1) && star_y == GUILD_POS_Y) ok = false;
+            if (star_x == GUILD_POS_X && (star_y+1) == GUILD_POS_Y) ok = false;
+            if (star_x == GUILD_POS_X && star_y == (GUILD_POS_Y+1)) ok = false;
+            if ((star_x+1) == GUILD_POS_X && (star_y+1) == GUILD_POS_Y) ok = false;
+            if ((star_x+1) == GUILD_POS_X && star_y == (GUILD_POS_Y+1)) ok = false;
+            if (star_x == (GUILD_POS_X+1) && (star_y+1) == GUILD_POS_Y) ok = false;
+            if (star_x == (GUILD_POS_X+1) && star_y == (GUILD_POS_Y+1)) ok = false;
+#endif
+
             for (int j = 0; j < i; ++j) {
                 if (star_x == stars[j].x  && star_y == stars[j].y) {
                     ok = false;
