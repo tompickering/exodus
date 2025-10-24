@@ -1191,7 +1191,11 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_set_speech("What do you want, %s...?",
                                 comm_player->get_name());
             }
-            comm_set_text(0, "Let us not talk. I want %s.", comm_planet->get_name());
+            if (comm_player_idx == comm_planet->get_prev_owner()) {
+                comm_set_text(0, "I am here to reclaim my planet.");
+            } else {
+                comm_set_text(0, "Let us not talk. I want %s.", comm_planet->get_name());
+            }
             comm_set_text(1, "I wish to trade.");
             if (!comm_planet->trade_possible(comm_player_idx)) {
                 comm_text_disabled_mask |= 2;
@@ -1833,7 +1837,11 @@ void CommPanelDrawer::comm_send(CommSend input) {
         case DIA_S_CPU_Attack:
             {
                 comm_prepare(4);
-                comm_set_speech("Let us not talk. I want %s.", comm_planet->get_name());
+                if (comm_player_idx == comm_planet->get_prev_owner()) {
+                    comm_set_speech("I am here to reclaim my planet.");
+                } else {
+                    comm_set_speech("Let us not talk. I want %s.", comm_planet->get_name());
+                }
 
                 bool ally = false;
                 if (exostate().has_alliance(comm_player_idx, comm_other_idx, ALLY_NonAttack)) {
