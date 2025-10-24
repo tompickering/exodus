@@ -260,9 +260,11 @@ class Planet : public Saveable {
         int get_food_production();
         int get_food_consumption();
         bool food_prod_sufficient();
+        bool food_prod_surplus();
         int get_plu_production();
         int get_plu_consumption();
         bool plu_prod_sufficient();
+        bool plu_prod_surplus();
         int get_army_funding();
         void adjust_army_funding(int);
         void validate_army_funding();

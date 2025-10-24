@@ -824,6 +824,10 @@ bool Planet::food_prod_sufficient() {
     return get_food_consumption() <= get_food_production();
 }
 
+bool Planet::food_prod_surplus() {
+    return get_food_consumption() < get_food_production();
+}
+
 int Planet::get_plu_production() {
     int mul = (cls == Volcano) ? 2 : 1;
     return count_stones(STONE_Plu) * mul;
@@ -838,6 +842,10 @@ int Planet::get_plu_consumption() {
 
 bool Planet::plu_prod_sufficient() {
     return get_plu_consumption() <= get_plu_production();
+}
+
+bool Planet::plu_prod_surplus() {
+    return get_plu_consumption() < get_plu_production();
 }
 
 int Planet::get_army_funding() {
@@ -2015,9 +2023,15 @@ const PlanetOwnerChangedEvent* Planet::get_human_lost_planet_event() const {
 PlanetTrafficLight Planet::get_traffic_light(PlanetTrafficLightProperty prop) {
     switch (prop) {
         case PTLP_Food:
-            return food_prod_sufficient() ? PTL_Green : PTL_Red;
+            if (food_prod_surplus() || get_food_consumption() == 0) {
+                return PTL_Green;
+            }
+            return food_prod_sufficient() ? PTL_Amber : PTL_Red;
         case PTLP_Plu:
-            return plu_prod_sufficient() ? PTL_Green : PTL_Red;
+            if (plu_prod_surplus() || get_plu_consumption() == 0) {
+                return PTL_Green;
+            }
+            return plu_prod_sufficient() ? PTL_Amber : PTL_Red;
         case PTLP_Unrest:
             {
                 int unrest = get_unrest();
