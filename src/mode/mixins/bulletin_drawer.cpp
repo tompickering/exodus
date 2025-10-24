@@ -279,6 +279,20 @@ void BulletinDrawer::bulletin_draw_events() {
              1.0f, 0.0f, 1, 1});
         ++event_count;
     }
+
+    if (rpt.light_army != PTL_Green) {
+        draw_manager.draw(
+            IMG_AR,
+            {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4,
+             BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
+             1.0f, 0.0f, 1, 1});
+        draw_manager.draw(
+            get_light_spr(rpt.light_army),
+            {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4 - 24,
+             BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
+             1.0f, 0.0f, 1, 1});
+        ++event_count;
+    }
 }
 
 void BulletinDrawer::bulletin_draw_text() {

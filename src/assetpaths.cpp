@@ -1076,6 +1076,7 @@ const char *IMG_PLM8             = D_NEW "plm_8";
 const char *IMG_BTNREPORT        = D_NEW "btn_report";
 const char *IMG_BTNGUIDE         = D_NEW "btn_guide";
 const char *IMG_BTNZOOM          = D_NEW "btn_zoom";
+const char *IMG_AR               = D_NEW "ar";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2153,6 +2154,7 @@ const char *ASSETS_IMG[] = {
     IMG_BTNREPORT,
     IMG_BTNGUIDE,
     IMG_BTNZOOM,
+    IMG_AR,
 
     "",
 };

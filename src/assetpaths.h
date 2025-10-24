@@ -1073,6 +1073,7 @@ extern const char *IMG_PLM8;
 extern const char *IMG_BTNREPORT;
 extern const char *IMG_BTNGUIDE;
 extern const char *IMG_BTNZOOM;
+extern const char *IMG_AR;
 
 extern const char *INIT_IMG;
 extern const char *CURSOR_IMG;
