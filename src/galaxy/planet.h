@@ -45,6 +45,7 @@ enum PlanetTrafficLightProperty {
     PTLP_Food,
     PTLP_Plu,
     PTLP_Unrest,
+    PTLP_Army,
 };
 
 // These are assigned the values that they had in the original.

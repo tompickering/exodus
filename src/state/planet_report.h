@@ -51,6 +51,7 @@ struct PlanetReport : public Saveable {
     PlanetTrafficLight light_food;
     PlanetTrafficLight light_plu;
     PlanetTrafficLight light_unrest;
+    PlanetTrafficLight light_army;
 
     int problems_critical;
     int problems_major;

@@ -28,6 +28,7 @@ PlanetReport& PlanetReport::operator=(const PlanetReport& other) {
     light_food = other.light_food;
     light_plu = other.light_plu;
     light_unrest = other.light_unrest;
+    light_army = other.light_army;
 
     return *this;
 }
@@ -125,13 +126,16 @@ void PlanetReport::finalise() {
     light_food = p->get_traffic_light(PTLP_Food);
     light_plu = p->get_traffic_light(PTLP_Plu);
     light_unrest = p->get_traffic_light(PTLP_Unrest);
+    light_army = p->get_traffic_light(PTLP_Army);
 
     if (light_food == PTL_Amber) register_minor_problem();
     if (light_plu == PTL_Amber) register_minor_problem();
     if (light_unrest == PTL_Amber) register_minor_problem();
+    if (light_army == PTL_Amber) register_minor_problem();
     if (light_food == PTL_Red) register_major_problem();
     if (light_plu == PTL_Red) register_major_problem();
     if (light_unrest == PTL_Red) register_major_problem();
+    if (light_army == PTL_Red) register_major_problem();
 
     finalised = true;
 }
@@ -141,7 +145,8 @@ bool PlanetReport::empty() const {
         && (event_mask == 0)
         && (light_food == PTL_Green)
         && (light_plu == PTL_Green)
-        && (light_unrest == PTL_Green);
+        && (light_unrest == PTL_Green)
+        && (light_army == PTL_Green);
 }
 
 void PlanetReport::reset() {
@@ -159,6 +164,7 @@ void PlanetReport::reset() {
     light_food = PTL_Green;
     light_plu = PTL_Green;
     light_unrest = PTL_Green;
+    light_army = PTL_Green;
 
     problems_critical = 0;
     problems_major = 0;
@@ -182,6 +188,7 @@ void PlanetReport::save(cJSON* j) const {
     SAVE_ENUM(j, light_food);
     SAVE_ENUM(j, light_plu);
     SAVE_ENUM(j, light_unrest);
+    SAVE_ENUM(j, light_army);
     SAVE_NUM(j, problems_critical);
     SAVE_NUM(j, problems_major);
     SAVE_NUM(j, problems_minor);
@@ -199,6 +206,7 @@ void PlanetReport::load(cJSON* j) {
     LOAD_ENUM(j, light_food);
     LOAD_ENUM(j, light_plu);
     LOAD_ENUM(j, light_unrest);
+    LOAD_ENUM(j, light_army);
     LOAD_NUM(j, problems_critical);
     LOAD_NUM(j, problems_major);
     LOAD_NUM(j, problems_minor);

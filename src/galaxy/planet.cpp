@@ -2029,6 +2029,8 @@ PlanetTrafficLight Planet::get_traffic_light(PlanetTrafficLightProperty prop) {
                 if (unrest >= 4) return PTL_Amber;
                 return PTL_Green;
             }
+        case PTLP_Army:
+            return army_funding_sufficient() ? PTL_Green : PTL_Red;
     }
 
     L.error("No case for property %d", prop);
