@@ -102,6 +102,14 @@ Galaxy::Galaxy(int _n_stars) {
                         break;
                     }
                 }
+
+                // It seems weird to allow vertical adjacency but not horizontal-adjacency
+                if (star_x == stars[j].x) {
+                    if ((star_y+1 == stars[j].y) || (star_y == stars[j].y+1)) {
+                        ok = false;
+                        break;
+                    }
+                }
 #endif
             }
 
