@@ -513,6 +513,10 @@ int Planet::get_owner() {
     return owner;
 }
 
+int Planet::get_prev_owner() {
+    return most_recent_previous_owner;
+}
+
 void Planet::set_owner(int new_owner, PlanetOwnerChangedReason reason) {
     L.info("[%s] owner: %d -> %d", is_named() ? get_name() : "NEW PLANET", owner, new_owner);
 

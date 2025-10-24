@@ -238,6 +238,7 @@ class Planet : public Saveable {
         const MoonSpriteSet* moon_sprites();
         bool is_owned();
         int get_owner();
+        int get_prev_owner();
         void set_owner(int, PlanetOwnerChangedReason);
         void unset_owner(PlanetOwnerChangedReason);
         Stone get_stone(int, int);
