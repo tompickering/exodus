@@ -390,6 +390,9 @@ class Planet : public Saveable {
         int army_gli;          // Orig: SIk(2)
         int army_art;          // Orig: SIk(3)
 
+        int most_recent_previous_owner;
+        PlanetOwnerChangedReason most_recent_previous_owner_change_reason;
+
         PlanetOwnerChangedEvent owner_changes_this_month[MAX_OWNER_CHANGES];
         int owner_changes_this_month_head;
 

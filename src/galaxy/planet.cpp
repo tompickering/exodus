@@ -76,6 +76,8 @@ Planet::Planet() {
     construction_phase = 0;
     traded = 0;
     laws = 0;
+    most_recent_previous_owner = -1;
+    most_recent_previous_owner_change_reason = POCR_Init;
     owner_changes_this_month_head = 0;
     festival_this_month = false;
     surfchange_this_month = false;
@@ -280,6 +282,9 @@ void Planet::init() {
     set_law(LAW_TradeFood,          true);
     set_law(LAW_PrivateIndustry,    true);
     set_law(LAW_DifferentReligions, true);
+
+    most_recent_previous_owner = -1;
+    most_recent_previous_owner_change_reason = POCR_Init;
 
     owner_changes_this_month_head = 0;
     festival_this_month = false;
@@ -510,6 +515,11 @@ int Planet::get_owner() {
 
 void Planet::set_owner(int new_owner, PlanetOwnerChangedReason reason) {
     L.info("[%s] owner: %d -> %d", is_named() ? get_name() : "NEW PLANET", owner, new_owner);
+
+    if (owner >= 0) {
+        most_recent_previous_owner = owner;
+        most_recent_previous_owner_change_reason = reason;
+    }
 
     if (owner_changes_this_month_head < MAX_OWNER_CHANGES) {
         owner_changes_this_month[owner_changes_this_month_head++].set(owner, new_owner, reason);
@@ -2559,6 +2569,8 @@ void Planet::save(cJSON* j) const {
     SAVE_NUM(j, army_inf);
     SAVE_NUM(j, army_gli);
     SAVE_NUM(j, army_art);
+    SAVE_NUM(j, most_recent_previous_owner);
+    SAVE_ENUM(j, most_recent_previous_owner_change_reason);
     SAVE_ARRAY_OF_SAVEABLE(j, owner_changes_this_month);
     SAVE_NUM(j, owner_changes_this_month_head);
     SAVE_BOOL(j, festival_this_month);
@@ -2595,6 +2607,8 @@ void Planet::load(cJSON* j) {
     LOAD_NUM(j, army_inf);
     LOAD_NUM(j, army_gli);
     LOAD_NUM(j, army_art);
+    LOAD_NUM(j, most_recent_previous_owner);
+    LOAD_ENUM(j, most_recent_previous_owner_change_reason);
     LOAD_ARRAY_OF_SAVEABLE(j, owner_changes_this_month);
     LOAD_NUM(j, owner_changes_this_month_head);
     LOAD_BOOL(j, festival_this_month);
