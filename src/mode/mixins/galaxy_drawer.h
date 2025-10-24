@@ -17,6 +17,7 @@ class GalaxyDrawer {
         FlyTarget *get_mouseover_flytarget();
         void get_draw_position(const FlyTarget*, int&, int&);
         void draw_markers(bool, bool);
+        void draw_planet_markers(bool);
     protected:
         void draw_galaxy(bool);
     private:

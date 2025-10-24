@@ -111,27 +111,9 @@ void GalaxyDrawer::draw_galaxy(bool pixelswap) {
         get_draw_position(s, x, y);
         star_ids[siter.get_idx()] = draw_manager.new_sprite_id();
         draw_manager.draw(tgt, star_ids[siter.get_idx()], spr, {x, y, 0.5, 0.5, 1, 1});
-
-#if FEATURE_GALAXY_MAP_PLANET_MARKERS
-        if (!exostate().multiplayer()) {
-            int drawn = 0;
-            for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
-                Planet *p = s->get_planet(i);
-                if (p && p->exists() && p->is_owned()) {
-                    Player *o = exostate().get_player(p->get_owner());
-                    if (o && o->is_human()) {
-                        draw_manager.draw(
-                            tgt,
-                            p->sprites()->marker,
-                            {x+10+6*drawn, y-10,
-                             0.5, 0.5, 1, 1});
-                        ++drawn;
-                    }
-                }
-            }
-        }
-#endif
     }
+
+    draw_planet_markers(pixelswap);
 
     Galaxy *gal = exostate().get_galaxy();
     Guild *guild = gal->get_guild();
@@ -151,6 +133,40 @@ void GalaxyDrawer::draw_galaxy(bool pixelswap) {
     }
 
     draw_markers(pixelswap, false);
+}
+
+void GalaxyDrawer::draw_planet_markers(bool pixelswap) {
+#if FEATURE_GALAXY_MAP_PLANET_MARKERS
+    int x, y;
+
+    if (exostate().multiplayer()) {
+        return;
+    }
+
+    DrawTarget tgt = pixelswap ? TGT_Secondary : TGT_Primary;
+
+    for (StarIterator siter; !siter.complete(); ++siter) {
+        Star *s = siter.get();
+        get_draw_position(s, x, y);
+
+        int drawn = 0;
+
+        for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+            Planet *p = s->get_planet(i);
+            if (p && p->exists() && p->is_owned()) {
+                Player *o = exostate().get_player(p->get_owner());
+                if (o && o->is_human()) {
+                    draw_manager.draw(
+                        tgt,
+                        p->sprites()->marker,
+                        {x+10+6*drawn, y-10,
+                         0.5, 0.5, 1, 1});
+                    ++drawn;
+                }
+            }
+        }
+    }
+#endif
 }
 
 void GalaxyDrawer::draw_markers(bool pixelswap, bool names_only) {
