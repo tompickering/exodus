@@ -883,10 +883,10 @@ ExodusMode GalaxyMap::update(float delta) {
                         break;
                 }
             } else {
+                bulletin_ensure_closed();
                 if (use_planet_summary()) {
                     set_stage(GM_OpenPlanetReportSummary);
                 } else {
-                    bulletin_ensure_closed();
                     set_stage(GM_Idle);
                 }
             }
@@ -930,6 +930,7 @@ ExodusMode GalaxyMap::update(float delta) {
                         break;
                     case BPR_OpenSpecificReport:
                         ephstate.planet_report_idx = bulletin_get_specific_report();
+                        bulletin_ensure_closed();
                         set_stage(GM_OpenPlanetReports);
                         break;
                     default:
