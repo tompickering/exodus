@@ -72,6 +72,7 @@ void PlanetReport::add_event(PlanetReportEvent event) {
         case PRE_HQDestroyed:
             register_critical_problem();
             break;
+        case PRE_Climate:
         case PRE_Plague:
         case PRE_Aliens:
         case PRE_Epidemic:
@@ -84,6 +85,10 @@ void PlanetReport::add_event(PlanetReportEvent event) {
         case PRE_SurfChangeClearing:
         case PRE_ArmyProductionStopped:
             register_minor_problem();
+            break;
+        case PRE_NewSpecies:
+        case PRE_SurfChangeCultivation:
+            register_good_news();
             break;
         default:
             break;
