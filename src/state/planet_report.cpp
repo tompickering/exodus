@@ -23,6 +23,13 @@ PlanetReport& PlanetReport::operator=(const PlanetReport& other) {
     problems_major = other.problems_major;
     problems_minor = other.problems_minor;
     good_news = other.good_news;
+
+    prod_inf = other.prod_inf;
+    prod_gli = other.prod_gli;
+    prod_art = other.prod_art;
+
+    trade_mc = other.trade_mc;
+
     finalised = other.finalised;
 
     light_food = other.light_food;
@@ -179,6 +186,12 @@ void PlanetReport::reset() {
     problems_minor = 0;
     good_news = 0;
 
+    prod_inf = 0;
+    prod_gli = 0;
+    prod_art = 0;
+
+    trade_mc = 0;
+
     finalised = false;
 }
 
@@ -201,6 +214,10 @@ void PlanetReport::save(cJSON* j) const {
     SAVE_NUM(j, problems_major);
     SAVE_NUM(j, problems_minor);
     SAVE_NUM(j, good_news);
+    SAVE_NUM(j, prod_inf);
+    SAVE_NUM(j, prod_gli);
+    SAVE_NUM(j, prod_art);
+    SAVE_NUM(j, trade_mc);
     SAVE_BOOL(j, finalised);
 }
 
@@ -219,5 +236,9 @@ void PlanetReport::load(cJSON* j) {
     LOAD_NUM(j, problems_major);
     LOAD_NUM(j, problems_minor);
     LOAD_NUM(j, good_news);
+    LOAD_NUM(j, prod_inf);
+    LOAD_NUM(j, prod_gli);
+    LOAD_NUM(j, prod_art);
+    LOAD_NUM(j, trade_mc);
     LOAD_BOOL(j, finalised);
 }

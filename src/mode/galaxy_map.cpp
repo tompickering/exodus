@@ -4844,8 +4844,15 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mp_state.mpp_stage == MPP_ProduceMilitary) {
+        report.prod_inf = 0;
+        report.prod_gli = 0;
+        report.prod_art = 0;
+
         ProductionReport rpt = p->produce_military();
         if (rpt.inf + rpt.gli + rpt.art > 0) {
+            report.prod_inf = rpt.inf;
+            report.prod_gli = rpt.gli;
+            report.prod_art = rpt.art;
             report.add_line("Produced battle units: %d / %d / %d",
                             rpt.inf, rpt.gli, rpt.art);
         }
@@ -4968,12 +4975,15 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mp_state.mpp_stage == MPP_Trade) {
+        report.trade_mc = 0;
+
         if (owner) {
             if (p->count_stones(STONE_Trade)) {
                 TradeReport rpt = p->monthly_trade();
                 if (rpt.mc > 0) {
                     report.register_good_news();
                 }
+                report.trade_mc = rpt.mc;
                 report.add_line("Trading Centre sold:");
                 report.add_line("Mi: %d / Fd: %d / Pl: %d => %d MC",
                                  rpt.mi,  rpt.fd,  rpt.pl, rpt.mc);

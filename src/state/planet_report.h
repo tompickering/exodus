@@ -65,6 +65,12 @@ struct PlanetReport : public Saveable {
     int problems_minor;
     int good_news;
 
+    int prod_inf;
+    int prod_gli;
+    int prod_art;
+
+    int trade_mc;
+
     bool finalised;
 
     void add_event(PlanetReportEvent event);
