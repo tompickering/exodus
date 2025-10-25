@@ -453,7 +453,7 @@ void BulletinDrawer::bulletin_draw_report_summary() {
                 draw_manager.draw(
                     icon,
                     {st_x + 150 + (28 * event_count),
-                     st_y,
+                     st_y-2,
                      0, 0, 1, 1});
 
                 ++event_count;
