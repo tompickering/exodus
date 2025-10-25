@@ -899,7 +899,7 @@ ExodusMode GalaxyMap::update(float delta) {
                 if (exostate().planet_report_count() == 0) {
                     set_stage(GM_Idle);
                 } else {
-                    planet_report_summary_bulletin(true, planet_report_summary_current);
+                    planet_report_summary_bulletin(false, planet_report_summary_current);
                     set_stage(GM_PlanetReportSummary);
                 }
             }
@@ -912,13 +912,13 @@ ExodusMode GalaxyMap::update(float delta) {
                     case BPR_Back:
                         if (planet_report_summary_current > 0) {
                             --planet_report_summary_current;
-                            planet_report_summary_bulletin(true, planet_report_summary_current);
+                            planet_report_summary_bulletin(false, planet_report_summary_current);
                         }
                         break;
                     case BPR_Forward:
                         if ((planet_report_summary_current+1) <= (exostate().planet_report_count()-1) / BULLETIN_REPORT_SUMMARY_LINES) {
                             ++planet_report_summary_current;
-                            planet_report_summary_bulletin(true, planet_report_summary_current);
+                            planet_report_summary_bulletin(false, planet_report_summary_current);
                         }
                         break;
                     case BPR_Close:
