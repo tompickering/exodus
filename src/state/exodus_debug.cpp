@@ -75,6 +75,14 @@ void ExodusDebug::set_all_alliances() {
     }
 }
 
+void ExodusDebug::own_planet() {
+    Planet *p = exostate().get_active_planet();
+    if (p && p->exists()) {
+        p->set_owner(0, POCR_Seized);
+        p->set_name("DEBUG");
+    }
+}
+
 void ExodusDebug::own_sys_planets() {
     Star* star = exostate().get_active_star();
     if (star) {

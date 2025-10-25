@@ -15,6 +15,7 @@ class ExodusDebug {
         void add_goods(int);
         void unlock_all_inventions();
         void set_all_alliances();
+        void own_planet();
         void own_sys_planets();
         bool show_player_markers;
         bool full_visibility;
