@@ -111,6 +111,9 @@ void BulletinDrawer::bulletin_update(float dt) {
     if (bulletin_redraws_needed && !bulletin_has_been_acknowledged) {
         bulletin_update_bg();
         bulletin_draw_events();
+        if (bulletin_mode == BM_ReportSummary) {
+            bulletin_draw_report_summary();
+        }
         bulletin_draw_text();
     }
 
@@ -323,6 +326,33 @@ void BulletinDrawer::bulletin_draw_events() {
              BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
              1.0f, 0.0f, 1, 1});
         ++event_count;
+    }
+}
+
+void BulletinDrawer::bulletin_draw_report_summary() {
+    const int first = bulletin_report_summary_page * BULLETIN_REPORT_SUMMARY_LINES;
+    const int last = (bulletin_report_summary_page + 1) * BULLETIN_REPORT_SUMMARY_LINES;
+
+    int drawn = 0;
+
+    for (int r_idx = first; r_idx < last; ++r_idx) {
+        if (r_idx >= exostate().planet_report_count()) {
+            break;
+        }
+
+        const PlanetReport& rpt = exostate().get_planet_report(r_idx);
+
+        Planet *p = exostate().get_planet(rpt.star_idx, rpt.planet_idx);
+
+        draw_manager.draw_text(
+            id_bulletin_text[drawn],
+            p->get_name(),
+            Justify::Left,
+            BULLETIN_TEXT_X,
+            bulletin_text_y(drawn),
+            COL_TEXT);
+
+        ++drawn;
     }
 }
 

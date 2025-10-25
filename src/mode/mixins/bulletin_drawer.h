@@ -90,6 +90,7 @@ class BulletinDrawer {
         void bulletin_draw_events();
         void bulletin_draw_text();
         int bulletin_text_y(int);
+        void bulletin_draw_report_summary();
 
         int bulletin_text_idx;
         bool bulletin_has_been_acknowledged;
