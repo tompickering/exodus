@@ -586,8 +586,8 @@ void Player::get_invention_description(Invention inv, const char*& d0, const cha
             break;
         case INV_MultiFunctionalVaccine:
             d0 = "This vaccine can inoculate against previously";
-            d1 = "unknown viral strains that could lead to city-wide";
-            d2 = "epidemics and closures.";
+            d1 = "unknown viral strains that could lead to";
+            d2 = "city-wide epidemics and closures.";
             break;
         case INV_Acid:
             d0 = "This acid can prevent sudden and unknown";
