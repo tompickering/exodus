@@ -31,6 +31,13 @@ enum PlanetReportEvent {
     PRE_MAX,
 };
 
+enum PlanetReportEventLevel {
+    PREL_None,
+    PREL_Good,
+    PREL_Warn,
+    PREL_Crit,
+};
+
 struct PlanetReport : public Saveable {
     PlanetReport();
     PlanetReport& operator=(const PlanetReport& other);
@@ -67,6 +74,7 @@ struct PlanetReport : public Saveable {
     void register_major_problem();
     void register_minor_problem();
     void register_good_news();
+    PlanetReportEventLevel get_level() const;
     void finalise();
     bool empty() const;
     void reset();

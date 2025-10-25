@@ -117,6 +117,14 @@ void PlanetReport::register_good_news() {
     ++good_news;
 }
 
+PlanetReportEventLevel PlanetReport::get_level() const {
+    if (problems_critical > 0) return PREL_Crit;
+    if (problems_major > 0) return PREL_Crit;
+    if (problems_minor > 0) return PREL_Warn;
+    if (good_news > 0) return PREL_Good;
+    return PREL_None;
+}
+
 void PlanetReport::finalise() {
     if (finalised) {
         return;
