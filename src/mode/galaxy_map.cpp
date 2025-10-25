@@ -349,7 +349,11 @@ ExodusMode GalaxyMap::update(float delta) {
             }
 
             if (draw_manager.query_click(id(ID::BTN_REPORT)).id) {
-                set_stage(GM_OpenPlanetReports);
+                if (use_planet_summary()) {
+                    set_stage(GM_OpenPlanetReportSummary);
+                } else {
+                    set_stage(GM_OpenPlanetReports);
+                }
                 return ExodusMode::MODE_None;
             }
 
@@ -647,7 +651,11 @@ ExodusMode GalaxyMap::update(float delta) {
                     bulletin_ensure_closed();
                     // The only place we emerge from month-pass-specific stages...
 #if FEATURE_PLANET_RECALLABLE_SUMMARIES
-                    set_stage(GM_OpenPlanetReports);
+                    if (use_planet_summary()) {
+                        set_stage(GM_OpenPlanetReportSummary);
+                    } else {
+                        set_stage(GM_OpenPlanetReports);
+                    }
 #else
                     set_stage(GM_Idle);
 #endif
@@ -875,8 +883,12 @@ ExodusMode GalaxyMap::update(float delta) {
                         break;
                 }
             } else {
-                bulletin_ensure_closed();
-                set_stage(GM_Idle);
+                if (use_planet_summary()) {
+                    set_stage(GM_OpenPlanetReportSummary);
+                } else {
+                    bulletin_ensure_closed();
+                    set_stage(GM_Idle);
+                }
             }
             break;
         case GM_OpenPlanetReportSummary:
@@ -5469,4 +5481,8 @@ void GalaxyMap::planet_report_summary_bulletin(bool transition, int idx) {
     bulletin_set_report_summary_page(idx);
     bulletin_set_bg(IMG_ME1_MENU);
     bulletin_set_player_flag(player);
+}
+
+bool GalaxyMap::use_planet_summary() {
+    return exostate().planet_report_count() > 5;
 }

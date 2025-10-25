@@ -205,6 +205,8 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
         void planet_report_summary_bulletin(bool, int);
         int planet_report_summary_current;
 
+        bool use_planet_summary();
+
         bool do_first_city;
         bool do_first_spaceport;
         bool do_meteor;
