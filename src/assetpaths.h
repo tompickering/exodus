@@ -1077,6 +1077,7 @@ extern const char *IMG_AR;
 extern const char *IMG_EXCL_CRIT;
 extern const char *IMG_EXCL_WARN;
 extern const char *IMG_EXCL_OK;
+extern const char *IMG_PL_ST;
 
 extern const char *INIT_IMG;
 extern const char *CURSOR_IMG;
