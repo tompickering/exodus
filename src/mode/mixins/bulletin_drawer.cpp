@@ -172,6 +172,36 @@ void BulletinDrawer::bulletin_draw_events() {
 
     int event_count = 0;
 
+    // Warning icons
+
+    const char* icon_spr = nullptr;
+
+    switch (bulletin_report->get_level()) {
+        case PREL_Crit:
+            icon_spr = IMG_EXCL_CRIT;
+            break;
+        case PREL_Warn:
+            icon_spr = IMG_EXCL_WARN;
+            break;
+        case PREL_Good:
+            icon_spr = IMG_EXCL_OK;
+            break;
+        default:
+            break;
+    }
+
+    if (icon_spr != nullptr) {
+        draw_manager.draw(
+            icon_spr,
+            {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4,
+             BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
+             1.0f, 0.0f, 1, 1});
+
+        ++event_count;
+    }
+
+    // Events
+
     for (int event_idx = 0; event_idx < (int)PRE_MAX; ++event_idx) {
         PlanetReportEvent event = (PlanetReportEvent)event_idx;
 
