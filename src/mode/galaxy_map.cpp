@@ -937,6 +937,7 @@ ExodusMode GalaxyMap::update(float delta) {
                         break;
                 }
             } else {
+                planet_report_summary_current = 0;
                 bulletin_ensure_closed();
                 set_stage(GM_Idle);
             }
