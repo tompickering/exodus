@@ -68,6 +68,7 @@ enum MonthPassAIStage {
 
 enum MonthPassPlanetStage {
     MPP_InitialiseReport,
+    MPP_CheckFailedAttacks,
     MPP_ShuffleTrade,
     MPP_FirstCity,
     MPP_FirstSpaceport,

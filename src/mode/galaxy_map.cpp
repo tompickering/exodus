@@ -4214,6 +4214,21 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
+    if (mp_state.mpp_stage == MPP_CheckFailedAttacks) {
+        uint32_t failed_attacks = p->get_failed_attacks();
+
+        if (failed_attacks) {
+            for (int i = 0; i < N_PLAYERS; ++i) {
+                if (failed_attacks & (1 << i)) {
+                    Player *agg = exostate().get_player(i);
+                    report.add_line("Defended against %s!", agg->get_full_name());
+                }
+            }
+        }
+
+        next_mpp_stage();
+    }
+
     if (mp_state.mpp_stage == MPP_ShuffleTrade) {
         if (onein(7)) p->randomise_trade_quality();
         next_mpp_stage();

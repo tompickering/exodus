@@ -81,6 +81,7 @@ Planet::Planet() {
     owner_changes_this_month_head = 0;
     festival_this_month = false;
     surfchange_this_month = false;
+    failed_attacks_this_month = 0;
     processing_in_progress = false;
     moon_cls = MOON_Dirt;
 }
@@ -289,6 +290,7 @@ void Planet::init() {
     owner_changes_this_month_head = 0;
     festival_this_month = false;
     surfchange_this_month = false;
+    failed_attacks_this_month = 0;
     processing_in_progress = false;
 
     for (int i = 0; i < (PLANET_BLOCKS_LG * PLANET_BLOCKS_LG); ++i) {
@@ -1399,6 +1401,14 @@ void Planet::register_festival() {
     festival_this_month = true;
 }
 
+void Planet::register_failed_attack(int player_idx) {
+    failed_attacks_this_month = (failed_attacks_this_month | (1 << player_idx));
+}
+
+uint32_t Planet::get_failed_attacks() {
+    return failed_attacks_this_month;
+}
+
 bool Planet::trade_possible(int player_idx) {
     return (bool)(!(traded & (1 << player_idx)));
 }
@@ -1429,6 +1439,7 @@ void Planet::owner_change_event_reset() {
      * case it has unintended consequences.
      */
     owner_changes_this_month_head = 0;
+    failed_attacks_this_month = 0;
 }
 
 void Planet::randomise_trade_quality() {
@@ -2587,6 +2598,7 @@ void Planet::save(cJSON* j) const {
     SAVE_NUM(j, owner_changes_this_month_head);
     SAVE_BOOL(j, festival_this_month);
     SAVE_BOOL(j, surfchange_this_month);
+    SAVE_NUM(j, failed_attacks_this_month);
     SAVE_BOOL(j, processing_in_progress);
 }
 
@@ -2625,5 +2637,6 @@ void Planet::load(cJSON* j) {
     LOAD_NUM(j, owner_changes_this_month_head);
     LOAD_BOOL(j, festival_this_month);
     LOAD_BOOL(j, surfchange_this_month);
+    LOAD_NUM(j, failed_attacks_this_month);
     LOAD_BOOL(j, processing_in_progress);
 }

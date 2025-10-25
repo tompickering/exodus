@@ -77,6 +77,14 @@ void LunarBattlePrep::enter() {
         L.info("");
         L.info("WON: %s", rpt.aggressor_won ? "AGG" : "DEF");
         L.info("---------------------");
+
+        // Record failed attack
+        if (p && p->exists()) {
+            if (!rpt.aggressor_won && rpt.agg_type == AGG_Player) {
+                p->register_failed_attack(b.aggressor_idx);
+            }
+        }
+
         set_stage(LBP_Conclude);
         return;
     }
