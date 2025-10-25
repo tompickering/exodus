@@ -2011,17 +2011,19 @@ const PlanetOwnerChangedEvent* Planet::get_human_lost_planet_event() const {
 }
 
 PlanetTrafficLight Planet::get_traffic_light(PlanetTrafficLightProperty prop) {
+    PlanetTrafficLight sufficient_light = PTL_Green;
+
     switch (prop) {
         case PTLP_Food:
             if (food_prod_surplus() || get_food_consumption() == 0) {
                 return PTL_Green;
             }
-            return food_prod_sufficient() ? PTL_Amber : PTL_Red;
+            return food_prod_sufficient() ? sufficient_light : PTL_Red;
         case PTLP_Plu:
             if (plu_prod_surplus() || get_plu_consumption() == 0) {
                 return PTL_Green;
             }
-            return plu_prod_sufficient() ? PTL_Amber : PTL_Red;
+            return plu_prod_sufficient() ? sufficient_light : PTL_Red;
         case PTLP_Unrest:
             {
                 int unrest = get_unrest();
