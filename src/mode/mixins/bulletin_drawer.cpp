@@ -146,6 +146,16 @@ void BulletinDrawer::bulletin_update(float dt) {
                 bulletin_has_been_acknowledged = true;
             }
         }
+
+        if (bulletin_mode == BM_ReportSummary) {
+            for (int i = 0; i < BULLETIN_REPORT_SUMMARY_LINES; ++i) {
+                if (draw_manager.query_click(id_bulletin_text[i]).id) {
+                    bulletin_report_specific = (bulletin_report_summary_page * BULLETIN_REPORT_SUMMARY_LINES) + i;
+                    bulletin_praction = BPR_OpenSpecificReport;
+                    break;
+                }
+            }
+        }
     } else if (bulletin_is_war_ally) {
         bulletin_war_ally_update();
     } else if (draw_manager.clicked()) {

@@ -29,6 +29,7 @@ enum BulletinPRAction : uint8_t {
     BPR_Forward,
     BPR_Close,
     BPR_Zoom,
+    BPR_OpenSpecificReport,
 };
 
 class BulletinDrawer {
@@ -58,6 +59,8 @@ class BulletinDrawer {
 
         void bulletin_set_war_ally(Planet*, int);
         int bulletin_get_war_ally_result(int&, int&, int&);
+
+        int bulletin_get_specific_report() { return bulletin_report_specific; }
     private:
         BulletinMode bulletin_mode;
 
@@ -106,6 +109,7 @@ class BulletinDrawer {
         const PlanetReport *bulletin_report;
 
         int bulletin_report_summary_page;
+        int bulletin_report_specific;
 
         bool bulletin_is_war_ally;
         Planet* bulletin_war_ally_planet;

@@ -868,6 +868,9 @@ ExodusMode GalaxyMap::update(float delta) {
                             }
                         }
                         break;
+                    case BPR_OpenSpecificReport:
+                        L.error("Shouldn't be possible to OpenSpecificReport from report");
+                        break;
                     default:
                         break;
                 }
@@ -912,6 +915,10 @@ ExodusMode GalaxyMap::update(float delta) {
                         break;
                     case BPR_Zoom:
                         L.error("Shouldn't be possible to Zoom from report summary");
+                        break;
+                    case BPR_OpenSpecificReport:
+                        ephstate.planet_report_idx = bulletin_get_specific_report();
+                        set_stage(GM_OpenPlanetReports);
                         break;
                     default:
                         break;
