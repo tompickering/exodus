@@ -732,7 +732,11 @@ bool BulletinDrawer::bulletin_is_open() {
 }
 
 int BulletinDrawer::bulletin_text_y(int idx) {
-    return BULLETIN_Y + BULLETIN_BORDER + 4 + idx * 18;
+    return bulletin_text_y(idx, 18);
+}
+
+int BulletinDrawer::bulletin_text_y(int idx, int gap) {
+    return BULLETIN_Y + BULLETIN_BORDER + 4 + idx * gap;
 }
 
 void BulletinDrawer::bulletin_reset_text_cols() {
