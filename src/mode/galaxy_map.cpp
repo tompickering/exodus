@@ -77,6 +77,8 @@ void GalaxyMap::enter() {
 
     artificial_planet_to_move = nullptr;
 
+    planet_report_summary_current = 0;
+
     if (ephstate.get_ephemeral_state() == EPH_MonthPass) {
         ephstate.clear_ephemeral_state();
         set_stage(GM_MonthPassing);
@@ -865,6 +867,51 @@ ExodusMode GalaxyMap::update(float delta) {
                                 }
                             }
                         }
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                bulletin_ensure_closed();
+                set_stage(GM_Idle);
+            }
+            break;
+        case GM_OpenPlanetReportSummary:
+            {
+                planet_report_summary_current = planet_report_current /
+                                                BULLETIN_REPORT_SUMMARY_LINES;
+
+                if (exostate().planet_report_count() == 0) {
+                    set_stage(GM_Idle);
+                } else {
+                    planet_report_summary_bulletin(true, planet_report_summary_current);
+                    set_stage(GM_PlanetReportSummary);
+                }
+            }
+            break;
+        case GM_PlanetReportSummary:
+            if (bulletin_is_open()) {
+                bulletin_update(delta);
+
+                switch (bulletin_get_praction()) {
+                    case BPR_Back:
+                        if (planet_report_summary_current > 0) {
+                            --planet_report_summary_current;
+                            planet_report_summary_bulletin(true, planet_report_summary_current);
+                        }
+                        break;
+                    case BPR_Forward:
+                        if (planet_report_summary_current < (exostate().planet_report_count()+1) / BULLETIN_REPORT_SUMMARY_LINES) {
+                            ++planet_report_summary_current;
+                            planet_report_summary_bulletin(true, planet_report_summary_current);
+                        }
+                        break;
+                    case BPR_Close:
+                        bulletin_ensure_closed();
+                        draw_manager.draw(id(ID::REPORT_COUNT), nullptr);
+                        break;
+                    case BPR_Zoom:
+                        L.error("Shouldn't be possible to Zoom from report summary");
                         break;
                     default:
                         break;
@@ -5392,4 +5439,27 @@ void GalaxyMap::planet_report_bulletin(bool transition, int idx) {
         bulletin_set_next_text(report.content[i]);
     }
     bulletin_set_next_text("Report ends.");
+}
+
+void GalaxyMap::planet_report_summary_bulletin(bool transition, int idx) {
+    const int pages = 1 + exostate().planet_report_count() / BULLETIN_REPORT_SUMMARY_LINES;
+
+    char text[32];
+    snprintf(text, sizeof(text), "Page: %d/%d", idx+1, pages);
+
+    draw_manager.draw_text(
+        id(ID::REPORT_COUNT),
+        Font::Large,
+        text,
+        Justify::Left,
+        10, 2,
+        COL_TEXT2);
+
+    // FIXME: Multiplayer
+    Player *player = exostate().get_player(0);
+
+    bulletin_start_new(transition, BM_ReportSummary);
+    bulletin_set_report_summary_page(idx);
+    bulletin_set_bg(IMG_ME1_MENU);
+    bulletin_set_player_flag(player);
 }

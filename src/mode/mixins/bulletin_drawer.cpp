@@ -36,6 +36,7 @@ BulletinDrawer::BulletinDrawer() {
     bulletin_yesno_was_yes = false;
     bulletin_praction = BPR_None;
     bulletin_report = nullptr;
+    bulletin_report_summary_page = 0;
     _bulletin_is_open = false;
 
     bulletin_bg_preserve = nullptr;
@@ -78,7 +79,7 @@ bool BulletinDrawer::bulletin_start_new_internal(bool transition, int star_idx, 
 
     bulletin_mode = mode;
 
-    if (bulletin_mode == BM_Report) {
+    if (bulletin_mode == BM_Report || bulletin_mode == BM_ReportSummary) {
         bulletin_praction = BPR_None;
     }
 
@@ -126,7 +127,7 @@ void BulletinDrawer::bulletin_update(float dt) {
             }
             bulletin_has_been_acknowledged = true;
         }
-    } else if (bulletin_mode == BM_Report) {
+    } else if (bulletin_mode == BM_Report || bulletin_mode == BM_ReportSummary) {
         if (draw_manager.query_click(id_bulletin_zoom).id) {
             bulletin_praction = BPR_Zoom;
         }
@@ -594,6 +595,13 @@ void BulletinDrawer::bulletin_open() {
             {BULLETIN_FLAG_BG_X + BULLETIN_FLAG_BG_W + 2,
              BULLETIN_Y - 2,
              0, 1, 1, 1});
+    } else if (bulletin_mode == BM_ReportSummary) {
+        draw_manager.draw(
+            id_bulletin_prbuttons,
+            IMG_PRBUTTONS,
+            {BULLETIN_FLAG_BG_X + BULLETIN_FLAG_BG_W + 2,
+             BULLETIN_Y - 2,
+             0, 1, 1, 1});
     } else {
         draw_manager.draw(
             id_bulletin_header_l,
@@ -668,6 +676,7 @@ void BulletinDrawer::bulletin_reset() {
     bulletin_yesno_was_yes = false;
     bulletin_praction = BPR_None;
     bulletin_report = nullptr;
+    bulletin_report_summary_page = 0;
 
     bulletin_is_war_ally = false;
 
@@ -716,6 +725,10 @@ BulletinPRAction BulletinDrawer::bulletin_get_praction() {
 
 void BulletinDrawer::bulletin_set_report(const PlanetReport *report) {
     bulletin_report = report;
+}
+
+void BulletinDrawer::bulletin_set_report_summary_page(int page) {
+    bulletin_report_summary_page = page;
 }
 
 void BulletinDrawer::bulletin_set_war_ally(Planet* p, int mc) {

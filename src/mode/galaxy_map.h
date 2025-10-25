@@ -172,6 +172,8 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
             GM_ArtificialWorldStarSelectInvalid,
             GM_OpenPlanetReports,
             GM_PlanetReports,
+            GM_OpenPlanetReportSummary,
+            GM_PlanetReportSummary,
             GM_QuitConfirm,
         };
 
@@ -199,6 +201,9 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
         void reset_planet_report();
         void planet_report_bulletin(bool, int);
         int planet_report_current;
+
+        void planet_report_summary_bulletin(bool, int);
+        int planet_report_summary_current;
 
         bool do_first_city;
         bool do_first_spaceport;

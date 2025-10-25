@@ -13,11 +13,14 @@
 
 #define BULLETIN_WAR_ALLY_IDS 15
 
+#define BULLETIN_REPORT_SUMMARY_LINES 10
+
 extern DRAWMANAGER draw_manager;
 
 enum BulletinMode : uint8_t {
     BM_Default,
     BM_Report,
+    BM_ReportSummary,
 };
 
 enum BulletinPRAction : uint8_t {
@@ -51,6 +54,7 @@ class BulletinDrawer {
         void bulletin_set_yesno();
         BulletinPRAction bulletin_get_praction();
         void bulletin_set_report(const PlanetReport* report);
+        void bulletin_set_report_summary_page(int);
 
         void bulletin_set_war_ally(Planet*, int);
         int bulletin_get_war_ally_result(int&, int&, int&);
@@ -99,6 +103,8 @@ class BulletinDrawer {
         BulletinPRAction bulletin_praction;
 
         const PlanetReport *bulletin_report;
+
+        int bulletin_report_summary_page;
 
         bool bulletin_is_war_ally;
         Planet* bulletin_war_ally_planet;
