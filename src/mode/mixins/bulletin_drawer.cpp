@@ -354,13 +354,78 @@ void BulletinDrawer::bulletin_draw_report_summary() {
 
         Planet *p = exostate().get_planet(rpt.star_idx, rpt.planet_idx);
 
+        int y = bulletin_text_y(drawn, 51) - 1;
+
+        const char* icon_spr = nullptr;
+
+        switch (rpt.get_level()) {
+            case PREL_Crit:
+                icon_spr = IMG_EXCL_CRIT;
+                break;
+            case PREL_Warn:
+                icon_spr = IMG_EXCL_WARN;
+                break;
+            case PREL_Good:
+                icon_spr = IMG_EXCL_OK;
+                break;
+            default:
+                break;
+        }
+
+        if (icon_spr) {
+            draw_manager.draw(
+                icon_spr,
+                {BULLETIN_TEXT_X + 8, y + 11,
+                 0.5, 0.5, 1, 1});
+        }
+
+        float planet_scale = 1.0;
+
+#if FEATURE_MULTISIZE_PLANETS_PANEL
+        if (p->get_size() == PLANET_Small) planet_scale = 0.6;
+        if (p->get_size() == PLANET_Medium) planet_scale = 0.8;
+#endif
+
+        draw_manager.draw(
+            p->sprites()->panel_icon,
+            {BULLETIN_TEXT_X + 32, y + 11,
+             0.5, 0.5, planet_scale, planet_scale});
+
         draw_manager.draw_text(
             id_bulletin_text[drawn],
             p->get_name(),
             Justify::Left,
-            BULLETIN_TEXT_X,
-            bulletin_text_y(drawn),
+            BULLETIN_TEXT_X + 48,
+            y,
             COL_TEXT);
+
+        const int st_x = BULLETIN_TEXT_X + 48;
+        const int st_y = y + 24;
+
+        draw_manager.draw(
+            IMG_PL_ST,
+            {st_x, st_y,
+             0, 0, 1, 1});
+
+        draw_manager.draw(
+            get_light_spr(rpt.light_army),
+            {st_x+22, st_y,
+             0, 0, 1, 1});
+
+        draw_manager.draw(
+            get_light_spr(rpt.light_plu),
+            {st_x+60, st_y,
+             0, 0, 1, 1});
+
+        draw_manager.draw(
+            get_light_spr(rpt.light_unrest),
+            {st_x+98, st_y,
+             0, 0, 1, 1});
+
+        draw_manager.draw(
+            get_light_spr(rpt.light_army),
+            {st_x+136, st_y,
+             0, 0, 1, 1});
 
         ++drawn;
     }
