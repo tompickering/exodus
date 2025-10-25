@@ -411,7 +411,7 @@ void BulletinDrawer::bulletin_draw_report_summary() {
              0, 0, 1, 1});
 
         draw_manager.draw(
-            get_light_spr(rpt.light_army),
+            get_light_spr(rpt.light_food),
             {st_x+22, st_y,
              0, 0, 1, 1});
 
