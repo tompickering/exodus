@@ -79,7 +79,9 @@ void ExodusDebug::own_planet() {
     Planet *p = exostate().get_active_planet();
     if (p && p->exists()) {
         p->set_owner(0, POCR_Seized);
-        p->set_name("DEBUG");
+        if (!p->is_named()) {
+            p->set_name("DEBUG");
+        }
     }
 }
 
@@ -90,7 +92,9 @@ void ExodusDebug::own_sys_planets() {
             Planet *p = star->get_planet(i);
             if (p && p->exists()) {
                 p->set_owner(0, POCR_Seized);
-                p->set_name("DEBUG");
+                if (!p->is_named()) {
+                    p->set_name("DEBUG");
+                }
             }
         }
     }
