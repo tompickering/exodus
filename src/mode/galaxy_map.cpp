@@ -30,6 +30,7 @@ enum ID {
     SPACEPORT_SHIP2,
     BTN_REPORT,
     BTN_GUIDE,
+    REPORT_COUNT,
     END,
 };
 
@@ -843,6 +844,7 @@ ExodusMode GalaxyMap::update(float delta) {
                         break;
                     case BPR_Close:
                         bulletin_ensure_closed();
+                        draw_manager.draw(id(ID::REPORT_COUNT), nullptr);
                         break;
                     case BPR_Zoom:
                         {
@@ -5365,6 +5367,17 @@ void GalaxyMap::reset_planet_report() {
 
 void GalaxyMap::planet_report_bulletin(bool transition, int idx) {
     const PlanetReport& report = exostate().get_planet_report(idx);
+
+    char text[32];
+    snprintf(text, sizeof(text), "Report: %d/%d", idx+1, exostate().planet_report_count());
+
+    draw_manager.draw_text(
+        id(ID::REPORT_COUNT),
+        Font::Large,
+        text,
+        Justify::Left,
+        10, 2,
+        COL_TEXT2);
 
     Star *s = exostate().get_star(report.star_idx);
     Planet *p = exostate().get_planet(report.star_idx, report.planet_idx);
