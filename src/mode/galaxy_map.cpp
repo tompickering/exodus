@@ -901,7 +901,7 @@ ExodusMode GalaxyMap::update(float delta) {
                         }
                         break;
                     case BPR_Forward:
-                        if (planet_report_summary_current < (exostate().planet_report_count()+1) / BULLETIN_REPORT_SUMMARY_LINES) {
+                        if ((planet_report_summary_current+1) <= (exostate().planet_report_count()-1) / BULLETIN_REPORT_SUMMARY_LINES) {
                             ++planet_report_summary_current;
                             planet_report_summary_bulletin(true, planet_report_summary_current);
                         }
@@ -5442,7 +5442,7 @@ void GalaxyMap::planet_report_bulletin(bool transition, int idx) {
 }
 
 void GalaxyMap::planet_report_summary_bulletin(bool transition, int idx) {
-    const int pages = 1 + exostate().planet_report_count() / BULLETIN_REPORT_SUMMARY_LINES;
+    const int pages = 1 + (exostate().planet_report_count()-1) / BULLETIN_REPORT_SUMMARY_LINES;
 
     char text[32];
     snprintf(text, sizeof(text), "Page: %d/%d", idx+1, pages);
