@@ -342,6 +342,7 @@ void BulletinDrawer::bulletin_draw_report_summary() {
         const PlanetReport& rpt = exostate().get_planet_report(r_idx);
 
         Planet *p = exostate().get_planet(rpt.star_idx, rpt.planet_idx);
+        Star *s = exostate().get_star(rpt.star_idx);
 
         int y = bulletin_text_y(drawn, 51) - 1;
 
@@ -380,11 +381,24 @@ void BulletinDrawer::bulletin_draw_report_summary() {
             {BULLETIN_TEXT_X + 32, y + 11,
              0.5, 0.5, planet_scale, planet_scale});
 
+        char line[BULLETIN_MAX_TEXT];
+
+        snprintf(line, BULLETIN_MAX_TEXT, "%s, %s", p->get_name(), s->name);
+
         draw_manager.draw_text(
             id_bulletin_text[drawn],
-            p->get_name(),
+            line,
             Justify::Left,
             BULLETIN_TEXT_X + 48,
+            y,
+            COL_TEXT);
+
+        snprintf(line, BULLETIN_MAX_TEXT, "Ar: +%d; +%dMC", rpt.prod_inf + rpt.prod_gli + rpt.prod_art, rpt.trade_mc);
+
+        draw_manager.draw_text(
+            line,
+            Justify::Right,
+            BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4,
             y,
             COL_TEXT);
 
