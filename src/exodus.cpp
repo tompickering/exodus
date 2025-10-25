@@ -357,6 +357,10 @@ int Exodus::run(int argc, char** argv) {
             reset_mode_stack();
             push_mode(MODE_GalaxyMap);
         }
+
+        if (input_manager.consume(Input::K_O)) {
+            exodebug.own_sys_planets();
+        }
 #endif
     }
 
