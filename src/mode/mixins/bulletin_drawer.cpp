@@ -271,61 +271,33 @@ void BulletinDrawer::bulletin_draw_events() {
 
     // Gauges
 
-    if (rpt.light_food != PTL_Green) {
-        draw_manager.draw(
-            IMG_SU1_CTRL1,
-            {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4,
-             BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
-             1.0f, 0.0f, 1, 1});
-        draw_manager.draw(
-            get_light_spr(rpt.light_food),
-            {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4 - 24,
-             BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
-             1.0f, 0.0f, 1, 1});
-        ++event_count;
-    }
+    const int st_x = BULLETIN_TEXT_X;
+    const int st_y = BULLETIN_Y + BULLETIN_H - BULLETIN_BORDER*2 - 2;
 
-    if (rpt.light_plu != PTL_Green) {
-        draw_manager.draw(
-            IMG_SU1_CTRL2,
-            {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4,
-             BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
-             1.0f, 0.0f, 1, 1});
-        draw_manager.draw(
-            get_light_spr(rpt.light_plu),
-            {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4 - 24,
-             BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
-             1.0f, 0.0f, 1, 1});
-        ++event_count;
-    }
+    draw_manager.draw(
+        IMG_PL_ST,
+        {st_x, st_y,
+         0, 1, 1, 1});
 
-    if (rpt.light_unrest != PTL_Green) {
-        draw_manager.draw(
-            IMG_SU1_CTRL3,
-            {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4,
-             BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
-             1.0f, 0.0f, 1, 1});
-        draw_manager.draw(
-            get_light_spr(rpt.light_unrest),
-            {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4 - 24,
-             BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
-             1.0f, 0.0f, 1, 1});
-        ++event_count;
-    }
+    draw_manager.draw(
+        get_light_spr(rpt.light_food),
+        {st_x+22, st_y,
+         0, 1, 1, 1});
 
-    if (rpt.light_army != PTL_Green) {
-        draw_manager.draw(
-            IMG_AR,
-            {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4,
-             BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
-             1.0f, 0.0f, 1, 1});
-        draw_manager.draw(
-            get_light_spr(rpt.light_army),
-            {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4 - 24,
-             BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
-             1.0f, 0.0f, 1, 1});
-        ++event_count;
-    }
+    draw_manager.draw(
+        get_light_spr(rpt.light_plu),
+        {st_x+60, st_y,
+         0, 1, 1, 1});
+
+    draw_manager.draw(
+        get_light_spr(rpt.light_unrest),
+        {st_x+98, st_y,
+         0, 1, 1, 1});
+
+    draw_manager.draw(
+        get_light_spr(rpt.light_army),
+        {st_x+136, st_y,
+         0, 1, 1, 1});
 }
 
 void BulletinDrawer::bulletin_draw_report_summary() {
