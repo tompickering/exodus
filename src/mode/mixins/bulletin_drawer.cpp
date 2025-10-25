@@ -179,7 +179,7 @@ void BulletinDrawer::bulletin_update(float dt) {
                     bulletin_continue_manual(BulletinManualPage((int)bulletin_manual_page_current - 1));
                 }
             } else if (clk.x < 0.67) {
-                if (bulletin_manual_page_current < bulletin_get_end_page()) {
+                if ((bulletin_manual_page_current+1) < bulletin_get_end_page()) {
                     bulletin_continue_manual(BulletinManualPage((int)bulletin_manual_page_current + 1));
                 }
             } else {
