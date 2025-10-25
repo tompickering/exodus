@@ -4980,9 +4980,6 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         if (owner) {
             if (p->count_stones(STONE_Trade)) {
                 TradeReport rpt = p->monthly_trade();
-                if (rpt.mc > 0) {
-                    report.register_good_news();
-                }
                 report.trade_mc = rpt.mc;
                 report.add_line("Trading Centre sold:");
                 report.add_line("Mi: %d / Fd: %d / Pl: %d => %d MC",
