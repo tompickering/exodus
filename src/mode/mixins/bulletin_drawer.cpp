@@ -167,6 +167,43 @@ void BulletinDrawer::bulletin_update(float dt) {
     }
 }
 
+static const char* get_event_icon(PlanetReportEvent event) {
+    switch (event) {
+        case PRE_Meteor:
+            return IMG_PREVENT1;
+        case PRE_Defects:
+            return IMG_PREVENT2;
+        case PRE_Climate:
+            return IMG_PREVENT3;
+        case PRE_Plague:
+            return IMG_PREVENT4;
+        case PRE_Aliens:
+            return IMG_PREVENT5;
+        case PRE_NewSpecies:
+            return IMG_PREVENT6;
+        case PRE_Epidemic:
+            return IMG_PREVENT7;
+        case PRE_Rebels:
+            return IMG_PREVENT8;
+        case PRE_Meltdown:
+            return IMG_PREVENT9;
+        case PRE_SurfChangeCultivation:
+            return IMG_PREVENT10;
+        case PRE_SurfChangeClearing:
+            return IMG_PREVENT11;
+        case PRE_HQDestroyed:
+            return IMG_PREVENT12;
+        case PRE_ArmyProductionSaved:
+            return IMG_PREVENT13;
+        case PRE_ArmyProductionStopped:
+            return IMG_PREVENT14;
+        default:
+            L.error("No icon for event %d", (int)event);
+    }
+
+    return nullptr;
+}
+
 static const char* get_light_spr(PlanetTrafficLight light) {
     if (light == PTL_Red) return IMG_SU1_CTA;
     if (light == PTL_Amber) return IMG_SU1_CTC;
@@ -220,55 +257,7 @@ void BulletinDrawer::bulletin_draw_events() {
         PlanetReportEvent event = (PlanetReportEvent)event_idx;
 
         if (rpt.has_event(event)) {
-            const char* icon = nullptr;
-
-            switch (event) {
-                case PRE_Meteor:
-                    icon = IMG_PREVENT1;
-                    break;
-                case PRE_Defects:
-                    icon = IMG_PREVENT2;
-                    break;
-                case PRE_Climate:
-                    icon = IMG_PREVENT3;
-                    break;
-                case PRE_Plague:
-                    icon = IMG_PREVENT4;
-                    break;
-                case PRE_Aliens:
-                    icon = IMG_PREVENT5;
-                    break;
-                case PRE_NewSpecies:
-                    icon = IMG_PREVENT6;
-                    break;
-                case PRE_Epidemic:
-                    icon = IMG_PREVENT7;
-                    break;
-                case PRE_Rebels:
-                    icon = IMG_PREVENT8;
-                    break;
-                case PRE_Meltdown:
-                    icon = IMG_PREVENT9;
-                    break;
-                case PRE_SurfChangeCultivation:
-                    icon = IMG_PREVENT10;
-                    break;
-                case PRE_SurfChangeClearing:
-                    icon = IMG_PREVENT11;
-                    break;
-                case PRE_HQDestroyed:
-                    icon = IMG_PREVENT12;
-                    break;
-                case PRE_ArmyProductionSaved:
-                    icon = IMG_PREVENT13;
-                    break;
-                case PRE_ArmyProductionStopped:
-                    icon = IMG_PREVENT14;
-                    break;
-                default:
-                    L.error("No icon for event %d", event_idx);
-                    break;
-            }
+            const char* icon = get_event_icon(event);
 
             draw_manager.draw(
                 icon,
@@ -426,6 +415,47 @@ void BulletinDrawer::bulletin_draw_report_summary() {
             get_light_spr(rpt.light_army),
             {st_x+136, st_y,
              0, 0, 1, 1});
+
+        const int max_events = 8;
+
+        int event_total = 0;
+
+        for (int event_idx = 0; event_idx < (int)PRE_MAX; ++event_idx) {
+            PlanetReportEvent event = (PlanetReportEvent)event_idx;
+
+            if (rpt.has_event(event)) {
+                ++event_total;
+            }
+        }
+
+        int event_count = 0;
+
+        for (int event_idx = 0; event_idx < (int)PRE_MAX; ++event_idx) {
+            PlanetReportEvent event = (PlanetReportEvent)event_idx;
+
+            if (rpt.has_event(event)) {
+                const char* icon = get_event_icon(event);
+
+                draw_manager.draw(
+                    icon,
+                    {st_x + 150 + (28 * event_count),
+                     st_y,
+                     0, 0, 1, 1});
+
+                ++event_count;
+
+                if (event_total > max_events && event_count == (max_events-1)) {
+                    draw_manager.draw_text(
+                        Font::Large,
+                        "...",
+                        Justify::Left,
+                        st_x + 154 + (28 * event_count),
+                        st_y - 14,
+                        COL_TEXT);
+                    break;
+                }
+            }
+        }
 
         ++drawn;
     }
