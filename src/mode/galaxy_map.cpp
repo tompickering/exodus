@@ -345,7 +345,9 @@ ExodusMode GalaxyMap::update(float delta) {
             }
 
             if (draw_manager.query_click(id(ID::BTN_GUIDE)).id) {
-                L.debug("Guide clicked");
+                bulletin_start_manual(BMP_START_GalaxyMap);
+                set_stage(GM_Manual);
+                return ExodusMode::MODE_None;
             }
 
             if (draw_manager.query_click(id(ID::BTN_REPORT)).id) {
@@ -940,6 +942,14 @@ ExodusMode GalaxyMap::update(float delta) {
                 planet_report_summary_current = 0;
                 bulletin_ensure_closed();
                 set_stage(GM_Idle);
+            }
+            break;
+        case GM_Manual:
+            bulletin_update(delta);
+            switch (bulletin_get_praction()) {
+                case BPR_Close:
+                    bulletin_ensure_closed();
+                    set_stage(GM_Idle);
             }
             break;
         case GM_QuitConfirm:

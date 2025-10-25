@@ -21,6 +21,15 @@ enum BulletinMode : uint8_t {
     BM_Default,
     BM_Report,
     BM_ReportSummary,
+    BM_Manual,
+};
+
+enum BulletinManualPage : uint8_t {
+    BMP_START_Contents,
+    BMP_END_Contents,
+    BMP_START_GalaxyMap,
+    BMP_END_GalaxyMap,
+    BMP_MAX,
 };
 
 enum BulletinPRAction : uint8_t {
@@ -39,6 +48,7 @@ class BulletinDrawer {
         bool bulletin_start_new(bool, Star*);
         bool bulletin_start_new(bool, int);
         bool bulletin_start_new(bool, BulletinMode);
+        bool bulletin_start_manual(BulletinManualPage);
         void bulletin_update(float);
         void bulletin_set_next_text(const char*, ...);
         void bulletin_set_text_col(RGB);
@@ -63,6 +73,8 @@ class BulletinDrawer {
         int bulletin_get_specific_report() { return bulletin_report_specific; }
     private:
         BulletinMode bulletin_mode;
+
+        bool bulletin_continue_manual(BulletinManualPage);
 
         bool bulletin_start_new_internal(bool, int, BulletinMode);
         void bulletin_open();    // Open using bulletin_start_new()
@@ -112,6 +124,9 @@ class BulletinDrawer {
         int bulletin_report_summary_page;
         int bulletin_report_specific;
 
+        BulletinManualPage bulletin_manual_page_opened;
+        BulletinManualPage bulletin_manual_page_current;
+
         bool bulletin_is_war_ally;
         Planet* bulletin_war_ally_planet;
         int bulletin_war_ally_mc;
@@ -124,6 +139,8 @@ class BulletinDrawer {
 
         SprID bulletin_war_ally_ids_army[BULLETIN_WAR_ALLY_IDS];
         SprID bulletin_war_ally_id_exit;
+
+        BulletinManualPage bulletin_get_end_page();
 };
 
 #endif

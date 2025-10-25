@@ -175,6 +175,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
             GM_PlanetReports,
             GM_OpenPlanetReportSummary,
             GM_PlanetReportSummary,
+            GM_Manual,
             GM_QuitConfirm,
         };
 

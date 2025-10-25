@@ -64,6 +64,17 @@ bool BulletinDrawer::bulletin_start_new(bool transition, BulletinMode mode) {
     return bulletin_start_new_internal(transition, -1, mode);
 }
 
+bool BulletinDrawer::bulletin_start_manual(BulletinManualPage page) {
+    bulletin_manual_page_opened = page;
+    return bulletin_continue_manual(page);
+}
+
+bool BulletinDrawer::bulletin_continue_manual(BulletinManualPage page) {
+    L.debug("MANUAL PAGE %d", (int)page);
+    bulletin_manual_page_current = page;
+    return bulletin_start_new_internal(false, -1, BM_Manual);
+}
+
 bool BulletinDrawer::bulletin_start_new_internal(bool transition, int star_idx, BulletinMode mode) {
     for (int i = 0; i < bulletin_text_idx; ++i) {
         draw_manager.draw(id_bulletin_text[i], nullptr);
@@ -94,7 +105,11 @@ bool BulletinDrawer::bulletin_start_new_internal(bool transition, int star_idx, 
         bulletin_bg_preserve = nullptr;
     }
 
-    bulletin_set_active_player_flag();
+    if (bulletin_mode == BM_Manual) {
+        bulletin_set_flag(IMG_FLAG_MAN);
+    } else {
+        bulletin_set_active_player_flag();
+    }
 
     return true;
 }
@@ -154,6 +169,22 @@ void BulletinDrawer::bulletin_update(float dt) {
                     bulletin_praction = BPR_OpenSpecificReport;
                     break;
                 }
+            }
+        }
+    } else if (bulletin_mode == BM_Manual) {
+        SpriteClick clk = draw_manager.query_click(id_bulletin_prbuttons);
+        if (clk.id) {
+            if (clk.x <= 0.33) {
+                if (bulletin_manual_page_current > bulletin_manual_page_opened) {
+                    bulletin_continue_manual(BulletinManualPage((int)bulletin_manual_page_current - 1));
+                }
+            } else if (clk.x < 0.67) {
+                if (bulletin_manual_page_current < bulletin_get_end_page()) {
+                    bulletin_continue_manual(BulletinManualPage((int)bulletin_manual_page_current + 1));
+                }
+            } else {
+                bulletin_praction = BPR_Close;
+                bulletin_has_been_acknowledged = true;
             }
         }
     } else if (bulletin_is_war_ally) {
@@ -723,6 +754,13 @@ void BulletinDrawer::bulletin_open() {
             {BULLETIN_FLAG_BG_X + BULLETIN_FLAG_BG_W + 2,
              BULLETIN_Y - 2,
              0, 1, 1, 1});
+    } else if (bulletin_mode == BM_Manual) {
+        draw_manager.draw(
+            id_bulletin_prbuttons,
+            IMG_PRBUTTONS,
+            {BULLETIN_FLAG_BG_X + BULLETIN_FLAG_BG_W + 2,
+             BULLETIN_Y - 2,
+             0, 1, 1, 1});
     } else {
         draw_manager.draw(
             id_bulletin_header_l,
@@ -962,4 +1000,18 @@ void BulletinDrawer::bulletin_set_player_flag(Player* player) {
 
 void BulletinDrawer::bulletin_set_active_player_flag() {
     bulletin_set_player_flag(exostate().get_active_player());
+}
+
+BulletinManualPage BulletinDrawer::bulletin_get_end_page() {
+    switch (bulletin_manual_page_opened) {
+        case BMP_START_Contents:
+            return BMP_END_Contents;
+        case BMP_START_GalaxyMap:
+            return BMP_END_GalaxyMap;
+        default:
+            break;
+    }
+
+    L.error("Opened page %d should have defined end", (int)bulletin_manual_page_opened);
+    return BMP_MAX;
 }
