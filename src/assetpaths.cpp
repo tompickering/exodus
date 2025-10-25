@@ -1077,6 +1077,9 @@ const char *IMG_BTNREPORT        = D_NEW "btn_report";
 const char *IMG_BTNGUIDE         = D_NEW "btn_guide";
 const char *IMG_BTNZOOM          = D_NEW "btn_zoom";
 const char *IMG_AR               = D_NEW "ar";
+const char *IMG_EXCL_CRIT        = D_NEW "excl_crit";
+const char *IMG_EXCL_WARN        = D_NEW "excl_warn";
+const char *IMG_EXCL_OK          = D_NEW "excl_ok";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2155,6 +2158,9 @@ const char *ASSETS_IMG[] = {
     IMG_BTNGUIDE,
     IMG_BTNZOOM,
     IMG_AR,
+    IMG_EXCL_CRIT,
+    IMG_EXCL_WARN,
+    IMG_EXCL_OK,
 
     "",
 };
