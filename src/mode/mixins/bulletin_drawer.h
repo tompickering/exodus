@@ -35,6 +35,11 @@ enum BulletinManualPage : uint8_t {
     BMP_END_GalaxyMap,
     BMP_START_Ctrl,
     BMP_END_Ctrl,
+    BMP_START_StarMap,
+    BMP_StarMap2,
+    BMP_END_StarMap,
+    BMP_START_Comm,
+    BMP_END_Comm,
     BMP_MAX,
 };
 

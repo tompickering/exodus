@@ -1033,6 +1033,10 @@ BulletinManualPage BulletinDrawer::bulletin_get_end_page() {
             return BMP_END_GalaxyMap;
         case BMP_START_Ctrl:
             return BMP_END_Ctrl;
+        case BMP_START_StarMap:
+            return BMP_END_StarMap;
+        case BMP_START_Comm:
+            return BMP_END_Comm;
         default:
             break;
     }
@@ -1049,6 +1053,11 @@ const char* BulletinDrawer::bulletin_get_manual_flag() {
             return IMG_FLAG_GALMAP;
         case BMP_START_Ctrl:
             return IMG_FLAG_CTRL;
+        case BMP_START_StarMap:
+        case BMP_StarMap2:
+            return IMG_FLAG_SOLMAP;
+        case BMP_START_Comm:
+            return IMG_FLAG_COMM;
         default:
             break;
     }
@@ -1072,10 +1081,14 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("First Steps");
             bulletin_set_next_text("The Galaxy Map");
             bulletin_set_next_text("The CTRL Menu");
+            bulletin_set_next_text("The Star Map");
+            bulletin_set_next_text("COMM: Settling, Negotiating, Attacking");
         } else {
             LINK(1, BMP_START_FirstSteps)
             LINK(2, BMP_START_GalaxyMap)
             LINK(3, BMP_START_Ctrl)
+            LINK(4, BMP_START_StarMap)
+            LINK(5, BMP_START_Comm)
         }
     }
 
@@ -1215,6 +1228,53 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
                  0.f, 0.f, 1, 1});
         } else {
             LINK(8, BMP_START_Ctrl)
+        }
+    }
+
+    if (p == BMP_START_StarMap) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("The Star Map");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("This map shows the habitable planets of a star.");
+            bulletin_set_next_text("Named planets usually belong to empires.");
+            bulletin_set_next_text("Unnamed planets may be claimed via COMM.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Click on a planet to select it.");
+            bulletin_set_next_text("Your interactions with the planet will be");
+            bulletin_set_next_text("different depending on whether:");
+            bulletin_set_next_text("* It is owned by you");
+            bulletin_set_next_text("* It is owned by a rival");
+            bulletin_set_next_text("* It is not owned at all");
+        }
+    }
+
+    if (p == BMP_StarMap2) {
+        if (draw) {
+            bulletin_set_next_text("");
+            bulletin_set_next_text("You have the following options:");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("FLEET: (If the planet is not owned by you)");
+            bulletin_set_next_text("Start a Scout or Bombing mission.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("MAP: (If the planet is owned by you)");
+            bulletin_set_next_text("Show the surface map for building and");
+            bulletin_set_next_text("management.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("INFO: Show information about the planet.");
+            bulletin_set_next_text("If the planet is owned by a rival, having more");
+            bulletin_set_next_text("Scouts may reveal more detailed information...");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("COMM: Click here to learn more about COMM.");
+        } else {
+            LINK(14, BMP_START_Comm);
+        }
+    }
+
+    if (p == BMP_START_Comm) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("The COMM Menu");
         }
     }
 }
