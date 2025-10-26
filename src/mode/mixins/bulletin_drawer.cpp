@@ -172,6 +172,11 @@ void BulletinDrawer::bulletin_update(float dt) {
             }
         }
     } else if (bulletin_mode == BM_Manual) {
+        if (draw_manager.query_click(id_bulletin_contents).id) {
+            // Start rather than Continue as we're changing section
+            bulletin_start_manual(BMP_START_Contents);
+        }
+
         SpriteClick clk = draw_manager.query_click(id_bulletin_prbuttons);
         if (clk.id) {
             if (clk.x <= 0.33) {
@@ -705,6 +710,7 @@ void BulletinDrawer::bulletin_open() {
     id_bulletin_yesno = draw_manager.new_sprite_id();
     id_bulletin_prbuttons = draw_manager.new_sprite_id();
     id_bulletin_zoom = draw_manager.new_sprite_id();
+    id_bulletin_contents = draw_manager.new_sprite_id();
 
     bulletin_bg_preserve = nullptr;
 
@@ -756,6 +762,12 @@ void BulletinDrawer::bulletin_open() {
              0, 1, 1, 1});
     } else if (bulletin_mode == BM_Manual) {
         draw_manager.draw(
+            id_bulletin_contents,
+            IMG_BTN_TOP,
+            {BULLETIN_FLAG_BG_X - 2,
+             BULLETIN_Y - 2,
+             1, 1, 1, 1});
+        draw_manager.draw(
             id_bulletin_prbuttons,
             IMG_PRBUTTONS,
             {BULLETIN_FLAG_BG_X + BULLETIN_FLAG_BG_W + 2,
@@ -800,6 +812,7 @@ void BulletinDrawer::bulletin_close() {
     draw_manager.draw(id_bulletin_yesno, nullptr);
     draw_manager.draw(id_bulletin_prbuttons, nullptr);
     draw_manager.draw(id_bulletin_zoom, nullptr);
+    draw_manager.draw(id_bulletin_contents, nullptr);
 
     draw_manager.release_sprite_id(id_bulletin_header_flag);
     draw_manager.release_sprite_id(id_bulletin_header_l);
@@ -812,6 +825,7 @@ void BulletinDrawer::bulletin_close() {
     draw_manager.release_sprite_id(id_bulletin_yesno);
     draw_manager.release_sprite_id(id_bulletin_prbuttons);
     draw_manager.release_sprite_id(id_bulletin_zoom);
+    draw_manager.release_sprite_id(id_bulletin_contents);
 
 
     // Wipe all info

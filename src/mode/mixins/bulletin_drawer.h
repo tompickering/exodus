@@ -101,6 +101,7 @@ class BulletinDrawer {
         SprID id_bulletin_yesno;
         SprID id_bulletin_prbuttons;
         SprID id_bulletin_zoom;
+        SprID id_bulletin_contents;
 
         void bulletin_draw_events();
         void bulletin_draw_text();
