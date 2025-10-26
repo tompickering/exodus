@@ -345,7 +345,7 @@ ExodusMode GalaxyMap::update(float delta) {
             }
 
             if (draw_manager.query_click(id(ID::BTN_GUIDE)).id) {
-                bulletin_start_manual(BMP_START_GalaxyMap);
+                bulletin_start_manual(BMP_GalaxyMap);
                 set_stage(GM_Manual);
                 return ExodusMode::MODE_None;
             }

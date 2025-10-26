@@ -179,7 +179,7 @@ void BulletinDrawer::bulletin_update(float dt) {
     } else if (bulletin_mode == BM_Manual) {
         if (draw_manager.query_click(id_bulletin_contents).id) {
             // Start rather than Continue as we're changing section
-            bulletin_start_manual(BMP_START_Contents);
+            bulletin_start_manual(BMP_Contents);
         }
 
         SpriteClick clk = draw_manager.query_click(id_bulletin_prbuttons);
@@ -1025,18 +1025,18 @@ void BulletinDrawer::bulletin_set_active_player_flag() {
 
 BulletinManualPage BulletinDrawer::bulletin_get_end_page() {
     switch (bulletin_manual_page_opened) {
-        case BMP_START_Contents:
-            return BMP_END_Contents;
-        case BMP_START_FirstSteps:
-            return BMP_END_FirstSteps;
-        case BMP_START_GalaxyMap:
-            return BMP_END_GalaxyMap;
-        case BMP_START_Ctrl:
-            return BMP_END_Ctrl;
-        case BMP_START_StarMap:
-            return BMP_END_StarMap;
-        case BMP_START_Comm:
-            return BMP_END_Comm;
+        case BMP_Contents:
+            return BMP_Contents_END;
+        case BMP_FirstSteps:
+            return BMP_FirstSteps_END;
+        case BMP_GalaxyMap:
+            return BMP_GalaxyMap_END;
+        case BMP_Ctrl:
+            return BMP_Ctrl_END;
+        case BMP_StarMap:
+            return BMP_StarMap_END;
+        case BMP_Comm:
+            return BMP_Comm_END;
         default:
             break;
     }
@@ -1047,16 +1047,16 @@ BulletinManualPage BulletinDrawer::bulletin_get_end_page() {
 
 const char* BulletinDrawer::bulletin_get_manual_flag() {
     switch (bulletin_manual_page_current) {
-        case BMP_START_GalaxyMap:
-        case BMP_GalaxyMap2:
-        case BMP_GalaxyMap3:
+        case BMP_GalaxyMap:
+        case BMP_GalaxyMap_2:
+        case BMP_GalaxyMap_3:
             return IMG_FLAG_GALMAP;
-        case BMP_START_Ctrl:
+        case BMP_Ctrl:
             return IMG_FLAG_CTRL;
-        case BMP_START_StarMap:
-        case BMP_StarMap2:
+        case BMP_StarMap:
+        case BMP_StarMap_2:
             return IMG_FLAG_SOLMAP;
-        case BMP_START_Comm:
+        case BMP_Comm:
             return IMG_FLAG_COMM;
         default:
             break;
@@ -1074,7 +1074,7 @@ const char* BulletinDrawer::bulletin_get_manual_flag() {
 void BulletinDrawer::bulletin_update_manual_page(bool draw) {
     BulletinManualPage p = bulletin_manual_page_current;
 
-    if (p == BMP_START_Contents) {
+    if (p == BMP_Contents) {
         if (draw) {
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("CONTENTS");
@@ -1084,22 +1084,22 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("The Star Map");
             bulletin_set_next_text("COMM: Settling, Negotiating, Attacking");
         } else {
-            LINK(1, BMP_START_FirstSteps)
-            LINK(2, BMP_START_GalaxyMap)
-            LINK(3, BMP_START_Ctrl)
-            LINK(4, BMP_START_StarMap)
-            LINK(5, BMP_START_Comm)
+            LINK(1, BMP_FirstSteps)
+            LINK(2, BMP_GalaxyMap)
+            LINK(3, BMP_Ctrl)
+            LINK(4, BMP_StarMap)
+            LINK(5, BMP_Comm)
         }
     }
 
-    if (p == BMP_START_FirstSteps) {
+    if (p == BMP_FirstSteps) {
         if (draw) {
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("First Steps");
         }
     }
 
-    if (p == BMP_START_GalaxyMap) {
+    if (p == BMP_GalaxyMap) {
         if (draw) {
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("The Galaxy Map");
@@ -1136,11 +1136,11 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
                  bulletin_text_y(14),
                  0.5f, 0.5f, 1, 1});
         } else {
-            LINK(2, BMP_START_FirstSteps)
+            LINK(2, BMP_FirstSteps)
         }
     }
 
-    if (p == BMP_GalaxyMap2) {
+    if (p == BMP_GalaxyMap_2) {
         if (draw) {
             bulletin_set_next_text("");
             bulletin_set_next_text("Click on a Star (or Guild) to select it.");
@@ -1184,7 +1184,7 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
         }
     }
 
-    if (p == BMP_GalaxyMap3) {
+    if (p == BMP_GalaxyMap_3) {
         if (draw) {
             bulletin_set_next_text("You have the following options:");
             bulletin_set_next_text("");
@@ -1227,11 +1227,11 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
                  bulletin_text_y(13) - 8,
                  0.f, 0.f, 1, 1});
         } else {
-            LINK(8, BMP_START_Ctrl)
+            LINK(8, BMP_Ctrl)
         }
     }
 
-    if (p == BMP_START_StarMap) {
+    if (p == BMP_StarMap) {
         if (draw) {
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("The Star Map");
@@ -1249,7 +1249,7 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
         }
     }
 
-    if (p == BMP_StarMap2) {
+    if (p == BMP_StarMap_2) {
         if (draw) {
             bulletin_set_next_text("");
             bulletin_set_next_text("You have the following options:");
@@ -1267,11 +1267,11 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("");
             bulletin_set_next_text("COMM: Click here to learn more about COMM.");
         } else {
-            LINK(14, BMP_START_Comm);
+            LINK(14, BMP_Comm);
         }
     }
 
-    if (p == BMP_START_Comm) {
+    if (p == BMP_Comm) {
         if (draw) {
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("The COMM Menu");
