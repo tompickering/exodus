@@ -146,8 +146,8 @@ class BulletinDrawer {
         SprID bulletin_war_ally_ids_army[BULLETIN_WAR_ALLY_IDS];
         SprID bulletin_war_ally_id_exit;
 
-        const char* bulletin_get_manual_flag();
         BulletinManualPage bulletin_get_end_page();
+        const char* bulletin_get_manual_flag();
 };
 
 #endif

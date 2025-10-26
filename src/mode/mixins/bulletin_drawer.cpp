@@ -1023,18 +1023,6 @@ void BulletinDrawer::bulletin_set_active_player_flag() {
     bulletin_set_player_flag(exostate().get_active_player());
 }
 
-const char* BulletinDrawer::bulletin_get_manual_flag() {
-    switch (bulletin_manual_page_current) {
-        case BMP_START_GalaxyMap:
-        case BMP_GalaxyMap2:
-            return IMG_FLAG_GALMAP;
-        default:
-            break;
-    }
-
-    return IMG_FLAG_MAN;
-}
-
 BulletinManualPage BulletinDrawer::bulletin_get_end_page() {
     switch (bulletin_manual_page_opened) {
         case BMP_START_Contents:
@@ -1049,6 +1037,18 @@ BulletinManualPage BulletinDrawer::bulletin_get_end_page() {
 
     L.error("Opened page %d should have defined end", (int)bulletin_manual_page_opened);
     return BMP_MAX;
+}
+
+const char* BulletinDrawer::bulletin_get_manual_flag() {
+    switch (bulletin_manual_page_current) {
+        case BMP_START_GalaxyMap:
+        case BMP_GalaxyMap2:
+            return IMG_FLAG_GALMAP;
+        default:
+            break;
+    }
+
+    return IMG_FLAG_MAN;
 }
 
 #define LINK(N,P) if (draw_manager.query_click(id_bulletin_text[N]).id) { bulletin_continue_manual(P); }
