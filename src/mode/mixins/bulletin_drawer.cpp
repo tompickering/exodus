@@ -1188,7 +1188,7 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("");
             bulletin_set_next_text("");
             bulletin_set_next_text("Take a closer look at the selected star");
-            bulletin_set_next_text("(if visited) or Guild");
+            bulletin_set_next_text("(if visited) or Guild.");
 
             draw_manager.draw(
                 IMG_MAN_BTN_FLY,
