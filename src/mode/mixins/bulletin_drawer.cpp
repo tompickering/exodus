@@ -1061,17 +1061,61 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
 
     if (p == BMP_START_Contents) {
         if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("CONTENTS");
             bulletin_set_next_text("First Steps");
             bulletin_set_next_text("The Galaxy Map");
         } else {
-            LINK(0, BMP_START_FirstSteps)
-            LINK(1, BMP_START_GalaxyMap)
+            LINK(1, BMP_START_FirstSteps)
+            LINK(2, BMP_START_GalaxyMap)
+        }
+    }
+
+    if (p == BMP_START_FirstSteps) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("First Steps");
         }
     }
 
     if (p == BMP_START_GalaxyMap) {
         if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("The Galaxy Map");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("(For advice on your First Steps, click here)");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("The map shows all the stars your fleet can");
+            bulletin_set_next_text("travel to.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("At the centre is the Space Guild.");
+            bulletin_set_next_text("This is where you begin your journey.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("This icon shows the location");
+            bulletin_set_next_text("of your fleet.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("When it is in flight, this icon");
+            bulletin_set_next_text("shows its destination.");
+
+            draw_manager.draw(
+                IMG_TS1_WORM,
+                {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 48,
+                 bulletin_text_y(8),
+                 0.5f, 0.5f, 1, 1});
+
+            draw_manager.draw(
+                IMG_TS1_ICON1,
+                {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 48,
+                 bulletin_text_y(11),
+                 0.5f, 0.5f, 1, 1});
+
+            draw_manager.draw(
+                IMG_TS1_DEST,
+                {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 48,
+                 bulletin_text_y(14),
+                 0.5f, 0.5f, 1, 1});
+        } else {
+            LINK(2, BMP_START_FirstSteps)
         }
     }
 }
