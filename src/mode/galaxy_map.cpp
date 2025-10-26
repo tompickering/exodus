@@ -950,6 +950,8 @@ ExodusMode GalaxyMap::update(float delta) {
                 case BPR_Close:
                     bulletin_ensure_closed();
                     set_stage(GM_Idle);
+                default:
+                    break;
             }
             break;
         case GM_QuitConfirm:
