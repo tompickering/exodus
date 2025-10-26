@@ -1031,6 +1031,8 @@ BulletinManualPage BulletinDrawer::bulletin_get_end_page() {
             return BMP_END_FirstSteps;
         case BMP_START_GalaxyMap:
             return BMP_END_GalaxyMap;
+        case BMP_START_Ctrl:
+            return BMP_END_Ctrl;
         default:
             break;
     }
@@ -1043,7 +1045,10 @@ const char* BulletinDrawer::bulletin_get_manual_flag() {
     switch (bulletin_manual_page_current) {
         case BMP_START_GalaxyMap:
         case BMP_GalaxyMap2:
+        case BMP_GalaxyMap3:
             return IMG_FLAG_GALMAP;
+        case BMP_START_Ctrl:
+            return IMG_FLAG_CTRL;
         default:
             break;
     }
@@ -1066,9 +1071,11 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("CONTENTS");
             bulletin_set_next_text("First Steps");
             bulletin_set_next_text("The Galaxy Map");
+            bulletin_set_next_text("The CTRL Menu");
         } else {
             LINK(1, BMP_START_FirstSteps)
             LINK(2, BMP_START_GalaxyMap)
+            LINK(3, BMP_START_Ctrl)
         }
     }
 
@@ -1161,8 +1168,24 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
                 {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 56,
                  bulletin_text_y(13)+4,
                  0.5f, 0.f, 1, 1});
+        }
+    }
+
+    if (p == BMP_GalaxyMap3) {
+        if (draw) {
+            bulletin_set_next_text("You have the following options:");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("FLY: Commence flight to the selected star.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("CTRL: Command functions; save/load options.");
+            bulletin_set_next_text("Click here to learn more about CTRL.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("STAT: Various status information options.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("ZOOM: Take a closer look at the selected star");
+            bulletin_set_next_text("(if visited) or Guild");
         } else {
-            LINK(2, BMP_START_FirstSteps)
+            LINK(5, BMP_START_Ctrl)
         }
     }
 }
