@@ -1080,6 +1080,15 @@ extern const char *IMG_EXCL_OK;
 extern const char *IMG_PL_ST;
 extern const char *IMG_FLAG_MAN;
 extern const char *IMG_FLAG_GALMAP;
+extern const char *IMG_FLAG_SOLMAP;
+extern const char *IMG_FLAG_COMM;
+extern const char *IMG_FLAG_FLEET;
+extern const char *IMG_FLAG_SURF;
+extern const char *IMG_FLAG_LIGHTS;
+extern const char *IMG_FLAG_BTLPREP;
+extern const char *IMG_FLAG_BTL;
+extern const char *IMG_FLAG_TRADE;
+extern const char *IMG_FLAG_SPACEBTL;
 extern const char *IMG_BTN_TOP;
 
 extern const char *INIT_IMG;

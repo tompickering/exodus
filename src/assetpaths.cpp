@@ -1083,6 +1083,15 @@ const char *IMG_EXCL_OK          = D_NEW "excl_ok";
 const char *IMG_PL_ST            = D_NEW "pl_st";
 const char *IMG_FLAG_MAN         = D_NEW "flag_man";
 const char *IMG_FLAG_GALMAP      = D_NEW "flag_galmap";
+const char *IMG_FLAG_SOLMAP      = D_NEW "flag_solmap";
+const char *IMG_FLAG_COMM        = D_NEW "flag_comm";
+const char *IMG_FLAG_FLEET       = D_NEW "flag_fleet";
+const char *IMG_FLAG_SURF        = D_NEW "flag_surf";
+const char *IMG_FLAG_LIGHTS      = D_NEW "flag_lights";
+const char *IMG_FLAG_BTLPREP     = D_NEW "flag_btlprep";
+const char *IMG_FLAG_BTL         = D_NEW "flag_btl";
+const char *IMG_FLAG_TRADE       = D_NEW "flag_trade";
+const char *IMG_FLAG_SPACEBTL    = D_NEW "flag_spacebtl2";
 const char *IMG_BTN_TOP          = D_NEW "btn_top";
 
 // Special cases
@@ -2168,6 +2177,15 @@ const char *ASSETS_IMG[] = {
     IMG_PL_ST,
     IMG_FLAG_MAN,
     IMG_FLAG_GALMAP,
+    IMG_FLAG_SOLMAP,
+    IMG_FLAG_COMM,
+    IMG_FLAG_FLEET,
+    IMG_FLAG_SURF,
+    IMG_FLAG_LIGHTS,
+    IMG_FLAG_BTLPREP,
+    IMG_FLAG_BTL,
+    IMG_FLAG_TRADE,
+    IMG_FLAG_SPACEBTL,
     IMG_BTN_TOP,
 
     "",
