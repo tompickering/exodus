@@ -1083,6 +1083,10 @@ const char *IMG_EXCL_OK          = D_NEW "excl_ok";
 const char *IMG_PL_ST            = D_NEW "pl_st";
 const char *IMG_FLAG_MAN         = D_NEW "flag_man";
 const char *IMG_FLAG_GALMAP      = D_NEW "flag_galmap";
+const char *IMG_FLAG_CTRL        = D_NEW "flag_ctrl";
+const char *IMG_FLAG_GUILD       = D_NEW "flag_guild";
+const char *IMG_FLAG_GUILDHQ     = D_NEW "flag_guildhq";
+const char *IMG_FLAG_GUILDBAR    = D_NEW "flag_guildbar";
 const char *IMG_FLAG_SOLMAP      = D_NEW "flag_solmap";
 const char *IMG_FLAG_COMM        = D_NEW "flag_comm";
 const char *IMG_FLAG_FLEET       = D_NEW "flag_fleet";
@@ -2177,6 +2181,10 @@ const char *ASSETS_IMG[] = {
     IMG_PL_ST,
     IMG_FLAG_MAN,
     IMG_FLAG_GALMAP,
+    IMG_FLAG_CTRL,
+    IMG_FLAG_GUILD,
+    IMG_FLAG_GUILDHQ,
+    IMG_FLAG_GUILDBAR,
     IMG_FLAG_SOLMAP,
     IMG_FLAG_COMM,
     IMG_FLAG_FLEET,
