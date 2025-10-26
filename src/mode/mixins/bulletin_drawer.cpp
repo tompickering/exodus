@@ -1189,7 +1189,6 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("You have the following options:");
             bulletin_set_next_text("");
             bulletin_set_next_text("");
-            bulletin_set_next_text("");
             bulletin_set_next_text("Commence flight to the selected star.");
             bulletin_set_next_text("");
             bulletin_set_next_text("");
@@ -1206,28 +1205,28 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             draw_manager.draw(
                 IMG_MAN_BTN_FLY,
                 {BULLETIN_TEXT_X,
-                 bulletin_text_y(3) - 8,
+                 bulletin_text_y(2),
                  0.f, 0.f, 1, 1});
 
             draw_manager.draw(
                 IMG_MAN_BTN_CTRL,
                 {BULLETIN_TEXT_X,
-                 bulletin_text_y(6) - 8,
+                 bulletin_text_y(5),
                  0.f, 0.f, 1, 1});
 
             draw_manager.draw(
                 IMG_MAN_BTN_STAT,
                 {BULLETIN_TEXT_X,
-                 bulletin_text_y(10) - 8,
+                 bulletin_text_y(9),
                  0.f, 0.f, 1, 1});
 
             draw_manager.draw(
                 IMG_MAN_BTN_ZOOM,
                 {BULLETIN_TEXT_X,
-                 bulletin_text_y(13) - 8,
+                 bulletin_text_y(12),
                  0.f, 0.f, 1, 1});
         } else {
-            LINK(8, BMP_Ctrl)
+            LINK(7, BMP_Ctrl)
         }
     }
 
