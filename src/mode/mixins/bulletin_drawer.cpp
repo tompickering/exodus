@@ -106,7 +106,7 @@ bool BulletinDrawer::bulletin_start_new_internal(bool transition, int star_idx, 
     }
 
     if (bulletin_mode == BM_Manual) {
-        bulletin_set_flag(IMG_FLAG_MAN);
+        bulletin_set_flag(bulletin_get_manual_flag());
     } else {
         bulletin_set_active_player_flag();
     }
@@ -1014,6 +1014,17 @@ void BulletinDrawer::bulletin_set_player_flag(Player* player) {
 
 void BulletinDrawer::bulletin_set_active_player_flag() {
     bulletin_set_player_flag(exostate().get_active_player());
+}
+
+const char* BulletinDrawer::bulletin_get_manual_flag() {
+    switch (bulletin_manual_page_current) {
+        case BMP_START_GalaxyMap:
+            return IMG_FLAG_GALMAP;
+        default:
+            break;
+    }
+
+    return IMG_FLAG_MAN;
 }
 
 BulletinManualPage BulletinDrawer::bulletin_get_end_page() {
