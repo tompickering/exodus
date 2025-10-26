@@ -1095,6 +1095,10 @@ extern const char *IMG_FLAG_TRADE;
 extern const char *IMG_FLAG_SPACEBTL;
 extern const char *IMG_BTN_TOP;
 extern const char *IMG_MAN_PLANPANEL;
+extern const char *IMG_MAN_BTN_FLY;
+extern const char *IMG_MAN_BTN_CTRL;
+extern const char *IMG_MAN_BTN_STAT;
+extern const char *IMG_MAN_BTN_ZOOM;
 
 extern const char *INIT_IMG;
 extern const char *CURSOR_IMG;

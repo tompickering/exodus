@@ -1098,6 +1098,10 @@ const char *IMG_FLAG_TRADE       = D_NEW "flag_trade";
 const char *IMG_FLAG_SPACEBTL    = D_NEW "flag_spacebtl2";
 const char *IMG_BTN_TOP          = D_NEW "btn_top";
 const char *IMG_MAN_PLANPANEL    = D_NEW "man_planpanel";
+const char *IMG_MAN_BTN_FLY      = D_NEW "man_btn_fly";
+const char *IMG_MAN_BTN_CTRL     = D_NEW "man_btn_ctrl";
+const char *IMG_MAN_BTN_STAT     = D_NEW "man_btn_stat";
+const char *IMG_MAN_BTN_ZOOM     = D_NEW "man_btn_zoom";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2197,6 +2201,10 @@ const char *ASSETS_IMG[] = {
     IMG_FLAG_SPACEBTL,
     IMG_BTN_TOP,
     IMG_MAN_PLANPANEL,
+    IMG_MAN_BTN_FLY,
+    IMG_MAN_BTN_CTRL,
+    IMG_MAN_BTN_STAT,
+    IMG_MAN_BTN_ZOOM,
 
     "",
 };

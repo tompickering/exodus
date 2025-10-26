@@ -1175,17 +1175,46 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
         if (draw) {
             bulletin_set_next_text("You have the following options:");
             bulletin_set_next_text("");
-            bulletin_set_next_text("FLY: Commence flight to the selected star.");
             bulletin_set_next_text("");
-            bulletin_set_next_text("CTRL: Command functions; save/load options.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Commence flight to the selected star.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Command functions; save/load options.");
             bulletin_set_next_text("Click here to learn more about CTRL.");
             bulletin_set_next_text("");
-            bulletin_set_next_text("STAT: Various status information options.");
             bulletin_set_next_text("");
-            bulletin_set_next_text("ZOOM: Take a closer look at the selected star");
+            bulletin_set_next_text("Various status information options.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Take a closer look at the selected star");
             bulletin_set_next_text("(if visited) or Guild");
+
+            draw_manager.draw(
+                IMG_MAN_BTN_FLY,
+                {BULLETIN_TEXT_X,
+                 bulletin_text_y(3) - 8,
+                 0.f, 0.f, 1, 1});
+
+            draw_manager.draw(
+                IMG_MAN_BTN_CTRL,
+                {BULLETIN_TEXT_X,
+                 bulletin_text_y(6) - 8,
+                 0.f, 0.f, 1, 1});
+
+            draw_manager.draw(
+                IMG_MAN_BTN_STAT,
+                {BULLETIN_TEXT_X,
+                 bulletin_text_y(10) - 8,
+                 0.f, 0.f, 1, 1});
+
+            draw_manager.draw(
+                IMG_MAN_BTN_ZOOM,
+                {BULLETIN_TEXT_X,
+                 bulletin_text_y(13) - 8,
+                 0.f, 0.f, 1, 1});
         } else {
-            LINK(5, BMP_START_Ctrl)
+            LINK(8, BMP_START_Ctrl)
         }
     }
 }
