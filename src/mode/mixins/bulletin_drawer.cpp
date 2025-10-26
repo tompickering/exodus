@@ -1051,7 +1051,7 @@ const char* BulletinDrawer::bulletin_get_manual_flag() {
     return IMG_FLAG_MAN;
 }
 
-#define LINK(N,P) if (draw_manager.query_click(id_bulletin_text[N]).id) { bulletin_continue_manual(P); }
+#define LINK(N,P) if (draw_manager.query_click(id_bulletin_text[N]).id) { bulletin_start_manual(P); }
 
 /*
  * Use the same function for draw and update so that the logic of each
