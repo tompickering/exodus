@@ -1026,6 +1026,7 @@ void BulletinDrawer::bulletin_set_active_player_flag() {
 const char* BulletinDrawer::bulletin_get_manual_flag() {
     switch (bulletin_manual_page_current) {
         case BMP_START_GalaxyMap:
+        case BMP_GalaxyMap2:
             return IMG_FLAG_GALMAP;
         default:
             break;
@@ -1113,6 +1114,42 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
                 IMG_TS1_DEST,
                 {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 48,
                  bulletin_text_y(14),
+                 0.5f, 0.5f, 1, 1});
+        } else {
+            LINK(2, BMP_START_FirstSteps)
+        }
+    }
+
+    if (p == BMP_GalaxyMap2) {
+        if (draw) {
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Click on a Star (or Guild) to select it.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("You can label (visited) stars with 'M'.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("The lower-right panel shows a '?'");
+            bulletin_set_next_text("if you have not visited this system.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Otherwise, it will display a system's planets.");
+            bulletin_set_next_text("Planets owned by you are marked yellow.");
+            bulletin_set_next_text("Planets owned by a rival are marked red.");
+
+            draw_manager.draw(
+                IMG_TS1_MK1,
+                {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 48,
+                 bulletin_text_y(1) - 4,
+                 0.5f, 0.f, 1, 1});
+
+            draw_manager.draw(
+                IMG_TS1_QMARK,
+                {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 48,
+                 bulletin_text_y(5)+4,
+                 0.5f, 0.f, 1, 1});
+
+            draw_manager.draw(
+                IMG_MAN_PLANPANEL,
+                {BULLETIN_X + BULLETIN_W/2,
+                 bulletin_text_y(14)-6,
                  0.5f, 0.5f, 1, 1});
         } else {
             LINK(2, BMP_START_FirstSteps)

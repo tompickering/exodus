@@ -30,6 +30,7 @@ enum BulletinManualPage : uint8_t {
     BMP_START_FirstSteps,
     BMP_END_FirstSteps,
     BMP_START_GalaxyMap,
+    BMP_GalaxyMap2,
     BMP_END_GalaxyMap,
     BMP_MAX,
 };
