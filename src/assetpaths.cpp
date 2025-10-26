@@ -1102,6 +1102,10 @@ const char *IMG_MAN_BTN_FLY      = D_NEW "man_btn_fly";
 const char *IMG_MAN_BTN_CTRL     = D_NEW "man_btn_ctrl";
 const char *IMG_MAN_BTN_STAT     = D_NEW "man_btn_stat";
 const char *IMG_MAN_BTN_ZOOM     = D_NEW "man_btn_zoom";
+const char *IMG_MAN_BTN_FLEET    = D_NEW "man_btn_fleet";
+const char *IMG_MAN_BTN_MAP      = D_NEW "man_btn_map";
+const char *IMG_MAN_BTN_INFO     = D_NEW "man_btn_info";
+const char *IMG_MAN_BTN_COMM     = D_NEW "man_btn_comm";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2205,6 +2209,10 @@ const char *ASSETS_IMG[] = {
     IMG_MAN_BTN_CTRL,
     IMG_MAN_BTN_STAT,
     IMG_MAN_BTN_ZOOM,
+    IMG_MAN_BTN_FLEET,
+    IMG_MAN_BTN_MAP,
+    IMG_MAN_BTN_INFO,
+    IMG_MAN_BTN_COMM,
 
     "",
 };

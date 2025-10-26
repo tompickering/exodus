@@ -1099,6 +1099,10 @@ extern const char *IMG_MAN_BTN_FLY;
 extern const char *IMG_MAN_BTN_CTRL;
 extern const char *IMG_MAN_BTN_STAT;
 extern const char *IMG_MAN_BTN_ZOOM;
+extern const char *IMG_MAN_BTN_FLEET;
+extern const char *IMG_MAN_BTN_MAP;
+extern const char *IMG_MAN_BTN_INFO;
+extern const char *IMG_MAN_BTN_COMM;
 
 extern const char *INIT_IMG;
 extern const char *CURSOR_IMG;

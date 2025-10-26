@@ -1242,6 +1242,7 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("Click on a planet to select it.");
             bulletin_set_next_text("Your interactions with the planet will be");
             bulletin_set_next_text("different depending on whether:");
+            bulletin_set_next_text("");
             bulletin_set_next_text("* It is owned by you");
             bulletin_set_next_text("* It is owned by a rival");
             bulletin_set_next_text("* It is not owned at all");
@@ -1253,18 +1254,42 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("");
             bulletin_set_next_text("You have the following options:");
             bulletin_set_next_text("");
-            bulletin_set_next_text("FLEET: (If the planet is not owned by you)");
+            bulletin_set_next_text("                  (If the planet is not owned by you)");
             bulletin_set_next_text("Start a Scout or Bombing mission.");
             bulletin_set_next_text("");
-            bulletin_set_next_text("MAP: (If the planet is owned by you)");
+            bulletin_set_next_text("                  (If the planet is owned by you)");
             bulletin_set_next_text("Show the surface map for building and");
             bulletin_set_next_text("management.");
             bulletin_set_next_text("");
-            bulletin_set_next_text("INFO: Show information about the planet.");
+            bulletin_set_next_text("                  Show information about the planet.");
             bulletin_set_next_text("If the planet is owned by a rival, having more");
             bulletin_set_next_text("Scouts may reveal more detailed information...");
             bulletin_set_next_text("");
-            bulletin_set_next_text("COMM: Click here to learn more about COMM.");
+            bulletin_set_next_text("                  Click here to learn more about COMM.");
+
+            draw_manager.draw(
+                IMG_MAN_BTN_FLEET,
+                {BULLETIN_TEXT_X,
+                 bulletin_text_y(3) + 2,
+                 0.f, 0.f, 1, 1});
+
+            draw_manager.draw(
+                IMG_MAN_BTN_MAP,
+                {BULLETIN_TEXT_X,
+                 bulletin_text_y(6) + 2,
+                 0.f, 0.f, 1, 1});
+
+            draw_manager.draw(
+                IMG_MAN_BTN_INFO,
+                {BULLETIN_TEXT_X,
+                 bulletin_text_y(10) + 2,
+                 0.f, 0.f, 1, 1});
+
+            draw_manager.draw(
+                IMG_MAN_BTN_COMM,
+                {BULLETIN_TEXT_X,
+                 bulletin_text_y(14) + 2,
+                 0.f, 0.f, 1, 1});
         } else {
             LINK(14, BMP_Comm);
         }
