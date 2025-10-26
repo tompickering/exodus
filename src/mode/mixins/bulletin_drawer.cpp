@@ -107,7 +107,6 @@ bool BulletinDrawer::bulletin_start_new_internal(bool transition, int star_idx, 
 
     if (bulletin_mode == BM_Manual) {
         bulletin_set_flag(bulletin_get_manual_flag());
-        bulletin_update_manual_page(true);
     } else {
         bulletin_set_active_player_flag();
     }
@@ -130,6 +129,11 @@ void BulletinDrawer::bulletin_update(float dt) {
         if (bulletin_mode == BM_ReportSummary) {
             bulletin_draw_report_summary();
         }
+
+        if (bulletin_mode == BM_Manual) {
+            bulletin_update_manual_page(true);
+        }
+
         bulletin_draw_text();
     }
 
