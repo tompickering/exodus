@@ -27,6 +27,8 @@ enum BulletinMode : uint8_t {
 enum BulletinManualPage : uint8_t {
     BMP_START_Contents,
     BMP_END_Contents,
+    BMP_START_FirstSteps,
+    BMP_END_FirstSteps,
     BMP_START_GalaxyMap,
     BMP_END_GalaxyMap,
     BMP_MAX,
@@ -83,6 +85,8 @@ class BulletinDrawer {
         bool _bulletin_is_open;
         void bulletin_update_bg();
         void bulletin_set_prbuttons();
+
+        void bulletin_update_manual_page(bool);
 
         char bulletin_text[BULLETIN_LINES][BULLETIN_MAX_TEXT];
         RGB bulletin_text_col[BULLETIN_LINES];

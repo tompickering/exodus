@@ -107,6 +107,7 @@ bool BulletinDrawer::bulletin_start_new_internal(bool transition, int star_idx, 
 
     if (bulletin_mode == BM_Manual) {
         bulletin_set_flag(bulletin_get_manual_flag());
+        bulletin_update_manual_page(true);
     } else {
         bulletin_set_active_player_flag();
     }
@@ -192,6 +193,8 @@ void BulletinDrawer::bulletin_update(float dt) {
                 bulletin_has_been_acknowledged = true;
             }
         }
+
+        bulletin_update_manual_page(false);
     } else if (bulletin_is_war_ally) {
         bulletin_war_ally_update();
     } else if (draw_manager.clicked()) {
@@ -1031,6 +1034,8 @@ BulletinManualPage BulletinDrawer::bulletin_get_end_page() {
     switch (bulletin_manual_page_opened) {
         case BMP_START_Contents:
             return BMP_END_Contents;
+        case BMP_START_FirstSteps:
+            return BMP_END_FirstSteps;
         case BMP_START_GalaxyMap:
             return BMP_END_GalaxyMap;
         default:
@@ -1039,4 +1044,30 @@ BulletinManualPage BulletinDrawer::bulletin_get_end_page() {
 
     L.error("Opened page %d should have defined end", (int)bulletin_manual_page_opened);
     return BMP_MAX;
+}
+
+#define LINK(N,P) if (draw_manager.query_click(id_bulletin_text[N]).id) { bulletin_continue_manual(P); }
+
+/*
+ * Use the same function for draw and update so that the logic of each
+ * for each page can be placed together.
+ */
+void BulletinDrawer::bulletin_update_manual_page(bool draw) {
+    BulletinManualPage p = bulletin_manual_page_current;
+
+    if (p == BMP_START_Contents) {
+        if (draw) {
+            bulletin_set_next_text("First Steps");
+            bulletin_set_next_text("The Galaxy Map");
+        } else {
+            LINK(0, BMP_START_FirstSteps)
+            LINK(1, BMP_START_GalaxyMap)
+        }
+    }
+
+    if (p == BMP_START_GalaxyMap) {
+        if (draw) {
+            bulletin_set_next_text("The Galaxy Map");
+        }
+    }
 }
