@@ -1082,6 +1082,7 @@ const char *IMG_EXCL_WARN        = D_NEW "excl_warn";
 const char *IMG_EXCL_OK          = D_NEW "excl_ok";
 const char *IMG_PL_ST            = D_NEW "pl_st";
 const char *IMG_FLAG_MAN         = D_NEW "flag_man";
+const char *IMG_BTN_TOP          = D_NEW "btn_top";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2165,6 +2166,7 @@ const char *ASSETS_IMG[] = {
     IMG_EXCL_OK,
     IMG_PL_ST,
     IMG_FLAG_MAN,
+    IMG_BTN_TOP,
 
     "",
 };
