@@ -1130,9 +1130,13 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("The lower-right panel shows a '?'");
             bulletin_set_next_text("if you have not visited this system.");
             bulletin_set_next_text("");
-            bulletin_set_next_text("Otherwise, it will display a system's planets.");
-            bulletin_set_next_text("Planets owned by you are marked yellow.");
-            bulletin_set_next_text("Planets owned by a rival are marked red.");
+            bulletin_set_next_text("Otherwise, it will display a system's.");
+            bulletin_set_next_text("planets. Planets owned by you are");
+            bulletin_set_next_text("marked yellow. Planets owned by a");
+            bulletin_set_next_text("rival are marked red.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("A fleet icon shows that an empire's");
+            bulletin_set_next_text("fleet is present.");
 
             draw_manager.draw(
                 IMG_TS1_MK1,
@@ -1148,9 +1152,15 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
 
             draw_manager.draw(
                 IMG_MAN_PLANPANEL,
-                {BULLETIN_X + BULLETIN_W/2,
-                 bulletin_text_y(14)-6,
-                 0.5f, 0.5f, 1, 1});
+                {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER-2,
+                 bulletin_text_y(10),
+                 1.f, 0.5f, 0.5, 0.5});
+
+            draw_manager.draw(
+                IMG_TS1_SHICON,
+                {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 56,
+                 bulletin_text_y(13)+4,
+                 0.5f, 0.f, 1, 1});
         } else {
             LINK(2, BMP_START_FirstSteps)
         }
