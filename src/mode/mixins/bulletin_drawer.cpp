@@ -1050,12 +1050,22 @@ const char* BulletinDrawer::bulletin_get_manual_flag() {
         case BMP_GalaxyMap:
         case BMP_GalaxyMap_2:
         case BMP_GalaxyMap_3:
+        case BMP_FirstSteps:
+        case BMP_FirstSteps_7:
             return IMG_FLAG_GALMAP;
         case BMP_Ctrl:
             return IMG_FLAG_CTRL;
         case BMP_StarMap:
         case BMP_StarMap_2:
+        case BMP_FirstSteps_2:
             return IMG_FLAG_SOLMAP;
+        case BMP_FirstSteps_3:
+        case BMP_FirstSteps_4:
+            return IMG_FLAG_SURF;
+        case BMP_FirstSteps_5:
+            return IMG_FLAG_STARPORT;
+        case BMP_FirstSteps_6:
+            return IMG_FLAG_LIGHTS;
         case BMP_Comm:
             return IMG_FLAG_COMM;
         default:
@@ -1096,6 +1106,144 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
         if (draw) {
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("First Steps");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Your fleet has just arrived at the centre of a");
+            bulletin_set_next_text("new galaxy. What should you do next?");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("You are stationed at the Space Guild. It may");
+            bulletin_set_next_text("be worth exploring to see what you can learn");
+            bulletin_set_next_text("about this unfamiliar world. Perhaps you should");
+            bulletin_set_next_text("take a closer look? Select it and click ZOOM.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Our mission demands that we travel the galaxy,");
+            bulletin_set_next_text("and there is no time like the present! Select the");
+            bulletin_set_next_text("star which piques your interest, and click FLY.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("From the CTRL menu, select 'Wait One Month'");
+            bulletin_set_next_text("(or press Space) until you arrive...");
+        }
+    }
+
+    if (p == BMP_FirstSteps_2) {
+        if (draw) {
+            bulletin_set_next_text("Once you arrive at your destination, select the");
+            bulletin_set_next_text("star and click ZOOM to inspect the system.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Planets controlled by rival powers will have a");
+            bulletin_set_next_text("name shown in red. Unclaimed planets will");
+            bulletin_set_next_text("display no name.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("If a rival world is present, you may select their");
+            bulletin_set_next_text("planet and use COMM to hail them. However, it's");
+            bulletin_set_next_text("unwise to make a new enemy at this time.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("If an unclaimed planet is present, consider");
+            bulletin_set_next_text("claiming it - click it and select COMM to.");
+            bulletin_set_next_text("begin the process.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("If there are none, it's likely best to move on...");
+        }
+    }
+
+    if (p == BMP_FirstSteps_3) {
+        if (draw) {
+            bulletin_set_next_text("After you claim a planet, use MAP to inspect");
+            bulletin_set_next_text("the planet's surface.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("You must immediately build a Command Base.");
+            bulletin_set_next_text("If a planet ever loses its last Base, you will");
+            bulletin_set_next_text("lose control of the planet. Select Command");
+            bulletin_set_next_text("Base and click on a clear space to build it.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("The Command Base needs to consume one unit");
+            bulletin_set_next_text("of food per month. You will also need to");
+            bulletin_set_next_text("build one Agricultural facility to provide");
+            bulletin_set_next_text("it. A starved Command Base will collapse!");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Once you have constructed these two units,");
+            bulletin_set_next_text("you must decide how to develop the planet.");
+            bulletin_set_next_text("Use the '?' to learn about each construction.");
+        }
+    }
+
+    if (p == BMP_FirstSteps_4) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("TRADE");
+            bulletin_set_next_text("If the planet is to produce trading commodities,");
+            bulletin_set_next_text("then it will need a Starport to transfer them to");
+            bulletin_set_next_text("your fleet, or a Trading Centre to sell locally.");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("MILITARY");
+            bulletin_set_next_text("If the planet is to produce battle units, it");
+            bulletin_set_next_text("will require production facilities, plutonium");
+            bulletin_set_next_text("to power them and army funding. Trasfer of");
+            bulletin_set_next_text("units to your fleet also requires a Starport");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("WEALTH");
+            bulletin_set_next_text("Citites produce MC.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("An entirely defenseless planet invites invasion.");
+            bulletin_set_next_text("A Lunar Base is an excellent deterrent.");
+        }
+    }
+
+    if (p == BMP_FirstSteps_5) {
+        if (draw) {
+            bulletin_set_next_text("A Starport consists of 3 units; a Control, a");
+            bulletin_set_next_text("Landing and a Power Plant.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Starports are required to transfer goods");
+            bulletin_set_next_text("and combat units between your fleet and");
+            bulletin_set_next_text("the planet. This is done via the COMM option");
+            bulletin_set_next_text("in the Star Map.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Starports also support the production of ships");
+            bulletin_set_next_text("for your fleet. Some ships may be used for");
+            bulletin_set_next_text("military operations on rival worlds; some");
+            bulletin_set_next_text("will strengthen your fleet, and some will allow");
+            bulletin_set_next_text("you to transport more battle units or goods.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("AirDef guns ward off bombing attacks.");
+            bulletin_set_next_text("Robots keep an angry population in check.");
+        }
+    }
+
+    if (p == BMP_FirstSteps_6) {
+        if (draw) {
+            bulletin_set_next_text("A series of indicators will tell you whether");
+            bulletin_set_next_text("the planet has sufficient food and plutonium");
+            bulletin_set_next_text("for its operations, along with the contentment");
+            bulletin_set_next_text("of the populace. Click these for more detail.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Excess food and plutonium is stored on the");
+            bulletin_set_next_text("planet - but note that food is perishable.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("The Army Funding control shows you how many");
+            bulletin_set_next_text("MC of the total generated by the planet each");
+            bulletin_set_next_text("month are being diverted to the military.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("This is required for unit production. The");
+            bulletin_set_next_text("figure is red if it is insufficient to operate");
+            bulletin_set_next_text("all facilities - but any overpayment is lost!");
+        }
+    }
+
+    if (p == BMP_FirstSteps_7) {
+        if (draw) {
+            bulletin_set_next_text("");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Your next move is up to you.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("What sort of ruler will you choose to be?");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Good Luck!");
         }
     }
 

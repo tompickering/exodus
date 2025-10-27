@@ -1089,6 +1089,7 @@ extern const char *IMG_FLAG_COMM;
 extern const char *IMG_FLAG_FLEET;
 extern const char *IMG_FLAG_SURF;
 extern const char *IMG_FLAG_LIGHTS;
+extern const char *IMG_FLAG_STARPORT;
 extern const char *IMG_FLAG_BTLPREP;
 extern const char *IMG_FLAG_BTL;
 extern const char *IMG_FLAG_TRADE;

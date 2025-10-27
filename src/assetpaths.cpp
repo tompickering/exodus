@@ -1092,6 +1092,7 @@ const char *IMG_FLAG_COMM        = D_NEW "flag_comm";
 const char *IMG_FLAG_FLEET       = D_NEW "flag_fleet";
 const char *IMG_FLAG_SURF        = D_NEW "flag_surf";
 const char *IMG_FLAG_LIGHTS      = D_NEW "flag_lights";
+const char *IMG_FLAG_STARPORT    = D_NEW "flag_starport";
 const char *IMG_FLAG_BTLPREP     = D_NEW "flag_btlprep";
 const char *IMG_FLAG_BTL         = D_NEW "flag_btl";
 const char *IMG_FLAG_TRADE       = D_NEW "flag_trade";
@@ -2199,6 +2200,7 @@ const char *ASSETS_IMG[] = {
     IMG_FLAG_FLEET,
     IMG_FLAG_SURF,
     IMG_FLAG_LIGHTS,
+    IMG_FLAG_STARPORT,
     IMG_FLAG_BTLPREP,
     IMG_FLAG_BTL,
     IMG_FLAG_TRADE,
