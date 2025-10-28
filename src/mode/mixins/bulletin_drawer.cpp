@@ -1041,6 +1041,20 @@ BulletinManualPage BulletinDrawer::bulletin_get_end_page() {
             return BMP_Comm_END;
         case BMP_LunarBattle:
             return BMP_LunarBattle_END;
+        case BMP_Trade:
+            return BMP_Trade_END;
+        case BMP_Alliances:
+            return BMP_Alliances_END;
+        case BMP_Fleet:
+            return BMP_Fleet_END;
+        case BMP_Science:
+            return BMP_Science_END;
+        case BMP_SpaceCombat:
+            return BMP_SpaceCombat_END;
+        case BMP_EndingTheGame:
+            return BMP_EndingTheGame_END;
+        case BMP_Tips:
+            return BMP_Tips_END;
         case BMP_FAQ:
             return BMP_FAQ_END;
         default:
@@ -1060,6 +1074,8 @@ const char* BulletinDrawer::bulletin_get_manual_flag() {
         case BMP_FirstSteps_7:
             return IMG_FLAG_GALMAP;
         case BMP_Ctrl:
+        case BMP_Ctrl_2:
+        case BMP_Ctrl_3:
             return IMG_FLAG_CTRL;
         case BMP_StarMap:
         case BMP_StarMap_2:
@@ -1088,13 +1104,15 @@ const char* BulletinDrawer::bulletin_get_manual_flag() {
             return IMG_FLAG_BTL;
         case BMP_Trade:
             return IMG_FLAG_TRADE;
+        case BMP_Alliances:
+            return IMG_FLAG_ALLIANCES;
         case BMP_Fleet:
             return IMG_FLAG_FLEET;
         case BMP_Science:
             return IMG_FLAG_SCIENCE;
-        case BMP_Outfitting:
-            return IMG_FLAG_SHIP;
         case BMP_SpaceCombat:
+            return IMG_FLAG_SHIP;
+        case BMP_SpaceCombat_2:
             return IMG_FLAG_SPACEBTL;
         case BMP_EndingTheGame:
             return IMG_FLAG_GUILDHQ;
@@ -1126,10 +1144,10 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("The Planet Map");
             bulletin_set_next_text("Lunar Battle");
             bulletin_set_next_text("Trade with Foreign Planets");
+            bulletin_set_next_text("Alliances");
             bulletin_set_next_text("Fleet Operations");
             bulletin_set_next_text("Science");
-            bulletin_set_next_text("Outfitting your Starship");
-            bulletin_set_next_text("Space Combat");
+            bulletin_set_next_text("Your Starship and Space Combat");
             bulletin_set_next_text("Ending The Game");
             bulletin_set_next_text("Tips");
             bulletin_set_next_text("FAQs");
@@ -1142,9 +1160,9 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             LINK(6, BMP_PlanetMap)
             LINK(7, BMP_LunarBattle)
             LINK(8, BMP_Trade)
-            LINK(9, BMP_Fleet)
-            LINK(10, BMP_Science)
-            LINK(11, BMP_Outfitting)
+            LINK(9, BMP_Alliances)
+            LINK(10, BMP_Fleet)
+            LINK(11, BMP_Science)
             LINK(12, BMP_SpaceCombat)
             LINK(13, BMP_EndingTheGame)
             LINK(14, BMP_Tips)
@@ -1425,6 +1443,78 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
                  0.f, 0.f, 1, 1});
         } else {
             LINK(7, BMP_Ctrl)
+        }
+    }
+
+    if (p == BMP_Ctrl) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("The CTRL Menu");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Several game features are accessed via CTRL,");
+            bulletin_set_next_text("including 'Wait One Month' which is a critical");
+            bulletin_set_next_text("aspect of gameplay.");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Change Officers & Taxes");
+            bulletin_set_next_text("Change the amount of your income which is");
+            bulletin_set_next_text("invested in science, or hire new officers.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Science Officer: Impacts speed of research");
+            bulletin_set_next_text("Fleet Admiral: Affects accuracy in space combat");
+            bulletin_set_next_text("Battle General: Affects accuracy in battle");
+            bulletin_set_next_text("Secret Service Leader: Affects mission success");
+            bulletin_set_next_text("Ship Counsellor: Offers trade/defence insights");
+        }
+    }
+
+    if (p == BMP_Ctrl_2) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Secret Service");
+            bulletin_set_next_text("Request information services, plan sabotage");
+            bulletin_set_next_text("operations or - if you have the technology -");
+            bulletin_set_next_text("order orbital bomb attacks.");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Set / Replace Star Markers");
+            bulletin_set_next_text("Place helpful markers on stars");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Equip Starship");
+            bulletin_set_next_text("Purchase ship upgrades and enlist crew.");
+            bulletin_set_next_text("Click here for more details.");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Build Artificial Planet");
+            bulletin_set_next_text("If you have developed the technology, you can");
+            bulletin_set_next_text("construct an entire planet. Three phases are");
+            bulletin_set_next_text("required, each costing 1000MC.");
+        } else {
+            LINK(10, BMP_SpaceCombat)
+        }
+    }
+
+    if (p == BMP_Ctrl_3) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Wait One Month");
+            bulletin_set_next_text("Allow one month to pass. This ends your 'turn'.");
+            bulletin_set_next_text("Any CPU powers all carry out actions, and your");
+            bulletin_set_next_text("planets generate their monthly production.");
+            bulletin_set_next_text("Flight from one star to another always requires");
+            bulletin_set_next_text("at least one month to pass.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("You can press Space to allow a month to pass.");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Show Distances");
+            bulletin_set_next_text("Display a visual reference showing how long");
+            bulletin_set_next_text("travel to other stars will take.");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Save Game and Quit Game");
+            bulletin_set_next_text("Save your progress, or exit to the menu.");
         }
     }
 
@@ -1717,8 +1807,24 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
         if (draw) {
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("Trade with Foreign Planets");
+            bulletin_set_next_text("Note: All planetary trading is done with");
+            bulletin_set_next_text("the private markets and doesn't affect");
+            bulletin_set_next_text("the planet owner's stocks.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("In order to trade with a planet, you must");
+            bulletin_set_next_text("be stationed in the same system.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Use COMM to trade with a foreign planet.");
         }
     }
+
+    if (p == BMP_Alliances) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Alliances");
+        }
+    }
+
 
     if (p == BMP_Fleet) {
         if (draw) {
@@ -1734,14 +1840,14 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
         }
     }
 
-    if (p == BMP_Outfitting) {
+    if (p == BMP_SpaceCombat) {
         if (draw) {
             bulletin_set_text_col(COL_TEXT2);
-            bulletin_set_next_text("Outfitting your Starship");
+            bulletin_set_next_text("Your Starship");
         }
     }
 
-    if (p == BMP_SpaceCombat) {
+    if (p == BMP_SpaceCombat_2) {
         if (draw) {
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("Space Combat");
@@ -1761,6 +1867,24 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("if you have not done so already.");
             bulletin_set_next_text("");
             bulletin_set_next_text("Go forth, and fulfil your destiny...");
+        }
+    }
+
+    if (p == BMP_Tips) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Hints and Tips");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Sell Unused Transporters");
+            bulletin_set_next_text("In the early game, you likely have more");
+            bulletin_set_next_text("transporters than you need.");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Reduce Science Funding");
+            bulletin_set_next_text("When you start, MC income is likely more");
+            bulletin_set_next_text("valuable than scientific endeavour. Use");
+            bulletin_set_next_text("the CTRL menu to maximise taxes.");
         }
     }
 
