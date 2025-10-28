@@ -1037,12 +1037,13 @@ BulletinManualPage BulletinDrawer::bulletin_get_end_page() {
             return BMP_StarMap_END;
         case BMP_Comm:
             return BMP_Comm_END;
+        case BMP_FAQ:
+            return BMP_FAQ_END;
         default:
             break;
     }
 
-    L.error("Opened page %d should have defined end", (int)bulletin_manual_page_opened);
-    return BMP_MAX;
+    return (BulletinManualPage)((int)bulletin_manual_page_opened + 1);
 }
 
 const char* BulletinDrawer::bulletin_get_manual_flag() {
@@ -1093,12 +1094,14 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("The CTRL Menu");
             bulletin_set_next_text("The Star Map");
             bulletin_set_next_text("COMM: Settling, Negotiating, Attacking");
+            bulletin_set_next_text("FAQs");
         } else {
             LINK(1, BMP_FirstSteps)
             LINK(2, BMP_GalaxyMap)
             LINK(3, BMP_Ctrl)
             LINK(4, BMP_StarMap)
             LINK(5, BMP_Comm)
+            LINK(6, BMP_FAQ)
         }
     }
 
@@ -1447,6 +1450,72 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
         if (draw) {
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("The COMM Menu");
+        }
+    }
+
+    if (p == BMP_FAQ) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("FAQs");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("How do I earn MC?");
+            bulletin_set_next_text("Why am I receiving less MC than I should?");
+            bulletin_set_next_text("Why is my planet losing food in reserve?");
+        } else {
+            LINK(2, BMP_FAQ_HowEarnMC)
+            LINK(3, BMP_FAQ_WhyLessMC)
+            LINK(4, BMP_FAQ_WhyLessFood)
+        }
+    }
+
+    if (p == BMP_FAQ_HowEarnMC) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("How do I earn MC?");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Planets generate MC.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Different types of planet have different worth.");
+            bulletin_set_next_text("E.g. Forest planets produce more than Desert.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Larger planets are also worth a little more.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Cities increase MC production.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("You can sell goods - food, minerals, plutonium");
+            bulletin_set_next_text("and combat units - to other powers for profit.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("You can even sell transporters!");
+        }
+    }
+
+    if (p == BMP_FAQ_WhyLessMC) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Why am I receiving less MC than I should?");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Check how much of a planet's MC is allocated");
+            bulletin_set_next_text("to army production.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Some of your income is invested in scientific");
+            bulletin_set_next_text("research. You can adjust this in the CTRL menu");
+            bulletin_set_next_text("under 'Change Officers & Taxes'.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("If you have upgraded any officers, these also");
+            bulletin_set_next_text("require a monthly salary.");
+        }
+    }
+
+    if (p == BMP_FAQ_WhyLessFood) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Why is my planet losing food in reserve?");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Food is perishable!");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("This only affects food in a planetary reserve.");
+            bulletin_set_next_text("Your transporters are equipped to preserve");
+            bulletin_set_next_text("food indefinitely.");
         }
     }
 }

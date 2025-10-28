@@ -46,6 +46,11 @@ enum BulletinManualPage : uint8_t {
     BMP_StarMap_END,
     BMP_Comm,
     BMP_Comm_END,
+    BMP_FAQ,
+    BMP_FAQ_HowEarnMC,
+    BMP_FAQ_WhyLessMC,
+    BMP_FAQ_WhyLessFood,
+    BMP_FAQ_END,
     BMP_MAX,
 };
 
