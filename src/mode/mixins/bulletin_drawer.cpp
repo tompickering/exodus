@@ -1999,6 +1999,47 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
         if (draw) {
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("Space Combat");
+            bulletin_set_next_text("This occurs in real time. If you win, you");
+            bulletin_set_next_text("capture the enemy's transporters and scouts.");
+            bulletin_set_next_text("Losing your starship        will end your game!");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Your ships are yellow; enemy ships are red.");
+            bulletin_set_next_text("      - Scout ships");
+            bulletin_set_next_text("      - Warships");
+            bulletin_set_next_text("      - Transporters");
+            bulletin_set_next_text("      - Bombers");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("To command a ship to attack, select it with the");
+            bulletin_set_next_text("left mouse button and assign a target with the");
+            bulletin_set_next_text("right. Alternatively, switch to AUTO to have");
+            bulletin_set_next_text("your Admiral take over. The distance from a");
+            bulletin_set_next_text("ship to its target determines its accuracy.");
+
+            draw_manager.draw(
+                IMG_RD1_TYP1,
+                {BULLETIN_TEXT_X + 193,
+                 bulletin_text_y(3) + 6,
+                 0, 0, 1, 1});
+            draw_manager.draw(
+                IMG_RD1_TYP4,
+                {BULLETIN_TEXT_X,
+                 bulletin_text_y(6) + 6,
+                 0, 0, 1, 1});
+            draw_manager.draw(
+                IMG_RD1_TYP2,
+                {BULLETIN_TEXT_X,
+                 bulletin_text_y(7) + 6,
+                 0, 0, 1, 1});
+            draw_manager.draw(
+                IMG_RD1_TYP3,
+                {BULLETIN_TEXT_X,
+                 bulletin_text_y(8) + 6,
+                 0, 0, 1, 1});
+            draw_manager.draw(
+                IMG_RD1_TYP5,
+                {BULLETIN_TEXT_X,
+                 bulletin_text_y(9) + 6,
+                 0, 0, 1, 1});
         }
     }
 
