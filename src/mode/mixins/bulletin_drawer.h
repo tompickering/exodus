@@ -46,6 +46,7 @@ enum BulletinManualPage : uint8_t {
     BMP_StarMap_END,
     BMP_PlanetMap,
     BMP_PlanetMap_2,
+    BMP_PlanetMap_3,
     BMP_PlanetMap_END,
     BMP_Comm,
     BMP_Comm_2,

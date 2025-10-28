@@ -1069,6 +1069,7 @@ const char* BulletinDrawer::bulletin_get_manual_flag() {
         case BMP_FirstSteps_5:
             return IMG_FLAG_STARPORT;
         case BMP_PlanetMap_2:
+        case BMP_PlanetMap_3:
         case BMP_FirstSteps_6:
             return IMG_FLAG_LIGHTS;
         case BMP_Comm:
@@ -1491,6 +1492,24 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("survive, and might occasionally expand.");
             bulletin_set_next_text("");
             bulletin_set_next_text("Agriculture is sensitive to climate.");
+        }
+    }
+
+    if (p == BMP_PlanetMap_3) {
+        if (draw) {
+            bulletin_set_next_text("Battle units require 1 plutonium per factory,");
+            bulletin_set_next_text("and a sufficient allocation of funds from the");
+            bulletin_set_next_text("planet's monthly product.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Infantry production requires 1MC");
+            bulletin_set_next_text("Glider production requires 2MC");
+            bulletin_set_next_text("Aetillery production requires 2MC");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Beware - plutonium is dangerous!");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("A Spaceport is required to transfer goods");
+            bulletin_set_next_text("and battle units between your fleet and");
+            bulletin_set_next_text("the planet surface.");
         }
     }
 
