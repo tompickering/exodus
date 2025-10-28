@@ -1900,6 +1900,18 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
         if (draw) {
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("Science");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Some of your income may be allocated to");
+            bulletin_set_next_text("scientific endeavour. This, and the quality");
+            bulletin_set_next_text("of your science officer, influence the rate of");
+            bulletin_set_next_text("your successes.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Each of these can be controlled under the CTRL");
+            bulletin_set_next_text("menu, under 'Change Officers & Taxes'.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("The list of possible inventions can be reviewed");
+            bulletin_set_next_text("in the STAT menu - it's worth familiarising");
+            bulletin_set_next_text("with these.");
         }
     }
 
