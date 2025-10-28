@@ -1035,6 +1035,8 @@ BulletinManualPage BulletinDrawer::bulletin_get_end_page() {
             return BMP_Ctrl_END;
         case BMP_StarMap:
             return BMP_StarMap_END;
+        case BMP_PlanetMap:
+            return BMP_PlanetMap_END;
         case BMP_Comm:
             return BMP_Comm_END;
         case BMP_FAQ:
@@ -1060,11 +1062,13 @@ const char* BulletinDrawer::bulletin_get_manual_flag() {
         case BMP_StarMap_2:
         case BMP_FirstSteps_2:
             return IMG_FLAG_SOLMAP;
+        case BMP_PlanetMap:
         case BMP_FirstSteps_3:
         case BMP_FirstSteps_4:
             return IMG_FLAG_SURF;
         case BMP_FirstSteps_5:
             return IMG_FLAG_STARPORT;
+        case BMP_PlanetMap_2:
         case BMP_FirstSteps_6:
             return IMG_FLAG_LIGHTS;
         case BMP_Comm:
@@ -1097,6 +1101,7 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("The CTRL Menu");
             bulletin_set_next_text("The Star Map");
             bulletin_set_next_text("COMM: Settling, Negotiating, Attacking");
+            bulletin_set_next_text("The Planet Map");
             bulletin_set_next_text("FAQs");
         } else {
             LINK(1, BMP_FirstSteps)
@@ -1104,7 +1109,8 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             LINK(3, BMP_Ctrl)
             LINK(4, BMP_StarMap)
             LINK(5, BMP_Comm)
-            LINK(6, BMP_FAQ)
+            LINK(6, BMP_PlanetMap)
+            LINK(7, BMP_FAQ)
         }
     }
 
@@ -1446,6 +1452,45 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
                  0.f, 0.f, 1, 1});
         } else {
             LINK(14, BMP_Comm);
+        }
+    }
+
+    if (p == BMP_PlanetMap) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("The Surface Map");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Developing a planet will yield MC, minerals,");
+            bulletin_set_next_text("battle units and more.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("The right panel shows available constructions.");
+            bulletin_set_next_text("Click on a building to select it and click on the");
+            bulletin_set_next_text("map to place it. Note that every planet needs a");
+            bulletin_set_next_text("working Command Base (plus 1 food per month).");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Use the '?' button on the right to learn more");
+            bulletin_set_next_text("about each building's function.");
+        }
+    }
+
+    if (p == BMP_PlanetMap_2) {
+        if (draw) {
+            bulletin_set_next_text("Red lights indicate insufficient resources or");
+            bulletin_set_next_text("an angered population. Click them for details.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Food is produced by Agriculture facilities, and");
+            bulletin_set_next_text("plutonium is produced by reactors.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Surplus food, minerals and plutonium is stored");
+            bulletin_set_next_text("on the planet until capacity is reached. Note");
+            bulletin_set_next_text("that food stored in reserve is perishable! Check");
+            bulletin_set_next_text("the INFO button on the Star Map for details.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("A planet always requires 1 food per month.");
+            bulletin_set_next_text("Cities require 3 food per month in order to");
+            bulletin_set_next_text("survive, and might occasionally expand.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Agriculture is sensitive to climate.");
         }
     }
 
