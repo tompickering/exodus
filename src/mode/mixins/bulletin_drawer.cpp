@@ -1503,7 +1503,7 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("");
             bulletin_set_next_text("Infantry production requires 1MC");
             bulletin_set_next_text("Glider production requires 2MC");
-            bulletin_set_next_text("Aetillery production requires 2MC");
+            bulletin_set_next_text("Aetillery production requires 3MC");
             bulletin_set_next_text("");
             bulletin_set_next_text("Beware - plutonium is dangerous!");
             bulletin_set_next_text("");
