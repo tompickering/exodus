@@ -153,7 +153,7 @@ void CommPanelDrawer::comm_exit_anim_update(float dt) {
              COMM_Y + COMM_BORDER + 103,
              194, 2},
              {r, g, b});
-    } else if (comm_exit_anim_time > 2) {
+    } else if (comm_exit_anim_time > 1.1f) {
         comm_exit_anim_active = false;
         comm_exit_anim_time = 0;
         comm_report_action = comm_exit_anim_action;
