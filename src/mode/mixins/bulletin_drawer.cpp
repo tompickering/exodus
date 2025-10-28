@@ -1039,6 +1039,8 @@ BulletinManualPage BulletinDrawer::bulletin_get_end_page() {
             return BMP_PlanetMap_END;
         case BMP_Comm:
             return BMP_Comm_END;
+        case BMP_LunarBattle:
+            return BMP_LunarBattle_END;
         case BMP_FAQ:
             return BMP_FAQ_END;
         default:
@@ -1050,10 +1052,11 @@ BulletinManualPage BulletinDrawer::bulletin_get_end_page() {
 
 const char* BulletinDrawer::bulletin_get_manual_flag() {
     switch (bulletin_manual_page_current) {
+        case BMP_FirstSteps:
+            return IMG_FLAG_START;
         case BMP_GalaxyMap:
         case BMP_GalaxyMap_2:
         case BMP_GalaxyMap_3:
-        case BMP_FirstSteps:
         case BMP_FirstSteps_7:
             return IMG_FLAG_GALMAP;
         case BMP_Ctrl:
@@ -1077,6 +1080,24 @@ const char* BulletinDrawer::bulletin_get_manual_flag() {
         case BMP_Comm_3:
         case BMP_Comm_4:
             return IMG_FLAG_COMM;
+        case BMP_LunarBattle:
+        case BMP_LunarBattle_2:
+            return IMG_FLAG_BTLPREP;
+        case BMP_LunarBattle_3:
+        case BMP_LunarBattle_4:
+            return IMG_FLAG_BTL;
+        case BMP_Trade:
+            return IMG_FLAG_TRADE;
+        case BMP_Fleet:
+            return IMG_FLAG_FLEET;
+        case BMP_Science:
+            return IMG_FLAG_SCIENCE;
+        case BMP_Outfitting:
+            return IMG_FLAG_SHIP;
+        case BMP_SpaceCombat:
+            return IMG_FLAG_SPACEBTL;
+        case BMP_EndingTheGame:
+            return IMG_FLAG_GUILDHQ;
         default:
             break;
     }
@@ -1103,6 +1124,14 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("The Star Map");
             bulletin_set_next_text("COMM: Settling, Negotiating, Attacking");
             bulletin_set_next_text("The Planet Map");
+            bulletin_set_next_text("Lunar Battle");
+            bulletin_set_next_text("Trade with Foreign Planets");
+            bulletin_set_next_text("Fleet Operations");
+            bulletin_set_next_text("Science");
+            bulletin_set_next_text("Outfitting your Starship");
+            bulletin_set_next_text("Space Combat");
+            bulletin_set_next_text("Ending The Game");
+            bulletin_set_next_text("Tips");
             bulletin_set_next_text("FAQs");
         } else {
             LINK(1, BMP_FirstSteps)
@@ -1111,7 +1140,15 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             LINK(4, BMP_StarMap)
             LINK(5, BMP_Comm)
             LINK(6, BMP_PlanetMap)
-            LINK(7, BMP_FAQ)
+            LINK(7, BMP_LunarBattle)
+            LINK(8, BMP_Trade)
+            LINK(9, BMP_Fleet)
+            LINK(10, BMP_Science)
+            LINK(11, BMP_Outfitting)
+            LINK(12, BMP_SpaceCombat)
+            LINK(13, BMP_EndingTheGame)
+            LINK(14, BMP_Tips)
+            LINK(15, BMP_FAQ)
         }
     }
 
@@ -1124,7 +1161,7 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("new galaxy. What should you do next?");
             bulletin_set_next_text("");
             bulletin_set_next_text("You are stationed at the Space Guild. It may");
-            bulletin_set_next_text("be worth exploring to see what you can learn");
+            bulletin_set_next_text("be worth exploring it to see what you can learn");
             bulletin_set_next_text("about this unfamiliar world. Perhaps you should");
             bulletin_set_next_text("take a closer look? Select it and click ZOOM.");
             bulletin_set_next_text("");
@@ -1577,6 +1614,156 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
         }
     }
 
+    if (p == BMP_LunarBattle) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Lunar Battle: Preparation");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("When you invade a rival world - or are");
+            bulletin_set_next_text("yourself invaded - a battle will commence.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("To protect civilians and infrastructure,");
+            bulletin_set_next_text("battles are fought on the planet's moon.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("In either case, you have the choice. Allow");
+            bulletin_set_next_text("your officer to handle the battle for you");
+            bulletin_set_next_text("and await the news, or assume command");
+            bulletin_set_next_text("yourself.");
+        }
+    }
+
+    if (p == BMP_LunarBattle_2) {
+        if (draw) {
+            bulletin_set_next_text("On the field of battle, units are organised into");
+            bulletin_set_next_text("squads of size 1 to 20. You may decide on the");
+            bulletin_set_next_text("squad size to use.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("The more units in a squad, the more times it will");
+            bulletin_set_next_text("fire on its turn.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("You may choose to have your officer deploy");
+            bulletin_set_next_text("your units onto the battle field, or take");
+            bulletin_set_next_text("charge of this yourself.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Click here for details about combat.");
+        } else {
+            LINK(11, BMP_LunarBattle);
+        }
+    }
+
+    if (p == BMP_LunarBattle_3) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Lunar Battle: Units");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Infantry");
+            bulletin_set_next_text("Low range and accuracy, but can");
+            bulletin_set_next_text("use the surroundings as cover.");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Gliders");
+            bulletin_set_next_text("Can move further than infantry, but");
+            bulletin_set_next_text("are susceptible to hidden mines.");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Artillery");
+            bulletin_set_next_text("Superior accuracy and range, but");
+            bulletin_set_next_text("stationary and may only fire");
+            bulletin_set_next_text("forwards.");
+
+            draw_manager.draw(
+                IMG_GF4_4,
+                {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 48,
+                 bulletin_text_y(4),
+                 0.5f, 0.5f, 1, 1});
+
+            draw_manager.draw(
+                IMG_GF4_5,
+                {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 48,
+                 bulletin_text_y(8) + 8,
+                 0.5f, 0.5f, 1, 1});
+
+            draw_manager.draw(
+                IMG_GF4_6,
+                {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 48,
+                 bulletin_text_y(12),
+                 0.5f, 0.5f, 1, 1});
+        }
+    }
+
+    if (p == BMP_LunarBattle_4) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Lunar Battle: Combat");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Squads take turns to move.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("On a squad's turn, click the arrows or use");
+            bulletin_set_next_text("the cursor keys to move, until the unit");
+            bulletin_set_next_text("cannot move further. Finish the movement");
+            bulletin_set_next_text("phase early by clicking on the unit itself,");
+            bulletin_set_next_text("or by pressing Enter.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("If any enemy unit is in range, you will now");
+            bulletin_set_next_text("be able to open fire by clicking on the target.");
+            bulletin_set_next_text("The number of hits you score depends on the");
+            bulletin_set_next_text("power of the unit, the enemy's cover and the");
+            bulletin_set_next_text("skill of your general.");
+        }
+    }
+
+    if (p == BMP_Trade) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Trade with Foreign Planets");
+        }
+    }
+
+    if (p == BMP_Fleet) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Fleet Operations");
+        }
+    }
+
+    if (p == BMP_Science) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Science");
+        }
+    }
+
+    if (p == BMP_Outfitting) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Outfitting your Starship");
+        }
+    }
+
+    if (p == BMP_SpaceCombat) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Space Combat");
+        }
+    }
+
+    if (p == BMP_EndingTheGame) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Ending the Game");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Once your mission is complete, you must");
+            bulletin_set_next_text("return to the Space Guild HQ and claim the");
+            bulletin_set_next_text("title of Guildmaster.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("You must first become a member of the Guild,");
+            bulletin_set_next_text("if you have not done so already.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Go forth, and fulfil your destiny...");
+        }
+    }
+
     if (p == BMP_FAQ) {
         if (draw) {
             bulletin_set_text_col(COL_TEXT2);
@@ -1597,14 +1784,15 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("How do I earn MC?");
             bulletin_set_next_text("");
-            bulletin_set_next_text("Planets generate MC.");
-            bulletin_set_next_text("");
-            bulletin_set_next_text("Different types of planet have different worth.");
-            bulletin_set_next_text("E.g. Forest planets produce more than Desert.");
+            bulletin_set_next_text("Planets generate MC. Different types of");
+            bulletin_set_next_text("planet have different worth. E.g. Forest");
+            bulletin_set_next_text("planets are more valuable than Desert.");
             bulletin_set_next_text("");
             bulletin_set_next_text("Larger planets are also worth a little more.");
             bulletin_set_next_text("");
-            bulletin_set_next_text("Cities increase MC production.");
+            bulletin_set_next_text("Cities increase MC production. Trade Centres");
+            bulletin_set_next_text("facilitate sale of goods from the planet's");
+            bulletin_set_next_text("reserves - if the law allows.");
             bulletin_set_next_text("");
             bulletin_set_next_text("You can sell goods - food, minerals, plutonium");
             bulletin_set_next_text("and combat units - to other powers for profit.");
