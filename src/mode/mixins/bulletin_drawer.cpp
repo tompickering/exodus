@@ -1068,6 +1068,9 @@ const char* BulletinDrawer::bulletin_get_manual_flag() {
         case BMP_FirstSteps_6:
             return IMG_FLAG_LIGHTS;
         case BMP_Comm:
+        case BMP_Comm_2:
+        case BMP_Comm_3:
+        case BMP_Comm_4:
             return IMG_FLAG_COMM;
         default:
             break;
@@ -1449,7 +1452,64 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
     if (p == BMP_Comm) {
         if (draw) {
             bulletin_set_text_col(COL_TEXT2);
-            bulletin_set_next_text("The COMM Menu");
+            bulletin_set_next_text("The COMM Button");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("COMM behaves differently depending on");
+            bulletin_set_next_text("whethr the selected planet is:");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("* Unclaimed");
+            bulletin_set_next_text("* Owned by you");
+            bulletin_set_next_text("* Owned by a rival power");
+        } else {
+            LINK(5, BMP_Comm_2);
+            LINK(6, BMP_Comm_3);
+            LINK(7, BMP_Comm_4);
+        }
+    }
+
+    if (p == BMP_Comm_2) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("The COMM Button: Unclaimed Planets");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Consider a planet for colonisation.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("You can see slightly more detailed");
+            bulletin_set_next_text("information about the planet - along");
+            bulletin_set_next_text("with cost of settlement - before deciding");
+            bulletin_set_next_text("whether to go ahead and claim the world.");
+        }
+    }
+
+    if (p == BMP_Comm_3) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("The COMM Button: Your Planets");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Contact your own planet.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("If you have a Starport, you can transfer");
+            bulletin_set_next_text("goods between your fleet and the planet here,");
+            bulletin_set_next_text("or commission new ships for your fleet.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("If you are sufficiently wealthy and have the");
+            bulletin_set_next_text("requisite technology, you can also engineer");
+            bulletin_set_next_text("the climate of the planet.");
+        }
+    }
+
+    if (p == BMP_Comm_4) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("The COMM Button: Rival Planets");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Contact the planet owner.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Here, you can gain an audience with the");
+            bulletin_set_next_text("planet's ruler. You can request trade,");
+            bulletin_set_next_text("propose an alliance, declare an invasion,");
+            bulletin_set_next_text("or perhaps apologise and grovel for past");
+            bulletin_set_next_text("transgressions.");
         }
     }
 
