@@ -77,6 +77,7 @@ enum BulletinManualPage : uint8_t {
     BMP_EndingTheGame,
     BMP_EndingTheGame_END,
     BMP_Tips,
+    BMP_Tips_2,
     BMP_Tips_END,
     BMP_FAQ,
     BMP_FAQ_HowEarnMC,

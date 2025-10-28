@@ -2065,15 +2065,42 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("Hints and Tips");
             bulletin_set_next_text("");
             bulletin_set_text_col(COL_TEXT2);
-            bulletin_set_next_text("Sell Unused Transporters");
-            bulletin_set_next_text("In the early game, you likely have more");
-            bulletin_set_next_text("transporters than you need.");
+            bulletin_set_next_text("Colonise Early");
+            bulletin_set_next_text("This helps against quick and aggressive");
+            bulletin_set_next_text("enemies.");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Neighbours Can Be Useful");
+            bulletin_set_next_text("Systems with other colonised worlds can be");
+            bulletin_set_next_text("favourable, as it's useful to have a local");
+            bulletin_set_next_text("trading partner.");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Play to Your Planet's Strengths");
+            bulletin_set_next_text("Pay attention to the planet class' advantages");
+            bulletin_set_next_text("and disadvantages - and capitalise on them!");
+        }
+    }
+
+    if (p == BMP_Tips_2) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Defend Yourself");
+            bulletin_set_next_text("Defenceless planets - especially developed");
+            bulletin_set_next_text("ones - are easy prey for every lord who");
+            bulletin_set_next_text("knows your solar system.");
             bulletin_set_next_text("");
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("Reduce Science Funding");
             bulletin_set_next_text("When you start, MC income is likely more");
             bulletin_set_next_text("valuable than scientific endeavour. Use");
             bulletin_set_next_text("the CTRL menu to maximise taxes.");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Sell Unused Transporters");
+            bulletin_set_next_text("In the early game, you likely have more");
+            bulletin_set_next_text("transporters than you need.");
+            bulletin_set_next_text("");
         }
     }
 
