@@ -1105,14 +1105,17 @@ const char* BulletinDrawer::bulletin_get_manual_flag() {
         case BMP_Trade:
             return IMG_FLAG_TRADE;
         case BMP_Alliances:
+        case BMP_Alliances_2:
             return IMG_FLAG_ALLIANCES;
         case BMP_Fleet:
+        case BMP_Fleet_2:
             return IMG_FLAG_FLEET;
         case BMP_Science:
             return IMG_FLAG_SCIENCE;
         case BMP_SpaceCombat:
-            return IMG_FLAG_SHIP;
         case BMP_SpaceCombat_2:
+            return IMG_FLAG_SHIP;
+        case BMP_SpaceCombat_3:
             return IMG_FLAG_SPACEBTL;
         case BMP_EndingTheGame:
             return IMG_FLAG_GUILDHQ;
@@ -1822,6 +1825,35 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
         if (draw) {
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("Alliances");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("It can be advantageous to seek alliances with");
+            bulletin_set_next_text("rival powers.");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Trade Alliances");
+            bulletin_set_next_text("You agree to allow free trade with each others'");
+            bulletin_set_next_text("empires. You also agree to the sale of arms.");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Non-Attack Alliances");
+            bulletin_set_next_text("You agree not to invade one another's worlds.");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("War Alliances");
+            bulletin_set_next_text("You agree to support one another in the event");
+            bulletin_set_next_text("of an invasion.");
+        }
+    }
+
+    if (p == BMP_Alliances_2) {
+        if (draw) {
+            bulletin_set_next_text("If you want to convince a rival power to");
+            bulletin_set_next_text("form an alliance with you, they need to");
+            bulletin_set_next_text("have reason to take you seriously.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Remember that just as a power can form an");
+            bulletin_set_next_text("alliance with you, so too can they hold a");
+            bulletin_set_next_text("grudge.");
         }
     }
 
@@ -1830,6 +1862,37 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
         if (draw) {
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("Fleet Operations");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("The FLEET button in the Star Map allows you");
+            bulletin_set_next_text("to deploy ships to a planet's surface.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("In order to enact fleet operations against");
+            bulletin_set_next_text("a planet, it must be stationed in that solar");
+            bulletin_set_next_text("system.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Note that if the planet is owned by a rival");
+            bulletin_set_next_text("power and has Air Defence guns, they are");
+            bulletin_set_next_text("liable to destroy your ships.");
+        }
+    }
+
+    if (p == BMP_Fleet_2) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Scout Flight");
+            bulletin_set_next_text("Fly over the world and reveal its map.");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Covered Scout Flight");
+            bulletin_set_next_text("The same as a Scout Flight - but send your");
+            bulletin_set_next_text("Bombers as escort to attack AirDef guns.");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Bomber Attack");
+            bulletin_set_next_text("Bombard specific planetary targets.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Ships and AirDef guns can be built by");
+            bulletin_set_next_text("any planet which has a Starport.");
         }
     }
 
@@ -1844,10 +1907,95 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
         if (draw) {
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("Your Starship");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("The STAT menu contains options which");
+            bulletin_set_next_text("allow you to review the status of your");
+            bulletin_set_next_text("ship.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Ship upgrades can be purchased via an");
+            bulletin_set_next_text("option in the CTRL menu.");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Shield Generator");
+            bulletin_set_next_text("Provides a regenerative force");
+            bulletin_set_next_text("field around the ship.");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Laser Guns and Missile Launchers");
+            bulletin_set_next_text("Allows your ship to fire more");
+            bulletin_set_next_text("projectiles in Space Combat.");
+
+            draw_manager.draw(
+                IMG_EQ1_TR1,
+                {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 60,
+                 bulletin_text_y(11),
+                 0.5f, 0.5f, 1, 1});
+
+            draw_manager.draw(
+                IMG_EQ1_TR2,
+                {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 60 - 30,
+                 bulletin_text_y(15),
+                 0.5f, 0.5f, 1, 1});
+
+            draw_manager.draw(
+                IMG_EQ1_TR3,
+                {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 60 + 30,
+                 bulletin_text_y(15),
+                 0.5f, 0.5f, 1, 1});
         }
     }
 
     if (p == BMP_SpaceCombat_2) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Crew");
+            bulletin_set_next_text("The more crew you have, the faster");
+            bulletin_set_next_text("you can repair damage to your ship.");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Bionic Probes");
+            bulletin_set_next_text("These allow you to probe a planet");
+            bulletin_set_next_text("before you commit to colonisation.");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Escape Capsule");
+            bulletin_set_next_text("Might just save you and your officers");
+            bulletin_set_next_text("from a close encounter...");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Repair Hangar");
+            bulletin_set_next_text("May allow you to salvage some");
+            bulletin_set_next_text("damaged ships in the aftermath of");
+            bulletin_set_next_text("battle.");
+
+            draw_manager.draw(
+                IMG_EQ1_TR4,
+                {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 40,
+                 bulletin_text_y(2),
+                 0.5f, 0.5f, 1, 1});
+
+            draw_manager.draw(
+                IMG_EQ1_TR5,
+                {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 40,
+                 bulletin_text_y(6),
+                 0.5f, 0.5f, 1, 1});
+
+            draw_manager.draw(
+                IMG_EQ1_TR6,
+                {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 40,
+                 bulletin_text_y(10),
+                 0.5f, 0.5f, 1, 1});
+
+            draw_manager.draw(
+                IMG_EQ1_TR7,
+                {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 40,
+                 bulletin_text_y(14),
+                 0.5f, 0.5f, 1, 1});
+
+        }
+    }
+
+    if (p == BMP_SpaceCombat_3) {
         if (draw) {
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("Space Combat");
@@ -1896,10 +2044,12 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("How do I earn MC?");
             bulletin_set_next_text("Why am I receiving less MC than I should?");
             bulletin_set_next_text("Why is my planet losing food in reserve?");
+            bulletin_set_next_text("Why won't a lord agree to an alliance?");
         } else {
             LINK(2, BMP_FAQ_HowEarnMC)
             LINK(3, BMP_FAQ_WhyLessMC)
             LINK(4, BMP_FAQ_WhyLessFood)
+            LINK(5, BMP_FAQ_WhyNoAlliance)
         }
     }
 
@@ -1952,6 +2102,25 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("This only affects food in a planetary reserve.");
             bulletin_set_next_text("Your transporters are equipped to preserve");
             bulletin_set_next_text("food indefinitely.");
+        }
+    }
+
+    if (p == BMP_FAQ_WhyNoAlliance) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Why won't a lord agree to an alliance?");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("For a power to enter into an alliance, they");
+            bulletin_set_next_text("need to be able to take you seriously. If");
+            bulletin_set_next_text("you don't have an empire, or a good reputation,");
+            bulletin_set_next_text("they are unlikely to be receptive to you.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Similarly, perheps you've done something to");
+            bulletin_set_next_text("sour your relationship with this power in the");
+            bulletin_set_next_text("past.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("And sometimes, it's simply not in the lord's");
+            bulletin_set_next_text("nature...");
         }
     }
 }
