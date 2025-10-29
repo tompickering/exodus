@@ -136,7 +136,8 @@ void GalaxyDrawer::draw_galaxy(bool pixelswap) {
 }
 
 void GalaxyDrawer::draw_planet_markers(bool pixelswap) {
-#if FEATURE_GALAXY_MAP_PLANET_MARKERS
+    if (!FEATURE(EF_GALAXY_MAP_PLANET_MARKERS)) return;
+
     int x, y;
 
     if (exostate().multiplayer()) {
@@ -166,7 +167,6 @@ void GalaxyDrawer::draw_planet_markers(bool pixelswap) {
             }
         }
     }
-#endif
 }
 
 void GalaxyDrawer::draw_markers(bool pixelswap, bool names_only) {

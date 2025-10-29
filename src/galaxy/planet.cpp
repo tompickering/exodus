@@ -1571,19 +1571,19 @@ ProductionReport Planet::produce_military() {
 
     bool optimise = false;
 
-#if FEATURE_OPTIMISE_ARMY_PRODUCTION_PRIORITIES
-    /*
-     * It's kinder to the player to perform these in reverse order:
-     * Artillery -> Gliders -> Infantry
-     * This would help to ensure maximum funding utility, as the player isn't
-     * receiving this money whatever the case.
-     * E.g. when funding is 3 and we have 1 inf and 1 artillery, we can't afford
-     * both, and we end up with just 1 inf with 2MC wasted. In the alternate case,
-     * we have one artillery and 0 MC wasted.
-     */
+    if (FEATURE(EF_OPTIMISE_ARMY_PRODUCTION_PRIORITIES)) {
+        /*
+         * It's kinder to the player to perform these in reverse order:
+         * Artillery -> Gliders -> Infantry
+         * This would help to ensure maximum funding utility, as the player isn't
+         * receiving this money whatever the case.
+         * E.g. when funding is 3 and we have 1 inf and 1 artillery, we can't afford
+         * both, and we end up with just 1 inf with 2MC wasted. In the alternate case,
+         * we have one artillery and 0 MC wasted.
+         */
 
-    optimise = exostate().get_player(get_owner())->is_human();
-#endif
+        optimise = exostate().get_player(get_owner())->is_human();
+    }
 
     if (optimise) {
         try_produce(prod_art, reserves_plu, army_art, cap, funds, 3, rpt);
@@ -2410,18 +2410,18 @@ void Planet::ai_update() {
                     int to_build = get_plu_consumption() - get_plu_production();
                     owner->cpu_write_off_debt();
 
-#ifdef FEATURE_CPU_EXPLOITS_VOLCANO
-                    /*
-                     * PROCeta13 doesn't account for the extra plutonium produced on
-                     * volcanic planets, as get_plu_production() does, and just takes
-                     * the number of plutonium reactors. Optional fix.
-                     */
+                    if (FEATURE(EF_CPU_EXPLOITS_VOLCANO)) {
+                        /*
+                         * PROCeta13 doesn't account for the extra plutonium produced on
+                         * volcanic planets, as get_plu_production() does, and just takes
+                         * the number of plutonium reactors. Optional fix.
+                         */
 
-                    // Halve (rounding up) build count of volcano worlds
-                    if (get_class() == Volcano) {
-                        to_build = (to_build+1)/2;
+                        // Halve (rounding up) build count of volcano worlds
+                        if (get_class() == Volcano) {
+                            to_build = (to_build+1)/2;
+                        }
                     }
-#endif
 
                     int crd = owner->get_mc();
                     int cost = stone_cost(STONE_Plu);

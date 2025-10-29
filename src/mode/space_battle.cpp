@@ -512,13 +512,16 @@ void SpaceBattle::draw() {
 
     // Draw buttons
 
-#if FEATURE_FLIP_BUTTONS
-    const char* button_detail = full_detail ? nullptr : IMG_RD1_F1 ;
-    const char* button_auto = auto_battle ? IMG_RD1_A1 : nullptr;
-#else
-    const char* button_detail = full_detail ? IMG_RD1_F1 : nullptr;
-    const char* button_auto = auto_battle ? nullptr : IMG_RD1_A1;
-#endif
+    const char* button_detail = nullptr;
+    const char* button_auto = nullptr;
+
+    if (FEATURE(EF_FLIP_BUTTONS)) {
+        button_detail = full_detail ? nullptr : IMG_RD1_F1 ;
+        button_auto = auto_battle ? IMG_RD1_A1 : nullptr;
+    } else {
+        button_detail = full_detail ? IMG_RD1_F1 : nullptr;
+        button_auto = auto_battle ? nullptr : IMG_RD1_A1;
+    }
 
     draw_manager.draw(
         id(ID::BUTTON_DETAIL),

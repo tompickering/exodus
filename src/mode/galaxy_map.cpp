@@ -282,16 +282,16 @@ ExodusMode GalaxyMap::update(float delta) {
                             set_stage(GM_FlyConfirm);
                             return ExodusMode::MODE_None;
                         } else {
-#if FEATURE_COUNSELLOR_EXTRA
-                            comm_open(DIA_S_FlyAlreadyFlying);
-                            set_stage(GM_Counsellor);
-#endif
+                            if (FEATURE(EF_COUNSELLOR_EXTRA)) {
+                                comm_open(DIA_S_FlyAlreadyFlying);
+                                set_stage(GM_Counsellor);
+                            }
                         }
                     } else {
-#if FEATURE_COUNSELLOR_EXTRA
-                        comm_open(DIA_S_FlyAlreadyThere);
-                        set_stage(GM_Counsellor);
-#endif
+                        if (FEATURE(EF_COUNSELLOR_EXTRA)) {
+                            comm_open(DIA_S_FlyAlreadyThere);
+                            set_stage(GM_Counsellor);
+                        }
                     }
                 } else if (click.x < 0.5) {
                     set_stage(GM_Menu);
@@ -330,10 +330,10 @@ ExodusMode GalaxyMap::update(float delta) {
                             }
                         }
                     } else {
-#if FEATURE_COUNSELLOR_EXTRA
-                        comm_open(DIA_S_ZoomButNotVisited);
-                        set_stage(GM_Counsellor);
-#endif
+                        if (FEATURE(EF_COUNSELLOR_EXTRA)) {
+                            comm_open(DIA_S_ZoomButNotVisited);
+                            set_stage(GM_Counsellor);
+                        }
                         L.debug("Can't zoom - not visited");
                     }
                 }
@@ -653,15 +653,15 @@ ExodusMode GalaxyMap::update(float delta) {
                 if (mp_state.mp_stage == MP_None) {
                     bulletin_ensure_closed();
                     // The only place we emerge from month-pass-specific stages...
-#if FEATURE_PLANET_RECALLABLE_SUMMARIES
-                    if (use_planet_summary()) {
-                        set_stage(GM_OpenPlanetReportSummary);
+                    if (FEATURE(EF_PLANET_RECALLABLE_SUMMARIES)) {
+                        if (use_planet_summary()) {
+                            set_stage(GM_OpenPlanetReportSummary);
+                        } else {
+                            set_stage(GM_OpenPlanetReports);
+                        }
                     } else {
-                        set_stage(GM_OpenPlanetReports);
+                        set_stage(GM_Idle);
                     }
-#else
-                    set_stage(GM_Idle);
-#endif
 
                     // This is mainly to redraw stars in case a sun expansion occurred
                     draw_galaxy(false);
@@ -2272,33 +2272,34 @@ ExodusMode GalaxyMap::month_pass_update() {
                         bulletin_set_next_text("");
                         bulletin_set_next_text("OFFICER NOT PAID");
                         bulletin_set_next_text("");
-#if FEATURE_UNPAID_OFFICER_NAMED
-                        bulletin_set_next_text("%s, you are unable to", p->get_full_name());
-                        switch (o) {
-                            case OFF_Science:
-                                bulletin_set_next_text("pay your Science Officer.");
-                                break;
-                            case OFF_Fleet:
-                                bulletin_set_next_text("pay your Fleet Admiral.");
-                                break;
-                            case OFF_Battle:
-                                bulletin_set_next_text("pay your Battle General.");
-                                break;
-                            case OFF_Secret:
-                                bulletin_set_next_text("pay your Secret Service Leader.");
-                                break;
-                            case OFF_Counsellor:
-                                bulletin_set_next_text("pay your Ship Counsellor.");
-                                break;
-                            default:
-                                bulletin_set_next_text("pay an officer.");
-                                L.warn("Unknown officer going unpaid");
-                                break;
+                        if (FEATURE(EF_UNPAID_OFFICER_NAMED)) {
+                            bulletin_set_next_text("%s, you are unable to", p->get_full_name());
+                            switch (o) {
+                                case OFF_Science:
+                                    bulletin_set_next_text("pay your Science Officer.");
+                                    break;
+                                case OFF_Fleet:
+                                    bulletin_set_next_text("pay your Fleet Admiral.");
+                                    break;
+                                case OFF_Battle:
+                                    bulletin_set_next_text("pay your Battle General.");
+                                    break;
+                                case OFF_Secret:
+                                    bulletin_set_next_text("pay your Secret Service Leader.");
+                                    break;
+                                case OFF_Counsellor:
+                                    bulletin_set_next_text("pay your Ship Counsellor.");
+                                    break;
+                                default:
+                                    bulletin_set_next_text("pay an officer.");
+                                    L.warn("Unknown officer going unpaid");
+                                    break;
+                            }
+                        } else {
+                            bulletin_set_next_text("%s,", p->get_full_name());
+                            bulletin_set_next_text("pay an officer.");
                         }
-#else
-                        bulletin_set_next_text("%s,", p->get_full_name());
-                        bulletin_set_next_text("pay an officer.");
-#endif
+
                         if (onein(6)) {
                             bulletin_set_next_text("The officer has left.");
                             p->set_officer(o, OFFQ_Poor);
@@ -2729,9 +2730,9 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 // Randomly lose alliances
                 int j = 0;
 
-#if FEATURE_HUMAN_NO_RANDOM_ALLY_LOSS
-                j = exostate().get_n_human_players();
-#endif
+                if (FEATURE(EF_HUMAN_NO_RANDOM_ALLY_LOSS)) {
+                    j = exostate().get_n_human_players();
+                }
 
                 for (; j < N_PLAYERS; ++j) {
                     if (onein(r)) {
@@ -2777,19 +2778,19 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     MissionType plan = MT_TerrorPort;
                     int cost = 100;
 
-#if FIX_AI_TERROR
-                    bool nuke_possible = player->has_invention(INV_OrbitalBombs) && exostate().get_orig_month() > 50;
-                    if (nuke_possible && player->can_afford(1500)) {
-                        plan = MT_Nuclear;
-                        cost = 1000;
-                    } else if (player->can_afford(201)) {
-                        plan = MT_TerrorAgri;
-                        cost = 200;
-                    } else if (player->can_afford(151)) {
-                        plan = MT_TerrorPlu;
-                        cost = 150;
+                    if (FEATURE(EF_FIX_AI_TERROR)) {
+                        bool nuke_possible = player->has_invention(INV_OrbitalBombs) && exostate().get_orig_month() > 50;
+                        if (nuke_possible && player->can_afford(1500)) {
+                            plan = MT_Nuclear;
+                            cost = 1000;
+                        } else if (player->can_afford(201)) {
+                            plan = MT_TerrorAgri;
+                            cost = 200;
+                        } else if (player->can_afford(151)) {
+                            plan = MT_TerrorPlu;
+                            cost = 150;
+                        }
                     }
-#endif
 
                     if (player->attempt_spend(cost)) {
                         L.info("[%s]: COMMITTING MISSION %d", player->get_full_name(), plan);
@@ -4658,9 +4659,9 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             if (rpt.aggressor_won) {
                 bool republic = !new_owner;
 
-#if FEATURE_REBEL_REPUBLIC_CHANCE
-                republic = republic || onein(5);
-#endif
+                if (FEATURE(EF_REBEL_REPUBLIC_CHANCE)) {
+                    republic = republic || onein(5);
+                }
 
                 exostate().register_news(NI_SuccessfulRevolution);
                 bulletin_set_next_text("The rebels have succeeded. So the");
@@ -5143,23 +5144,23 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     if (mp_state.mpp_stage == MPP_DisplayPlanetReport) {
         if (owner && owner->is_human()) {
-#if FEATURE_PLANET_RECALLABLE_SUMMARIES
-            exostate().save_planet_report(report);
-#else
-            // Skip any reports which don't have content
-            if (report.items > 0) {
-                bulletin_start_new(true);
-                bulletin_set_bg(p->sprites()->bulletin_bg);
-                bulletin_set_active_player_flag();
-                bulletin_write_planet_info(s, p);
-                for (int i = 0; i < report.items; ++i) {
-                    bulletin_set_next_text(report.content[i]);
+            if (FEATURE(EF_PLANET_RECALLABLE_SUMMARIES)) {
+                exostate().save_planet_report(report);
+            } else {
+                // Skip any reports which don't have content
+                if (report.items > 0) {
+                    bulletin_start_new(true);
+                    bulletin_set_bg(p->sprites()->bulletin_bg);
+                    bulletin_set_active_player_flag();
+                    bulletin_write_planet_info(s, p);
+                    for (int i = 0; i < report.items; ++i) {
+                        bulletin_set_next_text(report.content[i]);
+                    }
+                    bulletin_set_next_text("Report ends.");
+                    next_mpp_stage();
+                    return ExodusMode::MODE_None;
                 }
-                bulletin_set_next_text("Report ends.");
-                next_mpp_stage();
-                return ExodusMode::MODE_None;
             }
-#endif
         }
         next_mpp_stage();
     }

@@ -389,11 +389,11 @@ bool ExodusState::mission_complete() {
             {
                 int income = 0;
 
-#if FEATURE_AIM_MONEY_EXCLUDE_ARMY
-                income = get_total_income_ignoring_army(player_idx);
-#else
-                income = get_total_net_income(player_idx);
-#endif
+                if (FEATURE(EF_AIM_MONEY_EXCLUDE_ARMY)) {
+                    income = get_total_income_ignoring_army(player_idx);
+                } else {
+                    income = get_total_net_income(player_idx);
+                }
 
                 if (income < 1000) {
                     return false;
@@ -921,11 +921,11 @@ int ExodusState::count_alliances(int a) {
 }
 
 bool ExodusState::can_request_alliance(int other, AllianceType t) {
-#if FEATURE_ALLIANCE_LIMIT
-    return !(alliance_requests[other] & (1 << (int)t));
-#else
+    if (FEATURE(EF_ALLIANCE_LIMIT)) {
+        return !(alliance_requests[other] & (1 << (int)t));
+    }
+
     return true;
-#endif
 }
 
 void ExodusState::register_request_alliance(int other, AllianceType t) {

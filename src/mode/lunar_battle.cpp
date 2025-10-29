@@ -697,23 +697,23 @@ ExodusMode LunarBattle::update(float delta) {
                 } else {
                     move_dir = ai_decide_move_direction();
 
-#if FEATURE_PREVENT_AI_BATTLE_BACKTRACK
-                    if (move_dir == DIR_Up && active_unit->last_move == DIR_Down) {
-                        move_dir = DIR_None;
-                    }
+                    if (FEATURE(EF_PREVENT_AI_BATTLE_BACKTRACK)) {
+                        if (move_dir == DIR_Up && active_unit->last_move == DIR_Down) {
+                            move_dir = DIR_None;
+                        }
 
-                    if (move_dir == DIR_Down && active_unit->last_move == DIR_Up) {
-                        move_dir = DIR_None;
-                    }
+                        if (move_dir == DIR_Down && active_unit->last_move == DIR_Up) {
+                            move_dir = DIR_None;
+                        }
 
-                    if (move_dir == DIR_Left && active_unit->last_move == DIR_Right) {
-                        move_dir = DIR_None;
-                    }
+                        if (move_dir == DIR_Left && active_unit->last_move == DIR_Right) {
+                            move_dir = DIR_None;
+                        }
 
-                    if (move_dir == DIR_Right && active_unit->last_move == DIR_Left) {
-                        move_dir = DIR_None;
+                        if (move_dir == DIR_Right && active_unit->last_move == DIR_Left) {
+                            move_dir = DIR_None;
+                        }
                     }
-#endif
 
                     if (move_dir == DIR_None) {
                         // DIR_None from AI function indicates we can't move
@@ -2051,11 +2051,13 @@ void LunarBattle::update_panel() {
 
             draw_manager.fill_pattern({226, 12, 210, 50});
 
-#if FEATURE_FLIP_BUTTONS
-            const char* fast_button = fast ? IMG_GF4_HMENU5 : IMG_GF4_HMENU3;
-#else
-            const char* fast_button = fast ? IMG_GF4_HMENU3 : IMG_GF4_HMENU5;
-#endif
+            const char* fast_button = nullptr;
+
+            if (FEATURE(EF_FLIP_BUTTONS)) {
+                fast_button = fast ? IMG_GF4_HMENU5 : IMG_GF4_HMENU3;
+            } else {
+                fast_button = fast ? IMG_GF4_HMENU3 : IMG_GF4_HMENU5;
+            }
 
             draw_manager.draw(
                 id(ID::BTN_INFO),
@@ -2244,11 +2246,13 @@ LunarBattle::Stage LunarBattle::update_buttons() {
     if (draw_manager.query_click(id(ID::BTN_SPEED)).id) {
         fast = !fast;
 
-#if FEATURE_FLIP_BUTTONS
-        const char* fast_button = fast ? IMG_GF4_HMENU5 : IMG_GF4_HMENU3;
-#else
-        const char* fast_button = fast ? IMG_GF4_HMENU3 : IMG_GF4_HMENU5;
-#endif
+        const char* fast_button = nullptr;
+
+        if (FEATURE(EF_FLIP_BUTTONS)) {
+            fast_button = fast ? IMG_GF4_HMENU5 : IMG_GF4_HMENU3;
+        } else {
+            fast_button = fast ? IMG_GF4_HMENU3 : IMG_GF4_HMENU5;
+        }
 
         draw_manager.draw(
             id(ID::BTN_SPEED),
@@ -2798,21 +2802,21 @@ bool LunarBattle::is_in_cover(BattleUnit* u) {
         return true;
     }
 
-#if FEATURE_WRECKAGE_COVER
-    for (int i = 0; i < n_units; ++i) {
-        if (units[i].type == UNIT_Gli
-         || units[i].type == UNIT_Art
-         || units[i].type == UNIT_LBGun
-         || units[i].type == UNIT_LBCtl
-         || units[i].type == UNIT_AArt) {
-            if (units[i].hp <= 0) {
-                if (units[i].x == u->x && units[i].y == u->y) {
-                    return true;
+    if (FEATURE(EF_WRECKAGE_COVER)) {
+        for (int i = 0; i < n_units; ++i) {
+            if (units[i].type == UNIT_Gli
+             || units[i].type == UNIT_Art
+             || units[i].type == UNIT_LBGun
+             || units[i].type == UNIT_LBCtl
+             || units[i].type == UNIT_AArt) {
+                if (units[i].hp <= 0) {
+                    if (units[i].x == u->x && units[i].y == u->y) {
+                        return true;
+                    }
                 }
             }
         }
     }
-#endif
 
     return false;
 }

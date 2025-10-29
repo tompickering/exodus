@@ -198,10 +198,10 @@ void PanelDrawer::update_panel_info_ft(DrawTarget tgt, Player* player, FlyTarget
                 if (drawing) {
                     float planet_scale = 1.0;
 
-#if FEATURE_MULTISIZE_PLANETS_PANEL
-                    if (p->get_size() == PLANET_Small) planet_scale = 0.6;
-                    if (p->get_size() == PLANET_Medium) planet_scale = 0.8;
-#endif
+                    if (FEATURE(EF_MULTISIZE_PLANETS_PANEL)) {
+                        if (p->get_size() == PLANET_Small) planet_scale = 0.6;
+                        if (p->get_size() == PLANET_Medium) planet_scale = 0.8;
+                    }
 
                     draw_manager.draw(
                         id_planet_icons[STAR_MAX_PLANETS - 1 - planets_drawn],

@@ -88,16 +88,16 @@ Galaxy::Galaxy(int _n_stars) {
                 ok = false;
             }
 
-#if FEATURE_GALAXY_MAP_PLANET_MARKERS
-            if ((star_x+1) == GUILD_POS_X && star_y == GUILD_POS_Y) ok = false;
-            if (star_x == (GUILD_POS_X+1) && star_y == GUILD_POS_Y) ok = false;
-            if (star_x == GUILD_POS_X && (star_y+1) == GUILD_POS_Y) ok = false;
-            if (star_x == GUILD_POS_X && star_y == (GUILD_POS_Y+1)) ok = false;
-            if ((star_x+1) == GUILD_POS_X && (star_y+1) == GUILD_POS_Y) ok = false;
-            if ((star_x+1) == GUILD_POS_X && star_y == (GUILD_POS_Y+1)) ok = false;
-            if (star_x == (GUILD_POS_X+1) && (star_y+1) == GUILD_POS_Y) ok = false;
-            if (star_x == (GUILD_POS_X+1) && star_y == (GUILD_POS_Y+1)) ok = false;
-#endif
+            if (FEATURE(EF_GALAXY_MAP_PLANET_MARKERS)) {
+                if ((star_x+1) == GUILD_POS_X && star_y == GUILD_POS_Y) ok = false;
+                if (star_x == (GUILD_POS_X+1) && star_y == GUILD_POS_Y) ok = false;
+                if (star_x == GUILD_POS_X && (star_y+1) == GUILD_POS_Y) ok = false;
+                if (star_x == GUILD_POS_X && star_y == (GUILD_POS_Y+1)) ok = false;
+                if ((star_x+1) == GUILD_POS_X && (star_y+1) == GUILD_POS_Y) ok = false;
+                if ((star_x+1) == GUILD_POS_X && star_y == (GUILD_POS_Y+1)) ok = false;
+                if (star_x == (GUILD_POS_X+1) && (star_y+1) == GUILD_POS_Y) ok = false;
+                if (star_x == (GUILD_POS_X+1) && star_y == (GUILD_POS_Y+1)) ok = false;
+            }
 
             for (int j = 0; j < i; ++j) {
                 if (star_x == stars[j].x  && star_y == stars[j].y) {
@@ -105,23 +105,23 @@ Galaxy::Galaxy(int _n_stars) {
                     break;
                 }
 
-#if FEATURE_GALAXY_MAP_PLANET_MARKERS
-                // Horizontally-adjacent stars make this look too cluttered
-                if (star_y == stars[j].y) {
-                    if ((star_x+1 == stars[j].x) || (star_x == stars[j].x+1)) {
-                        ok = false;
-                        break;
+                if (FEATURE(EF_GALAXY_MAP_PLANET_MARKERS)) {
+                    // Horizontally-adjacent stars make this look too cluttered
+                    if (star_y == stars[j].y) {
+                        if ((star_x+1 == stars[j].x) || (star_x == stars[j].x+1)) {
+                            ok = false;
+                            break;
+                        }
                     }
-                }
 
-                // It seems weird to allow vertical adjacency but not horizontal-adjacency
-                if (star_x == stars[j].x) {
-                    if ((star_y+1 == stars[j].y) || (star_y == stars[j].y+1)) {
-                        ok = false;
-                        break;
+                    // It seems weird to allow vertical adjacency but not horizontal-adjacency
+                    if (star_x == stars[j].x) {
+                        if ((star_y+1 == stars[j].y) || (star_y == stars[j].y+1)) {
+                            ok = false;
+                            break;
+                        }
                     }
                 }
-#endif
             }
 
             if (ok) break;

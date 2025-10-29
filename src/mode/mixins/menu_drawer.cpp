@@ -974,16 +974,17 @@ void MenuDrawer::menu_open_specific_mode() {
 
                 int row = 8;
 
-#if FEATURE_OFFICER_COST_INFO
-                menu_set_txt(row, COL_TEXT, "Officers:");
-                snprintf(txt, sizeof(txt), "%dMC", p->get_total_officer_costs());
-                draw_manager.draw_text(
-                    txt,
-                    Justify::Left,
-                    MENU_X+120, menu_get_y(row),
-                    COL_TEXT2);
-                row++;
-#endif
+                if (FEATURE(EF_OFFICER_COST_INFO)) {
+                    menu_set_txt(row, COL_TEXT, "Officers:");
+                    snprintf(txt, sizeof(txt), "%dMC", p->get_total_officer_costs());
+                    draw_manager.draw_text(
+                        txt,
+                        Justify::Left,
+                        MENU_X+120, menu_get_y(row),
+                        COL_TEXT2);
+                    row++;
+                }
+
                 row++;
 
                 menu_set_txt(row, COL_TEXT, "Planets");

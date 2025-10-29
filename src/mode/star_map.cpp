@@ -247,13 +247,13 @@ ExodusMode StarMap::update(float delta) {
                         } else {
                             bool owned = planet->is_owned();
 
-#if FEATURE_BOMBING_LIMIT_HUMAN
-                            if (exostate().bombing_prevented(planet)) {
-                                comm_open(DIA_S_AlreadyBombed);
-                                set_stage(SM_Counsellor);
-                                return ExodusMode::MODE_None;
+                            if (FEATURE(EF_BOMBING_LIMIT_HUMAN)) {
+                                if (exostate().bombing_prevented(planet)) {
+                                    comm_open(DIA_S_AlreadyBombed);
+                                    set_stage(SM_Counsellor);
+                                    return ExodusMode::MODE_None;
+                                }
                             }
-#endif
 
                             draw_manager.fill(
                                 id(ID::FLEET_PANEL),
@@ -888,11 +888,11 @@ void StarMap::draw_planets(float delta) {
 
                 float planet_scale = 1.f;
 
-#if FEATURE_MULTISIZE_PLANETS
-                // The original renders all planets at the same scale...
-                if (planet->get_size() == PLANET_Small) planet_scale = 0.6;
-                if (planet->get_size() == PLANET_Medium) planet_scale = 0.8;
-#endif
+                if (FEATURE(EF_MULTISIZE_PLANETS)) {
+                    // The original renders all planets at the same scale...
+                    if (planet->get_size() == PLANET_Small) planet_scale = 0.6;
+                    if (planet->get_size() == PLANET_Medium) planet_scale = 0.8;
+                }
 
                 draw_manager.draw(
                     id(ID::PLANET1 + i),

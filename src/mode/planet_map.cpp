@@ -825,17 +825,17 @@ ExodusMode PlanetMap::update(float delta) {
 
                 bool festival_ok = true;
 
-#if FEATURE_FESTIVAL_LIMIT
-                if (planet->festival_happened_this_month()) {
-                    festival_ok = false;
+                if (FEATURE(EF_FESTIVAL_LIMIT)) {
+                    if (planet->festival_happened_this_month()) {
+                        festival_ok = false;
+                    }
                 }
-#endif
 
-#if FEATURE_FESTIVAL_REQUIRES_CITY
-                if (!planet->has_stone(STONE_City)) {
-                    festival_ok = false;
+                if (FEATURE(EF_FESTIVAL_REQUIRES_CITY)) {
+                    if (!planet->has_stone(STONE_City)) {
+                        festival_ok = false;
+                    }
                 }
-#endif
 
                 if (festival_ok) {
                     draw_manager.set_selectable(id(ID::LAW_FESTIVAL));

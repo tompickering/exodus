@@ -386,10 +386,10 @@ void BulletinDrawer::bulletin_draw_report_summary() {
 
         float planet_scale = 1.0;
 
-#if FEATURE_MULTISIZE_PLANETS_PANEL
-        if (p->get_size() == PLANET_Small) planet_scale = 0.6;
-        if (p->get_size() == PLANET_Medium) planet_scale = 0.8;
-#endif
+        if (FEATURE(EF_MULTISIZE_PLANETS_PANEL)) {
+            if (p->get_size() == PLANET_Small) planet_scale = 0.6;
+            if (p->get_size() == PLANET_Medium) planet_scale = 0.8;
+        }
 
         draw_manager.draw(
             p->sprites()->panel_icon,

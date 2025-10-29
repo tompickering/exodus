@@ -5,13 +5,17 @@
 
 #include "exodus_features.h"
 
-#if FEATURE_PLANET_ITERATION_RANDOMISE
+/*
+ * FIXME: This used to be behind FEATURE_PLANET_ITERATION_RANDOMISE when
+ *        it was a #define - needs rework now it's a runtime flag.
+ *        For now always use randomisation.
+ */
 #define STARITER StarIteratorRandom
 #define PLANETITER PlanetIteratorRandom
-#else
+/*
 #define STARITER StarIterator
 #define PLANETITER PlanetIterator
-#endif
+*/
 
 class Iterator {
     public:

@@ -60,10 +60,10 @@ void PlanetColonise::enter() {
 
     float planet_scale = 1.f;
 
-#if FEATURE_MULTISIZE_PLANETS_COLONISE
-    if (planet->get_size() == PLANET_Small) planet_scale = 0.6;
-    if (planet->get_size() == PLANET_Medium) planet_scale = 0.8;
-#endif
+    if (FEATURE(EF_MULTISIZE_PLANETS_COLONISE)) {
+        if (planet->get_size() == PLANET_Small) planet_scale = 0.6;
+        if (planet->get_size() == PLANET_Medium) planet_scale = 0.8;
+    }
 
     draw_manager.draw(IMG_INTRO_SPACE);
     draw_manager.draw(

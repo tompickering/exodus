@@ -457,57 +457,57 @@ ExodusMode Menu::update(float delta) {
 
             break;
         case NPlayers:
-#if DISABLE_MULTIPLAYER
-            config.n_players = 1;
-            current_player = 0;
-            set_stage(Name);
-#else
-            if (trans_state == None) {
-                draw_manager.draw(IMG_BG_MENU0);
-                draw_manager.draw_text(
-                    "How many human players wish to play?",
-                    Justify::Centre, RES_X/2, 90, COL_TEXT2);
-                draw_manager.draw(
-                    id(ID::NPLAYER_LR),
-                    IMG_BR11_LR,
-                    {255, 250, 1.0, 0.5, 1, 1});
-                draw_manager.draw(
-                    id(ID::NPLAYER_OK),
-                    IMG_BR11_OK,
-                    {305, 250, 0, 0.5, 1, 1});
-                draw_manager.fill(
-                    {264-BORDER, 234-BORDER, 32+2*BORDER, 32+2*BORDER},
-                    COL_BORDERS);
-                draw_manager.fill_pattern({264, 234, 32, 32});
-                draw_manager.save_background();
-                trans_state = Done;
-            }
-
-            SpriteClick click;
-            click = draw_manager.query_click(id(ID::NPLAYER_LR));
-            if (click.id) {
-                config.n_players += click.x > 0.5 ? 1 : -1;
-                if (config.n_players < 1)
-                    config.n_players = 1;
-                if (config.n_players > 5)
-                    config.n_players = 5;
-            }
-
-            if (draw_manager.query_click(id(ID::NPLAYER_OK)).id) {
+            if (FEATURE(EF_DISABLE_MULTIPLAYER)) {
+                config.n_players = 1;
                 current_player = 0;
                 set_stage(Name);
-            }
+            } else {
+                if (trans_state == None) {
+                    draw_manager.draw(IMG_BG_MENU0);
+                    draw_manager.draw_text(
+                        "How many human players wish to play?",
+                        Justify::Centre, RES_X/2, 90, COL_TEXT2);
+                    draw_manager.draw(
+                        id(ID::NPLAYER_LR),
+                        IMG_BR11_LR,
+                        {255, 250, 1.0, 0.5, 1, 1});
+                    draw_manager.draw(
+                        id(ID::NPLAYER_OK),
+                        IMG_BR11_OK,
+                        {305, 250, 0, 0.5, 1, 1});
+                    draw_manager.fill(
+                        {264-BORDER, 234-BORDER, 32+2*BORDER, 32+2*BORDER},
+                        COL_BORDERS);
+                    draw_manager.fill_pattern({264, 234, 32, 32});
+                    draw_manager.save_background();
+                    trans_state = Done;
+                }
 
-            char n[2];
-            n[0] = '1' + (config.n_players - 1);
-            n[1] = '\0';
-            draw_manager.draw_text(
-                    id(ID::NPLAYER_TXT),
-                    n,
-                    Justify::Centre,
-                    280, 240,
-                    COL_TEXT);
-#endif
+                SpriteClick click;
+                click = draw_manager.query_click(id(ID::NPLAYER_LR));
+                if (click.id) {
+                    config.n_players += click.x > 0.5 ? 1 : -1;
+                    if (config.n_players < 1)
+                        config.n_players = 1;
+                    if (config.n_players > 5)
+                        config.n_players = 5;
+                }
+
+                if (draw_manager.query_click(id(ID::NPLAYER_OK)).id) {
+                    current_player = 0;
+                    set_stage(Name);
+                }
+
+                char n[2];
+                n[0] = '1' + (config.n_players - 1);
+                n[1] = '\0';
+                draw_manager.draw_text(
+                        id(ID::NPLAYER_TXT),
+                        n,
+                        Justify::Centre,
+                        280, 240,
+                        COL_TEXT);
+            }
 
             break;
         case Name:
@@ -517,30 +517,30 @@ ExodusMode Menu::update(float delta) {
 
                 const char *txt = nullptr;
 
-#if DISABLE_MULTIPLAYER
-                txt = "Please identify yourself.";
-#else
-                switch (current_player) {
-                    case 0:
-                        txt = "Player One, please identify yourself.";
-                        break;
-                    case 1:
-                        txt = "Player Two, please identify yourself.";
-                        break;
-                    case 2:
-                        txt = "Player Three, please identify yourself.";
-                        break;
-                    case 3:
-                        txt = "Player Four, please identify yourself.";
-                        break;
-                    case 4:
-                        txt = "Player Five, please identify yourself.";
-                        break;
-                    default:
-                        txt = "-";
-                        break;
+                if (FEATURE(EF_DISABLE_MULTIPLAYER)) {
+                    txt = "Please identify yourself.";
+                } else {
+                    switch (current_player) {
+                        case 0:
+                            txt = "Player One, please identify yourself.";
+                            break;
+                        case 1:
+                            txt = "Player Two, please identify yourself.";
+                            break;
+                        case 2:
+                            txt = "Player Three, please identify yourself.";
+                            break;
+                        case 3:
+                            txt = "Player Four, please identify yourself.";
+                            break;
+                        case 4:
+                            txt = "Player Five, please identify yourself.";
+                            break;
+                        default:
+                            txt = "-";
+                            break;
+                    }
                 }
-#endif
 
                 draw_manager.draw_text(
                     txt, Justify::Centre, RES_X/2, 90, COL_TEXT);
