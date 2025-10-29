@@ -66,6 +66,9 @@ static bool GALAXY_MAP_PLANET_MARKERS = false;
 // Attempt to purchase more expensive units first, to optimise MC
 static bool OPTIMISE_ARMY_PRODUCTION_PRIORITIES = false;
 
+// Determines galaxy-star transition time
+static bool FAST_FADES = false;
+
 // Fixes bug meaning some AI terrorist actions are never taken
 static bool FIX_AI_TERROR = false;
 
@@ -99,6 +102,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         PLANET_RECALLABLE_SUMMARIES = false;
         GALAXY_MAP_PLANET_MARKERS = false;
         OPTIMISE_ARMY_PRODUCTION_PRIORITIES = false;
+        FAST_FADES = false;
         FIX_AI_TERROR = false;
         DISABLE_MULTIPLAYER = true;
     }
@@ -125,6 +129,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         PLANET_RECALLABLE_SUMMARIES = true;
         GALAXY_MAP_PLANET_MARKERS = true;
         OPTIMISE_ARMY_PRODUCTION_PRIORITIES = true;
+        FAST_FADES = true;
         FIX_AI_TERROR = true;
         DISABLE_MULTIPLAYER = true;
     }
@@ -156,6 +161,7 @@ bool FEATURE(ExodusFeature f) {
     if (f == EF_PLANET_RECALLABLE_SUMMARIES) return PLANET_RECALLABLE_SUMMARIES;
     if (f == EF_GALAXY_MAP_PLANET_MARKERS) return GALAXY_MAP_PLANET_MARKERS;
     if (f == EF_OPTIMISE_ARMY_PRODUCTION_PRIORITIES) return OPTIMISE_ARMY_PRODUCTION_PRIORITIES;
+    if (f == EF_FAST_FADES) return FAST_FADES;
     if (f == EF_FIX_AI_TERROR) return FIX_AI_TERROR;
     if (f == EF_DISABLE_MULTIPLAYER) return DISABLE_MULTIPLAYER;
 

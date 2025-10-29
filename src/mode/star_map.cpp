@@ -325,7 +325,7 @@ ExodusMode StarMap::update(float delta) {
                     }
                 } else {
                     // Back
-                    draw_manager.fade_black(1.2f, 24);
+                    draw_manager.fade_black(FEATURE(EF_FAST_FADES) ? 0.2f : 1.2f, 24);
                     set_stage(SM_Back2Gal);
                 }
             }

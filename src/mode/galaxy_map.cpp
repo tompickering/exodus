@@ -322,7 +322,7 @@ ExodusMode GalaxyMap::update(float delta) {
                             exostate().set_active_flytarget(selected_ft);
                             exostate().set_active_planet(-1);
                             draw_manager.show_cursor(false);
-                            draw_manager.fade_black(1.2f, 24);
+                            draw_manager.fade_black(FEATURE(EF_FAST_FADES) ? 0.2f : 1.2f, 24);
                             if (selected_ft == gal->get_guild()) {
                                 set_stage(GM_Zoom2Guild);
                             } else {
