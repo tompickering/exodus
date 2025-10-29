@@ -2010,6 +2010,7 @@ bool MenuDrawer::menu_specific_update() {
                     COL_TEXT);
 
                 if (input_manager.consume(K_Enter) && strnlen(name, 1)) {
+                    input_manager.stop_text_input();
                     menu_art_planet_named = true;
 
                     draw_manager.draw_text(
