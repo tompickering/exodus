@@ -182,6 +182,7 @@ enum EphState {
 enum SelectPlanetReason : uint8_t {
     SPR_None,
     SPR_PlanetSurface,
+    SPR_MarkStar,
     SPR_MAX
 };
 
@@ -223,6 +224,19 @@ class EphemeralState {
         void select_planet(SelectPlanetReason reason) {
             selectplanet_reason = reason;
             select_planet(&selectplanet_star_internal, &selectplanet_planet_internal);
+        }
+        void select_planet(SelectPlanetReason reason, int *st, int* pl) {
+            selectplanet_reason = reason;
+            select_planet(st, pl);
+        }
+        bool select_planet_allow_nonvisited() {
+            switch (selectplanet_reason) {
+                case SPR_MarkStar:
+                    return true;
+                default:
+                    break;
+            }
+            return false;
         }
         ExodusMode selectplanet_resolve() {
             clear_ephemeral_state();

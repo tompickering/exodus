@@ -474,7 +474,8 @@ ExodusMode GalaxyMap::update(float delta) {
                 ft = get_clicked_flytarget();
                 if (ft && ft != exostate().get_galaxy()->get_guild()) {
                     int ft_idx = exostate().tgt2loc(ft);
-                    if (player->get_location().has_visited(ft_idx)) {
+                    bool visited = player->get_location().has_visited(ft_idx);
+                    if (ephstate.select_planet_allow_nonvisited() || visited) {
                         *(ephstate.selectplanet_star) = ft_idx;
                         exostate().set_active_flytarget(ft);
                         if (ephstate.selectplanet_planet) {

@@ -17,6 +17,7 @@ void EphemeralState::set_ephemeral_state(EphState new_eph_state) {
 
 void EphemeralState::clear_ephemeral_state() {
     eph_state = EPH_None;
+    selectplanet_reason = SPR_None;
 }
 
 bool EphemeralState::ephemeral_state_set() {

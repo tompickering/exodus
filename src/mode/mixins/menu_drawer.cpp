@@ -1984,7 +1984,7 @@ bool MenuDrawer::menu_specific_update() {
                         p->set_marker_tag(marker_being_set, new_marker);
                         input_manager.stop_text_input();
                         StarMarker *marker = p->get_marker(marker_being_set);
-                        ephstate.select_planet(&marker->idx, nullptr);
+                        ephstate.select_planet(SPR_MarkStar, &marker->idx, nullptr);
                         menu_new_mode = ephstate.get_appropriate_mode();
                         return true;
                     }
