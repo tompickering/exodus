@@ -45,6 +45,7 @@ enum ID {
     RENAME,
     RENAME_BORDER,
     RENAME_NEWNAME,
+    BTN_GUIDE,
     END,
 };
 
@@ -135,9 +136,9 @@ void StarMap::enter() {
     audio_manager.target_music(ephstate.default_music);
 
     if (ephstate.get_ephemeral_state() == EPH_SelectPlanet) {
-        stage = SM_SelectPlanet;
+        set_stage(SM_SelectPlanet);
     } else {
-        stage = SM_Idle;
+        set_stage(SM_Idle);
     }
 }
 
@@ -189,7 +190,7 @@ ExodusMode StarMap::update(float delta) {
             update_panel_info_player(TGT_Primary, player);
 
             if (ephstate.get_ephemeral_state() == EPH_PostPlanet) {
-                stage = SM_HandlePostPlanet;
+                set_stage(SM_HandlePostPlanet);
                 return ExodusMode::MODE_None;
             }
 
@@ -197,7 +198,7 @@ ExodusMode StarMap::update(float delta) {
             if (ephstate.get_ephemeral_state() == EPH_ProbePlanet) {
                 ephstate.clear_ephemeral_state();
                 comm_open(DIA_S_PlanProbe);
-                stage = SM_PlanSettle;
+                set_stage(SM_PlanSettle);
                 return ExodusMode::MODE_None;
             }
 
@@ -220,7 +221,7 @@ ExodusMode StarMap::update(float delta) {
                             {0, 0, 0});
                         input_manager.start_text_input();
                         input_manager.set_input_text(p->get_name());
-                        stage = SM_PlanetRename;
+                        set_stage(SM_PlanetRename);
                         return ExodusMode::MODE_None;
                     }
                 }
@@ -241,7 +242,7 @@ ExodusMode StarMap::update(float delta) {
                             return ExodusMode::MODE_PlanetMap;
                         } else if (exostate().get_active_star_idx() != player->get_location().get_target()) {
                             comm_open(DIA_S_FleetNotInSystem);
-                            stage = SM_Counsellor;
+                            set_stage(SM_Counsellor);
                             return ExodusMode::MODE_None;
                         } else {
                             bool owned = planet->is_owned();
@@ -249,7 +250,7 @@ ExodusMode StarMap::update(float delta) {
 #if FEATURE_BOMBING_LIMIT_HUMAN
                             if (exostate().bombing_prevented(planet)) {
                                 comm_open(DIA_S_AlreadyBombed);
-                                stage = SM_Counsellor;
+                                set_stage(SM_Counsellor);
                                 return ExodusMode::MODE_None;
                             }
 #endif
@@ -270,7 +271,7 @@ ExodusMode StarMap::update(float delta) {
                                 }
                             }
 
-                            stage = SM_Fleet;
+                            set_stage(SM_Fleet);
                             return ExodusMode::MODE_None;
                         }
                     }
@@ -291,7 +292,7 @@ ExodusMode StarMap::update(float delta) {
 
                         if (player->get_starship().pct_damage_comms > 50) {
                             comm_open(DIA_S_CommsBroken);
-                            stage = SM_PlanetComm;
+                            set_stage(SM_PlanetComm);
                             return ExodusMode::MODE_None;
                         }
 
@@ -301,7 +302,7 @@ ExodusMode StarMap::update(float delta) {
                             if (owner_idx == player_idx) {
                                 // Comms with own planet
                                 comm_open(DIA_S_PlanetComm);
-                                stage = SM_PlanetComm;
+                                set_stage(SM_PlanetComm);
                                 return ExodusMode::MODE_None;
                             } else {
                                 // Comms with enemy planet
@@ -313,21 +314,28 @@ ExodusMode StarMap::update(float delta) {
                                     audio_manager.target_music(mpart2mus(4));
                                 }
                                 comm_open(DIA_S_HailPlanet);
-                                stage = SM_EnemyComm;
+                                set_stage(SM_EnemyComm);
                                 return ExodusMode::MODE_None;
                             }
                         } else {
                             comm_open(DIA_S_PlanSettle);
-                            stage = SM_PlanSettle;
+                            set_stage(SM_PlanSettle);
                             return ExodusMode::MODE_None;
                         }
                     }
                 } else {
                     // Back
                     draw_manager.fade_black(1.2f, 24);
-                    stage = SM_Back2Gal;
+                    set_stage(SM_Back2Gal);
                 }
             }
+
+            if (draw_manager.query_click(id(ID::BTN_GUIDE)).id) {
+                bulletin_start_manual(BMP_StarMap);
+                set_stage(SM_Manual);
+                return ExodusMode::MODE_None;
+            }
+
             break;
         case SM_Fleet:
             {
@@ -468,7 +476,7 @@ ExodusMode StarMap::update(float delta) {
                             FLEET_PANEL_X+4, FLEET_PANEL_Y+224,
                             COL_TEXT);
 
-                        stage = SM_MissionScout;
+                        set_stage(SM_MissionScout);
                         return ExodusMode::MODE_None;
                     }
                 }
@@ -559,7 +567,7 @@ ExodusMode StarMap::update(float delta) {
                             achievement_manager.unlock(ACH_BombingMission);
                         }
 
-                        stage = SM_MissionBomb;
+                        set_stage(SM_MissionBomb);
                         return ExodusMode::MODE_None;
                     }
                 }
@@ -573,7 +581,7 @@ ExodusMode StarMap::update(float delta) {
                         draw_manager.draw(id(ID::FLEET_PANEL_PATTERN), nullptr);
                         draw_manager.draw(id(ID::FLEET_PANEL), nullptr);
                     }
-                    stage = SM_Idle;
+                    set_stage(SM_Idle);
                 }
             }
             break;
@@ -589,7 +597,7 @@ ExodusMode StarMap::update(float delta) {
                         return ExodusMode::MODE_PlanetMap;
                     } else {
                         draw_manager.draw(id(ID::FLEET_MISSIONBG), nullptr);
-                        stage = SM_Fleet;
+                        set_stage(SM_Fleet);
                         return ExodusMode::MODE_None;
                     }
                 }
@@ -609,10 +617,10 @@ ExodusMode StarMap::update(float delta) {
             action = comm_update(delta);
             if (action == CA_Proceed) {
                 draw_manager.fade_black(1.2f, 24);
-                stage = SM_PlanSettleFade;
+                set_stage(SM_PlanSettleFade);
             } else if (action == CA_Abort) {
                 comm_close();
-                stage = SM_Idle;
+                set_stage(SM_Idle);
             } else if (action == CA_BionicProbe) {
                 comm_close();
                 ephstate.set_ephemeral_state(EPH_ProbePlanet);
@@ -631,7 +639,7 @@ ExodusMode StarMap::update(float delta) {
                     break;
                 case CA_Abort:
                     comm_close();
-                    stage = SM_Idle;
+                    set_stage(SM_Idle);
                     break;
                 case CA_GoodsTransfer:
                     comm_close();
@@ -658,12 +666,12 @@ ExodusMode StarMap::update(float delta) {
                     break;
                 case CA_Abort:
                     comm_close();
-                    stage = SM_Idle;
+                    set_stage(SM_Idle);
                     break;
                 case CA_PlanAttack:
                     comm_close();
                     comm_open(DIA_S_PlanAttack);
-                    stage = SM_PlanAttack;
+                    set_stage(SM_PlanAttack);
                     break;
                 case CA_Trade:
                     comm_close();
@@ -679,7 +687,7 @@ ExodusMode StarMap::update(float delta) {
                     break;
                 case CA_Abort:
                     comm_close();
-                    stage = SM_Idle;
+                    set_stage(SM_Idle);
                     break;
                 case CA_Proceed:
                     comm_close();
@@ -710,7 +718,7 @@ ExodusMode StarMap::update(float delta) {
                         RES_X/2, 10,
                         COL_TEXT2);
                     audio_manager.target_music(MUS_CELEBRATE);
-                    stage = SM_Festival;
+                    set_stage(SM_Festival);
                     return ExodusMode::MODE_None;
                 }
 
@@ -723,7 +731,7 @@ ExodusMode StarMap::update(float delta) {
                     draw_manager.draw(id(ID::FESTIVAL), nullptr);
                     frame_remove();
                     audio_manager.target_music(ephstate.default_music);
-                    stage = SM_Idle;
+                    set_stage(SM_Idle);
                 }
             }
             break;
@@ -748,7 +756,7 @@ ExodusMode StarMap::update(float delta) {
                             }
                             *(ephstate.selectplanet_planet) = i;
                             draw_manager.fade_black(1.2f, 24);
-                            stage = SM_SelectPlanetFadeOut;
+                            set_stage(SM_SelectPlanetFadeOut);
                             return ExodusMode::MODE_None;
                         } else {
                             L.error("Player cannot afford selectplanet MC - should not have gotten this far");
@@ -768,12 +776,12 @@ ExodusMode StarMap::update(float delta) {
         case SM_HandlePostPlanet:
             if (ephstate.consume_postplanet(PPA_BadLaws)) {
                 comm_open(DIA_S_LookAgainBadLaws);
-                stage = SM_HandlePostPlanetComms;
+                set_stage(SM_HandlePostPlanetComms);
                 return ExodusMode::MODE_None;
             }
             if (ephstate.consume_postplanet(PPA_NoEssentials)) {
                 comm_open(DIA_S_LookAgainNoEssentials);
-                stage = SM_HandlePostPlanetComms;
+                set_stage(SM_HandlePostPlanetComms);
                 return ExodusMode::MODE_None;
             }
 
@@ -782,14 +790,14 @@ ExodusMode StarMap::update(float delta) {
             }
 
             if (ephstate.consume_postplanet(PPA_Festival)) {
-                stage = SM_FestivalDelay;
+                set_stage(SM_FestivalDelay);
                 return ExodusMode::MODE_None;
             }
 
             // All postplanet actions consumed - we can clear state now
             ephstate.clear_ephemeral_state();
 
-            stage = SM_Idle;
+            set_stage(SM_Idle);
             return ExodusMode::MODE_None;
         case SM_HandlePostPlanetComms:
             switch (comm_update(delta)) {
@@ -798,7 +806,7 @@ ExodusMode StarMap::update(float delta) {
                     // Fallthrough...
                 case CA_Abort:
                     comm_close();
-                    stage = SM_HandlePostPlanet;
+                    set_stage(SM_HandlePostPlanet);
                     break;
                 default:
                     break;
@@ -808,7 +816,7 @@ ExodusMode StarMap::update(float delta) {
         case SM_Counsellor:
             if (comm_update(delta) != CA_None) {
                 comm_close();
-                stage = SM_Idle;
+                set_stage(SM_Idle);
             }
             break;
         case SM_PlanetRename:
@@ -840,6 +848,16 @@ ExodusMode StarMap::update(float delta) {
                     draw_manager.draw(id(ID::RENAME_BORDER), nullptr);
                     return ExodusMode::MODE_Reload;
                 }
+            }
+            break;
+        case SM_Manual:
+            bulletin_update(delta);
+            switch (bulletin_get_praction()) {
+                case BPR_Close:
+                    bulletin_ensure_closed();
+                    set_stage(SM_Idle);
+                default:
+                    break;
             }
             break;
         case SM_Back2Gal:
@@ -956,6 +974,21 @@ void StarMap::draw_planets(float delta) {
 void StarMap::get_planet_draw_pos(int i, int& x, int& y) {
     x = 140 + i*95;
     y = (RES_Y / 2) - 30 + ((i % 2) == 0 ? -30 : 30);
+}
+
+void StarMap::set_stage(Stage new_stage) {
+    switch (new_stage) {
+        case SM_Idle:
+            draw_manager.draw(
+                id(ID::BTN_GUIDE),
+                IMG_BTNGUIDE,
+                {RES_X-4, 4, 1, 0, 1, 1});
+            break;
+        default:
+            break;
+    }
+
+    stage = new_stage;
 }
 
 bool StarMap::select_planet(int index) {

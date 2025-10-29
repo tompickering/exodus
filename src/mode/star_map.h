@@ -6,6 +6,7 @@
 #include "mixins/comm_panel_drawer.h"
 #include "mixins/frame_drawer.h"
 #include "mixins/bombing.h"
+#include "mixins/bulletin_drawer.h"
 
 #include "draw/draw.h"
 
@@ -14,7 +15,7 @@
 
 
 
-class StarMap : ModeBase, PanelDrawer, CommPanelDrawer, FrameDrawer, Bombing {
+class StarMap : ModeBase, PanelDrawer, CommPanelDrawer, FrameDrawer, Bombing, BulletinDrawer {
     public:
         StarMap();
         virtual void enter() override;
@@ -40,6 +41,7 @@ class StarMap : ModeBase, PanelDrawer, CommPanelDrawer, FrameDrawer, Bombing {
             SM_HandlePostPlanetComms,
             SM_Counsellor,
             SM_PlanetRename,
+            SM_Manual,
             SM_Back2Gal,
         };
 
@@ -47,6 +49,8 @@ class StarMap : ModeBase, PanelDrawer, CommPanelDrawer, FrameDrawer, Bombing {
         Star *star;
         void draw_planets(float);
         float planet_progress[STAR_MAX_PLANETS];
+
+        void set_stage(Stage);
 
         bool select_planet(int);
         void set_fleet_button(bool);
