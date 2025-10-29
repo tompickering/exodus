@@ -2097,6 +2097,12 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
 
     if (p == BMP_Tips_2) {
         if (draw) {
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Consider Geological Features");
+            bulletin_set_next_text("There can be more to the natural geology");
+            bulletin_set_next_text("of a planet than meets the eye.");
+            bulletin_set_next_text("");
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("Defend Yourself");
             bulletin_set_next_text("Defenceless planets - especially developed");
@@ -2109,11 +2115,16 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("valuable than scientific endeavour. Use");
             bulletin_set_next_text("the CTRL menu to maximise taxes.");
             bulletin_set_next_text("");
+        }
+    }
+
+    if (p == BMP_Tips_3) {
+        if (draw) {
+            bulletin_set_next_text("");
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("Sell Unused Transporters");
             bulletin_set_next_text("In the early game, you likely have more");
             bulletin_set_next_text("transporters than you need.");
-            bulletin_set_next_text("");
         }
     }
 
