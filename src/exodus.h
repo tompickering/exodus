@@ -20,6 +20,7 @@ enum ExodusMode {
     MODE_NewGame,
     MODE_Quit,
 
+    MODE_GameModeSelect,
     MODE_Intro,
     MODE_Menu,
     MODE_GalaxyGen,

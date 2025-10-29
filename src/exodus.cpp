@@ -16,6 +16,7 @@ const ExodusVersion EXODUS_VERSION = 2;
 #include "state/ephemeral_state.h"
 
 #include "mode/mode_base.h"
+#include "mode/gamemode_select.h"
 #include "mode/intro.h"
 #include "mode/menu.h"
 #include "mode/galaxy_gen.h"
@@ -151,6 +152,7 @@ int Exodus::run(int argc, char** argv) {
     draw_manager.load_resources();
     audio_manager.load_resources();
 
+    GameModeSelect mode_gamemodeselect;
     Intro mode_intro;
     Menu  mode_menu;
     GalaxyGen  mode_galaxygen;
@@ -177,6 +179,7 @@ int Exodus::run(int argc, char** argv) {
     SpaceBattle mode_spacebattle;
     GameOver mode_gameover;
     Ending mode_ending;
+    mode_map[MODE_GameModeSelect] = (ModeBase*) &mode_gamemodeselect;
     mode_map[MODE_Intro] = (ModeBase*) &mode_intro;
     mode_map[MODE_Menu] = (ModeBase*) &mode_menu;
     mode_map[MODE_GalaxyGen] = (ModeBase*) &mode_galaxygen;
@@ -204,7 +207,7 @@ int Exodus::run(int argc, char** argv) {
     mode_map[MODE_GameOver] = (ModeBase*) &mode_gameover;
     mode_map[MODE_Ending] = (ModeBase*) &mode_ending;
 
-    push_mode(MODE_Intro);
+    push_mode(MODE_GameModeSelect);
 
     running = true;
 
