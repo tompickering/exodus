@@ -1542,11 +1542,11 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
 
     if (p == BMP_StarMap_2) {
         if (draw) {
-            bulletin_set_next_text("");
             bulletin_set_next_text("You have the following options:");
             bulletin_set_next_text("");
             bulletin_set_next_text("                  (If the planet is not owned by you)");
             bulletin_set_next_text("Start a Scout or Bombing mission.");
+            bulletin_set_next_text("Click here to learn more about FLEET.");
             bulletin_set_next_text("");
             bulletin_set_next_text("                  (If the planet is owned by you)");
             bulletin_set_next_text("Show the surface map for building and");
@@ -1561,7 +1561,7 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             draw_manager.draw(
                 IMG_MAN_BTN_FLEET,
                 {BULLETIN_TEXT_X,
-                 bulletin_text_y(3) + 2,
+                 bulletin_text_y(2) + 2,
                  0.f, 0.f, 1, 1});
 
             draw_manager.draw(
@@ -1582,6 +1582,7 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
                  bulletin_text_y(14) + 2,
                  0.f, 0.f, 1, 1});
         } else {
+            LINK(4, BMP_Fleet);
             LINK(14, BMP_Comm);
         }
     }
