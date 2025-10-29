@@ -70,8 +70,9 @@ class InputManager {
         const char* get_input_text(int);
         virtual unsigned int read_numbers() = 0;
         virtual bool is_num_held(unsigned char) = 0;
-        virtual void start_text_input() = 0;
-        virtual void stop_text_input() = 0;
+        virtual void start_text_input() { text_input_is_active = true; }
+        virtual void stop_text_input() { text_input_is_active = false; }
+        bool active_text_input() const { return text_input_is_active; }
         void set_input_text(const char*);
         void backspace();
         void enable_repeating_clicks(bool);
@@ -93,6 +94,7 @@ class InputManager {
     private:
         bool _read(Input input, bool reset);
         bool repeating_clicks;
+        bool text_input_is_active;
 };
 
 #ifdef SDL

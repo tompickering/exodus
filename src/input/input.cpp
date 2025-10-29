@@ -16,6 +16,7 @@ InputManager::InputManager() {
     click_pos_r.y = -1;
     text[INPUT_MAX_TEXT] = '\0';
     enable_repeating_clicks(false);
+    text_input_is_active = false;
 }
 
 bool InputManager::update(float delta) {

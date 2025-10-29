@@ -590,6 +590,7 @@ ExodusMode Menu::update(float delta) {
                     }
                     if (!duplicate) {
                         config.players[current_player].set_name(input_name);
+                        input_manager.stop_text_input();
                         set_stage(Gender);
                     } else {
                         L.info("Not allowing duplicate name");
@@ -696,6 +697,7 @@ ExodusMode Menu::update(float delta) {
 
                 if (input_manager.consume(K_Enter) && strnlen(input_title, 1)) {
                     config.players[current_player].set_title(input_title);
+                    input_manager.stop_text_input();
                     set_stage(CustomRef);
                 }
             }
@@ -747,6 +749,7 @@ ExodusMode Menu::update(float delta) {
 
                 if (input_manager.consume(K_Enter) && strnlen(input_ref, 1)) {
                     config.players[current_player].set_ref(input_ref);
+                    input_manager.stop_text_input();
                     set_stage(Welcome);
                 }
             }

@@ -129,6 +129,7 @@ bool InputManagerSDL::is_num_held(unsigned char n) {
 }
 
 void InputManagerSDL::start_text_input() {
+    InputManager::start_text_input();
     for (int i = 0; i <= INPUT_MAX_TEXT; ++i) {
         text[i] = '\0';
     }
@@ -137,4 +138,5 @@ void InputManagerSDL::start_text_input() {
 
 void InputManagerSDL::stop_text_input() {
     SDL_StopTextInput();
+    InputManager::stop_text_input();
 }
