@@ -310,6 +310,15 @@ ExodusMode MenuDrawer::menu_update(float delta) {
                 menu_text_col[i]);
         }
 
+        MousePos pos = draw_manager.get_click();
+        if (pos.valid()) {
+            if (pos.x < MENU_X || pos.x > MENU_X + MENU_W + 2*MENU_BORDER ||
+                pos.y < MENU_Y || pos.y > MENU_Y + MENU_H + 2*MENU_BORDER) {
+                menu_action = MA_Close;
+                return ExodusMode::MODE_None;
+            }
+        }
+
         menu_new_mode = MODE_None;
 
         if (!menu_specific_update()) {
