@@ -4606,6 +4606,13 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     bulletin_write_planet_info(s, p);
                     bulletin_set_next_text("REVOLUTION AT %s", tmp_caps(p->get_name()));
                     bulletin_set_next_text("");
+
+                    if (robots > 0) {
+                        bulletin_set_next_text("Your robots were unable to suppress");
+                        bulletin_set_next_text("the masses.");
+                        bulletin_set_next_text("");
+                    }
+
                     bulletin_set_next_text("The population of %s has sent", p->get_name());
                     bulletin_set_next_text("rebel warriors into a lunar battle");
                     bulletin_set_next_text("in order to depose %s.", owner->get_full_name());
@@ -4613,6 +4620,21 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     ephstate.set_ephemeral_state(EPH_LunarBattlePrep);
                     ephstate.lunar_battle.aggressor_type = AGG_Rebels;
                     do_lunar_battle = true;
+
+                    next_mpp_stage();
+                    return ExodusMode::MODE_None;
+                } else if (robots > 0) {
+                    if (bulletin_start_new(false, s)) {
+                        audio_manager.target_music(mpart2mus(8));
+                    }
+                    bulletin_set_bg(p->sprites()->bulletin_bg);
+                    bulletin_set_active_player_flag();
+                    bulletin_write_planet_info(s, p);
+                    bulletin_set_next_text("ATTEMPTED UPRISING AT %s", tmp_caps(p->get_name()));
+                    bulletin_set_next_text("");
+                    bulletin_set_next_text("Your robots were effective in neutralising");
+                    bulletin_set_next_text("the insurgents, but the situation remains.");
+                    bulletin_set_next_text("highly volatile.");
 
                     next_mpp_stage();
                     return ExodusMode::MODE_None;
