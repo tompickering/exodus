@@ -95,6 +95,7 @@ LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer() {
     cursor_prev_y = -1;
     damage_to_apply = 0;
     panel_unit = nullptr;
+    panel_hp = -1;
     manual_placement = false;
     placement_def = true;
     placement_item = 0;
@@ -264,6 +265,7 @@ void LunarBattle::enter() {
     active_unit = &units[0];
     target_unit = nullptr;
     panel_unit = nullptr;
+    panel_hp = -1;
 
     fast = false;
 
@@ -2206,10 +2208,17 @@ void LunarBattle::update_panel_battle() {
         panel_spr = draw_unit->idle;
     }
 
-    if (draw_unit != panel_unit) {
+    bool redraw = (draw_unit != panel_unit);
+
+    if (draw_unit && (draw_unit->hp != panel_hp)) {
+        redraw = true;
+    }
+
+    if (redraw) {
         const char* text = STR_Ground;
         RGB text_col = {0, 0xFF, 0};  // TODO: Check exact colour
         panel_unit = draw_unit;
+        panel_hp = draw_unit ? draw_unit->hp : -1;
         // Clears over drawn health info etc
         draw_manager.fill_pattern({226, 12, 210, 50});
         if (draw_unit) {

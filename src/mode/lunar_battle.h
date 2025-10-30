@@ -187,6 +187,7 @@ class LunarBattle : ModeBase, CommPanelDrawer, BattleReport {
         BattleUnit* active_unit;
         BattleUnit* target_unit;
         BattleUnit* panel_unit;
+        int panel_hp;
         bool is_in_cover(BattleUnit*);
 
         BattleUnit* unit_at(int, int);
