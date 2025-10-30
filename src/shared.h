@@ -42,9 +42,13 @@ extern EXODUS exodus;
 
 extern Log::Logger L;
 
-typedef struct {
+struct MousePos {
     int x;
     int y;
-} MousePos;
+
+    MousePos() { reset(); }
+    bool valid() const { return x>= 0 && y >= 0; }
+    void reset() { x = -1; y = -1; }
+};
 
 #endif

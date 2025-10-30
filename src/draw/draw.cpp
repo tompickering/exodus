@@ -242,11 +242,18 @@ SpriteClick DrawManager::query_mouseover(SprID query) {
     return res;
 }
 
-void DrawManager::consume_click() {
-    click_pos = {-1, -1};
-    click_pos_r = {-1, -1};
+MousePos DrawManager::get_click() {
+    MousePos pos = click_pos;
+    return pos;
+}
+
+MousePos DrawManager::consume_click() {
+    MousePos pos = click_pos;
+    click_pos.reset();
+    click_pos_r.reset();
     clicked_this_frame = false;
     clicked_this_frame_r = false;
+    return pos;
 }
 
 bool DrawManager::mouse_over(SprID query) {

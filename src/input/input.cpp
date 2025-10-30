@@ -131,7 +131,7 @@ void InputManager::enable_repeating_clicks(bool enable) {
 
 void InputManager::clear_click_held_state() {
     click_held = false;
-    last_click_pos = {-1, -1};
+    last_click_pos.reset();
     click_held_time = 0;
     click_repeat_timeout = 0;
 }

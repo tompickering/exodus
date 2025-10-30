@@ -211,9 +211,9 @@ int Exodus::run(int argc, char** argv) {
 
     running = true;
 
-    MousePos mouse_pos = {-1, -1};
-    MousePos click_pos = {-1, -1};
-    MousePos click_pos_r = {-1, -1};
+    MousePos mouse_pos;
+    MousePos click_pos;
+    MousePos click_pos_r;
 
 #ifdef DBG
     if (has_option("setup")) {
@@ -314,7 +314,7 @@ int Exodus::run(int argc, char** argv) {
         }
 
         if (input_manager.read(Input::K_C)) {
-            click_pos = {1, 1};
+            click_pos.reset();
         }
 
         if (input_manager.consume(Input::K_F1)) {
