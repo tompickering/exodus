@@ -57,6 +57,7 @@ class BattleUnit {
         int y;
         int tgt_x;
         int tgt_y;
+        int hp_initial;
         int hp;
         int move;
         int fire_range;
@@ -151,6 +152,7 @@ class LunarBattle : ModeBase, CommPanelDrawer, BattleReport {
         Stage stage;
 
         Player *aggressor;
+        Player *defender;
 
         int auto_base;
         void auto_run();

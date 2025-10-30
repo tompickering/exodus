@@ -114,8 +114,14 @@ void LunarBattle::enter() {
     Planet *p = exostate().get_active_planet();
 
     aggressor = nullptr;
+    defender = nullptr;
+
     if (b.aggressor_type == AGG_Player) {
         aggressor = exostate().get_player(b.aggressor_idx);
+    }
+
+    if (p->is_owned()) {
+        defender = exostate().get_player(p->get_owner());
     }
 
     LunarBattleReport &rpt = ephstate.lunar_battle_report;
@@ -327,7 +333,6 @@ ExodusMode LunarBattle::update(float delta) {
     LunarBattleReport &rpt = ephstate.lunar_battle_report;
 
     Planet *p = exostate().get_active_planet();
-    Player *defender = exostate().get_player(p->get_owner());
 
     bool defending = !(aggressor && aggressor->is_human());
 
@@ -2209,20 +2214,77 @@ void LunarBattle::update_panel_battle() {
         draw_manager.fill_pattern({226, 12, 210, 50});
         if (draw_unit) {
             text = draw_unit->name;
-            // Check if the unit is on our side
-            if (human_turn && active_unit->defending == draw_unit->defending) {
+
+            bool our_side = (human_turn && active_unit->defending == draw_unit->defending);
+
+            if (our_side) {
                 text_col = {0, 0, 0xFF};  // TODO: Check exact colour
-                for (int i = 0; i < draw_unit->hp; ++i) {
-                    draw_manager.draw(
-                        IMG_GF4_SBR,
-                        {232 + 10*i, 35, 0, 0, 1, 1});
-                }
             }
 
-            if (is_in_cover(draw_unit)) {
-                draw_manager.draw(
-                    IMG_GF4_COVER,
-                    {232, 50, 0, 0, 1, 1});
+            if (FEATURE(EF_LUNAR_BATTLE_ADVANCED_HP_INFO)) {
+                if (human_turn) {
+                    Player *player = defender_turn ? defender : aggressor;
+
+                    OfficerQuality offq = OFFQ_Poor;
+
+                    if (player) {
+                        offq = player->get_officer(OFF_Battle);
+                    }
+
+                    const char* text_hp = "HP:";
+                    const char* text_hits = "HITS:";
+
+                    if (our_side) {
+                        draw_manager.draw_text(Font::Tiny, text_hp, Justify::Left, 234, 34, COL_TEXT3);
+
+                        for (int i = 0; i < draw_unit->hp; ++i) {
+                            draw_manager.draw(
+                                IMG_GF4_SBR,
+                                {232 + 10*i, 50, 0, 0, 1, 1});
+                        }
+                    } else if (offq != OFFQ_Poor) {
+                        int dots_to_show = 0;
+                        const char* text = text_hp;
+
+                        if (offq == OFFQ_Average) {
+                            text = text_hits;
+                            dots_to_show = draw_unit->hp_initial - draw_unit->hp;
+                        }
+
+                        if (offq == OFFQ_Good) {
+                            text = text_hp;
+                            dots_to_show = draw_unit->hp;
+                        }
+
+                        draw_manager.draw_text(Font::Tiny, text, Justify::Left, 234, 34, COL_TEXT3);
+
+                        for (int i = 0; i < dots_to_show; ++i) {
+                            draw_manager.draw(
+                                IMG_GF4_SBR_RED,
+                                {232 + 10*i, 50, 0, 0, 1, 1});
+                        }
+                    }
+
+                    if (is_in_cover(draw_unit)) {
+                        draw_manager.draw(
+                            IMG_GF4_COVER,
+                            {430, 13, 1, 0, 1, 1});
+                    }
+                }
+            } else {
+                if (our_side) {
+                    for (int i = 0; i < draw_unit->hp; ++i) {
+                        draw_manager.draw(
+                            IMG_GF4_SBR,
+                            {232 + 10*i, 35, 0, 0, 1, 1});
+                    }
+                }
+
+                if (is_in_cover(draw_unit)) {
+                    draw_manager.draw(
+                        IMG_GF4_COVER,
+                        {232, 50, 0, 0, 1, 1});
+                }
             }
         }
         draw_manager.draw_text(text, Justify::Left, 232, 13, text_col);
@@ -3129,6 +3191,8 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             }
             break;
     }
+
+    hp_initial = hp;
 
     spr_id = draw_manager.new_sprite_id();
     fire_spr_id = draw_manager.new_sprite_id();

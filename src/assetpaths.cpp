@@ -1112,6 +1112,7 @@ const char *IMG_MAN_BTN_FLEET    = D_NEW "man_btn_fleet";
 const char *IMG_MAN_BTN_MAP      = D_NEW "man_btn_map";
 const char *IMG_MAN_BTN_INFO     = D_NEW "man_btn_info";
 const char *IMG_MAN_BTN_COMM     = D_NEW "man_btn_comm";
+const char *IMG_GF4_SBR_RED      = D_NEW "gf4_sbr_red";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2224,6 +2225,7 @@ const char *ASSETS_IMG[] = {
     IMG_MAN_BTN_MAP,
     IMG_MAN_BTN_INFO,
     IMG_MAN_BTN_COMM,
+    IMG_GF4_SBR_RED,
 
     "",
 };
