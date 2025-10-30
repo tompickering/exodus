@@ -319,6 +319,11 @@ ExodusMode MenuDrawer::menu_update(float delta) {
             }
         }
 
+        if (input_manager.consume(Input::K_Escape)) {
+            menu_action = MA_Close;
+            return ExodusMode::MODE_None;
+        }
+
         menu_new_mode = MODE_None;
 
         if (!menu_specific_update()) {
