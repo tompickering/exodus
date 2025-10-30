@@ -1,0 +1,13 @@
+Another Tiny Pixel Font (monospace, 3x5) by Alassë Eärfalas
+
+https://alasseearfalas.itch.io/another-tiny-pixel-font-mono-3x5
+
+Hi. I uh. I made a font?
+
+I was messing around in Python and admiring some of my favorite tiny pixel fonts and I thought, "hey! why don't I make my own! specifically for coding!" So I did. x)
+
+I made this font in PixelForge. Every character is within 3x5 pixels, though a few do dip down a pixel below that invisible line that all the letters sit on. Oh and I don't know whether it technically counts as monospace 'cause this is the first font I've ever made in my life, but I did try to make it monospace. I hope I succeeded. :D
+
+The license on this is CC0, so take it and do whatever you want with it. :)
+
+Toodles!

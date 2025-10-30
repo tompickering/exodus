@@ -70,3 +70,11 @@ Thanks to the following dependency projects, licensed as follows:
 * SDL2_mixer (zlib): https://wiki.libsdl.org/SDL2_mixer/FrontPage
 * SDL2_ttf (zlib): https://wiki.libsdl.org/SDL2_ttf/FrontPage
 * cJSON by Dave Gamble (MIT): https://github.com/DaveGamble/cJSON
+
+Thanks to the following font creators:
+* Brian J. Bonislawsky "Astigmatic" - Audiowide
+    * (SIL Open Font License, Version 1.1 https://openfontlicense.org/open-font-license-official-text/ )
+    * https://fonts.google.com/specimen/Audiowide
+* Alassë Eärfalas - Another Tiny Pixel Font (monospace, 3x5)
+    * (Creative Commons License)
+    * https://alasseearfalas.itch.io/another-tiny-pixel-font-mono-3x5
