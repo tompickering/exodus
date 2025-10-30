@@ -293,6 +293,18 @@ ExodusMode Trade::update(float delta) {
                     RES_X/2 + 100, 420,
                     COL_TEXT2);
 
+                if (input_manager.consume(Input::K_B)) {
+                    start_trade(false);
+                    stage = DoTrade;
+                    return ExodusMode::MODE_None;
+                }
+
+                if (input_manager.consume(Input::K_S)) {
+                    start_trade(true);
+                    stage = DoTrade;
+                    return ExodusMode::MODE_None;
+                }
+
                 SpriteClick clk = draw_manager.query_click(id(ID::BUTTON_BAR));
                 if (clk.id) {
                     if (clk.x < .25f) {
