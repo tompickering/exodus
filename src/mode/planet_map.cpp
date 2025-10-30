@@ -730,13 +730,13 @@ ExodusMode PlanetMap::update(float delta) {
                 return ExodusMode::MODE_Pop;
             }
 
-            if (draw_manager.query_click(id(ID::ICON_FOOD)).id) {
+            if (draw_manager.query_click(id(ID::ICON_FOOD)).id || draw_manager.query_click(id(ID::GAUGE_FOOD)).id) {
                 draw_frame_fd();
                 stage = PM_Frame;
-            } else if (draw_manager.query_click(id(ID::ICON_PLU)).id) {
+            } else if (draw_manager.query_click(id(ID::ICON_PLU)).id || draw_manager.query_click(id(ID::GAUGE_PLU)).id) {
                 draw_frame_pl();
                 stage = PM_Frame;
-            } else if (draw_manager.query_click(id(ID::ICON_UNREST)).id) {
+            } else if (draw_manager.query_click(id(ID::ICON_UNREST)).id || draw_manager.query_click(id(ID::GAUGE_UNREST)).id) {
                 draw_frame_unrest();
                 stage = PM_Frame;
             }
