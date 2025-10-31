@@ -422,6 +422,7 @@ ExodusMode LunarBattle::update(float delta) {
                                         mines[n_mines].x = cursor_x;
                                         mines[n_mines].y = cursor_y;
                                         mines[n_mines].live = true;
+                                        mines[n_mines].discovered = false;
                                         mines[n_mines].spr_id = draw_manager.new_sprite_id();
                                         n_mines++;
                                     } else {
@@ -623,16 +624,32 @@ ExodusMode LunarBattle::update(float delta) {
                 active_unit->y = active_unit->tgt_y;
                 active_unit->moves_remaining--;
 
-                // If we're a glider, check if we've on a mine
-                if (active_unit->type == UNIT_Gli) {
-                    for (int i = 0; i < n_mines; ++i) {
-                        if (mines[i].x == active_unit->x && mines[i].y == active_unit->y) {
-                            if (mines[i].live) {
-                                active_mine = &mines[i];
-                                stage = LB_Mine;
-                                return ExodusMode::MODE_None;
+                int on_mine = -1;
+
+                for (int i = 0; i < n_mines; ++i) {
+                    if (mines[i].x == active_unit->x && mines[i].y == active_unit->y) {
+                        if (mines[i].live) {
+                            on_mine = i;
+                            break;
+                        }
+                    }
+                }
+
+                if (on_mine >= 0) {
+                    if (FEATURE(EF_LUNAR_BATTLE_INF_DISCOVER_MINES)) {
+                        if (aggressor && aggressor->is_human()) {
+                            if (active_unit->type == UNIT_Inf) {
+                                audio_manager.play_sfx(SFX_BEEP);
+                                mines[on_mine].discovered = true;
                             }
                         }
+                    }
+
+                    // If we're a glider, check if we've on a mine
+                    if (active_unit->type == UNIT_Gli) {
+                        active_mine = &mines[on_mine];
+                        stage = LB_Mine;
+                        return ExodusMode::MODE_None;
                     }
                 }
 
@@ -1724,6 +1741,7 @@ void LunarBattle::place_units(bool def) {
                     mines[n_mines].x = mine_x;
                     mines[n_mines].y = mine_y;
                     mines[n_mines].live = true;
+                    mines[n_mines].discovered = false;
                     mines[n_mines].spr_id = draw_manager.new_sprite_id();
                     n_mines++;
                     L.debug("Placed mine at %d %d", mine_x, mine_y);
@@ -1833,23 +1851,77 @@ void LunarBattle::calc_force_strength(int& aat, int& adf) {
     }
 }
 
-void LunarBattle::draw_units() {
-    bool hide_enemies = false;
-    if (stage == LB_Placement || stage == LB_PlacementEnd) {
-        hide_enemies = true;
-    }
+enum DrawMineRule : uint8_t {
+    None,
+    InfOnly,
+    Discovered,
+    All
+};
+
+void LunarBattle::draw_mines() {
+    DrawMineRule draw_mine_rule = DrawMineRule::None;
 
     if (!(aggressor && aggressor->is_human())) {
+        draw_mine_rule = DrawMineRule::All;
+    }
+
+    if (FEATURE(EF_LUNAR_BATTLE_INF_DISCOVER_MINES)) {
+        if (aggressor && aggressor->is_human()) {
+            OfficerQuality offq = aggressor->get_officer(OFF_Battle);
+            if (offq == OFFQ_Average) draw_mine_rule = DrawMineRule::InfOnly;
+            if (offq == OFFQ_Good) draw_mine_rule = DrawMineRule::Discovered;
+        }
+    }
+
+    if (draw_mine_rule != DrawMineRule::None) {
         for (int i = 0; i < n_mines; ++i) {
-            if (mines[i].live) {
+            bool draw_mine = false;
+
+            switch (draw_mine_rule) {
+                case DrawMineRule::None:
+                    break;
+                case DrawMineRule::InfOnly:
+                    {
+                        BattleUnit *u = unit_at(mines[i].x, mines[i].y);
+                        if (u && !(u->defending) && (u->type == UNIT_Inf)) {
+                            draw_mine = mines[i].live;
+                        }
+                    }
+                    break;
+                case DrawMineRule::Discovered:
+                    draw_mine = mines[i].live && mines[i].discovered;
+                    break;
+                case DrawMineRule::All:
+                    draw_mine = mines[i].live;
+                    break;
+            }
+
+            if (draw_mine) {
+                // FIXME: It's a hack to refresh mine IDs every time we draw them!
+                // Ensure this mine draws above anything else
+                draw_manager.refresh_sprite_id(mines[i].spr_id);
+                // Except the cursor and explosion
+                draw_manager.refresh_sprite_id(id(ID::CURSOR));
+                draw_manager.refresh_sprite_id(id(ID::EXPLOSION));
                 draw_manager.draw(
                     mines[i].spr_id,
                     IMG_GF4_19,
                     {SURF_X + mines[i].x * BLK_SZ,
                      SURF_Y + mines[i].y * BLK_SZ,
                      0, 0, 1, 1});
+            } else {
+                draw_manager.draw(
+                    mines[i].spr_id,
+                    nullptr);
             }
         }
+    }
+}
+
+void LunarBattle::draw_units() {
+    bool hide_enemies = false;
+    if (stage == LB_Placement || stage == LB_PlacementEnd) {
+        hide_enemies = true;
     }
 
     for (int i = 0; i < n_tele; ++i) {
@@ -1960,6 +2032,8 @@ void LunarBattle::draw_units() {
             }
         }
     }
+
+    draw_mines();
 }
 
 void LunarBattle::draw_explosion() {

@@ -109,6 +109,7 @@ class Mine {
         int x;
         int y;
         bool live;
+        bool discovered;
         SprID spr_id;
 };
 
@@ -206,6 +207,7 @@ class LunarBattle : ModeBase, CommPanelDrawer, BattleReport {
 
         void draw_ground();
         void draw_units();
+        void draw_mines();
         void update_cursor();
         void update_arrows();
         void draw_explosion();

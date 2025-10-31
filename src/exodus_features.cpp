@@ -72,6 +72,9 @@ static bool FAST_FADES = false;
 // Diplays hits on enemy or enemy HP depending on general
 static bool LUNAR_BATTLE_ADVANCED_HP_INFO = false;
 
+// Diplays hits on enemy or enemy HP depending on general
+static bool LUNAR_BATTLE_INF_DISCOVER_MINES = false;
+
 // Fixes bug meaning some AI terrorist actions are never taken
 static bool FIX_AI_TERROR = false;
 
@@ -107,6 +110,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         OPTIMISE_ARMY_PRODUCTION_PRIORITIES = false;
         FAST_FADES = false;
         LUNAR_BATTLE_ADVANCED_HP_INFO = false;
+        LUNAR_BATTLE_INF_DISCOVER_MINES = false;
         FIX_AI_TERROR = false;
         DISABLE_MULTIPLAYER = true;
     }
@@ -135,6 +139,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         OPTIMISE_ARMY_PRODUCTION_PRIORITIES = true;
         FAST_FADES = true;
         LUNAR_BATTLE_ADVANCED_HP_INFO = true;
+        LUNAR_BATTLE_INF_DISCOVER_MINES = true;
         FIX_AI_TERROR = true;
         DISABLE_MULTIPLAYER = true;
     }
@@ -168,6 +173,7 @@ bool FEATURE(ExodusFeature f) {
     if (f == EF_OPTIMISE_ARMY_PRODUCTION_PRIORITIES) return OPTIMISE_ARMY_PRODUCTION_PRIORITIES;
     if (f == EF_FAST_FADES) return FAST_FADES;
     if (f == EF_LUNAR_BATTLE_ADVANCED_HP_INFO) return LUNAR_BATTLE_ADVANCED_HP_INFO;
+    if (f == EF_LUNAR_BATTLE_INF_DISCOVER_MINES) return LUNAR_BATTLE_INF_DISCOVER_MINES;
     if (f == EF_FIX_AI_TERROR) return FIX_AI_TERROR;
     if (f == EF_DISABLE_MULTIPLAYER) return DISABLE_MULTIPLAYER;
 
