@@ -460,6 +460,8 @@ class Player : public Saveable {
 
         int nopirates;
 
+        bool invalid_placement_seen;
+
     private:
         void refresh_full_name();
         int transfer(int, int*);

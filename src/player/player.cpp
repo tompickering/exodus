@@ -43,6 +43,7 @@ Player::Player() {
     inventions = 0;
     guild_member = false;
     nopirates = 0;
+    invalid_placement_seen = false;
     ai_tactic = 0;
 
     infraction_mask = 0;
@@ -977,6 +978,7 @@ void Player::add_trace(Trace t, int n) {
 void Player::save(cJSON* j) const
 {
     SAVE_NUM(j, nopirates);
+    SAVE_BOOL(j, invalid_placement_seen);
     SAVE_ENUM(j, race);
     SAVE_ENUM(j, gender);
     SAVE_STR(j, name);
@@ -1015,6 +1017,7 @@ void Player::save(cJSON* j) const
 void Player::load(cJSON* j)
 {
     LOAD_NUM(j, nopirates);
+    LOAD_BOOL(j, invalid_placement_seen);
     LOAD_ENUM(j, race);
     LOAD_ENUM(j, gender);
     LOAD_STR(j, name);

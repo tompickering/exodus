@@ -2,6 +2,7 @@
 #define GUARD_PLANET_MAP_H
 
 #include "mode_base.h"
+#include "mixins/comm_panel_drawer.h"
 
 #include "draw/draw.h"
 
@@ -45,7 +46,7 @@ typedef struct {
     bool radiation;
 } ChainedExplosion;
 
-class PlanetMap : ModeBase {
+class PlanetMap : ModeBase, CommPanelDrawer {
     public:
         PlanetMap();
         virtual void enter() override;
@@ -66,6 +67,7 @@ class PlanetMap : ModeBase {
             PM_LawTaxes,
             PM_LawFestival,
             PM_LawFestivalConfirm,
+            PM_Counsellor,
         };
 
         Stage stage;

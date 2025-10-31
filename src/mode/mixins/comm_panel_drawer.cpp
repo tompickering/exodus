@@ -835,6 +835,12 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img_caption("COUNSELLOR");
             comm_is_counsellor = true;
             break;
+        case DIA_S_PlanetInvalidPlacement:
+            comm_set_title("Message from counsellor");
+            comm_set_img(CI_HumanThoughtful);
+            comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
+            break;
         case DIA_S_Quit:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_HumanThoughtful);
@@ -1822,6 +1828,14 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_set_text(0, "We do not yet have detailed data");
                 comm_set_text(1, "on this system.");
                 comm_set_text(3, "We need to fly there first.");
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_PlanetInvalidPlacement:
+            {
+                comm_prepare(6);
+                comm_set_text(0, "We need to clear this terrain");
+                comm_set_text(1, "before we can build on it.");
                 comm_recv(DIA_R_Close);
             }
             break;

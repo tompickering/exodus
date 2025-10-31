@@ -635,6 +635,18 @@ ExodusMode PlanetMap::update(float delta) {
                     int block_y = (int)(0.9999f * click.y * blocks);
                     Stone existing = planet->get_stone(block_x, block_y);
                     bool ok = can_build_on(existing);
+
+                    if (!ok) {
+                        if (FEATURE(EF_COUNSELLOR_EXTRA)) {
+                            if (exostate().get_orig_month() <= 5 || !player->invalid_placement_seen) {
+                                player->invalid_placement_seen = true;
+                                comm_open(DIA_S_PlanetInvalidPlacement);
+                                stage = PM_Counsellor;
+                                return ExodusMode::MODE_None;
+                            }
+                        }
+                    }
+
                     if (active_tool == TOOL_Clear) {
                         // Can clear anything except radiation and already-clear ground
                         ok = existing != STONE_Radiation && existing != STONE_Clear;
@@ -1236,6 +1248,12 @@ ExodusMode PlanetMap::update(float delta) {
                     stage = PM_Idle;
                     return ExodusMode::MODE_None;
                 }
+            }
+            break;
+        case PM_Counsellor:
+            if (comm_update(delta) != CA_None) {
+                comm_close();
+                stage = PM_Idle;
             }
             break;
     }
