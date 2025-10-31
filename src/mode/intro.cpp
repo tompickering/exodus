@@ -201,7 +201,7 @@ ExodusMode Intro::update(float delta) {
     time += delta;
     text_time += delta;
 
-    if (input_manager.consume(K_Space)) {
+    if (input_manager.consume(K_Space) || input_manager.consume(K_Escape)) {
         if (stage < Title) {
             draw_manager.cancel_transitions();
             draw_manager.clear();
