@@ -104,6 +104,13 @@ enum ID {
 };
 
 GuildHQ::GuildHQ() : ModeBase("GuildHQ") {
+    guildbot_active = false;
+    guildbot_interp = 0.f;
+    eyes_loop = 0;
+    ending_delay = 0;
+    stage = HQ_Idle;
+    fine = 0;
+    text_y = 0;
 }
 
 void GuildHQ::enter() {
@@ -117,6 +124,8 @@ void GuildHQ::enter() {
     eyes_loop = 0;
     ending_delay = 0;
     stage = HQ_Idle;
+    fine = 0;
+    text_y = 0;
     draw_manager.set_selectable(id(ID::BOT_MISSIONINFO));
     draw_manager.set_selectable(id(ID::BOT_SGJOIN));
     draw_manager.set_selectable(id(ID::BOT_SGQUIT));
