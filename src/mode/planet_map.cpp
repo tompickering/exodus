@@ -634,23 +634,45 @@ ExodusMode PlanetMap::update(float delta) {
                     int block_x = (int)(0.9999f * click.x * blocks);
                     int block_y = (int)(0.9999f * click.y * blocks);
                     Stone existing = planet->get_stone(block_x, block_y);
-                    bool ok = can_build_on(existing);
+                    bool ok = true;
 
-                    if (!ok) {
-                        if (FEATURE(EF_COUNSELLOR_EXTRA)) {
-                            if (exostate().get_orig_month() <= 5 || !player->invalid_placement_seen) {
-                                player->invalid_placement_seen = true;
-                                comm_open(DIA_S_PlanetInvalidPlacement);
+                    if (active_tool == TOOL_Clear) {
+                        // Can clear anything except radiation and already-clear ground
+
+                        if (existing == STONE_Radiation) {
+                            ok = false;
+
+                            if (FEATURE(EF_COUNSELLOR_EXTRA)) {
+                                comm_open(DIA_S_PlanetInvalidRadiation);
                                 stage = PM_Counsellor;
                                 return ExodusMode::MODE_None;
                             }
                         }
+
+                        if (existing == STONE_Clear) {
+                            ok = false;
+                        }
+                    } else {
+                        if (!can_build_on(existing)) {
+                            ok = false;
+
+                            if (FEATURE(EF_COUNSELLOR_EXTRA)) {
+                                if (existing == STONE_Radiation) {
+                                    comm_open(DIA_S_PlanetInvalidRadiation);
+                                    stage = PM_Counsellor;
+                                    return ExodusMode::MODE_None;
+                                } else {
+                                    if (exostate().get_orig_month() <= 5 || !player->invalid_placement_seen) {
+                                        player->invalid_placement_seen = true;
+                                        comm_open(DIA_S_PlanetInvalidPlacement);
+                                        stage = PM_Counsellor;
+                                        return ExodusMode::MODE_None;
+                                    }
+                                }
+                            }
+                        }
                     }
 
-                    if (active_tool == TOOL_Clear) {
-                        // Can clear anything except radiation and already-clear ground
-                        ok = existing != STONE_Radiation && existing != STONE_Clear;
-                    }
                     if (ok) {
                         if (player->attempt_spend(tool2cost(active_tool))) {
                             if (active_tool == TOOL_Clear) {

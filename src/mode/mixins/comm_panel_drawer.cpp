@@ -847,6 +847,12 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img_caption("COUNSELLOR");
             comm_is_counsellor = true;
             break;
+        case DIA_S_PlanetInvalidRadiation:
+            comm_set_title("Message from counsellor");
+            comm_set_img(CI_HumanThoughtful);
+            comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
+            break;
         case DIA_S_Quit:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_HumanThoughtful);
@@ -1858,6 +1864,14 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_prepare(6);
                 comm_set_text(0, "We need to clear this terrain");
                 comm_set_text(1, "before we can build on it.");
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_PlanetInvalidRadiation:
+            {
+                comm_prepare(6);
+                comm_set_text(0, "We can't develop this area");
+                comm_set_text(1, "until the radiation clears...");
                 comm_recv(DIA_R_Close);
             }
             break;
