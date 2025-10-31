@@ -799,7 +799,21 @@ void SpaceBattle::do_attack(BattleShip* s) {
 
     int hits = 0;
 
-    for (int i = 0; i < s->hp; ++i) {
+    int iters = s->hp;
+
+    if (FEATURE(EF_FIX_FLEET_ADMIRAL)) {
+        if (!s->enemy) {
+            OfficerQuality offq = player->get_officer(OFF_Fleet);
+            if (offq == OFFQ_Average) {
+                iters = (int)(((float)iters) * 1.5f);
+            }
+            if (offq == OFFQ_Good) {
+                iters = (int)(((float)iters) * 2.0f);
+            }
+        }
+    }
+
+    for (int i = 0; i < iters; ++i) {
         int r = (s->action == BSA_AttackFast) ? 160 : 200;
         if (t->action == BSA_AttackFast) {
             r -= 40;
