@@ -1365,7 +1365,7 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("");
             bulletin_set_next_text("Click on a Star (or Guild) to select it.");
             bulletin_set_next_text("");
-            bulletin_set_next_text("You can label (visited) stars with 'M'.");
+            bulletin_set_next_text("You can label stars with 'M'.");
             bulletin_set_next_text("");
             bulletin_set_next_text("The lower-right panel shows a '?'");
             bulletin_set_next_text("if you have not visited this system.");
