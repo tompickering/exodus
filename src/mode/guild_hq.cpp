@@ -438,11 +438,13 @@ ExodusMode GuildHQ::update(float delta) {
                 const int rep = player->get_reputation();
 
                 const char* rep_str = "very bad";
-                if (rep >= 3) {
+                if (rep >= 6) {
+                    rep_str = "impeccable";
+                } else if (rep >= 3) {
                     rep_str = "very good";
-                } else if (rep > 2) {
+                } else if (rep >= 2) {
                     rep_str = "good";
-                } else if (rep > 1) {
+                } else if (rep >= 1) {
                     rep_str = "bad";
                 }
 

@@ -413,7 +413,7 @@ void Player::adjust_reputation(int adjustment) {
     reputation += adjustment;
     L.debug("%s: +%d REP (%d)", get_full_name(), adjustment, reputation);
 
-    if (is_human() && reputation >= 3) {
+    if (is_human() && reputation >= 6) {
         achievement_manager.unlock(ACH_VeryGoodRep);
     }
 }
