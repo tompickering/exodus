@@ -178,7 +178,7 @@ void Fly::enter() {
 }
 
 ExodusMode Fly::update(float delta) {
-    if (input_manager.consume(K_Space)) {
+    if (input_manager.consume(K_Space) || draw_manager.clicked()) {
         return ExodusMode::MODE_Pop;
     }
 
