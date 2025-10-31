@@ -1101,6 +1101,7 @@ const char* BulletinDrawer::bulletin_get_manual_flag() {
             return IMG_FLAG_BTLPREP;
         case BMP_LunarBattle_3:
         case BMP_LunarBattle_4:
+        case BMP_LunarBattle_5:
             return IMG_FLAG_BTL;
         case BMP_Trade:
             return IMG_FLAG_TRADE;
@@ -1804,6 +1805,22 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("The number of hits you score depends on the");
             bulletin_set_next_text("power of the unit, the enemy's cover and the");
             bulletin_set_next_text("skill of your general.");
+        }
+    }
+
+    if (p == BMP_LunarBattle_5) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("(Enhanced Game Only)");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Average generals allow you to see the number");
+            bulletin_set_next_text("of hits scored on an enemy unit.");
+            bulletin_set_next_text("Good generals allow you to see their HP.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Average generals allow infantry to see mines");
+            bulletin_set_next_text("whilst they occupy the position.");
+            bulletin_set_next_text("Good generals allow you to see them for the.");
+            bulletin_set_next_text("remainder of the battle.");
         }
     }
 

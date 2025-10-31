@@ -59,6 +59,7 @@ enum BulletinManualPage : uint8_t {
     BMP_LunarBattle_2,
     BMP_LunarBattle_3,
     BMP_LunarBattle_4,
+    BMP_LunarBattle_5,
     BMP_LunarBattle_END,
     BMP_Trade,
     BMP_Trade_END,
