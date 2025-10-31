@@ -823,6 +823,12 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img_caption("COUNSELLOR");
             comm_is_counsellor = true;
             break;
+        case DIA_S_FlyAlreadyFlyingThere:
+            comm_set_title("Message from counsellor");
+            comm_set_img(CI_Human);
+            comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
+            break;
         case DIA_S_FlyAlreadyThere:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_Human);
@@ -1811,6 +1817,22 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_set_text(0, "Our fleet is already in flight.");
                 comm_set_text(2, "We are unable to plot a new route");
                 comm_set_text(3, "until we arrive.");
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_FlyAlreadyFlyingThere:
+            {
+                int m = comm_player->get_location().get_months_to_arrive();
+                comm_prepare(6);
+                comm_set_text(0, "Our fleet is already in flight.");
+                comm_set_text(1, "to this system. We will arrive");
+
+                if (m == 1) {
+                    comm_set_text(2, "next month.");
+                } else {
+                    comm_set_text(2, "in %d months.", m);
+                }
+
                 comm_recv(DIA_R_Close);
             }
             break;

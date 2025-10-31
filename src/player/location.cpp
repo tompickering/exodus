@@ -87,6 +87,10 @@ bool PlayerLocation::is_target_set() {
     return target != location;
 }
 
+int PlayerLocation::get_months_to_arrive() {
+    return months_to_arrive;
+}
+
 void PlayerLocation::save(cJSON* j) const {
     SAVE_NUM(j, nopirates);
     SAVE_NUM(j, location);

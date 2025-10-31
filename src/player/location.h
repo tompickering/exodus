@@ -24,6 +24,7 @@ class PlayerLocation : public Saveable {
         bool has_visited(int);
         void unset_target();
         bool is_target_set();
+        int get_months_to_arrive();
 
         int nopirates;
 

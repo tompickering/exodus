@@ -98,6 +98,7 @@ enum CommSend {
     DIA_S_ArtificialPlanetStarInvalid,
     DIA_S_ArtificialPlanetStarMoveDest,
     DIA_S_FlyAlreadyFlying,
+    DIA_S_FlyAlreadyFlyingThere,
     DIA_S_FlyAlreadyThere,
     DIA_S_ZoomButNotVisited,
     DIA_S_PlanetInvalidPlacement,

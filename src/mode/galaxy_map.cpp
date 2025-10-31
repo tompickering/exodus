@@ -289,8 +289,13 @@ ExodusMode GalaxyMap::update(float delta) {
                         }
                     } else {
                         if (FEATURE(EF_COUNSELLOR_EXTRA)) {
-                            comm_open(DIA_S_FlyAlreadyThere);
-                            set_stage(GM_Counsellor);
+                            if (player->get_location().in_flight()) {
+                                comm_open(DIA_S_FlyAlreadyFlyingThere);
+                                set_stage(GM_Counsellor);
+                            } else {
+                                comm_open(DIA_S_FlyAlreadyThere);
+                                set_stage(GM_Counsellor);
+                            }
                         }
                     }
                 } else if (click.x < 0.5) {
