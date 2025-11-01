@@ -566,17 +566,21 @@ void Planet::set_stone(int x, int y, Stone stone) {
 }
 
 Stone Planet::get_stone_wrap(int x, int y) {
-    int size = get_size_blocks();
-    while (x < 0) x += size;
-    while (y < 0) y += size;
-    return get_stone(x % size, y % size);
+    wrap(x, y);
+    return get_stone(x, y);
 }
 
 void Planet::set_stone_wrap(int x, int y, Stone stone) {
+    wrap(x, y);
+    return set_stone(x, y, stone);
+}
+
+void Planet::wrap(int& x, int& y) {
     int size = get_size_blocks();
     while (x < 0) x += size;
     while (y < 0) y += size;
-    return set_stone(x % size, y % size, stone);
+    x = x % size;
+    y = y % size;
 }
 
 bool Planet::has_stone(Stone st) {

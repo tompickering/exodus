@@ -2112,6 +2112,7 @@ ExodusMode PlanetMap::update_destruction(float delta) {
                                     chained_explosions[chained_explosion_head++];
                                 c.x = cx;
                                 c.y = cy;
+                                planet->wrap(c.x, c.y);
                                 c.radiation = s == STONE_Plu;
                             }
 

@@ -246,6 +246,7 @@ class Planet : public Saveable {
         void set_stone(int, int, Stone);
         Stone get_stone_wrap(int, int);
         void set_stone_wrap(int, int, Stone);
+        void wrap(int&, int&);
         bool has_stone(Stone);
         Stone get_random_point(int&, int&);
         bool find_random_stone(Stone, int&, int&);
