@@ -25,6 +25,10 @@ Anim comm_anim_human(            7, IMG_LD0_LD0  , IMG_LD0_LD0_1,
 Anim comm_anim_human_thoughtful( 1, IMG_CS2_C  );
 Anim comm_anim_human_confident(  1, IMG_CS3_C  );
 Anim comm_anim_human_planet(     1, IMG_CS4_C  );
+Anim comm_anim_human_scientist(  7, IMG_LD6_LD6  , IMG_LD6_LD6_1,
+                                    IMG_LD6_LD6_2, IMG_LD6_LD6_3,
+                                    IMG_LD6_LD6_2, IMG_LD6_LD6_1,
+                                    IMG_LD6_LD6);
 Anim comm_anim_yokon(            1, IMG_LD1_LD1  , IMG_LD1_LD1_1,
                                     IMG_LD1_LD1_2, IMG_LD1_LD1_3,
                                     IMG_LD1_LD1_2, IMG_LD1_LD1_1,
@@ -278,6 +282,9 @@ void CommPanelDrawer::comm_set_img(CommImg img) {
             break;
         case CI_HumanConfident:
             comm_anim = comm_anim_human_confident;
+            break;
+        case CI_HumanScientist:
+            comm_anim = comm_anim_human_scientist;
             break;
         case CI_Yokon:
             comm_anim = comm_anim_yokon;
@@ -851,6 +858,12 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_title("Message from counsellor");
             comm_set_img(CI_HumanThoughtful);
             comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
+            break;
+        case DIA_S_AdvancedReportUnlocked:
+            comm_set_title("Message from scientists");
+            comm_set_img(CI_HumanScientist);
+            comm_set_img_caption("SCIENTISTS");
             comm_is_counsellor = true;
             break;
         case DIA_S_Quit:
@@ -1872,6 +1885,18 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_prepare(6);
                 comm_set_text(0, "We can't develop this area");
                 comm_set_text(1, "until the radiation clears...");
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_AdvancedReportUnlocked:
+            {
+                comm_prepare(6);
+                comm_set_text(0, "Our sprawling empire inspired us");
+                comm_set_text(1, "to upgrade our planetary status");
+                comm_set_text(2, "report system.");
+                comm_set_text(3, "");
+                comm_set_text(4, "And we could do more, you know,");
+                comm_set_text(5, "with sufficient funding...");
                 comm_recv(DIA_R_Close);
             }
             break;

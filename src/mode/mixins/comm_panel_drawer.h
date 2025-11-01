@@ -37,6 +37,7 @@ enum CommImg {
     CI_HumanThoughtful,
     CI_HumanConfident,
     CI_HumanPlanet,
+    CI_HumanScientist,
     CI_Yokon,
     CI_Teri,
     CI_Urkash,
@@ -103,6 +104,7 @@ enum CommSend {
     DIA_S_ZoomButNotVisited,
     DIA_S_PlanetInvalidPlacement,
     DIA_S_PlanetInvalidRadiation,
+    DIA_S_AdvancedReportUnlocked,
     DIA_S_Quit,
     // For these, CPU is talking to us - so CPU is comm_player and human is comm_other
     DIA_S_CPU_Attack,

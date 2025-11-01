@@ -2516,6 +2516,26 @@ ExodusMode GalaxyMap::month_pass_update() {
         next_mp_stage();
     }
 
+    if (mp_state.mp_stage == MP_AdvancedReportUnlock) {
+        if (comm_is_open()) {
+            comm_ensure_closed();
+        } else {
+            if (FEATURE(EF_PLANET_RECALLABLE_SUMMARIES)) {
+                // FIXME: Needs unlocking per-player in multiplayer
+                Player *player = exostate().get_player(0);
+                if (!player->advanced_report_unlocked) {
+                    if (!exostate().multiplayer() && (exostate().get_n_planets(player) >= 5)) {
+                        player->advanced_report_unlocked = true;
+                        bulletin_ensure_closed();
+                        comm_open(DIA_S_AdvancedReportUnlocked);
+                        return ExodusMode::MODE_None;
+                    }
+                }
+            }
+        }
+        next_mp_stage();
+    }
+
     if (mp_state.mp_stage == MP_End) {
         // When we decide we're done with updates...
         month_pass_end();
@@ -5549,5 +5569,5 @@ void GalaxyMap::planet_report_summary_bulletin(bool transition, int idx) {
 }
 
 bool GalaxyMap::use_planet_summary() {
-    return exostate().planet_report_count() > 5;
+    return exostate().get_active_player()->advanced_report_unlocked;
 }

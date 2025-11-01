@@ -461,6 +461,7 @@ class Player : public Saveable {
         int nopirates;
 
         bool invalid_placement_seen;
+        bool advanced_report_unlocked;
 
     private:
         void refresh_full_name();

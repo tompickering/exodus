@@ -1110,6 +1110,10 @@ extern const char *IMG_MAN_BTN_MAP;
 extern const char *IMG_MAN_BTN_INFO;
 extern const char *IMG_MAN_BTN_COMM;
 extern const char *IMG_GF4_SBR_RED;
+extern const char *IMG_LD6_LD6_1;
+extern const char *IMG_LD6_LD6_2;
+extern const char *IMG_LD6_LD6_3;
+extern const char *IMG_LD6_LD6;
 
 extern const char *INIT_IMG;
 extern const char *CURSOR_IMG;

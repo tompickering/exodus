@@ -44,6 +44,7 @@ Player::Player() {
     guild_member = false;
     nopirates = 0;
     invalid_placement_seen = false;
+    advanced_report_unlocked = false;
     ai_tactic = 0;
 
     infraction_mask = 0;
@@ -979,6 +980,7 @@ void Player::save(cJSON* j) const
 {
     SAVE_NUM(j, nopirates);
     SAVE_BOOL(j, invalid_placement_seen);
+    SAVE_BOOL(j, advanced_report_unlocked);
     SAVE_ENUM(j, race);
     SAVE_ENUM(j, gender);
     SAVE_STR(j, name);
@@ -1018,6 +1020,7 @@ void Player::load(cJSON* j)
 {
     LOAD_NUM(j, nopirates);
     LOAD_BOOL(j, invalid_placement_seen);
+    LOAD_BOOL(j, advanced_report_unlocked);
     LOAD_ENUM(j, race);
     LOAD_ENUM(j, gender);
     LOAD_STR(j, name);
