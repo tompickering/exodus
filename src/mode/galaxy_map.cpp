@@ -3825,6 +3825,8 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         mp_state.mpai_bombings_remain -= 1;
                         exostate().register_news(NI_BombAttack);
 
+                        p->register_bombing(exostate().get_player_idx(player));
+
                         L.debug("BOMB (Remaining: %d)", mp_state.mpai_bombings_remain);
 
                         // PROCenemybomb
@@ -4261,6 +4263,17 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 if (failed_attacks & (1 << i)) {
                     Player *agg = exostate().get_player(i);
                     report.add_line("Defended against %s!", agg->get_full_name());
+                }
+            }
+        }
+
+        uint32_t bombings = p->get_bombings();
+
+        if (bombings) {
+            for (int i = 0; i < N_PLAYERS; ++i) {
+                if (bombings & (1 << i)) {
+                    Player *agg = exostate().get_player(i);
+                    report.add_line("Bombed by %s", agg->get_full_name());
                 }
             }
         }
