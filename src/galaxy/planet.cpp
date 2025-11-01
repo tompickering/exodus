@@ -2044,12 +2044,31 @@ PlanetTrafficLight Planet::get_traffic_light(PlanetTrafficLightProperty prop) {
             if (food_prod_surplus() || get_food_consumption() == 0) {
                 return PTL_Green;
             }
-            return food_prod_sufficient() ? sufficient_light : PTL_Red;
+            if (food_prod_sufficient()) {
+                return sufficient_light;
+            }
+            if (FEATURE(EF_SMARTER_STATUS_LIGHTS)) {
+                // Insufficient production, but we have enough to last us for a little while
+                // More cautious than plu because A) food starvation is more serious, B) food perishes and C) legal to trade away
+                if (reserves_food > 4*(get_food_consumption() - get_food_production())) {
+                    return PTL_Amber;
+                }
+            }
+            return PTL_Red;
         case PTLP_Plu:
             if (plu_prod_surplus() || get_plu_consumption() == 0) {
                 return PTL_Green;
             }
-            return plu_prod_sufficient() ? sufficient_light : PTL_Red;
+            if (plu_prod_sufficient()) {
+                return sufficient_light;
+            }
+            if (FEATURE(EF_SMARTER_STATUS_LIGHTS)) {
+                // Insufficient production, but we have enough to last us for a little while
+                if (reserves_plu >= 3*(get_plu_consumption() - get_plu_production())) {
+                    return PTL_Amber;
+                }
+            }
+            return PTL_Red;
         case PTLP_Unrest:
             {
                 int unrest = get_unrest();
