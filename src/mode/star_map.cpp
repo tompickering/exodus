@@ -868,6 +868,8 @@ ExodusMode StarMap::update(float delta) {
 }
 
 void StarMap::draw_planets(float delta) {
+    uint32_t drawn_fleets = 0;
+
     for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
         Planet *planet = star->get_planet_nocheck(i);
         if (planet && planet->exists()) {
@@ -934,8 +936,6 @@ void StarMap::draw_planets(float delta) {
             // Fleet markers
             int s_idx = exostate().tgt2loc(exostate().get_active_star());
             if (planet->is_owned()) {
-                uint32_t drawn_fleets = 0;
-
                 int owner_idx = planet->get_owner();
                 Player *owner = exostate().get_player(owner_idx);
 
