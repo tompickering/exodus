@@ -674,7 +674,7 @@ void MenuDrawer::menu_open_specific_mode() {
                     b = "them";
                 }
 
-                const char* c = "adore %s";
+                const char* c = "adore ";
                 if (total_unrest > 8) {
                     c = "hate ";
                 } else if (total_unrest > 7) {
