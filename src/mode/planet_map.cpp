@@ -239,6 +239,7 @@ enum ID {
     ARMY,
     TRIBUTTONS,
     LAWBUILD,
+    LUNAR_BASE_MASK,
     EXIT,
     TARGET,
     EXPLOSION,
@@ -1275,6 +1276,7 @@ ExodusMode PlanetMap::update(float delta) {
         case PM_Counsellor:
             if (comm_update(delta) != CA_None) {
                 comm_close();
+                set_tool(active_tool);
                 stage = PM_Idle;
             }
             break;
@@ -1879,6 +1881,7 @@ void PlanetMap::set_build_button(bool on) {
 
 void PlanetMap::hide_lunar_base_tool() {
     draw_manager.draw(
+        id(ID::LUNAR_BASE_MASK),
         IMG_SU1_STONEXX,
         {540, 198,
         0, 0, 1, 1});
