@@ -33,6 +33,8 @@ class Star : public FlyTarget {
         Planet* construct_artificial_world(int, const char*);
         StarSize expand();
 
+        int most_recent_active_planet;
+
     private:
         StarSize size;
         int n_planets;

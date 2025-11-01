@@ -111,6 +111,9 @@ void StarMap::enter() {
         planet_set = select_planet(exostate().get_active_planet_idx());
     }
     if (!planet_set) {
+        planet_set = select_planet(star->most_recent_active_planet);
+    }
+    if (!planet_set) {
         for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
             if (select_planet(i))
                 break;
@@ -995,6 +998,7 @@ bool StarMap::select_planet(int index) {
     Planet *p = star->get_planet(index);
     if (p && p->exists()) {
         exostate().set_active_planet(index);
+        star->most_recent_active_planet = index;
         set_fleet_button(!(p->is_owned() && exostate().get_active_player_idx() == p->get_owner()));
         update_panel_info_planet(TGT_Primary, exostate().get_active_player(), p);
         return true;

@@ -10,6 +10,7 @@
 
 Star::Star(int _x, int _y, const char* _name) : FlyTarget(_x, _y, true, _name) {
     size = (StarSize)(rand() % (STAR_Huge + 1));
+    most_recent_active_planet = 0;
     L.debug("Star %s\t: %d %d %d", name, x, y, size);
 }
 
@@ -107,6 +108,7 @@ void Star::save(cJSON* j) const {
     SAVE_ENUM(j, size);
     SAVE_NUM(j, n_planets);
     SAVE_ARRAY_OF_SAVEABLE(j, planets);
+    SAVE_NUM(j, most_recent_active_planet);
 }
 
 void Star::load(cJSON* j) {
@@ -114,4 +116,5 @@ void Star::load(cJSON* j) {
     LOAD_ENUM(j, size);
     LOAD_NUM(j, n_planets);
     LOAD_ARRAY_OF_SAVEABLE(j, planets);
+    LOAD_NUM(j, most_recent_active_planet);
 }
