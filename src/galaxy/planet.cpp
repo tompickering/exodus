@@ -2050,7 +2050,7 @@ PlanetTrafficLight Planet::get_traffic_light(PlanetTrafficLightProperty prop) {
             if (FEATURE(EF_SMARTER_STATUS_LIGHTS)) {
                 // Insufficient production, but we have enough to last us for a little while
                 // More cautious than plu because A) food starvation is more serious, B) food perishes and C) legal to trade away
-                if (reserves_food > 4*(get_food_consumption() - get_food_production())) {
+                if (reserves_food > 5*(get_food_consumption() - get_food_production())) {
                     return PTL_Amber;
                 }
             }
