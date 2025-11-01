@@ -2526,11 +2526,16 @@ bool LunarBattle::ai_can_move_to(BattleUnit *u, int x, int y) {
         }
     }
 
-    // If it's a mine, return false if we're defending or the mine is discovered
+    // If it's a mine, return false if we're defending or we're a glider and the mine is discovered
     for (int i = 0; i < n_mines; ++i) {
         if (mines[i].x == x && mines[i].y == y) {
-            if (u->defending || mines[i].discovered) {
+            if (u->defending) {
                 return false;
+            }
+            if (mines[i].discovered && u->type == UNIT_Gli) {
+                if (!onein(10)) {
+                    return false;
+                }
             }
         }
     }
