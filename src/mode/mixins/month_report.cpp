@@ -179,24 +179,60 @@ void MonthReport::monthreport_open() {
                             }
                         }
 
-                        const char* t0 = "The scientists are working";
-                        const char* t1 = "on a new invention.";
-                        if (n_invs == (int)INV_MAX) {
-                            t0 = "The scientists are very";
-                            t1 = "content and not very busy.";
-                        } else if (player->get_tax() < 5) {
-                            t0 = "The scientists have no";
-                            t1 = "money for further projects.";
-                        } else {
-                            switch (rand() % 3) {
-                                case 0:
+                        const char* t0 = "";
+                        const char* t1 = "";
+
+                        if (FEATURE(EF_REFINED_SCIENCE_REPORTS)) {
+                            if (n_invs == (int)INV_MAX) {
+                                t0 = "The scientists are very";
+                                t1 = "content and not very busy.";
+                            } else {
+                                int q = (int)player->get_officer(OFF_Science);
+                                // Maximum possible value here is 8
+                                int threshold = 2*q - 1 + (player->get_tax() / 20);
+                                // Add noise - maximum possible is 9
+                                threshold += (1 - (rand() % 3));
+                                if (threshold <= 0) {
+                                    t0 = "The scientists are desperate";
+                                    t1 = "for funding.";
+                                } else if (threshold == 1) {
+                                    t0 = "The scientists are struggling";
+                                    t1 = "with such little funding.";
+                                } else if (threshold <= 3) {
+                                    t0 = "The scientists are making";
+                                    t1 = "interesting advancements.";
+                                } else if (threshold <= 5) {
                                     t0 = "We are making remarkable";
-                                    t1 = "advancements!";
-                                    break;
-                                case 1:
-                                    t0 = "We are making interesting";
-                                    t1 = "advancements.";
-                                    break;
+                                    t1 = "progress!";
+                                } else if (threshold <= 7) {
+                                    t0 = "We are confident of a";
+                                    t1 = "breakthrough soon!";
+                                } else {
+                                    t0 = "The scientists are thriving,";
+                                    t1 = "and extremely excited!";
+                                }
+                            }
+                        } else {
+                            t0 = "The scientists are working";
+                            t1 = "on a new invention.";
+
+                            if (n_invs == (int)INV_MAX) {
+                                t0 = "The scientists are very";
+                                t1 = "content and not very busy.";
+                            } else if (player->get_tax() < 5) {
+                                t0 = "The scientists have no";
+                                t1 = "money for further projects.";
+                            } else {
+                                switch (rand() % 3) {
+                                    case 0:
+                                        t0 = "We are making remarkable";
+                                        t1 = "advancements!";
+                                        break;
+                                    case 1:
+                                        t0 = "We are making interesting";
+                                        t1 = "advancements.";
+                                        break;
+                                }
                             }
                         }
 

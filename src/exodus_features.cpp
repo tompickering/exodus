@@ -75,6 +75,9 @@ static bool LUNAR_BATTLE_ADVANCED_HP_INFO = false;
 // Diplays hits on enemy or enemy HP depending on general
 static bool LUNAR_BATTLE_INF_DISCOVER_MINES = false;
 
+// Science section in monthly report changes based on funding
+static bool REFINED_SCIENCE_REPORTS = false;
+
 // Fixes bug meaning some AI terrorist actions are never taken
 static bool FIX_AI_TERROR = false;
 
@@ -114,6 +117,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         FAST_FADES = false;
         LUNAR_BATTLE_ADVANCED_HP_INFO = false;
         LUNAR_BATTLE_INF_DISCOVER_MINES = false;
+        REFINED_SCIENCE_REPORTS = false;
         FIX_AI_TERROR = false;
         FIX_FLEET_ADMIRAL = false;
         DISABLE_MULTIPLAYER = true;
@@ -144,6 +148,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         FAST_FADES = true;
         LUNAR_BATTLE_ADVANCED_HP_INFO = true;
         LUNAR_BATTLE_INF_DISCOVER_MINES = true;
+        REFINED_SCIENCE_REPORTS = true;
         FIX_AI_TERROR = true;
         FIX_FLEET_ADMIRAL = true;
         DISABLE_MULTIPLAYER = true;
@@ -179,6 +184,7 @@ bool FEATURE(ExodusFeature f) {
     if (f == EF_FAST_FADES) return FAST_FADES;
     if (f == EF_LUNAR_BATTLE_ADVANCED_HP_INFO) return LUNAR_BATTLE_ADVANCED_HP_INFO;
     if (f == EF_LUNAR_BATTLE_INF_DISCOVER_MINES) return LUNAR_BATTLE_INF_DISCOVER_MINES;
+    if (f == EF_REFINED_SCIENCE_REPORTS) return REFINED_SCIENCE_REPORTS;
     if (f == EF_FIX_AI_TERROR) return FIX_AI_TERROR;
     if (f == EF_FIX_FLEET_ADMIRAL) return FIX_FLEET_ADMIRAL;
     if (f == EF_DISABLE_MULTIPLAYER) return DISABLE_MULTIPLAYER;
