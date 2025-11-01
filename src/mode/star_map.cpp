@@ -946,7 +946,7 @@ void StarMap::draw_planets(float delta) {
 
                         draw_manager.draw(
                             id_fleet_markers[i],
-                            IMG_TS1_SHICON,
+                            (owner->is_human() ? IMG_SHICON_H : IMG_TS1_SHICON),
                             {draw_x,
                              draw_y + 100,
                              .5f, .5f, 1, 1});
