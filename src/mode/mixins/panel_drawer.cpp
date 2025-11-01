@@ -234,14 +234,16 @@ void PanelDrawer::update_panel_info_ft(DrawTarget tgt, Player* player, FlyTarget
                 for (int i = 0; i < N_PLAYERS && fleets_drawn < PNL_MAX_FLEETS; ++i) {
                     Player *pl = exostate().get_player(i);
 
+                    const char* icon = IMG_TS1_SHICON;
+
                     if (pl == player) {
-                        continue;
+                        icon = IMG_SHICON_H;
                     }
 
                     if (pl->get_location().get_target() == ftloc) {
                         draw_manager.draw(
                             id_fleet_icons[PNL_MAX_FLEETS - 1 - fleets_drawn],
-                            IMG_TS1_SHICON,
+                            icon,
                             {area_starinfo.x + 4 + 44*fleets_drawn,
                              area_starinfo.y + 24,
                              0, 0, 1, 1});
