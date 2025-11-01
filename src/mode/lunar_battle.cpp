@@ -126,8 +126,16 @@ void LunarBattle::enter() {
         defender = exostate().get_player(p->get_owner());
     }
 
-    aggressor_can_discover_mines = (aggressor && aggressor->get_race() == RACE_Human)
-                                || (aggressor && aggressor->get_race() == RACE_Urkash);
+    aggressor_can_discover_mines = false;
+
+    if (FEATURE(EF_LUNAR_BATTLE_INF_DISCOVER_MINES)) {
+        if (aggressor) {
+            if (aggressor->get_officer(OFF_Battle) != OFFQ_Poor) {
+                Race r = aggressor->get_race();
+                aggressor_can_discover_mines = (r == RACE_Human || r == RACE_Urkash);
+            }
+        }
+    }
 
     LunarBattleReport &rpt = ephstate.lunar_battle_report;
     rpt.clear();
@@ -640,12 +648,10 @@ ExodusMode LunarBattle::update(float delta) {
                 }
 
                 if (on_mine >= 0) {
-                    if (FEATURE(EF_LUNAR_BATTLE_INF_DISCOVER_MINES)) {
-                        if (!active_unit->defending && aggressor_can_discover_mines) {
-                            if (active_unit->type == UNIT_Inf) {
-                                audio_manager.play_sfx(SFX_BEEP);
-                                mines[on_mine].discovered = true;
-                            }
+                    if (!active_unit->defending && aggressor_can_discover_mines) {
+                        if (active_unit->type == UNIT_Inf) {
+                            audio_manager.play_sfx(SFX_BEEP);
+                            mines[on_mine].discovered = true;
                         }
                     }
 
