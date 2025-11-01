@@ -250,6 +250,8 @@ class LunarBattle : ModeBase, CommPanelDrawer, BattleReport {
         bool mine_damage;
         Mine *active_mine;
 
+        bool aggressor_can_discover_mines;
+
         float tele_timer;
         Teleporter *active_tele;
         bool tele_done;

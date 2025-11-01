@@ -94,6 +94,7 @@ LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer() {
     cursor_prev_x = -1;
     cursor_prev_y = -1;
     damage_to_apply = 0;
+    aggressor_can_discover_mines = false;
     panel_unit = nullptr;
     panel_hp = -1;
     manual_placement = false;
@@ -124,6 +125,9 @@ void LunarBattle::enter() {
     if (p->is_owned()) {
         defender = exostate().get_player(p->get_owner());
     }
+
+    aggressor_can_discover_mines = (aggressor && aggressor->get_race() == RACE_Human)
+                                || (aggressor && aggressor->get_race() == RACE_Urkash);
 
     LunarBattleReport &rpt = ephstate.lunar_battle_report;
     rpt.clear();
@@ -637,7 +641,7 @@ ExodusMode LunarBattle::update(float delta) {
 
                 if (on_mine >= 0) {
                     if (FEATURE(EF_LUNAR_BATTLE_INF_DISCOVER_MINES)) {
-                        if (aggressor && aggressor->is_human()) {
+                        if (!active_unit->defending && aggressor_can_discover_mines) {
                             if (active_unit->type == UNIT_Inf) {
                                 audio_manager.play_sfx(SFX_BEEP);
                                 mines[on_mine].discovered = true;
@@ -2516,10 +2520,10 @@ bool LunarBattle::ai_can_move_to(BattleUnit *u, int x, int y) {
         }
     }
 
-    // If it's a mine, return false if we're defending
-    if (u->defending) {
-        for (int i = 0; i < n_mines; ++i) {
-            if (mines[i].x == x && mines[i].y == y) {
+    // If it's a mine, return false if we're defending or the mine is discovered
+    for (int i = 0; i < n_mines; ++i) {
+        if (mines[i].x == x && mines[i].y == y) {
+            if (u->defending || mines[i].discovered) {
                 return false;
             }
         }
