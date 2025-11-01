@@ -1117,6 +1117,7 @@ const char *IMG_LD6_LD6_1        = D_NEW "ld6_ld6-1";
 const char *IMG_LD6_LD6_2        = D_NEW "ld6_ld6-2";
 const char *IMG_LD6_LD6_3        = D_NEW "ld6_ld6-3";
 const char *IMG_LD6_LD6          = D_NEW "ld6_ld6";
+const char *IMG_SHICON_H         = D_NEW "shicon_h";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2234,6 +2235,7 @@ const char *ASSETS_IMG[] = {
     IMG_LD6_LD6_2,
     IMG_LD6_LD6_3,
     IMG_LD6_LD6,
+    IMG_SHICON_H,
 
     "",
 };
