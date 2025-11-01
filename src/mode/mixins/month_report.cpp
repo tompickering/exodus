@@ -187,29 +187,180 @@ void MonthReport::monthreport_open() {
                                 t0 = "The scientists are very";
                                 t1 = "content and not very busy.";
                             } else {
-                                int q = (int)player->get_officer(OFF_Science);
+                                OfficerQuality q = player->get_officer(OFF_Science);
+                                int qint = (int)q;
                                 // Maximum possible value here is 8
-                                int threshold = 2*q - 1 + (player->get_tax() / 20);
+                                int threshold = 2*qint - 1 + (player->get_tax() / 20);
                                 // Add noise - maximum possible is 9
                                 threshold += (1 - (rand() % 3));
                                 if (threshold <= 0) {
                                     t0 = "The scientists are desperate";
                                     t1 = "for funding.";
+                                    switch (rand() % 3) {
+                                        case 0:
+                                            t0 = "Not much progress can be made";
+                                            t1 = "with such little funding.";
+                                            break;
+                                        case 1:
+                                            t0 = "We have plenty of ideas, but";
+                                            t1 = "no means to develop them!";
+                                            break;
+                                    }
+                                    if (onein(4)) {
+                                        switch (q) {
+                                            case OFFQ_Poor:
+                                                t0 = "Our officer does not seem";
+                                                t1 = "at all competent.";
+                                                break;
+                                            case OFFQ_Average:
+                                                t0 = "Despite our officer's best";
+                                                t1 = "efforts, we're getting nowhere.";
+                                                break;
+                                            case OFFQ_Good:
+                                                t0 = "Even our elite officer cannot";
+                                                t1 = "work in this situation.";
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
                                 } else if (threshold == 1) {
                                     t0 = "The scientists are struggling";
                                     t1 = "with such little funding.";
+                                    switch (rand() % 3) {
+                                        case 0:
+                                            t0 = "Progress is painfully";
+                                            t1 = "slow.";
+                                            break;
+                                        case 1:
+                                            t0 = "Only the most optimistic of";
+                                            t1 = "us hope for results soon.";
+                                            break;
+                                    }
+                                    if (onein(4)) {
+                                        switch (q) {
+                                            case OFFQ_Poor:
+                                                t0 = "Our officer does not seem";
+                                                t1 = "to know what they're doing.";
+                                                break;
+                                            case OFFQ_Average:
+                                                t0 = "Our officer is really";
+                                                t1 = "trying to drive progress.";
+                                                break;
+                                            case OFFQ_Good:
+                                                t0 = "Our officer is an inspiration";
+                                                t1 = "in difficult circumstances.";
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
                                 } else if (threshold <= 3) {
                                     t0 = "The scientists are making";
                                     t1 = "interesting advancements.";
+                                    switch (rand() % 3) {
+                                        case 0:
+                                            t0 = "The scientists are working";
+                                            t1 = "on a new invention.";
+                                            break;
+                                        case 1:
+                                            t0 = "We are developing projects";
+                                            t1 = "at a steady pace.";
+                                            break;
+                                    }
+                                    if (onein(4)) {
+                                        switch (q) {
+                                            case OFFQ_Poor:
+                                                t0 = "Our officer isn't exactly";
+                                                t1 = "helping matters.";
+                                                break;
+                                            case OFFQ_Average:
+                                                t0 = "Our officer is making a";
+                                                t1 = "real difference.";
+                                                break;
+                                            case OFFQ_Good:
+                                                t0 = "Our officer is driving";
+                                                t1 = "through real change!";
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
                                 } else if (threshold <= 5) {
                                     t0 = "We are making remarkable";
                                     t1 = "progress!";
+                                    switch (rand() % 3) {
+                                        case 0:
+                                            t0 = "Our work is going very";
+                                            t1 = "well indeed.";
+                                            break;
+                                        case 1:
+                                            t0 = "We have some fascinating";
+                                            t1 = "projects in the pipeline!";
+                                            break;
+                                    }
+                                    if (onein(4)) {
+                                        switch (q) {
+                                            case OFFQ_Poor:
+                                                t0 = "Our officer is managing";
+                                                t1 = "to hold things together.";
+                                                break;
+                                            case OFFQ_Average:
+                                                t0 = "Our officer deserves real";
+                                                t1 = "credit for this work.";
+                                                break;
+                                            case OFFQ_Good:
+                                                t0 = "We couldn't be making such";
+                                                t1 = "progress without our officer!";
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
                                 } else if (threshold <= 7) {
                                     t0 = "We are confident of a";
                                     t1 = "breakthrough soon!";
+                                    switch (rand() % 3) {
+                                        case 0:
+                                            t0 = "We are getting some";
+                                            t1 = "incredible results!";
+                                            break;
+                                        case 1:
+                                            t0 = "We have some fascinating";
+                                            t1 = "projects in the pipeline!";
+                                            break;
+                                    }
+                                    if (onein(4)) {
+                                        switch (q) {
+                                            case OFFQ_Poor:
+                                                t0 = "We could do even better with";
+                                                t1 = "a more capable officer!";
+                                                break;
+                                            case OFFQ_Average:
+                                                t0 = "Our officer deserves a";
+                                                t1 = "commendation!";
+                                                break;
+                                            case OFFQ_Good:
+                                                t0 = "Our officer is a credit";
+                                                t1 = "to the human race!";
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }
                                 } else {
                                     t0 = "The scientists are thriving,";
                                     t1 = "and extremely excited!";
+                                    switch (rand() % 3) {
+                                        case 0:
+                                            t0 = "We are holding conferences";
+                                            t1 = "on a huge scale!";
+                                            break;
+                                        case 1:
+                                            t0 = "We are seeing a new golden";
+                                            t1 = "age of science!";
+                                            break;
+                                    }
                                 }
                             }
                         } else {
