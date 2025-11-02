@@ -197,6 +197,7 @@ class EphemeralState {
 
         void set_postplanet(PostPlanetAction);
         bool consume_postplanet(PostPlanetAction);
+        bool big_festival;
 
         // These MUST be set going into EPH_SelectPlanet
         // This is where the results are stored

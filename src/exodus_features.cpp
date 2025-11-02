@@ -90,9 +90,11 @@ static bool FIX_FLEET_ADMIRAL = false;
 
 static bool DISABLE_MULTIPLAYER = true;
 
+static ExodusGameMode mode = EXODUSGAMEMODE_Classic;
 static bool mode_set = false;
 
 void exodus_set_game_mode(ExodusGameMode game_mode) {
+    mode = game_mode;
     mode_set = true;
 
     if (game_mode == EXODUSGAMEMODE_Classic) {
@@ -158,6 +160,10 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         FIX_FLEET_ADMIRAL = true;
         DISABLE_MULTIPLAYER = true;
     }
+}
+
+bool ENHANCED() {
+    return (mode == ExodusGameMode::EXODUSGAMEMODE_Enhanced);
 }
 
 bool FEATURE(ExodusFeature f) {

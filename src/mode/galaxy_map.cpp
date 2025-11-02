@@ -534,7 +534,7 @@ ExodusMode GalaxyMap::update(float delta) {
                         bulletin_ensure_closed();
                         draw_manager.draw(
                             id(ID::FRAMED_IMG),
-                            IMG_CT1_EXPORT,
+                            ENHANCED() ? IMG_CITY : IMG_CT1_EXPORT,
                             {5, 7, 0, 0, 1, 1});
                         frame_draw();
                         set_stage(GM_MP_FirstCity);

@@ -39,6 +39,7 @@ enum ExodusFeature {
 };
 
 void exodus_set_game_mode(ExodusGameMode);
+bool ENHANCED();
 bool FEATURE(ExodusFeature);
 
 #endif

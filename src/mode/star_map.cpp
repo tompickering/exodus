@@ -708,9 +708,18 @@ ExodusMode StarMap::update(float delta) {
             {
                 if (festival_delay > .8f) {
                     festival_delay = 0;
+
+                    const char* img = nullptr;
+
+                    if (ephstate.big_festival) {
+                        img = ENHANCED() ? IMG_CITY_BIGFEST : IMG_CT4_EXPORT;
+                    } else {
+                        img = ENHANCED() ? IMG_CITY_SMALLFEST : IMG_CT4_EXPORT;
+                    }
+
                     draw_manager.draw(
                         id(ID::FESTIVAL),
-                        IMG_CT4_EXPORT,
+                        img,
                         {5, 7, 0, 0, 1, 1});
                     frame_draw();
                     char text[24 + PLANET_MAX_NAME];

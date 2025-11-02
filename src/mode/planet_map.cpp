@@ -1221,6 +1221,7 @@ ExodusMode PlanetMap::update(float delta) {
                     COL_TEXT);
 
                 bool festival = false;
+                bool big_festival = false;
 
                 if (draw_manager.query_click(id(ID::LAW_FESTSM)).id) {
                     if (player->attempt_spend(20)) {
@@ -1232,6 +1233,7 @@ ExodusMode PlanetMap::update(float delta) {
                 if (draw_manager.query_click(id(ID::LAW_FESTLG)).id) {
                     if (player->attempt_spend(100)) {
                         festival = true;
+                        big_festival = true;
                         planet->adjust_unrest(-2);
                     }
                 }
@@ -1240,6 +1242,7 @@ ExodusMode PlanetMap::update(float delta) {
                     planet->register_festival();
                     ephstate.set_ephemeral_state(EPH_PostPlanet);
                     ephstate.set_postplanet(PPA_Festival);
+                    ephstate.big_festival = big_festival;
                     clear_law_ids();
                     draw_law_panel();
                     draw_manager.draw_text(

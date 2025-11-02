@@ -1118,6 +1118,9 @@ const char *IMG_LD6_LD6_2        = D_NEW "ld6_ld6-2";
 const char *IMG_LD6_LD6_3        = D_NEW "ld6_ld6-3";
 const char *IMG_LD6_LD6          = D_NEW "ld6_ld6";
 const char *IMG_SHICON_H         = D_NEW "shicon_h";
+const char *IMG_CITY             = D_NEW "city";
+const char *IMG_CITY_SMALLFEST   = D_NEW "city_fest_small";
+const char *IMG_CITY_BIGFEST     = D_NEW "city_fest_big";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2236,6 +2239,9 @@ const char *ASSETS_IMG[] = {
     IMG_LD6_LD6_3,
     IMG_LD6_LD6,
     IMG_SHICON_H,
+    IMG_CITY,
+    IMG_CITY_SMALLFEST,
+    IMG_CITY_BIGFEST,
 
     "",
 };
