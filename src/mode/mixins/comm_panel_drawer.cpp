@@ -402,6 +402,11 @@ void CommPanelDrawer::comm_open(CommSend input) {
          COMM_W, COMM_H},
          COL_BORDERS);
     draw_manager.fill(
+        FILL_3DOut,
+        {COMM_X, COMM_Y,
+         COMM_W, COMM_H},
+         COL_BORDERS);
+    draw_manager.fill(
         {COMM_X + COMM_BORDER,
          COMM_Y + COMM_BORDER,
          196, 208},
@@ -1118,6 +1123,11 @@ void CommPanelDrawer::comm_send(CommSend input) {
 
             draw_manager.fill(
                 id_comm_input_frame,
+                {COMM_RCOL_X + 4, comm_text_y(2) - 2 - BORDER,
+                 220 + 2*BORDER, 26 + 2*BORDER},
+                COL_BORDERS);
+            draw_manager.fill(
+                FILL_3DIn,
                 {COMM_RCOL_X + 4, comm_text_y(2) - 2 - BORDER,
                  220 + 2*BORDER, 26 + 2*BORDER},
                 COL_BORDERS);
