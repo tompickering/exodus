@@ -860,6 +860,12 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img_caption("COUNSELLOR");
             comm_is_counsellor = true;
             break;
+        case DIA_S_AdvancedGalaxyMapUnlocked:
+            comm_set_title("Message from scientists");
+            comm_set_img(CI_HumanScientist);
+            comm_set_img_caption("SCIENTISTS");
+            comm_is_counsellor = true;
+            break;
         case DIA_S_AdvancedReportUnlocked:
             comm_set_title("Message from scientists");
             comm_set_img(CI_HumanScientist);
@@ -1885,6 +1891,17 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_prepare(6);
                 comm_set_text(0, "We can't develop this area");
                 comm_set_text(1, "until the radiation clears...");
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_AdvancedGalaxyMapUnlocked:
+            {
+                comm_prepare(6);
+                comm_set_text(0, "Our travels yield fantastic discoveries!");
+                comm_set_text(1, "");
+                comm_set_text(2, "We were able to upgrade the Galaxy");
+                comm_set_text(3, "Map, and we would like to request a");
+                comm_set_text(4, "higher tax share for science.");
                 comm_recv(DIA_R_Close);
             }
             break;

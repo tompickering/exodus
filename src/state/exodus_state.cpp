@@ -518,6 +518,18 @@ FlyTarget* ExodusState::loc2tgt(int loc) {
     return &get_galaxy()->get_stars()[loc];
 }
 
+int ExodusState::count_visited_stars(Player* player) {
+    int visited = 0;
+
+    for (StarIterator siter; !siter.complete(); ++siter) {
+        if (player->get_location().has_visited(siter.get_idx())) {
+            ++visited;
+        }
+    }
+
+    return visited;
+}
+
 bool ExodusState::player_has_visited_all_stars(Player* player) {
     for (StarIterator siter; !siter.complete(); ++siter) {
         if (!player->get_location().has_visited(siter.get_idx())) {

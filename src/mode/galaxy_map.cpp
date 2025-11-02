@@ -2516,6 +2516,26 @@ ExodusMode GalaxyMap::month_pass_update() {
         next_mp_stage();
     }
 
+    if (mp_state.mp_stage == MP_AdvancedGalaxyMapUnlock) {
+        if (comm_is_open()) {
+            comm_ensure_closed();
+        } else {
+            if (FEATURE(EF_ADVANCED_GALAXY_MAP)) {
+                // FIXME: Needs unlocking per-player in multiplayer
+                Player *player = exostate().get_player(0);
+                if (!player->advanced_galmap_unlocked) {
+                    if (!exostate().multiplayer() && (exostate().count_visited_stars(player) >= 4)) {
+                        player->advanced_galmap_unlocked = true;
+                        bulletin_ensure_closed();
+                        comm_open(DIA_S_AdvancedGalaxyMapUnlocked);
+                        return ExodusMode::MODE_None;
+                    }
+                }
+            }
+        }
+        next_mp_stage();
+    }
+
     if (mp_state.mp_stage == MP_AdvancedReportUnlock) {
         if (comm_is_open()) {
             comm_ensure_closed();

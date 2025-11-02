@@ -81,6 +81,9 @@ static bool REFINED_SCIENCE_REPORTS = false;
 // Adds an Amber possibility for food and plutonium
 static bool SMARTER_STATUS_LIGHTS = false;
 
+// Unlockable advanced star map
+static bool ADVANCED_GALAXY_MAP = false;
+
 // Fixes bug meaning some AI terrorist actions are never taken
 static bool FIX_AI_TERROR = false;
 
@@ -124,6 +127,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         LUNAR_BATTLE_INF_DISCOVER_MINES = false;
         REFINED_SCIENCE_REPORTS = false;
         SMARTER_STATUS_LIGHTS = false;
+        ADVANCED_GALAXY_MAP = false;
         FIX_AI_TERROR = false;
         FIX_FLEET_ADMIRAL = false;
         DISABLE_MULTIPLAYER = true;
@@ -156,6 +160,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         LUNAR_BATTLE_INF_DISCOVER_MINES = true;
         REFINED_SCIENCE_REPORTS = true;
         SMARTER_STATUS_LIGHTS = true;
+        ADVANCED_GALAXY_MAP = true;
         FIX_AI_TERROR = true;
         FIX_FLEET_ADMIRAL = true;
         DISABLE_MULTIPLAYER = true;
@@ -197,6 +202,7 @@ bool FEATURE(ExodusFeature f) {
     if (f == EF_LUNAR_BATTLE_INF_DISCOVER_MINES) return LUNAR_BATTLE_INF_DISCOVER_MINES;
     if (f == EF_REFINED_SCIENCE_REPORTS) return REFINED_SCIENCE_REPORTS;
     if (f == EF_SMARTER_STATUS_LIGHTS) return SMARTER_STATUS_LIGHTS;
+    if (f == EF_ADVANCED_GALAXY_MAP) return ADVANCED_GALAXY_MAP;
     if (f == EF_FIX_AI_TERROR) return FIX_AI_TERROR;
     if (f == EF_FIX_FLEET_ADMIRAL) return FIX_FLEET_ADMIRAL;
     if (f == EF_DISABLE_MULTIPLAYER) return DISABLE_MULTIPLAYER;

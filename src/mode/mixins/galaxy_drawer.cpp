@@ -30,6 +30,18 @@ static const char* STAR_SPRITES[] = {
     IMG_TS1_SUN9,
 };
 
+static const char* STAR_SPRITES_OBS[] = {
+    IMG_TS1_SUN1_OBS,
+    IMG_TS1_SUN2_OBS,
+    IMG_TS1_SUN3_OBS,
+    IMG_TS1_SUN4_OBS,
+    IMG_TS1_SUN5_OBS,
+    IMG_TS1_SUN6_OBS,
+    IMG_TS1_SUN7_OBS,
+    IMG_TS1_SUN8_OBS,
+    IMG_TS1_SUN9_OBS,
+};
+
 static const char* GUILD_SPRITE = IMG_TS1_WORM;
 
 const int GDRAW_W = DRAW_W - PAD_X * 2;
@@ -108,6 +120,14 @@ void GalaxyDrawer::draw_galaxy(bool pixelswap) {
     for (StarIterator siter; !siter.complete(); ++siter) {
         Star *s = siter.get();
         spr = STAR_SPRITES[s->get_size()];
+
+        Player *player = exostate().get_player(0);
+        if (player->advanced_galmap_unlocked) {
+            if (!exostate().any_human_has_visited(siter.get_idx())) {
+                spr = STAR_SPRITES_OBS[s->get_size()];
+            }
+        }
+
         get_draw_position(s, x, y);
         star_ids[siter.get_idx()] = draw_manager.new_sprite_id();
         draw_manager.draw(tgt, star_ids[siter.get_idx()], spr, {x, y, 0.5, 0.5, 1, 1});

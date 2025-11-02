@@ -43,6 +43,7 @@ enum MonthPassStage {
     MP_AlienExile,
     MP_UpdateHumanFly,
     MP_GenerateLostPlanetReports,
+    MP_AdvancedGalaxyMapUnlock,
     MP_AdvancedReportUnlock,
     MP_End,
 };

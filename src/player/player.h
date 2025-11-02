@@ -462,6 +462,7 @@ class Player : public Saveable {
 
         bool invalid_placement_seen;
         bool advanced_report_unlocked;
+        bool advanced_galmap_unlocked;
 
     private:
         void refresh_full_name();
