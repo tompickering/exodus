@@ -144,6 +144,12 @@ enum DrawTarget {
     TGT_Pattern,
 };
 
+enum FillEffect {
+    FILL_None,
+    FILL_3DOut,
+    FILL_3DIn,
+};
+
 class DrawManager {
     public:
         DrawManager();
@@ -185,6 +191,8 @@ class DrawManager {
         virtual void fill(SprID, DrawArea area, RGB) = 0;
         virtual void fill(DrawTarget, SprID, DrawArea area, RGB) = 0;
         virtual void fill(DrawTarget, DrawArea area, RGB) = 0;
+        virtual void fill(FillEffect, DrawArea area, RGB) = 0;
+        virtual void fill(FillEffect, DrawTarget, DrawArea area, RGB) = 0;
         virtual void fill_pattern(DrawArea area) = 0;
         virtual void fill_pattern(SprID, DrawArea area) = 0;
         virtual void fill_pattern(DrawTarget, DrawArea area) = 0;

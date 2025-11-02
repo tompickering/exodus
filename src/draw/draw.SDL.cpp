@@ -1017,13 +1017,73 @@ void DrawManagerSDL::fill(DrawTarget tgt, SprID id, DrawArea area, RGB col) {
 }
 
 void DrawManagerSDL::fill(DrawTarget tgt, DrawArea area, RGB col) {
-    SDL_Rect r;
+    fill(FILL_None, tgt, area, col);
+}
+
+void DrawManagerSDL::fill(FillEffect effect, DrawArea area, RGB col) {
+    fill(effect, TGT_Primary, area, col);
+}
+
+void DrawManagerSDL::fill(FillEffect effect, DrawTarget tgt, DrawArea area, RGB col) {
+    SDL_Rect R;
     SDL_Surface *tgt_surf = get_target(tgt);
-    r.x = area.x * UPSCALE_X;
-    r.y = area.y * UPSCALE_Y;
-    r.w = area.w * UPSCALE_X;
-    r.h = area.h * UPSCALE_Y;
-    SDL_FillRect(tgt_surf, &r, SDL_MapRGB(surf->format, col.r, col.g, col.b));
+    R.x = area.x * UPSCALE_X;
+    R.y = area.y * UPSCALE_Y;
+    R.w = area.w * UPSCALE_X;
+    R.h = area.h * UPSCALE_Y;
+    SDL_FillRect(tgt_surf, &R, SDL_MapRGB(surf->format, col.r, col.g, col.b));
+
+    if (effect == FILL_3DOut || effect == FILL_3DIn) {
+        SDL_Rect t, l, b, r, tl, tr, bl, br, tl_h3, tl_v3, br_h3, br_v3;
+
+        t.x = R.x; t.y = R.y; t.w = R.w; t.h = 4;
+        l.x = R.x; l.y = R.y; l.w = 4; l.h = R.h;
+        b.x = R.x; b.y = R.y+R.h-4; b.w = R.w; b.h = 4;
+        r.x = R.x+R.w-4; r.y = R.y; r.w = 4; r.h = R.h;
+
+        tl.x = R.x; tl.y = R.y; tl.w = 4; tl.h = 4;
+        tr.x = R.x+R.w-4; tr.y = R.y; tr.w = 4; tr.h = 4;
+        bl.x = R.x; bl.y = R.y+R.h-4; bl.w = 4; bl.h = 4;
+        br.x = R.x+R.w-4; br.y = R.y+R.h-4; br.w = 4; br.h = 4;
+
+        tl_h3 = t; tl_h3.w = 12;
+        tl_v3 = l; tl_v3.h = 12;
+        br_h3 = br; br_h3.x -= 12; br_h3.w = 12;
+        br_v3 = br; br_h3.y -= 12; br_h3.h = 12;
+
+        // FIXME: Derive these from col
+        RGB l0 = {255, 255, 255};
+        RGB l1 = {204, 204, 204};
+        RGB l2 = {187, 187, 187};
+        RGB md = {153, 153, 153};
+        RGB d0 = {136, 136, 130};
+
+        if (effect == FILL_3DOut) {
+            SDL_FillRect(tgt_surf, &t, SDL_MapRGB(surf->format, l2.r, l2.g, l2.b));
+            SDL_FillRect(tgt_surf, &l, SDL_MapRGB(surf->format, l2.r, l2.g, l2.b));
+            SDL_FillRect(tgt_surf, &b, SDL_MapRGB(surf->format, d0.r, d0.g, d0.b));
+            SDL_FillRect(tgt_surf, &r, SDL_MapRGB(surf->format, d0.r, d0.g, d0.b));
+
+            SDL_FillRect(tgt_surf, &tl_h3, SDL_MapRGB(surf->format, l1.r, l1.g, l1.b));
+            SDL_FillRect(tgt_surf, &tl_v3, SDL_MapRGB(surf->format, l1.r, l1.g, l1.b));
+            SDL_FillRect(tgt_surf, &tl, SDL_MapRGB(surf->format, l0.r, l0.g, l0.b));
+
+            SDL_FillRect(tgt_surf, &tr, SDL_MapRGB(surf->format, md.r, md.g, md.b));
+            SDL_FillRect(tgt_surf, &bl, SDL_MapRGB(surf->format, md.r, md.g, md.b));
+        } else {
+            SDL_FillRect(tgt_surf, &t, SDL_MapRGB(surf->format, d0.r, d0.g, d0.b));
+            SDL_FillRect(tgt_surf, &l, SDL_MapRGB(surf->format, d0.r, d0.g, d0.b));
+            SDL_FillRect(tgt_surf, &b, SDL_MapRGB(surf->format, l2.r, l2.g, l2.b));
+            SDL_FillRect(tgt_surf, &r, SDL_MapRGB(surf->format, l2.r, l2.g, l2.b));
+
+            SDL_FillRect(tgt_surf, &br_h3, SDL_MapRGB(surf->format, l1.r, l1.g, l1.b));
+            SDL_FillRect(tgt_surf, &br_v3, SDL_MapRGB(surf->format, l1.r, l1.g, l1.b));
+            SDL_FillRect(tgt_surf, &br, SDL_MapRGB(surf->format, l0.r, l0.g, l0.b));
+
+            SDL_FillRect(tgt_surf, &tr, SDL_MapRGB(surf->format, md.r, md.g, md.b));
+            SDL_FillRect(tgt_surf, &bl, SDL_MapRGB(surf->format, md.r, md.g, md.b));
+        }
+    }
 }
 
 void DrawManagerSDL::fill_pattern(DrawArea area) {
