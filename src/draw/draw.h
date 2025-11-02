@@ -148,6 +148,8 @@ enum FillEffect {
     FILL_None,
     FILL_3DOut,
     FILL_3DIn,
+    FILL_3DOut_Hollow,
+    FILL_3DIn_Hollow,
 };
 
 class DrawManager {

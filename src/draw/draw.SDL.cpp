@@ -1031,7 +1031,13 @@ void DrawManagerSDL::fill(FillEffect effect, DrawTarget tgt, DrawArea area, RGB 
     R.y = area.y * UPSCALE_Y;
     R.w = area.w * UPSCALE_X;
     R.h = area.h * UPSCALE_Y;
-    SDL_FillRect(tgt_surf, &R, SDL_MapRGB(surf->format, col.r, col.g, col.b));
+
+    if (effect != FILL_3DOut_Hollow && effect != FILL_3DIn_Hollow) {
+        SDL_FillRect(tgt_surf, &R, SDL_MapRGB(surf->format, col.r, col.g, col.b));
+    }
+
+    if (effect == FILL_3DOut_Hollow) effect = FILL_3DOut;
+    if (effect == FILL_3DIn_Hollow) effect = FILL_3DIn;
 
     if (effect == FILL_3DOut || effect == FILL_3DIn) {
         SDL_Rect t, l, b, r, tl, tr, bl, br, tl_h3, tl_v3, br_h3, br_v3;
