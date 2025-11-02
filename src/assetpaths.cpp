@@ -1121,6 +1121,15 @@ const char *IMG_SHICON_H         = D_NEW "shicon_h";
 const char *IMG_CITY             = D_NEW "city";
 const char *IMG_CITY_SMALLFEST   = D_NEW "city_fest_small";
 const char *IMG_CITY_BIGFEST     = D_NEW "city_fest_big";
+const char *IMG_TS1_SUN1_OBS     = D_NEW "ts1_sun1_obs";
+const char *IMG_TS1_SUN2_OBS     = D_NEW "ts1_sun2_obs";
+const char *IMG_TS1_SUN3_OBS     = D_NEW "ts1_sun3_obs";
+const char *IMG_TS1_SUN4_OBS     = D_NEW "ts1_sun4_obs";
+const char *IMG_TS1_SUN5_OBS     = D_NEW "ts1_sun5_obs";
+const char *IMG_TS1_SUN6_OBS     = D_NEW "ts1_sun6_obs";
+const char *IMG_TS1_SUN7_OBS     = D_NEW "ts1_sun7_obs";
+const char *IMG_TS1_SUN8_OBS     = D_NEW "ts1_sun8_obs";
+const char *IMG_TS1_SUN9_OBS     = D_NEW "ts1_sun9_obs";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2242,6 +2251,15 @@ const char *ASSETS_IMG[] = {
     IMG_CITY,
     IMG_CITY_SMALLFEST,
     IMG_CITY_BIGFEST,
+    IMG_TS1_SUN1_OBS,
+    IMG_TS1_SUN2_OBS,
+    IMG_TS1_SUN3_OBS,
+    IMG_TS1_SUN4_OBS,
+    IMG_TS1_SUN5_OBS,
+    IMG_TS1_SUN6_OBS,
+    IMG_TS1_SUN7_OBS,
+    IMG_TS1_SUN8_OBS,
+    IMG_TS1_SUN9_OBS,
 
     "",
 };

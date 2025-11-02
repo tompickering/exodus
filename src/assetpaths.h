@@ -1118,6 +1118,15 @@ extern const char *IMG_SHICON_H;
 extern const char *IMG_CITY;
 extern const char *IMG_CITY_SMALLFEST;
 extern const char *IMG_CITY_BIGFEST;
+extern const char *IMG_TS1_SUN1_OBS;
+extern const char *IMG_TS1_SUN2_OBS;
+extern const char *IMG_TS1_SUN3_OBS;
+extern const char *IMG_TS1_SUN4_OBS;
+extern const char *IMG_TS1_SUN5_OBS;
+extern const char *IMG_TS1_SUN6_OBS;
+extern const char *IMG_TS1_SUN7_OBS;
+extern const char *IMG_TS1_SUN8_OBS;
+extern const char *IMG_TS1_SUN9_OBS;
 
 extern const char *INIT_IMG;
 extern const char *CURSOR_IMG;
