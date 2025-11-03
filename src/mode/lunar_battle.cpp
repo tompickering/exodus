@@ -1109,6 +1109,7 @@ ExodusMode LunarBattle::update(float delta) {
                         }
                         draw_manager.refresh_sprite_id(units[i].spr_id);
                         draw_manager.refresh_sprite_id(units[i].fire_spr_id);
+                        draw_manager.refresh_sprite_id(units[i].marker_spr_id);
                     }
                 }
                 // But leave the cursor and explosion on top
@@ -1264,6 +1265,7 @@ ExodusMode LunarBattle::update(float delta) {
 
     update_panel();
     draw_units();
+    draw_markers();
     update_cursor();
     update_arrows();
     draw_explosion();
@@ -2046,6 +2048,34 @@ void LunarBattle::draw_units() {
     draw_mines();
 }
 
+void LunarBattle::draw_markers() {
+    for (int i = 0; i < n_units; ++i) {
+        int x = units[i].x;
+        int y = units[i].y;
+        int draw_x = SURF_X + x * BLK_SZ;
+        int draw_y = SURF_Y + y * BLK_SZ;
+
+        int dx = draw_x;
+        if (units[i].defending) {
+            dx = draw_x + BLK_SZ;
+        }
+
+        if (human_turn && stage == LB_Fire) {
+            if (check_viable_target(&units[i])) {
+                draw_manager.draw(
+                    units[i].marker_spr_id,
+                    IMG_MARKER_FIRE,
+                    {dx + (units[i].defending ? -BLK_SZ/2 : BLK_SZ/2), draw_y - 14,
+                     0.5f, 0, 1, 1});
+            }
+        } else {
+            draw_manager.draw(
+                units[i].marker_spr_id,
+                nullptr);
+        }
+    }
+}
+
 void LunarBattle::draw_explosion() {
     if (exp_interp > 0 && target_unit) {
         int x = target_unit->x;
@@ -2113,6 +2143,8 @@ void LunarBattle::update_cursor() {
     }
 
     if (cursor_x >= 0 && cursor_y >= 0) {
+        draw_manager.refresh_sprite_id(id(ID::CURSOR));
+
         draw_manager.draw(
             id(ID::CURSOR),
             cursor_img,
@@ -3310,6 +3342,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
 
     spr_id = draw_manager.new_sprite_id();
     fire_spr_id = draw_manager.new_sprite_id();
+    marker_spr_id = draw_manager.new_sprite_id();
     spr_id_set = true;
 
     return *this;
@@ -3327,6 +3360,7 @@ BattleUnit& BattleUnit::init(int _x, int _y, int _hp, bool _def) {
 
 void BattleUnit::release_spr_id() {
     if (spr_id_set) {
+        draw_manager.release_sprite_id(marker_spr_id);
         draw_manager.release_sprite_id(fire_spr_id);
         draw_manager.release_sprite_id(spr_id);
         spr_id_set = false;

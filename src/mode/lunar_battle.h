@@ -85,6 +85,7 @@ class BattleUnit {
         const char* shoot_sfx;
         SprID spr_id;
         SprID fire_spr_id;
+        SprID marker_spr_id;
         bool spr_id_set;
         float dying_timer;
         Direction last_move;
@@ -207,6 +208,7 @@ class LunarBattle : ModeBase, CommPanelDrawer, BattleReport {
 
         void draw_ground();
         void draw_units();
+        void draw_markers();
         void draw_mines();
         void update_cursor();
         void update_arrows();
