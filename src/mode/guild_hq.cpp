@@ -10,8 +10,8 @@
 #define GUILD_COST_STR "5000"
 
 static const DrawArea AREA_BOT  = {100, 200, 120, 120};
-static const DrawArea AREA_DOOR = {200, 200, 120, 120};
-static const DrawArea AREA_EXIT = {RES_X - 120, 0, 120, RES_Y};
+static const DrawArea AREA_DOOR = {200, 200, 160, 120};
+static const DrawArea AREA_EXIT = {RES_X - 140, 0, 140, RES_Y};
 
 static const int PANEL_X = 280;
 static const int PANEL_Y = 40;
