@@ -1130,6 +1130,10 @@ const char *IMG_TS1_SUN6_OBS     = D_NEW "ts1_sun6_obs";
 const char *IMG_TS1_SUN7_OBS     = D_NEW "ts1_sun7_obs";
 const char *IMG_TS1_SUN8_OBS     = D_NEW "ts1_sun8_obs";
 const char *IMG_TS1_SUN9_OBS     = D_NEW "ts1_sun9_obs";
+const char *IMG_CURSOR_BATTLE_R  = D_NEW "cursor_battle2";
+const char *IMG_CURSOR_BATTLE_G  = D_NEW "cursor_battle1";
+const char *IMG_CURSOR_BATTLE_B  = D_NEW "cursor_battle0";
+const char *IMG_MARKER_FIRE      = D_NEW "marker_fire";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2260,6 +2264,10 @@ const char *ASSETS_IMG[] = {
     IMG_TS1_SUN7_OBS,
     IMG_TS1_SUN8_OBS,
     IMG_TS1_SUN9_OBS,
+    IMG_CURSOR_BATTLE_R,
+    IMG_CURSOR_BATTLE_G,
+    IMG_CURSOR_BATTLE_B,
+    IMG_MARKER_FIRE,
 
     "",
 };

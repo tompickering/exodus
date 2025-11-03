@@ -2084,8 +2084,10 @@ void LunarBattle::update_cursor() {
     bool over_target = false;
     bool over_aiming = false;
 
+    BattleUnit *u = unit_at(cursor_x, cursor_y);
+
     if (stage == LB_Fire) {
-        over_target = check_viable_target(unit_at(cursor_x, cursor_y));
+        over_target = check_viable_target(u);
         over_aiming = !target_unit && unit_at(cursor_x, cursor_y) == active_unit;
     }
 
@@ -2093,13 +2095,27 @@ void LunarBattle::update_cursor() {
         return;
     }
 
-    Planet *p = exostate().get_active_planet();
-    bool ice = p->get_moon_class() == MOON_Ice;
+    //Planet *p = exostate().get_active_planet();
+    //bool ice = p->get_moon_class() == MOON_Ice;
+
+    const char* cursor_img = IMG_CURSOR_BATTLE_B;
+
+    if (stage == LB_Fire || stage == LB_CalcDamage || stage == LB_Damage) {
+        if (over_target) {
+            cursor_img = IMG_CURSOR_BATTLE_G;
+        } else if (u) {
+            if (stage == LB_Damage) {
+                cursor_img = IMG_CURSOR_BATTLE_G;
+            } else {
+                cursor_img = IMG_CURSOR_BATTLE_R;
+            }
+        }
+    }
 
     if (cursor_x >= 0 && cursor_y >= 0) {
         draw_manager.draw(
             id(ID::CURSOR),
-            (over_target || ice) ? IMG_CURSOR_BATTLE1 : IMG_CURSOR_BATTLE0,
+            cursor_img,
             {SURF_X + BLK_SZ * cursor_x,
              SURF_Y + BLK_SZ * cursor_y,
              0, 0, 1, 1});
