@@ -251,7 +251,7 @@ void DrawManagerSDL::update(float delta, MousePos mouse_pos, MousePos new_click_
     draw_flag_vfx();
     draw_button_vfx();
 
-    bool render_cursor = draw_cursor && mouse_pos.x > 0 && mouse_pos.y > 0;
+    bool render_cursor = draw_cursor; /* && mouse_pos.x > 0 && mouse_pos.y > 0;*/
 
     if (render_cursor) {
         // To ensure that cursor drawing plays nicely with anything
@@ -265,6 +265,9 @@ void DrawManagerSDL::update(float delta, MousePos mouse_pos, MousePos new_click_
         // update the window.
         cursor_area.x = mouse_pos.x - cursor_area.w / 2;
         cursor_area.y = mouse_pos.y - cursor_area.h / 2;
+
+        cursor_area.x = clamp(cursor_area.x, 0, RES_X-cursor_area.w);
+        cursor_area.y = clamp(cursor_area.y, 0, RES_Y-cursor_area.h);
 
         ca = cursor_area;
         ca0 = cursor_area; ca0.x = 0; ca0.y = 0;
