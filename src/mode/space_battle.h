@@ -159,6 +159,7 @@ class SpaceBattle : ModeBase {
         bool fail_battle_readout_this_frame;
 
         bool do_explosions;
+        int enemy_ships_destroyed;
 };
 
 #endif

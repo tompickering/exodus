@@ -84,6 +84,7 @@ void SpaceBattle::enter() {
     }
 
     do_explosions = false;
+    enemy_ships_destroyed = 0;
 
     SpaceBattleParams &b = ephstate.space_battle;
     L.debug("STARTING BATTLE - ENEMY SHIPS: %d", b.enemy_ships + b.enemy_scouts + b.enemy_cargo);
@@ -879,9 +880,12 @@ void SpaceBattle::do_attack(BattleShip* s) {
         // SUGGEST: Orig had a half-implemented screen wobble here - maybe experiment with that
     } else {
         L.info("%s ship type %d HP: %d->%d", t->enemy?"CPU":"Human", (int)t->type, t->hp, t->hp - hits);
+        int t_hp_initial = t->hp;
         t->hp = max(t->hp - hits, 0);
 
-        if (!t->enemy) {
+        if (t->enemy) {
+            enemy_ships_destroyed += (t_hp_initial - t->hp);
+        } else {
             int *count = nullptr;
             switch (t->type) {
                 case SHIP_Warship:
@@ -1423,6 +1427,29 @@ ExodusMode SpaceBattle::update(float delta) {
                         }
 
                         y += 20;
+                    }
+
+                    if (FEATURE(EF_SPACE_BATTLE_MC)) {
+                        if (enemy_ships_destroyed > 0) {
+                            int mc = RND(2*enemy_ships_destroyed);
+                            exostate().get_active_player()->give_mc(mc);
+
+                            snprintf(text, sizeof(text), "You were able to liberate %dMC", mc);
+
+                            draw_manager.draw_text(
+                                TGT_Secondary, Font::Default,
+                                text,
+                                Justify::Left, 40, y,
+                                COL_TEXT);
+                            y += 20;
+
+                            draw_manager.draw_text(
+                                TGT_Secondary, Font::Default,
+                                "from the enemy fleet.",
+                                Justify::Left, 40, y,
+                                COL_TEXT);
+                            y += 40;
+                        }
                     }
 
                     const Starship &ship = player->get_starship();
