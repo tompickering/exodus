@@ -1134,6 +1134,7 @@ const char *IMG_CURSOR_BATTLE_R  = D_NEW "cursor_battle2";
 const char *IMG_CURSOR_BATTLE_G  = D_NEW "cursor_battle1";
 const char *IMG_CURSOR_BATTLE_B  = D_NEW "cursor_battle0";
 const char *IMG_MARKER_FIRE      = D_NEW "marker_fire";
+const char *IMG_MENU_STARS       = D_NEW "menu_stars";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2268,6 +2269,7 @@ const char *ASSETS_IMG[] = {
     IMG_CURSOR_BATTLE_G,
     IMG_CURSOR_BATTLE_B,
     IMG_MARKER_FIRE,
+    IMG_MENU_STARS,
 
     "",
 };

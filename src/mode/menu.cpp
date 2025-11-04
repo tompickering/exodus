@@ -159,33 +159,35 @@ ExodusMode Menu::update(float delta) {
                 config.n_players = 1;
                 current_player = 0;
 
-                const char *bg = IMG_BG_STARS0;
+                const char *bg = IMG_MENU_STARS;
 
-                switch (rand() % 8) {
-                    case 0:
-                        bg = IMG_BG_STARS0;
-                        break;
-                    case 1:
-                        bg = IMG_BG_STARS1;
-                        break;
-                    case 2:
-                        bg = IMG_BG_STARS2;
-                        break;
-                    case 3:
-                        bg = IMG_BG_STARS3;
-                        break;
-                    case 4:
-                        bg = IMG_BG_STARS4;
-                        break;
-                    case 5:
-                        bg = IMG_BG_STARS5;
-                        break;
-                    case 6:
-                        bg = IMG_BG_STARS6;
-                        break;
-                    case 7:
-                        bg = IMG_BG_STARS7;
-                        break;
+                if (!ENHANCED()) {
+                    switch (rand() % 8) {
+                        case 0:
+                            bg = IMG_BG_STARS0;
+                            break;
+                        case 1:
+                            bg = IMG_BG_STARS1;
+                            break;
+                        case 2:
+                            bg = IMG_BG_STARS2;
+                            break;
+                        case 3:
+                            bg = IMG_BG_STARS3;
+                            break;
+                        case 4:
+                            bg = IMG_BG_STARS4;
+                            break;
+                        case 5:
+                            bg = IMG_BG_STARS5;
+                            break;
+                        case 6:
+                            bg = IMG_BG_STARS6;
+                            break;
+                        case 7:
+                            bg = IMG_BG_STARS7;
+                            break;
+                    }
                 }
 
                 draw_manager.draw(TGT_Secondary, bg);
