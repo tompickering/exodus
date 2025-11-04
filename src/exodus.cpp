@@ -207,7 +207,8 @@ int Exodus::run(int argc, char** argv) {
     mode_map[MODE_GameOver] = (ModeBase*) &mode_gameover;
     mode_map[MODE_Ending] = (ModeBase*) &mode_ending;
 
-    push_mode(MODE_GameModeSelect);
+    exodus_set_game_mode(EXODUSGAMEMODE_Enhanced);
+    push_mode(MODE_Intro);
 
     running = true;
 
