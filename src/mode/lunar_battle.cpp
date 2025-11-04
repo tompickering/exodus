@@ -959,6 +959,12 @@ ExodusMode LunarBattle::update(float delta) {
             damage_to_apply = 0;
             if (target_unit) {
                 int power = active_unit->fire_power;
+
+                if (active_unit->promoted) {
+                    L.info("Promotion power bonus");
+                    ++power;
+                }
+
                 bool cover = is_in_cover(target_unit);
                 bool alienhit = false;
                 // CPU units except rebels get a firepower bonus
@@ -1095,6 +1101,13 @@ ExodusMode LunarBattle::update(float delta) {
 
             if (target_unit->hp <= 0) {
                 L.info("Unit dead");
+
+                if (FEATURE(EF_LUNAR_BATTLE_PROMOTION)) {
+                    if (active_unit) {
+                        L.info("Unit promoted!");
+                        active_unit->promoted = true;
+                    }
+                }
 
                 target_unit->dying_timer = DYING_TIME;
 
@@ -3161,6 +3174,7 @@ BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     fire_range = 0;
     fire_rate = 4.f;
     fire_power = 0;
+    promoted = false;
     shot_sfx = SFX_SHOT;
     move0_sfx = SFX_WALK0;
     move1_sfx = SFX_WALK1;
@@ -3344,6 +3358,8 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
     fire_spr_id = draw_manager.new_sprite_id();
     marker_spr_id = draw_manager.new_sprite_id();
     spr_id_set = true;
+
+    promoted = false;
 
     return *this;
 }
