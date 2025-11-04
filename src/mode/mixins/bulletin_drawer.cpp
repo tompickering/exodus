@@ -1824,6 +1824,12 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("(Enhanced Game Only)");
             bulletin_set_next_text("");
+            bulletin_set_next_text("Infantry may take cover in the wreckage");
+            bulletin_set_next_text("of destroyed gliders and artillery.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("When a unit destroys an enemy squad, it is");
+            bulletin_set_next_text("promoted - giving it an attack bonus.");
+            bulletin_set_next_text("");
             bulletin_set_next_text("Average generals allow you to see the number");
             bulletin_set_next_text("of hits scored on an enemy unit.");
             bulletin_set_next_text("Good generals allow you to see their HP.");
