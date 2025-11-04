@@ -2159,6 +2159,13 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("Sell Unused Transporters");
             bulletin_set_next_text("In the early game, you likely have more");
             bulletin_set_next_text("transporters than you need.");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Claim Additional Taxes");
+            bulletin_set_next_text("If you're in dire need of a few extra MC,");
+            bulletin_set_next_text("you can claim additional taxes from a planet via");
+            bulletin_set_next_text("the LAW button. Bear in mind that the citizens");
+            bulletin_set_next_text("will not be happy about this...");
         }
     }
 
