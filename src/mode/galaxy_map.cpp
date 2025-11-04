@@ -847,6 +847,12 @@ ExodusMode GalaxyMap::update(float delta) {
             if (bulletin_is_open()) {
                 bulletin_update(delta);
 
+                if (input_manager.consume(K_Escape)) {
+                    bulletin_ensure_closed();
+                    draw_manager.draw(id(ID::REPORT_COUNT), nullptr);
+                    break;
+                }
+
                 switch (bulletin_get_praction()) {
                     case BPR_Back:
                         if (planet_report_current > 0) {
