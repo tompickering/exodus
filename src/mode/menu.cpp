@@ -43,6 +43,7 @@ extern SAVEMANAGER save_manager;
 enum ID {
     NEWGAME_TXT,
     LOADGAME_TXT,
+    MODE_SELECT,
     LOADFRAME,
     LOADFRAME_INNER,
     LOADFRAME_EXIT,
@@ -215,6 +216,24 @@ ExodusMode Menu::update(float delta) {
                         RES_X/2, 250,
                         COL_TEXT);
 
+                draw_manager.fill(
+                    TGT_Secondary,
+                    {0, RES_Y-40,
+                     RES_X, 40},
+                     {0x08, 0x08, 0x08});
+
+                draw_manager.draw_text(TGT_Secondary,
+                        "Enhanced Version",
+                        Justify::Centre,
+                        RES_X/2 + 12, RES_Y - 31,
+                        COL_TEXT2);
+
+                draw_manager.draw(TGT_Secondary,
+                        id(MODE_SELECT),
+                        ENHANCED() ? IMG_BOX_ON : IMG_BOX_OFF,
+                        {RES_X/2 - 90, RES_Y - 20,
+                         0.5f, 0.5f, 1.0f, 1.0f});
+
                 draw_manager.pixelswap_start();
                 trans_state = Started;
                 return ExodusMode::MODE_None;
@@ -224,6 +243,16 @@ ExodusMode Menu::update(float delta) {
                 trans_state = Done;
                 draw_manager.save_background();
                 draw_manager.show_cursor(true);
+            }
+
+            if (draw_manager.query_click(id(MODE_SELECT)).id) {
+                if (ENHANCED()) {
+                    exodus_set_game_mode(EXODUSGAMEMODE_Classic);
+                } else {
+                    exodus_set_game_mode(EXODUSGAMEMODE_Enhanced);
+                }
+
+                return ExodusMode::MODE_Reload;
             }
 
             if (draw_manager.query_click(id(NEWGAME_TXT)).id) {
