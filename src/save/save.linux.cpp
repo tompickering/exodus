@@ -29,7 +29,19 @@ const char* SaveManagerLinux::get_save_dir() {
         snprintf(save_dir, sizeof(save_dir), "%s/.local/share", home);
         mkdir(save_dir, S_IRUSR | S_IWUSR | S_IXUSR);
 
-        snprintf(save_dir, sizeof(save_dir), "%s/.local/share/%s", home, "exodus");
+        snprintf(save_dir, sizeof(save_dir), "%s/.local/share/enhanced", home);
+        mkdir(save_dir, S_IRUSR | S_IWUSR | S_IXUSR);
+
+        snprintf(save_dir, sizeof(save_dir), "%s/.local/share/classic", home);
+        mkdir(save_dir, S_IRUSR | S_IWUSR | S_IXUSR);
+
+        const char* mode = "classic";
+
+        if (ENHANCED()) {
+            mode = "enhanced";
+        }
+
+        snprintf(save_dir, sizeof(save_dir), "%s/.local/share/%s/%s", home, mode, "exodus");
     }
 
     mkdir(save_dir, S_IRUSR | S_IWUSR | S_IXUSR);

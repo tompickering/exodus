@@ -8,6 +8,8 @@
 #include <windows.h>
 #include <shlobj.h>
 
+#include "exodus_features.h"
+
 static char save_dir[MAX_PATH];
 
 using std::string;
@@ -26,7 +28,17 @@ const char* SaveManagerWindows::get_save_dir() {
     snprintf(save_dir, sizeof(save_dir), "%s\\Exodus", location);
 
     if (CreateDirectory(save_dir, nullptr) || GetLastError() == ERROR_ALREADY_EXISTS) {
-        return save_dir;
+        if (ENHANCED()) {
+            snprintf(save_dir, sizeof(save_dir), "%s\\Exodus\\enhanced", location);
+            if (CreateDirectory(save_dir, nullptr) || GetLastError() == ERROR_ALREADY_EXISTS) {
+                return save_dir;
+            }
+        } else {
+            snprintf(save_dir, sizeof(save_dir), "%s\\Exodus\\classic", location);
+            if (CreateDirectory(save_dir, nullptr) || GetLastError() == ERROR_ALREADY_EXISTS) {
+                return save_dir;
+            }
+        }
     }
 
     return nullptr;
