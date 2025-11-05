@@ -1138,6 +1138,70 @@ const char *IMG_MARKER_FIRE      = D_NEW "marker_fire";
 const char *IMG_MENU_STARS       = D_NEW "menu_stars";
 const char *IMG_BOX_OFF          = D_NEW "box_off";
 const char *IMG_BOX_ON           = D_NEW "box_on";
+const char *IMG_YOK1             = D_NEW "yok1";
+const char *IMG_YOK1_1           = D_NEW "yok1-1";
+const char *IMG_YOK1_2           = D_NEW "yok1-2";
+const char *IMG_YOK1_3           = D_NEW "yok1-3";
+const char *IMG_YOK2             = D_NEW "yok2";
+const char *IMG_YOK2_1           = D_NEW "yok2-1";
+const char *IMG_YOK2_2           = D_NEW "yok2-2";
+const char *IMG_YOK2_3           = D_NEW "yok2-3";
+const char *IMG_YOK3             = D_NEW "yok3";
+const char *IMG_YOK3_1           = D_NEW "yok3-1";
+const char *IMG_YOK3_2           = D_NEW "yok3-2";
+const char *IMG_YOK3_3           = D_NEW "yok3-3";
+const char *IMG_YOK4             = D_NEW "yok4";
+const char *IMG_YOK4_1           = D_NEW "yok4-1";
+const char *IMG_YOK4_2           = D_NEW "yok4-2";
+const char *IMG_YOK4_3           = D_NEW "yok4-3";
+const char *IMG_TER1             = D_NEW "ter1";
+const char *IMG_TER1_1           = D_NEW "ter1-1";
+const char *IMG_TER1_2           = D_NEW "ter1-2";
+const char *IMG_TER1_3           = D_NEW "ter1-3";
+const char *IMG_TER2             = D_NEW "ter2";
+const char *IMG_TER2_1           = D_NEW "ter2-1";
+const char *IMG_TER2_2           = D_NEW "ter2-2";
+const char *IMG_TER2_3           = D_NEW "ter2-3";
+const char *IMG_TER3             = D_NEW "ter3";
+const char *IMG_TER3_1           = D_NEW "ter3-1";
+const char *IMG_TER3_2           = D_NEW "ter3-2";
+const char *IMG_TER3_3           = D_NEW "ter3-3";
+const char *IMG_TER4             = D_NEW "ter4";
+const char *IMG_TER4_1           = D_NEW "ter4-1";
+const char *IMG_TER4_2           = D_NEW "ter4-2";
+const char *IMG_TER4_3           = D_NEW "ter4-3";
+const char *IMG_URK1             = D_NEW "urk1";
+const char *IMG_URK1_1           = D_NEW "urk1-1";
+const char *IMG_URK1_2           = D_NEW "urk1-2";
+const char *IMG_URK1_3           = D_NEW "urk1-3";
+const char *IMG_URK2             = D_NEW "urk2";
+const char *IMG_URK2_1           = D_NEW "urk2-1";
+const char *IMG_URK2_2           = D_NEW "urk2-2";
+const char *IMG_URK2_3           = D_NEW "urk2-3";
+const char *IMG_URK3             = D_NEW "urk3";
+const char *IMG_URK3_1           = D_NEW "urk3-1";
+const char *IMG_URK3_2           = D_NEW "urk3-2";
+const char *IMG_URK3_3           = D_NEW "urk3-3";
+const char *IMG_URK4             = D_NEW "urk4";
+const char *IMG_URK4_1           = D_NEW "urk4-1";
+const char *IMG_URK4_2           = D_NEW "urk4-2";
+const char *IMG_URK4_3           = D_NEW "urk4-3";
+const char *IMG_GOR1             = D_NEW "gor1";
+const char *IMG_GOR1_1           = D_NEW "gor1-1";
+const char *IMG_GOR1_2           = D_NEW "gor1-2";
+const char *IMG_GOR1_3           = D_NEW "gor1-3";
+const char *IMG_GOR2             = D_NEW "gor2";
+const char *IMG_GOR2_1           = D_NEW "gor2-1";
+const char *IMG_GOR2_2           = D_NEW "gor2-2";
+const char *IMG_GOR2_3           = D_NEW "gor2-3";
+const char *IMG_GOR3             = D_NEW "gor3";
+const char *IMG_GOR3_1           = D_NEW "gor3-1";
+const char *IMG_GOR3_2           = D_NEW "gor3-2";
+const char *IMG_GOR3_3           = D_NEW "gor3-3";
+const char *IMG_GOR4             = D_NEW "gor4";
+const char *IMG_GOR4_1           = D_NEW "gor4-1";
+const char *IMG_GOR4_2           = D_NEW "gor4-2";
+const char *IMG_GOR4_3           = D_NEW "gor4-3";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2276,6 +2340,70 @@ const char *ASSETS_IMG[] = {
     IMG_MENU_STARS,
     IMG_BOX_OFF,
     IMG_BOX_ON,
+    IMG_YOK1,
+    IMG_YOK1_1,
+    IMG_YOK1_2,
+    IMG_YOK1_3,
+    IMG_YOK2,
+    IMG_YOK2_1,
+    IMG_YOK2_2,
+    IMG_YOK2_3,
+    IMG_YOK3,
+    IMG_YOK3_1,
+    IMG_YOK3_2,
+    IMG_YOK3_3,
+    IMG_YOK4,
+    IMG_YOK4_1,
+    IMG_YOK4_2,
+    IMG_YOK4_3,
+    IMG_TER1,
+    IMG_TER1_1,
+    IMG_TER1_2,
+    IMG_TER1_3,
+    IMG_TER2,
+    IMG_TER2_1,
+    IMG_TER2_2,
+    IMG_TER2_3,
+    IMG_TER3,
+    IMG_TER3_1,
+    IMG_TER3_2,
+    IMG_TER3_3,
+    IMG_TER4,
+    IMG_TER4_1,
+    IMG_TER4_2,
+    IMG_TER4_3,
+    IMG_URK1,
+    IMG_URK1_1,
+    IMG_URK1_2,
+    IMG_URK1_3,
+    IMG_URK2,
+    IMG_URK2_1,
+    IMG_URK2_2,
+    IMG_URK2_3,
+    IMG_URK3,
+    IMG_URK3_1,
+    IMG_URK3_2,
+    IMG_URK3_3,
+    IMG_URK4,
+    IMG_URK4_1,
+    IMG_URK4_2,
+    IMG_URK4_3,
+    IMG_GOR1,
+    IMG_GOR1_1,
+    IMG_GOR1_2,
+    IMG_GOR1_3,
+    IMG_GOR2,
+    IMG_GOR2_1,
+    IMG_GOR2_2,
+    IMG_GOR2_3,
+    IMG_GOR3,
+    IMG_GOR3_1,
+    IMG_GOR3_2,
+    IMG_GOR3_3,
+    IMG_GOR4,
+    IMG_GOR4_1,
+    IMG_GOR4_2,
+    IMG_GOR4_3,
 
     "",
 };

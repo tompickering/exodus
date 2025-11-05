@@ -160,6 +160,10 @@ void Player::refresh_full_name() {
         name);
 }
 
+Character Player::get_character() {
+    return character;
+}
+
 Race Player::get_race() {
     if (character == CHAR_None) {
         L.fatal("Character not set when getting race");

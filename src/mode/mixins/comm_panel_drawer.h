@@ -38,11 +38,27 @@ enum CommImg {
     CI_HumanConfident,
     CI_HumanPlanet,
     CI_HumanScientist,
+    CI_Rebels,
     CI_Yokon,
     CI_Teri,
     CI_Urkash,
     CI_Gordoon,
-    CI_Rebels,
+    CI_Yok1,
+    CI_Yok2,
+    CI_Yok3,
+    CI_Yok4,
+    CI_Ter1,
+    CI_Ter2,
+    CI_Ter3,
+    CI_Ter4,
+    CI_Urk1,
+    CI_Urk2,
+    CI_Urk3,
+    CI_Urk4,
+    CI_Gor1,
+    CI_Gor2,
+    CI_Gor3,
+    CI_Gor4,
 };
 
 // These are the player's *input* into the conversation
@@ -232,7 +248,7 @@ class CommPanelDrawer {
         void comm_draw_text();
         void comm_set_title(const char*, ...);
         void comm_set_speech(const char*, ...);
-        void comm_set_race(Race);
+        void comm_set_character(Character);
         void comm_set_img(CommImg);
         void comm_set_img_caption(const char*);
         void comm_set_img_caption_upper(const char*, ...);

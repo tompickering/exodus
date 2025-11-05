@@ -372,6 +372,7 @@ class Player : public Saveable {
         void set_title(const char*);
         void set_ref(const char*);
         void set_gender(Gender);
+        Character get_character();
         Race get_race();
         const char* get_race_str();
         bool is_human();

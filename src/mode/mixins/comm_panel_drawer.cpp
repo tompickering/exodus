@@ -46,6 +46,70 @@ Anim comm_anim_gordoon(          7, IMG_LD4_LD4  , IMG_LD4_LD4_1,
                                     IMG_LD4_LD4_2, IMG_LD4_LD4_1,
                                     IMG_LD4_LD4);
 Anim comm_anim_rebels(           1, IMG_LD5_LD5);
+Anim comm_anim_yok1(             7, IMG_YOK1     , IMG_YOK1_1    ,
+                                    IMG_YOK1_2   , IMG_YOK1_3   ,
+                                    IMG_YOK1_2   , IMG_YOK1_1   ,
+                                    IMG_YOK1);
+Anim comm_anim_yok2(             7, IMG_YOK2     , IMG_YOK2_1    ,
+                                    IMG_YOK2_2   , IMG_YOK2_3   ,
+                                    IMG_YOK2_2   , IMG_YOK2_1   ,
+                                    IMG_YOK2);
+Anim comm_anim_yok3(             7, IMG_YOK3     , IMG_YOK3_1    ,
+                                    IMG_YOK3_2   , IMG_YOK3_3   ,
+                                    IMG_YOK3_2   , IMG_YOK3_1   ,
+                                    IMG_YOK3);
+Anim comm_anim_yok4(             7, IMG_YOK4     , IMG_YOK4_1    ,
+                                    IMG_YOK4_2   , IMG_YOK4_3   ,
+                                    IMG_YOK4_2   , IMG_YOK4_1   ,
+                                    IMG_YOK4);
+Anim comm_anim_ter1(             7, IMG_TER1     , IMG_TER1_1    ,
+                                    IMG_TER1_2   , IMG_TER1_3   ,
+                                    IMG_TER1_2   , IMG_TER1_1   ,
+                                    IMG_TER1);
+Anim comm_anim_ter2(             7, IMG_TER2     , IMG_TER2_1    ,
+                                    IMG_TER2_2   , IMG_TER2_3   ,
+                                    IMG_TER2_2   , IMG_TER2_1   ,
+                                    IMG_TER2);
+Anim comm_anim_ter3(             7, IMG_TER3     , IMG_TER3_1    ,
+                                    IMG_TER3_2   , IMG_TER3_3   ,
+                                    IMG_TER3_2   , IMG_TER3_1   ,
+                                    IMG_TER3);
+Anim comm_anim_ter4(             7, IMG_TER4     , IMG_TER4_1    ,
+                                    IMG_TER4_2   , IMG_TER4_3   ,
+                                    IMG_TER4_2   , IMG_TER4_1   ,
+                                    IMG_TER4);
+Anim comm_anim_urk1(             7, IMG_URK1     , IMG_URK1_1    ,
+                                    IMG_URK1_2   , IMG_URK1_3   ,
+                                    IMG_URK1_2   , IMG_URK1_1   ,
+                                    IMG_URK1);
+Anim comm_anim_urk2(             7, IMG_URK2     , IMG_URK2_1    ,
+                                    IMG_URK2_2   , IMG_URK2_3   ,
+                                    IMG_URK2_2   , IMG_URK2_1   ,
+                                    IMG_URK2);
+Anim comm_anim_urk3(             7, IMG_URK3     , IMG_URK3_1    ,
+                                    IMG_URK3_2   , IMG_URK3_3   ,
+                                    IMG_URK3_2   , IMG_URK3_1   ,
+                                    IMG_URK3);
+Anim comm_anim_urk4(             7, IMG_URK4     , IMG_URK4_1    ,
+                                    IMG_URK4_2   , IMG_URK4_3   ,
+                                    IMG_URK4_2   , IMG_URK4_1   ,
+                                    IMG_URK4);
+Anim comm_anim_gor1(             7, IMG_GOR1     , IMG_GOR1_1    ,
+                                    IMG_GOR1_2   , IMG_GOR1_3   ,
+                                    IMG_GOR1_2   , IMG_GOR1_1   ,
+                                    IMG_GOR1);
+Anim comm_anim_gor2(             7, IMG_GOR2     , IMG_GOR2_1    ,
+                                    IMG_GOR2_2   , IMG_GOR2_3   ,
+                                    IMG_GOR2_2   , IMG_GOR2_1   ,
+                                    IMG_GOR2);
+Anim comm_anim_gor3(             7, IMG_GOR3     , IMG_GOR3_1    ,
+                                    IMG_GOR3_2   , IMG_GOR3_3   ,
+                                    IMG_GOR3_2   , IMG_GOR3_1   ,
+                                    IMG_GOR3);
+Anim comm_anim_gor4(             7, IMG_GOR4     , IMG_GOR4_1    ,
+                                    IMG_GOR4_2   , IMG_GOR4_3   ,
+                                    IMG_GOR4_2   , IMG_GOR4_1   ,
+                                    IMG_GOR4);
 
 Anim anim_throbber(9,
     IMG_GF4_CLOGO1, IMG_GF4_CLOGO2, IMG_GF4_CLOGO3,
@@ -252,22 +316,73 @@ void CommPanelDrawer::comm_set_speech(const char* text, ...) {
     comm_speech = true;
 }
 
-void CommPanelDrawer::comm_set_race(Race race) {
-    switch (race) {
-        case RACE_Human:
+void CommPanelDrawer::comm_set_character(Character character) {
+    switch (character) {
+        case CHAR_Human:
             comm_set_img(CI_Human);
             break;
-        case RACE_Yokon:
+        case CHAR_Yok0:
             comm_set_img(CI_Yokon);
             break;
-        case RACE_Teri:
+        case CHAR_Ter0:
             comm_set_img(CI_Teri);
             break;
-        case RACE_Urkash:
+        case CHAR_Urk0:
             comm_set_img(CI_Urkash);
             break;
-        case RACE_Gordoon:
+        case CHAR_Gor0:
             comm_set_img(CI_Gordoon);
+            break;
+        case CHAR_Yok1:
+            comm_set_img(CI_Yok1);
+            break;
+        case CHAR_Yok2:
+            comm_set_img(CI_Yok2);
+            break;
+        case CHAR_Yok3:
+            comm_set_img(CI_Yok3);
+            break;
+        case CHAR_Yok4:
+            comm_set_img(CI_Yok4);
+            break;
+        case CHAR_Ter1:
+            comm_set_img(CI_Ter1);
+            break;
+        case CHAR_Ter2:
+            comm_set_img(CI_Ter2);
+            break;
+        case CHAR_Ter3:
+            comm_set_img(CI_Ter3);
+            break;
+        case CHAR_Ter4:
+            comm_set_img(CI_Ter4);
+            break;
+        case CHAR_Urk1:
+            comm_set_img(CI_Urk1);
+            break;
+        case CHAR_Urk2:
+            comm_set_img(CI_Urk2);
+            break;
+        case CHAR_Urk3:
+            comm_set_img(CI_Urk3);
+            break;
+        case CHAR_Urk4:
+            comm_set_img(CI_Urk4);
+            break;
+        case CHAR_Gor1:
+            comm_set_img(CI_Gor1);
+            break;
+        case CHAR_Gor2:
+            comm_set_img(CI_Gor2);
+            break;
+        case CHAR_Gor3:
+            comm_set_img(CI_Gor3);
+            break;
+        case CHAR_Gor4:
+            comm_set_img(CI_Gor4);
+            break;
+        default:
+            L.error("No comm case for this character");
             break;
     }
 }
@@ -303,6 +418,54 @@ void CommPanelDrawer::comm_set_img(CommImg img) {
             break;
         case CI_HumanPlanet:
             comm_anim = comm_anim_human_planet;
+            break;
+        case CI_Yok1:
+            comm_anim = comm_anim_yok1;
+            break;
+        case CI_Yok2:
+            comm_anim = comm_anim_yok2;
+            break;
+        case CI_Yok3:
+            comm_anim = comm_anim_yok3;
+            break;
+        case CI_Yok4:
+            comm_anim = comm_anim_yok4;
+            break;
+        case CI_Ter1:
+            comm_anim = comm_anim_ter1;
+            break;
+        case CI_Ter2:
+            comm_anim = comm_anim_ter2;
+            break;
+        case CI_Ter3:
+            comm_anim = comm_anim_ter3;
+            break;
+        case CI_Ter4:
+            comm_anim = comm_anim_ter4;
+            break;
+        case CI_Urk1:
+            comm_anim = comm_anim_urk1;
+            break;
+        case CI_Urk2:
+            comm_anim = comm_anim_urk2;
+            break;
+        case CI_Urk3:
+            comm_anim = comm_anim_urk3;
+            break;
+        case CI_Urk4:
+            comm_anim = comm_anim_urk4;
+            break;
+        case CI_Gor1:
+            comm_anim = comm_anim_gor1;
+            break;
+        case CI_Gor2:
+            comm_anim = comm_anim_gor2;
+            break;
+        case CI_Gor3:
+            comm_anim = comm_anim_gor3;
+            break;
+        case CI_Gor4:
+            comm_anim = comm_anim_gor4;
             break;
     }
 }
@@ -693,7 +856,7 @@ void CommPanelDrawer::comm_init(CommSend input) {
         case DIA_S_HailPlanet:
             comm_set_img_caption_upper(comm_other->get_full_name());
             comm_set_img_caption_lower("RACE: %s", comm_other->get_race_str());
-            comm_set_race(comm_other->get_race());
+            comm_set_character(comm_other->get_character());
             comm_enable_throbber = true;
             comm_enable_distort = true;
             break;
@@ -886,39 +1049,39 @@ void CommPanelDrawer::comm_init(CommSend input) {
         case DIA_S_CPU_Attack:
             comm_set_img_caption_upper(comm_player->get_full_name());
             comm_set_img_caption_lower("RACE: %s", comm_player->get_race_str());
-            comm_set_race(comm_player->get_race());
+            comm_set_character(comm_player->get_character());
             break;
         case DIA_S_CPU_Trade:
             comm_set_img_caption_upper(comm_player->get_full_name());
             comm_set_img_caption_lower("RACE: %s", comm_player->get_race_str());
-            comm_set_race(comm_player->get_race());
+            comm_set_character(comm_player->get_character());
             break;
         case DIA_S_CPU_Offer:
             comm_set_img_caption_upper(comm_player->get_full_name());
             comm_set_img_caption_lower("RACE: %s", comm_player->get_race_str());
-            comm_set_race(comm_player->get_race());
+            comm_set_character(comm_player->get_character());
             break;
         case DIA_S_B_OpenCommsAttacker:
             comm_set_img_caption_upper(comm_other->get_full_name());
             comm_set_img_caption_lower("RACE: %s", comm_other->get_race_str());
-            comm_set_race(comm_other->get_race());
+            comm_set_character(comm_other->get_character());
             comm_enable_throbber = true;
             break;
         case DIA_S_B_OpenCommsDefender:
             comm_set_img_caption_upper(comm_player->get_full_name());
             comm_set_img_caption_lower("RACE: %s", comm_player->get_race_str());
-            comm_set_race(comm_player->get_race());
+            comm_set_character(comm_player->get_character());
             comm_enable_throbber = true;
             break;
         case DIA_S_B_CPU_OpenCommsAttacker:
             comm_set_img_caption_upper(comm_player->get_full_name());
             comm_set_img_caption_lower("RACE: %s", comm_player->get_race_str());
-            comm_set_race(comm_player->get_race());
+            comm_set_character(comm_player->get_character());
             break;
         case DIA_S_B_CPU_OpenCommsDefender:
             comm_set_img_caption_upper(comm_other->get_full_name());
             comm_set_img_caption_lower("RACE: %s", comm_other->get_race_str());
-            comm_set_race(comm_other->get_race());
+            comm_set_character(comm_other->get_character());
             break;
         case DIA_S_B_CPU_OpenCommsRebels:
             comm_set_img_caption_upper("REBELS");
