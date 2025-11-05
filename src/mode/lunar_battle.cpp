@@ -1103,8 +1103,9 @@ ExodusMode LunarBattle::update(float delta) {
                 L.info("Unit dead");
 
                 if (FEATURE(EF_LUNAR_BATTLE_PROMOTION)) {
-                    if (active_unit && active_unit->may_be_promoted) {
+                    if (active_unit && active_unit->may_be_promoted && !active_unit->promoted) {
                         L.info("Unit promoted!");
+                        audio_manager.play_sfx(SFX_PROMOTION);
                         active_unit->promoted = true;
                     }
                 }
