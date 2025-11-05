@@ -1154,7 +1154,7 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("First Steps");
             bulletin_set_next_text("The Galaxy Map");
             bulletin_set_next_text("The CTRL Menu");
-            bulletin_set_next_text("The Star Map");
+            bulletin_set_next_text("The Solar System Map");
             bulletin_set_next_text("COMM: Settling, Negotiating, Attacking");
             bulletin_set_next_text("The Planet Map");
             bulletin_set_next_text("Lunar Battle");
@@ -1281,7 +1281,7 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("Starports are required to transfer goods");
             bulletin_set_next_text("and combat units between your fleet and");
             bulletin_set_next_text("the planet. This is done via the COMM option");
-            bulletin_set_next_text("in the Star Map.");
+            bulletin_set_next_text("in the Solar System Map.");
             bulletin_set_next_text("");
             bulletin_set_next_text("Starports also support the production of ships");
             bulletin_set_next_text("for your fleet. Some ships may be used for");
@@ -1536,7 +1536,7 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
     if (p == BMP_StarMap) {
         if (draw) {
             bulletin_set_text_col(COL_TEXT2);
-            bulletin_set_next_text("The Star Map");
+            bulletin_set_next_text("The Solar System Map");
             bulletin_set_next_text("");
             bulletin_set_next_text("This map shows the habitable planets of a star.");
             bulletin_set_next_text("Named planets usually belong to empires.");
@@ -1692,7 +1692,7 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("Surplus food, minerals and plutonium is stored");
             bulletin_set_next_text("on the planet until capacity is reached. Note");
             bulletin_set_next_text("that food stored in reserve is perishable! Check");
-            bulletin_set_next_text("the INFO button on the Star Map for details.");
+            bulletin_set_next_text("the Solar System Map's INFO button for details.");
             bulletin_set_next_text("");
             bulletin_set_next_text("A planet always requires 1 food per month.");
             bulletin_set_next_text("Cities require 3 food per month in order to");
@@ -1898,8 +1898,8 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("Fleet Operations");
             bulletin_set_next_text("");
-            bulletin_set_next_text("The FLEET button in the Star Map allows you");
-            bulletin_set_next_text("to deploy ships to a planet's surface.");
+            bulletin_set_next_text("The Solar System Map's FLEET button allows");
+            bulletin_set_next_text("you to deploy ships to a planet's surface.");
             bulletin_set_next_text("");
             bulletin_set_next_text("In order to enact fleet operations against");
             bulletin_set_next_text("a planet, it must be stationed in that solar");
