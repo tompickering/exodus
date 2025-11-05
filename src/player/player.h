@@ -46,6 +46,31 @@ enum Race {
     RACE_Gordoon, // 4 -
 };
 
+enum Character {
+    CHAR_None,
+    CHAR_Human,
+    CHAR_Yok0,
+    CHAR_Yok1,
+    CHAR_Yok2,
+    CHAR_Yok3,
+    CHAR_Yok4,
+    CHAR_Ter0,
+    CHAR_Ter1,
+    CHAR_Ter2,
+    CHAR_Ter3,
+    CHAR_Ter4,
+    CHAR_Urk0,
+    CHAR_Urk1,
+    CHAR_Urk2,
+    CHAR_Urk3,
+    CHAR_Urk4,
+    CHAR_Gor0,
+    CHAR_Gor1,
+    CHAR_Gor2,
+    CHAR_Gor3,
+    CHAR_Gor4,
+};
+
 struct Starship : public Saveable {
     virtual void save(cJSON* j) const override {
         SAVE_NUM(j, shield_generators);
@@ -335,7 +360,7 @@ class Player : public Saveable {
 
         Player();
         void init_alien_name();
-        void init_race(Race);
+        void init_character(Character);
         const char* get_name();
         const char* get_title();
         const char* get_ref();
@@ -468,7 +493,7 @@ class Player : public Saveable {
         void refresh_full_name();
         int transfer(int, int*);
 
-        Race race;
+        Character character;
         Gender gender;
         char name[MAX_PLAYER_NAME + 1];
         char title[MAX_PLAYER_TITLE + 1];

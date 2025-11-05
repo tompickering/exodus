@@ -65,13 +65,13 @@ void Player::init_alien_name() {
         alien_names_offsets_initialised = true;
     }
 
-    int& alien_names_offset = alien_names_offsets[(int)race];
+    int& alien_names_offset = alien_names_offsets[(int)get_race()];
 
     int name_idx = (alien_names_offset++) % N_ALIEN_NAMES;
-    set_name(get_alien_name(race, name_idx));
+    set_name(get_alien_name(get_race(), name_idx));
     int gender_boundary = 5;
-    if (race == RACE_Yokon) gender_boundary = 6;
-    if (race == RACE_Urkash) gender_boundary = 6;
+    if (get_race() == RACE_Yokon) gender_boundary = 6;
+    if (get_race() == RACE_Urkash) gender_boundary = 6;
     set_gender(name_idx <= gender_boundary ? GENDER_Female : GENDER_Male);
     if (get_gender() == GENDER_Female) {
         set_title("Lady");
@@ -82,11 +82,12 @@ void Player::init_alien_name() {
     }
 }
 
-void Player::init_race(Race _race) {
-    race = _race;
+void Player::init_character(Character _character) {
+    character = _character;
+
     const AIFlag *flags = ai_hum;
 
-    switch (race) {
+    switch (get_race()) {
         case RACE_Human:
             flags = ai_hum;
             break;
@@ -160,7 +161,40 @@ void Player::refresh_full_name() {
 }
 
 Race Player::get_race() {
-    return race;
+    if (character == CHAR_None) {
+        L.fatal("Character not set when getting race");
+    }
+
+    switch (character) {
+        case CHAR_Yok0:
+        case CHAR_Yok1:
+        case CHAR_Yok2:
+        case CHAR_Yok3:
+        case CHAR_Yok4:
+            return RACE_Yokon;
+        case CHAR_Ter0:
+        case CHAR_Ter1:
+        case CHAR_Ter2:
+        case CHAR_Ter3:
+        case CHAR_Ter4:
+            return RACE_Teri;
+        case CHAR_Urk0:
+        case CHAR_Urk1:
+        case CHAR_Urk2:
+        case CHAR_Urk3:
+        case CHAR_Urk4:
+            return RACE_Urkash;
+        case CHAR_Gor0:
+        case CHAR_Gor1:
+        case CHAR_Gor2:
+        case CHAR_Gor3:
+        case CHAR_Gor4:
+            return RACE_Gordoon;
+        default:
+            break;
+    }
+
+    return RACE_Human;
 }
 
 const char* Player::get_race_str() {
@@ -180,7 +214,7 @@ const char* Player::get_race_str() {
 }
 
 bool Player::is_human() {
-    return race == RACE_Human;
+    return get_race() == RACE_Human;
 }
 
 bool Player::is_alive() {
@@ -672,7 +706,7 @@ Fleet& Player::get_fleet_nonconst() {
 
 void Player::init_tax() {
     tax = 30;
-    if (race != RACE_Human) {
+    if (get_race() != RACE_Human) {
         if (get_flag(4) == AI_Hi) {
             adjust_tax(-10);
         }
@@ -983,7 +1017,7 @@ void Player::save(cJSON* j) const
     SAVE_BOOL(j, invalid_placement_seen);
     SAVE_BOOL(j, advanced_report_unlocked);
     SAVE_BOOL(j, advanced_galmap_unlocked);
-    SAVE_ENUM(j, race);
+    SAVE_ENUM(j, character);
     SAVE_ENUM(j, gender);
     SAVE_STR(j, name);
     SAVE_STR(j, title);
@@ -1024,7 +1058,7 @@ void Player::load(cJSON* j)
     LOAD_BOOL(j, invalid_placement_seen);
     LOAD_BOOL(j, advanced_report_unlocked);
     LOAD_BOOL(j, advanced_galmap_unlocked);
-    LOAD_ENUM(j, race);
+    LOAD_ENUM(j, character);
     LOAD_ENUM(j, gender);
     LOAD_STR(j, name);
     LOAD_STR(j, title);
