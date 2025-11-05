@@ -362,6 +362,7 @@ class Player : public Saveable {
 
         Player();
         void init_alien_name();
+        bool init_alien_name_character();
         void init_character(Character);
         const char* get_name();
         const char* get_title();

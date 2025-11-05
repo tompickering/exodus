@@ -58,6 +58,14 @@ Player::Player() {
 }
 
 void Player::init_alien_name() {
+    if (FEATURE(EF_CHARACTERS)) {
+        if (init_alien_name_character()) {
+            return;
+        }
+
+        L.error("Failure to set up alien name for character %d", character);
+    }
+
     if (!alien_names_offsets_initialised) {
         for (int i = 0; i < N_RACES; ++i) {
             alien_names_offsets[i] = rand() % N_ALIEN_NAMES;
@@ -80,6 +88,82 @@ void Player::init_alien_name() {
         set_title("Lord");
         set_ref("Milord");
     }
+}
+
+bool Player::init_alien_name_character() {
+    // This is never visible for AI players
+    set_ref("");
+
+    switch (character) {
+        case CHAR_Yok1:
+            set_title("Lady");
+            set_name("Loana");
+            return true;
+        case CHAR_Yok2:
+            set_title("Lord");
+            set_name("Ter Terk");
+            return true;
+        case CHAR_Yok3:
+            set_title("Lady");
+            set_name("Garasa");
+            return true;
+        case CHAR_Yok4:
+            set_title("Lord");
+            set_name("Joray");
+            return true;
+        case CHAR_Ter1:
+            set_title("Lady");
+            set_name("Ye Nara");
+            return true;
+        case CHAR_Ter2:
+            set_title("Lord");
+            set_name("Ya Ni Noi");
+            return true;
+        case CHAR_Ter3:
+            set_title("Lady");
+            set_name("Ye Yeno");
+            return true;
+        case CHAR_Ter4:
+            set_title("Lord");
+            set_name("Ya Bakka");
+            return true;
+        case CHAR_Urk1:
+            set_title("Lady");
+            set_name("Terikka");
+            return true;
+        case CHAR_Urk2:
+            set_title("Lord");
+            set_name("Zerish");
+            return true;
+        case CHAR_Urk3:
+            set_title("Lady");
+            set_name("Mynra");
+            return true;
+        case CHAR_Urk4:
+            set_title("Lord");
+            set_name("Geccar");
+            return true;
+        case CHAR_Gor1:
+            set_title("Lady");
+            set_name("Kza Forn");
+            return true;
+        case CHAR_Gor2:
+            set_title("Lord");
+            set_name("Zok Marr");
+            return true;
+        case CHAR_Gor3:
+            set_title("Lady");
+            set_name("Toya");
+            return true;
+        case CHAR_Gor4:
+            set_title("Lord");
+            set_name("Caroon");
+            return true;
+        default:
+            break;
+    }
+
+    return false;
 }
 
 void Player::init_character(Character _character) {
