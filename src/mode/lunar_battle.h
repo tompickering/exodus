@@ -63,6 +63,7 @@ class BattleUnit {
         int fire_range;
         float fire_rate;
         int fire_power;
+        int may_be_promoted;
         bool promoted;
         const char* shot_sfx;
         const char* move0_sfx;

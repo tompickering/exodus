@@ -1103,7 +1103,7 @@ ExodusMode LunarBattle::update(float delta) {
                 L.info("Unit dead");
 
                 if (FEATURE(EF_LUNAR_BATTLE_PROMOTION)) {
-                    if (active_unit) {
+                    if (active_unit && active_unit->may_be_promoted) {
                         L.info("Unit promoted!");
                         active_unit->promoted = true;
                     }
@@ -3174,6 +3174,7 @@ BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     fire_range = 0;
     fire_rate = 4.f;
     fire_power = 0;
+    may_be_promoted = false;
     promoted = false;
     shot_sfx = SFX_SHOT;
     move0_sfx = SFX_WALK0;
@@ -3210,6 +3211,8 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
     teleported = false;
     dying_timer = 0;
 
+    may_be_promoted = false;
+
     switch (type) {
         case UNIT_Inf:
             name = STR_Inf;
@@ -3217,6 +3220,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             fire_range = 3;
             fire_power = 1;
             can_use_cover = true;
+            may_be_promoted = true;
             if (defending) {
                 idle = IMG_GF4_4;
                 walk = IMG_GF4_4_2;
@@ -3237,6 +3241,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             move0_sfx = SFX_GLIDE_LOW;
             move1_sfx = SFX_GLIDE_MED;
             move2_sfx = SFX_GLIDE_HIGH;
+            may_be_promoted = true;
             if (defending) {
                 // Blue
                 idle = IMG_GF4_5;
@@ -3260,6 +3265,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             fire_power = 3;
             shot_sfx = SFX_HEAVYSHOT;
             can_shoot_behind = false;
+            may_be_promoted = true;
             if (defending) {
                 idle = IMG_GF4_6;
                 walk = IMG_GF4_6;
