@@ -53,7 +53,8 @@ SpaceBattle::SpaceBattle() : ModeBase("SpaceBattle") {
 void SpaceBattle::enter() {
     ModeBase::enter(ID::END);
 
-    audio_manager.fade_out(1000);
+    //audio_manager.fade_out(1000);
+    audio_manager.target_music(MUS_ST3_58);
 
     draw_manager.draw(
         id(ID::BACKGROUND),
