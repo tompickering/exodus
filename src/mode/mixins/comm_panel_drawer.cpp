@@ -29,7 +29,7 @@ Anim comm_anim_human_scientist(  7, IMG_LD6_LD6  , IMG_LD6_LD6_1,
                                     IMG_LD6_LD6_2, IMG_LD6_LD6_3,
                                     IMG_LD6_LD6_2, IMG_LD6_LD6_1,
                                     IMG_LD6_LD6);
-Anim comm_anim_yokon(            1, IMG_LD1_LD1  , IMG_LD1_LD1_1,
+Anim comm_anim_yokon(            7, IMG_LD1_LD1  , IMG_LD1_LD1_1,
                                     IMG_LD1_LD1_2, IMG_LD1_LD1_3,
                                     IMG_LD1_LD1_2, IMG_LD1_LD1_1,
                                     IMG_LD1_LD1);
