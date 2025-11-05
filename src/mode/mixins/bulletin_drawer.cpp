@@ -1254,15 +1254,15 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("TRADE");
             bulletin_set_next_text("If the planet is to produce trading commodities,");
-            bulletin_set_next_text("then it will need a Starport to transfer them to");
-            bulletin_set_next_text("your fleet, or a Trading Centre to sell locally.");
+            bulletin_set_next_text("then it will need a Spaceport to transfer them");
+            bulletin_set_next_text("to your fleet, or a Trading Centre to sell locally.");
             bulletin_set_next_text("");
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("MILITARY");
             bulletin_set_next_text("If the planet is to produce battle units, it");
             bulletin_set_next_text("will require production facilities, plutonium");
             bulletin_set_next_text("to power them and army funding. Trasfer of");
-            bulletin_set_next_text("units to your fleet also requires a Starport");
+            bulletin_set_next_text("units to your fleet also requires a Spaceport");
             bulletin_set_next_text("");
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("WEALTH");
@@ -1275,17 +1275,17 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
 
     if (p == BMP_FirstSteps_5) {
         if (draw) {
-            bulletin_set_next_text("A Starport consists of 3 units; a Control, a");
+            bulletin_set_next_text("A Spaceport consists of 3 units; a Control, a");
             bulletin_set_next_text("Landing and a Power Plant.");
             bulletin_set_next_text("");
-            bulletin_set_next_text("Starports are required to transfer goods");
+            bulletin_set_next_text("Spaceports are required to transfer goods");
             bulletin_set_next_text("and combat units between your fleet and");
             bulletin_set_next_text("the planet. This is done via the COMM option");
             bulletin_set_next_text("in the Solar System Map.");
             bulletin_set_next_text("");
-            bulletin_set_next_text("Starports also support the production of ships");
-            bulletin_set_next_text("for your fleet. Some ships may be used for");
-            bulletin_set_next_text("military operations on rival worlds; some");
+            bulletin_set_next_text("Spaceports also support the production of");
+            bulletin_set_next_text("ships for your fleet. Some ships may be used");
+            bulletin_set_next_text("for military operations on rival worlds; some");
             bulletin_set_next_text("will strengthen your fleet, and some will allow");
             bulletin_set_next_text("you to transport more battle units or goods.");
             bulletin_set_next_text("");
@@ -1638,7 +1638,7 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("");
             bulletin_set_next_text("Contact your own planet.");
             bulletin_set_next_text("");
-            bulletin_set_next_text("If you have a Starport, you can transfer");
+            bulletin_set_next_text("If you have a Spaceport, you can transfer");
             bulletin_set_next_text("goods between your fleet and the planet here,");
             bulletin_set_next_text("or commission new ships for your fleet.");
             bulletin_set_next_text("");
@@ -1927,7 +1927,7 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("Bombard specific planetary targets.");
             bulletin_set_next_text("");
             bulletin_set_next_text("Ships and AirDef guns can be built by");
-            bulletin_set_next_text("any planet which has a Starport.");
+            bulletin_set_next_text("any planet which has a Spaceport.");
         }
     }
 
