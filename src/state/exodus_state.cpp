@@ -137,26 +137,41 @@ void ExodusState::init(GameConfig config) {
         }
     }
 
+    uint32_t characters = 0;
+
     // PLAYER INIT: CPU
     for (; i < N_PLAYERS; ++i) {
         Character c = CHAR_Yok0;
 
-        switch (RND(4)) {
-            case 1:
-                c = CHAR_Yok0;
-                break;
-            case 2:
-                c = CHAR_Ter0;
-                break;
-            case 3:
-                c = CHAR_Urk0;
-                break;
-            case 4:
-                c = CHAR_Gor0;
-                break;
+        if (FEATURE(EF_CHARACTERS)) {
+            while (true) {
+                int offset = rand() % ((int)CHAR_LAST - (int)CHAR_NEW - 1);
+
+                if (!(characters & (1 << offset))) {
+                    characters = characters | (1 << offset);
+                    c = (Character)((int)CHAR_NEW + 1 + offset);
+                    break;
+                }
+            }
+        } else {
+            switch (RND(4)) {
+                case 1:
+                    c = CHAR_Yok0;
+                    break;
+                case 2:
+                    c = CHAR_Ter0;
+                    break;
+                case 3:
+                    c = CHAR_Urk0;
+                    break;
+                case 4:
+                    c = CHAR_Gor0;
+                    break;
+            }
         }
 
         players[i].init_character(c);
+
         players[i].fleet_marker_idx = 0;
         players[i].init_alien_name(); // Orig: Assigned in PROCclear_memory
         bool flag_assigned = false;

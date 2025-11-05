@@ -90,6 +90,9 @@ static bool ADVANCED_GALAXY_MAP = false;
 // Award MC from space battles
 static bool SPACE_BATTLE_MC = false;
 
+// AI characters
+static bool CHARACTERS = false;
+
 // Fixes bug meaning some AI terrorist actions are never taken
 static bool FIX_AI_TERROR = false;
 
@@ -136,6 +139,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         SMARTER_STATUS_LIGHTS = false;
         ADVANCED_GALAXY_MAP = false;
         SPACE_BATTLE_MC = false;
+        CHARACTERS = false;
         FIX_AI_TERROR = false;
         FIX_FLEET_ADMIRAL = false;
         DISABLE_MULTIPLAYER = true;
@@ -171,6 +175,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         SMARTER_STATUS_LIGHTS = true;
         ADVANCED_GALAXY_MAP = true;
         SPACE_BATTLE_MC = true;
+        CHARACTERS = true;
         FIX_AI_TERROR = true;
         FIX_FLEET_ADMIRAL = true;
         DISABLE_MULTIPLAYER = true;
@@ -215,6 +220,7 @@ bool FEATURE(ExodusFeature f) {
     if (f == EF_SMARTER_STATUS_LIGHTS) return SMARTER_STATUS_LIGHTS;
     if (f == EF_ADVANCED_GALAXY_MAP) return ADVANCED_GALAXY_MAP;
     if (f == EF_SPACE_BATTLE_MC) return SPACE_BATTLE_MC;
+    if (f == EF_CHARACTERS) return CHARACTERS;
     if (f == EF_FIX_AI_TERROR) return FIX_AI_TERROR;
     if (f == EF_FIX_FLEET_ADMIRAL) return FIX_FLEET_ADMIRAL;
     if (f == EF_DISABLE_MULTIPLAYER) return DISABLE_MULTIPLAYER;
