@@ -59,11 +59,12 @@ Player::Player() {
 
 void Player::init_alien_name() {
     if (FEATURE(EF_CHARACTERS)) {
+        // N.B. This can fail if an 'original game' character is set
+        // This can happen if a lord dies - a 'new character' is replaced
+        // with one of the 'original characters'.
         if (init_alien_name_character()) {
             return;
         }
-
-        L.error("Failure to set up alien name for character %d", character);
     }
 
     if (!alien_names_offsets_initialised) {

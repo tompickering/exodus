@@ -995,6 +995,29 @@ bool ExodusState::kill(Player* p) {
     // PROClorddies
 
     // N.B. race doesn't change - if it did we'd want to do this first
+
+    if (FEATURE(EF_CHARACTERS)) {
+        Character c = CHAR_Yok0;
+        switch (p->get_race()) {
+            case RACE_Yokon:
+                c = CHAR_Yok0;
+                break;
+            case RACE_Teri:
+                c = CHAR_Ter0;
+                break;
+            case RACE_Urkash:
+                c = CHAR_Urk0;
+                break;
+            case RACE_Gordoon:
+                c = CHAR_Gor0;
+                break;
+            default:
+                break;
+        }
+
+        p->init_character(c);
+    }
+
     p->init_alien_name();
     p->give_mc(200);
     p->clear_hostility();
