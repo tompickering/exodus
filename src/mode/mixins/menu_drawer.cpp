@@ -1702,7 +1702,7 @@ bool MenuDrawer::menu_specific_update() {
                 }
 
                 if (menu_row_clicked(3)) {
-                    p->adjust_reputation(-11);
+                    p->adjust_reputation(-1);
                     menu_open(MM_OldOfficerDismissed);
                     return true;
                 }
