@@ -695,6 +695,7 @@ ExodusMode StarMap::update(float delta) {
                 case CA_Proceed:
                     comm_close();
                     player->add_trace(TRACE_BattlesStarted);
+                    planet->adjust_unrest(1);
                     ephstate.set_ephemeral_state(EPH_LunarBattlePrep);
                     ephstate.lunar_battle.aggressor_type = AGG_Player;
                     ephstate.lunar_battle.aggressor_idx = player_idx;
