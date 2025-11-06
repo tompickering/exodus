@@ -78,6 +78,9 @@ static bool LUNAR_BATTLE_INF_DISCOVER_MINES = false;
 // Units gain a power bonus after killing an enemy
 static bool LUNAR_BATTLE_PROMOTION = false;
 
+// Officers may be upgraded for a single lunar battle
+static bool LUNAR_BATTLE_OFFICER_UPGRADE = false;
+
 // Science section in monthly report changes based on funding
 static bool REFINED_SCIENCE_REPORTS = false;
 
@@ -135,6 +138,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         LUNAR_BATTLE_ADVANCED_HP_INFO = false;
         LUNAR_BATTLE_INF_DISCOVER_MINES = false;
         LUNAR_BATTLE_PROMOTION = false;
+        LUNAR_BATTLE_OFFICER_UPGRADE = false;
         REFINED_SCIENCE_REPORTS = false;
         SMARTER_STATUS_LIGHTS = false;
         ADVANCED_GALAXY_MAP = false;
@@ -171,6 +175,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         LUNAR_BATTLE_ADVANCED_HP_INFO = true;
         LUNAR_BATTLE_INF_DISCOVER_MINES = true;
         LUNAR_BATTLE_PROMOTION = true;
+        LUNAR_BATTLE_OFFICER_UPGRADE = true;
         REFINED_SCIENCE_REPORTS = true;
         SMARTER_STATUS_LIGHTS = true;
         ADVANCED_GALAXY_MAP = true;
@@ -216,6 +221,7 @@ bool FEATURE(ExodusFeature f) {
     if (f == EF_LUNAR_BATTLE_ADVANCED_HP_INFO) return LUNAR_BATTLE_ADVANCED_HP_INFO;
     if (f == EF_LUNAR_BATTLE_INF_DISCOVER_MINES) return LUNAR_BATTLE_INF_DISCOVER_MINES;
     if (f == EF_LUNAR_BATTLE_PROMOTION) return LUNAR_BATTLE_PROMOTION;
+    if (f == EF_LUNAR_BATTLE_OFFICER_UPGRADE) return LUNAR_BATTLE_OFFICER_UPGRADE;
     if (f == EF_REFINED_SCIENCE_REPORTS) return REFINED_SCIENCE_REPORTS;
     if (f == EF_SMARTER_STATUS_LIGHTS) return SMARTER_STATUS_LIGHTS;
     if (f == EF_ADVANCED_GALAXY_MAP) return ADVANCED_GALAXY_MAP;

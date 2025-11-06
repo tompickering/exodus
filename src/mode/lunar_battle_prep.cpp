@@ -10,11 +10,14 @@ static const int PANEL_H = 120;
 static const int PANEL_X = RES_X/2 - (PANEL_W/2);
 static const int PANEL_Y = 150;
 
+static const int OFFICER_UPGRADE_COST = 80;
+
 enum ID {
     PANEL,
     PANEL_PATTERN,
     MINES_TO_BUY,
     MINES_ADJUST,
+    UPGRADE_YESNO,
     OPT_COMMAND,
     OPT_WAIT,
     OPT_GROUP_AUTO,
@@ -280,6 +283,8 @@ ExodusMode LunarBattlePrep::update(float delta) {
 
     bool defending = !(aggressor && aggressor->is_human());
 
+    Player *human = defending ? owner : aggressor;
+
     switch (stage) {
         case LBP_Auto:
             if (!b.human_battle) {
@@ -347,7 +352,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
 
                 if (!defending) {
                     L.error("LBP_AllySupport invalid for attacker");
-                    set_stage(LBP_CommandOrWait);
+                    set_stage(LBP_UpgradeOfficer);
                 }
 
                 int m = exostate().get_orig_month();
@@ -490,7 +495,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
         case LBP_GuildSupport:
             if (!defending) {
                 L.error("LBP_GuildSupport invalid for attacker");
-                set_stage(LBP_CommandOrWait);
+                set_stage(LBP_UpgradeOfficer);
             }
 
             if (!owner->is_guild_member()) {
@@ -527,14 +532,14 @@ ExodusMode LunarBattlePrep::update(float delta) {
         case LBP_BuyMines:
             if (!defending) {
                 L.error("LBP_BuyMines invalid for attacker");
-                set_stage(LBP_CommandOrWait);
+                set_stage(LBP_UpgradeOfficer);
             }
 
             if (!stage_started) {
                 stage_started = true;
 
                 if (!(owner->get_mc() > 4 && onein(3))) {
-                    set_stage(LBP_CommandOrWait);
+                    set_stage(LBP_UpgradeOfficer);
                     break;
                 }
 
@@ -591,7 +596,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
                         // PROCb_ready allows us to buy one more mine than we can afford
                         if (owner->attempt_spend_allowing_writeoff(cost, mines_price)) {
                             b.defender_mines = mines_to_buy;
-                            set_stage(LBP_CommandOrWait);
+                            set_stage(LBP_UpgradeOfficer);
                         }
                     } else if (clk.x < .5f) {
                         mines_to_buy = max(mines_to_buy-1, 0);
@@ -604,6 +609,99 @@ ExodusMode LunarBattlePrep::update(float delta) {
                 }
             }
 
+            break;
+        case LBP_UpgradeOfficer:
+            if (!stage_started) {
+                stage_started = true;
+
+                if (!FEATURE(EF_LUNAR_BATTLE_OFFICER_UPGRADE)) {
+                    set_stage(LBP_CommandOrWait);
+                    break;
+                }
+
+                OfficerQuality offq = defending ? b.defender_officer : b.aggressor_officer;
+
+                if (offq == OFFQ_Good) {
+                    set_stage(LBP_CommandOrWait);
+                    break;
+                }
+
+                if (!human->can_afford(OFFICER_UPGRADE_COST)) {
+                    set_stage(LBP_CommandOrWait);
+                    break;
+                }
+
+                const char* t0 = "Your officer is poor. Do you";
+                const char* t1 = "Do you wish to recruit an average";
+                const char* t2 = "officer for this battle?";
+
+                if (offq == OFFQ_Average) {
+                    t0 = "Your officer is average. Do";
+                    t1 = "you wish to recruit a good";
+                    t2 = "officer for this battle?";
+                }
+
+                draw_panel();
+                draw_manager.draw_text(
+                    t0,
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 4,
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    t1,
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 24,
+                    COL_TEXT);
+                draw_manager.draw_text(
+                    t2,
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 44,
+                    COL_TEXT);
+
+                char text[32];
+                snprintf(text, sizeof(text), "(%dMC)", OFFICER_UPGRADE_COST);
+
+                draw_manager.draw_text(
+                    text,
+                    Justify::Left,
+                    PANEL_X + 4, PANEL_Y + 84,
+                    COL_TEXT);
+
+                draw_manager.draw(
+                    id(ID::UPGRADE_YESNO),
+                    IMG_BR14_EXPORT,
+                    {PANEL_X + PANEL_W - 4, PANEL_Y + PANEL_H - 4,
+                     1, 1,
+                     1, 1});
+
+                break;
+            }
+
+            {
+                SpriteClick clk = draw_manager.query_click(id(ID::UPGRADE_YESNO));
+                if (clk.id) {
+                    if (clk.y < .5f) {
+                        if (human->attempt_spend(OFFICER_UPGRADE_COST)) {
+                            if (defending) {
+                                if (b.defender_officer == OFFQ_Poor) {
+                                    b.defender_officer = OFFQ_Average;
+                                } else if (b.defender_officer == OFFQ_Average) {
+                                    b.defender_officer = OFFQ_Good;
+                                }
+                            } else {
+                                if (b.aggressor_officer == OFFQ_Poor) {
+                                    b.aggressor_officer = OFFQ_Average;
+                                } else if (b.aggressor_officer == OFFQ_Average) {
+                                    b.aggressor_officer = OFFQ_Good;
+                                }
+                            }
+                        }
+                    }
+
+                    set_stage(LBP_CommandOrWait);
+                    break;
+                }
+            }
             break;
         case LBP_CommandOrWait:
             if (!stage_started) {

@@ -26,6 +26,7 @@ class LunarBattlePrep : ModeBase, BattleReport {
             LBP_AllySupportWaitForClick,
             LBP_GuildSupport,
             LBP_BuyMines,
+            LBP_UpgradeOfficer,
             LBP_CommandOrWait,
             LBP_OptionGroupSize,
             LBP_GroupSize,
