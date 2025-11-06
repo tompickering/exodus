@@ -149,7 +149,7 @@ bool Player::init_alien_name_character() {
             return true;
         case CHAR_Gor2:
             set_title("Lord");
-            set_name("Zok Marr");
+            set_name("Noobas");
             return true;
         case CHAR_Gor3:
             set_title("Lady");
@@ -157,7 +157,7 @@ bool Player::init_alien_name_character() {
             return true;
         case CHAR_Gor4:
             set_title("Lord");
-            set_name("Caroon");
+            set_name("Zok Ten");
             return true;
         default:
             break;
