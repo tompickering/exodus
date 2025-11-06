@@ -858,7 +858,8 @@ void ExodusState::save_recommended_planet(const PlanetInfo& info) {
 }
 
 bool ExodusState::is_recommended_planet(Planet* p) {
-    int p_idx, s_idx;
+    int p_idx = -1;
+    int s_idx = -1;
     get_star_planet_idx(p, s_idx, p_idx);
     return (recommended_planet_star_idx = s_idx && recommended_planet_idx == p_idx);
 }
