@@ -364,6 +364,7 @@ class Player : public Saveable {
         void init_alien_name();
         bool init_alien_name_character();
         void init_character(Character);
+        void set_character_hostility();
         const char* get_name();
         const char* get_title();
         const char* get_ref();

@@ -197,6 +197,16 @@ void Player::init_character(Character _character) {
     }
 }
 
+void Player::set_character_hostility() {
+    if (is_hostile_to(0)) {
+        clear_hostility();
+    }
+
+    if (character == CHAR_Ter4 || character == CHAR_Urk1) {
+        set_hostile_to(0);
+    }
+}
+
 const char* Player::get_name() {
     return name;
 }
