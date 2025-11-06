@@ -123,7 +123,7 @@ void GuildHQ::enter() {
     guildbot_interp = 0.f;
     eyes_loop = 0;
     ending_delay = 0;
-    stage = HQ_Idle;
+    set_stage(HQ_Idle);
     fine = 0;
     text_y = 0;
     draw_manager.set_selectable(id(ID::BOT_MISSIONINFO));
@@ -131,6 +131,11 @@ void GuildHQ::enter() {
     draw_manager.set_selectable(id(ID::BOT_SGQUIT));
     draw_manager.set_selectable(id(ID::BOT_REP));
     draw_manager.set_selectable(id(ID::BOT_QUIT));
+}
+
+void GuildHQ::set_stage(Stage new_stage) {
+    L.debug("Stage: %d -> %d", (int)stage, (int)new_stage);
+    stage = new_stage;
 }
 
 ExodusMode GuildHQ::update(float delta) {
@@ -205,7 +210,7 @@ ExodusMode GuildHQ::update(float delta) {
                     bool punish = player->committed_any_infractions();
                     int line = 60;
 
-                    stage = HQ_ClaimGuildmaster;
+                    set_stage(HQ_ClaimGuildmaster);
 
                     if (worthy) {
                         bool claim = true;
@@ -239,7 +244,7 @@ ExodusMode GuildHQ::update(float delta) {
                          */
 
                         if (claim) {
-                            stage = HQ_GuildmasterClaimed;
+                            set_stage(HQ_GuildmasterClaimed);
                         }
                     } else {
                         draw_manager.draw_text(
@@ -280,7 +285,7 @@ ExodusMode GuildHQ::update(float delta) {
             }
 
             if (guildbot_interp == 1) {
-                stage = HQ_Guildbot;
+                set_stage(HQ_Guildbot);
                 draw_panel();
                 draw_manager.draw_text(
                     "Welcome to the Space Guild.",
@@ -364,7 +369,7 @@ ExodusMode GuildHQ::update(float delta) {
                         COL_TEXT);
                 }
 
-                stage = HQ_GuildbotCloseOnClick;
+                set_stage(HQ_GuildbotCloseOnClick);
             }
 
             if (draw_manager.query_click(id(ID::BOT_SGQUIT)).id) {
@@ -388,7 +393,7 @@ ExodusMode GuildHQ::update(float delta) {
                     COL_TEXT);
 
                 draw_choice();
-                stage = HQ_GuildbotQuitMembership;
+                set_stage(HQ_GuildbotQuitMembership);
             }
 
             if (draw_manager.query_click(id(ID::BOT_SGJOIN)).id) {
@@ -432,7 +437,7 @@ ExodusMode GuildHQ::update(float delta) {
                     COL_TEXT);
 
                 draw_choice();
-                stage = HQ_GuildbotBecomeMember;
+                set_stage(HQ_GuildbotBecomeMember);
             }
 
             if (draw_manager.query_click(id(ID::BOT_REP)).id) {
@@ -523,7 +528,7 @@ ExodusMode GuildHQ::update(float delta) {
                         text_y += 20;
 
                         draw_choice();
-                        stage = HQ_GuildbotPayFine;
+                        set_stage(HQ_GuildbotPayFine);
                     }
                 } else {
                     draw_manager.draw_text(
@@ -531,7 +536,7 @@ ExodusMode GuildHQ::update(float delta) {
                         Justify::Left,
                         PANEL_X + 12, PANEL_Y + text_y,
                         COL_TEXT);
-                    stage = HQ_GuildbotCloseOnClick;
+                    set_stage(HQ_GuildbotCloseOnClick);
                 }
             }
 
@@ -580,7 +585,7 @@ ExodusMode GuildHQ::update(float delta) {
                                 PANEL_X + 4, PANEL_Y + 184,
                                 COL_TEXT);
                         }
-                        stage = HQ_GuildbotCloseOnClick;
+                        set_stage(HQ_GuildbotCloseOnClick);
                     } else {
                         close_bot_panel();
                     }
@@ -609,7 +614,7 @@ ExodusMode GuildHQ::update(float delta) {
                             COL_TEXT);
                     }
 
-                    stage = HQ_GuildbotCloseOnClick;
+                    set_stage(HQ_GuildbotCloseOnClick);
                 }
             }
             break;
@@ -627,7 +632,7 @@ ExodusMode GuildHQ::update(float delta) {
                                 Justify::Left,
                                 PANEL_X + 12, PANEL_Y + text_y,
                                 COL_TEXT);
-                            stage = HQ_GuildbotCloseOnClick;
+                            set_stage(HQ_GuildbotCloseOnClick);
                         } else {
                             L.error("Should have checked we can afford fine already");
                         }
@@ -637,7 +642,7 @@ ExodusMode GuildHQ::update(float delta) {
                             Justify::Left,
                             PANEL_X + 12, PANEL_Y + text_y,
                             COL_TEXT);
-                        stage = HQ_GuildbotCloseOnClick;
+                        set_stage(HQ_GuildbotCloseOnClick);
                     }
                 }
             }
@@ -653,14 +658,14 @@ ExodusMode GuildHQ::update(float delta) {
             if (draw_manager.clicked()) {
                 draw_manager.draw(id(ID::PANEL_PATTERN), nullptr);
                 draw_manager.draw(id(ID::PANEL), nullptr);
-                stage = HQ_Idle;
+                set_stage(HQ_Idle);
             }
             break;
         case HQ_GuildmasterClaimed:
             if (ending_delay > ENDING_DELAY) {
                 draw_manager.fade_black(1.2f, 24);
                 audio_manager.fade_out(1000);
-                stage = HQ_FadeToEnding;
+                set_stage(HQ_FadeToEnding);
             }
             ending_delay += delta;
             break;
@@ -711,5 +716,5 @@ void GuildHQ::close_bot_panel() {
     draw_manager.draw(id(ID::PANEL_PATTERN), nullptr);
     draw_manager.draw(id(ID::PANEL), nullptr);
     guildbot_active = false;
-    stage = HQ_Idle;
+    set_stage(HQ_Idle);
 }

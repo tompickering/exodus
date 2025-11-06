@@ -24,6 +24,8 @@ class GuildHQ : ModeBase {
         };
 
         Stage stage;
+        void set_stage(Stage);
+
         bool guildbot_active;
         float guildbot_interp;
         float eyes_loop;
