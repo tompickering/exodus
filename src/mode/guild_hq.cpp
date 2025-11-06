@@ -529,6 +529,8 @@ ExodusMode GuildHQ::update(float delta) {
 
                         draw_choice();
                         set_stage(HQ_GuildbotPayFine);
+                    } else {
+                        set_stage(HQ_GuildbotCloseOnClick);
                     }
                 } else {
                     draw_manager.draw_text(
