@@ -949,6 +949,7 @@ ExodusMode LunarBattle::update(float delta) {
                 }
 
                 if (target_unit) {
+                    L.debug("%s FIRING AT %s", active_unit->debug_info(), target_unit->debug_info());
                     active_unit->shots_remaining--;
                     shot_interp = 1;
                     audio_manager.play_sfx(active_unit->shot_sfx);
@@ -1010,6 +1011,7 @@ ExodusMode LunarBattle::update(float delta) {
                         alienhit = true;
                     }
                 }
+                L.info("Power: %d", power);
                 for (int i = 0; i < active_unit->hp; ++i) {
                     // Aliens shooting on units not in cover always hit
                     if (alienhit || onein(6 - power)) {
@@ -2997,6 +2999,7 @@ bool LunarBattle::select_unit() {
         if (viable(units[i], defender_turn)) {
             if (viable_idx == 0) {
                 active_unit = &units[i];
+                L.debug("SET ACTIVE UNIT: %s", active_unit->debug_info());
                 break;
             }
             --viable_idx;
@@ -3399,4 +3402,39 @@ void BattleUnit::do_move(Direction d) {
     if (d == DIR_Left)  tgt_x--;
     if (d == DIR_Right) tgt_x++;
     last_move = d;
+}
+
+const char* BattleUnit::get_type_str() {
+    switch (type) {
+        case UNIT_Inf:
+            return "INF";
+        case UNIT_Gli:
+            return "GLI";
+        case UNIT_Art:
+            return "ART";
+        case UNIT_LBGun:
+            return "LBGun";
+        case UNIT_LBCtl:
+            return "LBCtl";
+        case UNIT_Rebel:
+            return "Rebel";
+        case UNIT_AInf:
+            return "AInf";
+        case UNIT_AArt:
+            return "AArt";
+    }
+
+    return "<UNKNOWN>";
+}
+
+const char* BattleUnit::debug_info() {
+#ifdef DBG
+    snprintf(dbg_info, sizeof(dbg_info), "[%s %s HP %d]",
+                                         defending ? "D" : "A",
+                                         get_type_str(),
+                                         hp);
+    return dbg_info;
+#else
+    return "";
+#endif
 }

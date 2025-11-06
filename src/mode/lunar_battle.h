@@ -93,6 +93,14 @@ class BattleUnit {
         Direction last_move;
 
         static bool use_alt_aliens;
+
+        const char* get_type_str();
+
+#ifdef DBG
+        char dbg_info[128];
+#endif
+
+        const char* debug_info();
 };
 
 class Cover {
