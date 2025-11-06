@@ -1109,11 +1109,11 @@ ExodusMode LunarBattle::update(float delta) {
             }
 
             if (target_unit->hp <= 0) {
-                L.info("Unit dead");
+                L.info("Unit dead: %s", target_unit->debug_info());
 
                 if (FEATURE(EF_LUNAR_BATTLE_PROMOTION)) {
                     if (active_unit && active_unit->may_be_promoted && !active_unit->promoted) {
-                        L.info("Unit promoted!");
+                        L.info("Unit promoted: %s", active_unit->debug_info());
                         audio_manager.play_sfx(SFX_PROMOTION);
                         active_unit->promoted = true;
                     }
@@ -3016,10 +3016,12 @@ bool LunarBattle::select_unit() {
 }
 
 void LunarBattle::reset_round() {
+    debug_dump_units();
     L.debug("< RESETTING ROUND >");
     for (int i = 0; i < n_units; ++i) {
         units[i].turn_taken = false;
     }
+    debug_dump_units();
 }
 
 bool LunarBattle::is_in_cover(BattleUnit* u) {
@@ -3170,6 +3172,14 @@ void LunarBattle::hide_info() {
     draw_manager.draw(id(ID::PANEL), nullptr);
 }
 
+void LunarBattle::debug_dump_units() {
+    L.debug("--- UNIT DUMP ---");
+    for (int i = 0; i < n_units; ++i) {
+        L.debug(units[i].debug_info());
+    }
+    L.debug("-----------------");
+}
+
 bool BattleUnit::use_alt_aliens = false;
 
 BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
@@ -3206,9 +3216,21 @@ BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     spr_id_set = false;
     dying_timer = 0;
     last_move = DIR_None;
+
+#ifdef DBG
+    dbg_id = -1;
+#endif
 }
 
+#ifdef DBG
+static int BATTLE_UNIT_ID = 0;
+#endif
+
 BattleUnit& BattleUnit::init(int _x, int _y) {
+#ifdef DBG
+    dbg_id = (++BATTLE_UNIT_ID);
+#endif
+
     x = _x;
     y = _y;
 
@@ -3431,10 +3453,12 @@ const char* BattleUnit::get_type_str() {
 
 const char* BattleUnit::debug_info() {
 #ifdef DBG
-    snprintf(dbg_info, sizeof(dbg_info), "[%s %s HP %d]",
+    snprintf(dbg_info, sizeof(dbg_info), "[%d %s %s HP %d (%s)]",
+                                         dbg_id,
                                          defending ? "D" : "A",
                                          get_type_str(),
-                                         hp);
+                                         hp,
+                                         turn_taken ? "turn taken" : "turn not taken");
     return dbg_info;
 #else
     return "";

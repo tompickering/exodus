@@ -97,6 +97,7 @@ class BattleUnit {
         const char* get_type_str();
 
 #ifdef DBG
+        int dbg_id;
         char dbg_info[128];
 #endif
 
@@ -283,6 +284,8 @@ class LunarBattle : ModeBase, CommPanelDrawer, BattleReport {
         const char* img_arrow_down;
         const char* img_arrow_left;
         const char* img_arrow_right;
+
+        void debug_dump_units();
 };
 
 #endif
