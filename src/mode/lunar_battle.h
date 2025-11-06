@@ -171,6 +171,10 @@ class LunarBattle : ModeBase, CommPanelDrawer, BattleReport {
         int to_place_gli;
         int to_place_art;
         int to_place_msc;
+
+        OfficerQuality agg_officer;
+        OfficerQuality def_officer;
+
         SprID fog_ids[88];
 
         Cover cover[COVER_MAX];

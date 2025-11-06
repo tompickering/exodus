@@ -104,13 +104,19 @@ void LunarBattlePrep::enter() {
     b.aggressor_manual_placement = false;
     b.defender_manual_placement = false;
 
+    b.aggressor_officer = OFFQ_Poor;
+    b.defender_officer = OFFQ_Poor;
+
     if (b.aggressor_type == AGG_Player) {
         aggressor = exostate().get_player(b.aggressor_idx);
         if (aggressor == owner) {
             L.fatal("%s is attacking own planet!", owner->get_full_name());
         }
         b.human_attacking = aggressor->is_human();
+        b.aggressor_officer = aggressor->get_officer(OFF_Battle);
     }
+
+    b.defender_officer = owner->get_officer(OFF_Battle);
 
     // TODO_MP: How does all this work in multiplayer PvP?
 

@@ -104,6 +104,8 @@ LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer() {
     to_place_gli = 0;
     to_place_art = 0;
     to_place_msc = 0;
+    agg_officer = OFFQ_Poor;
+    def_officer = OFFQ_Poor;
 }
 
 void LunarBattle::enter() {
@@ -112,6 +114,9 @@ void LunarBattle::enter() {
     panel_mode = LBPM_None;
 
     LunarBattleParams &b = ephstate.lunar_battle;
+
+    agg_officer = b.aggressor_officer;
+    def_officer = b.defender_officer;
 
     Planet *p = exostate().get_active_planet();
 
@@ -130,7 +135,7 @@ void LunarBattle::enter() {
 
     if (FEATURE(EF_LUNAR_BATTLE_INF_DISCOVER_MINES)) {
         if (aggressor) {
-            if (aggressor->get_officer(OFF_Battle) != OFFQ_Poor) {
+            if (agg_officer != OFFQ_Poor) {
                 Race r = aggressor->get_race();
                 aggressor_can_discover_mines = (r == RACE_Human || r == RACE_Urkash);
             }
@@ -983,9 +988,9 @@ ExodusMode LunarBattle::update(float delta) {
                  */
                 OfficerQuality offq = OFFQ_Average;
                 if (defender_turn) {
-                    offq = defender->get_officer(OFF_Battle);
+                    offq = def_officer;
                 } else if (aggressor) {
-                    offq = aggressor->get_officer(OFF_Battle);
+                    offq = agg_officer;
                 }
                 switch (offq) {
                     case OFFQ_Poor:
@@ -1434,9 +1439,6 @@ void LunarBattle::auto_act(bool agg) {
             power = 1;
         }
 
-        Planet *p = exostate().get_active_planet();
-        Player *defender = exostate().get_player(p->get_owner());
-
         /*
          * Slight deviation from orig here - when CPU attacks us,
          * or rebels / alients attack us, both armies are given
@@ -1446,9 +1448,9 @@ void LunarBattle::auto_act(bool agg) {
          */
         OfficerQuality offq = OFFQ_Average;
         if (!agg) {
-            offq = defender->get_officer(OFF_Battle);
+            offq = def_officer;
         } else if (aggressor) {
-            offq = aggressor->get_officer(OFF_Battle);
+            offq = agg_officer;
         }
         switch (offq) {
             case OFFQ_Poor:
@@ -1893,7 +1895,7 @@ void LunarBattle::draw_mines() {
 
     if (FEATURE(EF_LUNAR_BATTLE_INF_DISCOVER_MINES)) {
         if (aggressor && aggressor->is_human()) {
-            OfficerQuality offq = aggressor->get_officer(OFF_Battle);
+            OfficerQuality offq = agg_officer;
             if (offq == OFFQ_Average) draw_mine_rule = DrawMineRule::InfOnly;
             if (offq == OFFQ_Good) draw_mine_rule = DrawMineRule::Discovered;
         }
@@ -2383,7 +2385,7 @@ void LunarBattle::update_panel_battle() {
                     OfficerQuality offq = OFFQ_Poor;
 
                     if (player) {
-                        offq = player->get_officer(OFF_Battle);
+                        offq = defender_turn ? def_officer : agg_officer;
                     }
 
                     const char* text_hp = "HP:";

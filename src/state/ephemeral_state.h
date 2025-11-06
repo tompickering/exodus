@@ -50,6 +50,8 @@ typedef struct {
     int defender_gli;
     int defender_art;
     int defender_mines;
+    OfficerQuality aggressor_officer;
+    OfficerQuality defender_officer;
 } LunarBattleParams;
 
 typedef struct {
