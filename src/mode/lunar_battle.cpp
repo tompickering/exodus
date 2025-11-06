@@ -966,11 +966,6 @@ ExodusMode LunarBattle::update(float delta) {
             if (target_unit) {
                 int power = active_unit->fire_power;
 
-                if (active_unit->promoted) {
-                    L.info("Promotion power bonus");
-                    ++power;
-                }
-
                 bool cover = is_in_cover(target_unit);
                 bool alienhit = false;
                 // CPU units except rebels get a firepower bonus
@@ -1004,6 +999,13 @@ ExodusMode LunarBattle::update(float delta) {
                         break;
                 }
                 power = clamp(power, 0, 4);
+
+                if (active_unit->promoted) {
+                    L.info("Promotion power bonus");
+                    // Careful not to raise power beyond 5!
+                    ++power;
+                }
+
                 if (active_unit->is_alien) {
                     if (cover) {
                         power = 1;
