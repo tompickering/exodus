@@ -1381,7 +1381,7 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("The lower-right panel shows a '?'");
             bulletin_set_next_text("if you have not visited this system.");
             bulletin_set_next_text("");
-            bulletin_set_next_text("Otherwise, it will display a system's.");
+            bulletin_set_next_text("Otherwise, it will display a system's");
             bulletin_set_next_text("planets. Planets owned by you are");
             bulletin_set_next_text("marked yellow. Planets owned by a");
             bulletin_set_next_text("rival are marked red.");
