@@ -60,6 +60,7 @@ class BattleUnit {
         int hp_initial;
         int hp;
         int move;
+        bool reached_far_side;
         int fire_range;
         float fire_rate;
         int fire_power;
@@ -245,7 +246,9 @@ class LunarBattle : ModeBase, CommPanelDrawer, BattleReport {
         Direction get_random_move_direction();
 
         bool ai_can_move_to(BattleUnit*, int, int);
+        void update_reached_far_side(BattleUnit&);
         Direction ai_decide_move_direction();
+        Direction ai_decide_move_direction2();
 
         bool infinite_range();
 

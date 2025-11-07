@@ -681,6 +681,9 @@ ExodusMode LunarBattle::update(float delta) {
                     }
                 }
 
+                // Check if we've reached the far side
+                update_reached_far_side(*active_unit);
+
                 break;
             }
 
@@ -734,7 +737,11 @@ ExodusMode LunarBattle::update(float delta) {
                         move_dir = DIR_None;
                     }
                 } else {
-                    move_dir = ai_decide_move_direction();
+                    if (active_unit->reached_far_side && FEATURE(EF_FIX_LUNAR_BATTLE_STALEMATE)) {
+                        move_dir = ai_decide_move_direction2();
+                    } else {
+                        move_dir = ai_decide_move_direction();
+                    }
 
                     if (FEATURE(EF_PREVENT_AI_BATTLE_BACKTRACK)) {
                         if (move_dir == DIR_Up && active_unit->last_move == DIR_Down) {
@@ -2627,6 +2634,39 @@ bool LunarBattle::ai_can_move_to(BattleUnit *u, int x, int y) {
     return true;
 }
 
+void LunarBattle::update_reached_far_side(BattleUnit& u) {
+    if (!u.reached_far_side) {
+        int step = 1;
+        int lim = 0;
+        if (u.defending) {
+            step = -1;
+            lim = 0;
+        } else {
+            step = 1;
+            lim = BG_WIDTH - 1;
+        }
+
+        if (u.x == lim) {
+            u.reached_far_side = true;
+        } else {
+            // Also consider us to have reached the far side if there are 0 navigable
+            // spaces between our target position and the end of the field
+            bool found_clear_space = false;
+            for (int x = u.x + step; x != (lim + step); x += step) {
+                if (ai_can_move_to(&u, x, u.y)) {
+                    found_clear_space = true;
+                    break;
+                }
+            }
+
+            if (!found_clear_space) {
+                u.reached_far_side = true;
+            }
+        }
+    }
+}
+
+
 Direction LunarBattle::ai_decide_move_direction() {
     BattleUnit *u = active_unit;
 
@@ -2736,6 +2776,54 @@ Direction LunarBattle::ai_decide_move_direction() {
 
         if (move_down) {
             return DIR_Down;
+        }
+    }
+
+    return DIR_None;
+}
+
+Direction LunarBattle::ai_decide_move_direction2() {
+    if (!active_unit) {
+        return DIR_None;
+    }
+
+    BattleUnit &u = *active_unit;
+
+    BattleUnit *tgt = nullptr;
+    int min_dist = 999;
+
+    // Try to reduce distance to the closest enemy unit
+    for (int i = 0; i < n_units; ++i) {
+        BattleUnit &t = units[i];
+        if (t.hp > 0 && (t.defending) != u.defending) {
+            int dist = abs(t.x - u.x) + abs(t.y - u.y);
+            if (dist < min_dist) {
+                min_dist = dist;
+                tgt = &t;
+            }
+        }
+    }
+
+    if (!tgt) {
+        return DIR_None;
+    }
+
+    BattleUnit &t = *tgt;
+    int dx = t.x - u.x;
+    int dy = t.y - u.y;
+
+    // Prefer moving up/down, as moving back looks weird
+    if (abs(dy) > 0) {
+        int ny = u.y + ((dy > 0) ? 1 : -1);
+        if (ai_can_move_to(&u, u.x, ny)) {
+            return (dy > 0) ? DIR_Down : DIR_Up;
+        }
+    }
+
+    if (abs(dx > 0)) {
+        int nx = u.x + ((dx > 0) ? 1 : -1);
+        if (ai_can_move_to(&u, nx, u.y)) {
+            return (dx > 0) ? DIR_Right : DIR_Left;
         }
     }
 
@@ -3206,6 +3294,7 @@ BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     tgt_x = 0;
     tgt_y = 0;
     move = 0;
+    reached_far_side = false;
     fire_range = 0;
     fire_rate = 4.f;
     fire_power = 0;
@@ -3251,6 +3340,8 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
 
     x = _x;
     y = _y;
+
+    reached_far_side = false;
 
     tgt_x = x;
     tgt_y = y;

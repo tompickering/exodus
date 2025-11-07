@@ -105,6 +105,9 @@ static bool FIX_AI_TERROR = false;
 // Improved Fleet Admiral was never implemented in the original!
 static bool FIX_FLEET_ADMIRAL = false;
 
+// Fix issue where units never move into range
+static bool FIX_LUNAR_BATTLE_STALEMATE = false;
+
 
 static bool DISABLE_MULTIPLAYER = true;
 
@@ -150,6 +153,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         CHARACTERS = false;
         FIX_AI_TERROR = false;
         FIX_FLEET_ADMIRAL = false;
+        FIX_LUNAR_BATTLE_STALEMATE = true;
         DISABLE_MULTIPLAYER = true;
     }
 
@@ -188,6 +192,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         CHARACTERS = true;
         FIX_AI_TERROR = true;
         FIX_FLEET_ADMIRAL = true;
+        FIX_LUNAR_BATTLE_STALEMATE = true;
         DISABLE_MULTIPLAYER = true;
     }
 }
@@ -235,6 +240,7 @@ bool FEATURE(ExodusFeature f) {
     if (f == EF_CHARACTERS) return CHARACTERS;
     if (f == EF_FIX_AI_TERROR) return FIX_AI_TERROR;
     if (f == EF_FIX_FLEET_ADMIRAL) return FIX_FLEET_ADMIRAL;
+    if (f == EF_FIX_LUNAR_BATTLE_STALEMATE) return FIX_LUNAR_BATTLE_STALEMATE;
     if (f == EF_DISABLE_MULTIPLAYER) return DISABLE_MULTIPLAYER;
 
     L.fatal("Unhandled feature %d", (int)f);
