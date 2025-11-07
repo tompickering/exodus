@@ -55,7 +55,7 @@ PanelDrawer::PanelDrawer(PanelType _type) : type(_type) {
 }
 
 void PanelDrawer::draw_panel_bg(DrawTarget tgt) {
-    draw_manager.fill(FILL_3D, 2, tgt, galaxy_panel_area, COL_BORDERS);
+    draw_manager.fill(FILL_3D, 1, tgt, galaxy_panel_area, COL_BORDERS);
     draw_manager.fill_pattern(tgt, area_playerinfo);
     draw_manager.fill_pattern(tgt, area_starinfo);
     draw_manager.save_background();

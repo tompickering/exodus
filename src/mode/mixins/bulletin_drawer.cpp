@@ -732,7 +732,7 @@ void BulletinDrawer::bulletin_open() {
          COL_BORDERS);
 
     draw_manager.fill(
-        FILL_3D_Hollow, 3,
+        FILL_3D_Hollow, 1,
         {BULLETIN_X, BULLETIN_Y,
          BULLETIN_W, BULLETIN_H},
          COL_BORDERS);
@@ -753,7 +753,7 @@ void BulletinDrawer::bulletin_open() {
          BULLETIN_FLAG_BG_W, BULLETIN_FLAG_BG_H},
          COL_BORDERS);
     draw_manager.fill(
-        FILL_3D_Hollow, 3,
+        FILL_3D_Hollow, 1,
         {BULLETIN_FLAG_BG_X, BULLETIN_FLAG_BG_Y,
          BULLETIN_FLAG_BG_W, BULLETIN_FLAG_BG_H},
          COL_BORDERS);
