@@ -1672,9 +1672,9 @@ bool MenuDrawer::menu_specific_update() {
 
                 SpriteClick clk = draw_manager.query_click(id_menu_newoff_opt);
                 if (clk.id) {
-                    draw_manager.draw(id_menu_newoff_opt, nullptr);
                     if (clk.x < .33f) {
                         if (p->attempt_spend(engagement_cost)) {
+                            draw_manager.draw(id_menu_newoff_opt, nullptr);
                             p->set_officer(menu_new_officer, menu_new_officer_quality);
                             menu_open(MM_OldOfficer);
                             return true;
