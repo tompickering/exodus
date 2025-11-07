@@ -384,48 +384,52 @@ ExodusMode LunarBattlePrep::update(float delta) {
                         continue;
                     }
 
+                    bool does_support = true;
+
                     if (player->get_flag(4) == AI_Hi) {
                         L.debug("%s offering no support (AI flags)", player->get_name());
-                        continue;
+                        does_support = false;
                     }
 
                     if (player->is_hostile_to(owner_idx)) {
                         L.debug("%s offering no support (hostile)", player->get_name());
-                        continue;
+                        does_support = false;
                     }
 
                     int support_inf = 0;
                     int support_gli = 0;
                     int support_art = 0;
 
-                    for (PLANETITER piter(i); !piter.complete(); ++piter) {
-                        int supp_inf = 0;
-                        int supp_gli = 0;
-                        int supp_art = 0;
+                    if (does_support) {
+                        for (PLANETITER piter(i); !piter.complete(); ++piter) {
+                            int supp_inf = 0;
+                            int supp_gli = 0;
+                            int supp_art = 0;
 
-                        int inf, gli, art;
-                        piter.get()->get_army(inf, gli, art);
+                            int inf, gli, art;
+                            piter.get()->get_army(inf, gli, art);
 
-                        if (inf > s*2) {
-                            supp_inf = RND(s-1);
-                        }
+                            if (inf > s*2) {
+                                supp_inf = RND(s-1);
+                            }
 
-                        if (gli > s*3) {
-                            supp_gli = RND(s-1);
-                        }
+                            if (gli > s*3) {
+                                supp_gli = RND(s-1);
+                            }
 
-                        if (art > s*4) {
-                            supp_art = RND(s-1);
-                        }
+                            if (art > s*4) {
+                                supp_art = RND(s-1);
+                            }
 
-                        support_inf += supp_inf;
-                        support_gli += supp_gli;
-                        support_art += supp_art;
+                            support_inf += supp_inf;
+                            support_gli += supp_gli;
+                            support_art += supp_art;
 
-                        piter.get()->adjust_army(-supp_inf, -supp_gli, -supp_art);
+                            piter.get()->adjust_army(-supp_inf, -supp_gli, -supp_art);
 
-                        if (!onein(3)) {
-                            break;
+                            if (!onein(3)) {
+                                break;
+                            }
                         }
                     }
 
