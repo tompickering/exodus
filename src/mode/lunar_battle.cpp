@@ -737,8 +737,28 @@ ExodusMode LunarBattle::update(float delta) {
                         move_dir = DIR_None;
                     }
                 } else {
-                    if (active_unit->reached_far_side && FEATURE(EF_FIX_LUNAR_BATTLE_STALEMATE)) {
+                    if (active_unit->random_moves > 0) {
+                        move_dir = ai_decide_move_direction_random();
+
+                        if (move_dir == DIR_None) {
+                            // We can't move at all - might as well abandon random moving
+                            active_unit->random_moves = 0;
+                        } else {
+                            --active_unit->random_moves;
+                        }
+                    } else if (active_unit->reached_far_side && FEATURE(EF_FIX_LUNAR_BATTLE_STALEMATE)) {
                         move_dir = ai_decide_move_direction2();
+
+                        if (move_dir == DIR_None) {
+                            // We can't move following this strategy
+                            // Take a few random movements to 'shake' things a bit
+                            // Makes as sure as possible we don't completely stalemate
+                            move_dir = ai_decide_move_direction_random();
+
+                            if (move_dir != DIR_None) {
+                                active_unit->random_moves = 3;
+                            }
+                        }
                     } else {
                         move_dir = ai_decide_move_direction();
                     }
@@ -2830,6 +2850,39 @@ Direction LunarBattle::ai_decide_move_direction2() {
     return DIR_None;
 }
 
+Direction LunarBattle::ai_decide_move_direction_random() {
+    if (!active_unit) {
+        return DIR_None;
+    }
+
+    BattleUnit &u = *active_unit;
+
+    Direction valid_dirs[4];
+    int head = 0;
+
+    if (u.last_move != DIR_Down && ai_can_move_to(&u, u.x, u.y-1)) {
+        valid_dirs[head++] = DIR_Up;
+    }
+
+    if (u.last_move != DIR_Up && ai_can_move_to(&u, u.x, u.y+1)) {
+        valid_dirs[head++] = DIR_Down;
+    }
+
+    if (u.last_move != DIR_Right && ai_can_move_to(&u, u.x-1, u.y)) {
+        valid_dirs[head++] = DIR_Left;
+    }
+
+    if (u.last_move != DIR_Left && ai_can_move_to(&u, u.x+1, u.y)) {
+        valid_dirs[head++] = DIR_Right;
+    }
+
+    if (head == 0) {
+        return DIR_None;
+    }
+
+    return valid_dirs[rand() % head];
+}
+
 bool LunarBattle::set_target_unit() {
     target_unit = nullptr;
 
@@ -3295,6 +3348,7 @@ BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     tgt_y = 0;
     move = 0;
     reached_far_side = false;
+    random_moves = 0;
     fire_range = 0;
     fire_rate = 4.f;
     fire_power = 0;
@@ -3342,6 +3396,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
     y = _y;
 
     reached_far_side = false;
+    random_moves = 0;
 
     tgt_x = x;
     tgt_y = y;
