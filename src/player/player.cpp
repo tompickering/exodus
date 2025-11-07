@@ -15,10 +15,10 @@ static bool alien_names_offsets_initialised = false;
 static int alien_names_offsets[N_RACES];
 
 const AIFlag ai_hum[9] = {AI_Md, AI_Md, AI_Md, AI_Md, AI_Md, AI_Md, AI_Md, AI_Md, AI_Md};
-const AIFlag ai_yok[9] = {AI_Md, AI_Hi, AI_Md, AI_Md, AI_Md, AI_Lo, AI_Hi, AI_Lo, AI_Md};
-const AIFlag ai_ter[9] = {AI_Hi, AI_Hi, AI_Lo, AI_Lo, AI_Lo, AI_Hi, AI_Md, AI_Hi, AI_Lo};
-const AIFlag ai_urk[9] = {AI_Lo, AI_Hi, AI_Hi, AI_Hi, AI_Hi, AI_Md, AI_Md, AI_Lo, AI_Hi};
-const AIFlag ai_gor[9] = {AI_Hi, AI_Lo, AI_Md, AI_Hi, AI_Md, AI_Md, AI_Lo, AI_Md, AI_Hi};
+const AIFlag ai_yok[9] = {AI_Md, AI_Lo, AI_Hi, AI_Lo, AI_Md, AI_Md, AI_Md, AI_Hi, AI_Md};
+const AIFlag ai_ter[9] = {AI_Lo, AI_Hi, AI_Md, AI_Hi, AI_Lo, AI_Lo, AI_Lo, AI_Hi, AI_Hi};
+const AIFlag ai_urk[9] = {AI_Hi, AI_Lo, AI_Md, AI_Md, AI_Hi, AI_Hi, AI_Hi, AI_Hi, AI_Lo};
+const AIFlag ai_gor[9] = {AI_Hi, AI_Md, AI_Lo, AI_Md, AI_Md, AI_Hi, AI_Md, AI_Lo, AI_Hi};
 
 const char* get_alien_name(Race race, int idx) {
     if (idx >= N_ALIEN_NAMES) {
