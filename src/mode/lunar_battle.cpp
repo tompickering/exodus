@@ -1015,8 +1015,20 @@ ExodusMode LunarBattle::update(float delta) {
                 }
                 L.info("Power: %d", power);
                 for (int i = 0; i < active_unit->hp; ++i) {
-                    // Aliens shooting on units not in cover always hit
-                    if (alienhit || onein(6 - power)) {
+                    bool hit = false;
+
+                    if (alienhit) {
+                        // Aliens shooting on units not in cover always hit
+                        hit = true;
+                    } else {
+                        if (power < 5) {
+                            hit = onein(6 - power);
+                        } else {
+                            hit = !(onein(3 + power-5));
+                        }
+                    }
+
+                    if (hit) {
                         ++damage_to_apply;
                     }
                 }
