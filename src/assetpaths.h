@@ -14,6 +14,7 @@ extern const char *FONT_3X5;
 
 extern const char *SFX_SHOT;
 extern const char *SFX_EXPLOSION;
+extern const char *SFX_EXPLOSION_F;
 extern const char *SFX_HEAVYSHOT;
 extern const char *SFX_GLIDE_LOW;
 extern const char *SFX_GLIDE_MED;

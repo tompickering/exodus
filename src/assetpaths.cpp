@@ -6,6 +6,7 @@ const char *FONT_3X5       = "assets/font/my_3x5_tiny_mono_pixel_font/my_3x5_tin
 #define D_SFX "assets/sfx/"
 const char *SFX_SHOT            = D_SFX "1_2000";
 const char *SFX_EXPLOSION       = D_SFX "2_2000";
+const char *SFX_EXPLOSION_F     = D_SFX "2_4000";
 const char *SFX_HEAVYSHOT       = D_SFX "3_500";
 const char *SFX_GLIDE_LOW       = D_SFX "4_800";
 const char *SFX_GLIDE_MED       = D_SFX "4_1000";
@@ -1213,6 +1214,7 @@ const char *CURSOR_IMG = IMG_CURSOR;
 const char *ASSETS_SFX[] = {
     SFX_SHOT,
     SFX_EXPLOSION,
+    SFX_EXPLOSION_F,
     SFX_HEAVYSHOT,
     SFX_GLIDE_LOW,
     SFX_GLIDE_MED,

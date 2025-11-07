@@ -1115,8 +1115,11 @@ ExodusMode LunarBattle::update(float delta) {
                 break;
             } else if (damage_to_apply > 0) {
                 exp_interp = 1;
-                // SUGGEST: Louder if mine_damage?
-                audio_manager.play_sfx(SFX_EXPLOSION);
+                if (FEATURE(EF_LUNAR_BATTLE_LOUD_MINES) && mine_damage) {
+                    audio_manager.play_sfx(SFX_EXPLOSION_F);
+                } else {
+                    audio_manager.play_sfx(SFX_EXPLOSION);
+                }
                 break;
             }
 
