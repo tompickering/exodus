@@ -63,7 +63,8 @@ class BattleUnit {
         int fire_range;
         float fire_rate;
         int fire_power;
-        int may_be_promoted;
+        int promotion_category;
+        bool may_be_promoted;
         bool promoted;
         const char* shot_sfx;
         const char* move0_sfx;
@@ -93,6 +94,8 @@ class BattleUnit {
         Direction last_move;
 
         static bool use_alt_aliens;
+
+        bool try_promote(const BattleUnit&, OfficerQuality);
 
         const char* get_type_str();
 

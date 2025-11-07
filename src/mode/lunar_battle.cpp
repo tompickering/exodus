@@ -1123,11 +1123,12 @@ ExodusMode LunarBattle::update(float delta) {
             if (target_unit->hp <= 0) {
                 L.info("Unit dead: %s", target_unit->debug_info());
 
-                if (FEATURE(EF_LUNAR_BATTLE_PROMOTION)) {
-                    if (active_unit && active_unit->may_be_promoted && !active_unit->promoted) {
+                if (FEATURE(EF_LUNAR_BATTLE_PROMOTION) && active_unit && !mine_damage) {
+                    OfficerQuality offq = active_unit->defending ? def_officer : agg_officer;
+
+                    if (active_unit->try_promote(*target_unit, offq)) {
                         L.info("Unit promoted: %s", active_unit->debug_info());
                         audio_manager.play_sfx(SFX_PROMOTION);
-                        active_unit->promoted = true;
                     }
                 }
 
@@ -3205,6 +3206,7 @@ BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     fire_range = 0;
     fire_rate = 4.f;
     fire_power = 0;
+    promotion_category = 0;
     may_be_promoted = false;
     promoted = false;
     shot_sfx = SFX_SHOT;
@@ -3254,6 +3256,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
     teleported = false;
     dying_timer = 0;
 
+    promotion_category = 0;
     may_be_promoted = false;
 
     switch (type) {
@@ -3263,6 +3266,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             fire_range = 3;
             fire_power = 1;
             can_use_cover = true;
+            promotion_category = 1;
             may_be_promoted = true;
             if (defending) {
                 idle = IMG_GF4_4;
@@ -3284,6 +3288,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             move0_sfx = SFX_GLIDE_LOW;
             move1_sfx = SFX_GLIDE_MED;
             move2_sfx = SFX_GLIDE_HIGH;
+            promotion_category = 2;
             may_be_promoted = true;
             if (defending) {
                 // Blue
@@ -3308,6 +3313,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             fire_power = 3;
             shot_sfx = SFX_HEAVYSHOT;
             can_shoot_behind = false;
+            promotion_category = 3;
             may_be_promoted = true;
             if (defending) {
                 idle = IMG_GF4_6;
@@ -3329,6 +3335,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             shot_sfx = SFX_HEAVYSHOT;
             hp = LUNAR_BASE_GUN_HP;
             defending = true;
+            promotion_category = 3;
             idle = IMG_GF4_21;
             walk = IMG_GF4_21;
             fire = IMG_GF4_24;
@@ -3341,6 +3348,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             hp = LUNAR_BASE_CTL_HP;
             defending = true;
             can_act = false;
+            promotion_category = 4;
             idle = IMG_GF4_20;
             walk = IMG_GF4_20;
             fire = IMG_GF4_20;
@@ -3353,6 +3361,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             fire_power = 1;
             defending = false;
             can_use_cover = true;
+            promotion_category = 1;
             idle = IMG_RF1_1;
             walk = IMG_RF1_1_2;
             fire = IMG_RF1_13;
@@ -3366,6 +3375,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             is_alien = true;
             defending = false;
             can_use_cover = true;
+            promotion_category = 1;
             if (use_alt_aliens) {
                 idle = IMG_AL1_1;
                 walk = IMG_AL1_1_2;
@@ -3387,6 +3397,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             is_alien = true;
             can_shoot_behind = false;
             defending = false;
+            promotion_category = 3;
             if (use_alt_aliens) {
                 idle = IMG_AL1_3;
                 walk = IMG_AL1_3;
@@ -3439,6 +3450,32 @@ void BattleUnit::do_move(Direction d) {
     if (d == DIR_Left)  tgt_x--;
     if (d == DIR_Right) tgt_x++;
     last_move = d;
+}
+
+bool BattleUnit::try_promote(const BattleUnit& killed_unit, OfficerQuality offq) {
+    if (promoted || !may_be_promoted) {
+        return false;
+    }
+
+    switch (offq) {
+        case OFFQ_Poor:
+            if (promotion_category < killed_unit.promotion_category) {
+                promoted = true;
+            }
+            break;
+        case OFFQ_Average:
+            if (promotion_category <= killed_unit.promotion_category) {
+                promoted = true;
+            }
+            break;
+        case OFFQ_Good:
+            promoted = true;
+            break;
+        default:
+            break;
+    }
+
+    return promoted;
 }
 
 const char* BattleUnit::get_type_str() {
