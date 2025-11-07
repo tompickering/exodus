@@ -1113,6 +1113,7 @@ const char* BulletinDrawer::bulletin_get_manual_flag() {
         case BMP_LunarBattle_3:
         case BMP_LunarBattle_4:
         case BMP_LunarBattle_5:
+        case BMP_LunarBattle_6:
             return IMG_FLAG_BTL;
         case BMP_Trade:
             return IMG_FLAG_TRADE;
@@ -1827,9 +1828,6 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("Infantry may take cover in the wreckage");
             bulletin_set_next_text("of destroyed gliders and artillery.");
             bulletin_set_next_text("");
-            bulletin_set_next_text("When a unit destroys an enemy squad, it is");
-            bulletin_set_next_text("promoted - giving it an attack bonus.");
-            bulletin_set_next_text("");
             bulletin_set_next_text("Average generals allow you to see the number");
             bulletin_set_next_text("of hits scored on an enemy unit.");
             bulletin_set_next_text("Good generals allow you to see their HP.");
@@ -1838,6 +1836,28 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("whilst they occupy the position.");
             bulletin_set_next_text("Good generals allow you to see them for the.");
             bulletin_set_next_text("remainder of the battle.");
+        }
+    }
+
+    if (p == BMP_LunarBattle_6) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("(Enhanced Game Only)");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Promotions");
+            bulletin_set_next_text("A squad may gain a promotion when it");
+            bulletin_set_next_text("destroys an enemy squad. This will give it");
+            bulletin_set_next_text("an accuracy bonus for the remainder of the");
+            bulletin_set_next_text("battle.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("When using a Poor general, promotions are");
+            bulletin_set_next_text("granted only when a squad destroys a");
+            bulletin_set_next_text("superior type of unit. Using an average");
+            bulletin_set_next_text("general, squads destroying enemy units");
+            bulletin_set_next_text("of the same type will earn a promotion.");
+            bulletin_set_next_text("Using a good general, a squad will be");
+            bulletin_set_next_text("promoted when destroying any enemy squad.");
         }
     }
 
