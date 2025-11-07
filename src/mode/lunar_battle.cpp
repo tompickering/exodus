@@ -3001,6 +3001,7 @@ bool LunarBattle::select_unit() {
         if (viable(units[i], defender_turn)) {
             if (viable_idx == 0) {
                 active_unit = &units[i];
+                mine_damage = false;
                 L.debug("SET ACTIVE UNIT: %s", active_unit->debug_info());
                 break;
             }
