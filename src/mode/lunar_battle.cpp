@@ -750,13 +750,20 @@ ExodusMode LunarBattle::update(float delta) {
                         move_dir = ai_decide_move_direction2();
 
                         if (move_dir == DIR_None) {
-                            // We can't move following this strategy
-                            // Take a few random movements to 'shake' things a bit
-                            // Makes as sure as possible we don't completely stalemate
-                            move_dir = ai_decide_move_direction_random();
+                            if (!check_viable_targets()) {
+                                /*
+                                 * We can't move following this strategy - and we have
+                                 * no viable targets.
+                                 *
+                                 * Take a few random movements to 'shake' things a bit
+                                 *
+                                 * Makes as sure as possible we don't completely stalemate
+                                */
+                                move_dir = ai_decide_move_direction_random();
 
-                            if (move_dir != DIR_None) {
-                                active_unit->random_moves = 3;
+                                if (move_dir != DIR_None) {
+                                    active_unit->random_moves = 3;
+                                }
                             }
                         }
                     } else {
