@@ -600,17 +600,9 @@ void DrawManagerSDL::repair_dirty_area(SprID id, int mode, int extend) {
         }
     }
 
-    DrawnSprite *drawn_info = get_drawn_info(id);
-    DrawArea *dirty_area = drawn_info ? &(drawn_info->area) : nullptr;
-
+    DrawArea *dirty_area = get_drawn_area(id);
     if (dirty_area) {
         // We know where this sprite was drawn previously.
-
-        // If this is a button, extend to repair its depressed area
-        // FIXME: This should probably come in from the caller
-        if (drawn_info && buttons.count(drawn_info->sprite)) {
-            extend += 2;
-        }
 
         if (mode & REPAIR_Below) {
             // If we're repairing below, wipe that area with the background.
