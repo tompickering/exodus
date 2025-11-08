@@ -40,7 +40,7 @@ cp lib/SDL2_image-2.6.3/x86_64-w64-mingw32/bin/SDL2_image.dll .
 cp lib/SDL2_mixer-2.6.3/x86_64-w64-mingw32/bin/SDL2_mixer.dll .
 cp lib/SDL2_ttf-2.20.2/x86_64-w64-mingw32/bin/SDL2_ttf.dll .
 
-zipname="exodus_windows.zip"
+zipname="$(date +"%Y_%m_%d_%H%M")_exodus_windows.zip"
 name="$(basename "$(pwd)")"
 
 pushd ..
