@@ -100,42 +100,42 @@ void Trade::enter() {
     rows[0].img = IMG_TD2_TR1;
     rows[0].name = "Minerals";
     rows[0].stock = RND(10) + 10;
-    rows[0].icon = IMG_TD1_TRADE1;
+    rows[0].icon = ENHANCED() ? IMG_TD1_TRADE1_NEW : IMG_TD1_TRADE1;
 
     rows[1].img = IMG_TD2_TR2;
     rows[1].name = "Food";
     rows[1].stock = RND(20) + 20;
-    rows[1].icon = IMG_TD1_TRADE2;
+    rows[1].icon = ENHANCED() ? IMG_TD1_TRADE2_NEW : IMG_TD1_TRADE2;
 
     rows[2].img = IMG_TD2_TR3;
     rows[2].name = "Plutonium";
     rows[2].stock = RND(20) + 15;
-    rows[2].icon = IMG_TD1_TRADE3;
+    rows[2].icon = ENHANCED() ? IMG_TD1_TRADE3_NEW : IMG_TD1_TRADE3;
 
     rows[3].img = IMG_TD2_TR4;
     rows[3].name = "Infantry";
     rows[3].stock = RND(15);
-    rows[3].icon = IMG_TD1_TRADE4;
+    rows[3].icon = ENHANCED() ? IMG_TD1_TRADE4_NEW : IMG_TD1_TRADE4;
 
     rows[4].img = IMG_TD2_TR5;
     rows[4].name = "Gliders";
     rows[4].stock = RND(10);
-    rows[4].icon = IMG_TD1_TRADE5;
+    rows[4].icon = ENHANCED() ? IMG_TD1_TRADE5_NEW : IMG_TD1_TRADE5;
 
     rows[5].img = IMG_TD2_TR6;
     rows[5].name = "Artillery";
     rows[5].stock = RND(5);
-    rows[5].icon = IMG_TD1_TRADE6;
+    rows[5].icon = ENHANCED() ? IMG_TD1_TRADE6_NEW : IMG_TD1_TRADE6;
 
     rows[6].img = IMG_TD2_TR7;
     rows[6].name = "Robots";
     rows[6].stock = RND(10);
-    rows[6].icon = IMG_TD1_TRADE7;
+    rows[6].icon = ENHANCED() ? IMG_TD1_TRADE7_NEW : IMG_TD1_TRADE7;
 
     rows[7].img = IMG_TD2_TR8;
     rows[7].name = "Transporters";
     rows[7].stock = RND(10);
-    rows[7].icon = IMG_TD1_TRADE8;
+    rows[7].icon = ENHANCED() ? IMG_TD1_TRADE8_NEW : IMG_TD1_TRADE8;
 
     for (int i = 0; i < 8; ++i) {
         rows[i].cost = get_cost(quality, i);
@@ -575,7 +575,7 @@ void Trade::start_trade(bool _sell) {
     open_panel();
     draw_manager.draw(
         id(ID::TRADE_PANEL),
-        IMG_TD1_TRADEBACK,
+        ENHANCED() ? IMG_TD1_TRADEBACK_NEW : IMG_TD1_TRADEBACK,
         {PANEL_X, PANEL_Y, 0, 0, 1, 1});
     draw_manager.draw(r.icon, {PANEL_X+264, PANEL_Y+84, .5f, .5f, 1, 1});
 

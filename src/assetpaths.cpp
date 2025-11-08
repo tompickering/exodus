@@ -594,8 +594,8 @@ const char *IMG_LP1_LAND6        = D_GRA "lp1_land6";
 const char *IMG_LP1_LAND7        = D_GRA "lp1_land7";
 const char *IMG_LP1_LAND8        = D_GRA "lp1_land8";
 const char *IMG_LP1_LAND9        = D_GRA "lp1_land9";
-const char *IMG_ME1_MENU         = D_SUB "me1_menu";
-const char *IMG_ME2_MENU         = D_SUB "me2_menu";
+const char *IMG_ME1_MENU         = D_GRA "me1_menu";
+const char *IMG_ME2_MENU         = D_GRA "me2_menu";
 const char *IMG_ME4_MENU         = D_GRA "me4_menu";
 const char *IMG_ME5_MENU         = D_GRA "me5_menu";
 const char *IMG_ME6_MENU         = D_GRA "me6_menu";
@@ -687,8 +687,8 @@ const char *IMG_SF2_STONE2_0     = D_GRA "sf2_stone2-0";
 const char *IMG_SF2_STONE29B     = D_GRA "sf2_stone29b";
 const char *IMG_SF2_STONE29      = D_GRA "sf2_stone29";
 const char *IMG_SF2_STONE2       = D_GRA "sf2_stone2";
-const char *IMG_SF2_STONE8       = D_SUB "sf2_stone8";
-const char *IMG_SF2_STONE9       = D_SUB "sf2_stone9";
+const char *IMG_SF2_STONE8       = D_GRA "sf2_stone8";
+const char *IMG_SF2_STONE9       = D_GRA "sf2_stone9";
 const char *IMG_SF3              = D_SUB "sf3";
 const char *IMG_SF3_STONE0       = D_GRA "sf3_stone0";
 const char *IMG_SF3_STONE10      = D_GRA "sf3_stone10";
@@ -698,7 +698,7 @@ const char *IMG_SF3_STONE29B     = D_GRA "sf3_stone29b";
 const char *IMG_SF3_STONE29      = D_GRA "sf3_stone29";
 const char *IMG_SF3_STONE2       = D_GRA "sf3_stone2";
 const char *IMG_SF3_STONE8       = D_GRA "sf3_stone8";
-const char *IMG_SF3_STONE9       = D_SUB "sf3_stone9";
+const char *IMG_SF3_STONE9       = D_GRA "sf3_stone9";
 const char *IMG_SF4              = D_SUB "sf4";
 const char *IMG_SF4_STONE0       = D_GRA "sf4_stone0";
 const char *IMG_SF4_STONE10      = D_GRA "sf4_stone10";
@@ -710,7 +710,7 @@ const char *IMG_SF4_STONE29OLD   = D_GRA "sf4_stone29old";
 const char *IMG_SF4_STONE29      = D_GRA "sf4_stone29";
 const char *IMG_SF4_STONE2       = D_GRA "sf4_stone2";
 const char *IMG_SF4_STONE8OLD    = D_GRA "sf4_stone8old";
-const char *IMG_SF4_STONE8       = D_SUB "sf4_stone8";
+const char *IMG_SF4_STONE8       = D_GRA "sf4_stone8";
 const char *IMG_SF4_STONE9OLD    = D_GRA "sf4_stone9old";
 const char *IMG_SF4_STONE9       = D_GRA "sf4_stone9";
 const char *IMG_SF5              = D_SUB "sf5";
@@ -745,7 +745,7 @@ const char *IMG_SF8_STONE29      = D_GRA "sf8_stone29";
 const char *IMG_SF8_STONE2       = D_GRA "sf8_stone2";
 const char *IMG_SF8_STONE8       = D_GRA "sf8_stone8";
 const char *IMG_SF8_STONE9       = D_GRA "sf8_stone9";
-const char *IMG_SG1_GUILD        = D_SUB "sg1_guild";
+const char *IMG_SG1_GUILD        = D_GRA "sg1_guild";
 const char *IMG_SG1_LGHT1        = D_GRA "sg1_lght1";
 const char *IMG_SG1_LGHT2        = D_GRA "sg1_lght2";
 const char *IMG_SG1_LGHT3        = D_GRA "sg1_lght3";
@@ -757,10 +757,10 @@ const char *IMG_SG1_UFO1         = D_GRA "sg1_ufo1";
 const char *IMG_SG1_UFO2         = D_GRA "sg1_ufo2";
 const char *IMG_SG2_EYES2        = D_GRA "sg2_eyes2";
 const char *IMG_SG2_EYES         = D_GRA "sg2_eyes";
-const char *IMG_SG2_INS1         = D_SUB "sg2_ins1";
+const char *IMG_SG2_INS1         = D_GRA "sg2_ins1";
 const char *IMG_SG2_INS2         = D_GRA "sg2_ins2";
 const char *IMG_SG2_INS3         = D_GRA "sg2_ins3";
-const char *IMG_SG3_DUST         = D_SUB "sg3_dust";
+const char *IMG_SG3_DUST         = D_GRA "sg3_dust";
 const char *IMG_SG3_LAMP0        = D_GRA "sg3_lamp0";
 const char *IMG_SG3_LAMP1        = D_GRA "sg3_lamp1";
 const char *IMG_SG3_MIRR0        = D_GRA "sg3_mirr0";
@@ -905,15 +905,15 @@ const char *IMG_SU1_STONE7       = D_GRA "su1_stone7";
 const char *IMG_SU1_STONEXX      = D_GRA "su1_stonexx";
 const char *IMG_SU1_TRI          = D_GRA "su1_tri";
 const char *IMG_SU2_STONE7       = D_GRA "su2_stone7";
-const char *IMG_TD1_TRADE1       = D_SUB "td1_trade1";
-const char *IMG_TD1_TRADE2       = D_SUB "td1_trade2";
-const char *IMG_TD1_TRADE3       = D_SUB "td1_trade3";
-const char *IMG_TD1_TRADE4       = D_SUB "td1_trade4";
-const char *IMG_TD1_TRADE5       = D_SUB "td1_trade5";
-const char *IMG_TD1_TRADE6       = D_SUB "td1_trade6";
-const char *IMG_TD1_TRADE7       = D_SUB "td1_trade7";
-const char *IMG_TD1_TRADE8       = D_SUB "td1_trade8";
-const char *IMG_TD1_TRADEBACK    = D_SUB "td1_tradeback";
+const char *IMG_TD1_TRADE1       = D_GRA "td1_trade1";
+const char *IMG_TD1_TRADE2       = D_GRA "td1_trade2";
+const char *IMG_TD1_TRADE3       = D_GRA "td1_trade3";
+const char *IMG_TD1_TRADE4       = D_GRA "td1_trade4";
+const char *IMG_TD1_TRADE5       = D_GRA "td1_trade5";
+const char *IMG_TD1_TRADE6       = D_GRA "td1_trade6";
+const char *IMG_TD1_TRADE7       = D_GRA "td1_trade7";
+const char *IMG_TD1_TRADE8       = D_GRA "td1_trade8";
+const char *IMG_TD1_TRADEBACK    = D_GRA "td1_tradeback";
 const char *IMG_TD2_TR0          = D_GRA "td2_tr0";
 const char *IMG_TD2_TR1          = D_GRA "td2_tr1";
 const char *IMG_TD2_TR2          = D_GRA "td2_tr2";
@@ -1033,7 +1033,7 @@ const char *IMG_TS2_SPHERE6      = D_GRA "ts2_sphere6";
 const char *IMG_TS2_SPHERE8      = D_GRA "ts2_sphere8";
 const char *IMG_VS0_VPIC         = D_GRA "vs0_vpic";
 const char *IMG_VS1_VESSEL       = D_GRA "vs1_vessel";
-const char *IMG_VS2_VESSEL       = D_SUB "vs2_vessel";
+const char *IMG_VS2_VESSEL       = D_GRA "vs2_vessel";
 const char *IMG_VS3_VESSEL       = D_GRA "vs3_vessel";
 const char *IMG_VS4_VESSEL       = D_GRA "vs4_vessel";
 const char *IMG_VS5_VESSEL       = D_GRA "vs5_vessel";
@@ -1204,6 +1204,25 @@ const char *IMG_GOR4_1           = D_NEW "gor4-1";
 const char *IMG_GOR4_2           = D_NEW "gor4-2";
 const char *IMG_GOR4_3           = D_NEW "gor4-3";
 const char *IMG_REBELS           = D_NEW "rebels";
+const char *IMG_ME1_MENU_NEW     = D_NEW "me1_menu";
+const char *IMG_ME2_MENU_NEW     = D_NEW "me2_menu";
+const char *IMG_SF2_STONE8_NEW   = D_NEW "sf2_stone8";
+const char *IMG_SF2_STONE9_NEW   = D_NEW "sf2_stone9";
+const char *IMG_SF3_STONE9_NEW   = D_NEW "sf3_stone9";
+const char *IMG_SF4_STONE8_NEW   = D_NEW "sf4_stone8";
+const char *IMG_SG1_GUILD_NEW    = D_NEW "sg1_guild";
+const char *IMG_SG2_INS1_NEW     = D_NEW "sg2_ins1";
+const char *IMG_SG3_DUST_NEW     = D_NEW "sg3_dust";
+const char *IMG_TD1_TRADE1_NEW   = D_NEW "td1_trade1";
+const char *IMG_TD1_TRADE2_NEW   = D_NEW "td1_trade2";
+const char *IMG_TD1_TRADE3_NEW   = D_NEW "td1_trade3";
+const char *IMG_TD1_TRADE4_NEW   = D_NEW "td1_trade4";
+const char *IMG_TD1_TRADE5_NEW   = D_NEW "td1_trade5";
+const char *IMG_TD1_TRADE6_NEW   = D_NEW "td1_trade6";
+const char *IMG_TD1_TRADE7_NEW   = D_NEW "td1_trade7";
+const char *IMG_TD1_TRADE8_NEW   = D_NEW "td1_trade8";
+const char *IMG_TD1_TRADEBACK_NEW= D_NEW "td1_tradeback";
+const char *IMG_VS2_VESSEL_NEW   = D_NEW "vs2_vessel";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2408,6 +2427,25 @@ const char *ASSETS_IMG[] = {
     IMG_GOR4_2,
     IMG_GOR4_3,
     IMG_REBELS,
+    IMG_ME1_MENU_NEW,
+    IMG_ME2_MENU_NEW,
+    IMG_SF2_STONE8_NEW,
+    IMG_SF2_STONE9_NEW,
+    IMG_SF3_STONE9_NEW,
+    IMG_SF4_STONE8_NEW,
+    IMG_SG1_GUILD_NEW,
+    IMG_SG2_INS1_NEW,
+    IMG_SG3_DUST_NEW,
+    IMG_TD1_TRADE1_NEW,
+    IMG_TD1_TRADE2_NEW,
+    IMG_TD1_TRADE3_NEW,
+    IMG_TD1_TRADE4_NEW,
+    IMG_TD1_TRADE5_NEW,
+    IMG_TD1_TRADE6_NEW,
+    IMG_TD1_TRADE7_NEW,
+    IMG_TD1_TRADE8_NEW,
+    IMG_TD1_TRADEBACK_NEW,
+    IMG_VS2_VESSEL_NEW,
 
     "",
 };

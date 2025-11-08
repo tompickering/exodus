@@ -347,11 +347,11 @@ ExodusMode MenuDrawer::menu_update(float delta) {
 const char* MenuDrawer::menu_get_bg() {
     switch (menu_mode) {
         case MM_Save:
-            return IMG_ME2_MENU;
+            return ENHANCED() ? IMG_ME2_MENU_NEW : IMG_ME2_MENU;
         default:
-            return IMG_ME1_MENU;
+            return ENHANCED() ? IMG_ME1_MENU_NEW : IMG_ME1_MENU;
     }
-    return IMG_ME1_MENU;
+    return ENHANCED() ? IMG_ME1_MENU_NEW : IMG_ME1_MENU;
 }
 
 void MenuDrawer::menu_set_txt(int idx, RGB col, const char* in_text, ...) {

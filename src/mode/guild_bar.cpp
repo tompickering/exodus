@@ -58,7 +58,7 @@ GuildBar::GuildBar() : ModeBase("GuildBar") {
 
 void GuildBar::enter() {
     ModeBase::enter(ID::END);
-    draw_manager.draw(IMG_SG3_DUST);
+    draw_manager.draw(ENHANCED() ? IMG_SG3_DUST_NEW : IMG_SG3_DUST);
     draw_manager.save_background();
     draw_manager.show_cursor(true);
     audio_manager.target_music(MUS_CELEBRATE);
@@ -652,7 +652,7 @@ ExodusMode GuildBar::update(float delta) {
             draw_manager.draw(ID::SHERIFF_BORDER, nullptr);
             draw_manager.draw(ID::SHERIFF_BG, nullptr);
             draw_manager.draw(ID::SHERIFF_FRAME, nullptr);
-            draw_manager.draw(IMG_SG3_DUST);
+            draw_manager.draw(ENHANCED() ? IMG_SG3_DUST_NEW : IMG_SG3_DUST);
             return ExodusMode::MODE_Reload;
     }
 

@@ -25,7 +25,7 @@ GuildExterior::GuildExterior() : ModeBase("GuildExterior") {
 
 void GuildExterior::enter() {
     ModeBase::enter(ID::END);
-    draw_manager.draw(IMG_SG1_GUILD);
+    draw_manager.draw(ENHANCED() ? IMG_SG1_GUILD_NEW : IMG_SG1_GUILD);
     draw_manager.save_background();
     draw_manager.show_cursor(true);
     audio_manager.target_music(MUS_GUILD);

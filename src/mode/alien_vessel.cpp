@@ -134,7 +134,7 @@ void AlienVessel::enter() {
             ship_name = "MINING SHIP";
             break;
         case VESSEL_Religious:
-            ship_img = IMG_VS2_VESSEL;
+            ship_img = ENHANCED() ? IMG_VS2_VESSEL_NEW : IMG_VS2_VESSEL;
             ship_name = "RELIGIOUS VESSEL";
             will_hail = true;
             will_surrender = true;

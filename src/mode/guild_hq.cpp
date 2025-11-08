@@ -115,7 +115,7 @@ GuildHQ::GuildHQ() : ModeBase("GuildHQ") {
 
 void GuildHQ::enter() {
     ModeBase::enter(ID::END);
-    draw_manager.draw(IMG_SG2_INS1);
+    draw_manager.draw(ENHANCED() ? IMG_SG2_INS1_NEW : IMG_SG2_INS1);
     draw_manager.save_background();
     draw_manager.show_cursor(true);
     audio_manager.target_music(MUS_GUILD);

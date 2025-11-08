@@ -1403,14 +1403,14 @@ void init_stone_anims() {
 
     stone_anims_specific[Desert][STONE_Agri]             = Anim(1,  IMG_SF2_STONE2);
     stone_anims_specific[Desert][STONE_AgriDead]         = Anim(1,  IMG_SF2_STONE10);
-    stone_anims_specific[Desert][STONE_NaturalSmall]     = Anim(1,  IMG_SF2_STONE9);
-    stone_anims_specific[Desert][STONE_NaturalLarge]     = Anim(1,  IMG_SF2_STONE8);
+    stone_anims_specific[Desert][STONE_NaturalSmall]     = Anim(1,  ENHANCED() ? IMG_SF2_STONE9_NEW : IMG_SF2_STONE9);
+    stone_anims_specific[Desert][STONE_NaturalLarge]     = Anim(1,  ENHANCED() ? IMG_SF2_STONE8_NEW : IMG_SF2_STONE8);
     stone_anims_specific[Desert][STONE_NaturalAnim]      = Anim(2,  IMG_SF2_STONE29,
                                                                     IMG_SF2_STONE29B);
 
     stone_anims_specific[Volcano][STONE_Agri]            = Anim(1,  IMG_SF3_STONE2);
     stone_anims_specific[Volcano][STONE_AgriDead]        = Anim(1,  IMG_SF3_STONE10);
-    stone_anims_specific[Volcano][STONE_NaturalSmall]    = Anim(1,  IMG_SF3_STONE9);
+    stone_anims_specific[Volcano][STONE_NaturalSmall]    = Anim(1,  ENHANCED() ? IMG_SF3_STONE9_NEW : IMG_SF3_STONE9);
     stone_anims_specific[Volcano][STONE_NaturalLarge]    = Anim(1,  IMG_SF3_STONE8);
     stone_anims_specific[Volcano][STONE_NaturalAnim]     = Anim(2,  IMG_SF3_STONE29,
                                                                     IMG_SF3_STONE29B);
@@ -1418,7 +1418,7 @@ void init_stone_anims() {
     stone_anims_specific[Rock][STONE_Agri]               = Anim(1,  IMG_SF4_STONE2);
     stone_anims_specific[Rock][STONE_AgriDead]           = Anim(1,  IMG_SF4_STONE10);
     stone_anims_specific[Rock][STONE_NaturalSmall]       = Anim(1,  IMG_SF4_STONE9);
-    stone_anims_specific[Rock][STONE_NaturalLarge]       = Anim(1,  IMG_SF4_STONE8);
+    stone_anims_specific[Rock][STONE_NaturalLarge]       = Anim(1,  ENHANCED() ? IMG_SF4_STONE8_NEW : IMG_SF4_STONE8);
     stone_anims_specific[Rock][STONE_NaturalAnim]        = Anim(2,  IMG_SF4_STONE29,
                                                                     IMG_SF4_STONE29B);
 
