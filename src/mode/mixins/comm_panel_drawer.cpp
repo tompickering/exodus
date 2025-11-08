@@ -1404,8 +1404,13 @@ void CommPanelDrawer::comm_send(CommSend input) {
                                  comm_planet->get_name(),
                                  comm_player->get_name());
             } else {
-                comm_set_speech("What do you want, %s...?",
-                                comm_player->get_name());
+                if (comm_planet->register_comm(comm_player_idx) && ENHANCED()) {
+                    comm_set_speech("You again, %s...?",
+                                    comm_player->get_name());
+                } else {
+                    comm_set_speech("What do you want, %s...?",
+                                    comm_player->get_name());
+                }
             }
             if (comm_player_idx == comm_planet->get_prev_owner()) {
                 comm_set_text(0, "I am here to reclaim my planet.");

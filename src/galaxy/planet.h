@@ -287,6 +287,7 @@ class Planet : public Saveable {
         void changeclimate();
         void change_class(PlanetClass);
         void register_festival();
+        bool register_comm(int);
         void register_failed_attack(int);
         uint32_t get_failed_attacks();
         void register_bombing(int);
@@ -409,6 +410,7 @@ class Planet : public Saveable {
         bool surfchange_this_month;
         bool processing_in_progress;
 
+        uint32_t comms_this_month;
         uint32_t failed_attacks_this_month;
         uint32_t bombings_this_month;
 };

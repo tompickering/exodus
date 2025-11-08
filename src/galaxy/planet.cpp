@@ -81,6 +81,7 @@ Planet::Planet() {
     owner_changes_this_month_head = 0;
     festival_this_month = false;
     surfchange_this_month = false;
+    comms_this_month = 0;
     failed_attacks_this_month = 0;
     bombings_this_month = 0;
     processing_in_progress = false;
@@ -291,6 +292,7 @@ void Planet::init() {
     owner_changes_this_month_head = 0;
     festival_this_month = false;
     surfchange_this_month = false;
+    comms_this_month = 0;
     failed_attacks_this_month = 0;
     bombings_this_month = 0;
     processing_in_progress = false;
@@ -1407,6 +1409,12 @@ void Planet::register_festival() {
     festival_this_month = true;
 }
 
+bool Planet::register_comm(int player_idx) {
+    bool res = (comms_this_month & (1 << player_idx));
+    comms_this_month = comms_this_month | (1 << player_idx);
+    return res;
+}
+
 void Planet::register_failed_attack(int player_idx) {
     failed_attacks_this_month = (failed_attacks_this_month | (1 << player_idx));
 }
@@ -1452,6 +1460,7 @@ void Planet::owner_change_event_reset() {
      * I'm reluctant to change the order at this point in
      * case it has unintended consequences.
      */
+    comms_this_month = 0;
     owner_changes_this_month_head = 0;
     failed_attacks_this_month = 0;
     bombings_this_month = 0;
@@ -2632,6 +2641,7 @@ void Planet::save(cJSON* j) const {
     SAVE_NUM(j, owner_changes_this_month_head);
     SAVE_BOOL(j, festival_this_month);
     SAVE_BOOL(j, surfchange_this_month);
+    SAVE_NUM(j, comms_this_month);
     SAVE_NUM(j, failed_attacks_this_month);
     SAVE_NUM(j, bombings_this_month);
     SAVE_BOOL(j, processing_in_progress);
@@ -2672,6 +2682,7 @@ void Planet::load(cJSON* j) {
     LOAD_NUM(j, owner_changes_this_month_head);
     LOAD_BOOL(j, festival_this_month);
     LOAD_BOOL(j, surfchange_this_month);
+    LOAD_NUM(j, comms_this_month);
     LOAD_NUM(j, failed_attacks_this_month);
     LOAD_NUM(j, bombings_this_month);
     LOAD_BOOL(j, processing_in_progress);
