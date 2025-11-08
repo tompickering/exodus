@@ -270,7 +270,7 @@ ExodusMode Menu::update(float delta) {
                     COL_BORDERS);
 
                 draw_manager.fill(
-                    FILL_3D, 1,
+                    FILL_3D_Out,
                     {LOADFRAME_X-4, LOADFRAME_Y-4,
                      LOADFRAME_W+8, LOADFRAME_H+8},
                     COL_BORDERS);

@@ -1054,11 +1054,11 @@ void DrawManagerSDL::fill(DrawTarget tgt, DrawArea area, RGB col) {
     fill(FILL_None, tgt, area, col);
 }
 
-void DrawManagerSDL::fill(FillEffect effect, int effect_mag, DrawArea area, RGB col) {
-    fill(effect, effect_mag, TGT_Primary, area, col);
+void DrawManagerSDL::fill(FillEffect effect, DrawArea area, RGB col) {
+    fill(effect, TGT_Primary, area, col);
 }
 
-void DrawManagerSDL::fill(FillEffect effect, int effect_mag, DrawTarget tgt, DrawArea area, RGB col) {
+void DrawManagerSDL::fill(FillEffect effect, DrawTarget tgt, DrawArea area, RGB col) {
     SDL_Rect R;
     SDL_Surface *tgt_surf = get_target(tgt);
     R.x = area.x * UPSCALE_X;
@@ -1066,13 +1066,15 @@ void DrawManagerSDL::fill(FillEffect effect, int effect_mag, DrawTarget tgt, Dra
     R.w = area.w * UPSCALE_X;
     R.h = area.h * UPSCALE_Y;
 
-    if (effect != FILL_3D_Hollow) {
+    if (effect != FILL_3D_Out_Hollow && effect != FILL_3D_In_Hollow) {
         SDL_FillRect(tgt_surf, &R, SDL_MapRGB(surf->format, col.r, col.g, col.b));
     }
 
-    if (effect == FILL_3D_Hollow) effect = FILL_3D;
+    if (effect == FILL_3D_Out_Hollow) effect = FILL_3D_Out;
+    if (effect == FILL_3D_In_Hollow) effect = FILL_3D_In;
 
-    if (effect == FILL_3D && effect_mag != 0) {
+    if (effect == FILL_3D_Out || effect == FILL_3D_In) {
+        int effect_mag = (effect == FILL_3D_Out) ? 1 : -1;
         int effect_mag_positive = (effect_mag >= 0) ? effect_mag : -effect_mag;
         int m0 = 2 * effect_mag_positive;
         int m1 = 3 * m0;

@@ -55,8 +55,8 @@ class DrawManagerSDL : public DrawManager {
         virtual void fill(SprID, DrawArea, RGB) override;
         virtual void fill(DrawTarget, SprID, DrawArea, RGB) override;
         virtual void fill(DrawTarget, DrawArea, RGB) override;
-        virtual void fill(FillEffect, int, DrawArea, RGB) override;
-        virtual void fill(FillEffect, int, DrawTarget, DrawArea, RGB) override;
+        virtual void fill(FillEffect, DrawArea, RGB) override;
+        virtual void fill(FillEffect, DrawTarget, DrawArea, RGB) override;
         virtual void fill_pattern(DrawArea) override;
         virtual void fill_pattern(SprID, DrawArea) override;
         virtual void fill_pattern(DrawTarget, DrawArea) override;
