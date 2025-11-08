@@ -56,6 +56,7 @@ void GalaxyIntro::enter() {
     draw_manager.fill(TGT_Secondary, {0, 403, RES_X, 7}, COL_BORDERS);
     draw_manager.fill(TGT_Secondary, {0, 0, 7, 403}, COL_BORDERS);
     draw_manager.fill(TGT_Secondary, {RES_X-7, 0, 7, 403}, COL_BORDERS);
+    draw_manager.fill(FILL_3D_Out_Hollow, TGT_Secondary, {0, 0, RES_X, 410}, COL_BORDERS);
     DrawArea area = {0, 0, RES_X, PNL_TOP};
     draw_manager.pixelswap_start(&area);
 
