@@ -19,7 +19,7 @@ void FrameDrawer::frame_draw() {
     draw_manager.fill(id_frame_l, {0, 0, 7, 403}, COL_BORDERS);
     draw_manager.fill(id_frame_r, {RES_X - 7, 0, 7, 403}, COL_BORDERS);
 
-    draw_manager.fill(FILL_3D_Out_Hollow, {0, 0, RES_X, 403}, COL_BORDERS);
+    draw_manager.fill(FILL_3D_Out_Hollow, {0, 0, RES_X, 410}, COL_BORDERS);
 }
 
 void FrameDrawer::frame_remove() {
