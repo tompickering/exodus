@@ -44,6 +44,7 @@ enum ID {
     NEWGAME_TXT,
     LOADGAME_TXT,
     MODE_SELECT,
+    MODE_SELECT_TXT,
     LOADFRAME,
     LOADFRAME_INNER,
     LOADFRAME_EXIT,
@@ -222,7 +223,9 @@ ExodusMode Menu::update(float delta) {
                      RES_X, 40},
                      {0x08, 0x08, 0x08});
 
-                draw_manager.draw_text(TGT_Secondary,
+                draw_manager.draw_text(
+                        TGT_Secondary,
+                        id(MODE_SELECT_TXT),
                         "Enhanced Version",
                         Justify::Centre,
                         RES_X/2 + 12, RES_Y - 31,
@@ -245,7 +248,7 @@ ExodusMode Menu::update(float delta) {
                 draw_manager.show_cursor(true);
             }
 
-            if (draw_manager.query_click(id(MODE_SELECT)).id) {
+            if ((draw_manager.query_click(id(MODE_SELECT)).id) || (draw_manager.query_click(id(MODE_SELECT_TXT)).id)) {
                 if (ENHANCED()) {
                     exodus_set_game_mode(EXODUSGAMEMODE_Classic);
                 } else {
