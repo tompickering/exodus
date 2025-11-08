@@ -419,9 +419,9 @@ ExodusMode Menu::update(float delta) {
                 draw_manager.draw(TGT_Secondary, IMG_BG_MENU0);
                 draw_manager.draw_text(TGT_Secondary, Font::Large, "Galaxy size", Justify::Left, 20, 30, COL_TEXT2);
 
-                draw_manager.fill(TGT_Secondary, {OPT_0_X-6, OPT_0_Y-6, 212, 112}, COL_BORDERS);
-                draw_manager.fill(TGT_Secondary, {OPT_1_X-6, OPT_1_Y-6, 212, 112}, COL_BORDERS);
-                draw_manager.fill(TGT_Secondary, {OPT_2_X-6, OPT_2_Y-6, 212, 112}, COL_BORDERS);
+                draw_manager.fill(FILL_3D_Out, TGT_Secondary, {OPT_0_X-6, OPT_0_Y-6, 212, 112}, COL_BORDERS);
+                draw_manager.fill(FILL_3D_Out, TGT_Secondary, {OPT_1_X-6, OPT_1_Y-6, 212, 112}, COL_BORDERS);
+                draw_manager.fill(FILL_3D_Out, TGT_Secondary, {OPT_2_X-6, OPT_2_Y-6, 212, 112}, COL_BORDERS);
 
                 draw_border_opt(TGT_Secondary, 0, {0, 0, 0});
                 draw_border_opt(TGT_Secondary, 1, {0, 0, 0});
@@ -583,6 +583,7 @@ ExodusMode Menu::update(float delta) {
                     txt, Justify::Centre, RES_X/2, 90, COL_TEXT);
 
                 draw_manager.fill(
+                    FILL_3D_In,
                     {264-BORDER, 234-BORDER, 232+2*BORDER, 28+2*BORDER},
                     COL_BORDERS);
                 draw_manager.fill({264, 234, 232, 28}, {0, 0, 0});
@@ -602,6 +603,7 @@ ExodusMode Menu::update(float delta) {
             if (input_manager.consume(K_Backspace)) {
                 input_manager.backspace();
                 draw_manager.fill(
+                    FILL_3D_In,
                     {264-BORDER, 234-BORDER, 232+2*BORDER, 28+2*BORDER},
                     COL_BORDERS);
                 draw_manager.fill({264, 234, 232, 28}, {0, 0, 0});
@@ -698,6 +700,7 @@ ExodusMode Menu::update(float delta) {
                     COL_TEXT);
 
                 draw_manager.fill(
+                    FILL_3D_In,
                     {264-BORDER, 134-BORDER, 232+2*BORDER, 28+2*BORDER},
                     COL_BORDERS);
                 draw_manager.fill({264, 134, 232, 28}, {0, 0, 0});
@@ -717,6 +720,7 @@ ExodusMode Menu::update(float delta) {
             if (input_manager.consume(K_Backspace)) {
                 input_manager.backspace();
                 draw_manager.fill(
+                    FILL_3D_In,
                     {264-BORDER, 134-BORDER, 232+2*BORDER, 28+2*BORDER},
                     COL_BORDERS);
                 draw_manager.fill({264, 134, 232, 28}, {0, 0, 0});
@@ -750,6 +754,7 @@ ExodusMode Menu::update(float delta) {
                     COL_TEXT);
 
                 draw_manager.fill(
+                    FILL_3D_In,
                     {264-BORDER, 234-BORDER, 232+2*BORDER, 28+2*BORDER},
                     COL_BORDERS);
                 draw_manager.fill({264, 234, 232, 28}, {0, 0, 0});
@@ -769,6 +774,7 @@ ExodusMode Menu::update(float delta) {
             if (input_manager.consume(K_Backspace)) {
                 input_manager.backspace();
                 draw_manager.fill(
+                    FILL_3D_In,
                     {264-BORDER, 234-BORDER, 232+2*BORDER, 28+2*BORDER},
                     COL_BORDERS);
                 draw_manager.fill({264, 234, 232, 28}, {0, 0, 0});
@@ -825,7 +831,7 @@ ExodusMode Menu::update(float delta) {
                         int x, y;
                         get_flag_pos(flag_idx, x, y);
 
-                        draw_manager.fill({x - 52, y - 32, 104, 64}, COL_BORDERS);
+                        draw_manager.fill(FILL_3D_Out, {x - 52, y - 32, 104, 64}, COL_BORDERS);
                         draw_border_flag(flag_idx, {0, 0, 0x0});
 
                         draw_manager.draw(
@@ -882,9 +888,9 @@ ExodusMode Menu::update(float delta) {
                     Justify::Left,
                     20, 30, COL_TEXT2);
 
-                draw_manager.fill({OPT_0_X-6, OPT_0_Y-6, 212, 112}, COL_BORDERS);
-                draw_manager.fill({OPT_1_X-6, OPT_1_Y-6, 212, 112}, COL_BORDERS);
-                draw_manager.fill({OPT_2_X-6, OPT_2_Y-6, 212, 112}, COL_BORDERS);
+                draw_manager.fill(FILL_3D_Out, {OPT_0_X-6, OPT_0_Y-6, 212, 112}, COL_BORDERS);
+                draw_manager.fill(FILL_3D_Out, {OPT_1_X-6, OPT_1_Y-6, 212, 112}, COL_BORDERS);
+                draw_manager.fill(FILL_3D_Out, {OPT_2_X-6, OPT_2_Y-6, 212, 112}, COL_BORDERS);
 
                 draw_border_opt(0, {0, 0, 0});
                 draw_border_opt(1, {0, 0, 0});
@@ -1009,9 +1015,9 @@ ExodusMode Menu::update(float delta) {
                     txt2_2 = diff_medium_2;
                 }
 
-                draw_manager.fill({OPT_0_X-6, OPT_0_Y-6, 212, 112}, COL_BORDERS);
-                draw_manager.fill({OPT_1_X-6, OPT_1_Y-6, 212, 112}, COL_BORDERS);
-                draw_manager.fill({OPT_2_X-6, OPT_2_Y-6, 212, 112}, COL_BORDERS);
+                draw_manager.fill(FILL_3D_Out, {OPT_0_X-6, OPT_0_Y-6, 212, 112}, COL_BORDERS);
+                draw_manager.fill(FILL_3D_Out, {OPT_1_X-6, OPT_1_Y-6, 212, 112}, COL_BORDERS);
+                draw_manager.fill(FILL_3D_Out, {OPT_2_X-6, OPT_2_Y-6, 212, 112}, COL_BORDERS);
 
                 draw_border_opt(0, {0, 0, 0});
                 draw_border_opt(1, {0, 0, 0});
