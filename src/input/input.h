@@ -78,6 +78,7 @@ class InputManager {
         void enable_repeating_clicks(bool);
         void clear_click_held_state();
         virtual bool is_click_held();
+        virtual bool click_held_for(float);
     protected:
         bool space;
         bool escape;

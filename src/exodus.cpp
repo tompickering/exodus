@@ -283,7 +283,7 @@ int Exodus::run(int argc, char** argv) {
          * again).
          */
         if (mode_updated_since_enter) {
-            draw_manager.update(delta_time, mouse_pos, click_pos, click_pos_r, input_manager.is_click_held());
+            draw_manager.update(delta_time, mouse_pos, click_pos, click_pos_r, input_manager.click_held_for(0.1f));
             game_timer.sleep_until(frame_start + MIN_FRAME_DELTA);
         }
 

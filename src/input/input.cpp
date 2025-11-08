@@ -139,3 +139,7 @@ void InputManager::clear_click_held_state() {
 bool InputManager::is_click_held() {
     return click_held;
 }
+
+bool InputManager::click_held_for(float t) {
+    return click_held && (click_held_time >= t);
+}
