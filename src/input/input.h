@@ -77,6 +77,7 @@ class InputManager {
         void backspace();
         void enable_repeating_clicks(bool);
         void clear_click_held_state();
+        virtual bool is_click_held();
     protected:
         bool space;
         bool escape;

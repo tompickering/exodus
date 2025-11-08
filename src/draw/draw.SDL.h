@@ -25,7 +25,7 @@ class DrawManagerSDL : public DrawManager {
         DrawManagerSDL();
         virtual bool init(const DrawManagerOptions&) override;
         virtual void load_resources() override;
-        virtual void update(float, MousePos, MousePos, MousePos) override;
+        virtual void update(float, MousePos, MousePos, MousePos, bool) override;
         virtual void clear() override;
         virtual void clear(DrawTarget) override;
         virtual void save_background() override;

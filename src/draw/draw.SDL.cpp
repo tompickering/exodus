@@ -184,11 +184,11 @@ void DrawManagerSDL::load_resources() {
     }
 }
 
-void DrawManagerSDL::update(float delta, MousePos mouse_pos, MousePos new_click_pos, MousePos new_click_pos_r) {
+void DrawManagerSDL::update(float delta, MousePos mouse_pos, MousePos new_click_pos, MousePos new_click_pos_r, bool click_held) {
     SDL_Rect ca;
     SDL_Rect ca0;
 
-    DrawManager::update(delta, mouse_pos, new_click_pos, new_click_pos_r);
+    DrawManager::update(delta, mouse_pos, new_click_pos, new_click_pos_r, click_held);
     if (pixelswap_active()) {
         pixelswap_update();
     }
@@ -289,8 +289,11 @@ void DrawManagerSDL::update(float delta, MousePos mouse_pos, MousePos new_click_
         // In this way, the cursor sprite is only ever present on
         // the primary surface for the brief period in which we
         // update the window.
-        cursor_area.x = mouse_pos.x - cursor_area.w / 2;
-        cursor_area.y = mouse_pos.y - cursor_area.h / 2;
+
+        if (!click_held) {
+            cursor_area.x = mouse_pos.x - cursor_area.w / 2;
+            cursor_area.y = mouse_pos.y - cursor_area.h / 2;
+        }
 
         if (fullscreen) {
             cursor_area.x = clamp(cursor_area.x, 0, RES_X-cursor_area.w);

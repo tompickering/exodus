@@ -27,7 +27,7 @@ DrawManager::DrawManager() {
     init_special_vfx();
 }
 
-void DrawManager::update(float delta, MousePos new_mouse_pos, MousePos new_click_pos, MousePos new_click_pos_r) {
+void DrawManager::update(float delta, MousePos new_mouse_pos, MousePos new_click_pos, MousePos new_click_pos_r, bool click_held) {
     if (pixelswap_active()) {
         pixelswap_time += delta;
     }

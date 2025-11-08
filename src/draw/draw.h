@@ -155,7 +155,7 @@ class DrawManager {
         DrawManager();
         virtual bool init(const DrawManagerOptions&) = 0;
         virtual void load_resources() = 0;
-        virtual void update(float, MousePos, MousePos, MousePos);
+        virtual void update(float, MousePos, MousePos, MousePos, bool);
         virtual void save_background() = 0;
         virtual void save_background(DrawArea) = 0;
         virtual void restore_background(DrawArea) = 0;

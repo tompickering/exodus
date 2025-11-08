@@ -135,3 +135,7 @@ void InputManager::clear_click_held_state() {
     click_held_time = 0;
     click_repeat_timeout = 0;
 }
+
+bool InputManager::is_click_held() {
+    return click_held;
+}
