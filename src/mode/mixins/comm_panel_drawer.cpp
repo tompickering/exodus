@@ -1610,7 +1610,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 }
             } else {
                 // SUGGEST: This seems like a weird thing to say...
-                comm_set_speech("Why should I do so?");
+                comm_set_speech(ENHANCED() ? "Leave here immediately." : "Why should I do so?");
             }
             comm_exit_anim_action = CA_Abort;
             comm_recv(DIA_R_Close);
