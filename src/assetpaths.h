@@ -1200,6 +1200,7 @@ extern const char *IMG_GOR4;
 extern const char *IMG_GOR4_1;
 extern const char *IMG_GOR4_2;
 extern const char *IMG_GOR4_3;
+extern const char *IMG_REBELS;
 
 extern const char *INIT_IMG;
 extern const char *CURSOR_IMG;

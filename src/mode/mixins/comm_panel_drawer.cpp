@@ -46,6 +46,7 @@ Anim comm_anim_gordoon(          7, IMG_LD4_LD4  , IMG_LD4_LD4_1,
                                     IMG_LD4_LD4_2, IMG_LD4_LD4_1,
                                     IMG_LD4_LD4);
 Anim comm_anim_rebels(           1, IMG_LD5_LD5);
+Anim comm_anim_rebels_new(       1, IMG_REBELS);
 Anim comm_anim_yok1(             7, IMG_YOK1     , IMG_YOK1_1    ,
                                     IMG_YOK1_2   , IMG_YOK1_3   ,
                                     IMG_YOK1_2   , IMG_YOK1_1   ,
@@ -414,7 +415,11 @@ void CommPanelDrawer::comm_set_img(CommImg img) {
             comm_anim = comm_anim_gordoon;
             break;
         case CI_Rebels:
-            comm_anim = comm_anim_rebels;
+            if (ENHANCED()) {
+                comm_anim = comm_anim_rebels_new;
+            } else {
+                comm_anim = comm_anim_rebels;
+            }
             break;
         case CI_HumanPlanet:
             comm_anim = comm_anim_human_planet;

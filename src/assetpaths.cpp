@@ -1203,6 +1203,7 @@ const char *IMG_GOR4             = D_NEW "gor4";
 const char *IMG_GOR4_1           = D_NEW "gor4-1";
 const char *IMG_GOR4_2           = D_NEW "gor4-2";
 const char *IMG_GOR4_3           = D_NEW "gor4-3";
+const char *IMG_REBELS           = D_NEW "rebels";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2406,6 +2407,7 @@ const char *ASSETS_IMG[] = {
     IMG_GOR4_1,
     IMG_GOR4_2,
     IMG_GOR4_3,
+    IMG_REBELS,
 
     "",
 };
