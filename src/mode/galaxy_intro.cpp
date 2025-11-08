@@ -110,23 +110,43 @@ ExodusMode GalaxyIntro::update(float delta) {
             if (last_text_idx == 12) {
                 last_text = (const char*)(&title_text);
             }
-            draw_manager.draw_text(
-                id(ID::TEXT0 + last_text_idx),
-                last_text,
-                Justify::Centre,
-                INDENT_X,
-                INDENT_Y + (this_text_idx - 1) * SEP_Y,
-                {0xD0, 0xD0, 0xD0});
+            if (ENHANCED()) {
+                draw_manager.draw_text(
+                    id(ID::TEXT0 + last_text_idx),
+                    last_text,
+                    Justify::Centre,
+                    INDENT_X,
+                    INDENT_Y + (this_text_idx - 1) * SEP_Y,
+                    {0xD0, 0xD0, 0xD0});
+            } else {
+                draw_manager.draw_text(
+                    id(ID::TEXT0 + last_text_idx),
+                    last_text,
+                    Justify::Left,
+                    12,
+                    12 + (this_text_idx - 1) * SEP_Y,
+                    {0xD0, 0xD0, 0xD0});
+            }
         }
         float this_text_interp = n_lines * fmod(progress, 1.f/n_lines);
         grey = (char)(this_text_interp * 0xD0);
-        draw_manager.draw_text(
-            id(ID::TEXT0 + this_text_idx),
-            this_text,
-            Justify::Centre,
-            INDENT_X,
-            INDENT_Y + this_text_idx * SEP_Y,
-            {grey, grey, grey});
+        if (ENHANCED()) {
+            draw_manager.draw_text(
+                id(ID::TEXT0 + this_text_idx),
+                this_text,
+                Justify::Centre,
+                INDENT_X,
+                INDENT_Y + this_text_idx * SEP_Y,
+                {grey, grey, grey});
+        } else {
+            draw_manager.draw_text(
+                id(ID::TEXT0 + this_text_idx),
+                this_text,
+                Justify::Left,
+                12,
+                12 + this_text_idx * SEP_Y,
+                {grey, grey, grey});
+        }
     }
 
     if (time > 20 && !fade_started) {
