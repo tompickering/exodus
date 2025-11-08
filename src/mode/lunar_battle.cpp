@@ -3659,10 +3659,11 @@ const char* BattleUnit::get_type_str() {
 
 const char* BattleUnit::debug_info() {
 #ifdef DBG
-    snprintf(dbg_info, sizeof(dbg_info), "[%d %s %s HP %d (%s)]",
+    snprintf(dbg_info, sizeof(dbg_info), "[%d %s %s%s HP%d (%s)]",
                                          dbg_id,
                                          defending ? "D" : "A",
                                          get_type_str(),
+                                         promoted ? "+" : "",
                                          hp,
                                          turn_taken ? "turn taken" : "turn not taken");
     return dbg_info;
