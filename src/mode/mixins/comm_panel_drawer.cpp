@@ -2538,7 +2538,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             break;
         case DIA_S_B_NeverMind:
             comm_prepare(4);
-            comm_set_speech("Hum?!");
+            comm_set_speech(ENHANCED() ? "Hmm...?!" : "Hum?!");
             comm_exit_anim_action = CA_Abort;
             comm_recv(DIA_R_Close);
             break;
