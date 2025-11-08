@@ -2157,6 +2157,8 @@ void LunarBattle::draw_explosion() {
                 anim_explode.interp(1 - exp_interp),
                 {draw_x + BLK_SZ/2, draw_y + BLK_SZ/2,
                  0.5, 0.5, 1, 1});
+    } else {
+        draw_manager.draw(id(ID::EXPLOSION), nullptr);
     }
 }
 
