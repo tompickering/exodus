@@ -1506,8 +1506,8 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_prepare(4);
                 comm_ctx.mc = min(comm_other->get_mc(), 100+(RND(10)*20));
                 comm_set_speech("Well... I offer %dMC...", comm_ctx.mc);
-                comm_set_text(1, "This is acceptable.");
-                comm_set_text(2, "I do not want your money...");
+                comm_set_text(0, "This is acceptable.");
+                comm_set_text(1, "I do not want your money...");
                 comm_text_interactive_mask = 0x3;
                 comm_recv(DIA_R_AttackPayOffMore);
             } else {
