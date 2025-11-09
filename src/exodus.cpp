@@ -595,4 +595,8 @@ void Exodus::register_buttons() {
     draw_manager.register_button(IMG_BTNZOOM, {0, 0, 98, 26});
     draw_manager.register_button(IMG_BTN_TOP, {0, 0, 98, 26});
 
+    draw_manager.register_button(IMG_BATTLE_INFO, {0, 0, 86, 26});
+    draw_manager.register_button(IMG_BATTLE_MAN, {0, 0, 40, 26});
+    draw_manager.register_button(IMG_BATTLE_QUIT, {0, 0, 86, 26});
+    draw_manager.register_button(IMG_BATTLE_TALK, {0, 0, 86, 26});
 }
