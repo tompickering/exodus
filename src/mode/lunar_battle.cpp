@@ -39,6 +39,7 @@ static const float DYING_TIME = .1f;
 static const float FAST_SHOT_MULTIPLIER = 4.f;
 
 enum ID {
+    TOP_PANEL,
     PANEL,
     PANEL_PATTERN,
     PLACEMENT_SELECTED,
@@ -624,6 +625,7 @@ ExodusMode LunarBattle::update(float delta) {
             // Handle button clicks that require a stage change
             if (human_turn) {
                 stage = update_buttons();
+
                 if (stage != LB_Move) {
                     return ExodusMode::MODE_None;
                 }
@@ -942,6 +944,7 @@ ExodusMode LunarBattle::update(float delta) {
             // Handle button clicks that require a stage change
             if (human_turn) {
                 stage = update_buttons();
+
                 if (stage != LB_Fire) {
                     return ExodusMode::MODE_None;
                 }
@@ -1336,7 +1339,12 @@ ExodusMode LunarBattle::update(float delta) {
             return ExodusMode::MODE_None;
     }
 
-    update_panel();
+    if (FEATURE(EF_LUNAR_BATTLE_NEW_PANELS)) {
+        update_panel_new();
+    } else {
+        update_panel();
+    }
+
     draw_units();
     draw_markers();
     update_cursor();
@@ -2523,10 +2531,14 @@ LunarBattle::Stage LunarBattle::update_buttons() {
 
         const char* fast_button = nullptr;
 
-        if (FEATURE(EF_FLIP_BUTTONS)) {
-            fast_button = fast ? IMG_GF4_HMENU5 : IMG_GF4_HMENU3;
+        if (FEATURE(EF_LUNAR_BATTLE_NEW_PANELS)) {
+            fast_button = fast ? IMG_BATTLE_FF2 : IMG_BATTLE_FF;
         } else {
-            fast_button = fast ? IMG_GF4_HMENU3 : IMG_GF4_HMENU5;
+            if (FEATURE(EF_FLIP_BUTTONS)) {
+                fast_button = fast ? IMG_GF4_HMENU5 : IMG_GF4_HMENU3;
+            } else {
+                fast_button = fast ? IMG_GF4_HMENU3 : IMG_GF4_HMENU5;
+            }
         }
 
         draw_manager.draw(
@@ -2580,6 +2592,168 @@ LunarBattle::Stage LunarBattle::update_buttons() {
     }
 
     return stage;
+}
+
+void LunarBattle::update_panel_new() {
+    LBPanelMode target_mode = (stage == LB_Placement || stage == LB_PlacementEnd)
+                              ? LBPM_Placement
+                              : LBPM_Battle;
+
+    if (panel_mode != target_mode) {
+        draw_manager.draw(id(ID::TOP_PANEL), nullptr);
+
+        if (target_mode == LBPM_Placement) {
+            draw_manager.draw(
+                id(ID::TOP_PANEL),
+                IMG_BATTLE_PBAR,
+                {0, 0, 0, 0, 1, 1});
+        }
+
+        if (target_mode == LBPM_Battle) {
+            draw_manager.draw(
+                id(ID::TOP_PANEL),
+                IMG_BATTLE_BAR,
+                {0, 0, 0, 0, 1, 1});
+
+            Planet *p = exostate().get_active_planet();
+
+            draw_manager.draw_text("The battle of", Justify::Left, 12, 18, COL_TEXT);
+            draw_manager.draw_text(p->get_name(), Justify::Left, 12, 36, COL_TEXT);
+
+            DrawArea a = {0, 0, 40, 40};
+            draw_manager.set_source_region(id(ID::PANEL_UNIT_BG), &a);
+            draw_manager.draw(
+                id(ID::PANEL_UNIT_BG),
+                p->moon_sprites()->bg,
+                {178, 16, 0, 0, 1, 1});
+
+            const char* fast_button = fast ? IMG_BATTLE_FF2 : IMG_BATTLE_FF;
+
+            draw_manager.draw(
+                id(ID::BTN_INFO),
+                IMG_BATTLE_INFO,
+                {447, 8, 0, 0, 1, 1});
+            draw_manager.draw(
+                id(ID::BTN_SPEED),
+                fast_button,
+                {447, 38, 0, 0, 1, 1});
+            draw_manager.draw(
+                id(ID::BTN_TALK),
+                IMG_BATTLE_TALK,
+                {541, 8, 0, 0, 1, 1});
+            draw_manager.draw(
+                id(ID::BTN_QUIT),
+                IMG_BATTLE_QUIT,
+                {541, 38, 0, 0, 1, 1});
+        }
+        draw_manager.save_background({0, 0, RES_X, SURF_Y - 1});
+    }
+
+    panel_mode = target_mode;
+
+    switch (panel_mode) {
+        case LBPM_Placement:
+            update_panel_setup_new();
+            break;
+        case LBPM_Battle:
+            update_panel_battle_new();
+            break;
+        case LBPM_None:
+            break;
+    }
+}
+
+// The panel as drawn during unit placement
+void LunarBattle::update_panel_setup_new() {
+    LunarBattleParams &b = ephstate.lunar_battle;
+    const char* spr_inf = placement_def ? IMG_GF4_4  : IMG_GF4_1;
+    const char* spr_gli = placement_def ? IMG_GF4_5  : IMG_GF4_2;
+    const char* spr_art = placement_def ? IMG_GF4_6  : IMG_GF4_3;
+    const char* spr_msc = placement_def ? IMG_GF4_19 : IMG_GF1_25;
+
+    for (int i = 0; i < 4; ++i) {
+        const char* spr = spr_inf;
+        int n = 0;
+        int n_groups = 0;
+        if (i == 0) { spr = spr_inf; n = to_place_inf; }
+        if (i == 1) { spr = spr_gli; n = to_place_gli; }
+        if (i == 2) { spr = spr_art; n = to_place_art; }
+        if (i == 3) { spr = spr_msc; n = to_place_msc; }
+
+        if (i < 3) {
+            if (placement_def) {
+                n_groups = n / b.defender_group_size;
+                if ((n % b.defender_group_size) > 0) {
+                    n_groups++;
+                }
+            } else {
+                n_groups = n / b.aggressor_group_size;
+                if ((n % b.aggressor_group_size) > 0) {
+                    n_groups++;
+                }
+            }
+        } else {
+            n_groups = n;
+        }
+
+        draw_manager.draw(
+            placement_ids[i],
+            spr,
+            {9 + i*96, 22,
+             0, 0, 1, 1});
+        char n_str[8];
+        snprintf(n_str, sizeof(n_str), "%d", n_groups);
+        draw_manager.draw_text(
+            placement_ids[4+i],
+            n_str,
+            Justify::Left,
+            58 + i*96, 38,
+            COL_TEXT);
+    }
+
+    const char* item_name = "Infantry";
+    const char* spr_selected = spr_inf;
+    char text[16];
+    snprintf(text, sizeof(text),
+             "(max %d/group)",
+             placement_def ? b.defender_group_size : b.aggressor_group_size);
+
+    if (placement_item == 1) {
+        item_name = "Gliders";
+        spr_selected = spr_gli;
+    }
+    if (placement_item == 2) {
+        item_name = "Artillery",
+        spr_selected = spr_art;
+    }
+    if (placement_item == 3) {
+        item_name = placement_def ? "Mines" : "Teleporters",
+        spr_selected = spr_msc;
+        text[0] = '\0';
+    }
+    draw_manager.draw(
+        id(ID::PLACEMENT_SELECTED),
+        spr_selected,
+        {391, 22,
+         0, 0, 1, 1});
+    draw_manager.draw_text(
+        id(ID::PLACEMENT_SELECTED_NAME),
+        item_name,
+        Justify::Left,
+        437, 18,
+        COL_TEXT2);
+    draw_manager.draw_text(
+        id(ID::PLACEMENT_SELECTED_DESC),
+        text,
+        Justify::Left,
+        437, 36,
+        COL_TEXT);
+}
+
+// The panel as drawn during battle
+void LunarBattle::update_panel_battle_new() {
+    // TODO
+    update_panel_battle();
 }
 
 // 4 bits - UDLR

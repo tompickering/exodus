@@ -238,7 +238,13 @@ class LunarBattle : ModeBase, CommPanelDrawer, BattleReport {
         void update_panel();
         void update_panel_setup();
         void update_panel_battle();
+
+        void update_panel_new();
+        void update_panel_setup_new();
+        void update_panel_battle_new();
+
         Stage update_buttons();
+
         Stage button_prev_stage;
 
         bool valid_placement(int, int);
