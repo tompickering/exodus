@@ -50,6 +50,7 @@ enum ID {
     BTN_SPEED,
     BTN_TALK,
     BTN_QUIT,
+    BTN_MAN,
     PANEL_UNIT_BG,
     PANEL_UNIT,
     ARROW_UP,
@@ -1337,6 +1338,16 @@ ExodusMode LunarBattle::update(float delta) {
                 stage = LB_CheckWon;
             }
             return ExodusMode::MODE_None;
+        case LB_Manual:
+            bulletin_update(delta);
+            switch (bulletin_get_praction()) {
+                case BPR_Close:
+                    bulletin_ensure_closed();
+                    stage = LB_Move;
+                default:
+                    break;
+            }
+            return ExodusMode::MODE_None;
     }
 
     if (FEATURE(EF_LUNAR_BATTLE_NEW_PANELS)) {
@@ -2569,6 +2580,11 @@ LunarBattle::Stage LunarBattle::update_buttons() {
         }
     }
 
+    if (draw_manager.query_click(id(ID::BTN_MAN)).id) {
+        bulletin_start_manual(BMP_LunarBattle);
+        return LB_Manual;
+    }
+
     if (draw_manager.query_click(id(ID::BTN_QUIT)).id) {
         draw_manager.fill(
             id(ID::PANEL),
@@ -2644,6 +2660,10 @@ void LunarBattle::update_panel_new() {
                 id(ID::BTN_SPEED),
                 fast_button,
                 {541, 8, 0, 0, 1, 1});
+            draw_manager.draw(
+                id(ID::BTN_MAN),
+                IMG_BATTLE_MAN,
+                {627, 8, 1, 0, 1, 1});
             draw_manager.draw(
                 id(ID::BTN_TALK),
                 IMG_BATTLE_TALK,
