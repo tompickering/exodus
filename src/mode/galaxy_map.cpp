@@ -5242,7 +5242,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     for (int i = 0; i < report.items; ++i) {
                         bulletin_set_next_text(report.content[i]);
                     }
-                    bulletin_set_next_text("Report ends.");
+                    bulletin_set_next_text(ENHANCED() ? "---" : "Report ends.");
                     next_mpp_stage();
                     return ExodusMode::MODE_None;
                 }
@@ -5581,7 +5581,7 @@ void GalaxyMap::planet_report_bulletin(bool transition, int idx) {
     for (int i = 0; i < report.items; ++i) {
         bulletin_set_next_text(report.content[i]);
     }
-    bulletin_set_next_text("Report ends.");
+    bulletin_set_next_text(ENHANCED() ? "---" : "Report ends.");
 }
 
 void GalaxyMap::planet_report_summary_bulletin(bool transition, int idx) {
