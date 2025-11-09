@@ -1223,6 +1223,18 @@ const char *IMG_TD1_TRADE7_NEW   = D_NEW "td1_trade7";
 const char *IMG_TD1_TRADE8_NEW   = D_NEW "td1_trade8";
 const char *IMG_TD1_TRADEBACK_NEW= D_NEW "td1_tradeback";
 const char *IMG_VS2_VESSEL_NEW   = D_NEW "vs2_vessel";
+const char *IMG_BATTLE_BAR       = D_NEW "battle_bar";
+const char *IMG_BATTLE_COVER     = D_NEW "battle_cover";
+const char *IMG_BATTLE_FF        = D_NEW "battle_ff";
+const char *IMG_BATTLE_FF2       = D_NEW "battle_ff2";
+const char *IMG_BATTLE_INFO      = D_NEW "battle_info";
+const char *IMG_BATTLE_MAN       = D_NEW "battle_man";
+const char *IMG_BATTLE_PBAR      = D_NEW "battle_pbar";
+const char *IMG_BATTLE_PROMOTION = D_NEW "battle_promotion";
+const char *IMG_BATTLE_QUIT      = D_NEW "battle_quit";
+const char *IMG_BATTLE_SHIELD    = D_NEW "battle_shield";
+const char *IMG_BATTLE_SHIELD_RED= D_NEW "battle_shield_red";
+const char *IMG_BATTLE_TALK      = D_NEW "battle_talk";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2446,6 +2458,18 @@ const char *ASSETS_IMG[] = {
     IMG_TD1_TRADE8_NEW,
     IMG_TD1_TRADEBACK_NEW,
     IMG_VS2_VESSEL_NEW,
+    IMG_BATTLE_BAR,
+    IMG_BATTLE_COVER,
+    IMG_BATTLE_FF,
+    IMG_BATTLE_FF2,
+    IMG_BATTLE_INFO,
+    IMG_BATTLE_MAN,
+    IMG_BATTLE_PBAR,
+    IMG_BATTLE_PROMOTION,
+    IMG_BATTLE_QUIT,
+    IMG_BATTLE_SHIELD,
+    IMG_BATTLE_SHIELD_RED,
+    IMG_BATTLE_TALK,
 
     "",
 };

@@ -1220,6 +1220,18 @@ extern const char *IMG_TD1_TRADE7_NEW;
 extern const char *IMG_TD1_TRADE8_NEW;
 extern const char *IMG_TD1_TRADEBACK_NEW;
 extern const char *IMG_VS2_VESSEL_NEW;
+extern const char *IMG_BATTLE_BAR;
+extern const char *IMG_BATTLE_COVER;
+extern const char *IMG_BATTLE_FF;
+extern const char *IMG_BATTLE_FF2;
+extern const char *IMG_BATTLE_INFO;
+extern const char *IMG_BATTLE_MAN;
+extern const char *IMG_BATTLE_PBAR;
+extern const char *IMG_BATTLE_PROMOTION;
+extern const char *IMG_BATTLE_QUIT;
+extern const char *IMG_BATTLE_SHIELD;
+extern const char *IMG_BATTLE_SHIELD_RED;
+extern const char *IMG_BATTLE_TALK;
 
 extern const char *INIT_IMG;
 extern const char *CURSOR_IMG;
