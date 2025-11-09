@@ -3631,12 +3631,12 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
                 idle = IMG_GF4_4;
                 walk = IMG_GF4_4_2;
                 fire = IMG_GF4_16;
-                dead = IMG_GF4_7;
+                dead = IMG_GF4_10;
             } else {
                 idle = IMG_GF4_1;
                 walk = IMG_GF4_1_2;
                 fire = IMG_GF4_13;
-                dead = IMG_GF4_10;
+                dead = IMG_GF4_7;
             }
             break;
         case UNIT_Gli:
