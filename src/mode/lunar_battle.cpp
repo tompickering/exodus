@@ -2541,10 +2541,17 @@ LunarBattle::Stage LunarBattle::update_buttons() {
             }
         }
 
-        draw_manager.draw(
-            id(ID::BTN_SPEED),
-            fast_button,
-            {447, 38, 0, 0, 1, 1});
+        if (FEATURE(EF_LUNAR_BATTLE_NEW_PANELS)) {
+            draw_manager.draw(
+                id(ID::BTN_SPEED),
+                fast_button,
+                {541, 8, 0, 0, 1, 1});
+        } else {
+            draw_manager.draw(
+                id(ID::BTN_SPEED),
+                fast_button,
+                {447, 38, 0, 0, 1, 1});
+        }
     }
 
     if (draw_manager.query_click(id(ID::BTN_TALK)).id) {
@@ -2636,11 +2643,11 @@ void LunarBattle::update_panel_new() {
             draw_manager.draw(
                 id(ID::BTN_SPEED),
                 fast_button,
-                {447, 38, 0, 0, 1, 1});
+                {541, 8, 0, 0, 1, 1});
             draw_manager.draw(
                 id(ID::BTN_TALK),
                 IMG_BATTLE_TALK,
-                {541, 8, 0, 0, 1, 1});
+                {447, 38, 0, 0, 1, 1});
             draw_manager.draw(
                 id(ID::BTN_QUIT),
                 IMG_BATTLE_QUIT,
