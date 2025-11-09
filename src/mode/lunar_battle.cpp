@@ -2400,7 +2400,7 @@ void LunarBattle::update_panel_setup() {
         spr_selected = spr_art;
     }
     if (placement_item == 3) {
-        item_name = placement_def ? "Mines" : "Teleporters",
+        item_name = placement_def ? "Mines" : (ENHANCED() ? "Rescue Pads" : "Teleporters"),
         spr_selected = spr_msc;
         text[0] = '\0';
     }
@@ -2767,7 +2767,7 @@ void LunarBattle::update_panel_setup_new() {
         spr_selected = spr_art;
     }
     if (placement_item == 3) {
-        item_name = placement_def ? "Mines" : "Teleporters",
+        item_name = placement_def ? "Mines" : (ENHANCED() ? "Rescue Pads" : "Teleporters"),
         spr_selected = spr_msc;
         text[0] = '\0';
     }
