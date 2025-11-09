@@ -19,8 +19,12 @@ void Distances::enter() {
 
     Player *p = exostate().get_active_player();
 
-    const PlayerLocation& loc = p->get_location();
-    const FlyTarget *ft = exostate().loc2tgt(loc.get_target());
+    const FlyTarget *ft = exostate().get_active_flytarget();
+
+    if (!ft) {
+        const PlayerLocation& loc = p->get_location();
+        ft = exostate().loc2tgt(loc.get_target());
+    }
 
     int cx, cy;
     get_draw_position(ft, cx, cy);
