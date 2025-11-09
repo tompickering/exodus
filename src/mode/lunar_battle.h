@@ -183,6 +183,7 @@ class LunarBattle : ModeBase, CommPanelDrawer, BattleReport, BulletinDrawer {
         bool placement_def;
         int placement_item;
         SprID placement_ids[8];
+        SprID hp_ids[20];
         int to_place_inf;
         int to_place_gli;
         int to_place_art;
@@ -212,6 +213,7 @@ class LunarBattle : ModeBase, CommPanelDrawer, BattleReport, BulletinDrawer {
         BattleUnit* target_unit;
         BattleUnit* panel_unit;
         int panel_hp;
+        int panel_moves;
         bool is_in_cover(BattleUnit*);
 
         BattleUnit* unit_at(int, int);

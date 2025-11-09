@@ -40,6 +40,11 @@ static const float FAST_SHOT_MULTIPLIER = 4.f;
 
 enum ID {
     TOP_PANEL,
+    TOP_PANEL_MOVES,
+    TOP_PANEL_RANGE,
+    TOP_PANEL_UNITNAME,
+    TOP_PANEL_COVER,
+    TOP_PANEL_PROMOTED,
     PANEL,
     PANEL_PATTERN,
     PLACEMENT_SELECTED,
@@ -99,6 +104,7 @@ LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer() {
     aggressor_can_discover_mines = false;
     panel_unit = nullptr;
     panel_hp = -1;
+    panel_moves = -1;
     manual_placement = false;
     placement_def = true;
     placement_item = 0;
@@ -216,6 +222,9 @@ void LunarBattle::enter() {
         for (int i = 0; i < 8; ++i) {
             placement_ids[i] = draw_manager.new_sprite_id();
         }
+        for (int i = 0; i < 20; ++i) {
+            hp_ids[i] = draw_manager.new_sprite_id();
+        }
         for (int i = 0; i < 88; ++i) {
             fog_ids[i] = draw_manager.new_sprite_id();
         }
@@ -285,6 +294,7 @@ void LunarBattle::enter() {
     target_unit = nullptr;
     panel_unit = nullptr;
     panel_hp = -1;
+    panel_moves = -1;
 
     fast = false;
 
@@ -337,6 +347,9 @@ void LunarBattle::exit() {
         }
         for (int i = 0; i < 8; ++i) {
             draw_manager.release_sprite_id(placement_ids[i]);
+        }
+        for (int i = 0; i < 20; ++i) {
+            draw_manager.release_sprite_id(hp_ids[i]);
         }
         for (int i = 0; i < BATTLE_UNITS_MAX; ++i) {
             units[i].release_spr_id();
@@ -2777,10 +2790,160 @@ void LunarBattle::update_panel_setup_new() {
         COL_TEXT);
 }
 
+enum HPMODE {
+    HPMODE_None,
+    HPMODE_Hits,
+    HPMODE_HP,
+};
+
 // The panel as drawn during battle
 void LunarBattle::update_panel_battle_new() {
-    // TODO
-    update_panel_battle();
+    const char* panel_spr = nullptr;
+    BattleUnit *draw_unit = nullptr;
+
+    draw_unit = unit_at(cursor_x, cursor_y);
+
+    // Orig doesn't show cursor during walk phase, but it's
+    // useful to be able to check unit HPs before moving...
+    /*
+    if (human_turn && stage == LB_Move) {
+        draw_unit = active_unit;
+    } else {
+        draw_unit = unit_at(cursor_x, cursor_y);
+    }
+    */
+
+    if (draw_unit) {
+        panel_spr = draw_unit->idle;
+    }
+
+    bool redraw = (draw_unit != panel_unit);
+
+    if (draw_unit && (draw_unit->hp != panel_hp)) {
+        redraw = true;
+    }
+
+    if (draw_unit && (draw_unit->moves_remaining != panel_moves)) {
+        redraw = true;
+    }
+
+    if (redraw) {
+        const char* text = STR_Ground;
+        RGB text_col = {0, 0xFF, 0};  // TODO: Check exact colour
+        panel_unit = draw_unit;
+        panel_hp = draw_unit ? draw_unit->hp : -1;
+        panel_moves = draw_unit ? draw_unit->moves_remaining : -1;
+
+        for (int i = 0; i < 20; ++i) {
+            draw_manager.draw(hp_ids[i], nullptr);
+        }
+
+        draw_manager.draw(id(ID::TOP_PANEL_COVER), nullptr);
+        draw_manager.draw(id(ID::TOP_PANEL_PROMOTED), nullptr);
+
+        if (draw_unit) {
+            text = draw_unit->name;
+
+            bool our_side = (human_turn && active_unit->defending == draw_unit->defending);
+
+            if (our_side) {
+                text_col = {0, 0, 0xFF};  // TODO: Check exact colour
+            }
+
+            if (FEATURE(EF_LUNAR_BATTLE_ADVANCED_HP_INFO)) {
+                if (human_turn) {
+                    Player *player = defender_turn ? defender : aggressor;
+
+                    OfficerQuality offq = OFFQ_Poor;
+
+                    if (player) {
+                        offq = defender_turn ? def_officer : agg_officer;
+                    }
+
+                    HPMODE hp_mode = HPMODE_None;
+
+                    if (our_side) {
+                        hp_mode = HPMODE_HP;
+                    } else if (offq != OFFQ_Poor) {
+                        hp_mode = ((offq == OFFQ_Good) ? HPMODE_HP : HPMODE_Hits);
+                    }
+
+                    const char* hit_img = nullptr;
+
+                    switch (hp_mode) {
+                        case HPMODE_Hits:
+                            hit_img = (our_side ? IMG_GF4_SBR : IMG_GF4_SBR_RED);
+                            break;
+                        case HPMODE_HP:
+                            hit_img = (our_side ? IMG_BATTLE_SHIELD : IMG_BATTLE_SHIELD_RED);
+                            break;
+                        default:
+                            break;
+                    }
+
+                    int dots_to_show = 0;
+
+                    if (hp_mode == HPMODE_Hits) {
+                        dots_to_show = draw_unit->hp_initial - draw_unit->hp;
+                    }
+
+                    if (hp_mode == HPMODE_HP) {
+                        dots_to_show = draw_unit->hp;
+                    }
+
+                    if (dots_to_show > 0) {
+                        int x_off = 0;
+                        int y_off = (dots_to_show <= 10) ? 4 : 0;
+
+                        for (int i = 0; i < dots_to_show; ++i) {
+                            if (i == 10) {
+                                x_off = 0;
+                                y_off += 14;
+                            }
+
+                            draw_manager.draw(
+                                hp_ids[i],
+                                hit_img,
+                                {234 + x_off, 35 + y_off, 0, 0, 1, 1});
+
+                            x_off += 10;
+                        }
+                    }
+
+                    if (is_in_cover(draw_unit)) {
+                        draw_manager.draw(
+                            id(ID::TOP_PANEL_COVER),
+                            IMG_BATTLE_COVER,
+                            {372, 38, 1, 0, 1, 1});
+                    }
+
+                    if (draw_unit->promoted) {
+                        draw_manager.draw(
+                            id(ID::TOP_PANEL_PROMOTED),
+                            IMG_BATTLE_PROMOTION,
+                            {372, 16, 1, 0, 1, 1});
+                    }
+
+                    char text[8];
+                    snprintf(text, sizeof(text), "%d", draw_unit->moves_remaining);
+                    draw_manager.draw_text(id(ID::TOP_PANEL_MOVES), text, Justify::Centre, 414, 14, COL_TEXT);
+                    snprintf(text, sizeof(text), "%d", draw_unit->fire_range);
+                    draw_manager.draw_text(id(ID::TOP_PANEL_RANGE), text, Justify::Centre, 414, 36, COL_TEXT);
+                }
+            } else {
+                // TODO
+                // (we probably won't ever use this case)
+                L.warn("Case of EF_LUNAR_BATTLE_NEW_PANELS and not EF_LUNAR_BATTLE_ADVANCED_HP_INFO not implemented");
+            }
+        } else {
+            draw_manager.draw(id(ID::TOP_PANEL_MOVES), nullptr);
+            draw_manager.draw(id(ID::TOP_PANEL_RANGE), nullptr);
+        }
+
+        draw_manager.draw_text(id(ID::TOP_PANEL_UNITNAME), text, Justify::Left, 232, 13, text_col);
+    }
+
+    draw_manager.draw(id(ID::PANEL_UNIT), panel_spr, {177, 17, 0, 0, 1, 1});
 }
 
 // 4 bits - UDLR
