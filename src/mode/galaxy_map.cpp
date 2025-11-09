@@ -4978,13 +4978,18 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             const char *s0 = (rpt.no_money && (rpt.no_space || rpt.no_plu)) ? sep : empty;
             const char *s1 = (rpt.no_space && rpt.no_plu) ? sep : empty;
             if (rpt.not_produced == 1) {
-                report.register_major_problem();
                 report.add_line("1 battle unit has not been produced.");
             } else {
-                report.register_major_problem();
                 report.add_line("%d battle units have not been produced.",
                                 rpt.not_produced);
             }
+
+            if (rpt.no_space) {
+                report.register_minor_problem();
+            } else {
+                report.register_major_problem();
+            }
+
             report.add_line("%s%s%s%s%s", rpt.no_money ? "No money" : "", s0,
                                           rpt.no_space ? "No space" : "", s1,
                                           rpt.no_plu ? "No plutonium" : "");
