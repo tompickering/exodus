@@ -193,7 +193,7 @@ ExodusMode FleetProduction::update(float delta) {
     }
 
     if (draw_manager.query_click(id(ID::EXIT)).id) {
-        if (p->attempt_spend(total_cost())) {
+        if (p->attempt_spend(total_cost(), MC_FleetProd)) {
             Fleet &f = p->get_fleet_nonconst();
             f.scouts += rows[0].produce;
             f.transporters += rows[1].produce;

@@ -73,6 +73,51 @@ enum Character {
     CHAR_LAST,
 };
 
+enum MCReason {
+    MC_None,
+    MC_Debug,
+    MC_StartCredits,
+    MC_Colonise,
+    MC_Planets,
+    MC_Cities,
+    MC_VillageGifts,
+    MC_Army,
+    MC_ScienceFunding,
+    MC_Building,
+    MC_BuildingLunarBase,
+    MC_Festival,
+    MC_FactoryRepair,
+    MC_ExtraTaxes,
+    MC_TradingCentre,
+    MC_FleetProd,
+    MC_ShipEquip,
+    MC_Research,
+    MC_Discovery,
+    MC_ChangeGlobalClimate,
+    MC_ArtPlanet,
+    MC_SecretService,
+    MC_Missions,
+    MC_NewOfficer,
+    MC_OldOfficer,
+    MC_OfficerSalary,
+    MC_TempOfficer,
+    MC_PeaceDeal,
+    MC_PeaceDealRebels,
+    MC_Alliance,
+    MC_TradeFee,
+    MC_Trade,
+    MC_TradeBuy,
+    MC_WarSupport,
+    MC_Mines,
+    MC_GuildMembership,
+    MC_Fine,
+    MC_SpaceBattleLoot,
+    MC_SpaceBattleSurrendered,
+    MC_DiplomaticReparations,
+    MC_CPUWriteOffDebt,
+    MC_ReturnToGalaxyReset,
+};
+
 struct Starship : public Saveable {
     virtual void save(cJSON* j) const override {
         SAVE_NUM(j, shield_generators);
@@ -393,13 +438,15 @@ class Player : public Saveable {
         void set_flag_idx(int);
         bool intro_seen();
         void set_intro_seen();
-        void give_mc(int);
+        void give_mc(int, MCReason);
         bool can_afford(int);
-        bool attempt_spend(int);
-        bool attempt_spend_with_remaining(int, int);
-        bool attempt_spend_allowing_writeoff(int, int);
-        bool attempt_spend_cpuforce(int);
-        int remove_all_mc();
+        bool attempt_spend(int, MCReason);
+        bool attempt_spend_with_remaining(int, int, MCReason);
+        bool attempt_spend_allowing_writeoff(int, int, MCReason);
+        bool attempt_spend_force(int, MCReason);
+        bool attempt_spend_cpuforce(int, MCReason);
+        int remove_all_mc(MCReason);
+        void set_mc(int, MCReason);
         void cpu_write_off_debt();
         int get_fleet_marker_idx();
         PlayerLocation& get_location();
@@ -495,6 +542,8 @@ class Player : public Saveable {
         bool advanced_galmap_unlocked;
 
     private:
+        void adjust_mc(int, MCReason);
+
         void refresh_full_name();
         int transfer(int, int*);
 

@@ -20,7 +20,7 @@ void ExodusDebug::init() {
 void ExodusDebug::add_mc(int mc) {
     Player* p = exostate().get_active_player();
     if (p) {
-        p->give_mc(mc);
+        p->give_mc(mc, MC_Debug);
     }
 }
 

@@ -552,7 +552,7 @@ ExodusMode GuildHQ::update(float delta) {
                 SpriteClick click = draw_manager.query_click(id(ID::MEMBER_CHOICE));
                 if (click.id) {
                     if (click.x < .5f) {
-                        if (player->attempt_spend(GUILD_COST)) {
+                        if (player->attempt_spend(GUILD_COST, MC_GuildMembership)) {
                             player->set_guild_member(true);
                             draw_panel();
                             draw_manager.draw_text(
@@ -626,7 +626,7 @@ ExodusMode GuildHQ::update(float delta) {
                 if (click.id) {
                     if (click.x < .5f) {
                         // Proceed
-                        if (player->attempt_spend(fine)) {
+                        if (player->attempt_spend(fine, MC_Fine)) {
                             player->clear_infractions();
                             player->adjust_reputation(1);
                             draw_manager.draw_text(

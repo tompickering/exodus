@@ -180,7 +180,7 @@ void LunarBattlePrep::enter() {
                  * as to leave themselves with <6MC.
                  */
                 int to_spend = max(to_purchase * mines_price /*- 6*/, 0);
-                if (owner->attempt_spend(to_spend)) {
+                if (owner->attempt_spend(to_spend, MC_Mines)) {
                     b.defender_mines = to_purchase;
                     break;
                 }
@@ -598,7 +598,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
                     int cost = mines_price * mines_to_buy;
                     if (clk.y > .5f) {
                         // PROCb_ready allows us to buy one more mine than we can afford
-                        if (owner->attempt_spend_allowing_writeoff(cost, mines_price)) {
+                        if (owner->attempt_spend_allowing_writeoff(cost, mines_price, MC_Mines)) {
                             b.defender_mines = mines_to_buy;
                             set_stage(LBP_UpgradeOfficer);
                         }
@@ -685,7 +685,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
                 SpriteClick clk = draw_manager.query_click(id(ID::UPGRADE_YESNO));
                 if (clk.id) {
                     if (clk.y < .5f) {
-                        if (human->attempt_spend(OFFICER_UPGRADE_COST)) {
+                        if (human->attempt_spend(OFFICER_UPGRADE_COST, MC_TempOfficer)) {
                             if (defending) {
                                 if (b.defender_officer == OFFQ_Poor) {
                                     b.defender_officer = OFFQ_Average;

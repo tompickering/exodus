@@ -1489,7 +1489,7 @@ bool MenuDrawer::menu_specific_update() {
             // 6: Build Artificial Planet
             if (menu_row_clicked(6)) {
                 // Cost is refunded on cancel
-                if (p->attempt_spend(COST_ART)) {
+                if (p->attempt_spend(COST_ART, MC_ArtPlanet)) {
                     menu_art_planet_phase = 0;
                     menu_art_planet_named = false;
                     menu_open(MM_ArtificialWorld);
@@ -1673,7 +1673,7 @@ bool MenuDrawer::menu_specific_update() {
                 SpriteClick clk = draw_manager.query_click(id_menu_newoff_opt);
                 if (clk.id) {
                     if (clk.x < .33f) {
-                        if (p->attempt_spend(engagement_cost)) {
+                        if (p->attempt_spend(engagement_cost, MC_NewOfficer)) {
                             draw_manager.draw(id_menu_newoff_opt, nullptr);
                             p->set_officer(menu_new_officer, menu_new_officer_quality);
                             menu_open(MM_OldOfficer);
@@ -1694,7 +1694,7 @@ bool MenuDrawer::menu_specific_update() {
         case MM_OldOfficer:
             {
                 if (menu_row_clicked(2)) {
-                    if (p->attempt_spend(OFF_PAY_MC)) {
+                    if (p->attempt_spend(OFF_PAY_MC, MC_OldOfficer)) {
                         p->adjust_reputation(1);
                         menu_open(MM_OldOfficerPaid);
                         return true;
@@ -1734,7 +1734,7 @@ bool MenuDrawer::menu_specific_update() {
 
             // 5: A Personal File
             if (menu_row_clicked(5)) {
-                if (p->attempt_spend(COST_FILE)) {
+                if (p->attempt_spend(COST_FILE, MC_SecretService)) {
                     menu_open_player_select(MM_SecPersonalFile);
                     return true;
                 }
@@ -1773,7 +1773,7 @@ bool MenuDrawer::menu_specific_update() {
         case MM_SecInfo:
             // 3: Amount of money
             if (menu_row_clicked(3)) {
-                if (p->attempt_spend(COST_INF_MC)) {
+                if (p->attempt_spend(COST_INF_MC, MC_SecretService)) {
                     menu_open_player_select(MM_SecInfoMC);
                     return true;
                 }
@@ -1781,7 +1781,7 @@ bool MenuDrawer::menu_specific_update() {
 
             // 4: Allies
             if (menu_row_clicked(4)) {
-                if (p->attempt_spend(COST_INF_ALLIES)) {
+                if (p->attempt_spend(COST_INF_ALLIES, MC_SecretService)) {
                     menu_open_player_select(MM_SecInfoAllies);
                     return true;
                 }
@@ -1789,7 +1789,7 @@ bool MenuDrawer::menu_specific_update() {
 
             // 5: Number of planets
             if (menu_row_clicked(5)) {
-                if (p->attempt_spend(COST_INF_NPLANS)) {
+                if (p->attempt_spend(COST_INF_NPLANS, MC_SecretService)) {
                     menu_open_player_select(MM_SecInfoPlanets);
                     return true;
                 }
@@ -1797,7 +1797,7 @@ bool MenuDrawer::menu_specific_update() {
 
             // 6: Inventions
             if (menu_row_clicked(6)) {
-                if (p->attempt_spend(COST_INF_INV)) {
+                if (p->attempt_spend(COST_INF_INV, MC_SecretService)) {
                     menu_open_player_select(MM_SecInfoInventions);
                     return true;
                 }
@@ -1808,6 +1808,7 @@ bool MenuDrawer::menu_specific_update() {
                 if (p->can_afford(COST_INF_SURF)) {
                     ephstate.select_planet(SPR_PlanetSurface);
                     ephstate.selectplanet_mc = COST_INF_SURF;
+                    ephstate.selectplanet_mc_reason = MC_SecretService;
                     menu_new_mode = ephstate.get_appropriate_mode();
                     return true;
                 }
@@ -1894,6 +1895,7 @@ bool MenuDrawer::menu_specific_update() {
                 if (mission != MT_None) {
                     ephstate.select_planet(&star_idx, &planet_idx);
                     ephstate.selectplanet_mc = cost;
+                    ephstate.selectplanet_mc_reason = MC_Missions;
                     ephstate.selectplanet_mission = mission;
                     return false;
                 }
@@ -1923,6 +1925,7 @@ bool MenuDrawer::menu_specific_update() {
                     if (p->can_afford(COST_ATT_BOMB)) {
                         ephstate.select_planet(&star_idx, &planet_idx);
                         ephstate.selectplanet_mc = COST_ATT_BOMB;
+                        ephstate.selectplanet_mc_reason = MC_Missions;
                         ephstate.selectplanet_trace = TRACE_PlanetsBombed;
                         ephstate.selectplanet_mission = MT_RandomBomb;
                         return false;
@@ -1934,6 +1937,7 @@ bool MenuDrawer::menu_specific_update() {
                     if (p->can_afford(COST_ATT_NUKE)) {
                         ephstate.select_planet(&star_idx, &planet_idx);
                         ephstate.selectplanet_mc = COST_ATT_NUKE;
+                        ephstate.selectplanet_mc_reason = MC_Missions;
                         ephstate.selectplanet_trace = TRACE_PlanetsNuked;
                         ephstate.selectplanet_mission = MT_Nuclear;
                         return false;

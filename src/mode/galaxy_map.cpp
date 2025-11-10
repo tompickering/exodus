@@ -745,7 +745,7 @@ ExodusMode GalaxyMap::update(float delta) {
                 // Allow player to cancel
                 if (input_manager.consume(K_Escape)) {
                     if (!artificial_planet_to_move) {
-                        player->give_mc(COST_ART);
+                        player->give_mc(COST_ART, MC_ArtPlanet);
                     }
                     artificial_planet_to_move = nullptr;
                     set_stage(GM_Idle);
@@ -2273,7 +2273,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                     if (cost <= 0) {
                         continue;
                     }
-                    if (p->attempt_spend(cost)) {
+                    if (p->attempt_spend(cost, MC_OfficerSalary)) {
                         L.debug("[%s] Paid for officer: %d", p->get_full_name(), cost);
                     } else {
                         L.debug("[%s] Could not pay for officer: %d", p->get_full_name(), cost);
@@ -2583,7 +2583,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
         if (exostate().get_n_active_cpu_players() > 0) {
             if (onein(400) && (exostate().get_n_unowned_planets() > 0) && player->return_to_galaxy()) {
                 int m = exostate().get_orig_month();
-                player->give_mc(RND(300) + (m*50));
+                player->give_mc(RND(300) + (m*50), MC_ReturnToGalaxyReset);
                 player->set_tactic(9);
                 player->get_location().set_target(exostate().get_random_star_idx(), 1);
                 player->get_location().advance();
@@ -2843,7 +2843,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         }
                     }
 
-                    if (player->attempt_spend(cost)) {
+                    if (player->attempt_spend(cost, MC_Missions)) {
                         L.info("[%s]: COMMITTING MISSION %d", player->get_full_name(), plan);
                         player->set_mission_type(plan);
                     }
@@ -2865,14 +2865,14 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
             for (int i = 0; i <= n; ++i) {
                 switch (rand() % 4) {
                     case 0:
-                        if (onein(3) && player->attempt_spend(10)) {
+                        if (onein(3) && player->attempt_spend(10, MC_FleetProd)) {
                             L.debug("[%s]: BUY SCOUT", player->get_full_name());
                             fleet.scouts++;
                         }
                         break;
                     case 1:
                         for (int j = 0; j < 3; ++j) {
-                            if (player->attempt_spend(15)) {
+                            if (player->attempt_spend(15, MC_FleetProd)) {
                                 L.debug("[%s]: BUY TRANSPORTER", player->get_full_name());
                                 fleet.transporters++;
                             }
@@ -2884,13 +2884,13 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                          * it saves the CPU player money. Advantage is that without this noise
                          * you get more meaningful fleet size info from a captured assassin.
                          */
-                        if (player->attempt_spend(20)) {
+                        if (player->attempt_spend(20, MC_FleetProd)) {
                             L.debug("[%s]: BUY WARSHIP", player->get_full_name());
                             fleet.warships++;
                         }
                         break;
                     case 3:
-                        if (player->get_race() != RACE_Teri && player->attempt_spend(25)) {
+                        if (player->get_race() != RACE_Teri && player->attempt_spend(25, MC_FleetProd)) {
                             L.debug("[%s]: BUY BOMBER", player->get_full_name());
                             fleet.bombers++;
                         }
@@ -2908,13 +2908,13 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 if (i == 1) off = OFF_Science;
                 if (i == 2) off = OFF_Secret;
                 if (player->get_officer(off) < OFFQ_Good) {
-                    if (player->attempt_spend_with_remaining(800, 1)) {
+                    if (player->attempt_spend_with_remaining(800, 1, MC_NewOfficer)) {
                         player->set_officer(off, OFFQ_Good);
                         break;
                     }
                 }
                 if (player->get_officer(off) < OFFQ_Average) {
-                    if (player->attempt_spend_with_remaining(400, 1)) {
+                    if (player->attempt_spend_with_remaining(400, 1, MC_NewOfficer)) {
                         player->set_officer(off, OFFQ_Average);
                         break;
                     }
@@ -2930,7 +2930,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
         if (art && phase < 3) {
             if (   (phase == 2 && player->can_afford(1500))
                 || (phase == 1 && player->can_afford(1000))) {
-                if (player->attempt_spend(1000)) {
+                if (player->attempt_spend(1000, MC_ArtPlanet)) {
                     if (!art->advance_construction_phase()) {
                         L.error("Attempt to advance non-advanceable planet");
                     }
@@ -2967,7 +2967,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 for (StarIterator siter; !siter.complete(); ++siter) {
                     Star *s = siter.get();
                     if (exostate().artificial_planet_viable(s) == APV_Yes) {
-                        if (player->attempt_spend(1000)) {
+                        if (player->attempt_spend(1000, MC_ArtPlanet)) {
                             if (!exostate().construct_artificial_planet(s, player_idx, nullptr)) {
                                 L.error("Should be possible - viability check returned true");
                             }
@@ -3529,7 +3529,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 Star *s = &stars[star_idx];
                 Planet *p = s->get_planet(planet_idx);
                 if (p && p->exists() && !p->is_owned()) {
-                    if (player->attempt_spend_cpuforce(190)) {
+                    if (player->attempt_spend_cpuforce(190, MC_Colonise)) {
                         p->set_owner(player_idx, POCR_Settled);
                         p->reset_unrest();
                         p->prepare_for_cpu_lord();
@@ -3807,7 +3807,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     // Supporter MC ONLY expended and units added to defender planet when total > 3 - but supporter still loses them
                     int inf, gli, art;
                     int cost = bulletin_get_war_ally_result(inf, gli, art);
-                    if (inf + gli + art > 3 && supporter->attempt_spend(cost)) {
+                    if (inf + gli + art > 3 && supporter->attempt_spend(cost, MC_WarSupport)) {
                         L.info("[%s] Received support from %s", owner->get_full_name(), supporter->get_full_name());
                         p->adjust_army(inf, gli, art);
                         supporter->add_trace(TRACE_AlliesHelped);
@@ -4182,7 +4182,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
                         if (!owner->is_human()) {
                             if (!exostate().has_alliance(player_idx, owner_idx, ALLY_Trade)) {
-                                if (!player->attempt_spend_cpuforce(n)) {
+                                if (!player->attempt_spend_cpuforce(n, MC_TradeFee)) {
                                     L.warn("[%s] Preventing trade that was not affordable",
                                             player->get_full_name());
                                     player->set_tactic(22);
@@ -4193,9 +4193,9 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
                         const Freight &f = player->get_fleet().freight;
                         int sold_food = f.food;
-                        player->give_mc(a*player->transfer_min(-f.minerals));
-                        player->give_mc(b*player->transfer_fd(-f.food));
-                        player->give_mc(c*player->transfer_plu(-f.plutonium));
+                        player->give_mc(a*player->transfer_min(-f.minerals), MC_Trade);
+                        player->give_mc(b*player->transfer_fd(-f.food), MC_Trade);
+                        player->give_mc(c*player->transfer_plu(-f.plutonium), MC_Trade);
 
                         // PROClordbuy
                         if (!tradebuy_start(sold_food, rand()%6, rand()%5, rand()%4)) {
@@ -4944,12 +4944,29 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     if (mp_state.mpp_stage == MPP_Income) {
         if (owner) {
-            int income = p->get_net_income();
-            // If income is 1, we allow it to remain at 1 if taxes are <50%
-            if (!(income == 1 && owner->get_tax() < 50)) {
-                income = (income * (100 - owner->get_tax())) / 100;
+            int income_net = p->get_net_income();
+
+            int income_base = p->get_base_income();
+            int income_city = p->get_city_income();
+            int income_deductions = p->get_army_funding();
+
+            if (income_net != (income_base + income_city - income_deductions)) {
+                L.fatal("Income sums aren't accounting for something");
             }
-            owner->give_mc(income);
+
+            owner->give_mc(income_base, MC_Planets);
+            owner->give_mc(income_city, MC_Cities);
+            owner->attempt_spend_force(income_deductions, MC_Army);
+
+            int income_orig = income_net;
+
+            // If income is 1, we allow it to remain at 1 if taxes are <50%
+            if (!(income_orig == 1 && owner->get_tax() < 50)) {
+                income_orig = (income_orig * (100 - owner->get_tax())) / 100;
+            }
+
+            int spent_on_science = income_net - income_orig;
+            !owner->attempt_spend_force(spent_on_science, MC_ScienceFunding);
         }
         next_mpp_stage();
     }
@@ -5042,7 +5059,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     next_mpp_stage();
                     return ExodusMode::MODE_None;
                 } else {
-                    owner->attempt_spend_cpuforce(cost);
+                    owner->attempt_spend_cpuforce(cost, MC_FactoryRepair);
                     n = 0;
                 }
             }
@@ -5058,7 +5075,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         if (n > 0) {
             if (owner && owner->is_human()) {
                 if (bulletin_was_yesno_yes()) {
-                    while (n > 0 && owner->attempt_spend(repair_cost)) {
+                    while (n > 0 && owner->attempt_spend(repair_cost, MC_FactoryRepair)) {
                         n--;
                     }
                 }
@@ -5115,7 +5132,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         if (owner && n_villages > 2) {
             int mc = RND(n_villages);
             // FIXME: Should we delay the giving of MC until the bulletin?
-            owner->give_mc(mc);
+            owner->give_mc(mc, MC_VillageGifts);
             report.register_good_news();
             report.add_line("The native village inhabitants offer");
             report.add_line("presents that are worth %d MC.", mc);
@@ -5309,7 +5326,7 @@ bool GalaxyMap::update_research(Planet *p) {
     Player *owner = exostate().get_player(p->get_owner());
     if (ephstate.research.done) {
         ephstate.research.done = false;
-        if (ephstate.research.cost > 0 && !owner->attempt_spend(ephstate.research.cost)) {
+        if (ephstate.research.cost > 0 && !owner->attempt_spend(ephstate.research.cost, MC_Research)) {
             L.fatal("Option was given to spend more on research than player's MC. Cost: %d", ephstate.research.cost);
         }
         Invention inv = owner->get_random_researchable_invention();
@@ -5365,13 +5382,13 @@ bool GalaxyMap::update_research(Planet *p) {
                     // Changed phraseology slightly here - original "...Planet X earns therefore Y MC"
                     bulletin_set_next_text("The owner of Planet %s therefore", p->get_name());
                     bulletin_set_next_text("receives %dMC.", mc_reward);
-                    owner->give_mc(mc_reward);
+                    owner->give_mc(mc_reward, MC_Discovery);
                 }
                 next_mpp_stage();
                 return true;
             } else {
                 // CPU players get MC for all inventions - not just the later ones
-                owner->give_mc(mc_reward);
+                owner->give_mc(mc_reward, MC_Discovery);
             }
         } else {
             // New species discovery if all inventions researched
@@ -5459,7 +5476,7 @@ void GalaxyMap::discover_species_bulletin(Planet* p) {
         int reward = RND(5)*5;
         bulletin_set_next_text("The owner of planet %s therefore", p->get_name());
         bulletin_set_next_text("receives %d Mega Credits.", reward);
-        owner->give_mc(reward);
+        owner->give_mc(reward, MC_Discovery);
     } else {
         exostate().register_news(NI_NewPlant);
         bulletin_set_next_text("NEW PLANT DISCOVERED");
@@ -5507,7 +5524,7 @@ void GalaxyMap::discover_species_bulletin(Planet* p) {
         int reward = RND(4)*5;
         bulletin_set_next_text("The owner of planet %s therefore", p->get_name());
         bulletin_set_next_text("receives %d Mega Credits.", reward);
-        owner->give_mc(reward);
+        owner->give_mc(reward, MC_Discovery);
     }
 }
 

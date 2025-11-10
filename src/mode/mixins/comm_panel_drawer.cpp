@@ -1312,7 +1312,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 if (comm_planet_name_confirm_time == comm_time) {
                     const char *name = input_manager.get_input_text(PLANET_MAX_NAME);
                     input_manager.stop_text_input();
-                    if (comm_player->attempt_spend(comm_planet->get_settlement_cost())) {
+                    if (comm_player->attempt_spend(comm_planet->get_settlement_cost(), MC_Colonise)) {
                         comm_planet->set_name(name);
                         comm_planet->set_owner(exostate().get_player_idx(comm_player), POCR_Settled);
                         comm_player->add_trace(TRACE_PlanetsClaimed);
@@ -1517,7 +1517,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             }
             break;
         case DIA_S_AttackAllyCompensate:
-            if (!comm_player->attempt_spend(comm_ctx.mc)) {
+            if (!comm_player->attempt_spend(comm_ctx.mc, MC_DiplomaticReparations)) {
                 L.fatal("Not able to afford alliance breach compensation");
             }
             comm_prepare(1);
@@ -1738,7 +1738,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             }
             // TODO_MP: Multiplayer - 'verhalten'
             if (onein(max(comm_ctx.alliance_prob, 1))) {
-                if (!comm_player->attempt_spend(comm_ctx.mc)) {
+                if (!comm_player->attempt_spend(comm_ctx.mc, MC_Alliance)) {
                     // Shouldn't be able to set value higher than we can afford
                     L.fatal("We offered more than we could afford");
                 }
@@ -1816,11 +1816,11 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     comm_recv(DIA_R_Close);
                 } else {
                     comm_set_speech("I accept this.");
-                    if (!comm_player->attempt_spend(comm_ctx.mc)) {
+                    if (!comm_player->attempt_spend(comm_ctx.mc, MC_DiplomaticReparations)) {
                         L.fatal("Compensate (lower) with more than we can afford (%d/%d)",
                                 comm_ctx.mc, comm_player->get_mc());
                     }
-                    comm_other->give_mc(comm_ctx.mc);
+                    comm_other->give_mc(comm_ctx.mc, MC_DiplomaticReparations);
                     comm_other->clear_hostility();
                     comm_exit_anim_action = CA_Abort;
                     comm_recv(DIA_R_Close);
@@ -1839,11 +1839,11 @@ void CommPanelDrawer::comm_send(CommSend input) {
             {
                 comm_prepare(1);
                 comm_set_speech("I accept this.");
-                if (!comm_player->attempt_spend(comm_ctx.mc)) {
+                if (!comm_player->attempt_spend(comm_ctx.mc, MC_DiplomaticReparations)) {
                     L.fatal("Compensate with more than we can afford (%d/%d)",
                             comm_ctx.mc, comm_player->get_mc());
                 }
-                comm_other->give_mc(comm_ctx.mc);
+                comm_other->give_mc(comm_ctx.mc, MC_DiplomaticReparations);
                 comm_other->clear_hostility();
                 comm_exit_anim_action = CA_Abort;
                 comm_recv(DIA_R_Close);
@@ -2183,7 +2183,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 if (comm_player->get_flag(0) == AI_Hi) {
                     accept = false;
                 }
-                if (accept && comm_other->attempt_spend(comm_ctx.mc)) {
+                if (accept && comm_other->attempt_spend(comm_ctx.mc, MC_PeaceDeal)) {
                     comm_set_speech("I accept this.");
                     // FIXME: Orig doesn't increment lord's credits here
                     comm_exit_anim_action = CA_Abort;
@@ -2239,8 +2239,8 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 }
 
                 comm_prepare(1);
-                if (accept && comm_player->attempt_spend(comm_ctx.mc)) {
-                    comm_other->give_mc(comm_ctx.mc);
+                if (accept && comm_player->attempt_spend(comm_ctx.mc, MC_TradeFee)) {
+                    comm_other->give_mc(comm_ctx.mc, MC_TradeFee);
                     comm_set_speech("I accept this.");
                     comm_exit_anim_action = CA_Trade;
                 } else {
@@ -2388,13 +2388,13 @@ void CommPanelDrawer::comm_send(CommSend input) {
 
                 int p = exostate().get_n_planets(comm_other);
 
-                if (p <= 1 && a*2 > d*3 && comm_other->attempt_spend(comm_ctx.mc)) {
+                if (p <= 1 && a*2 > d*3 && comm_other->attempt_spend(comm_ctx.mc, MC_PeaceDeal)) {
                     comm_set_speech("I think I will accept this.");
 
                     // Prevent further attacks this month (orig doesn't do this)
                     exostate().prevent_attack(comm_planet);
 
-                    comm_player->give_mc(comm_ctx.mc);
+                    comm_player->give_mc(comm_ctx.mc, MC_PeaceDeal);
                     comm_exit_anim_action = CA_CallOffAttack;
                 } else {
                     comm_set_speech("Forget that.");
@@ -2504,8 +2504,8 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 int &d = comm_ctx.battle_strength_def;
 
                 if (d > a*3) {
-                    if (comm_player->attempt_spend(comm_ctx.mc)) {
-                        comm_other->give_mc(comm_ctx.mc);
+                    if (comm_player->attempt_spend(comm_ctx.mc, MC_PeaceDeal)) {
+                        comm_other->give_mc(comm_ctx.mc, MC_PeaceDeal);
                         comm_set_speech("This is a fair offer.");
                         comm_exit_anim_action = CA_CallOffAttack;
                     } else {
@@ -2593,13 +2593,13 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_recv(DIA_R_Close);
             break;
         case DIA_S_B_CPU_CommsDefenderAccept:
-            if (!comm_other->attempt_spend(comm_ctx.mc)) {
+            if (!comm_other->attempt_spend(comm_ctx.mc, MC_PeaceDeal)) {
                 L.error("Can't afford payoff of %dMC - setting to 0", comm_ctx.mc);
                 if (comm_player->get_mc() > 0) {
-                    comm_player->attempt_spend(comm_player->get_mc());
+                    comm_player->attempt_spend(comm_player->get_mc(), MC_PeaceDeal);
                 }
             }
-            comm_player->give_mc(comm_ctx.mc);
+            comm_player->give_mc(comm_ctx.mc, MC_PeaceDeal);
 
             // Prevent further attacks this month (orig doesn't do this)
             exostate().prevent_attack(comm_planet);
@@ -2697,7 +2697,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 if (comm_ctx.mc2 < (comm_ctx.mc-(comm_ctx.mc/4))) {
                     ok = false;
                 }
-                if (!comm_other->attempt_spend(comm_ctx.mc2)) {
+                if (!comm_other->attempt_spend(comm_ctx.mc2, MC_PeaceDealRebels)) {
                     L.error("Offered more MC to rebels than we could afford");
                     ok = false;
                 }
@@ -2865,7 +2865,7 @@ void CommPanelDrawer::comm_process_responses() {
                         comm_report_action = CA_MovePlanet;
                     } else {
                         // Change global climate
-                        if (comm_player->attempt_spend(500)) {
+                        if (comm_player->attempt_spend(500, MC_ChangeGlobalClimate)) {
                             comm_send(DIA_S_ChangeClimate);
                         } else {
                             L.error("Unaffordable change climate should not be enabled");
@@ -2922,10 +2922,10 @@ void CommPanelDrawer::comm_process_responses() {
                     comm_send(DIA_S_AttackPayOffWantMore);
                     break;
                 case 1:
-                    if (!comm_other->attempt_spend(comm_ctx.mc)) {
+                    if (!comm_other->attempt_spend(comm_ctx.mc, MC_PeaceDeal)) {
                         L.fatal("CPU offered more than they could afford");
                     }
-                    comm_player->give_mc(comm_ctx.mc);
+                    comm_player->give_mc(comm_ctx.mc, MC_PeaceDeal);
 
                     // Prevent further attacks this month (orig doesn't do this)
                     exostate().prevent_attack(comm_planet);
@@ -2940,10 +2940,10 @@ void CommPanelDrawer::comm_process_responses() {
         case DIA_R_AttackPayOffMore:
             switch (opt) {
                 case 0:
-                    if (!comm_other->attempt_spend(comm_ctx.mc)) {
+                    if (!comm_other->attempt_spend(comm_ctx.mc, MC_PeaceDeal)) {
                         L.fatal("CPU offered more than they could afford after increase");
                     }
-                    comm_player->give_mc(comm_ctx.mc);
+                    comm_player->give_mc(comm_ctx.mc, MC_PeaceDeal);
 
                     // Prevent further attacks this month (orig doesn't do this)
                     exostate().prevent_attack(comm_planet);
@@ -2968,7 +2968,7 @@ void CommPanelDrawer::comm_process_responses() {
         case DIA_R_TradeFee:
             switch (opt) {
                 case 0:
-                    if (comm_player->attempt_spend(comm_ctx.mc)) {
+                    if (comm_player->attempt_spend(comm_ctx.mc, MC_TradeFee)) {
                         comm_exit_anim(CA_Trade);
                     }
                     break;
@@ -3267,7 +3267,7 @@ void CommPanelDrawer::comm_process_responses() {
                 case 0:
                     // I accept this
                     // FIXME: Orig doesn't subtract MC from CPU lord, so neither do we
-                    comm_other->give_mc(comm_ctx.mc);
+                    comm_other->give_mc(comm_ctx.mc, MC_Alliance);
                     exostate().set_alliance(comm_player_idx, comm_other_idx, comm_ctx.alliance_type);
                     comm_exit_anim(CA_Abort);
                     break;
@@ -3345,7 +3345,7 @@ void CommPanelDrawer::comm_process_responses() {
                 if (draw_manager.query_click(id_comm_adj_ok).id) {
                     input_manager.enable_repeating_clicks(false);
                     if (comm_ctx.mc > exostate().get_orig_month()/2) {
-                        if (comm_other->attempt_spend(comm_ctx.mc)) {
+                        if (comm_other->attempt_spend(comm_ctx.mc, MC_PeaceDeal)) {
                             // FIXME: Orig doesn't give MC to CPU player either
                             comm_send(DIA_S_B_OfferMoneyDefenderAccept);
                         } else {

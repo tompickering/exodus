@@ -458,7 +458,11 @@ int Planet::get_base_income() {
 }
 
 int Planet::get_income() {
-    return get_base_income() + get_n_cities() * CITY_INCOME;
+    return get_base_income() + get_city_income();
+}
+
+int Planet::get_city_income() {
+    return get_n_cities() * CITY_INCOME;
 }
 
 int Planet::get_net_income() {
@@ -1486,7 +1490,7 @@ void Planet::collect_taxes() {
 
     Player *p = exostate().get_player(get_owner());
     adjust_unrest(4);
-    p->give_mc(get_tax_amount());
+    p->give_mc(get_tax_amount(), MC_ExtraTaxes);
     taxes_collected = true;
 }
 
@@ -1717,7 +1721,7 @@ TradeReport Planet::monthly_trade() {
     o->add_trace(TRACE_FoodSold, rpt.fd);
     o->add_trace(TRACE_PlutoniumSold, rpt.pl);
 
-    o->give_mc(rpt.mc);
+    o->give_mc(rpt.mc, MC_TradingCentre);
 
     return rpt;
 }
@@ -2127,7 +2131,7 @@ void Planet::ai_update() {
             bool viable = (c == Desert || c == Volcano || c == Ice || c == Rock);
             if (viable && onein(c == Rock ? 20 : 10)) {
                 // FIXME: Should be a cost variable somewhere
-                if (owner->attempt_spend(500)) {
+                if (owner->attempt_spend(500, MC_ChangeGlobalClimate)) {
                     PlanetClass new_class = Desert;
                     switch (c) {
                         case Desert:
@@ -2290,7 +2294,7 @@ void Planet::ai_update() {
                          * the same behaviour...
                          */
                         if (owner->can_afford(cost-3) && free >= agri_needed+1) {
-                            if (owner->attempt_spend_cpuforce(cost)) {
+                            if (owner->attempt_spend_cpuforce(cost, MC_Building)) {
                                 free -= ai_place_stone(1, STONE_City, STONE_City);
                                 free -= ai_place_stone(agri_needed, STONE_Agri, STONE_Agri);
                             }
@@ -2304,7 +2308,7 @@ void Planet::ai_update() {
                     Stone to_build = random_military();
                     Stone target_neighbour = random_military();
                     int cost = stone_cost(to_build) + stone_cost(STONE_Plu);
-                    if (free > 1 && owner->attempt_spend(cost)) {
+                    if (free > 1 && owner->attempt_spend(cost, MC_Building)) {
                         free -= ai_place_stone(1, to_build, target_neighbour);
                         free -= ai_place_stone(1, STONE_Plu, STONE_NaturalLarge);
                     }
@@ -2316,7 +2320,7 @@ void Planet::ai_update() {
                     int cost = stone_cost(STONE_Port0)
                              + stone_cost(STONE_Port1)
                              + stone_cost(STONE_Port2);
-                    if (free >= 3 && owner->attempt_spend(cost)) {
+                    if (free >= 3 && owner->attempt_spend(cost, MC_Building)) {
                         free -= ai_place_stone(1, STONE_Port0, STONE_Base);
                         free -= ai_place_stone(1, STONE_Port1, STONE_Port0);
                         free -= ai_place_stone(1, STONE_Port2, STONE_Port1);
@@ -2328,7 +2332,7 @@ void Planet::ai_update() {
                 {
                     int cost = stone_cost(STONE_Mine) + stone_cost(STONE_Plu);
                     for (int i = 0; i < RND(4); ++i) {
-                        if (free > 1 && owner->attempt_spend(cost)) {
+                        if (free > 1 && owner->attempt_spend(cost, MC_Building)) {
                             free -= ai_place_stone(1, STONE_Mine, STONE_Mine);
                             free -= ai_place_stone(1, STONE_Plu, STONE_NaturalLarge);
                         }
@@ -2337,13 +2341,13 @@ void Planet::ai_update() {
                 break;
             case 5:
                 // BUILD TRADE CENTRE
-                if (free > 0 && owner->attempt_spend_cpuforce(stone_cost(STONE_Trade))) {
+                if (free > 0 && owner->attempt_spend_cpuforce(stone_cost(STONE_Trade), MC_Building)) {
                     free -= ai_place_stone(1, STONE_Trade, STONE_City);
                 }
                 break;
             case 6:
                 // BUILD LUNAR BASE
-                if (!has_lunar_base() && owner->attempt_spend_cpuforce(COST_LUNAR_BASE)) {
+                if (!has_lunar_base() && owner->attempt_spend_cpuforce(COST_LUNAR_BASE, MC_BuildingLunarBase)) {
                     build_lunar_base();
                 } else {
                     // PROCeta6 sets action=2 in this case, but it looks inconsequential
@@ -2364,7 +2368,7 @@ void Planet::ai_update() {
                         int x, y;
                         while (n > 0 && find_random_stone(STONE_City, x, y)) {
                             int cost = stone_cost(STONE_Clear) + stone_cost(STONE_Agri);
-                            if (owner->attempt_spend(cost)) {
+                            if (owner->attempt_spend(cost, MC_Building)) {
                                 set_stone(x, y, STONE_Agri);
                             } else {
                                 break;
@@ -2376,7 +2380,7 @@ void Planet::ai_update() {
                     if (r > free) {
                         r = rand() % free;
                     }
-                    if (owner->attempt_spend_cpuforce(r * stone_cost(STONE_Agri))) {
+                    if (owner->attempt_spend_cpuforce(r * stone_cost(STONE_Agri), MC_Building)) {
                         free -= ai_place_stone(r, STONE_Agri, STONE_Agri);
                     }
                 }
@@ -2399,7 +2403,7 @@ void Planet::ai_update() {
                         if (r + guns > p) {
                             r = p - guns;
                         }
-                        if (owner->attempt_spend(r * COST_AIRDEF)) {
+                        if (owner->attempt_spend(r * COST_AIRDEF, MC_FleetProd)) {
                             airdef_guns += r;
                         } else {
                             L.error("Could not afford MC that we checked we had");
@@ -2409,7 +2413,7 @@ void Planet::ai_update() {
                 break;
             case 10:
                 // BUILD A BACKUP BASE
-                if (owner->attempt_spend_cpuforce(stone_cost(STONE_Base))) {
+                if (owner->attempt_spend_cpuforce(stone_cost(STONE_Base), MC_Building)) {
                     free -= ai_place_stone(1, STONE_Base, STONE_Base);
                 }
                 break;
@@ -2419,7 +2423,7 @@ void Planet::ai_update() {
                     int r = RND(3);
                     // SUGGEST: Don't buy robots outside resource limits (get_robot_cap())
                     // These robots might be scrapped on discard_excess_resources()!
-                    if (owner->attempt_spend_cpuforce(r * COST_ROBOT)) {
+                    if (owner->attempt_spend_cpuforce(r * COST_ROBOT, MC_FleetProd)) {
                         robots += r;
                     }
                 }
@@ -2434,7 +2438,7 @@ void Planet::ai_update() {
                             for (int x = rand() % sz; x < sz; ++x) {
                                 Stone s = get_stone(x, y);
                                 if (s == STONE_AgriDead || s == STONE_Rubble) {
-                                    if (owner->attempt_spend_cpuforce(stone_cost(STONE_Clear))) {
+                                    if (owner->attempt_spend_cpuforce(stone_cost(STONE_Clear), MC_Building)) {
                                         set_stone(x, y, STONE_Clear);
                                         break;
                                     }
@@ -2472,7 +2476,7 @@ void Planet::ai_update() {
                         to_build = (crd/cost)+1;
                     }
                     for (int i = 0; i < to_build; ++i) {
-                        if (owner->attempt_spend_cpuforce(cost)) {
+                        if (owner->attempt_spend_cpuforce(cost, MC_Building)) {
                             free -= ai_place_stone(1, STONE_Plu, STONE_NaturalLarge);
                         }
                     }
@@ -2548,7 +2552,7 @@ void Planet::_ai_make_space() {
                     || s == STONE_Rubble
                     || s == ab
                     || s == ac) {
-                    if (owner->attempt_spend(stone_cost(STONE_Clear))) {
+                    if (owner->attempt_spend(stone_cost(STONE_Clear), MC_Building)) {
                         set_stone(x, y, STONE_Clear);
                         placed = true;
                         break;

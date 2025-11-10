@@ -338,7 +338,7 @@ bool Player::return_to_galaxy() {
         left_galaxy = false;
         bool returned = is_participating();
         if (returned) {
-            mc = 0;
+            set_mc(0, MC_ReturnToGalaxyReset);
             fleet.freight.clear();
         }
         return returned;
@@ -439,26 +439,26 @@ void Player::set_intro_seen() {
     _intro_seen = true;
 }
 
-void Player::give_mc(int extra_mc) {
+void Player::give_mc(int extra_mc, MCReason reason) {
     if (extra_mc < 0) {
         L.fatal("Attempt to grant invalid MC amount %d", extra_mc);
     }
 
-    mc += extra_mc;
+    adjust_mc(extra_mc, reason);
 }
 
 bool Player::can_afford(int cost) {
     if (cost < 0) {
         L.warn("Calling can_afford() with -ve value %d", cost);
     }
-    return mc >= (int)cost;
+    return get_mc() >= (int)cost;
 }
 
-bool Player::attempt_spend(int cost) {
-    return attempt_spend_with_remaining(cost, 0);
+bool Player::attempt_spend(int cost, MCReason reason) {
+    return attempt_spend_with_remaining(cost, 0, reason);
 }
 
-bool Player::attempt_spend_with_remaining(int cost, int remaining) {
+bool Player::attempt_spend_with_remaining(int cost, int remaining, MCReason reason) {
     if (cost < 0) {
         L.warn("Calling attempt_spend_with_remaining() with -ve value %d", cost);
     }
@@ -467,53 +467,61 @@ bool Player::attempt_spend_with_remaining(int cost, int remaining) {
     }
 
     if (can_afford(cost + remaining)) {
-        mc -= cost;
+        adjust_mc(-cost, reason);
         return true;
     }
 
     return false;
 }
 
-bool Player::attempt_spend_allowing_writeoff(int cost, int lim) {
-    if (cost <= mc) {
-        return attempt_spend(cost);
+bool Player::attempt_spend_allowing_writeoff(int cost, int lim, MCReason reason) {
+    if (cost <= get_mc()) {
+        return attempt_spend(cost, reason);
     }
 
     // We're trying to overspend, but within the accepted limit
     // Zero MC and write off difference
-    if (cost <= mc+lim) {
-        mc = 0;
+    if (cost <= get_mc()+lim) {
+        set_mc(0, reason);
         return true;
     }
 
     return false;
 }
 
-bool Player::attempt_spend_cpuforce(int cost) {
-    if (is_human()) {
-        return attempt_spend(cost);
-    }
+bool Player::attempt_spend_force(int cost, MCReason reason) {
+    adjust_mc(-cost, reason);
 
-    mc -= cost;
-
-    if (mc < 0) {
-        L.info("%s now has negative MC: %d", get_full_name(), mc);
+    if (get_mc() < 0) {
+        L.info("%s now has negative MC: %d", get_full_name(), get_mc());
     }
 
     return true;
 }
 
-int Player::remove_all_mc() {
-    if (mc < 0) {
+bool Player::attempt_spend_cpuforce(int cost, MCReason reason) {
+    if (is_human()) {
+        return attempt_spend(cost, reason);
+    }
+
+    return attempt_spend_force(cost, reason);
+}
+
+int Player::remove_all_mc(MCReason reason) {
+    if (get_mc() < 0) {
         return 0;
     }
 
-    int mc_removed = mc;
-    mc = 0;
+    int mc_removed = get_mc();
+    set_mc(0, reason);
 
     L.debug("[%s]: Funds zeroed (was %dMC)", get_full_name(), mc_removed);
 
     return mc_removed;
+}
+
+void Player::set_mc(int target_mc, MCReason reason) {
+    adjust_mc(-(get_mc()), reason);
 }
 
 void Player::cpu_write_off_debt() {
@@ -522,9 +530,9 @@ void Player::cpu_write_off_debt() {
         return;
     }
 
-    if (mc < 0) {
-        L.info("[%s] - Writing off debt (%d)", get_full_name(), mc);
-        mc = 0;
+    if (get_mc() < 0) {
+        L.info("[%s] - Writing off debt (%d)", get_full_name(), get_mc());
+        set_mc(0, MC_CPUWriteOffDebt);
     }
 }
 
@@ -1108,6 +1116,10 @@ void Player::add_trace(Trace t) {
 void Player::add_trace(Trace t, int n) {
     trace[t] += n;
     L.debug("%s: TRACE %d -> %d", get_full_name(), (int)t, trace[t]);
+}
+
+void Player::adjust_mc(int amount, MCReason reason) {
+    mc += amount;
 }
 
 void Player::save(cJSON* j) const

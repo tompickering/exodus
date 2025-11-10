@@ -246,7 +246,7 @@ ExodusMode ShipEquip::update(float delta) {
     }
 
     if (draw_manager.query_click(id(ID::EXIT)).id || input_manager.consume(K_E)) {
-        if (p->attempt_spend(total_cost())) {
+        if (p->attempt_spend(total_cost(), MC_ShipEquip)) {
             Starship &s = p->get_starship();
             s.shield_generators += rows[0].produce;
             s.laser_guns += rows[1].produce;

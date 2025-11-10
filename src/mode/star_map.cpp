@@ -760,7 +760,7 @@ ExodusMode StarMap::update(float delta) {
                 // TODO: Should we allow you to select unowned planets? Likely needs ephstate config
                 for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
                     if (draw_manager.query_click(id(ID::PLANET1 + i)).id) {
-                        if (ephstate.selectplanet_mc <= 0 || player->attempt_spend(ephstate.selectplanet_mc)) {
+                        if (ephstate.selectplanet_mc <= 0 || player->attempt_spend(ephstate.selectplanet_mc, ephstate.selectplanet_mc_reason)) {
                             if (ephstate.selectplanet_trace != TRACE_None) {
                                 player->add_trace(ephstate.selectplanet_trace);
                             }

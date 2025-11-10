@@ -74,7 +74,7 @@ bool TradeBuy::tradebuy_start(int fd, int inf, int gli, int art) {
 
                 L.debug("[%s]: BUY %dfd", owner->get_full_name(), to_buy);
 
-                if (owner->attempt_spend(to_buy * cost)) {
+                if (owner->attempt_spend(to_buy * cost, MC_TradeBuy)) {
                     p->adjust_reserves(0, to_buy, 0);
                 } else {
                     L.fatal("TradeBuy: Could not spend MC we checked we had (fd)");
@@ -90,7 +90,7 @@ bool TradeBuy::tradebuy_start(int fd, int inf, int gli, int art) {
 
                 L.debug("[%s]: BUY %dinf", owner->get_full_name(), to_buy);
 
-                if (owner->attempt_spend(to_buy * cost)) {
+                if (owner->attempt_spend(to_buy * cost, MC_TradeBuy)) {
                     p->adjust_army(to_buy, 0, 0);
                 } else {
                     L.fatal("TradeBuy: Could not spend MC we checked we had (inf)");
@@ -106,7 +106,7 @@ bool TradeBuy::tradebuy_start(int fd, int inf, int gli, int art) {
 
                 L.debug("[%s]: BUY %dgli", owner->get_full_name(), to_buy);
 
-                if (owner->attempt_spend(to_buy * cost)) {
+                if (owner->attempt_spend(to_buy * cost, MC_TradeBuy)) {
                     p->adjust_army(0, to_buy, 0);
                 } else {
                     L.fatal("TradeBuy: Could not spend MC we checked we had (gli)");
@@ -122,7 +122,7 @@ bool TradeBuy::tradebuy_start(int fd, int inf, int gli, int art) {
 
                 L.debug("[%s]: BUY %dart", owner->get_full_name(), to_buy);
 
-                if (owner->attempt_spend(to_buy * cost)) {
+                if (owner->attempt_spend(to_buy * cost, MC_TradeBuy)) {
                     p->adjust_army(0, 0, to_buy);
                 } else {
                     L.fatal("TradeBuy: Could not spend MC we checked we had (art)");
@@ -410,7 +410,7 @@ bool TradeBuy::tradebuy_update() {
         if (clk.id) {
             if (clk.x < 0.5f) {
                 if (r.buy > 0) {
-                    owner->give_mc(r.cost);
+                    owner->give_mc(r.cost, MC_TradeBuy);
                     r.buy--;
                 }
             } else {
@@ -434,7 +434,7 @@ bool TradeBuy::tradebuy_update() {
                     }
 
                     if ((reserves + r.buy) < p->get_resource_cap()) {
-                        if (owner->attempt_spend(r.cost)) {
+                        if (owner->attempt_spend(r.cost, MC_TradeBuy)) {
                             r.buy++;
                         }
                     }

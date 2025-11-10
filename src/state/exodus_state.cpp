@@ -1020,7 +1020,7 @@ bool ExodusState::kill(Player* p) {
     }
 
     p->init_alien_name();
-    p->give_mc(200);
+    p->give_mc(200, MC_StartCredits);
     p->clear_hostility();
 
     int p_idx = get_player_idx(p);

@@ -638,12 +638,12 @@ void Trade::adjust_trade(bool inc) {
         }
 
         if (inc) {
-            p->give_mc(price);
+            p->give_mc(price, MC_Trade);
             sold++;
             r.stock++;
             adjust_freight(active_row, false);
         } else {
-            if (p->attempt_spend(price))
+            if (p->attempt_spend(price, MC_Trade))
             {
                 r.stock--;
                 sold--;
@@ -667,14 +667,14 @@ void Trade::adjust_trade(bool inc) {
         }
 
         if (inc) {
-            if (p->attempt_spend(price))
+            if (p->attempt_spend(price, MC_Trade))
             {
                 r.stock--;
                 bought++;
                 adjust_freight(active_row, true);
             }
         } else {
-            p->give_mc(price);
+            p->give_mc(price, MC_Trade);
             r.stock++;
             bought--;
             adjust_freight(active_row, false);

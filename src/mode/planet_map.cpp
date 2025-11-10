@@ -675,7 +675,7 @@ ExodusMode PlanetMap::update(float delta) {
                     }
 
                     if (ok) {
-                        if (player->attempt_spend(tool2cost(active_tool))) {
+                        if (player->attempt_spend(tool2cost(active_tool), MC_Building)) {
                             if (active_tool == TOOL_Clear) {
                                 // Clearing cities increases unrest
                                 if (existing == STONE_City) {
@@ -729,7 +729,7 @@ ExodusMode PlanetMap::update(float delta) {
 
             if (draw_manager.query_click(id(ID::LAWBUILD)).id) {
                 if (active_tool == TOOL_LunarBase && !planet->has_lunar_base()) {
-                    if (player->attempt_spend(tool2cost(TOOL_LunarBase))) {
+                    if (player->attempt_spend(tool2cost(TOOL_LunarBase), MC_BuildingLunarBase)) {
                         planet->build_lunar_base();
                         hide_lunar_base_tool();
                         set_build_button(false);
@@ -1224,14 +1224,14 @@ ExodusMode PlanetMap::update(float delta) {
                 bool big_festival = false;
 
                 if (draw_manager.query_click(id(ID::LAW_FESTSM)).id) {
-                    if (player->attempt_spend(20)) {
+                    if (player->attempt_spend(20, MC_Festival)) {
                         festival = true;
                         planet->adjust_unrest(-1);
                     }
                 }
 
                 if (draw_manager.query_click(id(ID::LAW_FESTLG)).id) {
-                    if (player->attempt_spend(100)) {
+                    if (player->attempt_spend(100, MC_Festival)) {
                         festival = true;
                         big_festival = true;
                         planet->adjust_unrest(-2);

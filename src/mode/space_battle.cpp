@@ -1335,7 +1335,7 @@ ExodusMode SpaceBattle::update(float delta) {
                         Justify::Left, 40, 40,
                         COL_TEXT2);
 
-                    int mc = player->remove_all_mc();
+                    int mc = player->remove_all_mc(MC_SpaceBattleSurrendered);
 
                     Fleet &fl = player->get_fleet_nonconst();
                     int stolen_transporters = min(RND(7), fl.transporters);
@@ -1433,7 +1433,7 @@ ExodusMode SpaceBattle::update(float delta) {
                     if (FEATURE(EF_SPACE_BATTLE_MC)) {
                         if (enemy_ships_destroyed > 0) {
                             int mc = RND(2*enemy_ships_destroyed);
-                            exostate().get_active_player()->give_mc(mc);
+                            exostate().get_active_player()->give_mc(mc, MC_SpaceBattleLoot);
 
                             snprintf(text, sizeof(text), "You were able to liberate %dMC", mc);
 
