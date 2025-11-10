@@ -85,7 +85,7 @@ static Anim anim_explode(
     nullptr
 );
 
-LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer() {
+LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer(), BulletinDrawer() {
     stage = LB_Move;
     aggressor = nullptr;
     panel_mode = LBPM_None;
@@ -114,6 +114,8 @@ LunarBattle::LunarBattle() : ModeBase("LunarBattle"), CommPanelDrawer() {
     to_place_msc = 0;
     agg_officer = OFFQ_Poor;
     def_officer = OFFQ_Poor;
+
+    bulletin_y_offset = 70;
 }
 
 void LunarBattle::enter() {
