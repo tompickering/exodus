@@ -49,7 +49,7 @@ class BattleUnit {
         BattleUnit(BattleUnitType);
         BattleUnit& init(int, int);
         BattleUnit& init(int, int, int);
-        BattleUnit& init(int, int, int, bool);
+        BattleUnit& init(int, int, int, bool, bool);
         void release_spr_id();
         BattleUnitType type;
         void do_move(Direction);
@@ -74,6 +74,7 @@ class BattleUnit {
         const char* move1_sfx;
         const char* move2_sfx;
         bool defending;
+        bool human;
         bool can_shoot_behind;
         bool can_act;
         bool can_use_cover;
@@ -108,6 +109,10 @@ class BattleUnit {
 #endif
 
         const char* debug_info();
+
+    private:
+
+        void update_enhanced_sprites();
 };
 
 class Cover {

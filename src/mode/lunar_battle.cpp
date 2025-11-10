@@ -434,7 +434,8 @@ ExodusMode LunarBattle::update(float delta) {
                                     place_unit(BattleUnit(UNIT_Inf).init(
                                                    cursor_x, cursor_y,
                                                    stack,
-                                                   placement_def));
+                                                   placement_def,
+                                                   true));
                                     to_place_inf -= stack;
                                 }
                                 break;
@@ -444,7 +445,8 @@ ExodusMode LunarBattle::update(float delta) {
                                     place_unit(BattleUnit(UNIT_Gli).init(
                                                    cursor_x, cursor_y,
                                                    stack,
-                                                   placement_def));
+                                                   placement_def,
+                                                   true));
                                     to_place_gli -= stack;
                                 }
                                 break;
@@ -454,7 +456,8 @@ ExodusMode LunarBattle::update(float delta) {
                                     place_unit(BattleUnit(UNIT_Art).init(
                                                    cursor_x, cursor_y,
                                                    stack,
-                                                   placement_def));
+                                                   placement_def,
+                                                   true));
                                     to_place_art -= stack;
                                 }
                                 break;
@@ -1684,6 +1687,8 @@ void LunarBattle::place_cover() {
 void LunarBattle::place_units(bool def) {
     LunarBattleParams &b = ephstate.lunar_battle;
 
+    bool human = (def == !(aggressor && aggressor->is_human()));
+
     int inf = b.aggressor_inf;
     int gli = b.aggressor_gli;
     int art = b.aggressor_art;
@@ -1713,10 +1718,10 @@ void LunarBattle::place_units(bool def) {
     if (stacks_art > 0) {
         BattleUnit u = (!def && b.aggressor_type == AGG_Aliens) ? UNIT_AArt : UNIT_Art;
         if (stacks_art >= 4) {
-            place_unit(BattleUnit(u).init(def ?  8 : 6,  0, stack, def));
-            place_unit(BattleUnit(u).init(def ?  8 : 6, 10, stack, def));
+            place_unit(BattleUnit(u).init(def ?  8 : 6,  0, stack, def, human));
+            place_unit(BattleUnit(u).init(def ?  8 : 6, 10, stack, def, human));
             // SUGGEST: These don't move - should we be placing them at the map edges...?
-            place_unit(BattleUnit(u).init(def ? 15 : 0,  4, stack, def));
+            place_unit(BattleUnit(u).init(def ? 15 : 0,  4, stack, def, human));
             art -= 3 * stack;
             while (art > 0) {
                 int x = rand() % 7;
@@ -1727,20 +1732,20 @@ void LunarBattle::place_units(bool def) {
                 if (unit_at(x, y) || cover_at(x, y)) {
                     continue;
                 }
-                place_unit(BattleUnit(u).init(x, y, min(stack, art), def));
+                place_unit(BattleUnit(u).init(x, y, min(stack, art), def, human));
                 art -= min(stack, art);
             }
         } else {
-            place_unit(BattleUnit(u).init(def ? 15 : 0, 4, stack, def));
+            place_unit(BattleUnit(u).init(def ? 15 : 0, 4, stack, def, human));
             art -= min(stack, art);
 
             if (art > 0) {
-                place_unit(BattleUnit(u).init(def ? 8 : 6, 1, min(stack, art), def));
+                place_unit(BattleUnit(u).init(def ? 8 : 6, 1, min(stack, art), def, human));
                 art -= min(stack, art);
             }
 
             if (art > 0) {
-                place_unit(BattleUnit(u).init(def ? 8 : 6, 9, min(stack, art), def));
+                place_unit(BattleUnit(u).init(def ? 8 : 6, 9, min(stack, art), def, human));
                 art -= min(stack, art);
             }
 
@@ -1789,14 +1794,14 @@ void LunarBattle::place_units(bool def) {
                     }
 
                     if (inf > 0) {
-                        place_unit(BattleUnit(u_inf).init(_x, y, min(stack, inf), def));
+                        place_unit(BattleUnit(u_inf).init(_x, y, min(stack, inf), def, human));
                         inf -= min(stack, inf);
                     } else if (gli > 0) {
-                        place_unit(BattleUnit(u_gli).init(_x, y, min(stack, gli), def));
+                        place_unit(BattleUnit(u_gli).init(_x, y, min(stack, gli), def, human));
                         gli -= min(stack, gli);
                     } else if (art > 0) {
                         // Shouldn't happen, as we already placed artillery...
-                        place_unit(BattleUnit(UNIT_Art).init(_x, y, min(stack, art), def));
+                        place_unit(BattleUnit(UNIT_Art).init(_x, y, min(stack, art), def, human));
                         art -= min(stack, art);
                     }
 
@@ -1820,7 +1825,7 @@ void LunarBattle::place_units(bool def) {
             if (unit_at(x, y) || cover_at(x, y)) {
                 continue;
             }
-            place_unit(BattleUnit(u_inf).init(x, y, min(stack, inf), def));
+            place_unit(BattleUnit(u_inf).init(x, y, min(stack, inf), def, human));
             inf -= min(stack, inf);
         }
 
@@ -1833,7 +1838,7 @@ void LunarBattle::place_units(bool def) {
             if (unit_at(x, y) || cover_at(x, y)) {
                 continue;
             }
-            place_unit(BattleUnit(u_gli).init(x, y, min(stack, gli), def));
+            place_unit(BattleUnit(u_gli).init(x, y, min(stack, gli), def, human));
             gli -= min(stack, gli);
         }
     }
@@ -3729,6 +3734,8 @@ BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     y = 0;
     tgt_x = 0;
     tgt_y = 0;
+    hp_initial = 0;
+    hp = 0;
     move = 0;
     reached_far_side = false;
     random_moves = 0;
@@ -3742,11 +3749,16 @@ BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     move0_sfx = SFX_WALK0;
     move1_sfx = SFX_WALK1;
     move2_sfx = SFX_WALK2;
-    moves_remaining = 0;
-    shots_remaining = 0;
+    defending = false;
+    human = false;
+    can_shoot_behind = true;
     can_act = true;
     can_use_cover = false;
     is_alien = false;
+    moves_remaining = 0;
+    shots_remaining = 0;
+    turn_taken = false;
+    teleported = false;
     idle = nullptr;
     walk = nullptr;
     fire = nullptr;
@@ -3754,9 +3766,6 @@ BattleUnit::BattleUnit(BattleUnitType _type) : type(_type) {
     dead = nullptr;
     move_sfx = nullptr;
     shoot_sfx = nullptr;
-    can_shoot_behind = true;
-    turn_taken = false;
-    teleported = false;
     spr_id_set = false;
     dying_timer = 0;
     last_move = DIR_None;
@@ -3953,6 +3962,8 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
 
     promoted = false;
 
+    update_enhanced_sprites();
+
     return *this;
 }
 
@@ -3961,8 +3972,9 @@ BattleUnit& BattleUnit::init(int _x, int _y, int _hp) {
     return init(_x, _y);
 }
 
-BattleUnit& BattleUnit::init(int _x, int _y, int _hp, bool _def) {
+BattleUnit& BattleUnit::init(int _x, int _y, int _hp, bool _def, bool _human) {
     defending = _def;
+    human = _human;
     return init(_x, _y, _hp);
 }
 
@@ -4007,7 +4019,167 @@ bool BattleUnit::try_promote(const BattleUnit& killed_unit, OfficerQuality offq)
             break;
     }
 
+    if (promoted) {
+        update_enhanced_sprites();
+    }
+
     return promoted;
+}
+
+void BattleUnit::update_enhanced_sprites() {
+    if (!ENHANCED()) {
+        return;
+    }
+
+    bool red = !human;
+
+    if (type == UNIT_Inf) {
+        if (defending) {
+            if (red) {
+                if (promoted) {
+                    idle = IMG_GF_DIRP;
+                    walk = IMG_GF_DIRP_WALK;
+                    fire = IMG_GF_DIRP_FIRE;
+                    dead = IMG_GF_DIR_DEAD;
+                } else {
+                    idle = IMG_GF_DIR;
+                    walk = IMG_GF_DIR_WALK;
+                    fire = IMG_GF_DIR_FIRE;
+                    dead = IMG_GF_DIR_DEAD;
+                }
+            } else {
+                if (promoted) {
+                    idle = IMG_GF_DIBP;
+                    walk = IMG_GF_DIBP_WALK;
+                    fire = IMG_GF_DIBP_FIRE;
+                    dead = IMG_GF_DIB_DEAD;
+                } else {
+                    idle = IMG_GF_DIB;
+                    walk = IMG_GF_DIB_WALK;
+                    fire = IMG_GF_DIB_FIRE;
+                    dead = IMG_GF_DIB_DEAD;
+                }
+            }
+        } else {
+            if (red) {
+                if (promoted) {
+                    idle = IMG_GF_AIRP;
+                    walk = IMG_GF_AIRP_WALK;
+                    fire = IMG_GF_AIRP_FIRE;
+                    dead = IMG_GF_AIR_DEAD;
+                } else {
+                    idle = IMG_GF_AIR;
+                    walk = IMG_GF_AIR_WALK;
+                    fire = IMG_GF_AIR_FIRE;
+                    dead = IMG_GF_AIR_DEAD;
+                }
+            } else {
+                if (promoted) {
+                    idle = IMG_GF_AIBP;
+                    walk = IMG_GF_AIBP_WALK;
+                    fire = IMG_GF_AIBP_FIRE;
+                    dead = IMG_GF_AIB_DEAD;
+                } else {
+                    idle = IMG_GF_AIB;
+                    walk = IMG_GF_AIB_WALK;
+                    fire = IMG_GF_AIB_FIRE;
+                    dead = IMG_GF_AIB_DEAD;
+                }
+            }
+        }
+    }
+
+    if (type == UNIT_Gli) {
+        if (defending) {
+            if (red) {
+                if (promoted) {
+                    idle  = IMG_GF_DGRP;
+                    walk  = IMG_GF_DGRP;
+                    fire  = IMG_GF_DGRP_FIRE;
+                    dying = IMG_GF_DGR_DYING;
+                    dead  = IMG_GF_DG_DEAD;
+                } else {
+                    idle  = IMG_GF_DGR;
+                    walk  = IMG_GF_DGR;
+                    fire  = IMG_GF_DGR_FIRE;
+                    dying = IMG_GF_DGR_DYING;
+                    dead  = IMG_GF_DG_DEAD;
+                }
+            } else {
+                if (promoted) {
+                    idle  = IMG_GF_DGBP;
+                    walk  = IMG_GF_DGBP;
+                    fire  = IMG_GF_DGBP_FIRE;
+                    dying = IMG_GF_DGB_DYING;
+                    dead  = IMG_GF_DG_DEAD;
+                } else {
+                    idle  = IMG_GF_DGB;
+                    walk  = IMG_GF_DGB;
+                    fire  = IMG_GF_DGB_FIRE;
+                    dying = IMG_GF_DGB_DYING;
+                    dead  = IMG_GF_DG_DEAD;
+                }
+            }
+        } else {
+            if (red) {
+                if (promoted) {
+                    idle  = IMG_GF_AGRP;
+                    walk  = IMG_GF_AGRP;
+                    fire  = IMG_GF_AGRP_FIRE;
+                    dying = IMG_GF_AGR_DYING;
+                    dead  = IMG_GF_AG_DEAD;
+                } else {
+                    idle  = IMG_GF_AGR;
+                    walk  = IMG_GF_AGR;
+                    fire  = IMG_GF_AGR_FIRE;
+                    dying = IMG_GF_AGR_DYING;
+                    dead  = IMG_GF_AG_DEAD;
+                }
+            } else {
+                if (promoted) {
+                    idle  = IMG_GF_AGBP;
+                    walk  = IMG_GF_AGBP;
+                    fire  = IMG_GF_AGBP_FIRE;
+                    dying = IMG_GF_AGB_DYING;
+                    dead  = IMG_GF_AG_DEAD;
+                } else {
+                    idle  = IMG_GF_AGB;
+                    walk  = IMG_GF_AGB;
+                    fire  = IMG_GF_AGB_FIRE;
+                    dying = IMG_GF_AGB_DYING;
+                    dead  = IMG_GF_AG_DEAD;
+                }
+            }
+        }
+    }
+
+    if (type == UNIT_Art) {
+        if (defending) {
+            if (promoted) {
+                idle = IMG_GF_DAP;
+                walk = IMG_GF_DAP;
+                fire = IMG_GF_DAP_FIRE;
+                dead = IMG_GF_DA_DEAD;
+            } else {
+                idle = IMG_GF_DA;
+                walk = IMG_GF_DA;
+                fire = IMG_GF_DA_FIRE;
+                dead = IMG_GF_DA_DEAD;
+            }
+        } else {
+            if (promoted) {
+                idle = IMG_GF_AAP;
+                walk = IMG_GF_AAP;
+                fire = IMG_GF_AAP_FIRE;
+                dead = IMG_GF_AA_DEAD;
+            } else {
+                idle = IMG_GF_AA;
+                walk = IMG_GF_AA;
+                fire = IMG_GF_AA_FIRE;
+                dead = IMG_GF_AA_DEAD;
+            }
+        }
+    }
 }
 
 const char* BattleUnit::get_type_str() {
