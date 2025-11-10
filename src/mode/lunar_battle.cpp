@@ -320,6 +320,9 @@ void LunarBattle::draw_ground() {
     if (ENHANCED() && bg == IMG_GF1) {
         bg = IMG_GF1_NEW;
     }
+    if (ENHANCED() && bg == IMG_GF3) {
+        bg = IMG_GF3_NEW;
+    }
 
     draw_manager.draw(
         id(ID::BG),

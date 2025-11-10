@@ -1237,6 +1237,8 @@ const char *IMG_BATTLE_SHIELD_RED= D_NEW "battle_shield_red";
 const char *IMG_BATTLE_TALK      = D_NEW "battle_talk";
 const char *IMG_GF1_NEW          = D_NEW "gf1";
 const char *IMG_GF1_TALL_NEW     = D_NEW "gf1_tall";
+const char *IMG_GF3_NEW          = D_NEW "gf3";
+const char *IMG_GF3_TALL_NEW     = D_NEW "gf3_tall";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2474,6 +2476,8 @@ const char *ASSETS_IMG[] = {
     IMG_BATTLE_TALK,
     IMG_GF1_NEW,
     IMG_GF1_TALL_NEW,
+    IMG_GF3_NEW,
+    IMG_GF3_TALL_NEW,
 
     "",
 };
