@@ -1232,6 +1232,8 @@ extern const char *IMG_BATTLE_QUIT;
 extern const char *IMG_BATTLE_SHIELD;
 extern const char *IMG_BATTLE_SHIELD_RED;
 extern const char *IMG_BATTLE_TALK;
+extern const char *IMG_GF1_NEW;
+extern const char *IMG_GF1_TALL_NEW;
 
 extern const char *INIT_IMG;
 extern const char *CURSOR_IMG;
