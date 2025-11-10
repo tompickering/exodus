@@ -1239,6 +1239,68 @@ const char *IMG_GF1_NEW          = D_NEW "gf1";
 const char *IMG_GF1_TALL_NEW     = D_NEW "gf1_tall";
 const char *IMG_GF3_NEW          = D_NEW "gf3";
 const char *IMG_GF3_TALL_NEW     = D_NEW "gf3_tall";
+const char *IMG_GF_AA_DEAD       = D_NEW "gf_aa_dead";
+const char *IMG_GF_AA_FIRE       = D_NEW "gf_aa_fire";
+const char *IMG_GF_AAP_FIRE      = D_NEW "gf_aap_fire";
+const char *IMG_GF_AA            = D_NEW "gf_aa";
+const char *IMG_GF_AAP           = D_NEW "gf_aap";
+const char *IMG_GF_AGB_DYING     = D_NEW "gf_agb_dying";
+const char *IMG_GF_AGB_FIRE      = D_NEW "gf_agb_fire";
+const char *IMG_GF_AGBP_FIRE     = D_NEW "gf_agbp_fire";
+const char *IMG_GF_AGB           = D_NEW "gf_agb";
+const char *IMG_GF_AGBP          = D_NEW "gf_agbp";
+const char *IMG_GF_AG_DEAD       = D_NEW "gf_ag_dead";
+const char *IMG_GF_AGR_DYING     = D_NEW "gf_agr_dying";
+const char *IMG_GF_AGR_FIRE      = D_NEW "gf_agr_fire";
+const char *IMG_GF_AGRP_FIRE     = D_NEW "gf_agrp_fire";
+const char *IMG_GF_AGR           = D_NEW "gf_agr";
+const char *IMG_GF_AGRP          = D_NEW "gf_agrp";
+const char *IMG_GF_AIB_DEAD      = D_NEW "gf_aib_dead";
+const char *IMG_GF_AIB_FIRE      = D_NEW "gf_aib_fire";
+const char *IMG_GF_AIBP_FIRE     = D_NEW "gf_aibp_fire";
+const char *IMG_GF_AIB           = D_NEW "gf_aib";
+const char *IMG_GF_AIBP          = D_NEW "gf_aibp";
+const char *IMG_GF_AIBP_WALK     = D_NEW "gf_aibp_walk";
+const char *IMG_GF_AIB_WALK      = D_NEW "gf_aib_walk";
+const char *IMG_GF_AIR_DEAD      = D_NEW "gf_air_dead";
+const char *IMG_GF_AIR_FIRE      = D_NEW "gf_air_fire";
+const char *IMG_GF_AIRP_FIRE     = D_NEW "gf_airp_fire";
+const char *IMG_GF_AIR           = D_NEW "gf_air";
+const char *IMG_GF_AIRP          = D_NEW "gf_airp";
+const char *IMG_GF_AIRP_WALK     = D_NEW "gf_airp_walk";
+const char *IMG_GF_AIR_WALK      = D_NEW "gf_air_walk";
+const char *IMG_GF_DA_DEAD       = D_NEW "gf_da_dead";
+const char *IMG_GF_DA_FIRE       = D_NEW "gf_da_fire";
+const char *IMG_GF_DAP_FIRE      = D_NEW "gf_dap_fire";
+const char *IMG_GF_DA            = D_NEW "gf_da";
+const char *IMG_GF_DAP           = D_NEW "gf_dap";
+const char *IMG_GF_DGB_DYING     = D_NEW "gf_dgb_dying";
+const char *IMG_GF_DGB_FIRE      = D_NEW "gf_dgb_fire";
+const char *IMG_GF_DGBP_FIRE     = D_NEW "gf_dgbp_fire";
+const char *IMG_GF_DGB           = D_NEW "gf_dgb";
+const char *IMG_GF_DGBP          = D_NEW "gf_dgbp";
+const char *IMG_GF_DG_DEAD       = D_NEW "gf_dg_dead";
+const char *IMG_GF_DGR_DYING     = D_NEW "gf_dgr_dying";
+const char *IMG_GF_DGR_FIRE      = D_NEW "gf_dgr_fire";
+const char *IMG_GF_DGRP_FIRE     = D_NEW "gf_dgrp_fire";
+const char *IMG_GF_DGR           = D_NEW "gf_dgr";
+const char *IMG_GF_DGRP          = D_NEW "gf_dgrp";
+const char *IMG_GF_DIB_DEAD      = D_NEW "gf_dib_dead";
+const char *IMG_GF_DIB_FIRE      = D_NEW "gf_dib_fire";
+const char *IMG_GF_DIBP_FIRE     = D_NEW "gf_dibp_fire";
+const char *IMG_GF_DIB           = D_NEW "gf_dib";
+const char *IMG_GF_DIBP          = D_NEW "gf_dibp";
+const char *IMG_GF_DIBP_WALK     = D_NEW "gf_dibp_walk";
+const char *IMG_GF_DIB_WALK      = D_NEW "gf_dib_walk";
+const char *IMG_GF_DIR_DEAD      = D_NEW "gf_dir_dead";
+const char *IMG_GF_DIR_FIRE      = D_NEW "gf_dir_fire";
+const char *IMG_GF_DIRP_FIRE     = D_NEW "gf_dirp_fire";
+const char *IMG_GF_DIR           = D_NEW "gf_dir";
+const char *IMG_GF_DIRP          = D_NEW "gf_dirp";
+const char *IMG_GF_DIRP_WALK     = D_NEW "gf_dirp_walk";
+const char *IMG_GF_DIR_WALK      = D_NEW "gf_dir_walk";
+const char *IMG_GF_GB_UP         = D_NEW "gf_gb_up";
+const char *IMG_GF_GR_UP         = D_NEW "gf_gr_up";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2478,6 +2540,68 @@ const char *ASSETS_IMG[] = {
     IMG_GF1_TALL_NEW,
     IMG_GF3_NEW,
     IMG_GF3_TALL_NEW,
+    IMG_GF_AA_DEAD,
+    IMG_GF_AA_FIRE,
+    IMG_GF_AAP_FIRE,
+    IMG_GF_AA,
+    IMG_GF_AAP,
+    IMG_GF_AGB_DYING,
+    IMG_GF_AGB_FIRE,
+    IMG_GF_AGBP_FIRE,
+    IMG_GF_AGB,
+    IMG_GF_AGBP,
+    IMG_GF_AG_DEAD,
+    IMG_GF_AGR_DYING,
+    IMG_GF_AGR_FIRE,
+    IMG_GF_AGRP_FIRE,
+    IMG_GF_AGR,
+    IMG_GF_AGRP,
+    IMG_GF_AIB_DEAD,
+    IMG_GF_AIB_FIRE,
+    IMG_GF_AIBP_FIRE,
+    IMG_GF_AIB,
+    IMG_GF_AIBP,
+    IMG_GF_AIBP_WALK,
+    IMG_GF_AIB_WALK,
+    IMG_GF_AIR_DEAD,
+    IMG_GF_AIR_FIRE,
+    IMG_GF_AIRP_FIRE,
+    IMG_GF_AIR,
+    IMG_GF_AIRP,
+    IMG_GF_AIRP_WALK,
+    IMG_GF_AIR_WALK,
+    IMG_GF_DA_DEAD,
+    IMG_GF_DA_FIRE,
+    IMG_GF_DAP_FIRE,
+    IMG_GF_DA,
+    IMG_GF_DAP,
+    IMG_GF_DGB_DYING,
+    IMG_GF_DGB_FIRE,
+    IMG_GF_DGBP_FIRE,
+    IMG_GF_DGB,
+    IMG_GF_DGBP,
+    IMG_GF_DG_DEAD,
+    IMG_GF_DGR_DYING,
+    IMG_GF_DGR_FIRE,
+    IMG_GF_DGRP_FIRE,
+    IMG_GF_DGR,
+    IMG_GF_DGRP,
+    IMG_GF_DIB_DEAD,
+    IMG_GF_DIB_FIRE,
+    IMG_GF_DIBP_FIRE,
+    IMG_GF_DIB,
+    IMG_GF_DIBP,
+    IMG_GF_DIBP_WALK,
+    IMG_GF_DIB_WALK,
+    IMG_GF_DIR_DEAD,
+    IMG_GF_DIR_FIRE,
+    IMG_GF_DIRP_FIRE,
+    IMG_GF_DIR,
+    IMG_GF_DIRP,
+    IMG_GF_DIRP_WALK,
+    IMG_GF_DIR_WALK,
+    IMG_GF_GB_UP,
+    IMG_GF_GR_UP,
 
     "",
 };
