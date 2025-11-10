@@ -130,7 +130,15 @@ class BulletinDrawer {
         int bulletin_get_war_ally_result(int&, int&, int&);
 
         int bulletin_get_specific_report() { return bulletin_report_specific; }
+
+    protected:
+        int bulletin_y_offset;
+
     private:
+        int BULLETIN_Y();
+        int BULLETIN_FLAG_BG_Y();
+        int BULLETIN_BG_Y();
+
         BulletinMode bulletin_mode;
 
         bool bulletin_continue_manual(BulletinManualPage);

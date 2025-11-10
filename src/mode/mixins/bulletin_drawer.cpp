@@ -11,14 +11,11 @@ const int BULLETIN_BORDER = 6;
 const int BULLETIN_W = 436 + (BULLETIN_BORDER) * 2;
 const int BULLETIN_H = 306 + (BULLETIN_BORDER) * 2;
 const int BULLETIN_X = (RES_X / 2) - (BULLETIN_W / 2);
-const int BULLETIN_Y = (RES_Y / 2) - (BULLETIN_H / 2) - 12;
 const int BULLETIN_TEXT_X = BULLETIN_X + BULLETIN_BORDER * 2 + 4;
 const int BULLETIN_FLAG_BG_X = (RES_X / 2) - 48 - BULLETIN_BORDER;
-const int BULLETIN_FLAG_BG_Y = BULLETIN_Y - 2 - 56 - BULLETIN_BORDER*2;
 const int BULLETIN_FLAG_BG_W = 96 + BULLETIN_BORDER*2;
 const int BULLETIN_FLAG_BG_H = 56 + BULLETIN_BORDER*2;
 const int BULLETIN_BG_X = BULLETIN_X + BULLETIN_BORDER;
-const int BULLETIN_BG_Y = BULLETIN_Y + BULLETIN_BORDER;
 
 extern INPUTMANAGER input_manager;
 
@@ -40,6 +37,20 @@ BulletinDrawer::BulletinDrawer() {
     _bulletin_is_open = false;
 
     bulletin_bg_preserve = nullptr;
+
+    bulletin_y_offset = 0;
+}
+
+int BulletinDrawer::BULLETIN_Y() {
+    return bulletin_y_offset + (RES_Y / 2) - (BULLETIN_H / 2) - 12;
+}
+
+int BulletinDrawer::BULLETIN_FLAG_BG_Y() {
+    return BULLETIN_Y() - 2 - 56 - BULLETIN_BORDER*2;
+}
+
+int BulletinDrawer::BULLETIN_BG_Y() {
+    return BULLETIN_Y() + BULLETIN_BORDER;
 }
 
 bool BulletinDrawer::bulletin_start_new(bool transition) {
@@ -288,7 +299,7 @@ void BulletinDrawer::bulletin_draw_events() {
         draw_manager.draw(
             icon_spr,
             {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4,
-             BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
+             BULLETIN_Y() + BULLETIN_BORDER + 4 + (28 * event_count),
              1.0f, 0.0f, 1, 1});
 
         ++event_count;
@@ -305,7 +316,7 @@ void BulletinDrawer::bulletin_draw_events() {
             draw_manager.draw(
                 icon,
                 {BULLETIN_X + BULLETIN_W - BULLETIN_BORDER - 4,
-                 BULLETIN_Y + BULLETIN_BORDER + 4 + (28 * event_count),
+                 BULLETIN_Y() + BULLETIN_BORDER + 4 + (28 * event_count),
                  1.0f, 0.0f, 1, 1});
 
             ++event_count;
@@ -315,7 +326,7 @@ void BulletinDrawer::bulletin_draw_events() {
     // Gauges
 
     const int st_x = BULLETIN_TEXT_X;
-    const int st_y = BULLETIN_Y + BULLETIN_H - BULLETIN_BORDER*2 - 2;
+    const int st_y = BULLETIN_Y() + BULLETIN_H - BULLETIN_BORDER*2 - 2;
 
     draw_manager.draw(
         IMG_PL_ST,
@@ -513,7 +524,7 @@ void BulletinDrawer::bulletin_draw_text() {
                 id_bulletin_yesno,
                 IMG_BR14_EXPORT,
                 {RES_X / 2,
-                 BULLETIN_Y + BULLETIN_H - BULLETIN_BORDER - 2,
+                 BULLETIN_Y() + BULLETIN_H - BULLETIN_BORDER - 2,
                  0.5f, 1, 1, 1});
         }
         if (bulletin_is_war_ally) {
@@ -555,14 +566,14 @@ void BulletinDrawer::bulletin_war_ally_init() {
             bulletin_war_ally_ids_army[i*5],
             img,
             {BULLETIN_X + 20,
-             BULLETIN_Y + 164 + i*44,
+             BULLETIN_Y() + 164 + i*44,
              0, 0.5f, 1, 1});
 
         draw_manager.draw(
             bulletin_war_ally_ids_army[i*5 + 3],
             IMG_BR4_EXPORT3,
             {BULLETIN_X + BULLETIN_W - 20,
-             BULLETIN_Y + 164 + i*44,
+             BULLETIN_Y() + 164 + i*44,
              1, 0.5f, 1, 1});
     }
 
@@ -570,7 +581,7 @@ void BulletinDrawer::bulletin_war_ally_init() {
         bulletin_war_ally_id_exit,
         IMG_BR5_EXPORT4,
         {RES_X / 2,
-         BULLETIN_Y + BULLETIN_H - BULLETIN_BORDER - 2,
+         BULLETIN_Y() + BULLETIN_H - BULLETIN_BORDER - 2,
          0.5f, 1, 1, 1});
 }
 
@@ -608,7 +619,7 @@ void BulletinDrawer::bulletin_war_ally_update() {
             n,
             Justify::Centre,
             BULLETIN_X + 170,
-            BULLETIN_Y + 152 + i*44,
+            BULLETIN_Y() + 152 + i*44,
             COL_TEXT);
 
         snprintf(n, sizeof(n), "%d", *to_send);
@@ -617,7 +628,7 @@ void BulletinDrawer::bulletin_war_ally_update() {
             n,
             Justify::Centre,
             BULLETIN_X + 276,
-            BULLETIN_Y + 152 + i*44,
+            BULLETIN_Y() + 152 + i*44,
             COL_TEXT);
 
         SpriteClick clk = draw_manager.query_click(bulletin_war_ally_ids_army[i*5 + 3]);
@@ -661,7 +672,7 @@ void BulletinDrawer::bulletin_war_ally_update() {
                 bulletin_war_ally_ids_army[i*5 + 4],
                 IMG_TD2_TR0,
                 {BULLETIN_X + 20,
-                 BULLETIN_Y + 164 + i*44,
+                 BULLETIN_Y() + 164 + i*44,
                  0, 0.5f, 1, 1});
         } else {
             draw_manager.draw(bulletin_war_ally_ids_army[i*5 + 4], nullptr);
@@ -727,13 +738,13 @@ void BulletinDrawer::bulletin_open() {
 
     draw_manager.fill(
         id_bulletin_panel,
-        {BULLETIN_X, BULLETIN_Y,
+        {BULLETIN_X, BULLETIN_Y(),
          BULLETIN_W, BULLETIN_H},
          COL_BORDERS);
 
     draw_manager.fill(
         FILL_3D_Out_Hollow,
-        {BULLETIN_X, BULLETIN_Y,
+        {BULLETIN_X, BULLETIN_Y(),
          BULLETIN_W, BULLETIN_H},
          COL_BORDERS);
 
@@ -742,19 +753,19 @@ void BulletinDrawer::bulletin_open() {
     draw_manager.fill(
         id_bulletin_black,
         {BULLETIN_X + BULLETIN_BORDER,
-         BULLETIN_Y + BULLETIN_BORDER,
+         BULLETIN_Y() + BULLETIN_BORDER,
          436, 306},
          {0, 0, 0});
 
     // Draw header flag and background
     draw_manager.fill(
         id_bulletin_header_flag,
-        {BULLETIN_FLAG_BG_X, BULLETIN_FLAG_BG_Y,
+        {BULLETIN_FLAG_BG_X, BULLETIN_FLAG_BG_Y(),
          BULLETIN_FLAG_BG_W, BULLETIN_FLAG_BG_H},
          COL_BORDERS);
     draw_manager.fill(
         FILL_3D_Out_Hollow,
-        {BULLETIN_FLAG_BG_X, BULLETIN_FLAG_BG_Y,
+        {BULLETIN_FLAG_BG_X, BULLETIN_FLAG_BG_Y(),
          BULLETIN_FLAG_BG_W, BULLETIN_FLAG_BG_H},
          COL_BORDERS);
 
@@ -763,47 +774,47 @@ void BulletinDrawer::bulletin_open() {
             id_bulletin_zoom,
             IMG_BTNZOOM,
             {BULLETIN_FLAG_BG_X - 2,
-             BULLETIN_Y - 2,
+             BULLETIN_Y() - 2,
              1, 1, 1, 1});
         draw_manager.draw(
             id_bulletin_prbuttons,
             IMG_PRBUTTONS,
             {BULLETIN_FLAG_BG_X + BULLETIN_FLAG_BG_W + 2,
-             BULLETIN_Y - 2,
+             BULLETIN_Y() - 2,
              0, 1, 1, 1});
     } else if (bulletin_mode == BM_ReportSummary) {
         draw_manager.draw(
             id_bulletin_prbuttons,
             IMG_PRBUTTONS,
             {BULLETIN_FLAG_BG_X + BULLETIN_FLAG_BG_W + 2,
-             BULLETIN_Y - 2,
+             BULLETIN_Y() - 2,
              0, 1, 1, 1});
     } else if (bulletin_mode == BM_Manual) {
         draw_manager.draw(
             id_bulletin_contents,
             IMG_BTN_TOP,
             {BULLETIN_FLAG_BG_X - 2,
-             BULLETIN_Y - 2,
+             BULLETIN_Y() - 2,
              1, 1, 1, 1});
         draw_manager.draw(
             id_bulletin_prbuttons,
             IMG_PRBUTTONS,
             {BULLETIN_FLAG_BG_X + BULLETIN_FLAG_BG_W + 2,
-             BULLETIN_Y - 2,
+             BULLETIN_Y() - 2,
              0, 1, 1, 1});
     } else {
         draw_manager.draw(
             id_bulletin_header_l,
             IMG_TS1_HEADER,
             {BULLETIN_FLAG_BG_X - 2,
-             BULLETIN_Y - 2,
+             BULLETIN_Y() - 2,
              1, 1, 1, 1});
 
         draw_manager.draw(
             id_bulletin_header_r,
             IMG_TS1_HEADER,
             {BULLETIN_FLAG_BG_X + BULLETIN_FLAG_BG_W + 2,
-             BULLETIN_Y - 2,
+             BULLETIN_Y() - 2,
              0, 1, 1, 1});
     }
 
@@ -887,7 +898,7 @@ int BulletinDrawer::bulletin_text_y(int idx) {
 }
 
 int BulletinDrawer::bulletin_text_y(int idx, int gap) {
-    return BULLETIN_Y + BULLETIN_BORDER + 4 + idx * gap;
+    return BULLETIN_Y() + BULLETIN_BORDER + 4 + idx * gap;
 }
 
 void BulletinDrawer::bulletin_reset_text_cols() {
@@ -978,7 +989,7 @@ void BulletinDrawer::bulletin_update_bg() {
                 id_bulletin_bg_preserve,
                 bulletin_bg_preserve,
                 {BULLETIN_BG_X,
-                 BULLETIN_BG_Y,
+                 BULLETIN_BG_Y(),
                  0, 0, 1, 1});
         }
         DrawArea a = {0, 0, 436, h};
@@ -989,14 +1000,14 @@ void BulletinDrawer::bulletin_update_bg() {
             id_bulletin_bg,
             bulletin_bg,
             {BULLETIN_BG_X,
-             BULLETIN_BG_Y,
+             BULLETIN_BG_Y(),
              0, 0, 1, 1});
     } else {
         // nullptr -> black background
         draw_manager.fill(
             id_bulletin_black,
             {BULLETIN_BG_X,
-             BULLETIN_BG_Y,
+             BULLETIN_BG_Y(),
              436, h},
              {0, 0, 0});
     }
@@ -1005,7 +1016,7 @@ void BulletinDrawer::bulletin_update_bg() {
     if (bulletin_transition < 1 && h < 434) {
         draw_manager.fill(
             id_bulletin_bg_scan,
-            {BULLETIN_BG_X, BULLETIN_BG_Y + h, 436, 2},
+            {BULLETIN_BG_X, BULLETIN_BG_Y() + h, 436, 2},
              {0, 0, 0xFF});
     } else {
         draw_manager.draw(
@@ -1022,7 +1033,7 @@ void BulletinDrawer::bulletin_set_flag(const char* img) {
     draw_manager.draw(
         img,
         {BULLETIN_FLAG_BG_X + BULLETIN_BORDER,
-         BULLETIN_FLAG_BG_Y + BULLETIN_BORDER,
+         BULLETIN_FLAG_BG_Y() + BULLETIN_BORDER,
          0, 0, 1, 1});
 }
 
