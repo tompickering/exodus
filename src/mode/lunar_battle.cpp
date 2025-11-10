@@ -314,9 +314,16 @@ void LunarBattle::enter() {
 void LunarBattle::draw_ground() {
     Planet *p = exostate().get_active_planet();
 
+    const char *bg = p->moon_sprites()->bg;
+
+    // FIXME This is a hack, but a better solution is not worth the effort
+    if (ENHANCED() && bg == IMG_GF1) {
+        bg = IMG_GF1_NEW;
+    }
+
     draw_manager.draw(
         id(ID::BG),
-        p->moon_sprites()->bg,
+        bg,
         {SURF_X, SURF_Y, 0, 0, 1, 1});
 
     draw_manager.save_background({SURF_X, SURF_Y, RES_X, RES_Y});
