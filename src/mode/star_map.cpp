@@ -49,7 +49,7 @@ enum ID {
     END,
 };
 
-StarMap::StarMap() : ModeBase("StarMap"), PanelDrawer(PNL_Star), CommPanelDrawer() {
+StarMap::StarMap() : ModeBase("StarMap"), PanelDrawer(PNL_Star), CommPanelDrawer(), FrameDrawer(), Bombing(), BulletinDrawer() {
     stage = SM_Idle;
     for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
         planet_progress[i] = 0;
