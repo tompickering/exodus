@@ -90,7 +90,7 @@ void ExodusDebug::own_sys_planets() {
     if (star) {
         for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
             Planet *p = star->get_planet(i);
-            if (p && p->exists()) {
+            if (p && p->exists() && p->is_owned()) {
                 p->set_owner(0, POCR_Seized);
                 if (!p->is_named()) {
                     p->set_name("DEBUG");
