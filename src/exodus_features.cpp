@@ -203,6 +203,10 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
 }
 
 bool ENHANCED() {
+    if (!mode_set) {
+        L.fatal("Attempt to query enhanced mode before initialising features");
+    }
+
     return (mode == ExodusGameMode::EXODUSGAMEMODE_Enhanced);
 }
 
