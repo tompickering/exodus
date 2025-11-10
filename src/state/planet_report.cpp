@@ -31,6 +31,7 @@ PlanetReport& PlanetReport::operator=(const PlanetReport& other) {
     trade_mc = other.trade_mc;
 
     finalised = other.finalised;
+    displayed = other.displayed;
 
     light_food = other.light_food;
     light_plu = other.light_plu;
@@ -198,6 +199,7 @@ void PlanetReport::reset() {
     trade_mc = 0;
 
     finalised = false;
+    displayed = false;
 }
 
 Planet* PlanetReport::get_planet() const {
@@ -224,6 +226,7 @@ void PlanetReport::save(cJSON* j) const {
     SAVE_NUM(j, prod_art);
     SAVE_NUM(j, trade_mc);
     SAVE_BOOL(j, finalised);
+    SAVE_BOOL(j, displayed);
 }
 
 void PlanetReport::load(cJSON* j) {
@@ -246,4 +249,5 @@ void PlanetReport::load(cJSON* j) {
     LOAD_NUM(j, prod_art);
     LOAD_NUM(j, trade_mc);
     LOAD_BOOL(j, finalised);
+    LOAD_BOOL(j, displayed);
 }

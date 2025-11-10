@@ -72,6 +72,7 @@ struct PlanetReport : public Saveable {
     int trade_mc;
 
     bool finalised;
+    bool displayed;
 
     void add_event(PlanetReportEvent event);
     bool has_event(PlanetReportEvent event) const;

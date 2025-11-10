@@ -838,7 +838,7 @@ ExodusMode GalaxyMap::update(float delta) {
                     set_stage(GM_Idle);
                 } else {
                     planet_report_current = report_idx_initial;
-                    planet_report_bulletin(true, planet_report_current);
+                    planet_report_bulletin(planet_report_current);
                     set_stage(GM_PlanetReports);
                 }
             }
@@ -857,13 +857,13 @@ ExodusMode GalaxyMap::update(float delta) {
                     case BPR_Back:
                         if (planet_report_current > 0) {
                             --planet_report_current;
-                            planet_report_bulletin(true, planet_report_current);
+                            planet_report_bulletin(planet_report_current);
                         }
                         break;
                     case BPR_Forward:
                         if ((planet_report_current + 1) < exostate().planet_report_count()) {
                             ++planet_report_current;
-                            planet_report_bulletin(true, planet_report_current);
+                            planet_report_bulletin(planet_report_current);
                         }
                         break;
                     case BPR_Close:
@@ -913,7 +913,7 @@ ExodusMode GalaxyMap::update(float delta) {
                 if (exostate().planet_report_count() == 0) {
                     set_stage(GM_Idle);
                 } else {
-                    planet_report_summary_bulletin(false, planet_report_summary_current);
+                    planet_report_summary_bulletin(planet_report_summary_current);
                     set_stage(GM_PlanetReportSummary);
                 }
             }
@@ -926,13 +926,13 @@ ExodusMode GalaxyMap::update(float delta) {
                     case BPR_Back:
                         if (planet_report_summary_current > 0) {
                             --planet_report_summary_current;
-                            planet_report_summary_bulletin(false, planet_report_summary_current);
+                            planet_report_summary_bulletin(planet_report_summary_current);
                         }
                         break;
                     case BPR_Forward:
                         if ((planet_report_summary_current+1) <= (exostate().planet_report_count()-1) / BULLETIN_REPORT_SUMMARY_LINES) {
                             ++planet_report_summary_current;
-                            planet_report_summary_bulletin(false, planet_report_summary_current);
+                            planet_report_summary_bulletin(planet_report_summary_current);
                         }
                         break;
                     case BPR_Close:
@@ -5577,8 +5577,11 @@ void GalaxyMap::reset_planet_report() {
     report.reset();
 }
 
-void GalaxyMap::planet_report_bulletin(bool transition, int idx) {
-    const PlanetReport& report = exostate().get_planet_report(idx);
+void GalaxyMap::planet_report_bulletin(int idx) {
+    PlanetReport& report = exostate().get_planet_report(idx);
+
+    bool transition = !report.displayed;
+    report.displayed = true;
 
     char text[32];
     snprintf(text, sizeof(text), "Report: %d/%d", idx+1, exostate().planet_report_count());
@@ -5606,7 +5609,7 @@ void GalaxyMap::planet_report_bulletin(bool transition, int idx) {
     bulletin_set_next_text(ENHANCED() ? "---" : "Report ends.");
 }
 
-void GalaxyMap::planet_report_summary_bulletin(bool transition, int idx) {
+void GalaxyMap::planet_report_summary_bulletin(int idx) {
     const int pages = 1 + (exostate().planet_report_count()-1) / BULLETIN_REPORT_SUMMARY_LINES;
 
     char text[32];
@@ -5623,7 +5626,7 @@ void GalaxyMap::planet_report_summary_bulletin(bool transition, int idx) {
     // FIXME: Multiplayer
     Player *player = exostate().get_player(0);
 
-    bulletin_start_new(transition, BM_ReportSummary);
+    bulletin_start_new(false, BM_ReportSummary);
     bulletin_set_report_summary_page(idx);
     bulletin_set_bg(IMG_ME1_MENU);
     bulletin_set_player_flag(player);

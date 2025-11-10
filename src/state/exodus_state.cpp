@@ -1212,7 +1212,7 @@ int ExodusState::planet_report_count() {
     return planet_reports_head;
 }
 
-const PlanetReport& ExodusState::get_planet_report(int idx) {
+PlanetReport& ExodusState::get_planet_report(int idx) {
     if (idx >= planet_report_count()) {
         L.error("Attempt to index invalid planet report");
         return planet_reports[0];

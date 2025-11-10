@@ -203,10 +203,10 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
 
         PlanetReport report;
         void reset_planet_report();
-        void planet_report_bulletin(bool, int);
+        void planet_report_bulletin(int);
         int planet_report_current;
 
-        void planet_report_summary_bulletin(bool, int);
+        void planet_report_summary_bulletin(int);
         int planet_report_summary_current;
 
         bool use_planet_summary();

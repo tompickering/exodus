@@ -177,7 +177,7 @@ class ExodusState : public Saveable {
         bool is_recommended_planet(Planet* p);
 
         int planet_report_count();
-        const PlanetReport& get_planet_report(int idx);
+        PlanetReport& get_planet_report(int idx);
         void reset_planet_reports();
         void save_planet_report(PlanetReport&);
 
