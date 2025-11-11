@@ -218,7 +218,7 @@ void GalaxyDrawer::draw_markers(bool pixelswap, bool names_only) {
             draw_manager.draw_text(
                 tgt,
                 marker_text_ids[i],
-                Font::Tiny,
+                Font::_3x5,
                 marker->tag,
                 Justify::Centre,
                 x, y+14,

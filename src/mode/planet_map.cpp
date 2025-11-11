@@ -2374,19 +2374,19 @@ void PlanetMap::draw_frame_unrest() {
     );
 
     draw_manager.draw_text(
-        Font::Tiny,
+        Font::_3x5,
         "HAPPY",
         Justify::Left,
         108, 124,
         {0x90, 0x90, 0x90});
     draw_manager.draw_text(
-        Font::Tiny,
+        Font::_3x5,
         "UNHAPPY",
         Justify::Left,
         108, 222,
         {0x90, 0x90, 0x90});
     draw_manager.draw_text(
-        Font::Tiny,
+        Font::_3x5,
         "ANGRY",
         Justify::Left,
         108, 320,
