@@ -13,6 +13,7 @@
 #include "shared.h"
 #include "assetpaths.h"
 
+#include "util/str.h"
 #include "util/value.h"
 
 #define PROPORTIONAL_FADE 0
@@ -165,8 +166,8 @@ void DrawManagerSDL::draw_init_image() {
 
 void DrawManagerSDL::load_resources() {
     font_data[Font::Default] = (void*)TTF_OpenFont(FONT_AUDIOWIDE, 16 * UPSCALE_X);
-    //font_data[Font::Tiny] = (void*)TTF_OpenFont(FONT_AUDIOWIDE, 10 * UPSCALE_X);
-    font_data[Font::Tiny] = (void*)TTF_OpenFont(FONT_3X5, 10 * UPSCALE_X);
+    font_data[Font::_3x5] = (void*)TTF_OpenFont(FONT_3X5, 10 * UPSCALE_X);
+    font_data[Font::Tiny] = (void*)TTF_OpenFont(FONT_AUDIOWIDE, 10 * UPSCALE_X);
     font_data[Font::Small] = (void*)TTF_OpenFont(FONT_AUDIOWIDE, 12 * UPSCALE_X);
     font_data[Font::Large] = (void*)TTF_OpenFont(FONT_AUDIOWIDE, 28 * UPSCALE_X);
 
@@ -940,13 +941,19 @@ void DrawManagerSDL::draw_text(DrawTarget tgt, SprID id, Font font, const char* 
     draw_text(tgt, id, font, text, jst, x, y, &rgb, nullptr);
 }
 
-void DrawManagerSDL::draw_text(DrawTarget tgt, SprID id, Font font, const char* text, Justify jst, int x, int y, RGB* rgb, RGB* bg_rgb) {
+void DrawManagerSDL::draw_text(DrawTarget tgt, SprID id, Font font, const char* _text, Justify jst, int x, int y, RGB* rgb, RGB* bg_rgb) {
     RGB adjustable_col = *rgb;
     adjust_selectable_text_col(id, adjustable_col);
 
     SDL_Color colour = {adjustable_col.r, adjustable_col.g, adjustable_col.b};
     SDL_Surface *msg_surf;
     SDL_Surface *tgt_surf = get_target(tgt);
+
+    const char* text = _text;
+
+    if (font == Font::_3x5) {
+        text = tmp_caps(_text);
+    }
 
     if (bg_rgb) {
         SDL_Color bg_colour = {bg_rgb->r, bg_rgb->g, bg_rgb->b};

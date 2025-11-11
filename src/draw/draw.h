@@ -127,6 +127,7 @@ typedef struct {
 
 enum Font {
     Default,
+    _3x5,
     Tiny,
     Small,
     Large,
