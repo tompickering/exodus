@@ -3891,7 +3891,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             hp = LUNAR_BASE_CTL_HP;
             defending = true;
             can_act = false;
-            promotion_category = 4;
+            promotion_category = 10;
             idle = IMG_GF4_20;
             walk = IMG_GF4_20;
             fire = IMG_GF4_20;
@@ -3904,7 +3904,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             fire_power = 1;
             defending = false;
             can_use_cover = true;
-            promotion_category = 1;
+            promotion_category = 0;
             idle = IMG_RF1_1;
             walk = IMG_RF1_1_2;
             fire = IMG_RF1_13;
@@ -3918,7 +3918,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             is_alien = true;
             defending = false;
             can_use_cover = true;
-            promotion_category = 1;
+            promotion_category = 10;
             if (use_alt_aliens) {
                 idle = IMG_AL1_1;
                 walk = IMG_AL1_1_2;
@@ -3940,7 +3940,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             is_alien = true;
             can_shoot_behind = false;
             defending = false;
-            promotion_category = 3;
+            promotion_category = 10;
             if (use_alt_aliens) {
                 idle = IMG_AL1_3;
                 walk = IMG_AL1_3;
