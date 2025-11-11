@@ -160,13 +160,17 @@ void LunarBattlePrep::enter() {
     else if (m < 100) mines_available = 10;
     else              mines_available = 12;
 
+    if (b.aggressor_type == AGG_Rebels) {
+        mines_available = 0;
+    }
+
     b.defender_mines = 0;
 
-    int r = RND(mines_available);
     // Orig was 'if attacker is human', but for multiplayer, we don't want
     // the defending player to have mines bought for them - so this should
     // only happen if the defender is a CPU.
-    if (!owner->is_human()) {
+    if (mines_available > 0 && !owner->is_human()) {
+        int r = RND(mines_available);
         if (owner->can_afford(3) && onein(3)) {
             int to_purchase = 0;
             do {
@@ -541,6 +545,11 @@ ExodusMode LunarBattlePrep::update(float delta) {
 
             if (!stage_started) {
                 stage_started = true;
+
+                if (mines_available <= 0) {
+                    set_stage(LBP_UpgradeOfficer);
+                    break;
+                }
 
                 if (!(owner->get_mc() > 4 && onein(3))) {
                     set_stage(LBP_UpgradeOfficer);
