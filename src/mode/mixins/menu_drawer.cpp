@@ -902,15 +902,15 @@ void MenuDrawer::menu_open_specific_mode() {
                 const SaveMeta *meta = save_manager.get_all_meta(true);
                 menu_set_txt(0, COL_TEXT2, "Save game in slot:");
                 char n[4];
-                for (int i = 0; i < MAX_SLOTS; ++i) {
+                for (int i = 1; i < MAX_SLOTS; ++i) {
                     if (meta[i].exists) {
-                        menu_set_opt(i+2, "%d: %s / Month %d / Planets %d",
-                                     i+1, meta[i].name, meta[i].month, meta[i].planets);
+                        menu_set_opt(i+1, "%d: %s / Month %d / Planets %d",
+                                     i, meta[i].name, meta[i].month, meta[i].planets);
                     } else {
                         // FIXME: The following line should work, but values end up corrupt
                         //menu_set_opt(i+2, "%d", i+1);
-                        snprintf(n, sizeof(n), "%d", i+1);
-                        menu_set_opt(i+2, n);
+                        snprintf(n, sizeof(n), "%d", i);
+                        menu_set_opt(i+1, n);
                     }
                 }
                 menu_set_opt(14, "Exit Menu");

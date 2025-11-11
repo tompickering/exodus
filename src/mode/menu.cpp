@@ -312,7 +312,12 @@ ExodusMode Menu::update(float delta) {
 
                 char n[8];
                 for (int i = 0; i < MAX_SLOTS; ++i) {
-                    snprintf(n, sizeof(n), "%d", i+1);
+                    if (i == 0) {
+                        snprintf(n, sizeof(n), "AUTO");
+                    } else {
+                        snprintf(n, sizeof(n), "%d", i);
+                    }
+
                     draw_manager.draw_text(
                         n,
                         Justify::Left,
@@ -335,7 +340,7 @@ ExodusMode Menu::update(float delta) {
                         draw_manager.draw_text(
                             "Empty",
                             Justify::Left,
-                            LOADFRAME_X+4+30, LOADFRAME_Y+2+((i+2)*LOADFRAME_STEP),
+                            LOADFRAME_X+4+80, LOADFRAME_Y+2+((i+2)*LOADFRAME_STEP),
                             COL_TEXT_GREYED);
                     }
                 }
@@ -361,7 +366,7 @@ ExodusMode Menu::update(float delta) {
                             load_game_ids[i],
                             savemeta[i].name,
                             Justify::Left,
-                            LOADFRAME_X+4+30, LOADFRAME_Y+2+((i+2)*LOADFRAME_STEP),
+                            LOADFRAME_X+4+80, LOADFRAME_Y+2+((i+2)*LOADFRAME_STEP),
                             COL_TEXT);
 
                         if (draw_manager.query_click(load_game_ids[i]).id) {
