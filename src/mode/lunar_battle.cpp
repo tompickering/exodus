@@ -2723,9 +2723,9 @@ void LunarBattle::update_panel_new() {
 // The panel as drawn during unit placement
 void LunarBattle::update_panel_setup_new() {
     LunarBattleParams &b = ephstate.lunar_battle;
-    const char* spr_inf = placement_def ? IMG_GF4_4  : IMG_GF4_1;
-    const char* spr_gli = placement_def ? IMG_GF4_5  : IMG_GF4_2;
-    const char* spr_art = placement_def ? IMG_GF4_6  : IMG_GF4_3;
+    const char* spr_inf = placement_def ? IMG_GF_DIB : IMG_GF_AIB;
+    const char* spr_gli = placement_def ? IMG_GF_DGB : IMG_GF_AGB;
+    const char* spr_art = placement_def ? IMG_GF_DA  : IMG_GF_AA;
     const char* spr_msc = placement_def ? IMG_GF4_19 : IMG_GF1_25;
 
     for (int i = 0; i < 4; ++i) {
