@@ -4005,17 +4005,19 @@ bool BattleUnit::try_promote(const BattleUnit& killed_unit, OfficerQuality offq)
 
     switch (offq) {
         case OFFQ_Poor:
-            if (promotion_category < killed_unit.promotion_category) {
+            if ((promotion_category+1) < killed_unit.promotion_category) {
                 promoted = true;
             }
             break;
         case OFFQ_Average:
-            if (promotion_category <= killed_unit.promotion_category) {
+            if (promotion_category < killed_unit.promotion_category) {
                 promoted = true;
             }
             break;
         case OFFQ_Good:
-            promoted = true;
+            if (promotion_category <= killed_unit.promotion_category) {
+                promoted = true;
+            }
             break;
         default:
             break;

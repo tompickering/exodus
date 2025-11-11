@@ -1864,11 +1864,12 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("");
             bulletin_set_next_text("When using a Poor general, promotions are");
             bulletin_set_next_text("granted only when a squad destroys a");
-            bulletin_set_next_text("superior type of unit. Using an average");
-            bulletin_set_next_text("general, squads destroying enemy units");
-            bulletin_set_next_text("of the same type will earn a promotion.");
-            bulletin_set_next_text("Using a good general, a squad will be");
-            bulletin_set_next_text("promoted when destroying any enemy squad.");
+            bulletin_set_next_text("vastly superior type of unit. Using an");
+            bulletin_set_next_text("average general, squads destroying any");
+            bulletin_set_next_text("superior unit will gain a promotion.");
+            bulletin_set_next_text("Using a good general, a squad will also");
+            bulletin_set_next_text("be promoted when destroying units of");
+            bulletin_set_next_text("of the same type.");
         }
     }
 
