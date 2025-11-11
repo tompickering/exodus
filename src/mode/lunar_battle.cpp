@@ -2865,92 +2865,84 @@ void LunarBattle::update_panel_battle_new() {
         if (draw_unit) {
             text = draw_unit->name;
 
-            bool our_side = (human_turn && active_unit->defending == draw_unit->defending);
+            bool our_side = (aggressor && aggressor->is_human()) ^ draw_unit->defending;
 
             if (our_side) {
                 text_col = {0, 0, 0xFF};  // TODO: Check exact colour
             }
 
             if (FEATURE(EF_LUNAR_BATTLE_ADVANCED_HP_INFO)) {
-                if (human_turn) {
-                    Player *player = defender_turn ? defender : aggressor;
+                OfficerQuality offq = (aggressor && aggressor->is_human()) ? agg_officer : def_officer;
 
-                    OfficerQuality offq = OFFQ_Poor;
+                HPMODE hp_mode = HPMODE_None;
 
-                    if (player) {
-                        offq = defender_turn ? def_officer : agg_officer;
-                    }
-
-                    HPMODE hp_mode = HPMODE_None;
-
-                    if (our_side) {
-                        hp_mode = HPMODE_HP;
-                    } else if (offq != OFFQ_Poor) {
-                        hp_mode = ((offq == OFFQ_Good) ? HPMODE_HP : HPMODE_Hits);
-                    }
-
-                    const char* hit_img = nullptr;
-
-                    switch (hp_mode) {
-                        case HPMODE_Hits:
-                            hit_img = (our_side ? IMG_GF4_SBR : IMG_GF4_SBR_RED);
-                            break;
-                        case HPMODE_HP:
-                            hit_img = (our_side ? IMG_BATTLE_SHIELD : IMG_BATTLE_SHIELD_RED);
-                            break;
-                        default:
-                            break;
-                    }
-
-                    int dots_to_show = 0;
-
-                    if (hp_mode == HPMODE_Hits) {
-                        dots_to_show = draw_unit->hp_initial - draw_unit->hp;
-                    }
-
-                    if (hp_mode == HPMODE_HP) {
-                        dots_to_show = draw_unit->hp;
-                    }
-
-                    if (dots_to_show > 0) {
-                        int x_off = 0;
-                        int y_off = (dots_to_show <= 10) ? 4 : 0;
-
-                        for (int i = 0; i < dots_to_show; ++i) {
-                            if (i == 10) {
-                                x_off = 0;
-                                y_off += 14;
-                            }
-
-                            draw_manager.draw(
-                                hp_ids[i],
-                                hit_img,
-                                {234 + x_off, 35 + y_off, 0, 0, 1, 1});
-
-                            x_off += 10;
-                        }
-                    }
-
-                    if (is_in_cover(draw_unit)) {
-                        draw_manager.draw(
-                            id(ID::TOP_PANEL_COVER),
-                            IMG_BATTLE_COVER,
-                            {372, 38, 1, 0, 1, 1});
-                    }
-
-                    if (draw_unit->promoted) {
-                        draw_manager.draw(
-                            id(ID::TOP_PANEL_PROMOTED),
-                            IMG_BATTLE_PROMOTION,
-                            {372, 16, 1, 0, 1, 1});
-                    }
-
-                    char text[8];
-                    snprintf(text, sizeof(text), "%d", draw_unit->moves_remaining);
-                    draw_manager.draw_text(id(ID::TOP_PANEL_MOVES), text, Justify::Centre, 414, 14, COL_TEXT);
-                    snprintf(text, sizeof(text), "%d", draw_unit->fire_range);
-                    draw_manager.draw_text(id(ID::TOP_PANEL_RANGE), text, Justify::Centre, 414, 36, COL_TEXT);
+                if (our_side) {
+                    hp_mode = HPMODE_HP;
+                } else if (offq != OFFQ_Poor) {
+                    hp_mode = ((offq == OFFQ_Good) ? HPMODE_HP : HPMODE_Hits);
                 }
+
+                const char* hit_img = nullptr;
+
+                switch (hp_mode) {
+                    case HPMODE_Hits:
+                        hit_img = (our_side ? IMG_GF4_SBR : IMG_GF4_SBR_RED);
+                        break;
+                    case HPMODE_HP:
+                        hit_img = (our_side ? IMG_BATTLE_SHIELD : IMG_BATTLE_SHIELD_RED);
+                        break;
+                    default:
+                        break;
+                }
+
+                int dots_to_show = 0;
+
+                if (hp_mode == HPMODE_Hits) {
+                    dots_to_show = draw_unit->hp_initial - draw_unit->hp;
+                }
+
+                if (hp_mode == HPMODE_HP) {
+                    dots_to_show = draw_unit->hp;
+                }
+
+                if (dots_to_show > 0) {
+                    int x_off = 0;
+                    int y_off = (dots_to_show <= 10) ? 4 : 0;
+
+                    for (int i = 0; i < dots_to_show; ++i) {
+                        if (i == 10) {
+                            x_off = 0;
+                            y_off += 14;
+                        }
+
+                        draw_manager.draw(
+                            hp_ids[i],
+                            hit_img,
+                            {234 + x_off, 35 + y_off, 0, 0, 1, 1});
+
+                        x_off += 10;
+                    }
+                }
+
+                if (is_in_cover(draw_unit)) {
+                    draw_manager.draw(
+                        id(ID::TOP_PANEL_COVER),
+                        IMG_BATTLE_COVER,
+                        {372, 38, 1, 0, 1, 1});
+                }
+
+                if (draw_unit->promoted) {
+                    draw_manager.draw(
+                        id(ID::TOP_PANEL_PROMOTED),
+                        IMG_BATTLE_PROMOTION,
+                        {372, 16, 1, 0, 1, 1});
+                }
+
+                char text[8];
+                snprintf(text, sizeof(text), "%d", draw_unit->moves_remaining);
+                draw_manager.draw_text(id(ID::TOP_PANEL_MOVES), text, Justify::Centre, 414, 14, COL_TEXT);
+                snprintf(text, sizeof(text), "%d", draw_unit->fire_range);
+                draw_manager.draw_text(id(ID::TOP_PANEL_RANGE), text, Justify::Centre, 414, 36, COL_TEXT);
             } else {
                 // TODO
                 // (we probably won't ever use this case)
