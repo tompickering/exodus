@@ -81,7 +81,7 @@ void GalaxyMap::enter() {
 
     if (ephstate.get_ephemeral_state() == EPH_MonthPass) {
         ephstate.clear_ephemeral_state();
-        set_stage(GM_MonthPassing);
+        set_stage(GM_MonthPassStart);
     } else if (ephstate.get_ephemeral_state() == EPH_ResumeFly) {
         ephstate.clear_ephemeral_state();
         set_stage(GM_Fly);
@@ -374,7 +374,7 @@ ExodusMode GalaxyMap::update(float delta) {
 #endif
 
                 if (month_pass) {
-                    set_stage(GM_MonthPassing);
+                    set_stage(GM_MonthPassStart);
                 }
             }
 
@@ -499,6 +499,11 @@ ExodusMode GalaxyMap::update(float delta) {
                 }
             }
             break;
+        case GM_MonthPassStart:
+            // Autosave
+            save_manager.save(0);
+            set_stage(GM_MonthPassing);
+            return ExodusMode::MODE_None;
         case GM_MonthPassing:
             {
                 update_panel_info_player(TGT_Primary, exostate().get_player(0));
@@ -664,15 +669,7 @@ ExodusMode GalaxyMap::update(float delta) {
                 if (mp_state.mp_stage == MP_None) {
                     bulletin_ensure_closed();
                     // The only place we emerge from month-pass-specific stages...
-                    if (FEATURE(EF_PLANET_RECALLABLE_SUMMARIES)) {
-                        if (use_planet_summary()) {
-                            set_stage(GM_OpenPlanetReportSummary);
-                        } else {
-                            set_stage(GM_OpenPlanetReports);
-                        }
-                    } else {
-                        set_stage(GM_Idle);
-                    }
+                    set_stage(GM_MonthPassEnd);
 
                     // This is mainly to redraw stars in case a sun expansion occurred
                     draw_galaxy(false);
@@ -700,6 +697,20 @@ ExodusMode GalaxyMap::update(float delta) {
                     nullptr);
                 frame_remove();
                 set_stage(GM_MonthPassing);
+            }
+            break;
+        case GM_MonthPassEnd:
+            // Autosave
+            save_manager.save(0);
+
+            if (FEATURE(EF_PLANET_RECALLABLE_SUMMARIES)) {
+                if (use_planet_summary()) {
+                    set_stage(GM_OpenPlanetReportSummary);
+                } else {
+                    set_stage(GM_OpenPlanetReports);
+                }
+            } else {
+                set_stage(GM_Idle);
             }
             break;
         case GM_Menu:
@@ -732,7 +743,7 @@ ExodusMode GalaxyMap::update(float delta) {
                         break;
                     case MA_WaitOneMonth:
                         menu_close();
-                        set_stage(GM_MonthPassing);
+                        set_stage(GM_MonthPassStart);
                         break;
                     case MA_Quit:
                         menu_close();
