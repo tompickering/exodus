@@ -1365,6 +1365,14 @@ ExodusMode GalaxyMap::month_pass_update() {
         }
     }
 
+    if (mp_state.mp_stage == MP_SaveMC1) {
+        for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
+            Player *p = exostate().set_active_player(mp_state.mp_player_idx);
+            p->save_mc_month_end();
+        }
+        next_mp_stage();
+    }
+
     if (mp_state.mp_stage == MP_CheckMissionFail) {
         // Towards start of PROCcalculatefly
         // Orig tests gameover here - but we instead perform this test in GM_MonthPassing
@@ -2564,6 +2572,14 @@ ExodusMode GalaxyMap::month_pass_update() {
                     }
                 }
             }
+        }
+        next_mp_stage();
+    }
+
+    if (mp_state.mp_stage == MP_SaveMC2) {
+        for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
+            Player *p = exostate().set_active_player(mp_state.mp_player_idx);
+            p->save_mc_month_start();
         }
         next_mp_stage();
     }

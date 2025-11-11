@@ -1118,6 +1118,14 @@ void Player::add_trace(Trace t, int n) {
     L.debug("%s: TRACE %d -> %d", get_full_name(), (int)t, trace[t]);
 }
 
+void Player::save_mc_month_end() {
+    mc_at_end_of_previous_month = mc;
+}
+
+void Player::save_mc_month_start() {
+    mc_at_start_of_current_month = mc;
+}
+
 void Player::adjust_mc(int amount, MCReason reason) {
     mc += amount;
 }
@@ -1140,6 +1148,8 @@ void Player::save(cJSON* j) const
     SAVE_BOOL(j, left_galaxy);
     SAVE_NUM(j, flag_idx);
     SAVE_NUM(j, mc);
+    SAVE_NUM(j, mc_at_end_of_previous_month);
+    SAVE_NUM(j, mc_at_start_of_current_month);
     SAVE_BOOL(j, _intro_seen);
     SAVE_NUM(j, fleet_marker_idx);
     SAVE_SAVEABLE(j, location);
@@ -1181,6 +1191,8 @@ void Player::load(cJSON* j)
     LOAD_BOOL(j, left_galaxy);
     LOAD_NUM(j, flag_idx);
     LOAD_NUM(j, mc);
+    LOAD_NUM(j, mc_at_end_of_previous_month);
+    LOAD_NUM(j, mc_at_start_of_current_month);
     LOAD_BOOL(j, _intro_seen);
     LOAD_NUM(j, fleet_marker_idx);
     LOAD_SAVEABLE(j, location);

@@ -23,6 +23,7 @@
 enum MonthPassStage {
     MP_None,
     MP_TimeDelay,
+    MP_SaveMC1,
     MP_CheckMissionFail,
     MP_StarshipRepairs,
     MP_UpdateReputation,
@@ -45,6 +46,7 @@ enum MonthPassStage {
     MP_GenerateLostPlanetReports,
     MP_AdvancedGalaxyMapUnlock,
     MP_AdvancedReportUnlock,
+    MP_SaveMC2,
     MP_End,
 };
 

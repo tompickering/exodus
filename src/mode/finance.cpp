@@ -13,7 +13,6 @@ void Finance::enter() {
     draw_manager.draw(IMG_BG_NEWS);
 
     char heading[32];
-    int m = max(1, exostate().get_month() - 1);
     snprintf(heading, sizeof(heading), "Finances");
     draw_manager.draw_text(
         Font::Large,
@@ -26,6 +25,25 @@ void Finance::enter() {
 }
 
 void Finance::draw_finance() {
+    Player *p = exostate().get_active_player();
+
+    char t[128];
+
+    int m = max(1, exostate().get_month() - 1);
+
+    snprintf(t, sizeof(t), "MC at end of Month %d: %d", m-1, p->get_mc_month_end());
+    draw_manager.draw_text(
+        t,
+        Justify::Left,
+        10, 40,
+        COL_TEXT);
+
+    snprintf(t, sizeof(t), "MC at start of Month %d: %d", m, p->get_mc_month_start());
+    draw_manager.draw_text(
+        t,
+        Justify::Left,
+        10, 60,
+        COL_TEXT);
 }
 
 ExodusMode Finance::update(float delta) {

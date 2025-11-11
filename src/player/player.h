@@ -535,6 +535,11 @@ class Player : public Saveable {
         void add_trace(Trace);
         void add_trace(Trace, int);
 
+        void save_mc_month_end();
+        void save_mc_month_start();
+        int get_mc_month_end() { return mc_at_end_of_previous_month; }
+        int get_mc_month_start() { return mc_at_start_of_current_month; }
+
         int nopirates;
 
         bool invalid_placement_seen;
@@ -559,6 +564,8 @@ class Player : public Saveable {
         bool left_galaxy;
         int flag_idx;
         int mc;
+        int mc_at_end_of_previous_month;
+        int mc_at_start_of_current_month;
         bool _intro_seen;
         int fleet_marker_idx;
         PlayerLocation location;

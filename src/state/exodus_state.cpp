@@ -243,6 +243,9 @@ void ExodusState::init(GameConfig config) {
 
         players[i].mission.reset();
         players[i].set_trade_charge();
+
+        players[i].mc_at_end_of_previous_month = players[i].mc;
+        players[i].mc_at_start_of_current_month = players[i].mc;
     }
 
     for (int j = 0; j < N_PLAYERS; ++j) {
