@@ -42,6 +42,7 @@ enum ExodusMode {
     MODE_FleetProduction,
     MODE_ShipEquip,
     MODE_News,
+    MODE_Finance,
     MODE_Arrive,
     MODE_AlienVessel,
     MODE_SpaceBattle,

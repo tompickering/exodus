@@ -38,6 +38,7 @@ const ExodusVersion EXODUS_VERSION = 2;
 #include "mode/fleet_production.h"
 #include "mode/ship_equip.h"
 #include "mode/news.h"
+#include "mode/finance.h"
 #include "mode/arrive.h"
 #include "mode/alien_vessel.h"
 #include "mode/space_battle.h"
@@ -174,6 +175,7 @@ int Exodus::run(int argc, char** argv) {
     FleetProduction mode_fleetproduction;
     ShipEquip mode_shipequip;
     News mode_news;
+    Finance mode_finance;
     Arrive mode_arrive;
     AlienVessel mode_alienvessel;
     SpaceBattle mode_spacebattle;
@@ -201,6 +203,7 @@ int Exodus::run(int argc, char** argv) {
     mode_map[MODE_FleetProduction] = (ModeBase*) &mode_fleetproduction;
     mode_map[MODE_ShipEquip] = (ModeBase*) &mode_shipequip;
     mode_map[MODE_News] = (ModeBase*) &mode_news;
+    mode_map[MODE_Finance] = (ModeBase*) &mode_finance;
     mode_map[MODE_Arrive] = (ModeBase*) &mode_arrive;
     mode_map[MODE_AlienVessel] = (ModeBase*) &mode_alienvessel;
     mode_map[MODE_SpaceBattle] = (ModeBase*) &mode_spacebattle;
@@ -459,6 +462,7 @@ void Exodus::reset_all_modes() {
     new (mode_map[MODE_FleetProduction]) FleetProduction();
     new (mode_map[MODE_ShipEquip]) ShipEquip();
     new (mode_map[MODE_News]) News();
+    new (mode_map[MODE_Finance]) Finance();
     new (mode_map[MODE_Arrive]) Arrive();
     new (mode_map[MODE_AlienVessel]) AlienVessel();
     new (mode_map[MODE_SpaceBattle]) SpaceBattle();

@@ -920,7 +920,11 @@ void MenuDrawer::menu_open_specific_mode() {
             menu_set_txt(0, COL_TEXT2, "Please select, %s", p->get_ref());
             menu_set_opt(2, "General Information");
             menu_set_opt(3, "Fleet Information");
-            menu_set_opt(4, "Recall Latest News (R)");
+            if (FEATURE(EF_FINANCE_MENU)) {
+                menu_set_opt(4, "Finance Information");
+            } else {
+                menu_set_opt(4, "Recall Latest News (R)");
+            }
             menu_set_opt(5, "List Planets");
             menu_set_opt(6, "List Inventions");
             menu_set_opt(7, "Relationship to Lords");
@@ -2075,7 +2079,11 @@ bool MenuDrawer::menu_specific_update() {
             }
             // 4: Recall Latest News
             if (menu_row_clicked(4)) {
-                menu_new_mode = MODE_News;
+                if (FEATURE(EF_FINANCE_MENU)) {
+                    menu_new_mode = MODE_Finance;
+                } else {
+                    menu_new_mode = MODE_News;
+                }
                 return true;
             }
             // 5: List Planets

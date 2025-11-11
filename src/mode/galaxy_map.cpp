@@ -392,9 +392,15 @@ ExodusMode GalaxyMap::update(float delta) {
                 return ExodusMode::MODE_None;
             }
 
-            // Orig is 'R' for 'Recall' but 'N' seems more intuitive
-            if (input_manager.consume(K_R) || input_manager.consume(K_N)) {
-                return ExodusMode::MODE_News;
+            if (FEATURE(EF_FINANCE_MENU)) {
+                if (input_manager.consume(K_F)) {
+                    return ExodusMode::MODE_Finance;
+                }
+            } else {
+                // Orig is 'R' for 'Recall' but 'N' seems more intuitive
+                if (input_manager.consume(K_R) || input_manager.consume(K_N)) {
+                    return ExodusMode::MODE_News;
+                }
             }
 
             if (input_manager.consume(K_S)) {
