@@ -17,6 +17,7 @@ class Menu : ModeBase {
         enum Stage {
             Main,
             Load,
+            LoadStart,
             LoadWelcome,
             LoadWelcomeFade,
             LoadFinish,
@@ -71,6 +72,7 @@ class Menu : ModeBase {
 
         SprID load_game_ids[MAX_SLOTS];
         const SaveMeta *savemeta;
+        int load_slot;
 };
 
 #endif

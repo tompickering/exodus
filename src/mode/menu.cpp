@@ -43,6 +43,7 @@ extern SAVEMANAGER save_manager;
 enum ID {
     NEWGAME_TXT,
     LOADGAME_TXT,
+    CONTINUE_TXT,
     MODE_SELECT,
     MODE_SELECT_TXT,
     LOADFRAME,
@@ -132,6 +133,8 @@ void Menu::enter() {
     for (int i = 0; i < MAX_SLOTS; ++i) {
         load_game_ids[i] = draw_manager.new_sprite_id();
     }
+
+    savemeta = save_manager.get_all_meta(true);
 }
 
 void Menu::exit() {
@@ -216,6 +219,16 @@ ExodusMode Menu::update(float delta) {
                         Justify::Centre,
                         RES_X/2, 250,
                         COL_TEXT);
+
+                if (savemeta[0].exists) {
+                    draw_manager.draw_text(TGT_Secondary,
+                            id(CONTINUE_TXT),
+                            Font::Large,
+                            "Continue",
+                            Justify::Centre,
+                            RES_X/2, 295,
+                            COL_TEXT);
+                }
 
                 draw_manager.fill(
                     TGT_Secondary,
@@ -308,8 +321,6 @@ ExodusMode Menu::update(float delta) {
                     LOADFRAME_X+4, LOADFRAME_Y+2+(14*LOADFRAME_STEP),
                     COL_TEXT2);
 
-                savemeta = save_manager.get_all_meta(true);
-
                 char n[8];
                 for (int i = 0; i < MAX_SLOTS; ++i) {
                     if (i == 0) {
@@ -352,6 +363,12 @@ ExodusMode Menu::update(float delta) {
                 stage = Load;
                 return ExodusMode::MODE_None;
             }
+
+            if (draw_manager.query_click(id(CONTINUE_TXT)).id) {
+                load_slot = 0;
+                set_stage(LoadStart);
+                return ExodusMode::MODE_None;
+            }
             break;
         case Load:
             {
@@ -370,29 +387,38 @@ ExodusMode Menu::update(float delta) {
                             COL_TEXT);
 
                         if (draw_manager.query_click(load_game_ids[i]).id) {
-                            L.debug("LOAD GAME: %s", savemeta[i].name);
-                            QUICKSAVE_SLOT = i;
-
-                            if (save_manager.load(i)) {
-                                draw_manager.draw(IMG_BG_STARS2);
-
-                                Player *p = exostate().get_player(0);
-                                char welcome[64];
-                                snprintf(welcome, sizeof(welcome), "Welcome, %s.", p->get_full_name());
-                                draw_manager.draw_text(
-                                        Font::Large,
-                                        welcome,
-                                        Justify::Centre,
-                                        RES_X/2, 200,
-                                        COL_TEXT2);
-
-                                set_stage(LoadWelcome);
-                                return ExodusMode::MODE_None;
-                            } else {
-                                L.error("Load failed");
-                            }
+                            load_slot = i;
+                            set_stage(LoadStart);
+                            return ExodusMode::MODE_None;
                         }
                     }
+                }
+            }
+            break;
+        case LoadStart:
+            {
+                int i = load_slot;
+                L.debug("LOAD GAME: %s", savemeta[i].name);
+                QUICKSAVE_SLOT = i;
+
+                if (save_manager.load(i)) {
+                    draw_manager.draw(IMG_BG_STARS2);
+
+                    Player *p = exostate().get_player(0);
+                    char welcome[64];
+                    snprintf(welcome, sizeof(welcome), "Welcome, %s.", p->get_full_name());
+                    draw_manager.draw_text(
+                            Font::Large,
+                            welcome,
+                            Justify::Centre,
+                            RES_X/2, 200,
+                            COL_TEXT2);
+
+                    set_stage(LoadWelcome);
+                    return ExodusMode::MODE_None;
+                } else {
+                    L.error("Load failed");
+                    return ExodusMode::MODE_Reload;
                 }
             }
             break;

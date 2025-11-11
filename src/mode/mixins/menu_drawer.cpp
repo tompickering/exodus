@@ -2053,8 +2053,8 @@ bool MenuDrawer::menu_specific_update() {
             }
             break;
         case MM_Save:
-            for (int i = 0; i < MAX_SLOTS; ++i) {
-                if (menu_row_clicked(i+2)) {
+            for (int i = 1; i < MAX_SLOTS; ++i) {
+                if (menu_row_clicked(i+1)) {
                     save_manager.save(i);
                     QUICKSAVE_SLOT = i;
                     menu_open(MM_Save);
