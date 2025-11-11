@@ -44,6 +44,9 @@ enum ID {
     NEWGAME_TXT,
     LOADGAME_TXT,
     CONTINUE_TXT,
+    AUTOSAVE_WARN_TXT0,
+    AUTOSAVE_WARN_TXT1,
+    AUTOSAVE_WARN_TXT2,
     MODE_SELECT,
     MODE_SELECT_TXT,
     LOADFRAME,
@@ -135,6 +138,7 @@ void Menu::enter() {
     }
 
     savemeta = save_manager.get_all_meta(true);
+    autosave_warned = false;
 }
 
 void Menu::exit() {
@@ -272,10 +276,33 @@ ExodusMode Menu::update(float delta) {
             }
 
             if (draw_manager.query_click(id(NEWGAME_TXT)).id) {
-                new (&exostate()) ExodusState();
-                new (&ephstate) EphemeralState();
-                set_stage(Size);
-                draw_manager.fade_black(1.2f, 24);
+                if (savemeta[0].exists && !autosave_warned) {
+                    autosave_warned = true;
+
+                    draw_manager.draw_text(
+                        id(AUTOSAVE_WARN_TXT0),
+                        "Warning:",
+                        Justify::Centre,
+                        RES_X/2, 40,
+                        COL_TEXT2);
+                    draw_manager.draw_text(
+                        id(AUTOSAVE_WARN_TXT1),
+                        "This will overwrite the existing autosave.",
+                        Justify::Centre,
+                        RES_X/2, 60,
+                        COL_TEXT2);
+                    draw_manager.draw_text(
+                        id(AUTOSAVE_WARN_TXT2),
+                        "Please click again to confirm.",
+                        Justify::Centre,
+                        RES_X/2, 80,
+                        COL_TEXT2);
+                } else {
+                    new (&exostate()) ExodusState();
+                    new (&ephstate) EphemeralState();
+                    set_stage(Size);
+                    draw_manager.fade_black(1.2f, 24);
+                }
             }
 
             if (draw_manager.query_click(id(LOADGAME_TXT)).id) {
@@ -1263,10 +1290,15 @@ ExodusMode Menu::update(float delta) {
 }
 
 void Menu::set_stage(Stage new_stage) {
+    draw_manager.draw(id(AUTOSAVE_WARN_TXT0), nullptr);
+    draw_manager.draw(id(AUTOSAVE_WARN_TXT1), nullptr);
+    draw_manager.draw(id(AUTOSAVE_WARN_TXT2), nullptr);
+
     trans_state = None;
     stage = new_stage;
     draw_manager.clear_sprite_ids();
     timer = 0;
+    autosave_warned = false;
 }
 
 void Menu::get_flag_pos(int idx, int& x, int& y) {

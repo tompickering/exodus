@@ -73,6 +73,7 @@ class Menu : ModeBase {
         SprID load_game_ids[MAX_SLOTS];
         const SaveMeta *savemeta;
         int load_slot;
+        bool autosave_warned;
 };
 
 #endif
