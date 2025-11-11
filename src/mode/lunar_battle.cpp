@@ -2168,6 +2168,10 @@ void LunarBattle::draw_units() {
 }
 
 void LunarBattle::draw_markers() {
+    if (!FEATURE(EF_LUNAR_BATTLE_FIRE_MARKERS)) {
+        return;
+    }
+
     for (int i = 0; i < n_units; ++i) {
         int x = units[i].x;
         int y = units[i].y;
