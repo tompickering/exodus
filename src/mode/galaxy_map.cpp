@@ -5581,6 +5581,11 @@ void GalaxyMap::planet_report_bulletin(int idx) {
     PlanetReport& report = exostate().get_planet_report(idx);
 
     bool transition = !report.displayed;
+
+    if (use_planet_summary()) {
+        transition = false;
+    }
+
     report.displayed = true;
 
     char text[32];
