@@ -47,7 +47,7 @@ bool BattleReport::batrpt_draw(bool reset) {
 
     audio_manager.target_music(mpart2mus(won ? 5 : 9));
 
-    if (won) {
+    if (won && (!b.auto_battle)) {
         if (!defending) {
             achievement_manager.unlock(ACH_AttackWon);
 
