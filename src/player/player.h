@@ -26,6 +26,8 @@
 #define OFF_INITCOST_AVG  200
 #define OFF_INITCOST_GOOD 400
 
+#define MAX_MC_CATEGORIES 50
+
 enum GuildTitle {
     GUILDTITLE_None,
     GUILDTITLE_Warrior,
@@ -116,7 +118,10 @@ enum MCReason {
     MC_DiplomaticReparations,
     MC_CPUWriteOffDebt,
     MC_ReturnToGalaxyReset,
+    MC_MAX,
 };
+
+static_assert(MC_MAX <= MAX_MC_CATEGORIES);
 
 struct Starship : public Saveable {
     virtual void save(cJSON* j) const override {
@@ -582,6 +587,11 @@ class Player : public Saveable {
         bool ever_committed_infraction;
         int trade_charge;
         int trace[TRACE_MAX];
+
+        int mc_gains_last_month[MAX_MC_CATEGORIES];
+        int mc_losses_last_month[MAX_MC_CATEGORIES];
+        int mc_gains_this_month[MAX_MC_CATEGORIES];
+        int mc_losses_this_month[MAX_MC_CATEGORIES];
 
         // AI
         AIFlag ai_flags[9];
