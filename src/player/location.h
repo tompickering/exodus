@@ -14,7 +14,7 @@ class PlayerLocation : public Saveable {
         PlayerLocation();
         bool advance();
         void complete();
-        bool in_flight();
+        bool in_flight() const;
         int get();
         void set(int);
         void set_target(int, int);

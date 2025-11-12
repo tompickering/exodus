@@ -34,7 +34,7 @@ void PlayerLocation::complete() {
     }
 }
 
-bool PlayerLocation::in_flight() {
+bool PlayerLocation::in_flight() const {
     return months_to_arrive > 0;
 }
 
