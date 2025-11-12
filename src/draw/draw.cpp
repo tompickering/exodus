@@ -23,6 +23,10 @@ DrawManager::DrawManager() {
     clicked_this_frame_r = false;
     prev_mouseover_selectable_text_id = ID_NONE;
     mouseover_selectable_text_id = ID_NONE;
+    text_cursor_id = ID_NONE;
+    text_cursor_text_id = ID_NONE;
+    text_cursor_text_len = -1;
+    text_cursor_cycle = TEXT_CURSOR_PERIOD;
 
     init_special_vfx();
 }
@@ -34,6 +38,13 @@ void DrawManager::update(float delta, MousePos new_mouse_pos, MousePos new_click
 
     if (fade_active()) {
         fade_time += delta;
+    }
+
+    if (text_cursor_enabled()) {
+        text_cursor_cycle -= delta;
+        while (text_cursor_cycle < 0) {
+            text_cursor_cycle += TEXT_CURSOR_PERIOD;
+        }
     }
 
     update_special_vfx(delta);
@@ -509,6 +520,25 @@ void DrawManager::register_button(const char* sprite, const DrawArea& area) {
         buttons[sprite] = vector<DrawArea>();
     }
     buttons[sprite].push_back(area);
+}
+
+void DrawManager::enable_text_cursor(SprID text_id) {
+    text_cursor_id = new_sprite_id();
+    text_cursor_text_id = text_id;
+    text_cursor_text_len = -1;
+    text_cursor_cycle = TEXT_CURSOR_PERIOD;
+}
+
+void DrawManager::disable_text_cursor() {
+    draw(text_cursor_id, nullptr);
+    release_sprite_id(text_cursor_id);
+    text_cursor_id = ID_NONE;
+    text_cursor_text_len = -1;
+    text_cursor_cycle = TEXT_CURSOR_PERIOD;
+}
+
+bool DrawManager::text_cursor_enabled() {
+    return (text_cursor_id != ID_NONE);
 }
 
 void DrawManager::update_special_vfx(float delta) {

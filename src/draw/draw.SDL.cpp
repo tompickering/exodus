@@ -973,6 +973,25 @@ void DrawManagerSDL::draw_text(DrawTarget tgt, SprID id, Font font, const char* 
         msg_rect.x -= (jst == Justify::Right) ? render_w : render_w / 2;
     }
 
+    if (text_cursor_enabled()) {
+        if (id == text_cursor_text_id) {
+            bool draw_text_cursor = text_cursor_cycle < (TEXT_CURSOR_PERIOD/2.f);
+
+            int len = strlen(_text);
+            int len_changed = len != text_cursor_text_len;
+            text_cursor_text_len = len;
+
+            if (len_changed || !draw_text_cursor) {
+                draw(text_cursor_id, nullptr);
+            }
+
+            if (draw_text_cursor) {
+                refresh_sprite_id(text_cursor_id);
+                fill(text_cursor_id, {msg_rect.x + render_w + 2, msg_rect.y+2, 2, render_h-4}, COL_TEXT2);
+            }
+        }
+    }
+
     if (id) {
         DrawArea area;
         area.x = msg_rect.x;

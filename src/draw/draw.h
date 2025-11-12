@@ -17,6 +17,8 @@
 #define FLAGVFX_TIME 3.0f
 #define BUTTONVFX_TIME 0.3f
 
+#define TEXT_CURSOR_PERIOD 1.0f
+
 using std::map;
 using std::vector;
 
@@ -241,6 +243,15 @@ class DrawManager {
         virtual void set_flag_vfx(SprID);
         virtual void register_button(const char*);
         virtual void register_button(const char*, const DrawArea&);
+
+        SprID text_cursor_id;
+        SprID text_cursor_text_id;
+        int text_cursor_text_len;
+        float text_cursor_cycle;
+        virtual void enable_text_cursor(SprID);
+        virtual void disable_text_cursor();
+        virtual bool text_cursor_enabled();
+
     protected:
         virtual SpriteClick query_click(SprID, bool);
         map<const char*, void*> sprite_data;
