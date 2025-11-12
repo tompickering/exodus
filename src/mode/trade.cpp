@@ -432,6 +432,9 @@ ExodusMode Trade::update(float delta) {
             break;
         case DoTrade:
             {
+                int available_y = ENHANCED() ? 45 : 15;
+                int price_y = ENHANCED() ? 15 : 45;
+
                 TradeRow &r = rows[active_row];
                 char val[16];
                 snprintf(val, sizeof(val), "%d", r.stock);
@@ -439,15 +442,21 @@ ExodusMode Trade::update(float delta) {
                     id(ID::TRADE_STOCK),
                     val,
                     Justify::Left,
-                    PANEL_X + 120, PANEL_Y + 15,
+                    PANEL_X + 120, PANEL_Y + available_y,
                     COL_TEXT2);
                 snprintf(val, sizeof(val), "%d", sell ? r.buy : r.cost);
                 draw_manager.draw_text(
                     id(ID::TRADE_PRICE),
                     val,
                     Justify::Left,
-                    PANEL_X + 120, PANEL_Y + 45,
+                    PANEL_X + 120, PANEL_Y + price_y,
                     COL_TEXT2);
+
+                RGB col = COL_TEXT_BAD;
+
+                if (ENHANCED()) {
+                    col = COL_TEXT2;
+                }
 
                 snprintf(val, sizeof(val), "%d", get_freight(active_row));
                 draw_manager.draw_text(
@@ -455,14 +464,14 @@ ExodusMode Trade::update(float delta) {
                     val,
                     Justify::Left,
                     PANEL_X + 120, PANEL_Y + 105,
-                    COL_TEXT_BAD);
+                    col);
                 snprintf(val, sizeof(val), "%d", p->get_mc());
                 draw_manager.draw_text(
                     id(ID::TRADE_MC),
                     val,
                     Justify::Left,
                     PANEL_X + 120, PANEL_Y + 135,
-                    COL_TEXT_BAD);
+                    col);
 
                 SpriteClick clk = draw_manager.query_click(id(ID::TRADE_PANEL));
                 if (clk.id) {
@@ -585,15 +594,18 @@ void Trade::start_trade(bool _sell) {
         PANEL_X+258, PANEL_Y+10,
         COL_TEXT);
 
+    int available_y = ENHANCED() ? 45 : 15;
+    int price_y = ENHANCED() ? 15 : 45;
+
     draw_manager.draw_text(
         "Available:",
         Justify::Left,
-        PANEL_X + 4, PANEL_Y + 15,
+        PANEL_X + 4, PANEL_Y + available_y,
         COL_TEXT);
     draw_manager.draw_text(
         "Price:",
         Justify::Left,
-        PANEL_X + 4, PANEL_Y + 45,
+        PANEL_X + 4, PANEL_Y + price_y,
         COL_TEXT);
 
     draw_manager.draw_text(
