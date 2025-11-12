@@ -1119,9 +1119,12 @@ void Player::add_trace(Trace t, int n) {
 }
 
 void Player::save_mc_month_end() {
-    mc_at_end_of_previous_month = mc;
+    int m = exostate().get_orig_month();
+    L.debug("SAVE MC RECORDS: Month %d", m);
 
-    L.debug("SAVE MC RECORDS");
+    mc_at_end_of_previous_month = mc;
+    mc_history[m-1] = mc;
+
     for (int i = 0; i < MAX_MC_CATEGORIES; ++i) {
         mc_gains_lifetime[i] += mc_gains_this_month[i];
         mc_losses_lifetime[i] += mc_losses_this_month[i];
@@ -1197,6 +1200,7 @@ void Player::save(cJSON* j) const
     SAVE_ARRAY_OF_NUM(j, mc_losses_last_month);
     SAVE_ARRAY_OF_NUM(j, mc_gains_this_month);
     SAVE_ARRAY_OF_NUM(j, mc_losses_this_month);
+    SAVE_ARRAY_OF_NUM(j, mc_history);
 }
 
 void Player::load(cJSON* j)
@@ -1246,4 +1250,5 @@ void Player::load(cJSON* j)
     LOAD_ARRAY_OF_NUM(j, mc_losses_last_month);
     LOAD_ARRAY_OF_NUM(j, mc_gains_this_month);
     LOAD_ARRAY_OF_NUM(j, mc_losses_this_month);
+    LOAD_ARRAY_OF_NUM(j, mc_history);
 }

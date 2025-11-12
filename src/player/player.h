@@ -27,6 +27,7 @@
 #define OFF_INITCOST_GOOD 400
 
 #define MAX_MC_CATEGORIES 50
+#define MAX_MC_HISTORY 400
 
 enum GuildTitle {
     GUILDTITLE_None,
@@ -599,6 +600,8 @@ class Player : public Saveable {
         int mc_losses_last_month[MAX_MC_CATEGORIES];
         int mc_gains_this_month[MAX_MC_CATEGORIES];
         int mc_losses_this_month[MAX_MC_CATEGORIES];
+
+        int mc_history[MAX_MC_HISTORY];
 
         // AI
         AIFlag ai_flags[9];

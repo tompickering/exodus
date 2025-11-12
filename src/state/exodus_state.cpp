@@ -255,6 +255,10 @@ void ExodusState::init(GameConfig config) {
             players[i].mc_gains_this_month[j] = 0;
             players[i].mc_losses_this_month[j] = 0;
         }
+
+        for (int j = 0; j < MAX_MC_HISTORY; ++j) {
+            players[i].mc_history[j] = 0;
+        }
     }
 
     for (int j = 0; j < N_PLAYERS; ++j) {
