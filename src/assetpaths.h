@@ -1302,6 +1302,8 @@ extern const char *IMG_GF_LBCB;
 extern const char *IMG_GF_LBCR;
 extern const char *IMG_SCIENTIST;
 extern const char *IMG_BG_WELCOME;
+extern const char *IMG_HEADER_L;
+extern const char *IMG_HEADER_R;
 
 extern const char *INIT_IMG;
 extern const char *CURSOR_IMG;

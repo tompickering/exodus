@@ -1305,6 +1305,8 @@ const char *IMG_GF_LBCB          = D_NEW "gf_lbcb";
 const char *IMG_GF_LBCR          = D_NEW "gf_lbcr";
 const char *IMG_SCIENTIST        = D_NEW "scientist";
 const char *IMG_BG_WELCOME       = D_NEW "bg_welcome";
+const char *IMG_HEADER_L         = D_NEW "header_l";
+const char *IMG_HEADER_R         = D_NEW "header_r";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2610,6 +2612,8 @@ const char *ASSETS_IMG[] = {
     IMG_GF_LBCR,
     IMG_SCIENTIST,
     IMG_BG_WELCOME,
+    IMG_HEADER_L,
+    IMG_HEADER_R,
 
     "",
 };

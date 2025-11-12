@@ -206,14 +206,14 @@ void TradeBuy::tradebuy_open() {
 
     draw_manager.draw(
         id_tradebuy_header_l,
-        IMG_TS1_HEADER,
+        ENHANCED() ? IMG_HEADER_L : IMG_TS1_HEADER,
         {TRADEBUY_FLAG_BG_X - 2,
          TRADEBUY_Y - 2,
          1, 1, 1, 1});
 
     draw_manager.draw(
         id_tradebuy_header_r,
-        IMG_TS1_HEADER,
+        ENHANCED() ? IMG_HEADER_R : IMG_TS1_HEADER,
         {TRADEBUY_FLAG_BG_X + TRADEBUY_FLAG_BG_W + 2,
          TRADEBUY_Y - 2,
          0, 1, 1, 1});

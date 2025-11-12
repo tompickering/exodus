@@ -210,14 +210,14 @@ void MenuDrawer::menu_open(MenuMode mode) {
 
         draw_manager.draw(
             id_menu_header_l,
-            IMG_TS1_HEADER,
+            ENHANCED() ? IMG_HEADER_L : IMG_TS1_HEADER,
             {MENU_FLAG_BG_X - 2,
              MENU_Y - 2,
              1, 1, 1, 1});
 
         draw_manager.draw(
             id_menu_header_r,
-            IMG_TS1_HEADER,
+            ENHANCED() ? IMG_HEADER_R : IMG_TS1_HEADER,
             {MENU_FLAG_BG_X + MENU_FLAG_BG_W + 2,
              MENU_Y - 2,
              0, 1, 1, 1});
