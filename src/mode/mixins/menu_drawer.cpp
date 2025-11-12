@@ -501,12 +501,14 @@ void MenuDrawer::menu_open_specific_mode() {
             break;
         case MM_OldOfficerDismissed:
             {
+                p->register_officer_fired_nopay(menu_new_officer, menu_old_officer_quality);
                 menu_set_txt(0, COL_TEXT, "The old officer has been dismissed without");
                 menu_set_txt(1, COL_TEXT, "any payment for their work.");
             }
             break;
         case MM_OldOfficerKilled:
             {
+                p->register_officer_killed(menu_new_officer, menu_old_officer_quality);
                 menu_set_txt(0, COL_TEXT, "The old officer has been shot.");
                 menu_set_txt(1, COL_TEXT, "Will this be good for your reputation?");
             }
@@ -1678,6 +1680,7 @@ bool MenuDrawer::menu_specific_update() {
                 if (clk.id) {
                     if (clk.x < .33f) {
                         if (p->attempt_spend(engagement_cost, MC_NewOfficer)) {
+                            menu_old_officer_quality = p->get_officer(menu_new_officer);
                             draw_manager.draw(id_menu_newoff_opt, nullptr);
                             p->set_officer(menu_new_officer, menu_new_officer_quality);
                             menu_open(MM_OldOfficer);

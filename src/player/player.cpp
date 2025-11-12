@@ -897,28 +897,31 @@ void Player::set_officer(Officer off, OfficerQuality off_q) {
     }
 }
 
-void Player::register_officer_fired_nopay(Officer off) {
-    officers_fired_nopay[officer_idx(off)] = true;
+void Player::register_officer_fired_nopay(Officer off, OfficerQuality offq) {
+    L.debug("Officer fired: %d %d", off, offq);
+    officers_fired_nopay[officer_idx(off, offq)] = true;
 }
 
-void Player::register_officer_quit(Officer off) {
-    officers_quit[officer_idx(off)] = true;
+void Player::register_officer_quit(Officer off, OfficerQuality offq) {
+    L.debug("Officer quit: %d %d", off, offq);
+    officers_quit[officer_idx(off, offq)] = true;
 }
 
-void Player::register_officer_killed(Officer off) {
-    officers_deceased[officer_idx(off)] = true;
+void Player::register_officer_killed(Officer off, OfficerQuality offq) {
+    L.debug("Officer killed: %d %d", off, offq);
+    officers_deceased[officer_idx(off, offq)] = true;
 }
 
-bool Player::officer_fired_nopay(Officer off) {
-    return officers_fired_nopay[officer_idx(off)];
+bool Player::officer_fired_nopay(Officer off, OfficerQuality offq) {
+    return officers_fired_nopay[officer_idx(off, offq)];
 }
 
-bool Player::officer_quit(Officer off) {
-    return officers_quit[officer_idx(off)];
+bool Player::officer_quit(Officer off, OfficerQuality offq) {
+    return officers_quit[officer_idx(off, offq)];
 }
 
-bool Player::officer_killed(Officer off) {
-    return officers_deceased[officer_idx(off)];
+bool Player::officer_killed(Officer off, OfficerQuality offq) {
+    return officers_deceased[officer_idx(off, offq)];
 }
 
 int Player::get_freight_capacity() {
@@ -1177,8 +1180,8 @@ void Player::adjust_mc(int amount, MCReason reason) {
     }
 }
 
-int Player::officer_idx(Officer off) {
-    return ((OFFQ_MAX * (int)off) + (int)get_officer(off));
+int Player::officer_idx(Officer off, OfficerQuality offq) {
+    return ((OFFQ_MAX * (int)off) + (int)offq);
 }
 
 void Player::save(cJSON* j) const

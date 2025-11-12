@@ -121,6 +121,7 @@ class MenuDrawer {
         MenuAction menu_action;
         Officer menu_new_officer;
         OfficerQuality menu_new_officer_quality;
+        OfficerQuality menu_old_officer_quality;
 
         bool menu_row_clicked(int);
         int menu_clickable_rows;

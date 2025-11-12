@@ -2338,6 +2338,7 @@ ExodusMode GalaxyMap::month_pass_update() {
 
                         if (onein(6)) {
                             bulletin_set_next_text("The officer has left.");
+                            p->register_officer_quit(o, p->get_officer(o));
                             p->set_officer(o, OFFQ_Poor);
                         }
 
