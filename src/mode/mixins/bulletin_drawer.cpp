@@ -2254,6 +2254,9 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("");
             bulletin_set_next_text("If you have upgraded any officers, these also");
             bulletin_set_next_text("require a monthly salary.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("(Enhanced mode only) Check the Finance");
+            bulletin_set_next_text("Information tab from the STAT menu.");
         }
     }
 
