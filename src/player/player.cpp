@@ -1120,10 +1120,6 @@ void Player::add_trace(Trace t, int n) {
 
 void Player::save_mc_month_end() {
     mc_at_end_of_previous_month = mc;
-}
-
-void Player::save_mc_month_start() {
-    mc_at_start_of_current_month = mc;
 
     L.debug("SAVE MC RECORDS");
     for (int i = 0; i < MAX_MC_CATEGORIES; ++i) {
@@ -1132,6 +1128,10 @@ void Player::save_mc_month_start() {
         mc_gains_this_month[i] = 0;
         mc_losses_this_month[i] = 0;
     }
+}
+
+void Player::save_mc_month_start() {
+    mc_at_start_of_current_month = mc;
 }
 
 void Player::adjust_mc(int amount, MCReason reason) {

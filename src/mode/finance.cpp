@@ -9,19 +9,7 @@ Finance::Finance() : ModeBase("Finance") {
 
 void Finance::enter() {
     ModeBase::enter();
-
-    draw_manager.draw(IMG_BG_NEWS);
-
-    char heading[32];
-    snprintf(heading, sizeof(heading), "Finances: Last Month");
-    draw_manager.draw_text(
-        Font::Large,
-        heading,
-        Justify::Centre,
-        RES_X/2, 8,
-        COL_TEXT);
-
-    draw_finance();
+    draw_finance(FR_LastMonth);
 }
 
 static const char* cat2header(int idx) {
@@ -114,7 +102,26 @@ static const char* cat2header(int idx) {
     return "<NONE>";
 }
 
-void Finance::draw_finance() {
+void Finance::draw_finance(FinanceReport report) {
+    current_report = report;
+
+    draw_manager.draw(IMG_BG_NEWS);
+
+    char heading[32];
+
+    if (report == FR_LastMonth) {
+        snprintf(heading, sizeof(heading), "Finances: Last Month");
+    } else {
+        snprintf(heading, sizeof(heading), "Finances: This Month");
+    }
+
+    draw_manager.draw_text(
+        Font::Large,
+        heading,
+        Justify::Centre,
+        RES_X/2, 8,
+        COL_TEXT);
+
     Player *p = exostate().get_active_player();
 
     char t[128];
@@ -133,19 +140,21 @@ void Finance::draw_finance() {
         (3*RES_X)/4 + 12, 60,
         COL_TEXT2);
 
-    snprintf(t, sizeof(t), "Month %d End: %dMC", m-1, p->get_mc_month_end());
-    draw_manager.draw_text(
-        t,
-        Justify::Left,
-        10, RES_Y-24,
-        COL_TEXT);
+    if (current_report == FR_ThisMonth) {
+        snprintf(t, sizeof(t), "Month %d End: %dMC", m-1, p->get_mc_month_end());
+        draw_manager.draw_text(
+            t,
+            Justify::Left,
+            10, RES_Y-24,
+            COL_TEXT);
 
-    snprintf(t, sizeof(t), "Month %d Start: %dMC", m, p->get_mc_month_start());
-    draw_manager.draw_text(
-        t,
-        Justify::Right,
-        RES_X-10, RES_Y-24,
-        COL_TEXT);
+        snprintf(t, sizeof(t), "Month %d Start: %dMC", m, p->get_mc_month_start());
+        draw_manager.draw_text(
+            t,
+            Justify::Right,
+            RES_X-10, RES_Y-24,
+            COL_TEXT);
+    }
 
     const int items_base_y = 90;
     const int items_spacing_v = 16;
@@ -161,8 +170,16 @@ void Finance::draw_finance() {
 
     const int max_items_per_col = 20;
 
-    const int* gains = p->get_gains_last_month();
-    const int* losses = p->get_losses_last_month();
+    const int* gains = nullptr;
+    const int* losses = nullptr;
+
+    if (report == FR_LastMonth) {
+        gains = p->get_gains_last_month();
+        losses = p->get_losses_last_month();
+    } else {
+        gains = p->get_gains_this_month();
+        losses = p->get_losses_this_month();
+    }
 
     int gains_total = 0;
     int losses_total = 0;
@@ -280,6 +297,11 @@ void Finance::draw_finance() {
 
 ExodusMode Finance::update(float delta) {
     if (draw_manager.clicked() || input_manager.consume(K_F)) {
+        if (current_report == FR_LastMonth) {
+            draw_finance(FR_ThisMonth);
+            return ExodusMode::MODE_None;
+        }
+
         return ExodusMode::MODE_Pop;
     }
 

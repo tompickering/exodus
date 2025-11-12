@@ -7,13 +7,19 @@
 
 #include "state/exodus_state.h"
 
+enum FinanceReport {
+    FR_LastMonth,
+    FR_ThisMonth,
+};
+
 class Finance : ModeBase {
     public:
         Finance();
         virtual void enter() override;
         virtual ExodusMode update(float) override;
     private:
-        void draw_finance();
+        void draw_finance(FinanceReport);
+        FinanceReport current_report;
 };
 
 #endif
