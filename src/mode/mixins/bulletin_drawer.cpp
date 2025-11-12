@@ -2198,6 +2198,24 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("you can claim additional taxes from a planet via");
             bulletin_set_next_text("the LAW button. Bear in mind that the citizens");
             bulletin_set_next_text("will not be happy about this...");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("");
+        }
+    }
+
+    if (p == BMP_Tips_4) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("(Enhanced Mode Only)");
+            bulletin_set_next_text("");
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("Resettle Cities");
+            bulletin_set_next_text("When your fleet is in the same system as one");
+            bulletin_set_next_text("of your planets, you may resettle the citizens");
+            bulletin_set_next_text("by using the Clear tool on any citier. This will");
+            bulletin_set_next_text("recover some MC and will not incur any of the");
+            bulletin_set_next_text("penalties usually associated with city");
+            bulletin_set_next_text("destruction.");
         }
     }
 

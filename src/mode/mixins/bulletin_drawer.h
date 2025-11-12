@@ -81,6 +81,7 @@ enum BulletinManualPage : uint8_t {
     BMP_Tips,
     BMP_Tips_2,
     BMP_Tips_3,
+    BMP_Tips_4,
     BMP_Tips_END,
     BMP_FAQ,
     BMP_FAQ_HowEarnMC,
