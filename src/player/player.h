@@ -612,6 +612,7 @@ class Player : public Saveable {
 
     // The ExodusState sets up the player data during game init.
     friend class ExodusState;
+    friend class ExodusDebug;
 };
 
 #endif

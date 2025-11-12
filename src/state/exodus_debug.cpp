@@ -99,3 +99,24 @@ void ExodusDebug::own_sys_planets() {
         }
     }
 }
+
+void ExodusDebug::print_mc_data() {
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        Player* p = exostate().get_player(i);
+        L.debug("--- %s ---", p->get_full_name());
+        for (int j = 0; j < MC_MAX; ++j) {
+            L.debug("%d: +%dMC", j, p->mc_gains_lifetime[j]);
+            L.debug("%d: -%dMC", j, p->mc_losses_lifetime[j]);
+        }
+    }
+}
+
+void ExodusDebug::print_mc_history() {
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        Player* p = exostate().get_player(i);
+        L.debug("--- %s ---", p->get_full_name());
+        for (int j = 0; j < exostate().get_month()-1; ++j) {
+            L.debug("%d: %dMC", j, p->mc_history[j]);
+        }
+    }
+}

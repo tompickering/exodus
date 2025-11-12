@@ -376,6 +376,14 @@ int Exodus::run(int argc, char** argv) {
             if (input_manager.consume(Input::K_O)) {
                 exodebug.own_sys_planets();
             }
+
+            if (input_manager.consume(Input::K_Z)) {
+                exodebug.print_mc_data();
+            }
+
+            if (input_manager.consume(Input::K_X)) {
+                exodebug.print_mc_history();
+            }
         }
 #endif
     }

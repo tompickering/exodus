@@ -17,6 +17,8 @@ class ExodusDebug {
         void set_all_alliances();
         void own_planet();
         void own_sys_planets();
+        void print_mc_data();
+        void print_mc_history();
         bool show_player_markers;
         bool full_visibility;
         SprID player_markers[N_PLAYERS];
