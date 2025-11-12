@@ -895,6 +895,7 @@ void MenuDrawer::menu_open_specific_mode() {
 
                 if (!menu_art_planet_named) {
                     input_manager.start_text_input();
+                    draw_manager.enable_text_cursor(id_menu_artplanname);
                     input_manager.set_input_text("Genesis");
                 }
             }
@@ -1973,6 +1974,8 @@ bool MenuDrawer::menu_specific_update() {
                         marker_being_set = i;
                         const StarMarker *m = p->get_marker(i);
                         input_manager.start_text_input();
+                        draw_manager.enable_text_cursor(id_menu_marker_entry_text);
+
                         if (m) {
                             input_manager.set_input_text(m->tag);
                         }
@@ -2009,6 +2012,7 @@ bool MenuDrawer::menu_specific_update() {
                     if (new_marker[0] != '\0') {
                         p->set_marker_tag(marker_being_set, new_marker);
                         input_manager.stop_text_input();
+                        draw_manager.disable_text_cursor();
                         StarMarker *marker = p->get_marker(marker_being_set);
                         ephstate.select_planet(SPR_MarkStar, &marker->idx, nullptr);
                         menu_new_mode = ephstate.get_appropriate_mode();
@@ -2036,6 +2040,7 @@ bool MenuDrawer::menu_specific_update() {
 
                 if (input_manager.consume(K_Enter) && strnlen(name, 1)) {
                     input_manager.stop_text_input();
+                    draw_manager.disable_text_cursor();
                     menu_art_planet_named = true;
 
                     draw_manager.draw_text(

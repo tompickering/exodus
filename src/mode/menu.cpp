@@ -660,6 +660,7 @@ ExodusMode Menu::update(float delta) {
 
                 draw_manager.save_background();
                 input_manager.start_text_input();
+                draw_manager.enable_text_cursor(id(ID::PLAYER_NAME));
 
                 trans_state = Done;
             }
@@ -694,6 +695,7 @@ ExodusMode Menu::update(float delta) {
                     if (!duplicate) {
                         config.players[current_player].set_name(input_name);
                         input_manager.stop_text_input();
+                        draw_manager.disable_text_cursor();
                         set_stage(Gender);
                     } else {
                         L.info("Not allowing duplicate name");
@@ -777,6 +779,7 @@ ExodusMode Menu::update(float delta) {
 
                 draw_manager.save_background();
                 input_manager.start_text_input();
+                draw_manager.enable_text_cursor(id(ID::PLAYER_TITLE));
 
                 trans_state = Done;
             }
@@ -803,6 +806,7 @@ ExodusMode Menu::update(float delta) {
                 if (input_manager.consume(K_Enter) && strnlen(input_title, 1)) {
                     config.players[current_player].set_title(input_title);
                     input_manager.stop_text_input();
+                    draw_manager.disable_text_cursor();
                     set_stage(CustomRef);
                 }
             }
@@ -831,6 +835,7 @@ ExodusMode Menu::update(float delta) {
 
                 draw_manager.save_background();
                 input_manager.start_text_input();
+                draw_manager.enable_text_cursor(id(ID::PLAYER_REF));
 
                 trans_state = Done;
             }
@@ -857,6 +862,7 @@ ExodusMode Menu::update(float delta) {
                 if (input_manager.consume(K_Enter) && strnlen(input_ref, 1)) {
                     config.players[current_player].set_ref(input_ref);
                     input_manager.stop_text_input();
+                    draw_manager.disable_text_cursor();
                     set_stage(Welcome);
                 }
             }

@@ -227,6 +227,7 @@ ExodusMode StarMap::update(float delta) {
                              RENAME_W, RENAME_H},
                             {0, 0, 0});
                         input_manager.start_text_input();
+                        draw_manager.enable_text_cursor(id(ID::RENAME_NEWNAME));
                         input_manager.set_input_text(p->get_name());
                         set_stage(SM_PlanetRename);
                         return ExodusMode::MODE_None;
@@ -860,6 +861,7 @@ ExodusMode StarMap::update(float delta) {
                     Planet *p = star->get_planet(rename_planet);
                     p->set_name(newname);
                     input_manager.stop_text_input();
+                    draw_manager.disable_text_cursor();
                     draw_manager.draw(id(ID::RENAME_NEWNAME), nullptr);
                     draw_manager.draw(id(ID::RENAME), nullptr);
                     draw_manager.draw(id(ID::RENAME_BORDER), nullptr);
