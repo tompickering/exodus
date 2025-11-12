@@ -17,6 +17,7 @@ enum MCReason {
     MC_ScienceFunding,
     MC_Building,
     MC_BuildingLunarBase,
+    MC_Resettling,
     MC_Festival,
     MC_FactoryRepair,
     MC_ExtraTaxes,

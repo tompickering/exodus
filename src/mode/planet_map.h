@@ -141,6 +141,8 @@ class PlanetMap : ModeBase, CommPanelDrawer {
 
         bool bomb_achievements_done;
 
+        bool resettling_enabled;
+
         SprID id_stones[MAX_STONES];
 };
 

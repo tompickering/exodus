@@ -34,6 +34,8 @@ const char* cat2header(int idx) {
             return "Construction";
         case MC_BuildingLunarBase:
             return "Lunar Base";
+        case MC_Resettling:
+            return "Resettling";
         case MC_Festival:
             return "Festivals";
         case MC_FactoryRepair:

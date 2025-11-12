@@ -338,6 +338,7 @@ PlanetMap::PlanetMap() : ModeBase("PlanetMap") {
     exploding_stone = STONE_Clear;
     chained_explosion_idx = 0;
     chained_explosion_head = 0;
+    resettling_enabled = false;
 }
 
 void PlanetMap::enter() {
@@ -480,6 +481,18 @@ void PlanetMap::enter() {
     law_changed = false;
 
     bomb_achievements_done = false;
+
+    resettling_enabled = false;
+
+    if (FEATURE(EF_RESETTLING)) {
+        int star_idx = exostate().get_active_star_idx();
+
+        const PlayerLocation& loc = player->get_location();
+
+        if (!loc.in_flight() && (star_idx == loc.get_target())) {
+            resettling_enabled = true;
+        }
+    }
 }
 
 void PlanetMap::exit() {
@@ -675,12 +688,23 @@ ExodusMode PlanetMap::update(float delta) {
                     }
 
                     if (ok) {
-                        if (player->attempt_spend(tool2cost(active_tool), MC_Building)) {
+                        bool proceed = false;
+
+                        if (resettling_enabled && (active_tool == TOOL_Clear) && (existing == STONE_City)) {
+                            proceed = true;
+                            player->give_mc(15, MC_Resettling);
+                        } else {
+                            proceed = player->attempt_spend(tool2cost(active_tool), MC_Building);
+                        }
+
+                        if (proceed) {
                             if (active_tool == TOOL_Clear) {
                                 // Clearing cities increases unrest
                                 if (existing == STONE_City) {
-                                    planet->adjust_unrest(3);
-                                    player->add_trace(TRACE_CitiesDestroyed);
+                                    if (!resettling_enabled) {
+                                        planet->adjust_unrest(3);
+                                        player->add_trace(TRACE_CitiesDestroyed);
+                                    }
                                 }
                                 // Clearing villages increases unrest
                                 if (existing == STONE_Village) {
