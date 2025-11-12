@@ -759,14 +759,47 @@ ExodusMode LunarBattle::update(float delta) {
                 }
 
                 if (human_turn) {
-                    if (draw_manager.query_click(id(ID::ARROW_UP)).id)
-                        move_dir = DIR_Up;
-                    if (draw_manager.query_click(id(ID::ARROW_DOWN)).id)
-                        move_dir = DIR_Down;
-                    if (draw_manager.query_click(id(ID::ARROW_LEFT)).id)
-                        move_dir = DIR_Left;
-                    if (draw_manager.query_click(id(ID::ARROW_RIGHT)).id)
-                        move_dir = DIR_Right;
+                    if (draw_manager.clicked()) {
+                        if (cursor_x >= 0 && cursor_y >= 0) {
+                            const int x = active_unit->x;
+                            const int y = active_unit->y;
+
+                            char valid_dirs = get_valid_move_directions();
+
+                            if (cursor_x == x) {
+                                if (cursor_y == y+1) {
+                                    move_dir = DIR_Down;
+                                } else if (cursor_y+1 == y) {
+                                    move_dir = DIR_Up;
+                                }
+                            } else if (cursor_y == y) {
+                                if (cursor_x == x+1) {
+                                    move_dir = DIR_Right;
+                                } else if (cursor_x+1 == x) {
+                                    move_dir = DIR_Left;
+                                }
+                            }
+
+                            if (   (move_dir == DIR_Right && !(valid_dirs & 1))
+                                || (move_dir == DIR_Left && !(valid_dirs & 2))
+                                || (move_dir == DIR_Down && !(valid_dirs & 4))
+                                || (move_dir == DIR_Up && !(valid_dirs & 8))) {
+                                    move_dir = DIR_None;
+                                }
+                        }
+                    }
+
+                    if (move_dir == DIR_None) {
+                        if (draw_manager.query_click(id(ID::ARROW_UP)).id)
+                            move_dir = DIR_Up;
+                        if (draw_manager.query_click(id(ID::ARROW_DOWN)).id)
+                            move_dir = DIR_Down;
+                        if (draw_manager.query_click(id(ID::ARROW_LEFT)).id)
+                            move_dir = DIR_Left;
+                        if (draw_manager.query_click(id(ID::ARROW_RIGHT)).id)
+                            move_dir = DIR_Right;
+                    }
+
                     if (draw_manager.query_click(active_unit->spr_id).id) {
                         // We wish to end our movement phase early
                         move_dir = DIR_None;
