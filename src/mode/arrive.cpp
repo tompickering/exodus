@@ -50,8 +50,8 @@ void Arrive::base_draw(const char* bg) {
     frame_draw();
 
     draw_panel_bg(TGT_Primary);
-    update_panel_info_player(TGT_Primary, player);
-    update_panel_info_ft(TGT_Primary, player, tgt);
+    update_panel_info_player(TGT_Primary, exostate().get_player(0));
+    update_panel_info_ft(TGT_Primary, exostate().get_player(0), tgt);
 
     char text[128];
     snprintf(
