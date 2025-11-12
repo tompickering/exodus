@@ -2187,7 +2187,9 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 }
                 if (accept && comm_other->attempt_spend(comm_ctx.mc, MC_PeaceDeal)) {
                     comm_set_speech("I accept this.");
-                    // FIXME: Orig doesn't increment lord's credits here
+                    if (FEATURE(EF_FIX_ATTACKPAYOFF_MC)) {
+                        comm_player->give_mc(comm_ctx.mc, MC_PeaceDeal);
+                    }
                     comm_exit_anim_action = CA_Abort;
                     comm_recv(DIA_R_Close);
                 } else {
