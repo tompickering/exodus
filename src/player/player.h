@@ -506,6 +506,8 @@ class Player : public Saveable {
         const int* get_gains_this_month(){ return mc_gains_this_month; }
         const int* get_losses_this_month(){ return mc_losses_this_month; }
 
+        bool officers_fired_nopay[OFFICERS_TOTAL];
+        bool officers_quit[OFFICERS_TOTAL];
         bool officers_deceased[OFFICERS_TOTAL];
 
         int nopirates;

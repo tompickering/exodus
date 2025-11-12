@@ -261,6 +261,8 @@ void ExodusState::init(GameConfig config) {
         }
 
         for (int j = 0; j < OFFICERS_TOTAL; ++j) {
+            players[i].officers_fired_nopay[j] = false;
+            players[i].officers_quit[j] = false;
             players[i].officers_deceased[j] = false;
         }
     }
