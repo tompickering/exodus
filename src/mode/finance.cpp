@@ -152,24 +152,29 @@ void Finance::draw_finance() {
 
     const int col0 = 10;
     const int col7 = RES_X - 10;
-    const int col6 = col7 - 110;
+    const int col6 = col7 - 120;
     const int col2 = (col0 + col6) / 3;
     const int col4 = (2*(col0 + col6)) / 3;
-    const int col1 = col0 + 110;
-    const int col3 = col2 + 110;
-    const int col5 = col4 + 110;
+    const int col1 = col0 + 120;
+    const int col3 = col2 + 120;
+    const int col5 = col4 + 120;
 
     const int max_items_per_col = 20;
 
     const int* gains = p->get_gains_last_month();
     const int* losses = p->get_losses_last_month();
 
+    int gains_total = 0;
+    int losses_total = 0;
+
     int x_header = col0;
     int x_mc = col1;
     int y = items_base_y;
 
+    int n = 0;
+
     for (int i = 0; i < MC_MAX; ++i) {
-        if (i == max_items_per_col) {
+        if (n == max_items_per_col) {
             x_header = col2;
             x_mc = col3;
             y = items_base_y;
@@ -178,6 +183,8 @@ void Finance::draw_finance() {
         if (gains[i] == 0) {
             continue;
         }
+
+        gains_total += gains[i];
 
         draw_manager.draw_text(
             Font::Tiny,
@@ -195,13 +202,15 @@ void Finance::draw_finance() {
             {0x00, 0xFF, 0x00});
 
         y += items_spacing_v;
+        ++n;
     }
 
     x_header = col4;
     x_mc = col5;
     y = items_base_y;
+    n = 0;
     for (int i = 0; i < MC_MAX; ++i) {
-        if (i == max_items_per_col) {
+        if (n == max_items_per_col) {
             x_header = col6;
             x_mc = col7;
             y = items_base_y;
@@ -210,6 +219,8 @@ void Finance::draw_finance() {
         if (losses[i] == 0) {
             continue;
         }
+
+        losses_total += losses[i];
 
         draw_manager.draw_text(
             Font::Tiny,
@@ -227,31 +238,44 @@ void Finance::draw_finance() {
             {0xFF, 0x00, 0x00});
 
         y += items_spacing_v;
+        ++n;
     }
 
     draw_manager.draw_line(RES_X/2, items_base_y-10, RES_X/2, items_base_y+items_spacing_v*max_items_per_col, COL_TEXT2);
 
-    // TODO
+    snprintf(t, sizeof(t), "Total: %dMC", gains_total);
     draw_manager.draw_text(
-        "Total: XMC",
+        t,
         Justify::Centre,
         RES_X/4 - 12, items_base_y+items_spacing_v*max_items_per_col,
         COL_TEXT2);
 
-    // TODO
+    snprintf(t, sizeof(t), "Total: %dMC", losses_total);
     draw_manager.draw_text(
-        "Total: XMC",
+        t,
         Justify::Centre,
         (3*RES_X)/4 + 12, items_base_y+items_spacing_v*max_items_per_col,
         COL_TEXT2);
 
-    // TODO
+    int total = gains_total - losses_total;
+
+    RGB col = {0xFF, 0x00, 0x00};
+
+    if (total > 0) {
+        col = {0x00, 0xFF, 0x00};
+    }
+
+    if (total == 0) {
+        col = COL_TEXT2;
+    }
+
+    snprintf(t, sizeof(t), "NET: %s%dMC", (total > 0 ? "+" : ""), total);
     draw_manager.draw_text(
         Font::Large,
-        "NET: +XMC",
+        t,
         Justify::Centre,
         RES_X/2, RES_Y-74,
-        COL_TEXT2);
+        col);
 }
 
 ExodusMode Finance::update(float delta) {
