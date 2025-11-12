@@ -1303,6 +1303,9 @@ const char *IMG_GF_GB_UP         = D_NEW "gf_gb_up";
 const char *IMG_GF_GR_UP         = D_NEW "gf_gr_up";
 const char *IMG_GF_LBCB          = D_NEW "gf_lbcb";
 const char *IMG_GF_LBCR          = D_NEW "gf_lbcr";
+const char *IMG_GF_LBCB2         = D_NEW "gf_lbcb2";
+const char *IMG_GF_LBCR2         = D_NEW "gf_lbcr2";
+const char *IMG_GF_LBCY          = D_NEW "gf_lbcy";
 const char *IMG_SCIENTIST        = D_NEW "scientist";
 const char *IMG_BG_WELCOME       = D_NEW "bg_welcome";
 const char *IMG_HEADER_L         = D_NEW "header_l";
@@ -2610,6 +2613,9 @@ const char *ASSETS_IMG[] = {
     IMG_GF_GR_UP,
     IMG_GF_LBCB,
     IMG_GF_LBCR,
+    IMG_GF_LBCB2,
+    IMG_GF_LBCR2,
+    IMG_GF_LBCY,
     IMG_SCIENTIST,
     IMG_BG_WELCOME,
     IMG_HEADER_L,
