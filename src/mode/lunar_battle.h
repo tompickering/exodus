@@ -308,6 +308,10 @@ class LunarBattle : ModeBase, CommPanelDrawer, BattleReport, BulletinDrawer {
         const char* img_arrow_left;
         const char* img_arrow_right;
 
+        BattleUnit *lbc;
+        bool lbc_light;
+        float lbc_next_toggle;
+
         void debug_dump_units();
 };
 

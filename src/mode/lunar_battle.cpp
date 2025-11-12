@@ -311,6 +311,17 @@ void LunarBattle::enter() {
         img_arrow_left = IMG_DARKARROW_LEFT;
         img_arrow_right = IMG_DARKARROW_RIGHT;
     }
+
+    lbc = nullptr;
+    lbc_light = false;
+    lbc_next_toggle = 0.5f;
+
+    for (int i = 0; i < n_units; ++i) {
+        if (units[i].type == UNIT_LBCtl) {
+            lbc = &units[i];
+            break;
+        }
+    }
 }
 
 void LunarBattle::draw_ground() {
@@ -393,6 +404,21 @@ ExodusMode LunarBattle::update(float delta) {
             units[i].dying_timer -= delta;
             if (units[i].dying_timer < 0) {
                 units[i].dying_timer = 0;
+            }
+        }
+    }
+
+    if (lbc) {
+        lbc_next_toggle -= delta;
+        if (lbc_next_toggle < 0) {
+            lbc_light = !lbc_light;
+
+            if (lbc->hp > 5) {
+                lbc_next_toggle += 0.5f;
+            } else if (lbc->hp > 2) {
+                lbc_next_toggle += 0.25f;
+            } else {
+                lbc_next_toggle += ((float)(rand() % 10)) / 50.f;
             }
         }
     }
@@ -2123,6 +2149,22 @@ void LunarBattle::draw_units() {
             if (units[i].defending) {
                 dx = draw_x + BLK_SZ;
                 anchor_x = 1;
+            }
+
+            if (spr == IMG_GF_LBCR || spr == IMG_GF_LBCB) {
+                if (active_unit && (active_unit->type == UNIT_LBGun) && (stage == LB_Fire) && target_unit) {
+                    spr = IMG_GF_LBCY;
+                } else {
+                    if (lbc_light) {
+                        if (spr == IMG_GF_LBCR) {
+                            spr = IMG_GF_LBCR2;
+                        }
+
+                        if (spr == IMG_GF_LBCB) {
+                            spr = IMG_GF_LBCB2;
+                        }
+                    }
+                }
             }
 
             draw_manager.draw(
