@@ -276,6 +276,9 @@ enum OfficerQuality {
     OFFQ_MAX,
 };
 
+#define OFFICERS_TOTAL 15
+static_assert(OFFICERS_TOTAL == (OFFICER_MAX*OFFQ_MAX));
+
 enum Infraction : uint8_t {
     INF_TradePlu,
     INF_AttackGuildShip,
@@ -502,6 +505,8 @@ class Player : public Saveable {
         const int* get_losses_last_month(){ return mc_losses_last_month; }
         const int* get_gains_this_month(){ return mc_gains_this_month; }
         const int* get_losses_this_month(){ return mc_losses_this_month; }
+
+        bool officers_deceased[OFFICERS_TOTAL];
 
         int nopirates;
 
