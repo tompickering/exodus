@@ -105,8 +105,8 @@ void ExodusDebug::print_mc_data() {
         Player* p = exostate().get_player(i);
         L.debug("--- %s ---", p->get_full_name());
         for (int j = 0; j < MC_MAX; ++j) {
-            L.debug("%d: +%dMC", j, p->mc_gains_lifetime[j]);
-            L.debug("%d: -%dMC", j, p->mc_losses_lifetime[j]);
+            L.debug("%s: +%dMC", cat2header(j), p->mc_gains_lifetime[j]);
+            L.debug("%s: -%dMC", cat2header(j), p->mc_losses_lifetime[j]);
         }
     }
 }
