@@ -5426,6 +5426,7 @@ bool GalaxyMap::update_research(Planet *p) {
             }
         } else {
             // New species discovery if all inventions researched
+            report.add_event(PRE_NewSpecies);
             discover_species_bulletin(p);
             return true;
         }
