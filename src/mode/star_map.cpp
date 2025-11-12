@@ -77,6 +77,10 @@ void StarMap::enter() {
 
     const char *bg = IMG_MAP_SOLAR;
 
+    if (ENHANCED()) {
+        bg = IMG_MAP_SOLAR_NEW;
+    }
+
     switch (star->get_size()) {
         case STAR_Expand1:
             bg = IMG_MAP_SOLAR_SN1;

@@ -70,7 +70,7 @@ const char *IMG_INTRO_KEYPAD    = D_PIC "ts1";
 const char *IMG_INTRO_FAIL      = D_PIC "go1";
 const char *IMG_INTRO_LAUNCH    = D_PIC "ho1";
 const char *IMG_INTRO_SPACE     = D_PIC "js1";
-const char *IMG_MAP_SOLAR       = D_SUB "mp2";
+const char *IMG_MAP_SOLAR       = D_PIC "mp2";
 const char *IMG_BATTLE          = D_PIC "lb1";
 const char *IMG_BATTLE_PREP     = D_PIC "ms1";
 const char *IMG_LORD_ARRIVE     = D_PIC "lp1";
@@ -1310,6 +1310,7 @@ const char *IMG_SCIENTIST        = D_NEW "scientist";
 const char *IMG_BG_WELCOME       = D_NEW "bg_welcome";
 const char *IMG_HEADER_L         = D_NEW "header_l";
 const char *IMG_HEADER_R         = D_NEW "header_r";
+const char *IMG_MAP_SOLAR_NEW    = D_NEW "solar_new";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2620,6 +2621,7 @@ const char *ASSETS_IMG[] = {
     IMG_BG_WELCOME,
     IMG_HEADER_L,
     IMG_HEADER_R,
+    IMG_MAP_SOLAR_NEW,
 
     "",
 };
