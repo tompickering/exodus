@@ -24,6 +24,96 @@ void Finance::enter() {
     draw_finance();
 }
 
+static const char* cat2header(int idx) {
+    switch ((MCReason)idx) {
+        case MC_None:
+        case MC_Debug:
+        case MC_CPUWriteOffDebt:
+        case MC_ReturnToGalaxyReset:
+        case MC_MAX:
+            L.error("Category should not be possible for players: %d", idx);
+            return "<UNKNOWN>";
+        case MC_StartCredits:
+            return "From Earth";
+        case MC_Colonise:
+            return "Colonisation";
+        case MC_Planets:
+            return "Planets";
+        case MC_Cities:
+            return "Cities";
+        case MC_VillageGifts:
+            return "Gifts";
+        case MC_Army:
+            return "Army";
+        case MC_ScienceFunding:
+            return "Science";
+        case MC_Building:
+            return "Construction";
+        case MC_BuildingLunarBase:
+            return "Lunar Base";
+        case MC_Festival:
+            return "Festivals";
+        case MC_FactoryRepair:
+            return "Factory Repair";
+        case MC_ExtraTaxes:
+            return "Extra Taxes";
+        case MC_TradingCentre:
+            return "Trade Centre";
+        case MC_FleetProd:
+            return "Fleet Prod.";
+        case MC_ShipEquip:
+            return "Ship Equip";
+        case MC_Research:
+            return "Research";
+        case MC_Discovery:
+            return "Discovery";
+        case MC_ChangeGlobalClimate:
+            return "Climate";
+        case MC_ArtPlanet:
+            return "Art. Planet";
+        case MC_SecretService:
+            return "Sec. Service";
+        case MC_Missions:
+            return "Missions";
+        case MC_NewOfficer:
+            return "Enlisting";
+        case MC_OldOfficer:
+            return "Severance";
+        case MC_OfficerSalary:
+            return "Salary";
+        case MC_TempOfficer:
+            return "Temp. Recruit";
+        case MC_PeaceDeal:
+            return "Peace Deal";
+        case MC_PeaceDealRebels:
+            return "Rebel Peace";
+        case MC_Alliance:
+            return "Alliance";
+        case MC_TradeFee:
+            return "Trade Fees";
+        case MC_Trade:
+            return "Trade";
+        case MC_TradeBuy:
+            return "Trade Buy";
+        case MC_WarSupport:
+            return "War Support";
+        case MC_Mines:
+            return "Mines";
+        case MC_GuildMembership:
+            return "Guild Membership";
+        case MC_Fine:
+            return "Fines";
+        case MC_SpaceBattleLoot:
+            return "Loot";
+        case MC_SpaceBattleSurrendered:
+            return "Piracy";
+        case MC_DiplomaticReparations:
+            return "Diplomacy";
+    }
+
+    return "<NONE>";
+}
+
 void Finance::draw_finance() {
     Player *p = exostate().get_active_player();
 
@@ -71,55 +161,72 @@ void Finance::draw_finance() {
 
     const int max_items_per_col = 20;
 
-    for (int i = 0; i < max_items_per_col; ++i) {
+    const int* gains = p->get_gains_last_month();
+    const int* losses = p->get_losses_last_month();
+
+    int x_header = col0;
+    int x_mc = col1;
+    int y = items_base_y;
+
+    for (int i = 0; i < MC_MAX; ++i) {
+        if (i == max_items_per_col) {
+            x_header = col2;
+            x_mc = col3;
+            y = items_base_y;
+        }
+
+        if (gains[i] == 0) {
+            continue;
+        }
+
         draw_manager.draw_text(
             Font::Tiny,
-            "Diplomacy",
+            cat2header(i),
             Justify::Left,
-            col0, items_base_y+items_spacing_v*i,
-            COL_TEXT);
+            x_header, y,
+            {0x00, 0xFF, 0x00});
+
+        snprintf(t, sizeof(t), "%dMC", gains[i]);
         draw_manager.draw_text(
             Font::Tiny,
-            "10MC",
+            t,
             Justify::Right,
-            col1, items_base_y+items_spacing_v*i,
-            COL_TEXT);
+            x_mc, y,
+            {0x00, 0xFF, 0x00});
+
+        y += items_spacing_v;
+    }
+
+    x_header = col4;
+    x_mc = col5;
+    y = items_base_y;
+    for (int i = 0; i < MC_MAX; ++i) {
+        if (i == max_items_per_col) {
+            x_header = col6;
+            x_mc = col7;
+            y = items_base_y;
+        }
+
+        if (losses[i] == 0) {
+            continue;
+        }
+
         draw_manager.draw_text(
             Font::Tiny,
-            "Diplomacy",
+            cat2header(i),
             Justify::Left,
-            col2, items_base_y+items_spacing_v*i,
-            COL_TEXT);
+            x_header, y,
+            {0xFF, 0x00, 0x00});
+
+        snprintf(t, sizeof(t), "%dMC", losses[i]);
         draw_manager.draw_text(
             Font::Tiny,
-            "10MC",
+            t,
             Justify::Right,
-            col3, items_base_y+items_spacing_v*i,
-            COL_TEXT);
-        draw_manager.draw_text(
-            Font::Tiny,
-            "Diplomacy",
-            Justify::Left,
-            col4, items_base_y+items_spacing_v*i,
-            COL_TEXT);
-        draw_manager.draw_text(
-            Font::Tiny,
-            "10MC",
-            Justify::Right,
-            col5, items_base_y+items_spacing_v*i,
-            COL_TEXT);
-        draw_manager.draw_text(
-            Font::Tiny,
-            "Diplomacy",
-            Justify::Left,
-            col6, items_base_y+items_spacing_v*i,
-            COL_TEXT);
-        draw_manager.draw_text(
-            Font::Tiny,
-            "10MC",
-            Justify::Right,
-            col7, items_base_y+items_spacing_v*i,
-            COL_TEXT);
+            x_mc, y,
+            {0xFF, 0x00, 0x00});
+
+        y += items_spacing_v;
     }
 
     draw_manager.draw_line(RES_X/2, items_base_y-10, RES_X/2, items_base_y+items_spacing_v*max_items_per_col, COL_TEXT2);

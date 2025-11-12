@@ -545,6 +545,11 @@ class Player : public Saveable {
         int get_mc_month_end() { return mc_at_end_of_previous_month; }
         int get_mc_month_start() { return mc_at_start_of_current_month; }
 
+        const int* get_gains_last_month(){ return mc_gains_last_month; }
+        const int* get_losses_last_month(){ return mc_gains_last_month; }
+        const int* get_gains_this_month(){ return mc_losses_this_month; }
+        const int* get_losses_this_month(){ return mc_losses_this_month; }
+
         int nopirates;
 
         bool invalid_placement_seen;
