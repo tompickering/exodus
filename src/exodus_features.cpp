@@ -111,6 +111,9 @@ static bool FINANCE_MENU = false;
 // Skip more bulletins
 static bool SKIP_MORE_BULLETINS = false;
 
+// Make random climate change less likely
+static bool CLIMATE_CHANGE_LESS_LIKELY = false;
+
 // Fixes bug meaning some AI terrorist actions are never taken
 static bool FIX_AI_TERROR = false;
 
@@ -170,6 +173,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         CHARACTERS = false;
         FINANCE_MENU = false;
         SKIP_MORE_BULLETINS = false;
+        CLIMATE_CHANGE_LESS_LIKELY = false;
         FIX_AI_TERROR = false;
         FIX_FLEET_ADMIRAL = false;
         FIX_LUNAR_BATTLE_STALEMATE = true;
@@ -214,6 +218,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         CHARACTERS = true;
         FINANCE_MENU = true;
         SKIP_MORE_BULLETINS = true;
+        CLIMATE_CHANGE_LESS_LIKELY = true;
         FIX_AI_TERROR = true;
         FIX_FLEET_ADMIRAL = true;
         FIX_LUNAR_BATTLE_STALEMATE = true;
@@ -271,6 +276,7 @@ bool FEATURE(ExodusFeature f) {
     if (f == EF_CHARACTERS) return CHARACTERS;
     if (f == EF_FINANCE_MENU) return FINANCE_MENU;
     if (f == EF_SKIP_MORE_BULLETINS) return SKIP_MORE_BULLETINS;
+    if (f == EF_CLIMATE_CHANGE_LESS_LIKELY) return CLIMATE_CHANGE_LESS_LIKELY;
     if (f == EF_FIX_AI_TERROR) return FIX_AI_TERROR;
     if (f == EF_FIX_FLEET_ADMIRAL) return FIX_FLEET_ADMIRAL;
     if (f == EF_FIX_LUNAR_BATTLE_STALEMATE) return FIX_LUNAR_BATTLE_STALEMATE;

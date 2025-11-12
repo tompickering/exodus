@@ -4495,7 +4495,11 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     }
 
     if (mp_state.mpp_stage == MPP_ClimateChange) {
-        if (onein(250)) {
+        int chance = 250;
+        if (FEATURE(EF_CLIMATE_CHANGE_LESS_LIKELY)) {
+            chance *= 10;
+        }
+        if (onein(chance)) {
             exostate().register_news(NI_GeologicalChange);
             report.add_event(PRE_Climate);
             const char* before = p->get_class_str_lower();
