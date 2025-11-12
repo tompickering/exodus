@@ -1304,6 +1304,7 @@ const char *IMG_GF_GR_UP         = D_NEW "gf_gr_up";
 const char *IMG_GF_LBCB          = D_NEW "gf_lbcb";
 const char *IMG_GF_LBCR          = D_NEW "gf_lbcr";
 const char *IMG_SCIENTIST        = D_NEW "scientist";
+const char *IMG_BG_WELCOME       = D_NEW "bg_welcome";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2608,6 +2609,7 @@ const char *ASSETS_IMG[] = {
     IMG_GF_LBCB,
     IMG_GF_LBCR,
     IMG_SCIENTIST,
+    IMG_BG_WELCOME,
 
     "",
 };

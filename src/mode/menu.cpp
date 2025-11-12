@@ -432,7 +432,7 @@ ExodusMode Menu::update(float delta) {
                 }
 
                 if (save_manager.load(i)) {
-                    draw_manager.draw(IMG_BG_STARS2);
+                    draw_manager.draw(ENHANCED() ? IMG_BG_WELCOME : IMG_BG_STARS2);
 
                     Player *p = exostate().get_player(0);
                     char welcome[64];
@@ -455,7 +455,7 @@ ExodusMode Menu::update(float delta) {
         case LoadWelcome:
             {
                 if (timer > 1.5f) {
-                    draw_manager.draw(TGT_Secondary, IMG_BG_STARS2);
+                    draw_manager.draw(TGT_Secondary, ENHANCED() ? IMG_BG_WELCOME : IMG_BG_STARS2);
                     draw_manager.pixelswap_start();
                     stage = LoadWelcomeFade;
                     return ExodusMode::MODE_None;
