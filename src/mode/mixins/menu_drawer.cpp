@@ -924,7 +924,7 @@ void MenuDrawer::menu_open_specific_mode() {
             menu_set_opt(2, "General Information");
             menu_set_opt(3, "Fleet Information");
             if (FEATURE(EF_FINANCE_MENU)) {
-                menu_set_opt(4, "Finance Information");
+                menu_set_opt(4, "Finance Information (F)");
             } else {
                 menu_set_opt(4, "Recall Latest News (R)");
             }
