@@ -779,6 +779,7 @@ ExodusMode Menu::update(float delta) {
 
                 draw_manager.save_background();
                 input_manager.start_text_input();
+                input_manager.set_input_text("Regent");
                 draw_manager.enable_text_cursor(id(ID::PLAYER_TITLE));
 
                 trans_state = Done;
@@ -835,6 +836,7 @@ ExodusMode Menu::update(float delta) {
 
                 draw_manager.save_background();
                 input_manager.start_text_input();
+                input_manager.set_input_text("My Regent");
                 draw_manager.enable_text_cursor(id(ID::PLAYER_REF));
 
                 trans_state = Done;
