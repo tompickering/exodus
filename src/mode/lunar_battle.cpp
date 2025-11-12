@@ -239,11 +239,11 @@ void LunarBattle::enter() {
 
         // From PROCb_ground - set up lunar base for defender
         if (p->has_lunar_base()) {
-            place_unit(BattleUnit(UNIT_LBCtl).init(14, 5));
-            place_unit(BattleUnit(UNIT_LBGun).init(13, 5));
-            place_unit(BattleUnit(UNIT_LBGun).init(13, 4));
-            place_unit(BattleUnit(UNIT_LBGun).init(13, 6));
-            place_unit(BattleUnit(UNIT_LBGun).init(12, 5));
+            place_unit(BattleUnit(UNIT_LBCtl).init(14, 5, LUNAR_BASE_CTL_HP, true, defending));
+            place_unit(BattleUnit(UNIT_LBGun).init(13, 5, LUNAR_BASE_GUN_HP, true, defending));
+            place_unit(BattleUnit(UNIT_LBGun).init(13, 4, LUNAR_BASE_GUN_HP, true, defending));
+            place_unit(BattleUnit(UNIT_LBGun).init(13, 6, LUNAR_BASE_GUN_HP, true, defending));
+            place_unit(BattleUnit(UNIT_LBGun).init(12, 5, LUNAR_BASE_GUN_HP, true, defending));
         }
 
         // Place the units for the non-'acting' side
@@ -3872,7 +3872,6 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             fire_range = 100;
             fire_power = 4;
             shot_sfx = SFX_HEAVYSHOT;
-            hp = LUNAR_BASE_GUN_HP;
             defending = true;
             promotion_category = 3;
             idle = IMG_GF4_21;
@@ -3884,7 +3883,6 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
             name = STR_LBCtl;
             move = 0;
             fire_range = 0;
-            hp = LUNAR_BASE_CTL_HP;
             defending = true;
             can_act = false;
             promotion_category = 10;
@@ -4179,6 +4177,12 @@ void BattleUnit::update_enhanced_sprites() {
                 dead = IMG_GF_AA_DEAD;
             }
         }
+    }
+
+    if (type == UNIT_LBCtl) {
+        idle = red ? IMG_GF_LBCR : IMG_GF_LBCB;
+        walk = idle;
+        fire = idle;
     }
 }
 

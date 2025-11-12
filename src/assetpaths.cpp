@@ -1301,6 +1301,8 @@ const char *IMG_GF_DIRP_WALK     = D_NEW "gf_dirp_walk";
 const char *IMG_GF_DIR_WALK      = D_NEW "gf_dir_walk";
 const char *IMG_GF_GB_UP         = D_NEW "gf_gb_up";
 const char *IMG_GF_GR_UP         = D_NEW "gf_gr_up";
+const char *IMG_GF_LBCB          = D_NEW "gf_lbcb";
+const char *IMG_GF_LBCR          = D_NEW "gf_lbcr";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2602,6 +2604,8 @@ const char *ASSETS_IMG[] = {
     IMG_GF_DIR_WALK,
     IMG_GF_GB_UP,
     IMG_GF_GR_UP,
+    IMG_GF_LBCB,
+    IMG_GF_LBCR,
 
     "",
 };

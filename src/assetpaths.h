@@ -1298,6 +1298,8 @@ extern const char *IMG_GF_DIRP_WALK;
 extern const char *IMG_GF_DIR_WALK;
 extern const char *IMG_GF_GB_UP;
 extern const char *IMG_GF_GR_UP;
+extern const char *IMG_GF_LBCB;
+extern const char *IMG_GF_LBCR;
 
 extern const char *INIT_IMG;
 extern const char *CURSOR_IMG;
