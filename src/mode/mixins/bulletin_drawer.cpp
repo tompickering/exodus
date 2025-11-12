@@ -530,6 +530,16 @@ void BulletinDrawer::bulletin_draw_text() {
         if (bulletin_is_war_ally) {
             bulletin_war_ally_init();
         }
+        if (bulletin_counter_current >= 0 && bulletin_counter_total >= 0) {
+            char t[16];
+            snprintf(t, sizeof(t), "%d/%d", bulletin_counter_current, bulletin_counter_total);
+            draw_manager.draw_text(
+                t,
+                Justify::Right,
+                BULLETIN_X + BULLETIN_W - 12,
+                bulletin_text_y(16) - 8,
+                COL_TEXT);
+        }
     }
 }
 
@@ -880,6 +890,9 @@ void BulletinDrawer::bulletin_reset() {
     bulletin_report = nullptr;
     bulletin_report_summary_page = 0;
 
+    bulletin_counter_current = -1;
+    bulletin_counter_total = -1;
+
     bulletin_is_war_ally = false;
 
     // N.B. Don't reset war ally vars here as we need to retrieve them later
@@ -1023,6 +1036,11 @@ void BulletinDrawer::bulletin_update_bg() {
             id_bulletin_bg_scan,
             nullptr);
     }
+}
+
+void BulletinDrawer::bulletin_set_counter(int current, int total) {
+    bulletin_counter_current = current;
+    bulletin_counter_total = total;
 }
 
 void BulletinDrawer::bulletin_set_flag(const char* img) {

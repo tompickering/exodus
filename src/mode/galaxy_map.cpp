@@ -30,7 +30,6 @@ enum ID {
     SPACEPORT_SHIP2,
     BTN_REPORT,
     BTN_GUIDE,
-    REPORT_COUNT,
     END,
 };
 
@@ -866,7 +865,6 @@ ExodusMode GalaxyMap::update(float delta) {
 
                 if (input_manager.consume(K_Escape)) {
                     bulletin_ensure_closed();
-                    draw_manager.draw(id(ID::REPORT_COUNT), nullptr);
                     break;
                 }
 
@@ -885,7 +883,6 @@ ExodusMode GalaxyMap::update(float delta) {
                         break;
                     case BPR_Close:
                         bulletin_ensure_closed();
-                        draw_manager.draw(id(ID::REPORT_COUNT), nullptr);
                         break;
                     case BPR_Zoom:
                         {
@@ -954,7 +951,6 @@ ExodusMode GalaxyMap::update(float delta) {
                         break;
                     case BPR_Close:
                         bulletin_ensure_closed();
-                        draw_manager.draw(id(ID::REPORT_COUNT), nullptr);
                         break;
                     case BPR_Zoom:
                         L.error("Shouldn't be possible to Zoom from report summary");
@@ -5637,22 +5633,12 @@ void GalaxyMap::planet_report_bulletin(int idx) {
 
     report.displayed = true;
 
-    char text[32];
-    snprintf(text, sizeof(text), "Report: %d/%d", idx+1, exostate().planet_report_count());
-
-    draw_manager.draw_text(
-        id(ID::REPORT_COUNT),
-        Font::Large,
-        text,
-        Justify::Left,
-        10, 2,
-        COL_TEXT2);
-
     Star *s = exostate().get_star(report.star_idx);
     Planet *p = exostate().get_planet(report.star_idx, report.planet_idx);
     Player *player = exostate().get_player(report.player_idx);
 
     bulletin_start_new(transition, BM_Report);
+    bulletin_set_counter(idx+1, exostate().planet_report_count());
     bulletin_set_report(&report);
     bulletin_set_bg(p->sprites()->bulletin_bg);
     bulletin_set_player_flag(player);
@@ -5666,21 +5652,11 @@ void GalaxyMap::planet_report_bulletin(int idx) {
 void GalaxyMap::planet_report_summary_bulletin(int idx) {
     const int pages = 1 + (exostate().planet_report_count()-1) / BULLETIN_REPORT_SUMMARY_LINES;
 
-    char text[32];
-    snprintf(text, sizeof(text), "Page: %d/%d", idx+1, pages);
-
-    draw_manager.draw_text(
-        id(ID::REPORT_COUNT),
-        Font::Large,
-        text,
-        Justify::Left,
-        10, 2,
-        COL_TEXT2);
-
     // FIXME: Multiplayer
     Player *player = exostate().get_player(0);
 
     bulletin_start_new(false, BM_ReportSummary);
+    bulletin_set_counter(idx+1, pages);
     bulletin_set_report_summary_page(idx);
     bulletin_set_bg(IMG_ME1_MENU);
     bulletin_set_player_flag(player);

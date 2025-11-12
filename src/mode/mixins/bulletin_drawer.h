@@ -126,6 +126,7 @@ class BulletinDrawer {
         BulletinPRAction bulletin_get_praction();
         void bulletin_set_report(const PlanetReport* report);
         void bulletin_set_report_summary_page(int);
+        void bulletin_set_counter(int, int);
 
         void bulletin_set_war_ally(Planet*, int);
         int bulletin_get_war_ally_result(int&, int&, int&);
@@ -197,6 +198,9 @@ class BulletinDrawer {
 
         BulletinManualPage bulletin_manual_page_opened;
         BulletinManualPage bulletin_manual_page_current;
+
+        int bulletin_counter_current;
+        int bulletin_counter_total;
 
         bool bulletin_is_war_ally;
         Planet* bulletin_war_ally_planet;
