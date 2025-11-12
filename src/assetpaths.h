@@ -1300,6 +1300,7 @@ extern const char *IMG_GF_GB_UP;
 extern const char *IMG_GF_GR_UP;
 extern const char *IMG_GF_LBCB;
 extern const char *IMG_GF_LBCR;
+extern const char *IMG_SCIENTIST;
 
 extern const char *INIT_IMG;
 extern const char *CURSOR_IMG;
