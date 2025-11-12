@@ -1282,6 +1282,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_set_title("Claim a planet");
             comm_set_text(0, "Please name the new planet.");
             input_manager.start_text_input();
+            draw_manager.enable_text_cursor(id_text[2]);
 
             if (comm_planet->is_named()) {
                 input_manager.set_input_text(comm_planet->get_name());
@@ -1312,6 +1313,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 if (comm_planet_name_confirm_time == comm_time) {
                     const char *name = input_manager.get_input_text(PLANET_MAX_NAME);
                     input_manager.stop_text_input();
+                    draw_manager.disable_text_cursor();
                     if (comm_player->attempt_spend(comm_planet->get_settlement_cost(), MC_Colonise)) {
                         comm_planet->set_name(name);
                         comm_planet->set_owner(exostate().get_player_idx(comm_player), POCR_Settled);
