@@ -3468,10 +3468,10 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                              */
                             AIFlag f = player->get_flag(1);
                             if (f == AI_Hi || (f == AI_Md && onein(2))) {
-                                if (exostate().has_only_alliance(player_idx, owner, ALLY_NonAttack)) {
+                                if (exostate().has_alliance(player_idx, owner, ALLY_NonAttack)) {
                                     ok = false;
                                 }
-                                if (exostate().has_only_alliance(player_idx, owner, ALLY_War)) {
+                                if (exostate().has_alliance(player_idx, owner, ALLY_War)) {
                                     ok = false;
                                 }
                             }
