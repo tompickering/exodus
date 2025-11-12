@@ -593,6 +593,8 @@ class Player : public Saveable {
         int trade_charge;
         int trace[TRACE_MAX];
 
+        int mc_gains_lifetime[MAX_MC_CATEGORIES];
+        int mc_losses_lifetime[MAX_MC_CATEGORIES];
         int mc_gains_last_month[MAX_MC_CATEGORIES];
         int mc_losses_last_month[MAX_MC_CATEGORIES];
         int mc_gains_this_month[MAX_MC_CATEGORIES];

@@ -248,6 +248,8 @@ void ExodusState::init(GameConfig config) {
         players[i].mc_at_start_of_current_month = players[i].mc;
 
         for (int i = 0; i < MAX_MC_CATEGORIES; ++i) {
+            players[i].mc_gains_lifetime[i] = 0;
+            players[i].mc_losses_lifetime[i] = 0;
             players[i].mc_gains_last_month[i] = 0;
             players[i].mc_losses_last_month[i] = 0;
             players[i].mc_gains_this_month[i] = 0;
