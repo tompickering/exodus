@@ -436,6 +436,12 @@ class Player : public Saveable {
         int get_officer_initial_cost(OfficerQuality);
         int get_total_officer_costs();
         void set_officer(Officer, OfficerQuality);
+        void register_officer_fired_nopay(Officer);
+        void register_officer_quit(Officer);
+        void register_officer_killed(Officer);
+        bool officer_fired_nopay(Officer);
+        bool officer_quit(Officer);
+        bool officer_killed(Officer);
 
         int get_freight_capacity();
         void cap_freight_randomly();
@@ -506,10 +512,6 @@ class Player : public Saveable {
         const int* get_gains_this_month(){ return mc_gains_this_month; }
         const int* get_losses_this_month(){ return mc_losses_this_month; }
 
-        bool officers_fired_nopay[OFFICERS_TOTAL];
-        bool officers_quit[OFFICERS_TOTAL];
-        bool officers_deceased[OFFICERS_TOTAL];
-
         int nopirates;
 
         bool invalid_placement_seen;
@@ -561,6 +563,11 @@ class Player : public Saveable {
         int mc_losses_this_month[MAX_MC_CATEGORIES];
 
         int mc_history[MAX_MC_HISTORY];
+
+        int officer_idx(Officer);
+        bool officers_fired_nopay[OFFICERS_TOTAL];
+        bool officers_quit[OFFICERS_TOTAL];
+        bool officers_deceased[OFFICERS_TOTAL];
 
         // AI
         AIFlag ai_flags[9];

@@ -897,6 +897,30 @@ void Player::set_officer(Officer off, OfficerQuality off_q) {
     }
 }
 
+void Player::register_officer_fired_nopay(Officer off) {
+    officers_fired_nopay[officer_idx(off)] = true;
+}
+
+void Player::register_officer_quit(Officer off) {
+    officers_quit[officer_idx(off)] = true;
+}
+
+void Player::register_officer_killed(Officer off) {
+    officers_deceased[officer_idx(off)] = true;
+}
+
+bool Player::officer_fired_nopay(Officer off) {
+    return officers_fired_nopay[officer_idx(off)];
+}
+
+bool Player::officer_quit(Officer off) {
+    return officers_quit[officer_idx(off)];
+}
+
+bool Player::officer_killed(Officer off) {
+    return officers_deceased[officer_idx(off)];
+}
+
 int Player::get_freight_capacity() {
     return fleet.transporters - fleet.freight.size();
 }
@@ -1151,6 +1175,10 @@ void Player::adjust_mc(int amount, MCReason reason) {
         L.debug("REGISTER LOSS: %dMC", abs(amount));
         mc_losses_this_month[(int)reason] += abs(amount);
     }
+}
+
+int Player::officer_idx(Officer off) {
+    return ((OFFQ_MAX * (int)off) + (int)get_officer(off));
 }
 
 void Player::save(cJSON* j) const
