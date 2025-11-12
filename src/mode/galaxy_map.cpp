@@ -5447,8 +5447,22 @@ void GalaxyMap::discover_species_bulletin(Planet* p) {
 
     Player* owner = exostate().get_player(p->get_owner());
 
+    bool animal = onein(2);
+
+    int reward = 0;
+
+    if (animal) {
+        reward = RND(5)*5;
+    } else {
+        reward = RND(4)*5;
+    }
+
+    owner->give_mc(reward, MC_Discovery);
+
     if (owner->is_human()) {
         audio_manager.target_music(mpart2mus(10));
+    } else if (FEATURE(EF_SKIP_MORE_BULLETINS)) {
+        return;
     }
 
     bulletin_start_new(true);
@@ -5456,7 +5470,7 @@ void GalaxyMap::discover_species_bulletin(Planet* p) {
     bulletin_set_active_player_flag();
     bulletin_write_planet_info(s, p);
 
-    if (onein(2)) {
+    if (animal) {
         exostate().register_news(NI_NewAnimal);
         bulletin_set_next_text("NEW ANIMAL DISCOVERED");
         bulletin_set_next_text("");
@@ -5508,10 +5522,8 @@ void GalaxyMap::discover_species_bulletin(Planet* p) {
         bulletin_set_next_text("This is a %s %s creature that", s1, s2);
         bulletin_set_next_text("lives %s and eats %s.", s3, s4);
         bulletin_set_next_text("");
-        int reward = RND(5)*5;
         bulletin_set_next_text("The owner of planet %s therefore", p->get_name());
         bulletin_set_next_text("receives %d Mega Credits.", reward);
-        owner->give_mc(reward, MC_Discovery);
     } else {
         exostate().register_news(NI_NewPlant);
         bulletin_set_next_text("NEW PLANT DISCOVERED");
@@ -5556,10 +5568,8 @@ void GalaxyMap::discover_species_bulletin(Planet* p) {
         bulletin_set_next_text("This is a %s plant with %s", s1, s2);
         bulletin_set_next_text("flowers. It grows in %s.", s3);
         bulletin_set_next_text("");
-        int reward = RND(4)*5;
         bulletin_set_next_text("The owner of planet %s therefore", p->get_name());
         bulletin_set_next_text("receives %d Mega Credits.", reward);
-        owner->give_mc(reward, MC_Discovery);
     }
 }
 
