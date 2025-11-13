@@ -1252,7 +1252,12 @@ void CommPanelDrawer::comm_send(CommSend input) {
                         comm_set_text(textidx++, "  Bad basis for agriculture");
                         break;
                     case Rock:
-                        comm_set_text(textidx++, "  Mining is very effective");
+                        if (ENHANCED()) {
+                            comm_set_text(textidx++, "  Mining near volcanoes is");
+                            comm_set_text(textidx++, "  very effective");
+                        } else {
+                            comm_set_text(textidx++, "  Mining is very effective");
+                        }
                         break;
                     case Ice:
                         comm_set_text(textidx++, "  Possibly rich in minerals");
