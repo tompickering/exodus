@@ -4605,9 +4605,11 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 p->plunder();
             } else {
                 ephstate.set_ephemeral_state(EPH_AlienResearch);
-                bulletin_set_next_text("%s%s could keep the planet.",
+                bulletin_set_next_text("%s%s could keep",
                     owner->get_full_name(),
                     owner->get_guild_title_str_with_space());
+                bulletin_set_next_text("the planet.");
+                bulletin_set_next_text("");
                 bulletin_set_next_text("The pirates did not succeed.");
             }
             next_mpp_stage();
