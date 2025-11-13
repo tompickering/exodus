@@ -399,6 +399,8 @@ class Player : public Saveable {
         void set_flag_idx(int);
         bool intro_seen();
         void set_intro_seen();
+        bool intro_comm_seen();
+        void set_intro_comm_seen();
         void give_mc(int, MCReason);
         bool can_afford(int);
         bool attempt_spend(int, MCReason);
@@ -539,6 +541,7 @@ class Player : public Saveable {
         int mc_at_end_of_previous_month;
         int mc_at_start_of_current_month;
         bool _intro_seen;
+        bool _intro_comm_seen;
         int fleet_marker_idx;
         PlayerLocation location;
         Starship starship;

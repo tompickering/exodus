@@ -234,6 +234,7 @@ int Exodus::run(int argc, char** argv) {
         config.enemy_start = ENEMY_Weak;
         exostate().init(config);
         exostate().get_player(0)->set_intro_seen();
+        exostate().get_player(0)->set_intro_comm_seen();
         srand(0);
         exostate().generate_galaxy();
         exostate().finalise_galaxy();

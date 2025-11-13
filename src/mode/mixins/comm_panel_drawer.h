@@ -8,6 +8,7 @@
 #include "state/ephemeral_state.h"
 
 #define COMM_MAX_TEXT 256
+#define COMM_MAX_LINES 8
 
 extern const int COMM_W;
 extern const int COMM_H;
@@ -66,6 +67,7 @@ enum CommImg {
 // even when a CPU player appears to be initiating a
 // conversation with us.
 enum CommSend {
+    DIA_S_IntroComm,
     DIA_S_ThrustBroken,
     DIA_S_PlanFly,
     DIA_S_PlanSettle,
@@ -271,7 +273,9 @@ class CommPanelDrawer {
         char comm_text3[COMM_MAX_TEXT];
         char comm_text4[COMM_MAX_TEXT];
         char comm_text5[COMM_MAX_TEXT];
-        char *comm_text[6];
+        char comm_text6[COMM_MAX_TEXT];
+        char comm_text7[COMM_MAX_TEXT];
+        char *comm_text[COMM_MAX_LINES];
         float comm_time;
         float comm_time_since_open;
         float comm_time_since_text_mouseover;
@@ -311,7 +315,7 @@ class CommPanelDrawer {
         SprID id_comm_buttons_bg;
         SprID id_comm_adj;
         SprID id_comm_adj_ok;
-        SprID id_text[6];
+        SprID id_text[COMM_MAX_LINES];
         SprID id_comm_input_frame;
         SprID id_comm_input_box;
 

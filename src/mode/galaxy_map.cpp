@@ -159,6 +159,15 @@ ExodusMode GalaxyMap::update(float delta) {
                 return ExodusMode::MODE_GalaxyIntro;
             }
 
+            if (FEATURE(EF_INTRO_COMM)) {
+                if (player->get_race() == RACE_Human && !player->intro_comm_seen()) {
+                    player->set_intro_comm_seen();
+                    comm_open(DIA_S_IntroComm);
+                    set_stage(GM_Counsellor);
+                    return ExodusMode::MODE_None;
+                }
+            }
+
             /*
              * Unfortunately, we need to redraw markers whilst idling.
              * This is because text can't be repaired.

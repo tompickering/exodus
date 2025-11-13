@@ -7,6 +7,7 @@ enum ExodusGameMode {
 };
 
 enum ExodusFeature {
+    EF_INTRO_COMM,
     EF_MULTISIZE_PLANETS,
     EF_MULTISIZE_PLANETS_COLONISE,
     EF_MULTISIZE_PLANETS_PANEL,

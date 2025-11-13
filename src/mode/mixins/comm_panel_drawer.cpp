@@ -120,8 +120,9 @@ Anim anim_throbber(9,
 CommPanelDrawer::CommPanelDrawer() {
     comm_text[0] = comm_text0; comm_text[1] = comm_text1; comm_text[2] = comm_text2;
     comm_text[3] = comm_text3; comm_text[4] = comm_text4; comm_text[5] = comm_text5;
+    comm_text[6] = comm_text6; comm_text[7] = comm_text7;
 
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < COMM_MAX_LINES; ++i) {
         strncpy(comm_text[i], "", 1);
     }
 
@@ -270,7 +271,7 @@ void CommPanelDrawer::comm_draw_text() {
     // FIXME: We can optimise redraws by only drawing text that has just stopped
     // or having or currently has the mouse over it - but we'll also need to know whether
     // this is a redraw vs an initial draw...
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < COMM_MAX_LINES; ++i) {
         if (comm_text_interactive_mask & (1 << i)) {
             draw_manager.set_selectable(id_text[i]);
         } else {
@@ -498,7 +499,7 @@ void CommPanelDrawer::comm_set_img_caption_lower(const char* text, ...) {
 }
 
 void CommPanelDrawer::comm_set_text(int idx, const char* in_text, ...) {
-    if (idx >= 6) {
+    if (idx >= COMM_MAX_LINES) {
         L.fatal("Tried to set invalid text index %d to %s", idx, in_text);
     }
 
@@ -560,7 +561,7 @@ void CommPanelDrawer::comm_open(CommSend input) {
     id_comm_input_frame = draw_manager.new_sprite_id();
     id_comm_input_box = draw_manager.new_sprite_id();
 
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < COMM_MAX_LINES; ++i) {
         id_text[i] = draw_manager.new_sprite_id();
     }
 
@@ -693,7 +694,7 @@ void CommPanelDrawer::comm_prepare(int text_slots) {
     comm_show_adj(false);
 
     // Clear old per-dialogue-phase info
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < COMM_MAX_LINES; ++i) {
         draw_manager.draw(id_text[i], nullptr);
         comm_text[i][0] = '\0';
     }
@@ -705,7 +706,7 @@ void CommPanelDrawer::comm_close() {
         L.fatal("Attempt to close comm panel whilst not open");
     }
 
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < COMM_MAX_LINES; ++i) {
         draw_manager.release_sprite_id(id_text[i]);
     }
 
@@ -759,7 +760,15 @@ CommAction CommPanelDrawer::comm_action_check() {
 }
 
 int CommPanelDrawer::comm_text_y(int idx) {
-    return COMM_Y + 36 + COMM_BORDER*2 + idx*120/comm_text_slots;
+    int y_base_offset = 36;
+    int usable_height = 120;
+
+    if (comm_text_slots > 6) {
+        y_base_offset -= 4;
+        usable_height = 160;
+    }
+
+    return COMM_Y + y_base_offset + COMM_BORDER*2 + idx*usable_height/comm_text_slots;
 }
 
 void CommPanelDrawer::comm_show_buttons(bool show) {
@@ -815,6 +824,11 @@ void CommPanelDrawer::comm_init(CommSend input) {
     }
 
     switch (input) {
+        case DIA_S_IntroComm:
+            comm_set_img(CI_Human);
+            comm_set_title("Message from counsellor");
+            comm_set_img_caption("COUNSELLOR");
+            break;
         case DIA_S_ThrustBroken:
             comm_is_counsellor = false;
             comm_set_img(CI_HumanThoughtful);
@@ -1113,6 +1127,18 @@ void CommPanelDrawer::comm_send(CommSend input) {
     }
 
     switch (input) {
+        case DIA_S_IntroComm:
+            comm_prepare(8);
+            comm_set_text(0, "Our officers have been collecting");
+            comm_set_text(1, "information on this new galaxy.");
+            comm_set_text(2, "Their findings can be reviewed using");
+            comm_set_text(3, "the '?' button in the top-right.");
+            comm_set_text(4, "");
+            comm_set_text(5, "Otherwise, it may be worth exploring");
+            comm_set_text(6, "this Guild Station. Use ZOOM to take");
+            comm_set_text(7, "a closer look.");
+            comm_recv(DIA_R_Close);
+            break;
         case DIA_S_ThrustBroken:
             comm_prepare(6);
             // SUGGEST: Would be cool to check crew numbers and vary response accordingly
@@ -2773,7 +2799,7 @@ void CommPanelDrawer::comm_process_responses() {
     }
 
     int opt = -1;
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < COMM_MAX_LINES; ++i) {
         if (comm_text_disabled_mask & (1 << i)) {
             continue;
         }

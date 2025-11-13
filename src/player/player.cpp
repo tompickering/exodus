@@ -39,6 +39,7 @@ Player::Player() {
     dead = false;
     left_galaxy = false;
     _intro_seen = false;
+    _intro_comm_seen = false;
     reputation = 3;
     inventions = 0;
     guild_member = false;
@@ -437,6 +438,14 @@ bool Player::intro_seen() {
 
 void Player::set_intro_seen() {
     _intro_seen = true;
+}
+
+bool Player::intro_comm_seen() {
+    return _intro_comm_seen;
+}
+
+void Player::set_intro_comm_seen() {
+    _intro_comm_seen = true;
 }
 
 void Player::give_mc(int extra_mc, MCReason reason) {
@@ -1208,6 +1217,7 @@ void Player::save(cJSON* j) const
     SAVE_NUM(j, mc_at_end_of_previous_month);
     SAVE_NUM(j, mc_at_start_of_current_month);
     SAVE_BOOL(j, _intro_seen);
+    SAVE_BOOL(j, _intro_comm_seen);
     SAVE_NUM(j, fleet_marker_idx);
     SAVE_SAVEABLE(j, location);
     SAVE_SAVEABLE(j, starship);
@@ -1261,6 +1271,7 @@ void Player::load(cJSON* j)
     LOAD_NUM(j, mc_at_end_of_previous_month);
     LOAD_NUM(j, mc_at_start_of_current_month);
     LOAD_BOOL(j, _intro_seen);
+    LOAD_BOOL(j, _intro_comm_seen);
     LOAD_NUM(j, fleet_marker_idx);
     LOAD_SAVEABLE(j, location);
     LOAD_SAVEABLE(j, starship);
