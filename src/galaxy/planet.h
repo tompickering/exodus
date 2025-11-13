@@ -72,7 +72,8 @@ enum Stone : uint8_t {
     STONE_Village       = 22,
     STONE_Park          = 23,
     STONE_NaturalAnim   = 29,
-    STONE_END           = 30,
+    STONE_Academy       = 30,
+    STONE_END           = 31,
 };
 
 class StoneSet {

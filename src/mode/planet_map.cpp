@@ -209,6 +209,20 @@ static const char* tool_desc_lunar_base[] = {
     "after battle.",
 };
 
+static const char* tool_desc_academy[] = {
+    "Academy",
+    "An academy fosters collaboration in this",
+    "solar system and attracts foreign talent.",
+    "",
+    "Other planets in this system that don't",
+    "have an academy may lose their city",
+    "expansions to your planet.",
+    "",
+    "All planets in this system that belong to",
+    "you and have academies will provide each",
+    "other with a research boost.",
+};
+
 static const char* tool_desc_park[] = {
     "Parks",
     "Parks should be built near cities. If",
@@ -586,6 +600,13 @@ void PlanetMap::draw() {
             get_stone_anim(STONE_Agri)->frame(0),
             {541, 47,
             0, 0, 1, 1});
+
+        if (FEATURE(EF_ACADEMIES)) {
+            draw_manager.draw(
+                get_stone_anim(STONE_Academy)->frame(0),
+                {540, 198,
+                0, 0, 1, 1});
+        }
 
         if (planet->has_lunar_base())
             hide_lunar_base_tool();
@@ -1499,6 +1520,8 @@ void init_stone_anims() {
                                                                     IMG_SU1_STONE16B);
     stone_anims_generic[STONE_Trade]                     = Anim(1,  IMG_SU1_STONE17);
     stone_anims_generic[STONE_Park]                      = Anim(1,  IMG_SU1_STONE23);
+    stone_anims_generic[STONE_Academy]                   = Anim(1,  IMG_STONE_ACAD);
+
     stone_anims_generic[STONE_Radiation]                 = Anim(1,  IMG_SU1_STONE6);
     stone_anims_generic[STONE_Rubble]                    = Anim(1,  IMG_SU1_STONE20);
 
@@ -1554,6 +1577,7 @@ void init_stone_anims() {
                                                                     IMG_SU1_STONE23_1,
                                                                     IMG_SU1_STONE23_2,
                                                                     IMG_SU1_STONE23_3);
+    construct_anims_generic[STONE_Academy]               = Anim(1,  IMG_STONE_ACAD);
 
     stone_anims_initialised = true;
 }
@@ -1606,7 +1630,11 @@ Tool PlanetMap::get_tool_for_click(float x, float y) {
         if (row == 1) return TOOL_City;
         if (row == 2) return TOOL_Gli;
         if (row == 3) return TOOL_Port1;
-        if (row == 4) return TOOL_LunarBase;
+        if (FEATURE(EF_ACADEMIES)) {
+            if (row == 4) return TOOL_Academy;
+        } else {
+            if (row == 4) return TOOL_LunarBase;
+        }
     } else {
         if (row == 0) return TOOL_Mine;
         if (row == 1) return TOOL_Clear;
@@ -1685,6 +1713,9 @@ void PlanetMap::set_tool(Tool t) {
             break;
         case TOOL_Park:
             tool_desc0 = "Park";
+            break;
+        case TOOL_Academy:
+            tool_desc0 = "Academy";
             break;
         case TOOL_END:
             break;
@@ -1768,6 +1799,7 @@ void PlanetMap::draw_tool_rect(Tool t, RGB col) {
         case TOOL_Gli:
         case TOOL_Port1:
         case TOOL_LunarBase:
+        case TOOL_Academy:
             x = 538;
             break;
         case TOOL_Mine:
@@ -1804,6 +1836,7 @@ void PlanetMap::draw_tool_rect(Tool t, RGB col) {
             break;
         case TOOL_Trade:
         case TOOL_LunarBase:
+        case TOOL_Academy:
         case TOOL_Park:
             y = 196;
             break;
@@ -1846,6 +1879,9 @@ Stone PlanetMap::tool2stone(Tool t) {
             break;
         case TOOL_Park:
             return STONE_Park;
+        case TOOL_Academy:
+            return STONE_Academy;
+            break;
         case TOOL_END:
             break;
     }
@@ -1886,6 +1922,8 @@ int PlanetMap::tool2cost(Tool t) {
             return COST_LUNAR_BASE;
         case TOOL_Park:
             return Planet::stone_cost(STONE_Park);
+        case TOOL_Academy:
+            return Planet::stone_cost(STONE_Academy);
         case TOOL_END:
             break;
     }
@@ -2508,6 +2546,9 @@ void PlanetMap::draw_frame_help(Tool tool) {
             break;
         case TOOL_Park:
             desc = tool_desc_park;
+            break;
+        case TOOL_Academy:
+            desc = tool_desc_academy;
             break;
         default:
             L.error("No help for tool %d", (int)tool);

@@ -31,6 +31,7 @@ enum Tool {
     TOOL_Trade,
     TOOL_LunarBase,
     TOOL_Park,
+    TOOL_Academy,
     TOOL_END,
 };
 

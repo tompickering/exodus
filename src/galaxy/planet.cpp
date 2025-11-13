@@ -64,6 +64,8 @@ int Planet::stone_cost(Stone st) {
             return 100;
         case STONE_Park:
             return 10;
+        case STONE_Academy:
+            return 150;
         default:
             L.warn("Checking cost of unbuildable stone %d", (int)st);
             return 0;

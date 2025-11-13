@@ -123,6 +123,9 @@ static bool RESETTLING = false;
 // Lunar base can be built from COMM menu
 static bool LUNAR_BASE_FROM_COMM_MENU;
 
+// Enables Academies - N.B. this replaces Lunar Base, so use with LUNAR_BASE_FROM_COMM_MENU
+static bool ACADEMIES = false;
+
 // Fixes bug meaning some AI terrorist actions are never taken
 static bool FIX_AI_TERROR = false;
 
@@ -186,6 +189,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         CLIMATE_CHANGE_LESS_LIKELY = false;
         RESETTLING = false;
         LUNAR_BASE_FROM_COMM_MENU = false;
+        ACADEMIES = false;
         FIX_AI_TERROR = false;
         FIX_FLEET_ADMIRAL = false;
         FIX_LUNAR_BATTLE_STALEMATE = true;
@@ -234,6 +238,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         CLIMATE_CHANGE_LESS_LIKELY = true;
         RESETTLING = true;
         LUNAR_BASE_FROM_COMM_MENU = true;
+        ACADEMIES = true;
         FIX_AI_TERROR = true;
         FIX_FLEET_ADMIRAL = true;
         FIX_LUNAR_BATTLE_STALEMATE = true;
@@ -295,6 +300,7 @@ bool FEATURE(ExodusFeature f) {
     if (f == EF_CLIMATE_CHANGE_LESS_LIKELY) return CLIMATE_CHANGE_LESS_LIKELY;
     if (f == EF_RESETTLING) return RESETTLING;
     if (f == EF_LUNAR_BASE_FROM_COMM_MENU) return LUNAR_BASE_FROM_COMM_MENU;
+    if (f == EF_ACADEMIES) return ACADEMIES;
     if (f == EF_FIX_AI_TERROR) return FIX_AI_TERROR;
     if (f == EF_FIX_FLEET_ADMIRAL) return FIX_FLEET_ADMIRAL;
     if (f == EF_FIX_LUNAR_BATTLE_STALEMATE) return FIX_LUNAR_BATTLE_STALEMATE;
