@@ -1410,8 +1410,8 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_text_disabled_mask |= 0x3;
             }
             if (FEATURE(EF_LUNAR_BASE_FROM_COMM_MENU)) {
-                comm_set_text(2, "Construct Lunar Battle Base (120MC)");
-                if (comm_planet->has_lunar_base() || !comm_player->can_afford(120)) {
+                comm_set_text(2, "Construct Lunar Battle Base (%dMC)", COST_LUNAR_BASE);
+                if (comm_planet->has_lunar_base() || !comm_player->can_afford(COST_LUNAR_BASE)) {
                     comm_text_disabled_mask |= 0x4;
                 }
                 if (comm_planet->get_class() == Artificial) {
@@ -2922,7 +2922,7 @@ void CommPanelDrawer::comm_process_responses() {
                         comm_exit_anim(CA_StartProduction);
                         break;
                     case 2:
-                        if (comm_player->attempt_spend(120, MC_BuildingLunarBase)) {
+                        if (comm_player->attempt_spend(COST_LUNAR_BASE, MC_BuildingLunarBase)) {
                             comm_planet->build_lunar_base();
                         }
                         comm_exit_anim(CA_Abort);
