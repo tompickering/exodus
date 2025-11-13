@@ -598,7 +598,7 @@ void PlanetMap::draw() {
 
         draw_manager.draw(
             get_stone_anim(STONE_Agri)->frame(0),
-            {541, 47,
+            {540, 46,
             0, 0, 1, 1});
 
         if (FEATURE(EF_ACADEMIES)) {
