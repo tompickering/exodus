@@ -240,6 +240,8 @@ enum ID {
     MENU_BG,
     MENU,
     SURF,
+    TOOL_AGRI,
+    TOOL_ACAD,
     ICON_FOOD,
     ICON_PLU,
     ICON_UNREST,
@@ -597,12 +599,14 @@ void PlanetMap::draw() {
             0, 1, 1, 1});
 
         draw_manager.draw(
+            id(ID::TOOL_AGRI),
             get_stone_anim(STONE_Agri)->frame(0),
             {540, 46,
             0, 0, 1, 1});
 
         if (FEATURE(EF_ACADEMIES)) {
             draw_manager.draw(
+                id(ID::TOOL_ACAD),
                 get_stone_anim(STONE_Academy)->frame(0),
                 {540, 198,
                 0, 0, 1, 1});
