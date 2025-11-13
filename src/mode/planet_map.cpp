@@ -1949,11 +1949,13 @@ void PlanetMap::set_build_button(bool on) {
 }
 
 void PlanetMap::hide_lunar_base_tool() {
-    draw_manager.draw(
-        id(ID::LUNAR_BASE_MASK),
-        IMG_SU1_STONEXX,
-        {540, 198,
-        0, 0, 1, 1});
+    if (!FEATURE(EF_ACADEMIES)) {
+        draw_manager.draw(
+            id(ID::LUNAR_BASE_MASK),
+            IMG_SU1_STONEXX,
+            {540, 198,
+            0, 0, 1, 1});
+    }
 }
 
 void PlanetMap::draw_attack_details() {
