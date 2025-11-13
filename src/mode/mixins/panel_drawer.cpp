@@ -294,29 +294,26 @@ void PanelDrawer::update_panel_info_planet(DrawTarget tgt, Player *player, Plane
 
     draw_manager.draw_text(
         id_desc,
-        Font::Small,
         (const char*) planet_desc,
         Justify::Left,
         area_starinfo.x + 4,
-        area_starinfo.y + 2,
+        area_starinfo.y,
         COL_TEXT);
 
     draw_manager.draw_text(
         id_desc1,
-        Font::Small,
         (const char*) planet_own,
         Justify::Left,
         area_starinfo.x + 4,
-        area_starinfo.y + 2 + PNL_Y_SEP,
+        area_starinfo.y + PNL_Y_SEP,
         COL_TEXT);
 
     draw_manager.draw_text(
         id_desc2,
-        Font::Small,
         (const char*) planet_class,
         Justify::Left,
         area_starinfo.x + 4,
-        area_starinfo.y + 2 + 2*PNL_Y_SEP,
+        area_starinfo.y + 2*PNL_Y_SEP,
         COL_TEXT);
 }
 
