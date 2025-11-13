@@ -1311,6 +1311,7 @@ const char *IMG_BG_WELCOME       = D_NEW "bg_welcome";
 const char *IMG_HEADER_L         = D_NEW "header_l";
 const char *IMG_HEADER_R         = D_NEW "header_r";
 const char *IMG_MAP_SOLAR_NEW    = D_NEW "solar_new";
+const char *IMG_STONE_ACAD       = D_NEW "stone_acad";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2622,6 +2623,7 @@ const char *ASSETS_IMG[] = {
     IMG_HEADER_L,
     IMG_HEADER_R,
     IMG_MAP_SOLAR_NEW,
+    IMG_STONE_ACAD,
 
     "",
 };

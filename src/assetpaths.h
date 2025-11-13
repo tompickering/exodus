@@ -1308,6 +1308,7 @@ extern const char *IMG_BG_WELCOME;
 extern const char *IMG_HEADER_L;
 extern const char *IMG_HEADER_R;
 extern const char *IMG_MAP_SOLAR_NEW;
+extern const char *IMG_STONE_ACAD;
 
 extern const char *INIT_IMG;
 extern const char *CURSOR_IMG;
