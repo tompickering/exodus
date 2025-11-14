@@ -1964,14 +1964,16 @@ bool Planet::expand(Stone st, bool do_place) {
     return false;
 }
 
-bool Planet::do_academy_immigration(int source_idx) {
+bool Planet::do_academy_immigration(int source_s, int source_p) {
     if (!expand_city()) {
         // Caller should verify expansion possible first
         L.error("Academy immigration called when city cannot expand");
         return false;
     }
 
-    academy_sources_this_month[academy_sources_this_month_head++] = source_idx;
+    academy_sources_this_month_s[academy_sources_this_month_head] = source_s;
+    academy_sources_this_month_p[academy_sources_this_month_head] = source_p;
+    ++academy_sources_this_month_head;
 
     return true;
 }
@@ -2545,12 +2547,16 @@ void Planet::ai_update() {
     }
 }
 
-int Planet::get_n_academy_sources_this_month() {
-    return academy_sources_this_month_head;
+int* Planet::get_academy_sources_this_month_s() {
+    return &academy_sources_this_month_s[0];
 }
 
-int* Planet::get_academy_sources_this_month() {
-    return &academy_sources_this_month[0];
+int* Planet::get_academy_sources_this_month_p() {
+    return &academy_sources_this_month_p[0];
+}
+
+int Planet::get_n_academy_sources_this_month() {
+    return academy_sources_this_month_head;
 }
 
 void Planet::_ai_make_space() {
@@ -2675,7 +2681,8 @@ void Planet::save(cJSON* j) const {
     SAVE_ENUM(j, most_recent_previous_owner_change_reason);
     SAVE_ARRAY_OF_SAVEABLE(j, owner_changes_this_month);
     SAVE_NUM(j, owner_changes_this_month_head);
-    SAVE_ARRAY_OF_NUM(j, academy_sources_this_month);
+    SAVE_ARRAY_OF_NUM(j, academy_sources_this_month_s);
+    SAVE_ARRAY_OF_NUM(j, academy_sources_this_month_p);
     SAVE_NUM(j, academy_sources_this_month_head);
     SAVE_BOOL(j, festival_this_month);
     SAVE_BOOL(j, surfchange_this_month);
@@ -2718,7 +2725,8 @@ void Planet::load(cJSON* j) {
     LOAD_ENUM(j, most_recent_previous_owner_change_reason);
     LOAD_ARRAY_OF_SAVEABLE(j, owner_changes_this_month);
     LOAD_NUM(j, owner_changes_this_month_head);
-    LOAD_ARRAY_OF_NUM(j, academy_sources_this_month);
+    LOAD_ARRAY_OF_NUM(j, academy_sources_this_month_s);
+    LOAD_ARRAY_OF_NUM(j, academy_sources_this_month_p);
     LOAD_NUM(j, academy_sources_this_month_head);
     LOAD_BOOL(j, festival_this_month);
     LOAD_BOOL(j, surfchange_this_month);

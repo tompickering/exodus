@@ -336,7 +336,7 @@ class Planet : public Saveable {
         bool expand_city();
         bool expand_village();
         bool expand_city_possible();
-        bool do_academy_immigration(int);
+        bool do_academy_immigration(int, int);
         bool agri_collapse();
         void monthly_processing_start();
         bool monthly_processing_in_progress();
@@ -346,7 +346,8 @@ class Planet : public Saveable {
         void ai_update();
 
         int get_n_academy_sources_this_month();
-        int* get_academy_sources_this_month();
+        int* get_academy_sources_this_month_p();
+        int* get_academy_sources_this_month_s();
 
     private:
         void init();
@@ -413,7 +414,8 @@ class Planet : public Saveable {
         PlanetOwnerChangedEvent owner_changes_this_month[MAX_OWNER_CHANGES];
         int owner_changes_this_month_head;
 
-        int academy_sources_this_month[5];
+        int academy_sources_this_month_p[5];
+        int academy_sources_this_month_s[5];
         int academy_sources_this_month_head;
 
         bool festival_this_month;

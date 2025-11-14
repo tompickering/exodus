@@ -158,9 +158,9 @@ void PlanetReport::finalise() {
     if (light_unrest == PTL_Red) register_major_problem();
     if (light_army == PTL_Red) register_major_problem();
 
-    Star *s = exostate().get_star_for_planet(p);
     for (int i = 0; i < p->get_n_academy_sources_this_month(); ++i) {
-        Planet *source = s->get_planet(p->get_academy_sources_this_month()[i]);
+        Star *s = exostate().get_star(p->get_academy_sources_this_month_s()[i]);
+        Planet *source = s->get_planet(p->get_academy_sources_this_month_p()[i]);
         add_line("Welcomed students from %s!", source->get_name());
         register_good_news();
     }

@@ -5218,7 +5218,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         for (int i = 0; i < p->count_stones(STONE_City); ++i) {
             if (onein(20)) {
                 if (Planet *thief = attempt_academy_expansion(p)) {
-                    if (thief->do_academy_immigration(p_idx)) {
+                    if (thief->do_academy_immigration(s_idx, p_idx)) {
                         report.register_minor_problem();
                         report.add_line("Emigrants left to study at %s.", thief->get_name());
                     } else {
