@@ -5208,11 +5208,20 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     if (mp_state.mpp_stage == MPP_CityExpansion) {
         for (int i = 0; i < p->count_stones(STONE_City); ++i) {
             if (onein(20)) {
-                if (p->expand_city()) {
-                    report.register_good_news();
-                    report.add_line("A city has expanded.");
-                    if (owner && owner->is_human()) {
-                        exostate().register_news(NI_CityExpanded);
+                if (Planet *thief = attempt_academy_expansion(p)) {
+                    if (thief->do_academy_immigration(p_idx)) {
+                        report.register_minor_problem();
+                        report.add_line("Emigrants left to study at %s.", thief->get_name());
+                    } else {
+                        L.error("attempt_academy_expansion should only return viable planets");
+                    }
+                } else {
+                    if (p->expand_city()) {
+                        report.register_good_news();
+                        report.add_line("A city has expanded.");
+                        if (owner && owner->is_human()) {
+                            exostate().register_news(NI_CityExpanded);
+                        }
                     }
                 }
                 break;
@@ -5675,4 +5684,141 @@ void GalaxyMap::planet_report_summary_bulletin(int idx) {
 
 bool GalaxyMap::use_planet_summary() {
     return exostate().get_active_player()->advanced_report_unlocked;
+}
+
+Planet* GalaxyMap::attempt_academy_expansion(Planet* source) {
+    if (source->has_stone(STONE_Academy)) {
+        return nullptr;
+    }
+
+    Star *s = exostate().get_star_for_planet(source);
+
+    int source_owner = (source->is_owned() ? source->get_owner() : -1);
+
+    Planet *targets[STAR_MAX_PLANETS];
+    for (int i = 0; i < STAR_MAX_PLANETS; ++i) targets[i] = nullptr;
+
+    int n_targets = 0;
+
+    for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+        Planet *p = s->get_planet(i);
+
+        if (!p || (p == source)) {
+            continue;
+        }
+
+        // N.B. we don't skip owned planets... republics can still operate
+
+        if (!p->has_stone(STONE_Academy)) {
+            continue;
+        }
+
+        int p_owner = (p->is_owned() ? p->get_owner() : -1);
+
+        bool enemies = ((source_owner < 0) || (p_owner < 0) || (source_owner != p_owner));
+
+        if (enemies && !p->has_law(LAW_AllowSystemEnemies)) {
+            continue;
+        }
+
+        if (!p->expand_city_possible()) {
+            continue;
+        }
+
+        targets[n_targets++] = p;
+    }
+
+    if (n_targets == 0) {
+        return nullptr;
+    }
+
+    if (n_targets == 1) {
+        return targets[0];
+    }
+
+    // Multiple potential targets
+
+    int scores[STAR_MAX_PLANETS];
+
+    for (int i = 0; i < n_targets; ++i) {
+        int& sc = scores[i];
+        sc = 0;
+
+        Planet *p = targets[i];
+
+        switch (p->get_class()) {
+            case Forest:
+                sc += 1;
+                break;
+            case Desert:
+                sc -= 1;
+                break;
+            case Volcano:
+                sc -= 2;
+                break;
+            case Rock:
+                break;
+            case Ice:
+                sc -= 1;
+                break;
+            case Terra:
+                sc += 2;
+                break;
+            case Artificial:
+                sc += 2;
+                break;
+        }
+
+        sc -= (p->get_unrest()/2);
+        sc += (p->count_stones(STONE_Park)/2);
+
+        if (p->has_law(LAW_FreeSpeech)) {
+            sc += 1;
+        }
+
+        // Students...
+        if (p->has_law(LAW_DrugLegalisation)) {
+            sc += 1;
+        }
+
+        if (p->has_law(LAW_DifferentReligions)) {
+            sc += 1;
+        }
+
+        if (p->has_law(LAW_CivilianWeapons)) {
+            sc -= 1;
+        }
+    }
+
+    // Ensure all our scores are +ve
+    int min_score = 1;
+    for (int i = 0; i < n_targets; ++i) {
+        if (scores[i] < min_score) {
+            min_score = scores[i];
+        }
+    }
+    if (min_score <= 0) {
+        int to_add = abs(min_score) + 1;
+        for (int i = 0; i < n_targets; ++i) {
+            scores[i] += to_add;
+        }
+    }
+
+    int score_total = 0;
+
+    for (int i = 0; i < n_targets; ++i) {
+        score_total += scores[i];
+    }
+
+    int score_point = (rand() % score_total);
+
+    score_total = 0;
+    for (int i = 0; i < n_targets; ++i) {
+        score_total += scores[i];
+        if (score_total >= score_point) {
+            return targets[i];
+        }
+    }
+
+    return targets[n_targets-1];
 }

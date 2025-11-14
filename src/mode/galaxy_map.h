@@ -214,6 +214,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
         int planet_report_summary_current;
 
         bool use_planet_summary();
+        Planet* attempt_academy_expansion(Planet*);
 
         bool do_first_city;
         bool do_first_spaceport;

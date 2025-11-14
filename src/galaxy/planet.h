@@ -335,6 +335,8 @@ class Planet : public Saveable {
         void disown(PlanetOwnerChangedReason);
         bool expand_city();
         bool expand_village();
+        bool expand_city_possible();
+        bool do_academy_immigration(int);
         bool agri_collapse();
         void monthly_processing_start();
         bool monthly_processing_in_progress();
@@ -343,9 +345,12 @@ class Planet : public Saveable {
         PlanetTrafficLight get_traffic_light(PlanetTrafficLightProperty);
         void ai_update();
 
+        int get_n_academy_sources_this_month();
+        int get_academy_sources_this_month();
+
     private:
         void init();
-        bool expand(Stone);
+        bool expand(Stone, bool);
 
         void cull_stones_to_size();
         Stone _get_stone(int, int);
@@ -407,6 +412,9 @@ class Planet : public Saveable {
 
         PlanetOwnerChangedEvent owner_changes_this_month[MAX_OWNER_CHANGES];
         int owner_changes_this_month_head;
+
+        int academy_sources_this_month[5];
+        int academy_sources_this_month_head;
 
         bool festival_this_month;
         bool surfchange_this_month;

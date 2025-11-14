@@ -81,6 +81,8 @@ Planet::Planet() {
     most_recent_previous_owner = -1;
     most_recent_previous_owner_change_reason = POCR_Init;
     owner_changes_this_month_head = 0;
+    academy_sources_this_month_head = 0;
+
     festival_this_month = false;
     surfchange_this_month = false;
     comms_this_month = 0;
@@ -292,6 +294,7 @@ void Planet::init() {
     most_recent_previous_owner_change_reason = POCR_Init;
 
     owner_changes_this_month_head = 0;
+    academy_sources_this_month_head = 0;
     festival_this_month = false;
     surfchange_this_month = false;
     comms_this_month = 0;
@@ -1468,6 +1471,7 @@ void Planet::owner_change_event_reset() {
      */
     comms_this_month = 0;
     owner_changes_this_month_head = 0;
+    academy_sources_this_month_head = 0;
     failed_attacks_this_month = 0;
     bombings_this_month = 0;
 }
@@ -1871,14 +1875,18 @@ void Planet::disown(PlanetOwnerChangedReason reason) {
 }
 
 bool Planet::expand_city() {
-    return expand(STONE_City);
+    return expand(STONE_City, true);
+}
+
+bool Planet::expand_city_possible() {
+    return expand(STONE_City, false);
 }
 
 bool Planet::expand_village() {
-    return expand(STONE_Village);
+    return expand(STONE_Village, true);
 }
 
-bool Planet::expand(Stone st) {
+bool Planet::expand(Stone st, bool do_place) {
     L.info("Expanding %d on %s", st, get_name());
 
     // Find expansion candidates
@@ -1937,8 +1945,10 @@ bool Planet::expand(Stone st) {
                                 tgt_ok = tgt_ok || tgt == STONE_City;
                             }
                             if (tgt_ok) {
-                                set_stone_wrap(i + i_off, j + j_off, st);
-                                L.info("Expansion %d,%d", i, j);
+                                if (do_place) {
+                                    set_stone_wrap(i + i_off, j + j_off, st);
+                                    L.info("Expansion %d,%d", i, j);
+                                }
                                 return true;
                             }
                         }
@@ -1952,6 +1962,18 @@ bool Planet::expand(Stone st) {
 
     L.fatal("Could not find suitable expansion after verifying it must be possible");
     return false;
+}
+
+bool Planet::do_academy_immigration(int source_idx) {
+    if (!expand_city()) {
+        // Caller should verify expansion possible first
+        L.error("Academy immigration called when city cannot expand");
+        return false;
+    }
+
+    academy_sources_this_month[academy_sources_this_month_head++] = source_idx;
+
+    return true;
 }
 
 bool Planet::agri_collapse() {
@@ -2523,6 +2545,14 @@ void Planet::ai_update() {
     }
 }
 
+int Planet::get_n_academy_sources_this_month() {
+    return academy_sources_this_month_head;
+}
+
+int Planet::get_academy_sources_this_month() {
+    return academy_sources_this_month[0];
+}
+
 void Planet::_ai_make_space() {
     if (!is_owned()) {
         L.fatal("Tried to make space on unowned planet");
@@ -2645,6 +2675,8 @@ void Planet::save(cJSON* j) const {
     SAVE_ENUM(j, most_recent_previous_owner_change_reason);
     SAVE_ARRAY_OF_SAVEABLE(j, owner_changes_this_month);
     SAVE_NUM(j, owner_changes_this_month_head);
+    SAVE_ARRAY_OF_NUM(j, academy_sources_this_month);
+    SAVE_NUM(j, academy_sources_this_month_head);
     SAVE_BOOL(j, festival_this_month);
     SAVE_BOOL(j, surfchange_this_month);
     SAVE_NUM(j, comms_this_month);
@@ -2686,6 +2718,8 @@ void Planet::load(cJSON* j) {
     LOAD_ENUM(j, most_recent_previous_owner_change_reason);
     LOAD_ARRAY_OF_SAVEABLE(j, owner_changes_this_month);
     LOAD_NUM(j, owner_changes_this_month_head);
+    LOAD_ARRAY_OF_NUM(j, academy_sources_this_month);
+    LOAD_NUM(j, academy_sources_this_month_head);
     LOAD_BOOL(j, festival_this_month);
     LOAD_BOOL(j, surfchange_this_month);
     LOAD_NUM(j, comms_this_month);
