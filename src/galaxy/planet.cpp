@@ -2236,6 +2236,22 @@ void Planet::ai_update() {
         const int port_c = count_stones(STONE_Port2);
         const int tcentre = count_stones(STONE_Trade);
         const int cities = count_stones(STONE_City);
+        const int academies = count_stones(STONE_Academy);
+
+        int other_inhabited_planets = 0;
+
+        Star *s = exostate().get_star_for_planet(this);
+        for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+            Planet *other = s->get_planet(i);
+            if (other == this) {
+                continue;
+            }
+            if (!(other && other->exists() && other->is_owned())) {
+                continue;
+            }
+
+            other_inhabited_planets++;
+        }
 
         int action = 0;
 
@@ -2291,6 +2307,21 @@ void Planet::ai_update() {
 
         if (cities < 4) {
             action = 1;
+        }
+
+        if (FEATURE(EF_ACADEMIES)) {
+            if (   owner->get_mc() > stone_cost(STONE_Academy)
+                && academies < (m/20)
+                && other_inhabited_planets > 0) {
+                int chance = 0;
+                if (owner->get_race() == RACE_Yokon) chance = 4;
+                if (owner->get_race() == RACE_Teri) chance = 2;
+                if (owner->get_race() == RACE_Gordoon) chance = 3;
+                chance *= (academies+1);
+                if (chance > 0 && onein(chance)) {
+                    action = 100;
+                }
+            }
         }
 
         if (get_army_size() < 120 && m > 10) {
@@ -2545,6 +2576,11 @@ void Planet::ai_update() {
                             free -= ai_place_stone(1, STONE_Plu, STONE_NaturalLarge);
                         }
                     }
+                }
+                break;
+            case 100:
+                if (owner->attempt_spend(stone_cost(STONE_Academy), MC_Building)) {
+                    free -= ai_place_stone(1, STONE_Academy, STONE_City);
                 }
                 break;
             default:
