@@ -5744,18 +5744,21 @@ Planet* GalaxyMap::attempt_academy_expansion(Planet* source) {
             continue;
         }
 
-        if (n_acad_source > n_acad_tgt) {
-            if (!onein(10)) {
-                continue;
-            }
-        } else if (n_acad_tgt > n_acad_source) {
-            if (onein(10)) {
-                continue;
-            }
-        } else {
-            // When there are as many academies, there is a bias towards staying
-            if (!onein(5)) {
-                continue;
+        // If the source has at least one academy, we determine the chances of continuing
+        if (n_acad_source > 0) {
+            if (n_acad_source > n_acad_tgt) {
+                if (!onein(10)) {
+                    continue;
+                }
+            } else if (n_acad_tgt > n_acad_source) {
+                if (onein(10)) {
+                    continue;
+                }
+            } else {
+                // When there are as many academies, there is a bias towards staying
+                if (!onein(5)) {
+                    continue;
+                }
             }
         }
 
