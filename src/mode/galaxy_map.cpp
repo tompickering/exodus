@@ -5718,9 +5718,7 @@ Planet* GalaxyMap::attempt_academy_expansion(Planet* source) {
         return nullptr;
     }
 
-    if (source->has_stone(STONE_Academy)) {
-        return nullptr;
-    }
+    int n_acad_source = source->count_stones(STONE_Academy);
 
     Star *s = exostate().get_star_for_planet(source);
 
@@ -5740,8 +5738,25 @@ Planet* GalaxyMap::attempt_academy_expansion(Planet* source) {
 
         // N.B. we don't skip owned planets... republics can still operate
 
-        if (!p->has_stone(STONE_Academy)) {
+        int n_acad_tgt = p->count_stones(STONE_Academy);
+
+        if (n_acad_tgt < 1) {
             continue;
+        }
+
+        if (n_acad_source > n_acad_tgt) {
+            if (!onein(10)) {
+                continue;
+            }
+        } else if (n_acad_tgt > n_acad_source) {
+            if (onein(10)) {
+                continue;
+            }
+        } else {
+            // When there are as many academies, there is a bias towards staying
+            if (!onein(5)) {
+                continue;
+            }
         }
 
         int p_owner = (p->is_owned() ? p->get_owner() : -1);
