@@ -1304,6 +1304,29 @@ void Planet::prepare_for_cpu_lord() {
                 }
             }
         }
+
+        if (FEATURE(EF_CHARACTERS)) {
+            if (FEATURE(EF_ACADEMIES)) {
+                Player *owner = exostate().get_player(get_owner());
+
+                if (owner->get_character() == CHAR_Ter1) {
+                    while (true) {
+                        // Place an Academy
+                        x = rand() % blocks;
+                        y = rand() % blocks;
+                        s = get_stone(x, y);
+                        if (   s == STONE_Clear
+                            || s == STONE_NaturalSmall
+                            || s == STONE_Radiation
+                            || s == STONE_AgriDead
+                            || s == STONE_Rubble) {
+                            set_stone(x, y, STONE_Academy);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     } else {
         // Ensure that there's enough agri to sustain it
         int agri_placed = 0;
