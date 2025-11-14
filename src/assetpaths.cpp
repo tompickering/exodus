@@ -1320,6 +1320,37 @@ const char *IMG_STONE_ACAD_4     = D_NEW "stone_acad-4";
 const char *IMG_STONE_ACAD_5     = D_NEW "stone_acad-5";
 const char *IMG_STONE_ACAD_6     = D_NEW "stone_acad-6";
 const char *IMG_STONE_ACAD_7     = D_NEW "stone_acad-7";
+const char *IMG_EMB_1            = D_NEW "emblem_mini_1";
+const char *IMG_EMB_2            = D_NEW "emblem_mini_2";
+const char *IMG_EMB_3            = D_NEW "emblem_mini_3";
+const char *IMG_EMB_4            = D_NEW "emblem_mini_4";
+const char *IMG_EMB_5            = D_NEW "emblem_mini_5";
+const char *IMG_EMB_6            = D_NEW "emblem_mini_6";
+const char *IMG_EMB_7            = D_NEW "emblem_mini_7";
+const char *IMG_EMB_8            = D_NEW "emblem_mini_8";
+const char *IMG_EMB_9            = D_NEW "emblem_mini_9";
+const char *IMG_EMB_10           = D_NEW "emblem_mini_10";
+const char *IMG_EMB_11           = D_NEW "emblem_mini_11";
+const char *IMG_EMB_12           = D_NEW "emblem_mini_12";
+const char *IMG_EMB_13           = D_NEW "emblem_mini_13";
+const char *IMG_EMB_14           = D_NEW "emblem_mini_14";
+const char *IMG_EMB_15           = D_NEW "emblem_mini_15";
+const char *IMG_LTHUMB_YOK1      = D_NEW "lord_thumb_1_1";
+const char *IMG_LTHUMB_YOK2      = D_NEW "lord_thumb_1_2";
+const char *IMG_LTHUMB_YOK3      = D_NEW "lord_thumb_1_3";
+const char *IMG_LTHUMB_YOK4      = D_NEW "lord_thumb_1_4";
+const char *IMG_LTHUMB_TER1      = D_NEW "lord_thumb_2_1";
+const char *IMG_LTHUMB_TER2      = D_NEW "lord_thumb_2_2";
+const char *IMG_LTHUMB_TER3      = D_NEW "lord_thumb_2_3";
+const char *IMG_LTHUMB_TER4      = D_NEW "lord_thumb_2_4";
+const char *IMG_LTHUMB_URK1      = D_NEW "lord_thumb_3_1";
+const char *IMG_LTHUMB_URK2      = D_NEW "lord_thumb_3_2";
+const char *IMG_LTHUMB_URK3      = D_NEW "lord_thumb_3_3";
+const char *IMG_LTHUMB_URK4      = D_NEW "lord_thumb_3_4";
+const char *IMG_LTHUMB_GOR1      = D_NEW "lord_thumb_4_1";
+const char *IMG_LTHUMB_GOR2      = D_NEW "lord_thumb_4_2";
+const char *IMG_LTHUMB_GOR3      = D_NEW "lord_thumb_4_3";
+const char *IMG_LTHUMB_GOR4      = D_NEW "lord_thumb_4_4";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2640,6 +2671,37 @@ const char *ASSETS_IMG[] = {
     IMG_STONE_ACAD_5,
     IMG_STONE_ACAD_6,
     IMG_STONE_ACAD_7,
+    IMG_EMB_1,
+    IMG_EMB_2,
+    IMG_EMB_3,
+    IMG_EMB_4,
+    IMG_EMB_5,
+    IMG_EMB_6,
+    IMG_EMB_7,
+    IMG_EMB_8,
+    IMG_EMB_9,
+    IMG_EMB_10,
+    IMG_EMB_11,
+    IMG_EMB_12,
+    IMG_EMB_13,
+    IMG_EMB_14,
+    IMG_EMB_15,
+    IMG_LTHUMB_YOK1,
+    IMG_LTHUMB_YOK2,
+    IMG_LTHUMB_YOK3,
+    IMG_LTHUMB_YOK4,
+    IMG_LTHUMB_TER1,
+    IMG_LTHUMB_TER2,
+    IMG_LTHUMB_TER3,
+    IMG_LTHUMB_TER4,
+    IMG_LTHUMB_URK1,
+    IMG_LTHUMB_URK2,
+    IMG_LTHUMB_URK3,
+    IMG_LTHUMB_URK4,
+    IMG_LTHUMB_GOR1,
+    IMG_LTHUMB_GOR2,
+    IMG_LTHUMB_GOR3,
+    IMG_LTHUMB_GOR4,
 
     "",
 };
