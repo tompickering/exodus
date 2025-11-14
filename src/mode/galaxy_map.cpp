@@ -5687,6 +5687,10 @@ bool GalaxyMap::use_planet_summary() {
 }
 
 Planet* GalaxyMap::attempt_academy_expansion(Planet* source) {
+    if (!FEATURE(EF_ACADEMIES)) {
+        return nullptr;
+    }
+
     if (source->has_stone(STONE_Academy)) {
         return nullptr;
     }
