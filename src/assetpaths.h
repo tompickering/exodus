@@ -1310,6 +1310,13 @@ extern const char *IMG_HEADER_L;
 extern const char *IMG_HEADER_R;
 extern const char *IMG_MAP_SOLAR_NEW;
 extern const char *IMG_STONE_ACAD;
+extern const char *IMG_STONE_ACAD_1;
+extern const char *IMG_STONE_ACAD_2;
+extern const char *IMG_STONE_ACAD_3;
+extern const char *IMG_STONE_ACAD_4;
+extern const char *IMG_STONE_ACAD_5;
+extern const char *IMG_STONE_ACAD_6;
+extern const char *IMG_STONE_ACAD_7;
 
 extern const char *INIT_IMG;
 extern const char *CURSOR_IMG;

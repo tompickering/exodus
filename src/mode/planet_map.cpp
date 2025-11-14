@@ -1581,7 +1581,13 @@ void init_stone_anims() {
                                                                     IMG_SU1_STONE23_1,
                                                                     IMG_SU1_STONE23_2,
                                                                     IMG_SU1_STONE23_3);
-    construct_anims_generic[STONE_Academy]               = Anim(1,  IMG_STONE_ACAD);
+    construct_anims_generic[STONE_Academy]               = Anim(7,  IMG_STONE_ACAD_1,
+                                                                    IMG_STONE_ACAD_2,
+                                                                    IMG_STONE_ACAD_3,
+                                                                    IMG_STONE_ACAD_4,
+                                                                    IMG_STONE_ACAD_5,
+                                                                    IMG_STONE_ACAD_6,
+                                                                    IMG_STONE_ACAD_7);
 
     stone_anims_initialised = true;
 }

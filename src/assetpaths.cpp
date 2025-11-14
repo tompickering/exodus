@@ -1313,6 +1313,13 @@ const char *IMG_HEADER_L         = D_NEW "header_l";
 const char *IMG_HEADER_R         = D_NEW "header_r";
 const char *IMG_MAP_SOLAR_NEW    = D_NEW "solar_new";
 const char *IMG_STONE_ACAD       = D_NEW "stone_acad";
+const char *IMG_STONE_ACAD_1     = D_NEW "stone_acad-1";
+const char *IMG_STONE_ACAD_2     = D_NEW "stone_acad-2";
+const char *IMG_STONE_ACAD_3     = D_NEW "stone_acad-3";
+const char *IMG_STONE_ACAD_4     = D_NEW "stone_acad-4";
+const char *IMG_STONE_ACAD_5     = D_NEW "stone_acad-5";
+const char *IMG_STONE_ACAD_6     = D_NEW "stone_acad-6";
+const char *IMG_STONE_ACAD_7     = D_NEW "stone_acad-7";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2626,6 +2633,13 @@ const char *ASSETS_IMG[] = {
     IMG_HEADER_R,
     IMG_MAP_SOLAR_NEW,
     IMG_STONE_ACAD,
+    IMG_STONE_ACAD_1,
+    IMG_STONE_ACAD_2,
+    IMG_STONE_ACAD_3,
+    IMG_STONE_ACAD_4,
+    IMG_STONE_ACAD_5,
+    IMG_STONE_ACAD_6,
+    IMG_STONE_ACAD_7,
 
     "",
 };
