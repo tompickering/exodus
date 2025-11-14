@@ -5807,6 +5807,14 @@ Planet* GalaxyMap::attempt_academy_expansion(Planet* source) {
         sc -= (p->get_unrest()/2);
         sc += (p->count_stones(STONE_Park)/2);
 
+        if (p->has_next_to_4(STONE_Academy, STONE_Park)) {
+            sc += 1;
+        }
+
+        if (p->has_next_to_4(STONE_Academy, STONE_City)) {
+            sc += 1;
+        }
+
         if (p->has_law(LAW_FreeSpeech)) {
             sc += 1;
         }

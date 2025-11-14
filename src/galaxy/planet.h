@@ -257,6 +257,7 @@ class Planet : public Saveable {
         bool find_random_buildable_stone_next_to_8(Stone, int&, int&);
         bool next_to_4(int, int, Stone);
         bool next_to_8(int, int, Stone);
+        bool has_next_to_4(Stone, Stone);
         int count_stones(Stone);
         int count_stones(StoneSet);
         int plan_bomb(int, StoneSet, int&, bool);

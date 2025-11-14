@@ -792,6 +792,19 @@ bool Planet::next_to_8(int x, int y, Stone st) {
     return false;
 }
 
+bool Planet::has_next_to_4(Stone a, Stone b) {
+    for (int j = 0; j < get_size_blocks(); ++j) {
+        for (int i = 0; i < get_size_blocks(); ++i) {
+            if (get_stone(i, j) == a) {
+                if (next_to_4(i, j, b)) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 int Planet::count_stones(Stone st) {
     int count = 0;
     for (int j = 0; j < get_size_blocks(); ++j) {
