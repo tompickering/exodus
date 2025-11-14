@@ -81,6 +81,11 @@ Planet::Planet() {
     most_recent_previous_owner = -1;
     most_recent_previous_owner_change_reason = POCR_Init;
     owner_changes_this_month_head = 0;
+    academy_source0[0] = '\0';
+    academy_source1[0] = '\0';
+    academy_source2[0] = '\0';
+    academy_source3[0] = '\0';
+    academy_source4[0] = '\0';
     academy_sources_this_month_head = 0;
 
     festival_this_month = false;
@@ -294,6 +299,11 @@ void Planet::init() {
     most_recent_previous_owner_change_reason = POCR_Init;
 
     owner_changes_this_month_head = 0;
+    academy_source0[0] = '\0';
+    academy_source1[0] = '\0';
+    academy_source2[0] = '\0';
+    academy_source3[0] = '\0';
+    academy_source4[0] = '\0';
     academy_sources_this_month_head = 0;
     festival_this_month = false;
     surfchange_this_month = false;
@@ -1471,6 +1481,11 @@ void Planet::owner_change_event_reset() {
      */
     comms_this_month = 0;
     owner_changes_this_month_head = 0;
+    academy_source0[0] = '\0';
+    academy_source1[0] = '\0';
+    academy_source2[0] = '\0';
+    academy_source3[0] = '\0';
+    academy_source4[0] = '\0';
     academy_sources_this_month_head = 0;
     failed_attacks_this_month = 0;
     bombings_this_month = 0;
@@ -1964,15 +1979,26 @@ bool Planet::expand(Stone st, bool do_place) {
     return false;
 }
 
-bool Planet::do_academy_immigration(int source_s, int source_p) {
+bool Planet::do_academy_immigration(const char* source_name) {
     if (!expand_city()) {
         // Caller should verify expansion possible first
         L.error("Academy immigration called when city cannot expand");
         return false;
     }
 
-    academy_sources_this_month_s[academy_sources_this_month_head] = source_s;
-    academy_sources_this_month_p[academy_sources_this_month_head] = source_p;
+    char* s = nullptr;
+    if (academy_sources_this_month_head == 0) s = academy_source0;
+    if (academy_sources_this_month_head == 1) s = academy_source1;
+    if (academy_sources_this_month_head == 2) s = academy_source2;
+    if (academy_sources_this_month_head == 3) s = academy_source3;
+    if (academy_sources_this_month_head == 4) s = academy_source4;
+
+    if (!s) {
+        L.error("Cannot not support this many sources in one month");
+        return false;
+    }
+
+    snprintf(s, PLANET_MAX_NAME+1, source_name);
     ++academy_sources_this_month_head;
 
     return true;
@@ -2547,15 +2573,17 @@ void Planet::ai_update() {
     }
 }
 
-int* Planet::get_academy_sources_this_month_s() {
-    return &academy_sources_this_month_s[0];
+const char* Planet::get_academy_source(int i) {
+    if (i == 0) return academy_source0;
+    if (i == 1) return academy_source1;
+    if (i == 2) return academy_source2;
+    if (i == 3) return academy_source3;
+    if (i == 4) return academy_source4;
+    L.error("Cannot return source %d", i);
+    return "<NONE>";
 }
 
-int* Planet::get_academy_sources_this_month_p() {
-    return &academy_sources_this_month_p[0];
-}
-
-int Planet::get_n_academy_sources_this_month() {
+int Planet::get_n_academy_sources() {
     return academy_sources_this_month_head;
 }
 
@@ -2681,8 +2709,11 @@ void Planet::save(cJSON* j) const {
     SAVE_ENUM(j, most_recent_previous_owner_change_reason);
     SAVE_ARRAY_OF_SAVEABLE(j, owner_changes_this_month);
     SAVE_NUM(j, owner_changes_this_month_head);
-    SAVE_ARRAY_OF_NUM(j, academy_sources_this_month_s);
-    SAVE_ARRAY_OF_NUM(j, academy_sources_this_month_p);
+    SAVE_STR(j, academy_source0);
+    SAVE_STR(j, academy_source1);
+    SAVE_STR(j, academy_source2);
+    SAVE_STR(j, academy_source3);
+    SAVE_STR(j, academy_source4);
     SAVE_NUM(j, academy_sources_this_month_head);
     SAVE_BOOL(j, festival_this_month);
     SAVE_BOOL(j, surfchange_this_month);
@@ -2725,8 +2756,11 @@ void Planet::load(cJSON* j) {
     LOAD_ENUM(j, most_recent_previous_owner_change_reason);
     LOAD_ARRAY_OF_SAVEABLE(j, owner_changes_this_month);
     LOAD_NUM(j, owner_changes_this_month_head);
-    LOAD_ARRAY_OF_NUM(j, academy_sources_this_month_s);
-    LOAD_ARRAY_OF_NUM(j, academy_sources_this_month_p);
+    LOAD_STR(j, academy_source0);
+    LOAD_STR(j, academy_source1);
+    LOAD_STR(j, academy_source2);
+    LOAD_STR(j, academy_source3);
+    LOAD_STR(j, academy_source4);
     LOAD_NUM(j, academy_sources_this_month_head);
     LOAD_BOOL(j, festival_this_month);
     LOAD_BOOL(j, surfchange_this_month);
