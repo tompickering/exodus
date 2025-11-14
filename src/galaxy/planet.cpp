@@ -2239,6 +2239,11 @@ void Planet::ai_update() {
         const int academies = count_stones(STONE_Academy);
 
         int other_inhabited_planets = 0;
+        int cost_academy = stone_cost(STONE_Academy);
+
+        if (owner->get_race() == RACE_Teri) {
+            cost_academy = 50;
+        }
 
         Star *s = exostate().get_star_for_planet(this);
         for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
@@ -2310,8 +2315,8 @@ void Planet::ai_update() {
         }
 
         if (FEATURE(EF_ACADEMIES)) {
-            if (   owner->get_mc() > stone_cost(STONE_Academy)
-                && academies < (m/20)
+            if (   owner->get_mc() > cost_academy
+                && (academies < (m/((owner->get_race() == RACE_Teri) ? 10 : 20)))
                 && other_inhabited_planets > 0) {
                 int chance = 0;
                 if (owner->get_race() == RACE_Yokon) chance = 4;
@@ -2579,7 +2584,7 @@ void Planet::ai_update() {
                 }
                 break;
             case 100:
-                if (owner->attempt_spend(stone_cost(STONE_Academy), MC_Building)) {
+                if (owner->attempt_spend(cost_academy, MC_Building)) {
                     free -= ai_place_stone(1, STONE_Academy, STONE_City);
                 }
                 break;
