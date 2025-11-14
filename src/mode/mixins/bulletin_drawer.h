@@ -88,6 +88,7 @@ enum BulletinManualPage : uint8_t {
     BMP_FAQ_WhyLessMC,
     BMP_FAQ_WhyLessFood,
     BMP_FAQ_WhyNoAlliance,
+    BMP_FAQ_HowAttractStudents,
     BMP_FAQ_END,
     BMP_MAX,
 };

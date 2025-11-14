@@ -2246,11 +2246,13 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("Why am I receiving less MC than I should?");
             bulletin_set_next_text("Why is my planet losing food in reserve?");
             bulletin_set_next_text("Why won't a lord agree to an alliance?");
+            bulletin_set_next_text("How do I get students to come to my academy?");
         } else {
             LINK(2, BMP_FAQ_HowEarnMC)
             LINK(3, BMP_FAQ_WhyLessMC)
             LINK(4, BMP_FAQ_WhyLessFood)
             LINK(5, BMP_FAQ_WhyNoAlliance)
+            LINK(6, BMP_FAQ_HowAttractStudents)
         }
     }
 
@@ -2325,6 +2327,25 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("");
             bulletin_set_next_text("And sometimes, it's simply not in the lord's");
             bulletin_set_next_text("nature...");
+        }
+    }
+
+    if (p == BMP_FAQ_HowAttractStudents) {
+        if (draw) {
+            bulletin_set_text_col(COL_TEXT2);
+            bulletin_set_next_text("How do I get students to come to my academy?");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("First, students are only likely to arrive if");
+            bulletin_set_next_text("there are other planets in the same system");
+            bulletin_set_next_text("which have cities without as many academies.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Second, if other planets in the system also");
+            bulletin_set_next_text("have academies, students consider various");
+            bulletin_set_next_text("factors to decide where to live - such as");
+            bulletin_set_next_text("the climate, unrest, and parks etc.");
+            bulletin_set_next_text("");
+            bulletin_set_next_text("Finally, if your laws forbid system enemies,");
+            bulletin_set_next_text("students will not arrive from hostile powers.");
         }
     }
 }
