@@ -2919,7 +2919,17 @@ void LunarBattle::update_panel_battle_new() {
         redraw = true;
     }
 
-    if (draw_unit && (draw_unit->moves_remaining != panel_moves)) {
+    int moves_to_draw = -1;
+
+    if (draw_unit) {
+        if (draw_unit == active_unit) {
+            moves_to_draw = draw_unit->moves_remaining;
+        } else {
+            moves_to_draw = draw_unit->move;
+        }
+    }
+
+    if (draw_unit && (moves_to_draw != panel_moves)) {
         redraw = true;
     }
 
@@ -2928,7 +2938,8 @@ void LunarBattle::update_panel_battle_new() {
         RGB text_col = {0, 0xFF, 0};  // TODO: Check exact colour
         panel_unit = draw_unit;
         panel_hp = draw_unit ? draw_unit->hp : -1;
-        panel_moves = draw_unit ? draw_unit->moves_remaining : -1;
+
+        panel_moves = moves_to_draw;
 
         for (int i = 0; i < 20; ++i) {
             draw_manager.draw(hp_ids[i], nullptr);
@@ -3014,7 +3025,7 @@ void LunarBattle::update_panel_battle_new() {
                 }
 
                 char text[8];
-                snprintf(text, sizeof(text), "%d", draw_unit->moves_remaining);
+                snprintf(text, sizeof(text), "%d", panel_moves);
                 draw_manager.draw_text(id(ID::TOP_PANEL_MOVES), text, Justify::Centre, 414, 14, COL_TEXT);
                 snprintf(text, sizeof(text), "%d", draw_unit->fire_range);
                 draw_manager.draw_text(id(ID::TOP_PANEL_RANGE), text, Justify::Centre, 414, 36, COL_TEXT);
