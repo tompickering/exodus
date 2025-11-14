@@ -3944,7 +3944,7 @@ BattleUnit& BattleUnit::init(int _x, int _y) {
         case UNIT_LBGun:
             name = STR_LBGun;
             move = 0;
-            fire_range = 100;
+            fire_range = 99;
             fire_power = 4;
             shot_sfx = SFX_HEAVYSHOT;
             defending = true;
