@@ -180,6 +180,7 @@ class ExodusState : public Saveable {
         PlanetReport& get_planet_report(int idx);
         void reset_planet_reports();
         void save_planet_report(PlanetReport&);
+        void finalise_planet_reports();
 
         bool first_city_done;
         bool first_spaceport_done;

@@ -2547,8 +2547,6 @@ ExodusMode GalaxyMap::month_pass_update() {
                 rpt.add_line("");
                 exostate().save_planet_report(rpt);
             }
-
-            p->owner_change_event_reset();
         }
         next_mp_stage();
     }
@@ -2590,6 +2588,17 @@ ExodusMode GalaxyMap::month_pass_update() {
                 }
             }
         }
+        next_mp_stage();
+    }
+
+    if (mp_state.mp_stage == MP_FinaliseReports) {
+        exostate().finalise_planet_reports();
+
+        for (PlanetIterator pi; !pi.complete(); ++pi) {
+            Planet *p = pi.get();
+            p->owner_change_event_reset();
+        }
+
         next_mp_stage();
     }
 

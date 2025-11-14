@@ -46,6 +46,7 @@ enum MonthPassStage {
     MP_GenerateLostPlanetReports,
     MP_AdvancedGalaxyMapUnlock,
     MP_AdvancedReportUnlock,
+    MP_FinaliseReports,
     MP_SaveMC2,
     MP_End,
 };

@@ -1252,8 +1252,6 @@ void ExodusState::reset_planet_reports() {
 }
 
 void ExodusState::save_planet_report(PlanetReport& report) {
-    report.finalise();
-
     /*
      * We used to omit reports with no information - however
      * this turns out to be a bit confusing.
@@ -1288,6 +1286,12 @@ void ExodusState::save_planet_report(PlanetReport& report) {
     }
 
     planet_reports[planet_reports_head++] = report;
+}
+
+void ExodusState::finalise_planet_reports() {
+    for (int i = 0; i < planet_reports_head; ++i) {
+        planet_reports[i].finalise();
+    }
 }
 
 /*
