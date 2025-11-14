@@ -935,6 +935,17 @@ int ExodusState::count_hostile_players(int p_idx) {
     return count;
 }
 
+bool ExodusState::hostility_between(int a, int b) {
+    if (a < 0 || b < 0) {
+        return false;
+    }
+
+    Player *pa = get_player(a);
+    Player *pb = get_player(b);
+
+    return (pa->is_hostile_to(b) || pb->is_hostile_to(a));
+}
+
 bool ExodusState::is_allied(int a, int b) {
     return get_alliances(a, b) > 0;
 }

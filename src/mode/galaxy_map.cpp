@@ -5728,7 +5728,11 @@ Planet* GalaxyMap::attempt_academy_expansion(Planet* source) {
 
         int p_owner = (p->is_owned() ? p->get_owner() : -1);
 
-        bool enemies = ((source_owner < 0) || (p_owner < 0) || (source_owner != p_owner));
+        // If we want "any other controlling power" to count as an enemy
+        //bool enemies = ((source_owner < 0) || (p_owner < 0) || (source_owner != p_owner));
+
+        // If we want "lords hostile to us or we're hostile to" to count as an enemy
+        bool enemies = exostate().hostility_between(p_owner, source_owner);
 
         if (enemies && !p->has_law(LAW_AllowSystemEnemies)) {
             continue;
