@@ -346,7 +346,7 @@ class Planet : public Saveable {
         void ai_update();
 
         int get_n_academy_sources_this_month();
-        int get_academy_sources_this_month();
+        int* get_academy_sources_this_month();
 
     private:
         void init();

@@ -2549,8 +2549,8 @@ int Planet::get_n_academy_sources_this_month() {
     return academy_sources_this_month_head;
 }
 
-int Planet::get_academy_sources_this_month() {
-    return academy_sources_this_month[0];
+int* Planet::get_academy_sources_this_month() {
+    return &academy_sources_this_month[0];
 }
 
 void Planet::_ai_make_space() {
