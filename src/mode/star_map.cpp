@@ -857,7 +857,7 @@ ExodusMode StarMap::update(float delta) {
                     input_manager.backspace();
                 }
 
-                if (input_manager.consume(K_Enter)) {
+                if (input_manager.consume(K_Enter) && (strnlen(newname, 2) > 0)) {
                     Planet *p = star->get_planet(rename_planet);
                     p->set_name(newname);
                     input_manager.stop_text_input();
