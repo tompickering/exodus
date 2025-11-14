@@ -1039,6 +1039,7 @@ extern const char *IMG_VS6_VESSEL;
 extern const char *IMG_WD1_DONE;
 extern const char *IMG_WD1_WELL;
 
+extern const char *IMG_ARTEX;
 extern const char *IMG_MAP_SOLAR_SN1;
 extern const char *IMG_MAP_SOLAR_SN2;
 extern const char *IMG_MAP_SOLAR_SN3;

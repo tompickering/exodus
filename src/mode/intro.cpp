@@ -12,6 +12,8 @@
 // Requires a unique name within the context - but this is checked at compile time.
 #define ONCE(once_id) static bool once_id = true; if (once_id && !(once_id = false))
 
+static bool ARTEX_LOGO = true;
+
 static const char* intro_text[] = {
     "It is the year 3011.",
     "Civilization has failed.",
@@ -224,9 +226,17 @@ ExodusMode Intro::update(float delta) {
                 return ExodusMode::MODE_None;
             }
 
-            ONCE(oid_start_fadein) {
-                audio_manager.target_music(MUS_INTRO);
-                draw_manager.fade_white(1.2f, 24);
+            if (ARTEX_LOGO) {
+                ONCE(oid_start_fadein) {
+                    audio_manager.target_music(MUS_INTRO);
+                    draw_manager.draw(TGT_Secondary, IMG_ARTEX);
+                    draw_manager.fade_start(1.2f, 24);
+                }
+            } else {
+                ONCE(oid_start_fadein) {
+                    audio_manager.target_music(MUS_INTRO);
+                    draw_manager.fade_white(1.2f, 24);
+                }
             }
 
             if (time > START_FADEOUT) {

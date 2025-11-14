@@ -1042,6 +1042,7 @@ const char *IMG_WD1_DONE         = D_GRA "wd1_done";
 const char *IMG_WD1_WELL         = D_GRA "wd1_well";
 
 #define D_NEW "assets/img/new/"
+const char *IMG_ARTEX            = D_NEW "artex";
 const char *IMG_MAP_SOLAR_SN1    = D_NEW "supernova_1";
 const char *IMG_MAP_SOLAR_SN2    = D_NEW "supernova_2";
 const char *IMG_MAP_SOLAR_SN3    = D_NEW "supernova_3";
@@ -2354,6 +2355,7 @@ const char *ASSETS_IMG[] = {
     IMG_WD1_DONE,
     IMG_WD1_WELL,
 
+    IMG_ARTEX,
     IMG_MAP_SOLAR_SN1,
     IMG_MAP_SOLAR_SN2,
     IMG_MAP_SOLAR_SN3,
