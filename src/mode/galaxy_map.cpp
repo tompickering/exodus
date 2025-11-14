@@ -4413,6 +4413,15 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             // mistakenly assumed that the quality started from 1...?
             threshold += 2*q - 2;
             threshold += owner->get_tax() / 20;
+
+            if (FEATURE(EF_ACADEMIES)) {
+                if (p->has_stone(STONE_Academy)) {
+                    threshold += 2;
+                } else {
+                    threshold -= 1;
+                }
+            }
+
             if (RND(40) <= threshold) {
                 if (update_researchcheck(s, p)) {
                     return ExodusMode::MODE_None;
@@ -4654,6 +4663,15 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     int q = (int)owner->get_officer(OFF_Science);
                     threshold += 2*q - 2;
                     threshold += owner->get_tax() / 20;
+
+                    if (FEATURE(EF_ACADEMIES)) {
+                        if (p->has_stone(STONE_Academy)) {
+                            threshold += 2;
+                        } else {
+                            threshold -= 1;
+                        }
+                    }
+
                     if (RND(50) <= threshold) {
                         report.add_event(PRE_NewSpecies);
                         discover_species_bulletin(p);
