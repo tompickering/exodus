@@ -1975,6 +1975,11 @@ bool MenuDrawer::menu_specific_update() {
                         off_status_col = COL_TEXT_BAD;
                     }
 
+                    if (p->get_officer(menu_new_officer) == menu_new_officer_quality) {
+                        off_status = "Employed";
+                        off_status_col = {0, 0xFF, 0};
+                    }
+
                     draw_manager.draw_text(
                         off_status,
                         Justify::Left,
@@ -2005,7 +2010,48 @@ bool MenuDrawer::menu_specific_update() {
                 SpriteClick clk = draw_manager.query_click(id_menu_newoff_opt);
                 if (clk.id) {
                     if (clk.x < .33f) {
-                        if (p->attempt_spend(engagement_cost, MC_NewOfficer)) {
+                        bool ok = true;
+
+                        const char* tn = Player::get_officer_character_title_and_name(menu_new_officer, menu_new_officer_quality);
+                        if (p->get_officer(menu_new_officer) == menu_new_officer_quality) {
+                            menu_set_txt(9,  COL_TEXT, "%s in already in your employ,", tn);
+                            menu_set_txt(10,  COL_TEXT, "%s.", p->get_ref());
+                            menu_set_txt(11,  COL_TEXT, "");
+                            menu_set_txt(12,  COL_TEXT, "");
+                            ok = false;
+                        } else if (p->officer_fired_nopay(menu_new_officer, menu_new_officer_quality)) {
+                            if ((exostate().get_month() % 2) == 0) {
+                                menu_set_txt(9,  COL_TEXT, "%s is angry about having been", tn);
+                                menu_set_txt(10,  COL_TEXT, "dismissed without pay, and has refused");
+                                menu_set_txt(11,  COL_TEXT, "your offer. Perhaps another time...");
+                                menu_set_txt(12,  COL_TEXT, "");
+                                ok = false;
+                            }
+                        } else if (p->officer_quit(menu_new_officer, menu_new_officer_quality)) {
+                            if ((exostate().get_month() % 2) == 0) {
+                                menu_set_txt(9,  COL_TEXT, "%s is angry about having been", tn);
+                                menu_set_txt(10,  COL_TEXT, "unpaid, and has refused your offer.");
+                                menu_set_txt(11,  COL_TEXT, "Perhaps another time...");
+                                menu_set_txt(12,  COL_TEXT, "");
+                                ok = false;
+                            }
+                        } else if (p->officer_killed(menu_new_officer, menu_new_officer_quality)) {
+                            menu_set_txt(9,  COL_TEXT, "We cannot hire %s, %s.", tn, p->get_ref());
+                            menu_set_txt(10,  COL_TEXT, "");
+                            menu_set_txt(11,  COL_TEXT, "You had them killed.");
+                            menu_set_txt(12,  COL_TEXT, "");
+                            ok = false;
+                        }
+
+                        if (ok && !p->attempt_spend(engagement_cost, MC_NewOfficer)) {
+                            ok = false;
+                            menu_set_txt(9,  COL_TEXT, "We cannot afford %s, %s.", tn, p->get_ref());
+                            menu_set_txt(10,  COL_TEXT, "");
+                            menu_set_txt(11,  COL_TEXT, "");
+                            menu_set_txt(12,  COL_TEXT, "");
+                        }
+
+                        if (ok) {
                             menu_old_officer_quality = p->get_officer(menu_new_officer);
                             draw_manager.draw(id_menu_newoff_opt, nullptr);
                             p->set_officer(menu_new_officer, menu_new_officer_quality);
