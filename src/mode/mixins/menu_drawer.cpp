@@ -1228,7 +1228,7 @@ void MenuDrawer::menu_open_specific_mode() {
 
                     if (FEATURE(EF_LORD_DISCOVERY) && !exostate().check_lord_discovery(p_idx, other_idx)) {
                         display_name = "?????";
-                        snprintf(rel, sizeof(rel), "");
+                        snprintf(rel, sizeof(rel), " ");
                         lordcol = COL_TEXT_GREYED;
                         relcol = COL_TEXT_GREYED;
                     } else {
