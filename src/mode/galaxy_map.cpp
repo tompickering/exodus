@@ -2662,7 +2662,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
     if (mp_state.mpai_stage == MPAI_Die) {
         if (exostate().get_n_active_cpu_players() > 0 && exostate().get_orig_month() > 50) {
-            if (onein(1000)) {
+            if (!(FEATURE(EF_CHARACTERS)) && onein(1000)) {
                 char oldname[MAX_PLAYER_NAME];
                 char oldfullname[MAX_PLAYER_FULLNAME];
                 snprintf(oldname, MAX_PLAYER_NAME, player->get_name());
