@@ -600,7 +600,12 @@ void MenuDrawer::menu_open_specific_mode() {
             break;
         case MM_OldOfficer:
             {
-                menu_set_txt(0, COL_TEXT, "What do you want to do with the old officer?");
+                if (FEATURE(EF_OFFICER_CHARACTERS)) {
+                    const char* tn = Player::get_officer_character_title_and_name(menu_new_officer, menu_old_officer_quality);
+                    menu_set_txt(0, COL_TEXT, "What do you want to do with %s?", tn);
+                } else {
+                    menu_set_txt(0, COL_TEXT, "What do you want to do with the old officer?");
+                }
                 menu_set_opt(2, "Pay " STR(OFF_PAY_MC) "MC for their work", p->can_afford(OFF_PAY_MC));
                 menu_set_opt(3, "Dismiss");
                 menu_set_opt(4, "Kill");
@@ -615,14 +620,24 @@ void MenuDrawer::menu_open_specific_mode() {
         case MM_OldOfficerDismissed:
             {
                 p->register_officer_fired_nopay(menu_new_officer, menu_old_officer_quality);
-                menu_set_txt(0, COL_TEXT, "The old officer has been dismissed without");
+                if (FEATURE(EF_OFFICER_CHARACTERS)) {
+                    const char* tn = Player::get_officer_character_title_and_name(menu_new_officer, menu_old_officer_quality);
+                    menu_set_txt(0, COL_TEXT, "%s has been dismissed without", tn);
+                } else {
+                    menu_set_txt(0, COL_TEXT, "The old officer has been dismissed without");
+                }
                 menu_set_txt(1, COL_TEXT, "any payment for their work.");
             }
             break;
         case MM_OldOfficerKilled:
             {
                 p->register_officer_killed(menu_new_officer, menu_old_officer_quality);
-                menu_set_txt(0, COL_TEXT, "The old officer has been shot.");
+                if (FEATURE(EF_OFFICER_CHARACTERS)) {
+                    const char* tn = Player::get_officer_character_name(menu_new_officer, menu_old_officer_quality);
+                    menu_set_txt(0, COL_TEXT, "%s has been shot.", tn);
+                } else {
+                    menu_set_txt(0, COL_TEXT, "The old officer has been shot.");
+                }
                 menu_set_txt(1, COL_TEXT, "Will this be good for your reputation?");
             }
             break;
