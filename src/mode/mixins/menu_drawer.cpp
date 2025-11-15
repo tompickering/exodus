@@ -129,69 +129,69 @@ static const char* off_desc_char_poor[] = {
     "The poorly-rated officer has no special",
     "abilities.",
     "",
-    "However, you might choose them because",
-    "they demand no special salary.",
+    "",
+    "",
 };
 
 static const char* off_desc_char_avg_sci[] = {
-    "The scientists will work better and",
-    "faster under the leadership of this",
-    "officer.",
+    "The scientists will work better and faster",
+    "under the leadership of this officer.",
+    "",
     "",
     "",
 };
 
 static const char* off_desc_char_good_sci[] = {
-    "The scientists will do their best to",
-    "create new inventions and make new",
-    "biological discoveries under the",
-    "leadership of this officer.",
+    "The scientists will do their best to create new",
+    "inventions and make new biological discoveries",
+    "under the leadership of this officer.",
+    "",
     "",
 };
 
 static const char* off_desc_char_avg_flt[] = {
-    "This admiral will train your space pilots",
-    "to be more accurate and effective",
-    "during space combat.",
+    "This commander will train your space pilots to",
+    "be more accurate and effective during space.",
+    "combat.",
     "",
     "",
 };
 
 static const char* off_desc_char_good_flt[] = {
-    "This admiral will give your space pilots",
-    "very effective training which will improve",
-    "their fighting abilities as much as",
-    "possible.",
+    "This admiral will give your space pilots very",
+    "effective training which will improve their",
+    "fighting abilities as much as possible.",
+    "",
     "",
 };
 
 static const char* off_desc_char_avg_btl[] = {
-    "Your battle units will be more effective",
-    "under the control of this general.",
-    "",
-    "",
+    "Your battle units will be more effective.",
+    "Infantry can spot mines and you can see hits",
+    "scored on enemy units. Killing any superior",
+    "unit will grant unit promotion.",
     "",
 };
 
 static const char* off_desc_char_good_btl[] = {
-    "This battle general promises to give your",
-    "battle units much better accuracy in",
-    "lunar battles due to a new organisation",
-    "within the unit clusters.",
+    "Your battle units gain deadly precision. You can",
+    "see the exact HP of enemy units. Discovered",
+    "mines remain visible, and like-for-like kills grant",
+    "promotions.",
     "",
 };
 
 static const char* off_desc_char_avg_sec[] = {
-    "This skilled agent will improve the skills",
-    "of your agents and terrorists so that they",
-    "can work more accurately.",
-    "He also trains his agents to be more watchful",
-    "in case of enemy terrorist attacks.",
+    "This skilled leader will improve the skills of",
+    "your agents and terrorists so that they can",
+    "work more accurately. He understands",
+    "planetary defense systems.",
+    "",
 };
 
 static const char* off_desc_char_good_sec[] = {
-    "This agent will allow all of your agency",
-    "staff to work at maximum efficiency.",
+    "This agent will allow all of your agency staff to",
+    "work at maximum efficiency.",
     "",
     "",
     "",
