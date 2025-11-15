@@ -43,13 +43,13 @@ void Finance::draw_finance(FinanceReport report) {
     int m = max(1, exostate().get_month() - 1);
 
     draw_manager.draw_text(
-        "Gains",
+        "Income",
         Justify::Centre,
         RES_X/4 - 12, 60,
         COL_TEXT2);
 
     draw_manager.draw_text(
-        "Losses",
+        "Expenses",
         Justify::Centre,
         (3*RES_X)/4 + 12, 60,
         COL_TEXT2);
