@@ -1002,6 +1002,9 @@ void StarMap::set_stage(Stage new_stage) {
                 id(ID::BTN_GUIDE),
                 IMG_BTNGUIDE,
                 {RES_X-4, 4, 1, 0, 1, 1});
+            update_panel_info_planet(TGT_Primary,
+                                     exostate().get_active_player(),
+                                     exostate().get_active_planet());
             break;
         default:
             break;

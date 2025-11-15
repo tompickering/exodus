@@ -46,6 +46,9 @@ class PanelDrawer {
         SprID id_desc;
         SprID id_desc1;
         SprID id_desc2;
+        SprID id_lord_thumb;
+        SprID id_lord_emb;
+        SprID id_lord_status;
         SprID id_planet_icons[STAR_MAX_PLANETS];
         SprID id_marker_icons[STAR_MAX_PLANETS];
         SprID id_fleet_icons[PNL_MAX_FLEETS];

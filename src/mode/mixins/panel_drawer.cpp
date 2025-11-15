@@ -32,6 +32,9 @@ PanelDrawer::PanelDrawer(PanelType _type) : type(_type) {
     id_desc        = draw_manager.new_sprite_id();
     id_desc1       = draw_manager.new_sprite_id();
     id_desc2       = draw_manager.new_sprite_id();
+    id_lord_thumb  = draw_manager.new_sprite_id();
+    id_lord_emb    = draw_manager.new_sprite_id();
+    id_lord_status = draw_manager.new_sprite_id();
 
     for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
         id_planet_icons[i] = draw_manager.new_sprite_id();
@@ -275,6 +278,9 @@ void PanelDrawer::update_panel_info_planet(DrawTarget tgt, Player *player, Plane
         draw_manager.draw(id_desc,  nullptr);
         draw_manager.draw(id_desc1, nullptr);
         draw_manager.draw(id_desc2, nullptr);
+        draw_manager.draw(id_lord_thumb, nullptr);
+        draw_manager.draw(id_lord_emb, nullptr);
+        draw_manager.draw(id_lord_status, nullptr);
         return;
     }
 
@@ -315,6 +321,30 @@ void PanelDrawer::update_panel_info_planet(DrawTarget tgt, Player *player, Plane
         area_starinfo.x + 4,
         area_starinfo.y + 2*PNL_Y_SEP,
         COL_TEXT);
+
+    draw_manager.draw(id_lord_thumb, nullptr);
+    draw_manager.draw(id_lord_emb, nullptr);
+    draw_manager.draw(id_lord_status, nullptr);
+
+    if (FEATURE(EF_LORD_DISCOVERY) && planet->is_owned()) {
+        int p_idx = exostate().get_player_idx(player);
+        int o_idx = planet->get_owner();
+        if (exostate().check_lord_discovery(p_idx, o_idx)) {
+            Player *owner = exostate().get_player(o_idx);
+
+            draw_manager.draw(
+                id_lord_thumb,
+                owner->get_icon(),
+                {area_starinfo.x + area_starinfo.w - 6, area_starinfo.y + 6,
+                 1, 0, 1, 1});
+        } else {
+            draw_manager.draw(
+                id_lord_thumb,
+                IMG_LTHUMB_UNKNOWN,
+                {area_starinfo.x + area_starinfo.w - 6, area_starinfo.y + 6,
+                 1, 0, 1, 1});
+        }
+    }
 }
 
 void PanelDrawer::panel_clear_starinfo() {
@@ -322,6 +352,9 @@ void PanelDrawer::panel_clear_starinfo() {
     draw_manager.draw(id_desc, nullptr);
     draw_manager.draw(id_desc1, nullptr);
     draw_manager.draw(id_desc2, nullptr);
+    draw_manager.draw(id_lord_thumb, nullptr);
+    draw_manager.draw(id_lord_emb, nullptr);
+    draw_manager.draw(id_lord_status, nullptr);
 
     for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
         draw_manager.draw(id_planet_icons[i], nullptr);
