@@ -534,11 +534,19 @@ void MenuDrawer::menu_open_specific_mode() {
                 menu_set_txt(2,  COL_TEXT,  "Science:");
                 menu_set_txt(3,  COL_TEXT,  "Taxes:");
                 menu_set_txt(6,  COL_TEXT,  "Leading Officers");
-                menu_set_txt(8,  COL_TEXT,  "Science Officer");
-                menu_set_txt(9,  COL_TEXT,  "Fleet Admiral");
-                menu_set_txt(10, COL_TEXT,  "Battle General");
-                menu_set_txt(11, COL_TEXT,  "Secret Service Leader");
-                menu_set_txt(12, COL_TEXT,  "Ship Counsellor");
+                if (FEATURE(EF_OFFICER_CHARACTERS)) {
+                    menu_set_txt(8,  COL_TEXT, Player::get_officer_character_desc(OFF_Science));
+                    menu_set_txt(9,  COL_TEXT, Player::get_officer_character_desc(OFF_Fleet));
+                    menu_set_txt(10, COL_TEXT, Player::get_officer_character_desc(OFF_Battle));
+                    menu_set_txt(11, COL_TEXT, Player::get_officer_character_desc(OFF_Secret));
+                    menu_set_txt(12, COL_TEXT, Player::get_officer_character_desc(OFF_Counsellor));
+                } else {
+                    menu_set_txt(8,  COL_TEXT, "Science Officer");
+                    menu_set_txt(9,  COL_TEXT, "Fleet Admiral");
+                    menu_set_txt(10, COL_TEXT, "Battle General");
+                    menu_set_txt(11, COL_TEXT, "Secret Service Leader");
+                    menu_set_txt(12, COL_TEXT, "Ship Counsellor");
+                }
                 menu_set_opt(14, "Exit");
                 input_manager.enable_repeating_clicks(true);
             }
