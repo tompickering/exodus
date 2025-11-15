@@ -329,20 +329,44 @@ void PanelDrawer::update_panel_info_planet(DrawTarget tgt, Player *player, Plane
     if (FEATURE(EF_LORD_DISCOVERY) && planet->is_owned()) {
         int p_idx = exostate().get_player_idx(player);
         int o_idx = planet->get_owner();
-        if (exostate().check_lord_discovery(p_idx, o_idx)) {
-            Player *owner = exostate().get_player(o_idx);
+        if (p_idx != o_idx) {
+            if (exostate().check_lord_discovery(p_idx, o_idx)) {
+                Player *owner = exostate().get_player(o_idx);
 
-            draw_manager.draw(
-                id_lord_thumb,
-                owner->get_icon(),
-                {area_starinfo.x + area_starinfo.w - 6, area_starinfo.y + 6,
-                 1, 0, 1, 1});
-        } else {
-            draw_manager.draw(
-                id_lord_thumb,
-                IMG_LTHUMB_UNKNOWN,
-                {area_starinfo.x + area_starinfo.w - 6, area_starinfo.y + 6,
-                 1, 0, 1, 1});
+                const char* rel = IMG_REL_NONE;
+
+                if (exostate().is_allied(p_idx, o_idx)) {
+                    rel = IMG_REL_ALLY;
+                }
+
+                if (owner->is_hostile_to(p_idx)) {
+                    rel = IMG_REL_HOSTILE;
+                }
+
+                draw_manager.draw(
+                    id_lord_thumb,
+                    owner->get_icon(),
+                    {area_starinfo.x + area_starinfo.w - 6, area_starinfo.y + 6,
+                     1, 0, 1, 1});
+
+                draw_manager.draw(
+                    id_lord_emb,
+                    emblems[owner->get_flag_idx()],
+                    {area_starinfo.x + area_starinfo.w - 6 - 54, area_starinfo.y + 6,
+                     1, 0, 1, 1});
+
+                draw_manager.draw(
+                    id_lord_status,
+                    rel,
+                    {area_starinfo.x + area_starinfo.w - 6 - 56, area_starinfo.y + area_starinfo.h - 6,
+                     1, 1, 1, 1});
+            } else {
+                draw_manager.draw(
+                    id_lord_thumb,
+                    IMG_LTHUMB_UNKNOWN,
+                    {area_starinfo.x + area_starinfo.w - 6, area_starinfo.y + 6,
+                     1, 0, 1, 1});
+            }
         }
     }
 }

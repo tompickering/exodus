@@ -31,6 +31,7 @@
 extern int QUICKSAVE_SLOT;
 
 extern const char* flags[];
+extern const char* emblems[];
 
 enum GalaxySize {
     GAL_Small,
