@@ -1685,6 +1685,14 @@ bool MenuDrawer::menu_specific_update() {
                     draw_manager.fill(
                         {MENU_X+MENU_W-MENU_BORDER-37, MENU_Y+MENU_H-MENU_BORDER-28, 35, 26},
                         COL_BORDERS);
+                    draw_manager.fill(
+                        FILL_3D_Out_Hollow,
+                        {MENU_X+MENU_BORDER+2, MENU_Y+MENU_H-MENU_BORDER-28, 35, 26},
+                        COL_BORDERS);
+                    draw_manager.fill(
+                        FILL_3D_Out_Hollow,
+                        {MENU_X+MENU_W-MENU_BORDER-37, MENU_Y+MENU_H-MENU_BORDER-28, 35, 26},
+                        COL_BORDERS);
                 }
 
                 SpriteClick clk = draw_manager.query_click(id_menu_newoff_opt);
