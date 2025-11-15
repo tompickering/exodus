@@ -173,6 +173,7 @@ ExodusMode GalaxyMap::update(float delta) {
              * This is because text can't be repaired.
              */
             draw_markers(false, true);
+            draw_planet_markers(false);
 
             draw_manager.show_cursor(true);
 

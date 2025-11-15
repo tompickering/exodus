@@ -133,6 +133,7 @@ void GalaxyDrawer::draw_galaxy(bool pixelswap) {
         draw_manager.draw(tgt, star_ids[siter.get_idx()], spr, {x, y, 0.5, 0.5, 1, 1});
     }
 
+    draw_markers(pixelswap, false);
     draw_planet_markers(pixelswap);
 
     Galaxy *gal = exostate().get_galaxy();
@@ -151,8 +152,6 @@ void GalaxyDrawer::draw_galaxy(bool pixelswap) {
     for (int i = 0; i < N_MARKERS; ++i) {
         marker_text_ids[i] = draw_manager.new_sprite_id();
     }
-
-    draw_markers(pixelswap, false);
 }
 
 void GalaxyDrawer::draw_planet_markers(bool pixelswap) {
