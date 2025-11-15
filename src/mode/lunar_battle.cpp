@@ -2749,8 +2749,8 @@ void LunarBattle::update_panel_new() {
 
             Planet *p = exostate().get_active_planet();
 
-            draw_manager.draw_text("The battle of", Justify::Left, 12, 18, COL_TEXT);
-            draw_manager.draw_text(p->get_name(), Justify::Left, 12, 36, COL_TEXT);
+            draw_manager.draw_text("The battle of", Justify::Left, 12, 16, COL_TEXT);
+            draw_manager.draw_text(p->get_name(), Justify::Left, 12, 34, COL_TEXT);
 
             DrawArea a = {0, 0, 40, 40};
             draw_manager.set_source_region(id(ID::PANEL_UNIT_BG), &a);
