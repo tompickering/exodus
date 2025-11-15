@@ -288,10 +288,20 @@ void MenuDrawer::menu_open(MenuMode mode) {
             {MENU_X, MENU_Y,
              MENU_W, MENU_H},
             COL_BORDERS);
+        draw_manager.fill(
+            FILL_3D_Out_Hollow,
+            {MENU_X, MENU_Y,
+             MENU_W, MENU_H},
+            COL_BORDERS);
 
         // Draw header flag and background
         draw_manager.fill(
             id_menu_header_flag_bg,
+            {MENU_FLAG_BG_X, MENU_FLAG_BG_Y,
+             MENU_FLAG_BG_W, MENU_FLAG_BG_H},
+             COL_BORDERS);
+        draw_manager.fill(
+            FILL_3D_Out_Hollow,
             {MENU_FLAG_BG_X, MENU_FLAG_BG_Y,
              MENU_FLAG_BG_W, MENU_FLAG_BG_H},
              COL_BORDERS);
