@@ -214,13 +214,12 @@ static const char* tool_desc_academy[] = {
     "An academy fosters collaboration in this",
     "solar system and attracts foreign talent.",
     "",
-    "Other planets in this system that don't",
-    "have an academy may lose their city",
+    "Other planets in this system that have",
+    "fewer academies may lose their city",
     "expansions to your planet.",
     "",
-    "All planets in this system that belong to",
-    "you and have academies will provide each",
-    "other with a research boost.",
+    "Academies also provide a boost to",
+    "scientific progress.",
 };
 
 static const char* tool_desc_park[] = {
