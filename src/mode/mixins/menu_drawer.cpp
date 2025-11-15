@@ -607,8 +607,14 @@ void MenuDrawer::menu_open_specific_mode() {
                     menu_set_txt(0, COL_TEXT, "What do you want to do with the old officer?");
                 }
                 menu_set_opt(2, "Pay " STR(OFF_PAY_MC) "MC for their work", p->can_afford(OFF_PAY_MC));
-                menu_set_opt(3, "Dismiss");
-                menu_set_opt(4, "Kill");
+
+                if (FEATURE(EF_OFFICER_CHARACTERS)) {
+                    menu_set_opt(3, "Dismiss Without Honours");
+                    menu_set_opt(4, "Incarcerate");
+                } else {
+                    menu_set_opt(3, "Dismiss");
+                    menu_set_opt(4, "Kill");
+                }
             }
             break;
         case MM_OldOfficerPaid:
@@ -634,7 +640,7 @@ void MenuDrawer::menu_open_specific_mode() {
                 p->register_officer_killed(menu_new_officer, menu_old_officer_quality);
                 if (FEATURE(EF_OFFICER_CHARACTERS)) {
                     const char* tn = Player::get_officer_character_name(menu_new_officer, menu_old_officer_quality);
-                    menu_set_txt(0, COL_TEXT, "%s has been shot.", tn);
+                    menu_set_txt(0, COL_TEXT, "%s has been sent to a penal colony.", tn);
                 } else {
                     menu_set_txt(0, COL_TEXT, "The old officer has been shot.");
                 }
@@ -1986,7 +1992,7 @@ bool MenuDrawer::menu_specific_update() {
                     }
 
                     if (p->officer_killed(menu_new_officer, menu_new_officer_quality)) {
-                        off_status = "Dead";
+                        off_status = "Incarcerated";
                         off_status_col = COL_TEXT_BAD;
                     }
 
@@ -2050,12 +2056,6 @@ bool MenuDrawer::menu_specific_update() {
                                 menu_set_txt(12,  COL_TEXT, "");
                                 ok = false;
                             }
-                        } else if (p->officer_killed(menu_new_officer, menu_new_officer_quality)) {
-                            menu_set_txt(9,  COL_TEXT, "We cannot hire %s, %s.", tn, p->get_ref());
-                            menu_set_txt(10,  COL_TEXT, "");
-                            menu_set_txt(11,  COL_TEXT, "You had them killed.");
-                            menu_set_txt(12,  COL_TEXT, "");
-                            ok = false;
                         }
 
                         if (ok && !p->attempt_spend(engagement_cost, MC_NewOfficer)) {
