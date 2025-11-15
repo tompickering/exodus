@@ -72,6 +72,7 @@ void Finance::draw_finance(FinanceReport report) {
 
     const int items_base_y = 90;
     const int items_spacing_v = 16;
+    const int items_spacing_v_big = 22;
 
     const int col0 = 10;
     const int col7 = RES_X - 10;
@@ -83,6 +84,7 @@ void Finance::draw_finance(FinanceReport report) {
     const int col5 = col4 + 120;
 
     const int max_items_per_col = 20;
+    const int max_items_per_col_big = 14;
 
     const int* gains = nullptr;
     const int* losses = nullptr;
@@ -101,11 +103,34 @@ void Finance::draw_finance(FinanceReport report) {
     int gains_total = 0;
     int losses_total = 0;
 
+    int gains_lines = 0;
+    int losses_lines = 0;
+
+    for (int i = 0; i < MC_MAX; ++i) {
+        if (gains[i] == 0) { continue; }
+        ++gains_lines;
+    }
+
+    for (int i = 0; i < MC_MAX; ++i) {
+        if (losses[i] == 0) { continue; }
+        ++losses_lines;
+    }
+
+    bool draw_big = false;
+
+    if (gains_lines <= max_items_per_col_big && losses_lines <= max_items_per_col_big) {
+        draw_big = true;
+    }
+
     int x_header = col0;
     int x_mc = col1;
     int y = items_base_y;
 
     int n = 0;
+
+    if (draw_big) {
+        x_mc = col3;
+    }
 
     for (int i = 0; i < MC_MAX; ++i) {
         if (n == max_items_per_col) {
@@ -121,7 +146,7 @@ void Finance::draw_finance(FinanceReport report) {
         gains_total += gains[i];
 
         draw_manager.draw_text(
-            Font::Tiny,
+            draw_big ? Font::Default : Font::Tiny,
             cat2header(i),
             Justify::Left,
             x_header, y,
@@ -129,19 +154,24 @@ void Finance::draw_finance(FinanceReport report) {
 
         snprintf(t, sizeof(t), "%dMC", gains[i]);
         draw_manager.draw_text(
-            Font::Tiny,
+            draw_big ? Font::Default : Font::Tiny,
             t,
             Justify::Right,
             x_mc, y,
             {0x00, 0xFF, 0x00});
 
-        y += items_spacing_v;
+        y += draw_big ? items_spacing_v_big : items_spacing_v;
         ++n;
     }
 
     x_header = col4;
     x_mc = col5;
     y = items_base_y;
+
+    if (draw_big) {
+        x_mc = col7;
+    }
+
     n = 0;
     for (int i = 0; i < MC_MAX; ++i) {
         if (n == max_items_per_col) {
@@ -157,7 +187,7 @@ void Finance::draw_finance(FinanceReport report) {
         losses_total += losses[i];
 
         draw_manager.draw_text(
-            Font::Tiny,
+            draw_big ? Font::Default : Font::Tiny,
             cat2header(i),
             Justify::Left,
             x_header, y,
@@ -165,13 +195,13 @@ void Finance::draw_finance(FinanceReport report) {
 
         snprintf(t, sizeof(t), "%dMC", losses[i]);
         draw_manager.draw_text(
-            Font::Tiny,
+            draw_big ? Font::Default : Font::Tiny,
             t,
             Justify::Right,
             x_mc, y,
             {0xFF, 0x00, 0x00});
 
-        y += items_spacing_v;
+        y += draw_big ? items_spacing_v_big : items_spacing_v;
         ++n;
     }
 
