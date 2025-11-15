@@ -4427,6 +4427,11 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 } else {
                     threshold -= 1;
                 }
+
+                // Ensure academies can't help without funding
+                if (owner->get_tax() < 8) {
+                    threshold -= 10;
+                }
             }
 
             if (RND(40) <= threshold) {
@@ -4676,6 +4681,11 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                             threshold += 2;
                         } else {
                             threshold -= 1;
+                        }
+
+                        // Ensure academies can't help without funding
+                        if (owner->get_tax() < 8) {
+                            threshold -= 10;
                         }
                     }
 
