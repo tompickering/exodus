@@ -9,6 +9,7 @@
 
 enum FinanceReport {
     FR_LastMonth,
+    FR_OverLastMonth,
     FR_ThisMonth,
 };
 

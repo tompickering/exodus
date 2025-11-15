@@ -23,6 +23,8 @@ void Finance::draw_finance(FinanceReport report) {
 
     if (report == FR_LastMonth) {
         snprintf(heading, sizeof(heading), "Finances: Last Month");
+    } else if (report == FR_OverLastMonth) {
+        snprintf(heading, sizeof(heading), "Finances: Over Last Month");
     } else {
         snprintf(heading, sizeof(heading), "Finances: This Month");
     }
@@ -52,7 +54,7 @@ void Finance::draw_finance(FinanceReport report) {
         (3*RES_X)/4 + 12, 60,
         COL_TEXT2);
 
-    if (current_report == FR_ThisMonth) {
+    if (current_report == FR_OverLastMonth) {
         snprintf(t, sizeof(t), "Month %d End: %dMC", m-1, p->get_mc_month_end());
         draw_manager.draw_text(
             t,
@@ -88,6 +90,9 @@ void Finance::draw_finance(FinanceReport report) {
     if (report == FR_LastMonth) {
         gains = p->get_gains_last_month();
         losses = p->get_losses_last_month();
+    } else if (report == FR_OverLastMonth) {
+        gains = p->get_gains_over_last_month();
+        losses = p->get_losses_over_last_month();
     } else {
         gains = p->get_gains_this_month();
         losses = p->get_losses_this_month();
@@ -210,6 +215,11 @@ void Finance::draw_finance(FinanceReport report) {
 ExodusMode Finance::update(float delta) {
     if (draw_manager.clicked() || input_manager.consume(K_F)) {
         if (current_report == FR_LastMonth) {
+            draw_finance(FR_OverLastMonth);
+            return ExodusMode::MODE_None;
+        }
+
+        if (current_report == FR_OverLastMonth) {
             draw_finance(FR_ThisMonth);
             return ExodusMode::MODE_None;
         }

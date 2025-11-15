@@ -512,6 +512,8 @@ class Player : public Saveable {
 
         const int* get_gains_last_month(){ return mc_gains_last_month; }
         const int* get_losses_last_month(){ return mc_losses_last_month; }
+        const int* get_gains_over_last_month(){ return mc_gains_over_last_month; }
+        const int* get_losses_over_last_month(){ return mc_losses_over_last_month; }
         const int* get_gains_this_month(){ return mc_gains_this_month; }
         const int* get_losses_this_month(){ return mc_losses_this_month; }
 
@@ -563,6 +565,8 @@ class Player : public Saveable {
         int mc_losses_lifetime[MAX_MC_CATEGORIES];
         int mc_gains_last_month[MAX_MC_CATEGORIES];
         int mc_losses_last_month[MAX_MC_CATEGORIES];
+        int mc_gains_over_last_month[MAX_MC_CATEGORIES];
+        int mc_losses_over_last_month[MAX_MC_CATEGORIES];
         int mc_gains_this_month[MAX_MC_CATEGORIES];
         int mc_losses_this_month[MAX_MC_CATEGORIES];
 

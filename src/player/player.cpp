@@ -1214,6 +1214,15 @@ void Player::save_mc_month_end() {
 
 void Player::save_mc_month_start() {
     mc_at_start_of_current_month = mc;
+
+    for (int i = 0; i < MAX_MC_CATEGORIES; ++i) {
+        mc_gains_lifetime[i] += mc_gains_this_month[i];
+        mc_losses_lifetime[i] += mc_losses_this_month[i];
+        mc_gains_over_last_month[i] = mc_gains_this_month[i];
+        mc_losses_over_last_month[i] = mc_losses_this_month[i];
+        mc_gains_this_month[i] = 0;
+        mc_losses_this_month[i] = 0;
+    }
 }
 
 void Player::adjust_mc(int amount, MCReason reason) {
@@ -1283,6 +1292,8 @@ void Player::save(cJSON* j) const
     SAVE_ARRAY_OF_NUM(j, mc_losses_lifetime);
     SAVE_ARRAY_OF_NUM(j, mc_gains_last_month);
     SAVE_ARRAY_OF_NUM(j, mc_losses_last_month);
+    SAVE_ARRAY_OF_NUM(j, mc_gains_over_last_month);
+    SAVE_ARRAY_OF_NUM(j, mc_losses_over_last_month);
     SAVE_ARRAY_OF_NUM(j, mc_gains_this_month);
     SAVE_ARRAY_OF_NUM(j, mc_losses_this_month);
     SAVE_ARRAY_OF_NUM(j, mc_history);
@@ -1337,6 +1348,8 @@ void Player::load(cJSON* j)
     LOAD_ARRAY_OF_NUM(j, mc_losses_lifetime);
     LOAD_ARRAY_OF_NUM(j, mc_gains_last_month);
     LOAD_ARRAY_OF_NUM(j, mc_losses_last_month);
+    SAVE_ARRAY_OF_NUM(j, mc_gains_over_last_month);
+    SAVE_ARRAY_OF_NUM(j, mc_losses_over_last_month);
     LOAD_ARRAY_OF_NUM(j, mc_gains_this_month);
     LOAD_ARRAY_OF_NUM(j, mc_losses_this_month);
     LOAD_ARRAY_OF_NUM(j, mc_history);
