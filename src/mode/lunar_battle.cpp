@@ -2749,8 +2749,19 @@ void LunarBattle::update_panel_new() {
 
             Planet *p = exostate().get_active_planet();
 
-            draw_manager.draw_text("The battle of", Justify::Left, 12, 16, COL_TEXT);
-            draw_manager.draw_text(p->get_name(), Justify::Left, 12, 34, COL_TEXT);
+            if (FEATURE(EF_OFFICER_CHARACTERS)) {
+                OfficerQuality offq = (aggressor && aggressor->is_human()) ? agg_officer : def_officer;
+                draw_manager.draw_text(Player::get_officer_character_title_and_name(OFF_Battle, offq), Justify::Left, 12, 14, COL_TEXT);
+                const char* offq_txt = "Poor";
+                if (offq == OFFQ_Average) offq_txt = "Average";
+                if (offq == OFFQ_Good) offq_txt = "Good";
+                char text[32];
+                snprintf(text, sizeof(text), "Rating: %s", offq_txt);
+                draw_manager.draw_text(text, Justify::Left, 12, 36, COL_TEXT_GREYED);
+            } else {
+                draw_manager.draw_text("The battle of", Justify::Left, 12, 16, COL_TEXT);
+                draw_manager.draw_text(p->get_name(), Justify::Left, 12, 34, COL_TEXT);
+            }
 
             DrawArea a = {0, 0, 40, 40};
             draw_manager.set_source_region(id(ID::PANEL_UNIT_BG), &a);
