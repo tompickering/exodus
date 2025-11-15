@@ -122,6 +122,97 @@ static const char* off_desc_good_clr[] = {
     "",
 };
 
+
+// Officer characters
+
+static const char* off_desc_char_poor[] = {
+    "The poorly-rated officer has no special",
+    "abilities.",
+    "",
+    "However, you might choose them because",
+    "they demand no special salary.",
+};
+
+static const char* off_desc_char_avg_sci[] = {
+    "The scientists will work better and",
+    "faster under the leadership of this",
+    "officer.",
+    "",
+    "",
+};
+
+static const char* off_desc_char_good_sci[] = {
+    "The scientists will do their best to",
+    "create new inventions and make new",
+    "biological discoveries under the",
+    "leadership of this officer.",
+    "",
+};
+
+static const char* off_desc_char_avg_flt[] = {
+    "This admiral will train your space pilots",
+    "to be more accurate and effective",
+    "during space combat.",
+    "",
+    "",
+};
+
+static const char* off_desc_char_good_flt[] = {
+    "This admiral will give your space pilots",
+    "very effective training which will improve",
+    "their fighting abilities as much as",
+    "possible.",
+    "",
+};
+
+static const char* off_desc_char_avg_btl[] = {
+    "Your battle units will be more effective",
+    "under the control of this general.",
+    "",
+    "",
+    "",
+};
+
+static const char* off_desc_char_good_btl[] = {
+    "This battle general promises to give your",
+    "battle units much better accuracy in",
+    "lunar battles due to a new organisation",
+    "within the unit clusters.",
+    "",
+};
+
+static const char* off_desc_char_avg_sec[] = {
+    "This skilled agent will improve the skills",
+    "of your agents and terrorists so that they",
+    "can work more accurately.",
+    "He also trains his agents to be more watchful",
+    "in case of enemy terrorist attacks.",
+};
+
+static const char* off_desc_char_good_sec[] = {
+    "This agent will allow all of your agency",
+    "staff to work at maximum efficiency.",
+    "",
+    "",
+    "",
+};
+
+static const char* off_desc_char_avg_clr[] = {
+    "This counsellor's knowledge also includes",
+    "planetary defense systems and other small",
+    "details compared to a poorly-rated",
+    "counsellor.",
+    "",
+};
+
+static const char* off_desc_char_good_clr[] = {
+    "This counsellor's knowledge of planetary",
+    "defense systems and market prices is",
+    "unrivalled.",
+    "",
+    "",
+};
+
 MenuDrawer::MenuDrawer()
     : _menu_is_open(false)
     , menu_new_officer((Officer)0)
@@ -150,6 +241,10 @@ MenuAction MenuDrawer::menu_get_action() {
 }
 
 void MenuDrawer::menu_open(MenuMode mode) {
+    if (FEATURE(EF_OFFICER_CHARACTERS)) {
+        if (mode == MM_NewOfficer) mode = MM_NewOfficerCharacter;
+    }
+
     menu_mode = mode;
     menu_action = MA_None;
     menu_clickable_rows = 0;
@@ -511,6 +606,56 @@ void MenuDrawer::menu_open_specific_mode() {
                 p->register_officer_killed(menu_new_officer, menu_old_officer_quality);
                 menu_set_txt(0, COL_TEXT, "The old officer has been shot.");
                 menu_set_txt(1, COL_TEXT, "Will this be good for your reputation?");
+            }
+            break;
+        case MM_NewOfficerCharacter:
+            {
+                const char* off_str = "Science Officer";
+                const char** off_desc = &off_desc_char_poor[0];
+                const OfficerQuality &q = menu_new_officer_quality;
+
+                switch (menu_new_officer) {
+                    case OFF_Science:
+                        off_str = Player::get_officer_character_desc(OFF_Science);
+                        if (q==OFFQ_Average) off_desc = off_desc_char_avg_sci;
+                        if (q==OFFQ_Good)    off_desc = off_desc_char_good_sci;
+                        break;
+                    case OFF_Fleet:
+                        off_str = Player::get_officer_character_desc(OFF_Fleet);
+                        if (q==OFFQ_Average) off_desc = off_desc_char_avg_flt;
+                        if (q==OFFQ_Good)    off_desc = off_desc_char_good_flt;
+                        break;
+                    case OFF_Battle:
+                        off_str = Player::get_officer_character_desc(OFF_Battle);
+                        if (q==OFFQ_Average) off_desc = off_desc_char_avg_btl;
+                        if (q==OFFQ_Good)    off_desc = off_desc_char_good_btl;
+                        break;
+                    case OFF_Secret:
+                        off_str = Player::get_officer_character_desc(OFF_Secret);
+                        if (q==OFFQ_Average) off_desc = off_desc_char_avg_sec;
+                        if (q==OFFQ_Good)    off_desc = off_desc_char_good_sec;
+                        break;
+                    case OFF_Counsellor:
+                        off_str = Player::get_officer_character_desc(OFF_Counsellor);
+                        if (q==OFFQ_Average) off_desc = off_desc_char_avg_clr;
+                        if (q==OFFQ_Good)    off_desc = off_desc_char_good_clr;
+                        break;
+                    default:
+                        L.error("Unknown officer: %d", (int)menu_new_officer);
+                        break;
+                }
+
+                menu_set_txt(0,  COL_TEXT2, "New %s", off_str);
+                menu_set_txt(2,  COL_TEXT,  "Rank:");
+                menu_set_txt(3,  COL_TEXT,  "Name:");
+                menu_set_txt(4,  COL_TEXT,  "Classification:");
+                menu_set_txt(5,  COL_TEXT,  "Engagement cost:");
+                menu_set_txt(6,  COL_TEXT,  "Monthly cost:");
+                menu_set_txt(7,  COL_TEXT,  "Status:");
+
+                for (int i = 0; i < OFF_DESC_LINES; ++i) {
+                    menu_set_txt(9+i,  COL_TEXT, off_desc[i]);
+                }
             }
             break;
         case MM_SecretService:
@@ -1749,6 +1894,116 @@ bool MenuDrawer::menu_specific_update() {
             if (draw_manager.clicked()) {
                 menu_open(MM_OfficersAndTaxes);
                 return true;
+            }
+            break;
+        case MM_NewOfficerCharacter:
+            {
+                OfficerQuality q = menu_new_officer_quality;
+                int engagement_cost = p->get_officer_initial_cost(q);
+
+                if (first_update) {
+                    draw_manager.draw_text(
+                        Player::get_officer_character_title(menu_new_officer, q),
+                        Justify::Left,
+                        MENU_X + 320, menu_get_y(2),
+                        COL_TEXT);
+
+                    draw_manager.draw_text(
+                        Player::get_officer_character_name(menu_new_officer, q),
+                        Justify::Left,
+                        MENU_X + 320, menu_get_y(3),
+                        COL_TEXT);
+
+                    const char* q_str = "poor";
+                    if (q == OFFQ_Average) q_str = "average";
+                    if (q == OFFQ_Good) q_str = "good";
+                    draw_manager.draw_text(
+                        q_str,
+                        Justify::Left,
+                        MENU_X + 320, menu_get_y(4),
+                        COL_TEXT2);
+
+                    char cost_str[8];
+                    snprintf(cost_str, sizeof(cost_str), "%d", engagement_cost);
+                    draw_manager.draw_text(
+                        cost_str,
+                        Justify::Left,
+                        MENU_X + 320, menu_get_y(5),
+                        COL_TEXT2);
+
+                    int cost = p->get_officer_cost(q);
+                    snprintf(cost_str, sizeof(cost_str), "%d", cost);
+                    draw_manager.draw_text(
+                        cost_str,
+                        Justify::Left,
+                        MENU_X + 320, menu_get_y(6),
+                        COL_TEXT2);
+
+                    const char* off_status = "Alive";
+                    RGB off_status_col = {0, 0xFF, 0};
+
+                    if (p->officer_fired_nopay(menu_new_officer, menu_new_officer_quality)) {
+                        off_status = "Fired W/O Pay";
+                        off_status_col = COL_TEXT;
+                    }
+
+                    if (p->officer_quit(menu_new_officer, menu_new_officer_quality)) {
+                        off_status = "Quit";
+                        off_status_col = COL_TEXT;
+                    }
+
+                    if (p->officer_killed(menu_new_officer, menu_new_officer_quality)) {
+                        off_status = "Dead";
+                        off_status_col = COL_TEXT_BAD;
+                    }
+
+                    draw_manager.draw_text(
+                        off_status,
+                        Justify::Left,
+                        MENU_X + 320, menu_get_y(7),
+                        off_status_col);
+
+                    draw_manager.draw(
+                        id_menu_newoff_opt,
+                        IMG_BR8_EXPORT,
+                        {RES_X/2, MENU_Y + MENU_H-MENU_BORDER-2,
+                         .5, 1, 1, 1});
+                    draw_manager.fill(
+                        {MENU_X+MENU_BORDER+2, MENU_Y+MENU_H-MENU_BORDER-28, 35, 26},
+                        COL_BORDERS);
+                    draw_manager.fill(
+                        {MENU_X+MENU_W-MENU_BORDER-37, MENU_Y+MENU_H-MENU_BORDER-28, 35, 26},
+                        COL_BORDERS);
+                    draw_manager.fill(
+                        FILL_3D_Out_Hollow,
+                        {MENU_X+MENU_BORDER+2, MENU_Y+MENU_H-MENU_BORDER-28, 35, 26},
+                        COL_BORDERS);
+                    draw_manager.fill(
+                        FILL_3D_Out_Hollow,
+                        {MENU_X+MENU_W-MENU_BORDER-37, MENU_Y+MENU_H-MENU_BORDER-28, 35, 26},
+                        COL_BORDERS);
+                }
+
+                SpriteClick clk = draw_manager.query_click(id_menu_newoff_opt);
+                if (clk.id) {
+                    if (clk.x < .33f) {
+                        if (p->attempt_spend(engagement_cost, MC_NewOfficer)) {
+                            menu_old_officer_quality = p->get_officer(menu_new_officer);
+                            draw_manager.draw(id_menu_newoff_opt, nullptr);
+                            p->set_officer(menu_new_officer, menu_new_officer_quality);
+                            menu_open(MM_OldOfficer);
+                            return true;
+                        }
+                    } else if (clk.x < .66f) {
+                        q = (OfficerQuality)(((int)q + 1) % (int)OFFQ_MAX);
+                        menu_new_officer_quality = q;
+                        menu_open(MM_NewOfficer);
+                        return true;
+                    } else {
+                        menu_open(MM_OfficersAndTaxes);
+                        return true;
+                    }
+                }
             }
             break;
         case MM_SecretService:

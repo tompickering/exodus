@@ -46,6 +46,7 @@ enum MenuMode {
     MM_OldOfficerPaid,
     MM_OldOfficerDismissed,
     MM_OldOfficerKilled,
+    MM_NewOfficerCharacter,
     MM_SecretService,
     MM_SecInfo,
     MM_PlayerChoice,

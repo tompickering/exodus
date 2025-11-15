@@ -523,6 +523,14 @@ class Player : public Saveable {
         bool advanced_report_unlocked;
         bool advanced_galmap_unlocked;
 
+        const char* get_officer_title(Officer);
+        const char* get_officer_name(Officer);
+        const char* get_officer_title_and_name(Officer);
+        static const char* get_officer_character_desc(Officer);
+        static const char* get_officer_character_title(Officer, OfficerQuality);
+        static const char* get_officer_character_name(Officer, OfficerQuality);
+        static const char* get_officer_character_title_and_name(Officer, OfficerQuality);
+
     private:
         void adjust_mc(int, MCReason);
 

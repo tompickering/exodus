@@ -7,6 +7,7 @@
 #include "state/exodus_state.h"
 
 #include "alien_names.h"
+#include "officer_names.h"
 #include "shared.h"
 
 
@@ -1241,6 +1242,88 @@ void Player::adjust_mc(int amount, MCReason reason) {
 
 int Player::officer_idx(Officer off, OfficerQuality offq) {
     return ((OFFQ_MAX * (int)off) + (int)offq);
+}
+
+const char* Player::get_officer_title(Officer officer) {
+    return get_officer_character_title(officer, get_officer(officer));
+}
+
+const char* Player::get_officer_name(Officer officer) {
+    return get_officer_character_name(officer, get_officer(officer));
+}
+
+const char* Player::get_officer_title_and_name(Officer officer) {
+    return get_officer_character_title_and_name(officer, get_officer(officer));
+}
+
+const char* Player::get_officer_character_desc(Officer o) {
+    if ((o == OFF_Science))    return O_SC;
+    if ((o == OFF_Fleet))      return O_FL;
+    if ((o == OFF_Battle))     return O_BA;
+    if ((o == OFF_Secret))     return O_SS;
+    if ((o == OFF_Counsellor)) return O_CO;
+    L.error("Unknown officer");
+    return "<NONE>";
+}
+
+const char* Player::get_officer_character_title(Officer o, OfficerQuality q) {
+    if ((o == OFF_Science)    && (q == OFFQ_Poor))    return OT_SC_P;
+    if ((o == OFF_Science)    && (q == OFFQ_Average)) return OT_SC_A;
+    if ((o == OFF_Science)    && (q == OFFQ_Good))    return OT_SC_G;
+    if ((o == OFF_Fleet)      && (q == OFFQ_Poor))    return OT_FL_P;
+    if ((o == OFF_Fleet)      && (q == OFFQ_Average)) return OT_FL_A;
+    if ((o == OFF_Fleet)      && (q == OFFQ_Good))    return OT_FL_G;
+    if ((o == OFF_Battle)     && (q == OFFQ_Poor))    return OT_BA_P;
+    if ((o == OFF_Battle)     && (q == OFFQ_Average)) return OT_BA_A;
+    if ((o == OFF_Battle)     && (q == OFFQ_Good))    return OT_BA_G;
+    if ((o == OFF_Secret)     && (q == OFFQ_Poor))    return OT_SS_P;
+    if ((o == OFF_Secret)     && (q == OFFQ_Average)) return OT_SS_A;
+    if ((o == OFF_Secret)     && (q == OFFQ_Good))    return OT_SS_G;
+    if ((o == OFF_Counsellor) && (q == OFFQ_Poor))    return OT_CO_P;
+    if ((o == OFF_Counsellor) && (q == OFFQ_Average)) return OT_CO_A;
+    if ((o == OFF_Counsellor) && (q == OFFQ_Good))    return OT_CO_G;
+    L.error("Unknown officer");
+    return "<NONE>";
+}
+
+const char* Player::get_officer_character_name(Officer o, OfficerQuality q) {
+    if ((o == OFF_Science)    && (q == OFFQ_Poor))    return ON_SC_P;
+    if ((o == OFF_Science)    && (q == OFFQ_Average)) return ON_SC_A;
+    if ((o == OFF_Science)    && (q == OFFQ_Good))    return ON_SC_G;
+    if ((o == OFF_Fleet)      && (q == OFFQ_Poor))    return ON_FL_P;
+    if ((o == OFF_Fleet)      && (q == OFFQ_Average)) return ON_FL_A;
+    if ((o == OFF_Fleet)      && (q == OFFQ_Good))    return ON_FL_G;
+    if ((o == OFF_Battle)     && (q == OFFQ_Poor))    return ON_BA_P;
+    if ((o == OFF_Battle)     && (q == OFFQ_Average)) return ON_BA_A;
+    if ((o == OFF_Battle)     && (q == OFFQ_Good))    return ON_BA_G;
+    if ((o == OFF_Secret)     && (q == OFFQ_Poor))    return ON_SS_P;
+    if ((o == OFF_Secret)     && (q == OFFQ_Average)) return ON_SS_A;
+    if ((o == OFF_Secret)     && (q == OFFQ_Good))    return ON_SS_G;
+    if ((o == OFF_Counsellor) && (q == OFFQ_Poor))    return ON_CO_P;
+    if ((o == OFF_Counsellor) && (q == OFFQ_Average)) return ON_CO_A;
+    if ((o == OFF_Counsellor) && (q == OFFQ_Good))    return ON_CO_G;
+    L.error("Unknown officer");;
+    return "<NONE>";
+}
+
+const char* Player::get_officer_character_title_and_name(Officer o, OfficerQuality q) {
+    if ((o == OFF_Science)    && (q == OFFQ_Poor))    return OT_SC_P " " ON_SC_P;
+    if ((o == OFF_Science)    && (q == OFFQ_Average)) return OT_SC_A " " ON_SC_A;
+    if ((o == OFF_Science)    && (q == OFFQ_Good))    return OT_SC_G " " ON_SC_G;
+    if ((o == OFF_Fleet)      && (q == OFFQ_Poor))    return OT_FL_P " " ON_FL_P;
+    if ((o == OFF_Fleet)      && (q == OFFQ_Average)) return OT_FL_A " " ON_FL_A;
+    if ((o == OFF_Fleet)      && (q == OFFQ_Good))    return OT_FL_G " " ON_FL_G;
+    if ((o == OFF_Battle)     && (q == OFFQ_Poor))    return OT_BA_P " " ON_BA_P;
+    if ((o == OFF_Battle)     && (q == OFFQ_Average)) return OT_BA_A " " ON_BA_A;
+    if ((o == OFF_Battle)     && (q == OFFQ_Good))    return OT_BA_G " " ON_BA_G;
+    if ((o == OFF_Secret)     && (q == OFFQ_Poor))    return OT_SS_P " " ON_SS_P;
+    if ((o == OFF_Secret)     && (q == OFFQ_Average)) return OT_SS_A " " ON_SS_A;
+    if ((o == OFF_Secret)     && (q == OFFQ_Good))    return OT_SS_G " " ON_SS_G;
+    if ((o == OFF_Counsellor) && (q == OFFQ_Poor))    return OT_CO_P " " ON_CO_P;
+    if ((o == OFF_Counsellor) && (q == OFFQ_Average)) return OT_CO_A " " ON_CO_A;
+    if ((o == OFF_Counsellor) && (q == OFFQ_Good))    return OT_CO_G " " ON_CO_G;
+    L.error("Unknown officer");
+    return "<NONE>";
 }
 
 void Player::save(cJSON* j) const
