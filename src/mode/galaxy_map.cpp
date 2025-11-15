@@ -387,6 +387,12 @@ ExodusMode GalaxyMap::update(float delta) {
                 }
             }
 
+            if (input_manager.consume(K_Escape)) {
+                set_stage(GM_Menu);
+                menu_open(MM_Ctrl);
+                return ExodusMode::MODE_None;
+            }
+
             if (input_manager.consume(K_D)) {
                 return ExodusMode::MODE_Distances;
             }
