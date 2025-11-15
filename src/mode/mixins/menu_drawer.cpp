@@ -1224,41 +1224,51 @@ void MenuDrawer::menu_open_specific_mode() {
 
                     RGB lordcol = COL_TEXT;
                     RGB relcol = COL_TEXT;
+                    const char* display_name = "";
 
-                    snprintf(rel, sizeof(rel), "None");
-
-                    if (other->is_hostile_to(p_idx)) {
-                        snprintf(rel, sizeof(rel), "Hostile");
-                        relcol = COL_TEXT_BAD;
-                    } else {
-                        const char* sep = "";
-
-                        int relidx = 0;
-                        if (exostate().has_alliance(p_idx, other_idx, ALLY_Trade)) {
-                            relidx += snprintf(rel+relidx, sizeof(rel)-relidx, "%sTrade", sep);
-                            relcol = COL_TEXT2;
-                            sep = " / ";
-                        }
-                        if (exostate().has_alliance(p_idx, other_idx, ALLY_NonAttack)) {
-                            relidx += snprintf(rel+relidx, sizeof(rel)-relidx, "%sNo Att", sep);
-                            relcol = COL_TEXT2;
-                            sep = " / ";
-                        }
-                        if (exostate().has_alliance(p_idx, other_idx, ALLY_War)) {
-                            relidx += snprintf(rel+relidx, sizeof(rel)-relidx, "%sWar Ally", sep);
-                            relcol = COL_TEXT2;
-                            sep = " / ";
-                        }
-                    }
-
-                    if (!other->is_participating()) {
+                    if (FEATURE(EF_LORD_DISCOVERY) && !exostate().check_lord_discovery(p_idx, other_idx)) {
+                        display_name = "?????";
+                        snprintf(rel, sizeof(rel), "");
                         lordcol = COL_TEXT_GREYED;
                         relcol = COL_TEXT_GREYED;
+                    } else {
+                        display_name = other->get_full_name();
+
+                        snprintf(rel, sizeof(rel), "None");
+
+                        if (other->is_hostile_to(p_idx)) {
+                            snprintf(rel, sizeof(rel), "Hostile");
+                            relcol = COL_TEXT_BAD;
+                        } else {
+                            const char* sep = "";
+
+                            int relidx = 0;
+                            if (exostate().has_alliance(p_idx, other_idx, ALLY_Trade)) {
+                                relidx += snprintf(rel+relidx, sizeof(rel)-relidx, "%sTrade", sep);
+                                relcol = COL_TEXT2;
+                                sep = " / ";
+                            }
+                            if (exostate().has_alliance(p_idx, other_idx, ALLY_NonAttack)) {
+                                relidx += snprintf(rel+relidx, sizeof(rel)-relidx, "%sNo Att", sep);
+                                relcol = COL_TEXT2;
+                                sep = " / ";
+                            }
+                            if (exostate().has_alliance(p_idx, other_idx, ALLY_War)) {
+                                relidx += snprintf(rel+relidx, sizeof(rel)-relidx, "%sWar Ally", sep);
+                                relcol = COL_TEXT2;
+                                sep = " / ";
+                            }
+                        }
+
+                        if (!other->is_participating()) {
+                            lordcol = COL_TEXT_GREYED;
+                            relcol = COL_TEXT_GREYED;
+                        }
                     }
 
                     // TODO_MP: Multiplayer relations here - may be 'friendly' as per 'verhalten'
 
-                    menu_set_txt(line_idx, lordcol, other->get_full_name());
+                    menu_set_txt(line_idx, lordcol, display_name);
                     draw_manager.draw_text(rel, Justify::Left, MENU_X+200, menu_get_y(line_idx), relcol);
 
                     line_idx++;

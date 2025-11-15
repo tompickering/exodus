@@ -274,6 +274,12 @@ void ExodusState::init(GameConfig config) {
         alliance_requests[j] = 0;
     }
 
+    for (int j = 0; j < N_PLAYERS; ++j) {
+        for (int i = 0; i < N_PLAYERS; ++i) {
+            lord_discovery_matrix[j*N_PLAYERS + i] = false;
+        }
+    }
+
     aim = config.aim;
     enemy_start = config.enemy_start;
 
@@ -1343,6 +1349,23 @@ void ExodusState::set_alliances(int a, int b, uint8_t alliances) {
     }
 }
 
+void ExodusState::register_lord_discovery(int a, int b) {
+    if (b > a) {
+        lord_discovery_matrix[a*N_PLAYERS + b] = true;
+    } else {
+        lord_discovery_matrix[b*N_PLAYERS + a] = true;
+    }
+}
+bool ExodusState::check_lord_discovery(int a, int b) {
+    if (a == b) {
+        return 1;
+    }
+    if (b > a) {
+        return lord_discovery_matrix[a*N_PLAYERS + b];
+    }
+    return lord_discovery_matrix[b*N_PLAYERS + a];
+}
+
 void ExodusState::save(cJSON* j) const {
     SAVE_BOOL(j, first_city_done);
     SAVE_BOOL(j, first_spaceport_done);
@@ -1359,6 +1382,7 @@ void ExodusState::save(cJSON* j) const {
     SAVE_BOOL(j, galaxy_finalised);
     SAVE_BOOL(j, active_flytarget_is_guild);
     SAVE_ARRAY_OF_NUM(j, alliance_matrix);
+    SAVE_ARRAY_OF_NUM(j, lord_discovery_matrix);
     SAVE_ARRAY_OF_NUM(j, alliance_requests);
     SAVE_NUM(j, newsitem_head);
     SAVE_ARRAY_OF_SAVEABLE(j, newsitems);
@@ -1386,6 +1410,7 @@ void ExodusState::load(cJSON* j) {
     LOAD_BOOL(j, galaxy_finalised);
     LOAD_BOOL(j, active_flytarget_is_guild);
     LOAD_ARRAY_OF_NUM(j, alliance_matrix);
+    LOAD_ARRAY_OF_NUM(j, lord_discovery_matrix);
     LOAD_ARRAY_OF_NUM(j, alliance_requests);
     LOAD_NUM(j, newsitem_head);
     LOAD_ARRAY_OF_SAVEABLE(j, newsitems);

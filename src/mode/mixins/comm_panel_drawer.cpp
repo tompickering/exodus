@@ -823,6 +823,12 @@ void CommPanelDrawer::comm_init(CommSend input) {
         comm_other = exostate().get_player(comm_planet->get_owner());
     }
 
+    if (comm_other) {
+        int idx_player = exostate().get_player_idx(comm_player);
+        int idx_other = exostate().get_player_idx(comm_other);
+        exostate().register_lord_discovery(idx_player, idx_other);
+    }
+
     switch (input) {
         case DIA_S_IntroComm:
             comm_set_img(CI_Human);

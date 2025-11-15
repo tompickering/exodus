@@ -155,6 +155,8 @@ class ExodusState : public Saveable {
         bool can_request_alliance(int, AllianceType);
         void register_request_alliance(int, AllianceType);
         void reset_alliance_requests();
+        void register_lord_discovery(int, int);
+        bool check_lord_discovery(int, int);
         bool kill(Player*);
         NewsItem& register_news(NewsItemType);
         NewsItem& register_news_force(NewsItemType);
@@ -205,6 +207,7 @@ class ExodusState : public Saveable {
         bool active_flytarget_is_guild;
         uint8_t alliance_matrix[N_PLAYERS * N_PLAYERS];
         char alliance_requests[N_PLAYERS];
+        bool lord_discovery_matrix[N_PLAYERS * N_PLAYERS];
         int newsitem_head;
         NewsItem newsitems[MAX_NEWSITEMS];
         int planet_reports_head;
