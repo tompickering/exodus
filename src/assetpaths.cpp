@@ -1351,6 +1351,7 @@ const char *IMG_LTHUMB_GOR1      = D_NEW "lord_thumb_4_1";
 const char *IMG_LTHUMB_GOR2      = D_NEW "lord_thumb_4_2";
 const char *IMG_LTHUMB_GOR3      = D_NEW "lord_thumb_4_3";
 const char *IMG_LTHUMB_GOR4      = D_NEW "lord_thumb_4_4";
+const char *IMG_LTHUMB_UNKNOWN   = D_NEW "lord_thumb_uncontacted";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2702,6 +2703,7 @@ const char *ASSETS_IMG[] = {
     IMG_LTHUMB_GOR2,
     IMG_LTHUMB_GOR3,
     IMG_LTHUMB_GOR4,
+    IMG_LTHUMB_UNKNOWN,
 
     "",
 };

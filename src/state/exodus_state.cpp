@@ -48,6 +48,24 @@ const char* flags[] = {
     IMG_TS1_FLAG3,
 };
 
+const char* emblems[] = {
+    IMG_EMB_13,
+    IMG_EMB_14,
+    IMG_EMB_15,
+    IMG_EMB_10,
+    IMG_EMB_11,
+    IMG_EMB_12,
+    IMG_EMB_7,
+    IMG_EMB_8,
+    IMG_EMB_9,
+    IMG_EMB_4,
+    IMG_EMB_5,
+    IMG_EMB_6,
+    IMG_EMB_1,
+    IMG_EMB_2,
+    IMG_EMB_3,
+};
+
 ExodusState::ExodusState() {
     galaxy_finalised = false;
     active_flytarget_is_guild = true;

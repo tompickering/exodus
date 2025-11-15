@@ -396,6 +396,7 @@ class Player : public Saveable {
         void set_guild_title(GuildTitle);
         int get_mc();
         int get_flag_idx();
+        const char* get_icon();
         void set_flag_idx(int);
         bool intro_seen();
         void set_intro_seen();

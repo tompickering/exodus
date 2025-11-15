@@ -432,6 +432,47 @@ int Player::get_mc() {
     return mc;
 }
 
+const char* Player::get_icon() {
+    switch (get_character()) {
+        case CHAR_Yok1:
+            return IMG_LTHUMB_YOK1;
+        case CHAR_Yok2:
+            return IMG_LTHUMB_YOK2;
+        case CHAR_Yok3:
+            return IMG_LTHUMB_YOK3;
+        case CHAR_Yok4:
+            return IMG_LTHUMB_YOK4;
+        case CHAR_Ter1:
+            return IMG_LTHUMB_TER1;
+        case CHAR_Ter2:
+            return IMG_LTHUMB_TER2;
+        case CHAR_Ter3:
+            return IMG_LTHUMB_TER3;
+        case CHAR_Ter4:
+            return IMG_LTHUMB_TER4;
+        case CHAR_Urk1:
+            return IMG_LTHUMB_URK1;
+        case CHAR_Urk2:
+            return IMG_LTHUMB_URK2;
+        case CHAR_Urk3:
+            return IMG_LTHUMB_URK3;
+        case CHAR_Urk4:
+            return IMG_LTHUMB_URK4;
+        case CHAR_Gor1:
+            return IMG_LTHUMB_GOR1;
+        case CHAR_Gor2:
+            return IMG_LTHUMB_GOR2;
+        case CHAR_Gor3:
+            return IMG_LTHUMB_GOR3;
+        case CHAR_Gor4:
+            return IMG_LTHUMB_GOR4;
+        default:
+            break;
+    }
+
+    return IMG_LTHUMB_UNKNOWN;
+}
+
 bool Player::intro_seen() {
     return _intro_seen;
 }

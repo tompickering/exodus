@@ -1348,6 +1348,7 @@ extern const char *IMG_LTHUMB_GOR1;
 extern const char *IMG_LTHUMB_GOR2;
 extern const char *IMG_LTHUMB_GOR3;
 extern const char *IMG_LTHUMB_GOR4;
+extern const char *IMG_LTHUMB_UNKNOWN;
 
 extern const char *INIT_IMG;
 extern const char *CURSOR_IMG;
