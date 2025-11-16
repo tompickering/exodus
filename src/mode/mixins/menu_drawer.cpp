@@ -1938,13 +1938,13 @@ bool MenuDrawer::menu_specific_update() {
                     draw_manager.draw_text(
                         Player::get_officer_character_title(menu_new_officer, q),
                         Justify::Left,
-                        MENU_X + 320, menu_get_y(2),
+                        MENU_X + 300, menu_get_y(2),
                         COL_TEXT);
 
                     draw_manager.draw_text(
                         Player::get_officer_character_name(menu_new_officer, q),
                         Justify::Left,
-                        MENU_X + 320, menu_get_y(3),
+                        MENU_X + 300, menu_get_y(3),
                         COL_TEXT);
 
                     const char* q_str = "poor";
@@ -1953,7 +1953,7 @@ bool MenuDrawer::menu_specific_update() {
                     draw_manager.draw_text(
                         q_str,
                         Justify::Left,
-                        MENU_X + 320, menu_get_y(4),
+                        MENU_X + 300, menu_get_y(4),
                         COL_TEXT2);
 
                     char cost_str[8];
@@ -1961,7 +1961,7 @@ bool MenuDrawer::menu_specific_update() {
                     draw_manager.draw_text(
                         cost_str,
                         Justify::Left,
-                        MENU_X + 320, menu_get_y(5),
+                        MENU_X + 300, menu_get_y(5),
                         COL_TEXT2);
 
                     int cost = p->get_officer_cost(q);
@@ -1969,7 +1969,7 @@ bool MenuDrawer::menu_specific_update() {
                     draw_manager.draw_text(
                         cost_str,
                         Justify::Left,
-                        MENU_X + 320, menu_get_y(6),
+                        MENU_X + 300, menu_get_y(6),
                         COL_TEXT2);
 
                     const char* off_status = "Alive";
@@ -1998,7 +1998,7 @@ bool MenuDrawer::menu_specific_update() {
                     draw_manager.draw_text(
                         off_status,
                         Justify::Left,
-                        MENU_X + 320, menu_get_y(7),
+                        MENU_X + 300, menu_get_y(7),
                         off_status_col);
 
                     draw_manager.draw(
