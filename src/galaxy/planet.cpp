@@ -1812,6 +1812,11 @@ bool Planet::trade_port_operational() {
         // This star is always in range
         bool in_range = (s == this_star);
 
+        // AI planets are always in range of each other
+        if (!in_range && (!owner->is_human())) {
+            in_range = true;
+        }
+
         if (!in_range && owner->has_invention(INV_UltraRangeScanner)) {
             if (exostate().get_months_between(this_star, s) <= 1) {
                 in_range = true;
