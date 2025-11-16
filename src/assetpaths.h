@@ -1353,6 +1353,12 @@ extern const char *IMG_REL_NONE;
 extern const char *IMG_REL_ALLY;
 extern const char *IMG_REL_HOSTILE;
 extern const char *IMG_SPACE_BG;
+extern const char *IMG_STONE_TPORT;
+extern const char *IMG_STONE_TPORT_OFF;
+extern const char *IMG_STONE_TPORTX;
+extern const char *IMG_STONE_TPORTX_OFF;
+extern const char *IMG_STONE_TPORT_0;
+extern const char *IMG_STONE_TPORT_1;
 
 extern const char *INIT_IMG;
 extern const char *CURSOR_IMG;

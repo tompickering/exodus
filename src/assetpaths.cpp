@@ -1356,6 +1356,12 @@ const char *IMG_REL_NONE         = D_NEW "rel_none";
 const char *IMG_REL_ALLY         = D_NEW "rel_allied";
 const char *IMG_REL_HOSTILE      = D_NEW "rel_hostile";
 const char *IMG_SPACE_BG         = D_NEW "rd1";
+const char *IMG_STONE_TPORT      = D_NEW "tport";
+const char *IMG_STONE_TPORT_OFF  = D_NEW "tport-lights-off";
+const char *IMG_STONE_TPORTX     = D_NEW "tport-closed";
+const char *IMG_STONE_TPORTX_OFF = D_NEW "tport-closed-lights-off";
+const char *IMG_STONE_TPORT_0    = D_NEW "tport-0";
+const char *IMG_STONE_TPORT_1    = D_NEW "tport-1";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2712,6 +2718,12 @@ const char *ASSETS_IMG[] = {
     IMG_REL_ALLY,
     IMG_REL_HOSTILE,
     IMG_SPACE_BG,
+    IMG_STONE_TPORT,
+    IMG_STONE_TPORT_OFF,
+    IMG_STONE_TPORTX,
+    IMG_STONE_TPORTX_OFF,
+    IMG_STONE_TPORT_0,
+    IMG_STONE_TPORT_1,
 
     "",
 };
