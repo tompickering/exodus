@@ -5220,6 +5220,21 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
+    if (mp_state.mpp_stage == MPP_TradePort) {
+        report.trade_mc = 0;
+
+        if (owner) {
+            if (p->count_stones(STONE_TradePort)) {
+                TradeReport rpt = p->monthly_trade_port();
+                report.trade_mc = rpt.mc;
+                report.add_line("Trade Port sold:");
+                report.add_line("Mi: %d / Fd: %d / Pl: %d => %d MC",
+                                 rpt.mi,  rpt.fd,  rpt.pl, rpt.mc);
+            }
+        }
+        next_mpp_stage();
+    }
+
     if (mp_state.mpp_stage == MPP_VillageGifts) {
         int n_villages = p->count_stones(STONE_Village);
         if (owner && n_villages > 2) {

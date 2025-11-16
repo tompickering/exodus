@@ -153,12 +153,13 @@ typedef struct {
     int not_produced;
 } ProductionReport;
 
-typedef struct {
+struct TradeReport {
+    TradeReport(): mi(0), fd(0), pl(0), mc(0) {}
     int mi;
     int fd;
     int pl;
     int mc;
-} TradeReport;
+};
 
 enum PlanetOwnerChangedReason {
     POCR_Init,
@@ -316,6 +317,7 @@ class Planet : public Saveable {
         ProductionReport produce_military();
         int consume_food();
         TradeReport monthly_trade();
+        TradeReport monthly_trade_port();
         void mine();
         void perish_food();
         int get_resource_cap();
@@ -353,6 +355,8 @@ class Planet : public Saveable {
     private:
         void init();
         bool expand(Stone, bool);
+
+        TradeReport do_monthly_trade(Stone);
 
         void cull_stones_to_size();
         Stone _get_stone(int, int);

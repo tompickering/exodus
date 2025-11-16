@@ -1705,8 +1705,16 @@ int Planet::consume_food() {
 }
 
 TradeReport Planet::monthly_trade() {
+    return do_monthly_trade(STONE_Trade);
+}
+
+TradeReport Planet::monthly_trade_port() {
+    return do_monthly_trade(STONE_TradePort);
+}
+
+TradeReport Planet::do_monthly_trade(Stone st) {
     TradeReport rpt;
-    int n = count_stones(STONE_Trade);
+    int n = count_stones(st);
 
     if (n == 0) {
         L.error("Trade requested on planet with no trade centre");

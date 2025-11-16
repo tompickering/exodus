@@ -107,6 +107,7 @@ enum MonthPassPlanetStage {
     MPP_MilitaryFacilityShutdown,
     MPP_MilitaryFacilityShutdown2,
     MPP_Trade,
+    MPP_TradePort,
     MPP_VillageGifts,
     MPP_FoodPerishes,
     MPP_FoodProduction,
