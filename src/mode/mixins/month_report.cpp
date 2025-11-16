@@ -185,6 +185,8 @@ void MonthReport::monthreport_open() {
                         const char* t0 = "";
                         const char* t1 = "";
 
+                        bool oc = FEATURE(EF_OFFICER_CHARACTERS);
+
                         if (FEATURE(EF_REFINED_SCIENCE_REPORTS)) {
                             if (n_invs == (int)INV_MAX) {
                                 t0 = "The scientists are very";
@@ -212,16 +214,31 @@ void MonthReport::monthreport_open() {
                                     if (onein(4)) {
                                         switch (q) {
                                             case OFFQ_Poor:
-                                                t0 = "Our officer does not seem";
-                                                t1 = "at all competent.";
+                                                if (oc) {
+                                                    t0 = "%s does not";
+                                                    t1 = "seem at all competent.";
+                                                } else {
+                                                    t0 = "Our officer does not seem";
+                                                    t1 = "at all competent.";
+                                                }
                                                 break;
                                             case OFFQ_Average:
-                                                t0 = "Despite our officer's best";
-                                                t1 = "efforts, we're getting nowhere.";
+                                                if (oc) {
+                                                    t0 = "Despite %s's best";
+                                                    t1 = "efforts, we're getting nowhere.";
+                                                } else {
+                                                    t0 = "Despite our officer's best";
+                                                    t1 = "efforts, we're getting nowhere.";
+                                                }
                                                 break;
                                             case OFFQ_Good:
-                                                t0 = "Even our elite officer cannot";
-                                                t1 = "work in this situation.";
+                                                if (oc) {
+                                                    t0 = "Even %s cannot";
+                                                    t1 = "work in this situation.";
+                                                } else {
+                                                    t0 = "Even our elite officer cannot";
+                                                    t1 = "work in this situation.";
+                                                }
                                                 break;
                                             default:
                                                 break;
@@ -243,16 +260,31 @@ void MonthReport::monthreport_open() {
                                     if (onein(4)) {
                                         switch (q) {
                                             case OFFQ_Poor:
-                                                t0 = "Our officer does not seem";
-                                                t1 = "to know what they're doing.";
+                                                if (oc) {
+                                                    t0 = "%s does not seem";
+                                                    t1 = "to know what they're doing.";
+                                                } else {
+                                                    t0 = "Our officer does not seem";
+                                                    t1 = "to know what they're doing.";
+                                                }
                                                 break;
                                             case OFFQ_Average:
-                                                t0 = "Our officer is really";
-                                                t1 = "trying to drive progress.";
+                                                if (oc) {
+                                                    t0 = "%s is really";
+                                                    t1 = "trying to drive progress.";
+                                                } else {
+                                                    t0 = "Our officer is really";
+                                                    t1 = "trying to drive progress.";
+                                                }
                                                 break;
                                             case OFFQ_Good:
-                                                t0 = "Our officer is an inspiration";
-                                                t1 = "in difficult circumstances.";
+                                                if (oc) {
+                                                    t0 = "%s is an inspiration";
+                                                    t1 = "in difficult circumstances.";
+                                                } else {
+                                                    t0 = "Our officer is an inspiration";
+                                                    t1 = "in difficult circumstances.";
+                                                }
                                                 break;
                                             default:
                                                 break;
@@ -274,16 +306,31 @@ void MonthReport::monthreport_open() {
                                     if (onein(4)) {
                                         switch (q) {
                                             case OFFQ_Poor:
-                                                t0 = "Our officer isn't exactly";
-                                                t1 = "helping matters.";
+                                                if (oc) {
+                                                    t0 = "Our officer isn't exactly";
+                                                    t1 = "helping matters.";
+                                                } else {
+                                                    t0 = "%s isn't exactly";
+                                                    t1 = "helping matters.";
+                                                }
                                                 break;
                                             case OFFQ_Average:
-                                                t0 = "Our officer is making a";
-                                                t1 = "real difference.";
+                                                if (oc) {
+                                                    t0 = "%s is making a";
+                                                    t1 = "real difference.";
+                                                } else {
+                                                    t0 = "Our officer is making a";
+                                                    t1 = "real difference.";
+                                                }
                                                 break;
                                             case OFFQ_Good:
-                                                t0 = "Our officer is driving";
-                                                t1 = "through real change!";
+                                                if (oc) {
+                                                    t0 = "%s is driving";
+                                                    t1 = "through real change!";
+                                                } else {
+                                                    t0 = "Our officer is driving";
+                                                    t1 = "through real change!";
+                                                }
                                                 break;
                                             default:
                                                 break;
@@ -305,16 +352,31 @@ void MonthReport::monthreport_open() {
                                     if (onein(4)) {
                                         switch (q) {
                                             case OFFQ_Poor:
-                                                t0 = "Our officer is managing";
-                                                t1 = "to hold things together.";
+                                                if (oc) {
+                                                    t0 = "%s is managing";
+                                                    t1 = "to hold things together.";
+                                                } else {
+                                                    t0 = "Our officer is managing";
+                                                    t1 = "to hold things together.";
+                                                }
                                                 break;
                                             case OFFQ_Average:
-                                                t0 = "Our officer deserves real";
-                                                t1 = "credit for this work.";
+                                                if (oc) {
+                                                    t0 = "%s deserves real";
+                                                    t1 = "credit for this work.";
+                                                } else {
+                                                    t0 = "Our officer deserves real";
+                                                    t1 = "credit for this work.";
+                                                }
                                                 break;
                                             case OFFQ_Good:
-                                                t0 = "We couldn't be making such";
-                                                t1 = "progress without our officer!";
+                                                if (oc) {
+                                                    t0 = "We owe our success entirely";
+                                                    t1 = "to %s!";
+                                                } else {
+                                                    t0 = "We couldn't be making such";
+                                                    t1 = "progress without our officer!";
+                                                }
                                                 break;
                                             default:
                                                 break;
@@ -340,12 +402,22 @@ void MonthReport::monthreport_open() {
                                                 t1 = "a more capable officer!";
                                                 break;
                                             case OFFQ_Average:
-                                                t0 = "Our officer deserves a";
-                                                t1 = "commendation!";
+                                                if (oc) {
+                                                    t0 = "%s deserves a";
+                                                    t1 = "commendation!";
+                                                } else {
+                                                    t0 = "Our officer deserves a";
+                                                    t1 = "commendation!";
+                                                }
                                                 break;
                                             case OFFQ_Good:
-                                                t0 = "Our officer is a credit";
-                                                t1 = "to the human race!";
+                                                if (oc) {
+                                                    t0 = "%s is a credit";
+                                                    t1 = "to the human race!";
+                                                } else {
+                                                    t0 = "Our officer is a credit";
+                                                    t1 = "to the human race!";
+                                                }
                                                 break;
                                             default:
                                                 break;
@@ -390,13 +462,18 @@ void MonthReport::monthreport_open() {
                             }
                         }
 
+                        char text[64];
+
+                        snprintf(text, sizeof(text), t0, player->get_officer_title_and_name(OFF_Science));
                         draw_manager.draw_text(
-                            t0,
+                            text,
                             Justify::Left,
                             rx+4, y+4,
                             COL_TEXT);
+
+                        snprintf(text, sizeof(text), t1, player->get_officer_title_and_name(OFF_Science));
                         draw_manager.draw_text(
-                            t1,
+                            text,
                             Justify::Left,
                             rx+4, y+24,
                             COL_TEXT);
