@@ -11,6 +11,7 @@
 #include "shared.h"
 #include "exodus_features.h"
 
+#include "util/iter.h"
 #include "util/value.h"
 
 
@@ -1802,20 +1803,42 @@ bool Planet::trade_port_operational() {
     }
 
     int owner_idx = get_owner();
-    Star *s = exostate().get_star_for_planet(this);
+    Player *owner = exostate().get_player(owner_idx);
+    Star *this_star = exostate().get_star_for_planet(this);
 
-    for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
-        Planet *p = s->get_planet(i);
-        if (p == this) continue;
-        if (!(p && p->exists() && p->is_owned())) continue;
-        int p_owner = p->get_owner();
+    for (StarIterator siter; !siter.complete(); ++siter) {
+        Star *s = siter.get();
 
-        if (p_owner == owner_idx) {
-            return true;
+        // This star is always in range
+        bool in_range = (s == this_star);
+
+        if (!in_range && owner->has_invention(INV_UltraRangeScanner)) {
+            if (exostate().get_months_between(this_star, s) <= 1) {
+                in_range = true;
+            }
         }
 
-        if (exostate().has_alliance(owner_idx, p_owner, ALLY_Trade)) {
-            return true;
+        if (!in_range && owner->has_invention(INV_OrbitalMassThrust)) {
+            in_range = true;
+        }
+
+        if (!in_range) {
+            continue;
+        }
+
+        for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+            Planet *p = s->get_planet(i);
+            if (p == this) continue;
+            if (!(p && p->exists() && p->is_owned())) continue;
+            int p_owner = p->get_owner();
+
+            if (p_owner == owner_idx) {
+                return true;
+            }
+
+            if (exostate().has_alliance(owner_idx, p_owner, ALLY_Trade)) {
+                return true;
+            }
         }
     }
 
