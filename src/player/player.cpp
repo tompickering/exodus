@@ -934,6 +934,8 @@ void Player::set_officer(Officer off, OfficerQuality off_q) {
     L.debug("%s: NEW OFFICER %d: %d->%d", get_full_name(), off, officers[off], off_q);
     officers[off] = off_q;
 
+    officer_status_reset(off, off_q);
+
     bool all_good = true;
 
     for (int i = 0; i < (int)OFFICER_MAX; ++i) {
@@ -973,6 +975,11 @@ bool Player::officer_quit(Officer off, OfficerQuality offq) {
 
 bool Player::officer_killed(Officer off, OfficerQuality offq) {
     return officers_deceased[officer_idx(off, offq)];
+}
+void Player::officer_status_reset(Officer off, OfficerQuality offq) {
+    officers_fired_nopay[officer_idx(off, offq)] = false;
+    officers_quit[officer_idx(off, offq)] = false;
+    officers_deceased[officer_idx(off, offq)] = false;
 }
 
 int Player::get_freight_capacity() {

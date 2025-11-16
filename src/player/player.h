@@ -584,6 +584,7 @@ class Player : public Saveable {
         bool officers_fired_nopay[OFFICERS_TOTAL];
         bool officers_quit[OFFICERS_TOTAL];
         bool officers_deceased[OFFICERS_TOTAL];
+        void officer_status_reset(Officer, OfficerQuality);
 
         // AI
         AIFlag ai_flags[9];
