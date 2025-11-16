@@ -539,13 +539,17 @@ void MenuDrawer::menu_open_specific_mode() {
                     menu_set_txt(9,  COL_TEXT, Player::get_officer_character_desc(OFF_Fleet));
                     menu_set_txt(10, COL_TEXT, Player::get_officer_character_desc(OFF_Battle));
                     menu_set_txt(11, COL_TEXT, Player::get_officer_character_desc(OFF_Secret));
-                    menu_set_txt(12, COL_TEXT, Player::get_officer_character_desc(OFF_Counsellor));
+                    if (!FEATURE(EF_COMBINE_SS_COUNSELLOR)) {
+                        menu_set_txt(12, COL_TEXT, Player::get_officer_character_desc(OFF_Counsellor));
+                    }
                 } else {
                     menu_set_txt(8,  COL_TEXT, "Science Officer");
                     menu_set_txt(9,  COL_TEXT, "Fleet Admiral");
                     menu_set_txt(10, COL_TEXT, "Battle General");
                     menu_set_txt(11, COL_TEXT, "Secret Service Leader");
-                    menu_set_txt(12, COL_TEXT, "Ship Counsellor");
+                    if (!FEATURE(EF_COMBINE_SS_COUNSELLOR)) {
+                        menu_set_txt(12, COL_TEXT, "Ship Counsellor");
+                    }
                 }
                 menu_set_opt(14, "Exit");
                 input_manager.enable_repeating_clicks(true);
@@ -1751,6 +1755,11 @@ bool MenuDrawer::menu_specific_update() {
                         COL_TEXT);
 
                     for (int i = 0; i < MENU_N_OFFICERS; ++i) {
+                        if (FEATURE(EF_COMBINE_SS_COUNSELLOR)) {
+                            if ((Officer)i == OFF_Counsellor) {
+                                continue;
+                            }
+                        }
                         OfficerQuality q = p->get_officer((Officer)i);
                         const char* s = "poor";
                         if (q == OFFQ_Average) s = "average";

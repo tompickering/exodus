@@ -2306,6 +2306,10 @@ ExodusMode GalaxyMap::month_pass_update() {
             if (p && p->is_participating()) {
                 Officer &o = mp_state.mp_officer;
                 for (; o < OFFICER_MAX; o = (Officer)((int)o + 1)) {
+                    if (FEATURE(EF_COMBINE_SS_COUNSELLOR) && (o == OFF_Counsellor)) {
+                        continue;
+                    }
+
                     int cost = p->get_officer_cost(o);
                     if (cost <= 0) {
                         continue;

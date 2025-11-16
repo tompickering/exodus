@@ -894,6 +894,9 @@ void Player::set_tax(int t) {
 }
 
 OfficerQuality Player::get_officer(Officer off) {
+    if (FEATURE(EF_COMBINE_SS_COUNSELLOR) && (off == OFF_Counsellor)) {
+        off = OFF_Secret;
+    }
     if (off >= OFFICER_MAX) {
         L.fatal("Requested invalid officer %d (max is %d)", off, OFFICER_MAX-1);
     }
@@ -919,6 +922,9 @@ int Player::get_officer_initial_cost(OfficerQuality q) {
 int Player::get_total_officer_costs() {
     int total = 0;
     for (int i = 0; i < (int)OFFICER_MAX; ++i) {
+        if (FEATURE(EF_COMBINE_SS_COUNSELLOR) && ((Officer)i == OFF_Counsellor)) {
+            continue;
+        }
         total += get_officer_cost((Officer)i);
     }
     return total;
@@ -939,7 +945,7 @@ void Player::set_officer(Officer off, OfficerQuality off_q) {
     bool all_good = true;
 
     for (int i = 0; i < (int)OFFICER_MAX; ++i) {
-        if (officers[i] != OFFQ_Good) {
+        if (get_officer((Officer)i) != OFFQ_Good) {
             all_good = false;
             break;
         }

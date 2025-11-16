@@ -132,6 +132,9 @@ static bool LORD_DISCOVERY = false;
 // Officer characters
 static bool OFFICER_CHARACTERS = false;
 
+// Incorporate Counsellor officer into Secret Service
+static bool COMBINE_SS_COUNSELLOR = false;
+
 // Fixes bug meaning some AI terrorist actions are never taken
 static bool FIX_AI_TERROR = false;
 
@@ -198,6 +201,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         ACADEMIES = false;
         LORD_DISCOVERY = false;
         OFFICER_CHARACTERS = false;
+        COMBINE_SS_COUNSELLOR = false;
         FIX_AI_TERROR = false;
         FIX_FLEET_ADMIRAL = false;
         FIX_LUNAR_BATTLE_STALEMATE = true;
@@ -249,6 +253,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         ACADEMIES = true;
         LORD_DISCOVERY = true;
         OFFICER_CHARACTERS = true;
+        COMBINE_SS_COUNSELLOR = true;
         FIX_AI_TERROR = true;
         FIX_FLEET_ADMIRAL = true;
         FIX_LUNAR_BATTLE_STALEMATE = true;
@@ -313,6 +318,7 @@ bool FEATURE(ExodusFeature f) {
     if (f == EF_ACADEMIES) return ACADEMIES;
     if (f == EF_LORD_DISCOVERY) return LORD_DISCOVERY;
     if (f == EF_OFFICER_CHARACTERS) return OFFICER_CHARACTERS;
+    if (f == EF_COMBINE_SS_COUNSELLOR) return COMBINE_SS_COUNSELLOR;
     if (f == EF_FIX_AI_TERROR) return FIX_AI_TERROR;
     if (f == EF_FIX_FLEET_ADMIRAL) return FIX_FLEET_ADMIRAL;
     if (f == EF_FIX_LUNAR_BATTLE_STALEMATE) return FIX_LUNAR_BATTLE_STALEMATE;
