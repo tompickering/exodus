@@ -1709,6 +1709,9 @@ TradeReport Planet::monthly_trade() {
 }
 
 TradeReport Planet::monthly_trade_port() {
+    if (!trade_port_operational()) {
+        return TradeReport();
+    }
     return do_monthly_trade(STONE_TradePort);
 }
 
@@ -1791,6 +1794,32 @@ TradeReport Planet::do_monthly_trade(Stone st) {
     o->give_mc(rpt.mc, MC_TradingCentre);
 
     return rpt;
+}
+
+bool Planet::trade_port_operational() {
+    if (!is_owned()) {
+        return false;
+    }
+
+    int owner_idx = get_owner();
+    Star *s = exostate().get_star_for_planet(this);
+
+    for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+        Planet *p = s->get_planet(i);
+        if (p == this) continue;
+        if (!(p && p->exists() && p->is_owned())) continue;
+        int p_owner = p->get_owner();
+
+        if (p_owner == owner_idx) {
+            return true;
+        }
+
+        if (exostate().has_alliance(owner_idx, p_owner, ALLY_Trade)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void Planet::mine() {

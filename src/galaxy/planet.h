@@ -318,6 +318,7 @@ class Planet : public Saveable {
         int consume_food();
         TradeReport monthly_trade();
         TradeReport monthly_trade_port();
+        bool trade_port_operational();
         void mine();
         void perish_food();
         int get_resource_cap();

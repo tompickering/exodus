@@ -288,6 +288,10 @@ map<PlanetClass, map<Stone, Anim>> stone_anims_specific;
 map<Stone, Anim> stone_anims_generic;
 map<PlanetClass, map<Stone, Anim>> construct_anims_specific;
 map<Stone, Anim> construct_anims_generic;
+
+Anim stone_anims_generic_tradeportx = Anim(2,  IMG_STONE_TPORTX,
+                                               IMG_STONE_TPORTX_OFF);
+
 bool stone_anims_initialised = false;
 
 Anim anim_target {
@@ -1613,6 +1617,10 @@ Anim* PlanetMap::get_stone_anim(Stone stone) {
     PlanetClass cls = planet->get_class();
     if (stone_anims_specific[cls].count(stone)) {
         return &stone_anims_specific[cls][stone];
+    }
+
+    if (stone == STONE_TradePort && !planet->trade_port_operational()) {
+        return &stone_anims_generic_tradeportx;
     }
 
     if (stone_anims_generic.count(stone)) {
