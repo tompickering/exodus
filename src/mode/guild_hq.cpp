@@ -687,6 +687,11 @@ void GuildHQ::draw_panel() {
         {PANEL_X - BORDER, PANEL_Y - BORDER,
          PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
         COL_BORDERS);
+    draw_manager.fill(
+        FILL_3D_Out_Hollow,
+        {PANEL_X - BORDER, PANEL_Y - BORDER,
+         PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+        COL_BORDERS);
     draw_manager.fill_pattern(
         id(ID::PANEL_PATTERN),
         {PANEL_X, PANEL_Y,
@@ -695,6 +700,10 @@ void GuildHQ::draw_panel() {
 
 void GuildHQ::draw_choice() {
     draw_manager.fill(
+        {PANEL_X + 242, PANEL_Y + PANEL_H - 30, 86, 26},
+        COL_BORDERS);
+    draw_manager.fill(
+        FILL_3D_Out_Hollow,
         {PANEL_X + 242, PANEL_Y + PANEL_H - 30, 86, 26},
         COL_BORDERS);
     draw_manager.draw(

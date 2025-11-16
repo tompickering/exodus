@@ -222,6 +222,11 @@ ExodusMode StarMap::update(float delta) {
                              RENAME_W+2*BORDER, RENAME_H+2*BORDER},
                             COL_BORDERS);
                         draw_manager.fill(
+                            FILL_3D_In_Hollow,
+                            {x-RENAME_W/2-BORDER, y+50-BORDER,
+                             RENAME_W+2*BORDER, RENAME_H+2*BORDER},
+                            COL_BORDERS);
+                        draw_manager.fill(
                             id(ID::RENAME),
                             {x-RENAME_W/2, y+50,
                              RENAME_W, RENAME_H},
@@ -265,6 +270,11 @@ ExodusMode StarMap::update(float delta) {
 
                             draw_manager.fill(
                                 id(ID::FLEET_PANEL),
+                                {FLEET_PANEL_X-BORDER, FLEET_PANEL_Y-BORDER,
+                                FLEET_PANEL_W+2*BORDER, FLEET_PANEL_H+2*BORDER},
+                                COL_BORDERS);
+                            draw_manager.fill(
+                                FILL_3D_Out_Hollow,
                                 {FLEET_PANEL_X-BORDER, FLEET_PANEL_Y-BORDER,
                                 FLEET_PANEL_W+2*BORDER, FLEET_PANEL_H+2*BORDER},
                                 COL_BORDERS);

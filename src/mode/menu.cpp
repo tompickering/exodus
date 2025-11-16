@@ -311,7 +311,6 @@ ExodusMode Menu::update(float delta) {
                     {LOADFRAME_X-4, LOADFRAME_Y-4,
                      LOADFRAME_W+8, LOADFRAME_H+8},
                     COL_BORDERS);
-
                 draw_manager.fill(
                     FILL_3D_Out,
                     {LOADFRAME_X-4, LOADFRAME_Y-4,
@@ -577,6 +576,7 @@ ExodusMode Menu::update(float delta) {
                         IMG_BR11_OK,
                         {305, 250, 0, 0.5, 1, 1});
                     draw_manager.fill(
+                        FILL_3D_Out,
                         {264-BORDER, 234-BORDER, 32+2*BORDER, 32+2*BORDER},
                         COL_BORDERS);
                     draw_manager.fill_pattern({264, 234, 32, 32});

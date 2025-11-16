@@ -1044,6 +1044,11 @@ ExodusMode SpaceBattle::update(float delta) {
                         {PANEL_X - BORDER, PANEL_Y - BORDER,
                          PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
                         COL_BORDERS);
+                    draw_manager.fill(
+                        FILL_3D_Out_Hollow,
+                        {PANEL_X - BORDER, PANEL_Y - BORDER,
+                         PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+                        COL_BORDERS);
                     draw_manager.fill_pattern(
                         {PANEL_X, PANEL_Y,
                          PANEL_W, PANEL_H});
@@ -1165,6 +1170,11 @@ ExodusMode SpaceBattle::update(float delta) {
                         {PANEL_X - BORDER, PANEL_Y - BORDER,
                          PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
                         COL_BORDERS);
+                    draw_manager.fill(
+                        FILL_3D_Out_Hollow,
+                        {PANEL_X - BORDER, PANEL_Y - BORDER,
+                         PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+                        COL_BORDERS);
                     draw_manager.fill_pattern(
                         {PANEL_X, PANEL_Y,
                          PANEL_W, PANEL_H});
@@ -1175,8 +1185,8 @@ ExodusMode SpaceBattle::update(float delta) {
                         RES_X/2, PANEL_Y + 28,
                         COL_TEXT);
 
-                    draw_manager.fill({PANEL_X+2, PANEL_Y+PANEL_H-46, 41, 26}, COL_BORDERS);
-                    draw_manager.fill({PANEL_X+PANEL_W-43, PANEL_Y+PANEL_H-46, 41, 26}, COL_BORDERS);
+                    draw_manager.fill(FILL_3D_Out, {PANEL_X+2, PANEL_Y+PANEL_H-46, 41, 26}, COL_BORDERS);
+                    draw_manager.fill(FILL_3D_Out, {PANEL_X+PANEL_W-43, PANEL_Y+PANEL_H-46, 41, 26}, COL_BORDERS);
 
                     draw_manager.draw(
                         id(ID::SURRENDER_OPT),

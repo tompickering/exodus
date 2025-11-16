@@ -537,6 +537,11 @@ ExodusMode LunarBattle::update(float delta) {
                         {PANEL_X - BORDER, PANEL_Y - BORDER,
                         PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
                         COL_BORDERS);
+                    draw_manager.fill(
+                        FILL_3D_Out_Hollow,
+                        {PANEL_X - BORDER, PANEL_Y - BORDER,
+                        PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+                        COL_BORDERS);
                     draw_manager.fill_pattern(
                         id(ID::PANEL_PATTERN),
                         {PANEL_X, PANEL_Y,
@@ -2361,7 +2366,7 @@ void LunarBattle::update_panel() {
 
     if (panel_mode != target_mode) {
         draw_manager.fill({0, SURF_Y - 1, RES_X, 1}, {0, 0, 0});
-        draw_manager.fill({0, 0, RES_X, SURF_Y - 1}, COL_BORDERS);
+        draw_manager.fill(FILL_3D_Out, {0, 0, RES_X, SURF_Y - 1}, COL_BORDERS);
 
         if (target_mode == LBPM_Placement) {
             for (int i = 0; i < 4; ++i) {
@@ -2700,6 +2705,11 @@ LunarBattle::Stage LunarBattle::update_buttons() {
             {PANEL_X - BORDER, PANEL_Y - BORDER,
             PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
             COL_BORDERS);
+        draw_manager.fill(
+            FILL_3D_Out_Hollow,
+            {PANEL_X - BORDER, PANEL_Y - BORDER,
+            PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+            COL_BORDERS);
         draw_manager.fill_pattern(
             id(ID::PANEL_PATTERN),
             {PANEL_X, PANEL_Y,
@@ -2712,8 +2722,8 @@ LunarBattle::Stage LunarBattle::update_buttons() {
             COL_TEXT);
 
         int fill_w = 40;
-        draw_manager.fill({PANEL_X+4, PANEL_Y+PANEL_H-50, fill_w, 26}, COL_BORDERS);
-        draw_manager.fill({PANEL_X+PANEL_W-4-fill_w, PANEL_Y+PANEL_H-50, fill_w, 26}, COL_BORDERS);
+        draw_manager.fill(FILL_3D_Out, {PANEL_X+4, PANEL_Y+PANEL_H-50, fill_w, 26}, COL_BORDERS);
+        draw_manager.fill(FILL_3D_Out, {PANEL_X+PANEL_W-4-fill_w, PANEL_Y+PANEL_H-50, fill_w, 26}, COL_BORDERS);
 
         draw_manager.draw(
             id(ID::SURRENDER_YESNO),
@@ -3703,6 +3713,11 @@ void LunarBattle::show_info() {
         {PANEL_X - BORDER, PANEL_Y - BORDER,
         PANEL_W + 2*BORDER, PANEL_H + 60 + 2*BORDER},
         COL_BORDERS);
+    draw_manager.fill(
+        FILL_3D_Out_Hollow,
+        {PANEL_X - BORDER, PANEL_Y - BORDER,
+        PANEL_W + 2*BORDER, PANEL_H + 60 + 2*BORDER},
+        COL_BORDERS);
     draw_manager.fill_pattern(
         id(ID::PANEL_PATTERN),
         {PANEL_X, PANEL_Y,
@@ -3718,7 +3733,7 @@ void LunarBattle::show_info() {
         PANEL_X + PANEL_W/2, PANEL_Y + 4,
         COL_TEXT2);
 
-    draw_manager.fill({PANEL_X, PANEL_Y + 28, PANEL_W, 4}, COL_BORDERS);
+    draw_manager.fill(FILL_3D_Out, {PANEL_X, PANEL_Y + 28, PANEL_W, 4}, COL_BORDERS);
 
     RGB col_att = COL_TEXT2;
     RGB col_def = COL_TEXT2;
