@@ -1864,17 +1864,11 @@ bool MenuDrawer::menu_specific_update() {
                         {RES_X/2, MENU_Y + MENU_H-MENU_BORDER-2,
                          .5, 1, 1, 1});
                     draw_manager.fill(
+                        FILL_3D_Out,
                         {MENU_X+MENU_BORDER+2, MENU_Y+MENU_H-MENU_BORDER-28, 35, 26},
                         COL_BORDERS);
                     draw_manager.fill(
-                        {MENU_X+MENU_W-MENU_BORDER-37, MENU_Y+MENU_H-MENU_BORDER-28, 35, 26},
-                        COL_BORDERS);
-                    draw_manager.fill(
-                        FILL_3D_Out_Hollow,
-                        {MENU_X+MENU_BORDER+2, MENU_Y+MENU_H-MENU_BORDER-28, 35, 26},
-                        COL_BORDERS);
-                    draw_manager.fill(
-                        FILL_3D_Out_Hollow,
+                        FILL_3D_Out,
                         {MENU_X+MENU_W-MENU_BORDER-37, MENU_Y+MENU_H-MENU_BORDER-28, 35, 26},
                         COL_BORDERS);
                 }
@@ -2013,17 +2007,11 @@ bool MenuDrawer::menu_specific_update() {
                         {RES_X/2, MENU_Y + MENU_H-MENU_BORDER-2,
                          .5, 1, 1, 1});
                     draw_manager.fill(
+                        FILL_3D_Out,
                         {MENU_X+MENU_BORDER+2, MENU_Y+MENU_H-MENU_BORDER-28, 35, 26},
                         COL_BORDERS);
                     draw_manager.fill(
-                        {MENU_X+MENU_W-MENU_BORDER-37, MENU_Y+MENU_H-MENU_BORDER-28, 35, 26},
-                        COL_BORDERS);
-                    draw_manager.fill(
-                        FILL_3D_Out_Hollow,
-                        {MENU_X+MENU_BORDER+2, MENU_Y+MENU_H-MENU_BORDER-28, 35, 26},
-                        COL_BORDERS);
-                    draw_manager.fill(
-                        FILL_3D_Out_Hollow,
+                        FILL_3D_Out,
                         {MENU_X+MENU_W-MENU_BORDER-37, MENU_Y+MENU_H-MENU_BORDER-28, 35, 26},
                         COL_BORDERS);
                 }
@@ -2335,6 +2323,11 @@ bool MenuDrawer::menu_specific_update() {
                         int y = menu_get_y(i+2);
                         draw_manager.fill(
                             id_menu_marker_entry_border,
+                            {MENU_TEXT_X + 50-BORDER, y-BORDER,
+                             MARKER_ENTRY_W+2*BORDER, MARKER_ENTRY_H+2*BORDER},
+                            COL_BORDERS);
+                        draw_manager.fill(
+                            FILL_3D_In_Hollow,
                             {MENU_TEXT_X + 50-BORDER, y-BORDER,
                              MARKER_ENTRY_W+2*BORDER, MARKER_ENTRY_H+2*BORDER},
                             COL_BORDERS);

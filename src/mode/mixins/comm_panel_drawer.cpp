@@ -786,6 +786,12 @@ void CommPanelDrawer::comm_show_buttons(bool show) {
              COMM_Y + COMM_H - COMM_BORDER - 28,
              118, 26},
              COL_BORDERS);
+        draw_manager.fill(
+            FILL_3D_Out_Hollow,
+            {COMM_RCOL_X + 4 + 236,
+             COMM_Y + COMM_H - COMM_BORDER - 28,
+             118, 26},
+             COL_BORDERS);
     } else {
         draw_manager.draw(id_comm_buttons_bg, nullptr);
         draw_manager.draw(id_comm_buttons, nullptr);

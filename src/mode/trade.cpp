@@ -224,6 +224,7 @@ void Trade::enter() {
         COL_TEXT);
 
     draw_manager.fill(
+        FILL_3D_Out,
         {0, 460, RES_X, 26},
         COL_BORDERS);
     draw_manager.fill(
@@ -562,6 +563,11 @@ void Trade::draw_stock_freight() {
 void Trade::open_panel() {
     draw_manager.fill(
         id(ID::PANEL),
+        {PANEL_X - BORDER, PANEL_Y - BORDER,
+         PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+         COL_BORDERS);
+    draw_manager.fill(
+        FILL_3D_Out_Hollow,
         {PANEL_X - BORDER, PANEL_Y - BORDER,
          PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
          COL_BORDERS);

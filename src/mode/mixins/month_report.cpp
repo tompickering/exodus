@@ -48,6 +48,7 @@ void MonthReport::monthreport_open() {
         if (row == 0) {
             SprID box_id = monthreport_ids[0];
             draw_manager.fill(box_id, {x-b, y-b, w+b*2, h+b*2}, COL_BORDERS);
+            draw_manager.fill(FILL_3D_Out_Hollow, {x-b, y-b, w+b*2, h+b*2}, COL_BORDERS);
             draw_manager.fill_pattern({x, y, w, h});
 
             char heading[32];
@@ -57,6 +58,7 @@ void MonthReport::monthreport_open() {
             SprID box_id_l = monthreport_ids[1 + 2*(row-1)];
             SprID box_id_r = monthreport_ids[1 + 2*(row-1) + 1];
             draw_manager.fill(box_id_l, {x-b, y-b, lw+b*2, h+b*2}, COL_BORDERS);
+            draw_manager.fill(FILL_3D_Out_Hollow, {x-b, y-b, lw+b*2, h+b*2}, COL_BORDERS);
             draw_manager.fill_pattern({x, y, lw, h});
 
             const char* section = "Diplomacy";
@@ -68,6 +70,7 @@ void MonthReport::monthreport_open() {
             const int rx = x+lw+b*2+2;
             const int rw = w-lw-2-2*b;
             draw_manager.fill(box_id_r, {rx-b, y-b, rw+2*b, h+b*2}, COL_BORDERS);
+            draw_manager.fill(FILL_3D_Out_Hollow, {rx-b, y-b, rw+2*b, h+b*2}, COL_BORDERS);
             draw_manager.fill_pattern({rx, y, rw, h});
 
             char text[64];

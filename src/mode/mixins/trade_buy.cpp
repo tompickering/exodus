@@ -184,6 +184,11 @@ void TradeBuy::tradebuy_open() {
         {TRADEBUY_X, TRADEBUY_Y,
          TRADEBUY_W, TRADEBUY_H},
         COL_BORDERS);
+    draw_manager.fill(
+        FILL_3D_Out_Hollow,
+        {TRADEBUY_X, TRADEBUY_Y,
+         TRADEBUY_W, TRADEBUY_H},
+        COL_BORDERS);
 
     draw_manager.fill(
         id_tradebuy_black,
@@ -194,6 +199,11 @@ void TradeBuy::tradebuy_open() {
 
     draw_manager.fill(
         id_tradebuy_header_flag,
+        {TRADEBUY_FLAG_BG_X, TRADEBUY_FLAG_BG_Y,
+         TRADEBUY_FLAG_BG_W, TRADEBUY_FLAG_BG_H},
+        COL_BORDERS);
+    draw_manager.fill(
+        FILL_3D_Out_Hollow,
         {TRADEBUY_FLAG_BG_X, TRADEBUY_FLAG_BG_Y,
          TRADEBUY_FLAG_BG_W, TRADEBUY_FLAG_BG_H},
         COL_BORDERS);
@@ -219,11 +229,13 @@ void TradeBuy::tradebuy_open() {
          0, 1, 1, 1});
 
     draw_manager.fill(
+        FILL_3D_Out,
         {TRADEBUY_X + TRADEBUY_BORDER + 2, TRADEBUY_Y + TRADEBUY_H - 2*TRADEBUY_BORDER - 22,
          30, 26},
         COL_BORDERS);
 
     draw_manager.fill(
+        FILL_3D_Out,
         {TRADEBUY_X + TRADEBUY_BORDER + 154, TRADEBUY_Y + TRADEBUY_H - 2*TRADEBUY_BORDER - 22,
          280, 26},
         COL_BORDERS);

@@ -36,7 +36,8 @@ bool BattleReport::batrpt_draw(bool reset) {
 
     bool defending = !(aggressor && aggressor->is_human());
 
-    draw_manager.fill({PANEL_X - BORDER, PANEL_Y - BORDER,
+    draw_manager.fill(FILL_3D_Out,
+                      {PANEL_X - BORDER, PANEL_Y - BORDER,
                        PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
                       COL_BORDERS);
     draw_manager.fill_pattern({PANEL_X, PANEL_Y,
