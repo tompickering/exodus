@@ -58,7 +58,7 @@ void SpaceBattle::enter() {
 
     draw_manager.draw(
         id(ID::BACKGROUND),
-        IMG_RADAR,
+        FEATURE(EF_SPACE_BATTLE_LAYOUT) ? IMG_SPACE_BG : IMG_RADAR,
         {0, 0, 0, 0, 1, 1});
 
     stage = SB_Setup;

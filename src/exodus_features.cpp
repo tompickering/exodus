@@ -135,6 +135,9 @@ static bool OFFICER_CHARACTERS = false;
 // Incorporate Counsellor officer into Secret Service
 static bool COMBINE_SS_COUNSELLOR = false;
 
+// Space battle button layout
+static bool SPACE_BATTLE_LAYOUT = false;
+
 // Fixes bug meaning some AI terrorist actions are never taken
 static bool FIX_AI_TERROR = false;
 
@@ -202,6 +205,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         LORD_DISCOVERY = false;
         OFFICER_CHARACTERS = false;
         COMBINE_SS_COUNSELLOR = false;
+        SPACE_BATTLE_LAYOUT = false;
         FIX_AI_TERROR = false;
         FIX_FLEET_ADMIRAL = false;
         FIX_LUNAR_BATTLE_STALEMATE = true;
@@ -254,6 +258,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         LORD_DISCOVERY = true;
         OFFICER_CHARACTERS = true;
         COMBINE_SS_COUNSELLOR = true;
+        SPACE_BATTLE_LAYOUT = true;
         FIX_AI_TERROR = true;
         FIX_FLEET_ADMIRAL = true;
         FIX_LUNAR_BATTLE_STALEMATE = true;

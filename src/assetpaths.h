@@ -1352,6 +1352,7 @@ extern const char *IMG_LTHUMB_UNKNOWN;
 extern const char *IMG_REL_NONE;
 extern const char *IMG_REL_ALLY;
 extern const char *IMG_REL_HOSTILE;
+extern const char *IMG_SPACE_BG;
 
 extern const char *INIT_IMG;
 extern const char *CURSOR_IMG;

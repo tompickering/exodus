@@ -1355,6 +1355,7 @@ const char *IMG_LTHUMB_UNKNOWN   = D_NEW "lord_thumb_uncontacted";
 const char *IMG_REL_NONE         = D_NEW "rel_none";
 const char *IMG_REL_ALLY         = D_NEW "rel_allied";
 const char *IMG_REL_HOSTILE      = D_NEW "rel_hostile";
+const char *IMG_SPACE_BG         = D_NEW "rd1";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2710,6 +2711,7 @@ const char *ASSETS_IMG[] = {
     IMG_REL_NONE,
     IMG_REL_ALLY,
     IMG_REL_HOSTILE,
+    IMG_SPACE_BG,
 
     "",
 };
