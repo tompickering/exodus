@@ -359,6 +359,7 @@ PlanetMap::PlanetMap() : ModeBase("PlanetMap") {
     chained_explosion_idx = 0;
     chained_explosion_head = 0;
     resettling_enabled = false;
+    trade_port_operational = false;
 }
 
 void PlanetMap::enter() {
@@ -503,6 +504,12 @@ void PlanetMap::enter() {
     bomb_achievements_done = false;
 
     resettling_enabled = false;
+
+    trade_port_operational = false;
+
+    if (FEATURE(EF_TRADE_PORTS)) {
+        trade_port_operational = planet->trade_port_operational();
+    }
 
     if (FEATURE(EF_RESETTLING)) {
         int star_idx = exostate().get_active_star_idx();
@@ -1619,7 +1626,7 @@ Anim* PlanetMap::get_stone_anim(Stone stone) {
         return &stone_anims_specific[cls][stone];
     }
 
-    if (stone == STONE_TradePort && !planet->trade_port_operational()) {
+    if (stone == STONE_TradePort && !trade_port_operational) {
         return &stone_anims_generic_tradeportx;
     }
 

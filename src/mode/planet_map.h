@@ -144,6 +144,7 @@ class PlanetMap : ModeBase, CommPanelDrawer {
         bool bomb_achievements_done;
 
         bool resettling_enabled;
+        bool trade_port_operational;
 
         SprID id_stones[MAX_STONES];
 };
