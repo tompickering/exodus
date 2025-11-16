@@ -373,6 +373,11 @@ ExodusMode GuildBar::update(float delta) {
                         {PINBOARD_X - BORDER, PINBOARD_Y - BORDER,
                          PINBOARD_W + 2*BORDER, PINBOARD_H + 2*BORDER},
                          COL_BORDERS);
+                    draw_manager.fill(
+                        FILL_3D_Out_Hollow,
+                        {PINBOARD_X - BORDER, PINBOARD_Y - BORDER,
+                         PINBOARD_W + 2*BORDER, PINBOARD_H + 2*BORDER},
+                         COL_BORDERS);
                     draw_manager.fill_pattern(
                         {PINBOARD_X, PINBOARD_Y,
                          PINBOARD_W, PINBOARD_H});
@@ -436,6 +441,11 @@ ExodusMode GuildBar::update(float delta) {
                 if (click) {
                     draw_manager.fill(
                         id(ID::PINBOARD),
+                        {PINBOARD_X - BORDER, PINBOARD_Y - BORDER,
+                         PINBOARD_W + 2*BORDER, PINBOARD_H + 2*BORDER},
+                         COL_BORDERS);
+                    draw_manager.fill(
+                        FILL_3D_Out_Hollow,
                         {PINBOARD_X - BORDER, PINBOARD_Y - BORDER,
                          PINBOARD_W + 2*BORDER, PINBOARD_H + 2*BORDER},
                          COL_BORDERS);
@@ -551,6 +561,11 @@ ExodusMode GuildBar::update(float delta) {
                  SHERIFF_W + 2*BORDER, SHERIFF_H + 2*BORDER},
                  COL_BORDERS);
             draw_manager.fill(
+                FILL_3D_Out_Hollow,
+                {SHERIFF_X -   BORDER, SHERIFF_Y -   BORDER,
+                 SHERIFF_W + 2*BORDER, SHERIFF_H + 2*BORDER},
+                 COL_BORDERS);
+            draw_manager.fill(
                 id(ID::SHERIFF_BORDER),
                 {SHERIFF_X + 4, SHERIFF_Y + SHERIFF_H - 36,
                  SHERIFF_W - 8, 36},
@@ -566,6 +581,7 @@ ExodusMode GuildBar::update(float delta) {
                 {SHERIFF_X + 6, SHERIFF_Y + SHERIFF_H - 2,
                  0, 1, 1, 1});
             draw_manager.fill(
+                FILL_3D_Out,
                 {SHERIFF_X + 126, SHERIFF_Y + SHERIFF_H - 28,
                  SHERIFF_W - 132, 26},
                  COL_BORDERS);

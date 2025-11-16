@@ -91,6 +91,7 @@ void PlanetTransfer::enter() {
         COL_TEXT);
 
     draw_manager.fill(
+        FILL_3D_Out,
         {0, 460, RES_X, 26},
         COL_BORDERS);
     draw_manager.fill(

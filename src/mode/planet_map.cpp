@@ -542,6 +542,7 @@ void PlanetMap::draw() {
 
     if (draw_menu) {
         draw_manager.fill(
+            FILL_3D_Out,
             {menu_x, menu_y, 126, 447},
             COL_BORDERS);
 
@@ -1006,8 +1007,8 @@ ExodusMode PlanetMap::update(float delta) {
                         Justify::Left,
                         LAW_X+20, LAW_Y+104,
                         COL_TEXT);
-                    draw_manager.fill({LAW_X+2, LAW_Y+LAW_H-28, 28, 26}, COL_BORDERS);
-                    draw_manager.fill({LAW_X+LAW_W-30, LAW_Y+LAW_H-28, 28, 26}, COL_BORDERS);
+                    draw_manager.fill(FILL_3D_Out, {LAW_X+2, LAW_Y+LAW_H-28, 28, 26}, COL_BORDERS);
+                    draw_manager.fill(FILL_3D_Out, {LAW_X+LAW_W-30, LAW_Y+LAW_H-28, 28, 26}, COL_BORDERS);
                     draw_manager.draw(
                         id(ID::LAW_TAXYESNO),
                         IMG_BR14_EXPORT,
@@ -2240,6 +2241,13 @@ void PlanetMap::draw_frame(int w, int h, bool planet_bg) {
          w + 2*border,
          h + 2*border},
          COL_BORDERS);
+    draw_manager.fill(
+        FILL_3D_Out_Hollow,
+        {(RES_X - w) / 2 - border,
+         (RES_Y - h) / 2 - border - 18,
+         w + 2*border,
+         h + 2*border},
+         COL_BORDERS);
     if (planet_bg) {
         DrawArea area = {108, 90, w, h};
         draw_manager.set_source_region(id(ID::FRAME_BG), &area);
@@ -2595,6 +2603,11 @@ void PlanetMap::close_law_panel() {
 void PlanetMap::draw_law_panel() {
     draw_manager.fill(
         id(ID::LAW_PANEL),
+        {LAW_X - BORDER, LAW_Y - BORDER,
+         LAW_W + 2*BORDER, LAW_H + 2*BORDER},
+         COL_BORDERS);
+    draw_manager.fill(
+        FILL_3D_Out_Hollow,
         {LAW_X - BORDER, LAW_Y - BORDER,
          LAW_W + 2*BORDER, LAW_H + 2*BORDER},
          COL_BORDERS);

@@ -1062,6 +1062,11 @@ void LunarBattlePrep::draw_panel() {
         {PANEL_X - BORDER, PANEL_Y - BORDER,
          PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
         COL_BORDERS);
+    draw_manager.fill(
+        FILL_3D_Out_Hollow,
+        {PANEL_X - BORDER, PANEL_Y - BORDER,
+         PANEL_W + 2*BORDER, PANEL_H + 2*BORDER},
+        COL_BORDERS);
     draw_manager.fill_pattern(
         id(ID::PANEL_PATTERN),
         {PANEL_X, PANEL_Y,

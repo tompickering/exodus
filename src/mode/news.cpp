@@ -13,7 +13,7 @@ void News::enter() {
     ModeBase::enter();
 
     draw_manager.draw(IMG_BG_NEWS);
-    draw_manager.fill({0, 0, RES_X, HEADER_HEIGHT}, COL_BORDERS);
+    draw_manager.fill(FILL_3D_Out, {0, 0, RES_X, HEADER_HEIGHT}, COL_BORDERS);
     draw_manager.fill_pattern({4, 4, RES_X-8, HEADER_HEIGHT - 8});
 
     char heading[32];
