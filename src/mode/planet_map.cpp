@@ -241,6 +241,7 @@ enum ID {
     SURF,
     TOOL_AGRI,
     TOOL_ACAD,
+    TOOL_TRADEPORT,
     ICON_FOOD,
     ICON_PLU,
     ICON_UNREST,
@@ -609,6 +610,15 @@ void PlanetMap::draw() {
                 id(ID::TOOL_ACAD),
                 get_stone_anim(STONE_Academy)->frame(0),
                 {540, 198,
+                0, 0, 1, 1});
+        }
+
+        if (FEATURE(EF_TRADE_PORTS)) {
+            draw_manager.draw(
+                id(ID::TOOL_TRADEPORT),
+                get_stone_anim(STONE_TradePort)->frame(0),
+                //TODO
+                {500, 198,
                 0, 0, 1, 1});
         }
 
@@ -1525,7 +1535,8 @@ void init_stone_anims() {
     stone_anims_generic[STONE_Trade]                     = Anim(1,  IMG_SU1_STONE17);
     stone_anims_generic[STONE_Park]                      = Anim(1,  IMG_SU1_STONE23);
     stone_anims_generic[STONE_Academy]                   = Anim(1,  IMG_STONE_ACAD);
-
+    stone_anims_generic[STONE_TradePort]                 = Anim(2,  IMG_STONE_TPORT,
+                                                                    IMG_STONE_TPORT_OFF);
     stone_anims_generic[STONE_Radiation]                 = Anim(1,  IMG_SU1_STONE6);
     stone_anims_generic[STONE_Rubble]                    = Anim(1,  IMG_SU1_STONE20);
 
@@ -1588,6 +1599,9 @@ void init_stone_anims() {
                                                                     IMG_STONE_ACAD_5,
                                                                     IMG_STONE_ACAD_6,
                                                                     IMG_STONE_ACAD_7);
+    construct_anims_generic[STONE_TradePort]             = Anim(3,  IMG_STONE_TPORT_0,
+                                                                    IMG_STONE_TPORT_1,
+                                                                    IMG_STONE_TPORTX_OFF);
 
     stone_anims_initialised = true;
 }
@@ -1634,7 +1648,11 @@ Tool PlanetMap::get_tool_for_click(float x, float y) {
         if (row == 1) return TOOL_Plu;
         if (row == 2) return TOOL_Inf;
         if (row == 3) return TOOL_Port0;
-        if (row == 4) return TOOL_Trade;
+        if (FEATURE(EF_TRADE_PORTS)) {
+            if (row == 4) return TOOL_TradePort;
+        } else {
+            if (row == 4) return TOOL_Trade;
+        }
     } else if (col == 1) {
         if (row == 0) return TOOL_Cultivate;
         if (row == 1) return TOOL_City;
@@ -1727,6 +1745,9 @@ void PlanetMap::set_tool(Tool t) {
         case TOOL_Academy:
             tool_desc0 = "Academy";
             break;
+        case TOOL_TradePort:
+            tool_desc0 = "Trade Port";
+            break;
         case TOOL_END:
             break;
     }
@@ -1802,6 +1823,7 @@ void PlanetMap::draw_tool_rect(Tool t, RGB col) {
         case TOOL_Inf:
         case TOOL_Port0:
         case TOOL_Trade:
+        case TOOL_TradePort:
             x = 498;
             break;
         case TOOL_Cultivate:
@@ -1845,6 +1867,7 @@ void PlanetMap::draw_tool_rect(Tool t, RGB col) {
             y = 158;
             break;
         case TOOL_Trade:
+        case TOOL_TradePort:
         case TOOL_LunarBase:
         case TOOL_Academy:
         case TOOL_Park:
@@ -1891,7 +1914,8 @@ Stone PlanetMap::tool2stone(Tool t) {
             return STONE_Park;
         case TOOL_Academy:
             return STONE_Academy;
-            break;
+        case TOOL_TradePort:
+            return STONE_TradePort;
         case TOOL_END:
             break;
     }
@@ -1934,6 +1958,8 @@ int PlanetMap::tool2cost(Tool t) {
             return Planet::stone_cost(STONE_Park);
         case TOOL_Academy:
             return Planet::stone_cost(STONE_Academy);
+        case TOOL_TradePort:
+            return Planet::stone_cost(STONE_TradePort);
         case TOOL_END:
             break;
     }
