@@ -277,12 +277,7 @@ ExodusMode GalaxyMap::update(float delta) {
                             }
 
                             comm_ctx.location = exostate().tgt2loc(selected_ft);
-                            // Orig stores pixel locations instead of low-res grid values
-                            // See PROC_Csunpos for original's multiplaication by 43
-                            int dx = (selected_ft->x - tgt->x) * 43;
-                            int dy = (selected_ft->y - tgt->y) * 43;
-                            int dist = sqrt((dx*dx) + (dy*dy));
-                            int ftime = 1 + (dist/300);
+                            int ftime = exostate().get_months_between(selected_ft, tgt);
                             if (ftime > 1 && player->has_invention(INV_OrbitalMassThrust)) {
                                 ftime /= 3;
                             }

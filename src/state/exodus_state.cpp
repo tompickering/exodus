@@ -704,6 +704,15 @@ int ExodusState::get_random_star_idx() {
     return rand() % n_stars;
 }
 
+int ExodusState::get_months_between(const FlyTarget* a, const FlyTarget* b) {
+    // Orig stores pixel locations instead of low-res grid values
+    // See PROC_Csunpos for original's multiplaication by 43
+    int dx = (a->x - b->x) * 43;
+    int dy = (a->y - b->y) * 43;
+    int dist = sqrt((dx*dx) + (dy*dy));
+    return 1 + (dist/300);
+}
+
 int ExodusState::get_n_owned_planets() {
     return _get_n_owned_planets(true);
 }

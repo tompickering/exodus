@@ -126,6 +126,7 @@ class ExodusState : public Saveable {
         Star* get_star(int);
         int get_star_idx(Star*);
         int get_random_star_idx();
+        int get_months_between(const FlyTarget*, const FlyTarget*);
         int get_n_owned_planets();
         int get_n_unowned_planets();
         ArtificialPlanetViable artificial_planet_viable(Star*);
