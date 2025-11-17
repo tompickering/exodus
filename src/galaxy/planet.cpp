@@ -2324,7 +2324,7 @@ void Planet::ai_update() {
         const int port_a = count_stones(STONE_Port0);
         const int port_b = count_stones(STONE_Port1);
         const int port_c = count_stones(STONE_Port2);
-        const int tcentre = count_stones(STONE_Trade);
+        const int tcentre = count_stones(STONE_Trade) + count_stones(STONE_TradePort);
         const int cities = count_stones(STONE_City);
         const int academies = count_stones(STONE_Academy);
 
@@ -2467,6 +2467,8 @@ void Planet::ai_update() {
 
         stop = stop || action == 0;
 
+        Stone trade_stone = FEATURE(EF_TRADE_PORTS) ? STONE_TradePort : STONE_Trade;
+
         // Apply action (Orig: PROCeta*)
         switch (action) {
             case 1:
@@ -2532,8 +2534,8 @@ void Planet::ai_update() {
                 break;
             case 5:
                 // BUILD TRADE CENTRE
-                if (free > 0 && owner->attempt_spend_cpuforce(stone_cost(STONE_Trade), MC_Building)) {
-                    free -= ai_place_stone(1, STONE_Trade, STONE_City);
+                if (free > 0 && owner->attempt_spend_cpuforce(stone_cost(trade_stone), MC_Building)) {
+                    free -= ai_place_stone(1, trade_stone, STONE_City);
                 }
                 break;
             case 6:
