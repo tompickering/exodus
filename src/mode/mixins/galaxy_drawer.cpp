@@ -157,35 +157,47 @@ void GalaxyDrawer::draw_galaxy(bool pixelswap) {
 void GalaxyDrawer::draw_planet_markers(bool pixelswap) {
     if (!FEATURE(EF_GALAXY_MAP_PLANET_MARKERS)) return;
 
-    int x, y;
-
     if (exostate().multiplayer()) {
         return;
     }
 
-    DrawTarget tgt = pixelswap ? TGT_Secondary : TGT_Primary;
-
     for (StarIterator siter; !siter.complete(); ++siter) {
         Star *s = siter.get();
-        get_draw_position(s, x, y);
+        draw_planet_markers_for_star(pixelswap, s, true);
+    }
+}
 
-        int drawn = 0;
+bool GalaxyDrawer::draw_planet_markers_for_star(bool pixelswap, Star* s, bool do_draw) {
+    if (!FEATURE(EF_GALAXY_MAP_PLANET_MARKERS)) return false;
 
-        for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
-            Planet *p = s->get_planet(i);
-            if (p && p->exists() && p->is_owned()) {
-                Player *o = exostate().get_player(p->get_owner());
-                if (o && o->is_human()) {
-                    draw_manager.draw(
-                        tgt,
-                        p->sprites()->marker,
-                        {x+10+6*drawn, y-10,
-                         0.5, 0.5, 1, 1});
-                    ++drawn;
+    int x, y;
+
+    get_draw_position(s, x, y);
+
+    DrawTarget tgt = pixelswap ? TGT_Secondary : TGT_Primary;
+
+    int drawn = 0;
+
+    for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+        Planet *p = s->get_planet(i);
+        if (p && p->exists() && p->is_owned()) {
+            Player *o = exostate().get_player(p->get_owner());
+            if (o && o->is_human()) {
+                if (!do_draw) {
+                    return true;
                 }
+
+                draw_manager.draw(
+                    tgt,
+                    p->sprites()->marker,
+                    {x+10+6*drawn, y-10,
+                     0.5, 0.5, 1, 1});
+                ++drawn;
             }
         }
     }
+
+    return (drawn > 0);
 }
 
 void GalaxyDrawer::draw_markers(bool pixelswap, bool names_only) {
@@ -196,15 +208,22 @@ void GalaxyDrawer::draw_markers(bool pixelswap, bool names_only) {
 
     int n_stars;
     Galaxy *gal = exostate().get_galaxy();
-    const Star *stars = gal->get_stars(n_stars);
+    Star *stars = gal->get_stars(n_stars);
 
     if (!names_only) {
         for (int i = 0; i < N_MARKERS; ++i) {
             const StarMarker* marker = p->get_marker(i);
             if (marker->valid()) {
-                const Star* s = &stars[marker->idx];
+                Star* s = &stars[marker->idx];
                 get_draw_position(s, x, y);
-                const char* spr = FEATURE(EF_GALAXY_MAP_PLANET_MARKERS) ? IMG_TS1_MK4 : IMG_TS1_MK2;
+                const char* spr = IMG_TS1_MK2;
+
+                if (FEATURE(EF_GALAXY_MAP_PLANET_MARKERS)) {
+                    if (draw_planet_markers_for_star(false, s, false)) {
+                        spr = IMG_TS1_MK4;
+                    }
+                }
+
                 draw_manager.draw(tgt, marker_ids[i], spr, {x, y, 0.5, 0.5, 1, 1});
             }
         }

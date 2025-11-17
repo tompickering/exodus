@@ -18,6 +18,7 @@ class GalaxyDrawer {
         void get_draw_position(const FlyTarget*, int&, int&);
         void draw_markers(bool, bool);
         void draw_planet_markers(bool);
+        bool draw_planet_markers_for_star(bool, Star*, bool);
     protected:
         void draw_galaxy(bool);
     private:
