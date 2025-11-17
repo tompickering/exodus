@@ -2206,6 +2206,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                                                 break;
                                             case MT_TerrorTrade:
                                                 ephstate.destruction.tgt_stones.add(STONE_Trade);
+                                                ephstate.destruction.tgt_stones.add(STONE_TradePort);
                                                 break;
                                             case MT_TerrorMine:
                                                 ephstate.destruction.tgt_stones.add(STONE_Mine);
