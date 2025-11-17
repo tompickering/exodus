@@ -25,7 +25,7 @@ const int LAW_Y = RES_Y/2 - LAW_H/2;
 
 const float ANIM_RATE = 0.5f;
 
-static const int TOOL_DESC_LINES = 10;
+static const int TOOL_DESC_LINES = 12;
 
 static const char* tool_desc_hq[] = {
     "The command station",
@@ -37,6 +37,8 @@ static const char* tool_desc_hq[] = {
     "",
     "To survive, the command base units need",
     "one cultivated area.",
+    "",
+    "",
     "",
 };
 
@@ -51,6 +53,8 @@ static const char* tool_desc_agri[] = {
     "",
     "The food that is non needed is going to",
     "be stored in the planet's depots.",
+    "",
+    "",
 };
 
 static const char* tool_desc_mine[] = {
@@ -63,6 +67,8 @@ static const char* tool_desc_mine[] = {
     "If the player's raw materials have been",
     "exploited, the mining units will not be able",
     "to haul any more minerals.",
+    "",
+    "",
     "",
 };
 
@@ -77,6 +83,8 @@ static const char* tool_desc_plu[] = {
     "If a plutonium unit explodes for",
     "any reason, it will destroy its",
     "environment. Beware of chain reactions.",
+    "",
+    "",
 };
 
 static const char* tool_desc_city[] = {
@@ -90,6 +98,8 @@ static const char* tool_desc_city[] = {
     "If the population of a city gets too big,",
     "the city will expand automatically if",
     "the environment allows that.",
+    "",
+    "",
 };
 
 static const char* tool_desc_clear[] = {
@@ -103,6 +113,8 @@ static const char* tool_desc_clear[] = {
     "",
     "If an alien village is cleared, its",
     "inhabitants will not survive.",
+    "",
+    "",
 };
 
 static const char* tool_desc_inf[] = {
@@ -112,6 +124,8 @@ static const char* tool_desc_inf[] = {
     "",
     "It needs one plutonium unit",
     "and one Army Credit (Ar) to work.",
+    "",
+    "",
     "",
     "",
     "",
@@ -129,6 +143,8 @@ static const char* tool_desc_gli[] = {
     "",
     "",
     "",
+    "",
+    "",
 };
 
 static const char* tool_desc_art[] = {
@@ -138,6 +154,8 @@ static const char* tool_desc_art[] = {
     "",
     "It needs one plutonium unit",
     "and three Army Credits (Ar) to work.",
+    "",
+    "",
     "",
     "",
     "",
@@ -155,6 +173,8 @@ static const char* tool_desc_port0[] = {
     "fleet and the planet.",
     "",
     "",
+    "",
+    "",
 };
 
 static const char* tool_desc_port1[] = {
@@ -166,6 +186,8 @@ static const char* tool_desc_port1[] = {
     "The spaceport makes it possible to",
     "transfer goods between the space",
     "fleet and the planet.",
+    "",
+    "",
     "",
     "",
 };
@@ -181,6 +203,8 @@ static const char* tool_desc_port2[] = {
     "fleet and the planet.",
     "",
     "",
+    "",
+    "",
 };
 
 static const char* tool_desc_trade[] = {
@@ -194,6 +218,23 @@ static const char* tool_desc_trade[] = {
     "certain amount of the planet's stock.",
     "",
     "",
+    "",
+    "",
+};
+
+static const char* tool_desc_tradeport[] = {
+    "Trade Port",
+    "Allows private traders from other planets to",
+    "buy resources stored in the planet's depots.",
+    "",
+    "Planets in this system belonging to you or to a",
+    "trade ally are viable trade partners. Advanced",
+    "technology may be able to extend operating",
+    "range beyond this system.",
+    "",
+    "Green lights indicate that we have a viable",
+    "trade partner, while red lights indicate we",
+    "do not, and thus cannot operate.",
 };
 
 static const char* tool_desc_lunar_base[] = {
@@ -207,6 +248,8 @@ static const char* tool_desc_lunar_base[] = {
     "destroyed during battle, the base is",
     "able to recreate its destroyed units",
     "after battle.",
+    "",
+    "",
 };
 
 static const char* tool_desc_academy[] = {
@@ -220,6 +263,8 @@ static const char* tool_desc_academy[] = {
     "",
     "Academies also provide a boost to",
     "scientific progress.",
+    "",
+    "",
 };
 
 static const char* tool_desc_park[] = {
@@ -230,6 +275,8 @@ static const char* tool_desc_park[] = {
     "",
     "A park offers sufficient space for",
     "inhabitants of at least 3 cities.",
+    "",
+    "",
     "",
     "",
     "",
@@ -2600,6 +2647,9 @@ void PlanetMap::draw_frame_help(Tool tool) {
             break;
         case TOOL_Trade:
             desc = tool_desc_trade;
+            break;
+        case TOOL_TradePort:
+            desc = tool_desc_tradeport;
             break;
         case TOOL_LunarBase:
             desc = tool_desc_lunar_base;
