@@ -442,6 +442,12 @@ void PlanetMap::enter() {
     exploding_stone = STONE_Clear;
     exploding = EXP_None;
 
+    trade_port_operational = false;
+
+    if (FEATURE(EF_TRADE_PORTS)) {
+        trade_port_operational = planet->trade_port_operational();
+    }
+
     for (int i = 0; i < MAX_STONES; ++i) {
         id_stones[i] = draw_manager.new_sprite_id();
     }
@@ -551,12 +557,6 @@ void PlanetMap::enter() {
     bomb_achievements_done = false;
 
     resettling_enabled = false;
-
-    trade_port_operational = false;
-
-    if (FEATURE(EF_TRADE_PORTS)) {
-        trade_port_operational = planet->trade_port_operational();
-    }
 
     if (FEATURE(EF_RESETTLING)) {
         int star_idx = exostate().get_active_star_idx();
