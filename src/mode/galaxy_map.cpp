@@ -2138,7 +2138,7 @@ ExodusMode GalaxyMap::month_pass_update() {
 
                                         draw_manager.draw(
                                             id(ID::FRAMED_IMG),
-                                            IMG_CT3_EXPORT,
+                                            ENHANCED() ? IMG_SPYCAUGHT : IMG_CT3_EXPORT,
                                             {5, 7, 0, 0, 1, 1});
 
                                         char t[64];
