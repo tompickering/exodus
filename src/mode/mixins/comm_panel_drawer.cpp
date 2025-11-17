@@ -1228,8 +1228,10 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 buildset.add(STONE_Port1);
                 buildset.add(STONE_Port2);
                 buildset.add(STONE_Trade);
+                buildset.add(STONE_TradePort);
                 buildset.add(STONE_Village);
                 buildset.add(STONE_Park);
+                buildset.add(STONE_Academy);
 
                 StoneSet freeset;
                 freeset.add(STONE_Clear);
