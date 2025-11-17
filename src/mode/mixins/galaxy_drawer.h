@@ -19,6 +19,7 @@ class GalaxyDrawer {
         void draw_markers(bool, bool);
         void draw_planet_markers(bool);
         bool draw_planet_markers_for_star(bool, Star*, bool);
+        void draw_mouseover_star_name();
     protected:
         void draw_galaxy(bool);
     private:
@@ -26,6 +27,7 @@ class GalaxyDrawer {
         SprID star_ids[GALAXY_MAX_STARS];
         SprID marker_ids[N_MARKERS];
         SprID marker_text_ids[N_MARKERS];
+        SprID star_name_id;
 };
 
 #endif

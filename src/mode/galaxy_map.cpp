@@ -148,6 +148,8 @@ ExodusMode GalaxyMap::update(float delta) {
     while (selected_ft_blink > 2*BLINK_TIME)
         selected_ft_blink -= 2*BLINK_TIME;
 
+    draw_mouseover_star_name();
+
     switch (stage) {
         case GM_SwapIn:
             draw_manager.save_background();

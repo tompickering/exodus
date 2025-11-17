@@ -60,6 +60,8 @@ GalaxyDrawer::GalaxyDrawer() {
         marker_ids[i] = ID_NONE;
         marker_text_ids[i] = ID_NONE;
     }
+
+    star_name_id = ID_NONE;
 }
 
 FlyTarget* GalaxyDrawer::get_clicked_flytarget() {
@@ -198,6 +200,29 @@ bool GalaxyDrawer::draw_planet_markers_for_star(bool pixelswap, Star* s, bool do
     }
 
     return (drawn > 0);
+}
+
+void GalaxyDrawer::draw_mouseover_star_name() {
+    int x, y;
+
+    if (star_name_id == ID_NONE) {
+        star_name_id = draw_manager.new_sprite_id();
+    }
+
+    FlyTarget *ft = get_mouseover_flytarget();
+
+    if (ft) {
+        get_draw_position(ft, x, y);
+        draw_manager.draw_text(
+            star_name_id,
+            Font::Tiny,
+            ft->name,
+            Justify::Centre,
+            x, y - 28,
+            COL_TEXT2);
+    } else {
+        draw_manager.draw(star_name_id, nullptr);
+    }
 }
 
 void GalaxyDrawer::draw_markers(bool pixelswap, bool names_only) {
