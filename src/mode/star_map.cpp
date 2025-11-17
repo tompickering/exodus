@@ -512,7 +512,7 @@ ExodusMode StarMap::update(float delta) {
                 if (draw_manager.query_click(id(ID::FLEET_BMB_PORT)).id)   { bmb=true; tgt.add(STONE_Port0);
                                                                                        tgt.add(STONE_Port1);
                                                                                        tgt.add(STONE_Port2); }
-                if (draw_manager.query_click(id(ID::FLEET_BMB_TRADE)).id)  { bmb=true; tgt.add(STONE_Trade); }
+                if (draw_manager.query_click(id(ID::FLEET_BMB_TRADE)).id)  { bmb=true; tgt.add(STONE_Trade); tgt.add(STONE_TradePort); }
                 if (draw_manager.query_click(id(ID::FLEET_BMB_AIRDEF)).id) { bmb=true; bmb_guns=true; }
 
                 if (bmb) {
