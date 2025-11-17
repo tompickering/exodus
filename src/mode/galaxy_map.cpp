@@ -58,6 +58,8 @@ GalaxyMap::GalaxyMap() : ModeBase("GalaxyMap"), GalaxyDrawer(), PanelDrawer(PNL_
 void GalaxyMap::enter() {
     ModeBase::enter(ID::END);
 
+    news_flag_img = ENHANCED() ? IMG_FLAG_NEWS : IMG_TS1_FLAG16;
+
     DrawTarget tgt = TGT_Primary;
     if (ephstate.galaxymap_pixelswap) {
         tgt = TGT_Secondary;
@@ -569,7 +571,7 @@ ExodusMode GalaxyMap::update(float delta) {
                         bulletin_ensure_closed();
                         bulletin_start_new(false);
                         bulletin_set_bg(IMG_ME6_MENU);
-                        bulletin_set_flag(IMG_TS1_FLAG16);
+                        bulletin_set_flag(news_flag_img);
                         bulletin_set_text_col(COL_TEXT3);
                         bulletin_set_next_text("MESSAGE FROM SPACE GUILD");
                         bulletin_set_next_text("");
@@ -1446,7 +1448,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                 if ((int)sz < (int)STAR_Dwarf) {
                     bulletin_start_new(false);
                     bulletin_set_bg(IMG_ME4_MENU);
-                    bulletin_set_flag(IMG_TS1_FLAG16);
+                    bulletin_set_flag(news_flag_img);
                     if (sz < STAR_Expand4) {
                         bulletin_set_next_text("SUN %s IS EXPANDING", tmp_caps(s->name));
                     } else {
@@ -2384,7 +2386,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                         const char* title_str = p->get_guild_title_str();
                         audio_manager.target_music(mpart2mus(5));
                         bulletin_start_new(false);
-                        bulletin_set_flag(IMG_TS1_FLAG16);
+                        bulletin_set_flag(news_flag_img);
                         bulletin_set_text_col(COL_TEXT3);
                         bulletin_set_next_text("NEW TITLE FOR %s", tmp_caps(p->get_full_name()));
                         bulletin_set_next_text("");
@@ -2465,7 +2467,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                         if (p->leave_galaxy()) {
                             audio_manager.target_music(mpart2mus(9));
                             bulletin_start_new(false);
-                            bulletin_set_flag(IMG_TS1_FLAG16);
+                            bulletin_set_flag(news_flag_img);
                             bulletin_set_text_col(COL_TEXT3);
                             bulletin_set_next_text("%s FAILED", tmp_caps(p->get_name()));
                             bulletin_set_next_text("");
@@ -2647,7 +2649,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 player->transfer_art(m/2);
                 audio_manager.target_music(mpart2mus(8));
                 bulletin_start_new(false);
-                bulletin_set_flag(IMG_TS1_FLAG16);
+                bulletin_set_flag(news_flag_img);
                 bulletin_set_text_col(COL_TEXT3);
                 bulletin_set_next_text("%s HAS RETURNED", tmp_caps(player->get_name()));
                 bulletin_set_next_text("");
@@ -2671,7 +2673,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 if (exostate().kill(player)) {
                     audio_manager.target_music(mpart2mus(9));
                     bulletin_start_new(false);
-                    bulletin_set_flag(IMG_TS1_FLAG16);
+                    bulletin_set_flag(news_flag_img);
                     bulletin_set_text_col(COL_TEXT3);
                     bulletin_set_next_text("%s IS DEAD", tmp_caps(oldname));
                     bulletin_set_next_text("");
@@ -4373,7 +4375,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 audio_manager.target_music(mpart2mus(10));
                 exostate().first_city_done = true;
                 bulletin_start_new(false);
-                bulletin_set_flag(IMG_TS1_FLAG16);
+                bulletin_set_flag(news_flag_img);
                 bulletin_set_text_col(COL_TEXT3);
                 bulletin_set_next_text("%s HAS BUILT THE FIRST CITY", tmp_caps(owner->get_name()));
                 bulletin_set_next_text("");

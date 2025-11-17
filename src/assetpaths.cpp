@@ -1105,6 +1105,7 @@ const char *IMG_FLAG_SCIENCE     = D_NEW "flag_science";
 const char *IMG_FLAG_SHIP        = D_NEW "flag_ship";
 const char *IMG_FLAG_START       = D_NEW "flag_start";
 const char *IMG_FLAG_ALLIANCES   = D_NEW "flag_alliances";
+const char *IMG_FLAG_NEWS        = D_NEW "flag_news";
 const char *IMG_BTN_TOP          = D_NEW "btn_top";
 const char *IMG_MAN_PLANPANEL    = D_NEW "man_planpanel";
 const char *IMG_MAN_BTN_FLY      = D_NEW "man_btn_fly";
@@ -2467,6 +2468,7 @@ const char *ASSETS_IMG[] = {
     IMG_FLAG_SHIP,
     IMG_FLAG_START,
     IMG_FLAG_ALLIANCES,
+    IMG_FLAG_NEWS,
     IMG_BTN_TOP,
     IMG_MAN_PLANPANEL,
     IMG_MAN_BTN_FLY,

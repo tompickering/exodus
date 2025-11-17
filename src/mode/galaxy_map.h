@@ -191,6 +191,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
         FlyTarget *selected_ft;
         float selected_ft_blink;
         float first_spaceport_time;
+        const char* news_flag_img;
 
         void set_stage(Stage);
 

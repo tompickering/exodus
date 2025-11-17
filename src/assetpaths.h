@@ -1102,6 +1102,7 @@ extern const char *IMG_FLAG_SCIENCE;
 extern const char *IMG_FLAG_SHIP;
 extern const char *IMG_FLAG_START;
 extern const char *IMG_FLAG_ALLIANCES;
+extern const char *IMG_FLAG_NEWS;
 extern const char *IMG_BTN_TOP;
 extern const char *IMG_MAN_PLANPANEL;
 extern const char *IMG_MAN_BTN_FLY;
