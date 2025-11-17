@@ -3733,7 +3733,7 @@ void LunarBattle::show_info() {
         PANEL_X + PANEL_W/2, PANEL_Y + 4,
         COL_TEXT2);
 
-    draw_manager.fill(FILL_3D_Out, {PANEL_X, PANEL_Y + 28, PANEL_W, 4}, COL_BORDERS);
+    draw_manager.fill({PANEL_X, PANEL_Y + 28, PANEL_W, 4}, COL_BORDERS);
 
     RGB col_att = COL_TEXT2;
     RGB col_def = COL_TEXT2;
