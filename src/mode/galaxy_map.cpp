@@ -5221,11 +5221,16 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
         if (owner) {
             if (p->count_stones(STONE_TradePort)) {
-                TradeReport rpt = p->monthly_trade_port();
-                report.trade_mc = rpt.mc;
-                report.add_line("Trade Port sold:");
-                report.add_line("Mi: %d / Fd: %d / Pl: %d => %d MC",
-                                 rpt.mi,  rpt.fd,  rpt.pl, rpt.mc);
+                if (p->trade_port_operational()) {
+                    TradeReport rpt = p->monthly_trade_port();
+                    report.trade_mc = rpt.mc;
+                    report.add_line("Trade Port sold:");
+                    report.add_line("Mi: %d / Fd: %d / Pl: %d => %d MC",
+                                     rpt.mi,  rpt.fd,  rpt.pl, rpt.mc);
+                } else {
+                    report.register_minor_problem();
+                    report.add_line("Trade Port not in operation. No partners.");
+                }
             }
         }
         next_mpp_stage();
