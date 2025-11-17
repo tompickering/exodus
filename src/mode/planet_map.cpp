@@ -785,6 +785,8 @@ ExodusMode PlanetMap::update(float delta) {
 
                         if (resettling_enabled && (active_tool == TOOL_Clear) && (existing == STONE_City)) {
                             proceed = true;
+                            // Resettling still causes some unrest
+                            planet->adjust_unrest(1);
                             player->give_mc(15, MC_Resettling);
                         } else {
                             proceed = player->attempt_spend(tool2cost(active_tool), MC_Building);
