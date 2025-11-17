@@ -204,7 +204,8 @@ void GalaxyDrawer::draw_markers(bool pixelswap, bool names_only) {
             if (marker->valid()) {
                 const Star* s = &stars[marker->idx];
                 get_draw_position(s, x, y);
-                draw_manager.draw(tgt, marker_ids[i], IMG_TS1_MK2, {x, y, 0.5, 0.5, 1, 1});
+                const char* spr = FEATURE(EF_GALAXY_MAP_PLANET_MARKERS) ? IMG_TS1_MK4 : IMG_TS1_MK2;
+                draw_manager.draw(tgt, marker_ids[i], spr, {x, y, 0.5, 0.5, 1, 1});
             }
         }
     }

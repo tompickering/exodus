@@ -1364,6 +1364,7 @@ const char *IMG_STONE_TPORTX_OFF = D_NEW "tport-closed-lights-off";
 const char *IMG_STONE_TPORT_0    = D_NEW "tport-0";
 const char *IMG_STONE_TPORT_1    = D_NEW "tport-1";
 const char *IMG_SPYCAUGHT        = D_NEW "spycaught";
+const char *IMG_TS1_MK4          = D_NEW "ts1_mk4";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2728,6 +2729,7 @@ const char *ASSETS_IMG[] = {
     IMG_STONE_TPORT_0,
     IMG_STONE_TPORT_1,
     IMG_SPYCAUGHT,
+    IMG_TS1_MK4,
 
     "",
 };

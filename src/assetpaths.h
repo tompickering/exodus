@@ -1361,6 +1361,7 @@ extern const char *IMG_STONE_TPORTX_OFF;
 extern const char *IMG_STONE_TPORT_0;
 extern const char *IMG_STONE_TPORT_1;
 extern const char *IMG_SPYCAUGHT;
+extern const char *IMG_TS1_MK4;
 
 extern const char *INIT_IMG;
 extern const char *CURSOR_IMG;
