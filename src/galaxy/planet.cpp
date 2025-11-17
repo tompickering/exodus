@@ -1804,6 +1804,12 @@ bool Planet::trade_port_operational() {
 
     int owner_idx = get_owner();
     Player *owner = exostate().get_player(owner_idx);
+
+    // Building AI to exploit ports is tricky - cheat and allow them to operate
+    if (!owner->is_human()) {
+        return true;
+    }
+
     Star *this_star = exostate().get_star_for_planet(this);
 
     for (StarIterator siter; !siter.complete(); ++siter) {
@@ -1812,10 +1818,13 @@ bool Planet::trade_port_operational() {
         // This star is always in range
         bool in_range = (s == this_star);
 
+        // Irrelevant as we allow AI ports to operate - see above
+        /*
         // AI planets are always in range of each other
         if (!in_range && (!owner->is_human())) {
             in_range = true;
         }
+        */
 
         if (!in_range && owner->has_invention(INV_UltraRangeScanner)) {
             if (exostate().get_months_between(this_star, s) <= 1) {
