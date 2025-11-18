@@ -1807,7 +1807,9 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_prepare(1);
             // Alliance very unlikely if we don't have a planet
             if (exostate().get_n_planets(comm_player) <= 0) {
-                comm_ctx.alliance_prob = 99;
+                if (!comm_other->perk_easy_alliances) {
+                    comm_ctx.alliance_prob = 99;
+                }
             }
             // TODO_MP: Multiplayer - 'verhalten'
             if (onein(max(comm_ctx.alliance_prob, 1))) {

@@ -52,6 +52,7 @@ Player::Player() {
 
     perk_starts_with_lunar_base = false;
     perk_starts_with_academy = false;
+    perk_easy_alliances = false;
 
     infraction_mask = 0;
     ever_committed_infraction = false;
@@ -217,8 +218,10 @@ void Player::init_character_perks() {
             perk_starts_with_academy = true;
             break;
         case CHAR_Ter2:
+            perk_easy_alliances = true;
             break;
         case CHAR_Ter3:
+            perk_easy_alliances = true;
             break;
         case CHAR_Ter4:
             break;

@@ -535,6 +535,7 @@ class Player : public Saveable {
         // AI character perks
         bool perk_starts_with_lunar_base;
         bool perk_starts_with_academy;
+        bool perk_easy_alliances;
 
     private:
         void adjust_mc(int, MCReason);
