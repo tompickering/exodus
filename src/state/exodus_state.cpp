@@ -1239,6 +1239,15 @@ void ExodusState::cancel_worlds_under_construction(int player_idx) {
     }
 }
 
+void ExodusState::disable_easy_alliances() {
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        Player *p = get_player(i);
+        if (p) {
+            p->perk_easy_alliances = false;
+        }
+    }
+}
+
 void ExodusState::prevent_attack(Planet* p) {
     int s_idx, p_idx;
     if (get_star_planet_idx(p, s_idx, p_idx)) {
@@ -1368,6 +1377,13 @@ void ExodusState::set_alliances(int a, int b, uint8_t alliances) {
         alliance_matrix[a*N_PLAYERS + b] = alliances;
     } else {
         alliance_matrix[b*N_PLAYERS + a] = alliances;
+    }
+
+    if (pa->is_human() && pb->perk_easy_alliances) {
+        disable_easy_alliances();
+    }
+    if (pb->is_human() && pa->perk_easy_alliances) {
+        disable_easy_alliances();
     }
 
     if (pa->is_human() || pb->is_human()) {

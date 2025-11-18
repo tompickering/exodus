@@ -169,6 +169,7 @@ class ExodusState : public Saveable {
         bool planet_name_taken(const char*);
         void stabilise_disappeared_planet(Planet*);
         void cancel_worlds_under_construction(int);
+        void disable_easy_alliances();
 
         void prevent_attack(Planet*);
         bool attack_prevented(Planet*);

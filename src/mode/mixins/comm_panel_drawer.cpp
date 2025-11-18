@@ -1695,7 +1695,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             break;
         case DIA_S_Offer:
             comm_prepare(4);
-            if (onein(2)) {
+            if (onein(2) || comm_other->perk_easy_alliances) {
                 comm_set_speech("Tell me more.");
             } else {
                 comm_set_speech("Do you?");
@@ -3140,6 +3140,11 @@ void CommPanelDrawer::comm_process_responses() {
                     break;
                 case 1:
                     comm_ctx.alliance_prob = 3;
+
+                    if (comm_other->perk_easy_alliances) {
+                        comm_ctx.alliance_prob = 1;
+                    }
+
                     comm_send(DIA_S_OfferAllianceResponse);
                     break;
                 case 2:
