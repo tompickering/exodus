@@ -532,6 +532,10 @@ class Player : public Saveable {
         static const char* get_officer_character_name(Officer, OfficerQuality);
         static const char* get_officer_character_title_and_name(Officer, OfficerQuality);
 
+        // AI character perks
+        bool perk_starts_with_lunar_base;
+        bool perk_starts_with_academy;
+
     private:
         void adjust_mc(int, MCReason);
 

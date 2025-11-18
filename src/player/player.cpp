@@ -50,6 +50,9 @@ Player::Player() {
     advanced_galmap_unlocked = false;
     ai_tactic = 0;
 
+    perk_starts_with_lunar_base = false;
+    perk_starts_with_academy = false;
+
     infraction_mask = 0;
     ever_committed_infraction = false;
 
@@ -211,6 +214,7 @@ void Player::init_character_perks() {
         case CHAR_Yok4:
             break;
         case CHAR_Ter1:
+            perk_starts_with_academy = true;
             break;
         case CHAR_Ter2:
             break;
@@ -228,6 +232,7 @@ void Player::init_character_perks() {
         case CHAR_Urk4:
             break;
         case CHAR_Gor1:
+            perk_starts_with_lunar_base = true;
             break;
         case CHAR_Gor2:
             give_mc(500, MC_StartCredits);

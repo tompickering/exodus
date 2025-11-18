@@ -1312,7 +1312,7 @@ void Planet::prepare_for_cpu_lord() {
             if (FEATURE(EF_ACADEMIES)) {
                 Player *owner = exostate().get_player(get_owner());
 
-                if (owner->get_character() == CHAR_Ter1) {
+                if (owner->perk_starts_with_academy) {
                     while (true) {
                         // Place an Academy
                         x = rand() % blocks;
@@ -1329,7 +1329,7 @@ void Planet::prepare_for_cpu_lord() {
                     }
                 }
 
-                if (owner->get_character() == CHAR_Gor1) {
+                if (owner->perk_starts_with_lunar_base) {
                     build_lunar_base();
                 }
             }
