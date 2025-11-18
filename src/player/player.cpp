@@ -222,12 +222,12 @@ void Player::init_character_perks() {
             break;
         case CHAR_Ter1:
             perk_starts_with_academy = true;
+            perk_easy_alliances = true;
             break;
         case CHAR_Ter2:
             perk_easy_alliances = true;
             break;
         case CHAR_Ter3:
-            perk_easy_alliances = true;
             break;
         case CHAR_Ter4:
             break;
