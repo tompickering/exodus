@@ -44,6 +44,10 @@ enum ID {
     BOW,
     PANEL,
     SURRENDER_OPT,
+    BTN_ENG,
+    BTN_DATA,
+    BTN_INFO,
+    BTN_QUIT,
     END,
 };
 
@@ -513,26 +517,27 @@ void SpaceBattle::draw() {
     }
 
     // Draw buttons
+    if (!FEATURE(EF_SPACE_BATTLE_LAYOUT)) {
+        const char* button_detail = nullptr;
+        const char* button_auto = nullptr;
 
-    const char* button_detail = nullptr;
-    const char* button_auto = nullptr;
+        if (FEATURE(EF_FLIP_BUTTONS)) {
+            button_detail = full_detail ? nullptr : IMG_RD1_F1 ;
+            button_auto = auto_battle ? IMG_RD1_A1 : nullptr;
+        } else {
+            button_detail = full_detail ? IMG_RD1_F1 : nullptr;
+            button_auto = auto_battle ? nullptr : IMG_RD1_A1;
+        }
 
-    if (FEATURE(EF_FLIP_BUTTONS)) {
-        button_detail = full_detail ? nullptr : IMG_RD1_F1 ;
-        button_auto = auto_battle ? IMG_RD1_A1 : nullptr;
-    } else {
-        button_detail = full_detail ? IMG_RD1_F1 : nullptr;
-        button_auto = auto_battle ? nullptr : IMG_RD1_A1;
+        draw_manager.draw(
+            id(ID::BUTTON_DETAIL),
+            button_detail,
+            {AREA_DETAIL.x, AREA_DETAIL.y, 0, 0, 1, 1});
+        draw_manager.draw(
+            id(ID::BUTTON_AUTO),
+            button_auto,
+            {AREA_AUTO.x, AREA_AUTO.y, 0, 0, 1, 1});
     }
-
-    draw_manager.draw(
-        id(ID::BUTTON_DETAIL),
-        button_detail,
-        {AREA_DETAIL.x, AREA_DETAIL.y, 0, 0, 1, 1});
-    draw_manager.draw(
-        id(ID::BUTTON_AUTO),
-        button_auto,
-        {AREA_AUTO.x, AREA_AUTO.y, 0, 0, 1, 1});
 }
 
 void SpaceBattle::update_mouse() {
@@ -568,26 +573,64 @@ void SpaceBattle::update_mouse() {
 }
 
 SpaceBattle::Stage SpaceBattle::update_buttons() {
-    if (!draw_manager.clicked()) {
-        return stage;
-    }
+    if (FEATURE(EF_SPACE_BATTLE_LAYOUT)) {
+        draw_manager.draw(
+            id(ID::BTN_ENG),
+            auto_battle ? IMG_BTN_ENG_DOWN : IMG_BTN_ENG,
+            {518, 400, 0, 0, 1, 1});
 
-    if (draw_manager.mouse_in_area(AREA_INFO)) {
-        return SB_Info;
-    }
+        draw_manager.draw(
+            id(ID::BTN_DATA),
+            full_detail ? IMG_BTN_DATA_DOWN : IMG_BTN_DATA,
+            {518, 428, 0, 0, 1, 1});
 
-    if (draw_manager.mouse_in_area(AREA_DETAIL)) {
-        full_detail = !full_detail;
-        return stage;
-    }
+        draw_manager.draw(
+            id(ID::BTN_INFO),
+            IMG_BTN_INFO,
+            {518, 456, 0, 0, 1, 1});
 
-    if (draw_manager.mouse_in_area(AREA_AUTO)) {
-        auto_battle = !auto_battle;
-        return stage;
-    }
+        draw_manager.draw(
+            id(ID::BTN_QUIT),
+            IMG_BTN_QUIT,
+            {518, 484, 0, 0, 1, 1});
 
-    if (draw_manager.mouse_in_area(AREA_QUIT)) {
-        return SB_Surrender;
+        if (draw_manager.query_click(id(ID::BTN_ENG)).id) {
+            auto_battle = !auto_battle;
+        }
+
+        if (draw_manager.query_click(id(ID::BTN_DATA)).id) {
+            full_detail = !full_detail;
+        }
+
+        if (draw_manager.query_click(id(ID::BTN_INFO)).id) {
+            return SB_Info;
+        }
+
+        if (draw_manager.query_click(id(ID::BTN_QUIT)).id) {
+            return SB_Surrender;
+        }
+    } else {
+        if (!draw_manager.clicked()) {
+            return stage;
+        }
+
+        if (draw_manager.mouse_in_area(AREA_INFO)) {
+            return SB_Info;
+        }
+
+        if (draw_manager.mouse_in_area(AREA_DETAIL)) {
+            full_detail = !full_detail;
+            return stage;
+        }
+
+        if (draw_manager.mouse_in_area(AREA_AUTO)) {
+            auto_battle = !auto_battle;
+            return stage;
+        }
+
+        if (draw_manager.mouse_in_area(AREA_QUIT)) {
+            return SB_Surrender;
+        }
     }
 
     return stage;
