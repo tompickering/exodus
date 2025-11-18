@@ -286,6 +286,7 @@ enum ID {
     MENU_BG,
     MENU,
     SURF,
+    TOOL_MINE,
     TOOL_AGRI,
     TOOL_ACAD,
     TOOL_TRADEPORT,
@@ -662,6 +663,14 @@ void PlanetMap::draw() {
             get_stone_anim(STONE_Agri)->frame(0),
             {540, 46,
             0, 0, 1, 1});
+
+        if (FEATURE(EF_NEW_MINES)) {
+            draw_manager.draw(
+                id(ID::TOOL_MINE),
+                get_stone_anim(STONE_Mine)->frame(0),
+                {580, 46,
+                0, 0, 1, 1});
+        }
 
         if (FEATURE(EF_ACADEMIES)) {
             draw_manager.draw(
@@ -1512,7 +1521,7 @@ void PlanetMap::clear_surf(int x, int y) {
     draw_manager.release_sprite_id(id_surfclear);
 }
 
-void init_stone_anims() {
+void init_stone_anims(Planet *p) {
     stone_anims_specific[Forest][STONE_Agri]             = Anim(1,  IMG_SF1_STONE2);
     stone_anims_specific[Forest][STONE_AgriDead]         = Anim(1,  IMG_SF1_STONE10);
     stone_anims_specific[Forest][STONE_NaturalSmall]     = Anim(1,  IMG_SF1_STONE9);
@@ -1564,7 +1573,19 @@ void init_stone_anims() {
 
     stone_anims_generic[STONE_Village]                   = Anim(1,  IMG_SU1_STONE22);
     stone_anims_generic[STONE_Base]                      = Anim(1,  IMG_SU1_STONE1);
-    stone_anims_generic[STONE_Mine]                      = Anim(1,  IMG_SU1_STONE3);
+
+    if (FEATURE(EF_NEW_MINES)) {
+        if (p->get_minerals() > 0) {
+            stone_anims_generic[STONE_Mine]              = Anim(3,  IMG_MINE_LIT,
+                                                                    IMG_MINE,
+                                                                    IMG_MINE_LIT);
+        } else {
+            stone_anims_generic[STONE_Mine]              = Anim(1,  IMG_MINE);
+        }
+    } else {
+        stone_anims_generic[STONE_Mine]                  = Anim(1,  IMG_SU1_STONE3);
+    }
+
     stone_anims_generic[STONE_Plu]                       = Anim(2,  IMG_SU1_STONE4,
                                                                     IMG_SU1_STONE4B);
     stone_anims_generic[STONE_City]                      = Anim(18, IMG_SU1_STONE5A1,
@@ -1612,9 +1633,17 @@ void init_stone_anims() {
                                                                     IMG_SU1_STONE1_1,
                                                                     IMG_SU1_STONE1_2,
                                                                     IMG_SU1_STONE1_3);
-    construct_anims_generic[STONE_Mine]                  = Anim(3,  IMG_SU1_STONE3_0,
+    if (FEATURE(EF_NEW_MINES)) {
+        construct_anims_generic[STONE_Mine]              = Anim(4,  IMG_MINE_0,
+                                                                    IMG_MINE_1,
+                                                                    IMG_MINE_2,
+                                                                    IMG_MINE);
+    } else {
+        construct_anims_generic[STONE_Mine]              = Anim(3,  IMG_SU1_STONE3_0,
                                                                     IMG_SU1_STONE3_1,
                                                                     IMG_SU1_STONE3_2);
+    }
+
     construct_anims_generic[STONE_Plu]                   = Anim(4,  IMG_SU1_STONE4_0,
                                                                     IMG_SU1_STONE4_1,
                                                                     IMG_SU1_STONE4_2,
@@ -1668,7 +1697,7 @@ void init_stone_anims() {
 
 Anim* PlanetMap::get_stone_anim(Stone stone) {
     if (!stone_anims_initialised)
-        init_stone_anims();
+        init_stone_anims(planet);
 
     PlanetClass cls = planet->get_class();
     if (stone_anims_specific[cls].count(stone)) {
@@ -1689,7 +1718,7 @@ Anim* PlanetMap::get_stone_anim(Stone stone) {
 
 Anim* PlanetMap::get_construct_anim(Stone stone) {
     if (!stone_anims_initialised)
-        init_stone_anims();
+        init_stone_anims(planet);
 
     PlanetClass cls = planet->get_class();
     if (construct_anims_specific[cls].count(stone)) {
