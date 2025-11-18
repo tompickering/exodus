@@ -93,6 +93,19 @@ void SpaceBattle::enter() {
 
     SpaceBattleParams &b = ephstate.space_battle;
     L.debug("STARTING BATTLE - ENEMY SHIPS: %d", b.enemy_ships + b.enemy_scouts + b.enemy_cargo);
+
+    if (FEATURE(EF_SPACE_BATTLE_LAYOUT)) {
+        draw_manager.draw(
+            id(ID::BTN_INFO),
+            IMG_BTN_INFO,
+            {518, 456, 0, 0, 1, 1});
+
+        draw_manager.draw(
+            id(ID::BTN_QUIT),
+            IMG_BTN_QUIT,
+            {518, 484, 0, 0, 1, 1});
+    }
+
 }
 
 void SpaceBattle::exit() {
@@ -583,16 +596,6 @@ SpaceBattle::Stage SpaceBattle::update_buttons() {
             id(ID::BTN_DATA),
             full_detail ? IMG_BTN_DATA_DOWN : IMG_BTN_DATA,
             {518, 428, 0, 0, 1, 1});
-
-        draw_manager.draw(
-            id(ID::BTN_INFO),
-            IMG_BTN_INFO,
-            {518, 456, 0, 0, 1, 1});
-
-        draw_manager.draw(
-            id(ID::BTN_QUIT),
-            IMG_BTN_QUIT,
-            {518, 484, 0, 0, 1, 1});
 
         if (draw_manager.query_click(id(ID::BTN_ENG)).id) {
             auto_battle = !auto_battle;
