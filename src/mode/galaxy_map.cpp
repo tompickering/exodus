@@ -5097,7 +5097,9 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             }
 
             if (rpt.no_space) {
-                report.register_minor_problem();
+                if (!rpt.no_money) {
+                    report.register_minor_problem();
+                }
             } else {
                 report.register_major_problem();
             }
