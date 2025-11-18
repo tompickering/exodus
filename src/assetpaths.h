@@ -1372,6 +1372,8 @@ extern const char *IMG_BTN_DATA;
 extern const char *IMG_BTN_DATA_DOWN;
 extern const char *IMG_BTN_ENG;
 extern const char *IMG_BTN_ENG_DOWN;
+extern const char *IMG_BTN_INFO;
+extern const char *IMG_BTN_QUIT;
 
 extern const char *INIT_IMG;
 extern const char *CURSOR_IMG;

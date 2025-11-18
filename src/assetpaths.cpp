@@ -1375,6 +1375,8 @@ const char *IMG_BTN_DATA         = D_NEW "btn_data";
 const char *IMG_BTN_DATA_DOWN    = D_NEW "btn_data_down";
 const char *IMG_BTN_ENG          = D_NEW "btn_engage";
 const char *IMG_BTN_ENG_DOWN     = D_NEW "btn_engage_down";
+const char *IMG_BTN_INFO         = D_NEW "btn_info";
+const char *IMG_BTN_QUIT         = D_NEW "btn_quit";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2750,6 +2752,8 @@ const char *ASSETS_IMG[] = {
     IMG_BTN_DATA_DOWN,
     IMG_BTN_ENG,
     IMG_BTN_ENG_DOWN,
+    IMG_BTN_INFO,
+    IMG_BTN_QUIT,
 
     "",
 };
