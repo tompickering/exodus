@@ -8,6 +8,7 @@
 #include "assetpaths.h"
 
 #include "util/iter.h"
+#include "util/str.h"
 
 #include "shared.h"
 
@@ -216,7 +217,7 @@ void GalaxyDrawer::draw_mouseover_star_name() {
         draw_manager.draw_text(
             star_name_id,
             Font::Tiny,
-            ft->name,
+            tmp_caps(ft->name),
             Justify::Centre,
             x, y - 28,
             COL_TEXT2);
