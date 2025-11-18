@@ -1368,6 +1368,10 @@ extern const char *IMG_MINE_LIT;
 extern const char *IMG_MINE_0;
 extern const char *IMG_MINE_1;
 extern const char *IMG_MINE_2;
+extern const char *IMG_BTN_DATA;
+extern const char *IMG_BTN_DATA_DOWN;
+extern const char *IMG_BTN_ENG;
+extern const char *IMG_BTN_ENG_DOWN;
 
 extern const char *INIT_IMG;
 extern const char *CURSOR_IMG;
