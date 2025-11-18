@@ -205,6 +205,12 @@ void Player::init_character(Character _character) {
 }
 
 void Player::init_character_perks() {
+    EnemyStart start = exostate().get_enemy_start();
+
+    if (start == ENEMY_Weak) {
+        return;
+    }
+
     switch (get_character()) {
         case CHAR_Yok1:
             break;

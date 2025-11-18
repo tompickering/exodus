@@ -298,18 +298,18 @@ void ExodusState::init(GameConfig config) {
         }
     }
 
+    aim = config.aim;
+    enemy_start = config.enemy_start;
+
+    recommended_planet_star_idx = -1;
+    recommended_planet_idx = -1;
+
     // PLAYER INIT: Character perk init
     if (FEATURE(EF_CHARACTERS)) {
         for (i = 0; i < N_PLAYERS; ++i) {
             players[i].init_character_perks();
         }
     }
-
-    aim = config.aim;
-    enemy_start = config.enemy_start;
-
-    recommended_planet_star_idx = -1;
-    recommended_planet_idx = -1;
 
     L.debug("ExodusState init");
     L.debug("      Size: %d", size);
