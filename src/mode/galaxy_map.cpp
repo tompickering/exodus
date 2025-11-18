@@ -2468,6 +2468,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                     } else {
                         // ...and can't afford to colonise a new one.
                         exostate().cancel_worlds_under_construction(mp_state.mp_player_idx);
+                        exostate().register_lord_discovery(0, mp_state.mp_player_idx);
                         if (p->leave_galaxy()) {
                             audio_manager.target_music(mpart2mus(9));
                             bulletin_start_new(false);
