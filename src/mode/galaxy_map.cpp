@@ -760,6 +760,8 @@ ExodusMode GalaxyMap::update(float delta) {
                         set_stage(GM_MonthPassStart);
                         break;
                     case MA_Quit:
+                        // Autosave
+                        save_manager.save(0);
                         menu_close();
                         comm_open(DIA_S_Quit);
                         set_stage(GM_QuitConfirm);
