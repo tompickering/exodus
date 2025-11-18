@@ -239,6 +239,7 @@ void Player::init_character_perks() {
             fleet.transporters += 100;
             break;
         case CHAR_Urk4:
+            set_officer(OFF_Battle, OFFQ_Average);
             break;
         case CHAR_Gor1:
             perk_starts_with_lunar_base = true;
