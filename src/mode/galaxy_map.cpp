@@ -760,8 +760,6 @@ ExodusMode GalaxyMap::update(float delta) {
                         set_stage(GM_MonthPassStart);
                         break;
                     case MA_Quit:
-                        // Autosave
-                        save_manager.save(0);
                         menu_close();
                         comm_open(DIA_S_Quit);
                         set_stage(GM_QuitConfirm);
@@ -1000,6 +998,8 @@ ExodusMode GalaxyMap::update(float delta) {
             if (ephstate.get_ephemeral_state() != EPH_GameOver) {
                 action = comm_update(delta);
                 if (action == CA_Proceed) {
+                    // Autosave
+                    save_manager.save(0);
                     ephstate.set_ephemeral_state(EPH_GameOver);
                     ephstate.game_over_reason = GAMEOVER_Failed;
                     draw_manager.fade_black(1.2f, 24);
