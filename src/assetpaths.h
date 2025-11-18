@@ -1134,6 +1134,7 @@ extern const char *IMG_TS1_SUN9_OBS;
 extern const char *IMG_CURSOR_BATTLE_R;
 extern const char *IMG_CURSOR_BATTLE_G;
 extern const char *IMG_CURSOR_BATTLE_B;
+extern const char *IMG_CURSOR_BATTLE_Y;
 extern const char *IMG_MARKER_FIRE;
 extern const char *IMG_MENU_STARS;
 extern const char *IMG_BOX_OFF;

@@ -1137,6 +1137,7 @@ const char *IMG_TS1_SUN9_OBS     = D_NEW "ts1_sun9_obs";
 const char *IMG_CURSOR_BATTLE_R  = D_NEW "cursor_battle2";
 const char *IMG_CURSOR_BATTLE_G  = D_NEW "cursor_battle1";
 const char *IMG_CURSOR_BATTLE_B  = D_NEW "cursor_battle0";
+const char *IMG_CURSOR_BATTLE_Y  = D_NEW "cursor_battle3";
 const char *IMG_MARKER_FIRE      = D_NEW "marker_fire";
 const char *IMG_MENU_STARS       = D_NEW "menu_stars";
 const char *IMG_BOX_OFF          = D_NEW "box_off";
@@ -2507,6 +2508,7 @@ const char *ASSETS_IMG[] = {
     IMG_CURSOR_BATTLE_R,
     IMG_CURSOR_BATTLE_G,
     IMG_CURSOR_BATTLE_B,
+    IMG_CURSOR_BATTLE_Y,
     IMG_MARKER_FIRE,
     IMG_MENU_STARS,
     IMG_BOX_OFF,

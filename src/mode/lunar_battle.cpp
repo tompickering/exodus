@@ -2232,7 +2232,7 @@ void LunarBattle::draw_units() {
                 if (draw_highlight) {
                     draw_manager.draw(
                         id(ID::HIGHLIGHT),
-                        IMG_CURSOR_BATTLE1,
+                        ENHANCED() ? IMG_CURSOR_BATTLE_Y : IMG_CURSOR_BATTLE1,
                         {draw_x, draw_y,
                          0, 0, 1, 1});
                 } else {
