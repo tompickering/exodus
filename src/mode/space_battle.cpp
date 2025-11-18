@@ -729,8 +729,27 @@ void SpaceBattle::update_ships() {
         }
 
         if (s->type != SHIP_Starship) {
-            s->x += dx;
-            s->y += dy;
+            if ((sa*sa) + (sb*sb) > (50*50)) {
+                s->x += dx;
+                s->y += dy;
+            } else {
+                int rdx = (2 - (rand() % 5));
+                int rdy = (2 - (rand() % 5));
+
+                // Bias towards moving away
+                if (!((rdx > 0) ^ (dx > 0))) {
+                    if (!onein(3)) {
+                        rdx = -rdx;
+                    }
+                }
+                if (!((rdy > 0) ^ (dy > 0))) {
+                    if (!onein(3)) {
+                        rdy = -rdy;
+                    }
+                }
+                s->x += rdx;
+                s->y += rdy;
+            }
         }
 
         bool fire = (s->action == BSA_AttackSlow && onein(15));
