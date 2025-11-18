@@ -99,20 +99,20 @@ bool Player::init_alien_name_character() {
 
     switch (character) {
         case CHAR_Yok1:
-            set_title("Lady");
-            set_name("Loana");
+            set_title("Regent");
+            set_name("Y'Ry");
             return true;
         case CHAR_Yok2:
-            set_title("Lord");
-            set_name("Ter Terk");
+            set_title("Regent");
+            set_name("Tk'Terk");
             return true;
         case CHAR_Yok3:
-            set_title("Lady");
-            set_name("Garasa");
+            set_title("Regent");
+            set_name("Gar'Xa");
             return true;
         case CHAR_Yok4:
-            set_title("Lord");
-            set_name("Joray");
+            set_title("Regent");
+            set_name("Z'Ren");
             return true;
         case CHAR_Ter1:
             set_title("Lady");
@@ -132,19 +132,19 @@ bool Player::init_alien_name_character() {
             return true;
         case CHAR_Urk1:
             set_title("Lady");
-            set_name("Terikka");
+            set_name("Kror");
             return true;
         case CHAR_Urk2:
             set_title("Lord");
-            set_name("Zerish");
+            set_name("Zeish");
             return true;
         case CHAR_Urk3:
             set_title("Lady");
-            set_name("Mynra");
+            set_name("Mzaa");
             return true;
         case CHAR_Urk4:
             set_title("Lord");
-            set_name("Geccar");
+            set_name("Gecc");
             return true;
         case CHAR_Gor1:
             set_title("Lady");
@@ -155,7 +155,7 @@ bool Player::init_alien_name_character() {
             set_name("Noobas");
             return true;
         case CHAR_Gor3:
-            set_title("Lady");
+            set_title("Elder");
             set_name("Toya");
             return true;
         case CHAR_Gor4:
