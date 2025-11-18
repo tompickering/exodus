@@ -4,6 +4,7 @@
 #include "mode_base.h"
 
 #include "draw/draw.h"
+#include "galaxy/planet.h"
 
 #define SHERIFF_N_SHIPS 5
 #define SHERIFF_N_HIGHSCORES 3
@@ -56,6 +57,7 @@ class GuildBar : ModeBase {
         bool update_star_sheriff(float);
 
         Stage stage;
+        Planet *suggested_ally;
         int last_update_month;
         int pin;
         int rumour_headings[2];

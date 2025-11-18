@@ -67,6 +67,20 @@ void GuildBar::enter() {
     screen_loop = 0.f;
     stage = GB_Idle;
 
+    suggested_ally = nullptr;
+
+    if (FEATURE(EF_CHARACTERS) && exostate().get_enemy_start() == ENEMY_Strong) {
+        for (PlanetIterator pi; !pi.complete(); ++pi) {
+            Planet *planet = pi.get();
+            if (planet->is_owned()) {
+                Player *owner = exostate().get_player(planet->get_owner());
+                if (owner->perk_easy_alliances) {
+                    suggested_ally = planet;
+                }
+            }
+        }
+    }
+
     if (exostate().get_month() != last_update_month) {
         update_pin_and_rumours();
         last_update_month = exostate().get_month();
@@ -408,16 +422,33 @@ ExodusMode GuildBar::update(float delta) {
                         Justify::Left,
                         PINBOARD_X + 4, PINBOARD_Y + 160,
                         COL_TEXT);
-                    draw_manager.draw_text(
-                        rumours[rumour_indices[1]].line0,
-                        Justify::Left,
-                        PINBOARD_X + 4, PINBOARD_Y + 180,
-                        COL_TEXT);
-                    draw_manager.draw_text(
-                        rumours[rumour_indices[1]].line1,
-                        Justify::Left,
-                        PINBOARD_X + 4, PINBOARD_Y + 200,
-                        COL_TEXT);
+
+                    if (suggested_ally) {
+                        char text[64];
+                        Star *s = exostate().get_star_for_planet(suggested_ally);
+                        snprintf(text, sizeof(text), "%s at %s", suggested_ally->get_name(), s->name);
+                        draw_manager.draw_text(
+                            text,
+                            Justify::Left,
+                            PINBOARD_X + 4, PINBOARD_Y + 180,
+                            COL_TEXT);
+                        draw_manager.draw_text(
+                            "is seeking new allies.",
+                            Justify::Left,
+                            PINBOARD_X + 4, PINBOARD_Y + 200,
+                            COL_TEXT);
+                    } else {
+                        draw_manager.draw_text(
+                            rumours[rumour_indices[1]].line0,
+                            Justify::Left,
+                            PINBOARD_X + 4, PINBOARD_Y + 180,
+                            COL_TEXT);
+                        draw_manager.draw_text(
+                            rumours[rumour_indices[1]].line1,
+                            Justify::Left,
+                            PINBOARD_X + 4, PINBOARD_Y + 200,
+                            COL_TEXT);
+                    }
 
                     stage = GB_Barkeeper;
                 }
