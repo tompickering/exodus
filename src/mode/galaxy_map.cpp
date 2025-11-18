@@ -148,7 +148,7 @@ ExodusMode GalaxyMap::update(float delta) {
     while (selected_ft_blink > 2*BLINK_TIME)
         selected_ft_blink -= 2*BLINK_TIME;
 
-    draw_mouseover_star_name();
+    clear_mouseover_star_name();
 
     switch (stage) {
         case GM_SwapIn:
@@ -171,6 +171,8 @@ ExodusMode GalaxyMap::update(float delta) {
                     return ExodusMode::MODE_None;
                 }
             }
+
+            draw_mouseover_star_name();
 
             /*
              * Unfortunately, we need to redraw markers whilst idling.

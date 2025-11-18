@@ -19,6 +19,7 @@ class GalaxyDrawer {
         void draw_markers(bool, bool);
         void draw_planet_markers(bool);
         bool draw_planet_markers_for_star(bool, Star*, bool);
+        void clear_mouseover_star_name();
         void draw_mouseover_star_name();
     protected:
         void draw_galaxy(bool);

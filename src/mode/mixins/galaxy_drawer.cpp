@@ -203,6 +203,10 @@ bool GalaxyDrawer::draw_planet_markers_for_star(bool pixelswap, Star* s, bool do
     return (drawn > 0);
 }
 
+void GalaxyDrawer::clear_mouseover_star_name() {
+    draw_manager.draw(star_name_id, nullptr);
+}
+
 void GalaxyDrawer::draw_mouseover_star_name() {
     int x, y;
 
@@ -222,7 +226,7 @@ void GalaxyDrawer::draw_mouseover_star_name() {
             x, y - 28,
             COL_TEXT2);
     } else {
-        draw_manager.draw(star_name_id, nullptr);
+        clear_mouseover_star_name();
     }
 }
 
