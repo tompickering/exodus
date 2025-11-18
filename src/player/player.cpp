@@ -200,6 +200,47 @@ void Player::init_character(Character _character) {
     }
 }
 
+void Player::init_character_perks() {
+    switch (get_character()) {
+        case CHAR_Yok1:
+            break;
+        case CHAR_Yok2:
+            break;
+        case CHAR_Yok3:
+            break;
+        case CHAR_Yok4:
+            break;
+        case CHAR_Ter1:
+            break;
+        case CHAR_Ter2:
+            break;
+        case CHAR_Ter3:
+            break;
+        case CHAR_Ter4:
+            break;
+        case CHAR_Urk1:
+            break;
+        case CHAR_Urk2:
+            break;
+        case CHAR_Urk3:
+            fleet.transporters += 100;
+            break;
+        case CHAR_Urk4:
+            break;
+        case CHAR_Gor1:
+            break;
+        case CHAR_Gor2:
+            give_mc(500, MC_StartCredits);
+            break;
+        case CHAR_Gor3:
+            break;
+        case CHAR_Gor4:
+            break;
+        default:
+            break;
+    }
+}
+
 void Player::set_character_hostility() {
     if (is_hostile_to(0)) {
         clear_hostility();

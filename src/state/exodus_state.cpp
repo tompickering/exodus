@@ -298,6 +298,13 @@ void ExodusState::init(GameConfig config) {
         }
     }
 
+    // PLAYER INIT: Character perk init
+    if (FEATURE(EF_CHARACTERS)) {
+        for (i = 0; i < N_PLAYERS; ++i) {
+            players[i].init_character_perks();
+        }
+    }
+
     aim = config.aim;
     enemy_start = config.enemy_start;
 

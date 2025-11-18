@@ -1328,6 +1328,10 @@ void Planet::prepare_for_cpu_lord() {
                         }
                     }
                 }
+
+                if (owner->get_character() == CHAR_Gor1) {
+                    build_lunar_base();
+                }
             }
         }
     } else {
