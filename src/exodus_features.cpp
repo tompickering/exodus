@@ -2,8 +2,8 @@
 
 #include "shared.h"
 
-// New COMM message when starting the game
-static bool INTRO_COMM = false;
+// Manual and new COMM message when starting the game
+static bool MANUAL = false;
 
 // Planets in the star map are rendered at scale according to size
 static bool MULTISIZE_PLANETS = false;
@@ -167,7 +167,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
     mode_set = true;
 
     if (game_mode == EXODUSGAMEMODE_Classic) {
-        INTRO_COMM = false;
+        MANUAL = false;
         MULTISIZE_PLANETS = false;
         MULTISIZE_PLANETS_COLONISE = false;
         MULTISIZE_PLANETS_PANEL = false;
@@ -222,7 +222,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
     }
 
     if (game_mode == EXODUSGAMEMODE_Enhanced) {
-        INTRO_COMM = true;
+        MANUAL = true;
         MULTISIZE_PLANETS = true;
         MULTISIZE_PLANETS_COLONISE = true;
         MULTISIZE_PLANETS_PANEL = true;
@@ -290,7 +290,7 @@ bool FEATURE(ExodusFeature f) {
         L.fatal("Attempt to query feature before initialising features");
     }
 
-    if (f == EF_INTRO_COMM) return INTRO_COMM;
+    if (f == EF_MANUAL) return MANUAL;
     if (f == EF_MULTISIZE_PLANETS) return MULTISIZE_PLANETS;
     if (f == EF_MULTISIZE_PLANETS_COLONISE) return MULTISIZE_PLANETS_COLONISE;
     if (f == EF_MULTISIZE_PLANETS_PANEL) return MULTISIZE_PLANETS_PANEL;

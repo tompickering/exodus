@@ -163,7 +163,7 @@ ExodusMode GalaxyMap::update(float delta) {
                 return ExodusMode::MODE_GalaxyIntro;
             }
 
-            if (FEATURE(EF_INTRO_COMM)) {
+            if (FEATURE(EF_MANUAL)) {
                 if (player->get_race() == RACE_Human && !player->intro_comm_seen()) {
                     player->set_intro_comm_seen();
                     comm_open(DIA_S_IntroComm);
@@ -1031,10 +1031,12 @@ void GalaxyMap::exit() {
 void GalaxyMap::set_stage(Stage new_stage) {
     switch (new_stage) {
         case GM_Idle:
-            draw_manager.draw(
-                id(ID::BTN_GUIDE),
-                IMG_BTNGUIDE,
-                {RES_X-4, 4, 1, 0, 1, 1});
+            if (FEATURE(EF_MANUAL)) {
+                draw_manager.draw(
+                    id(ID::BTN_GUIDE),
+                    IMG_BTNGUIDE,
+                    {RES_X-4, 4, 1, 0, 1, 1});
+            }
 
             if (exostate().planet_report_count() > 0) {
                 draw_manager.draw(
