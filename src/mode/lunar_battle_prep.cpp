@@ -717,7 +717,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
             {
                 SpriteClick clk = draw_manager.query_click(id(ID::UPGRADE_YESNO));
                 if (clk.id) {
-                    if (clk.y < .5f) {
+                    if (clk.x < .5f) {
                         if (human->attempt_spend(OFFICER_UPGRADE_COST, MC_TempOfficer)) {
                             if (defending) {
                                 if (b.defender_officer == OFFQ_Poor) {
