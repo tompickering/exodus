@@ -1060,7 +1060,7 @@ ExodusMode SpaceBattle::update(float delta) {
     }
 
     if (draw_manager.query_click(id(ID::BTN_GUIDE)).id) {
-        bulletin_start_manual(BMP_SpaceCombat_3);
+        bulletin_start_manual(BMP_SpaceCombat_Combat);
         return ExodusMode::MODE_None;
     }
 

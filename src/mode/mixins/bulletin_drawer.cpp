@@ -1157,7 +1157,7 @@ const char* BulletinDrawer::bulletin_get_manual_flag() {
         case BMP_SpaceCombat:
         case BMP_SpaceCombat_2:
             return IMG_FLAG_SHIP;
-        case BMP_SpaceCombat_3:
+        case BMP_SpaceCombat_Combat:
             return IMG_FLAG_SPACEBTL;
         case BMP_EndingTheGame:
             return IMG_FLAG_GUILDHQ;
@@ -2092,7 +2092,7 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
         }
     }
 
-    if (p == BMP_SpaceCombat_3) {
+    if (p == BMP_SpaceCombat_Combat) {
         if (draw) {
             bulletin_set_text_col(COL_TEXT2);
             bulletin_set_next_text("Space Combat");

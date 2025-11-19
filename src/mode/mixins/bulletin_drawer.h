@@ -74,7 +74,7 @@ enum BulletinManualPage : uint8_t {
     BMP_Science_END,
     BMP_SpaceCombat,
     BMP_SpaceCombat_2,
-    BMP_SpaceCombat_3,
+    BMP_SpaceCombat_Combat,
     BMP_SpaceCombat_END,
     BMP_EndingTheGame,
     BMP_EndingTheGame_END,
