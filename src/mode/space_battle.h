@@ -7,6 +7,8 @@
 
 #include "state/exodus_state.h"
 
+#include "mixins/bulletin_drawer.h"
+
 #include "assetpaths.h"
 
 #define MAX_SHIPS_PER_TYPE 5
@@ -95,7 +97,7 @@ struct Explosion {
     SprID spr_id;
 };
 
-class SpaceBattle : ModeBase {
+class SpaceBattle : ModeBase, BulletinDrawer {
     public:
         SpaceBattle();
         virtual void enter() override;

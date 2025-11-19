@@ -48,6 +48,7 @@ enum ID {
     BTN_DATA,
     BTN_INFO,
     BTN_QUIT,
+    BTN_GUIDE,
     END,
 };
 
@@ -106,6 +107,12 @@ void SpaceBattle::enter() {
             {518, 484, 0, 0, 1, 1});
     }
 
+    if (FEATURE(EF_MANUAL)) {
+        draw_manager.draw(
+            id(ID::BTN_GUIDE),
+            IMG_BTNGUIDE,
+            {RES_X-4, 150, 1, 0, 1, 1});
+    }
 }
 
 void SpaceBattle::exit() {
@@ -1040,6 +1047,23 @@ void SpaceBattle::update_battle() {
 }
 
 ExodusMode SpaceBattle::update(float delta) {
+    if (bulletin_is_open()) {
+        bulletin_update(delta);
+        switch (bulletin_get_praction()) {
+            case BPR_Close:
+                bulletin_ensure_closed();
+                break;
+            default:
+                break;
+        }
+        return ExodusMode::MODE_None;
+    }
+
+    if (draw_manager.query_click(id(ID::BTN_GUIDE)).id) {
+        bulletin_start_manual(BMP_SpaceCombat_3);
+        return ExodusMode::MODE_None;
+    }
+
     SpaceBattleParams &b = ephstate.space_battle;
 
     switch (stage) {
