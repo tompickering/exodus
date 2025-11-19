@@ -228,7 +228,13 @@ extern const char* RUMOUR_HEADINGS[];
 extern const char* PINS[];
 
 void GuildBar::update_pin_and_rumours() {
-    pin = RND(22) - 1;
+    int n_pins = 20;
+
+    if (ENHANCED()) {
+        n_pins = 22;
+    }
+
+    pin = (rand() % n_pins);
     rumour_headings[0] = RND(5) - 1;
     rumour_headings[1] = RND(5) - 1;
 
