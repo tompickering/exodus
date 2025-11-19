@@ -1187,7 +1187,7 @@ ExodusMode LunarBattle::update(float delta) {
 
             if (exp_interp > 0) {
                 exp_interp -= delta * EXP_RATE;
-                if (exp_interp < 0) {
+                if (exp_interp <= 0) {
                     exp_interp = 0;
 
                     UnitCount *uc_lost = nullptr;
