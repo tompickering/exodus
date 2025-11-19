@@ -399,7 +399,7 @@ ExodusMode LunarBattle::update(float delta) {
         human_turn = (bool)(aggressor && aggressor->is_human());
     }
 
-    for (int i = 0; i < BATTLE_UNITS_MAX; ++i) {
+    for (int i = 0; i < n_units; ++i) {
         if (units[i].dying_timer > 0) {
             units[i].dying_timer -= delta;
             if (units[i].dying_timer < 0) {
