@@ -63,6 +63,7 @@ GalaxyDrawer::GalaxyDrawer() {
     }
 
     star_name_id = ID_NONE;
+    star_name2_id = ID_NONE;
 }
 
 FlyTarget* GalaxyDrawer::get_clicked_flytarget() {
@@ -89,6 +90,10 @@ FlyTarget* GalaxyDrawer::get_clicked_flytarget() {
 FlyTarget* GalaxyDrawer::get_mouseover_flytarget() {
     SpriteClick click;
     Galaxy *gal = exostate().get_galaxy();
+
+    if (draw_manager.query_mouseover(guild_id).id) {
+        return gal->get_guild();
+    }
 
     for (int i = 0; i < GALAXY_MAX_STARS; ++i) {
         if (!star_ids[i])
@@ -205,6 +210,7 @@ bool GalaxyDrawer::draw_planet_markers_for_star(bool pixelswap, Star* s, bool do
 
 void GalaxyDrawer::clear_mouseover_star_name() {
     draw_manager.draw(star_name_id, nullptr);
+    draw_manager.draw(star_name2_id, nullptr);
 }
 
 void GalaxyDrawer::draw_mouseover_star_name() {
@@ -214,17 +220,41 @@ void GalaxyDrawer::draw_mouseover_star_name() {
         star_name_id = draw_manager.new_sprite_id();
     }
 
+    if (star_name2_id == ID_NONE) {
+        star_name2_id = draw_manager.new_sprite_id();
+    }
+
     FlyTarget *ft = get_mouseover_flytarget();
+
+    const char* ft_name = ft->name;
 
     if (ft) {
         get_draw_position(ft, x, y);
-        draw_manager.draw_text(
-            star_name_id,
-            Font::Cybattler,
-            tmp_caps(ft->name),
-            Justify::Centre,
-            x, y - 28,
-            COL_TEXT2);
+
+        if (ft == exostate().get_galaxy()->get_guild()) {
+            draw_manager.draw_text(
+                star_name2_id,
+                Font::Cybattler,
+                "SPACE",
+                Justify::Centre,
+                x, y - 48,
+                {168, 85, 204});
+            draw_manager.draw_text(
+                star_name_id,
+                Font::Cybattler,
+                "GUILD",
+                Justify::Centre,
+                x, y - 28,
+                {168, 85, 204});
+        } else {
+            draw_manager.draw_text(
+                star_name_id,
+                Font::Cybattler,
+                tmp_caps(ft_name),
+                Justify::Centre,
+                x, y - 28,
+                COL_TEXT2);
+        }
     } else {
         clear_mouseover_star_name();
     }
