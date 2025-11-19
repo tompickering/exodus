@@ -2108,9 +2108,9 @@ void BulletinDrawer::bulletin_update_manual_page(bool draw) {
             bulletin_set_next_text("");
             bulletin_set_next_text("To command a ship to attack, select it with the");
             bulletin_set_next_text("left mouse button and assign a target with the");
-            bulletin_set_next_text("right. Alternatively, switch to AUTO to have");
-            bulletin_set_next_text("your Admiral take over. The distance from a");
-            bulletin_set_next_text("ship to its target determines its accuracy.");
+            bulletin_set_next_text("right. Alternatively, ENGAGE to have your Fleet");
+            bulletin_set_next_text("Commander take over. Ships are more accurage");
+            bulletin_set_next_text("when they are close to their target.");
 
             draw_manager.draw(
                 IMG_RD1_TYP1,
