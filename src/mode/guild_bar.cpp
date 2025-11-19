@@ -228,7 +228,7 @@ extern const char* RUMOUR_HEADINGS[];
 extern const char* PINS[];
 
 void GuildBar::update_pin_and_rumours() {
-    pin = RND(20) - 1;
+    pin = RND(22) - 1;
     rumour_headings[0] = RND(5) - 1;
     rumour_headings[1] = RND(5) - 1;
 
@@ -1130,5 +1130,11 @@ const char* PINS[] = {
     "Call: 765-T2Y",
     "This month's best Star",
     "Sheriff Player will",
-    "receive a reward!"
+    "receive a reward!",
+    "WANTED!",
+    "Solo smuggler stealing",
+    "freighter from Trade Port",
+    "SHOCK!",
+    "Academy cadet passes",
+    "Kobayashi Maru!",
 };
