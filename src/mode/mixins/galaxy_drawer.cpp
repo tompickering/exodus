@@ -220,7 +220,7 @@ void GalaxyDrawer::draw_mouseover_star_name() {
         get_draw_position(ft, x, y);
         draw_manager.draw_text(
             star_name_id,
-            Font::Tiny,
+            Font::Cybattler,
             tmp_caps(ft->name),
             Justify::Centre,
             x, y - 28,
