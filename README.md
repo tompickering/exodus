@@ -78,3 +78,6 @@ Thanks to the following font creators:
 * Alassë Eärfalas - Another Tiny Pixel Font (monospace, 3x5)
     * (Creative Commons License)
     * https://alasseearfalas.itch.io/another-tiny-pixel-font-mono-3x5
+* Patrick H. Lauke - Cybattler
+    * (Creative Commons License, http://creativecommons.org/licenses/by/3.0/ )
+    * https://fontstruct.com/fontstructions/show/1592816/cybattler
