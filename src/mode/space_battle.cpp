@@ -354,7 +354,7 @@ void SpaceBattle::draw() {
 
                 draw_manager.draw_text(
                     s.spr_id_label_hp,
-                    Font::_3x5,
+                    Font::Cybattler,
                     t,
                     Justify::Right,
                     draw_x - 20,
@@ -370,7 +370,7 @@ void SpaceBattle::draw() {
 
                 draw_manager.draw_text(
                     s.spr_id_label_hp,
-                    Font::_3x5,
+                    Font::Cybattler,
                     t,
                     Justify::Left,
                     draw_x + 40,
@@ -443,7 +443,7 @@ void SpaceBattle::draw() {
         count[3] = '\0';
         draw_manager.draw_text(
             id(ID::COUNT_WARSHIPS),
-            Font::_3x5,
+            Font::Cybattler,
             count,
             Justify::Right,
             104, 30,
@@ -453,7 +453,7 @@ void SpaceBattle::draw() {
         count[3] = '\0';
         draw_manager.draw_text(
             id(ID::COUNT_BOMBERS),
-            Font::_3x5,
+            Font::Cybattler,
             count,
             Justify::Right,
             104, 48,
@@ -463,7 +463,7 @@ void SpaceBattle::draw() {
         count[3] = '\0';
         draw_manager.draw_text(
             id(ID::COUNT_SCOUTS),
-            Font::_3x5,
+            Font::Cybattler,
             count,
             Justify::Right,
             104, 66,
@@ -473,7 +473,7 @@ void SpaceBattle::draw() {
         count[3] = '\0';
         draw_manager.draw_text(
             id(ID::COUNT_TRANSPORTS),
-            Font::_3x5,
+            Font::Cybattler,
             count,
             Justify::Right,
             104, 84,
@@ -483,7 +483,7 @@ void SpaceBattle::draw() {
         count[3] = '\0';
         draw_manager.draw_text(
             id(ID::COUNT_ENEMY),
-            Font::_3x5,
+            Font::Cybattler,
             count,
             Justify::Right,
             104, 110,

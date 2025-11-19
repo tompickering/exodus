@@ -2574,19 +2574,19 @@ void PlanetMap::draw_frame_unrest() {
     );
 
     draw_manager.draw_text(
-        Font::_3x5,
+        Font::Cybattler,
         "HAPPY",
         Justify::Left,
         108, 124,
         {0x90, 0x90, 0x90});
     draw_manager.draw_text(
-        Font::_3x5,
+        Font::Cybattler,
         "UNHAPPY",
         Justify::Left,
         108, 222,
         {0x90, 0x90, 0x90});
     draw_manager.draw_text(
-        Font::_3x5,
+        Font::Cybattler,
         "ANGRY",
         Justify::Left,
         108, 320,

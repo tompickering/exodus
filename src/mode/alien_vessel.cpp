@@ -225,21 +225,21 @@ ExodusMode AlienVessel::update(float delta) {
                         {RES_X/2 + 100, ship_y + 80,
                          .5, .5, 1, 1});
                     draw_manager.draw_text(
-                        Font::_3x5,
+                        Font::Cybattler,
                         id(ID::SHIP_ID0),
                         "SPACECRAFT",
                         Justify::Left,
                         460, 140,
                         COL_TEXT_SPEECH);
                     draw_manager.draw_text(
-                        Font::_3x5,
+                        Font::Cybattler,
                         id(ID::SHIP_ID1),
                         "IDENTIFICATION:",
                         Justify::Left,
                         460, 155,
                         COL_TEXT_SPEECH);
                     draw_manager.draw_text(
-                        Font::_3x5,
+                        Font::Cybattler,
                         id(ID::SHIP_ID2),
                         ship_name,
                         Justify::Left,

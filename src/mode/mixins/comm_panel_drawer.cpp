@@ -659,7 +659,7 @@ void CommPanelDrawer::comm_draw_over_img_elements() {
     }
 
     draw_manager.draw_text(
-        Font::_3x5,
+        Font::Cybattler,
         comm_img_caption_upper,
         Justify::Left,
         COMM_X + COMM_BORDER + 6,
@@ -667,7 +667,7 @@ void CommPanelDrawer::comm_draw_over_img_elements() {
         COL_TEXT2);
 
     draw_manager.draw_text(
-        Font::_3x5,
+        Font::Cybattler,
         comm_img_caption_lower,
         Justify::Left,
         COMM_X + COMM_BORDER + 6,
