@@ -26,6 +26,7 @@ enum ID {
     OPT_GROUP_ADJUST,
     OPT_PLACE_AUTO,
     OPT_PLACE_MAN,
+    BTN_GUIDE,
     END,
 };
 
@@ -250,6 +251,12 @@ void LunarBattlePrep::enter() {
         draw_manager.draw(IMG_BATTLE_PREP);
         draw_manager.save_background();
         audio_manager.target_music(mpart2mus(16));
+
+        draw_manager.draw(
+            id(ID::BTN_GUIDE),
+            IMG_BTNGUIDE,
+            {RES_X-4, 4, 1, 0, 1, 1});
+
         set_stage(LBP_InitialPause);
     }
 
@@ -275,6 +282,23 @@ void LunarBattlePrep::exit() {
 }
 
 ExodusMode LunarBattlePrep::update(float delta) {
+    if (bulletin_is_open()) {
+        bulletin_update(delta);
+        switch (bulletin_get_praction()) {
+            case BPR_Close:
+                bulletin_ensure_closed();
+                break;
+            default:
+                break;
+        }
+        return ExodusMode::MODE_None;
+    }
+
+    if (draw_manager.query_click(id(ID::BTN_GUIDE)).id) {
+        bulletin_start_manual(BMP_LunarBattle);
+        return ExodusMode::MODE_None;
+    }
+
     LunarBattleParams &b = ephstate.lunar_battle;
 
     Planet *p = exostate().get_active_planet();

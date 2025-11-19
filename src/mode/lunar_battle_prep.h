@@ -8,10 +8,11 @@
 #include "state/exodus_state.h"
 
 #include "mixins/battle_report.h"
+#include "mixins/bulletin_drawer.h"
 
 
 
-class LunarBattlePrep : ModeBase, BattleReport {
+class LunarBattlePrep : ModeBase, BattleReport, BulletinDrawer {
     public:
         LunarBattlePrep();
         virtual void enter() override;
