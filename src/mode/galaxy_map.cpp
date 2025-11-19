@@ -492,7 +492,7 @@ ExodusMode GalaxyMap::update(float delta) {
 
                 panel_set_text("SELECT A STAR");
 
-                FlyTarget* mouseover_ft = get_mouseover_flytarget();
+                FlyTarget* mouseover_ft = get_mouseover_flytarget(false);
                 if (mouseover_ft) {
                     update_panel_info_ft(TGT_Primary, exostate().get_player(0), mouseover_ft);
                 }
@@ -844,7 +844,7 @@ ExodusMode GalaxyMap::update(float delta) {
 
                 panel_set_text("SELECT A STAR");
 
-                FlyTarget* mouseover_ft = get_mouseover_flytarget();
+                FlyTarget* mouseover_ft = get_mouseover_flytarget(false);
                 if (mouseover_ft) {
                     update_panel_info_ft(TGT_Primary, exostate().get_player(0), mouseover_ft);
                 }

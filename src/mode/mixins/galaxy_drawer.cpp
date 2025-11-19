@@ -87,12 +87,14 @@ FlyTarget* GalaxyDrawer::get_clicked_flytarget() {
     return nullptr;
 }
 
-FlyTarget* GalaxyDrawer::get_mouseover_flytarget() {
+FlyTarget* GalaxyDrawer::get_mouseover_flytarget(bool include_guild) {
     SpriteClick click;
     Galaxy *gal = exostate().get_galaxy();
 
-    if (draw_manager.query_mouseover(guild_id).id) {
-        return gal->get_guild();
+    if (include_guild) {
+        if (draw_manager.query_mouseover(guild_id).id) {
+            return gal->get_guild();
+        }
     }
 
     for (int i = 0; i < GALAXY_MAX_STARS; ++i) {
@@ -224,7 +226,7 @@ void GalaxyDrawer::draw_mouseover_star_name() {
         star_name2_id = draw_manager.new_sprite_id();
     }
 
-    FlyTarget *ft = get_mouseover_flytarget();
+    FlyTarget *ft = get_mouseover_flytarget(true);
 
     const char* ft_name = ft->name;
 
