@@ -863,6 +863,16 @@ ExodusMode LunarBattle::update(float delta) {
                         }
                     } else {
                         move_dir = ai_decide_move_direction();
+
+                        if (FEATURE(EF_FIX_LUNAR_BATTLE_SOFTLOCKS)) {
+                            if ((move_dir == DIR_None) && (valid_dirs != 0)) {
+                                move_dir = ai_decide_move_direction_random();
+
+                                if (move_dir != DIR_None) {
+                                    active_unit->random_moves = 3;
+                                }
+                            }
+                        }
                     }
 
                     if (FEATURE(EF_PREVENT_AI_BATTLE_BACKTRACK)) {

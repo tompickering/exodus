@@ -153,6 +153,9 @@ static bool FIX_FLEET_ADMIRAL = false;
 // Fix issue where units never move into range
 static bool FIX_LUNAR_BATTLE_STALEMATE = false;
 
+// Fix softlock situaitions in lunar battles
+static bool FIX_LUNAR_BATTLE_SOFTLOCKS = false;
+
 // Fix MC going to player in attack payoff event
 static bool FIX_ATTACKPAYOFF_MC = false;
 
@@ -217,6 +220,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         FIX_AI_TERROR = false;
         FIX_FLEET_ADMIRAL = false;
         FIX_LUNAR_BATTLE_STALEMATE = true;
+        FIX_LUNAR_BATTLE_SOFTLOCKS = true;
         FIX_ATTACKPAYOFF_MC = false;
         DISABLE_MULTIPLAYER = true;
     }
@@ -272,6 +276,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         FIX_AI_TERROR = true;
         FIX_FLEET_ADMIRAL = true;
         FIX_LUNAR_BATTLE_STALEMATE = true;
+        FIX_LUNAR_BATTLE_SOFTLOCKS = true;
         FIX_ATTACKPAYOFF_MC = true;
         DISABLE_MULTIPLAYER = true;
     }
@@ -340,6 +345,7 @@ bool FEATURE(ExodusFeature f) {
     if (f == EF_FIX_AI_TERROR) return FIX_AI_TERROR;
     if (f == EF_FIX_FLEET_ADMIRAL) return FIX_FLEET_ADMIRAL;
     if (f == EF_FIX_LUNAR_BATTLE_STALEMATE) return FIX_LUNAR_BATTLE_STALEMATE;
+    if (f == EF_FIX_LUNAR_BATTLE_SOFTLOCKS) return FIX_LUNAR_BATTLE_SOFTLOCKS;
     if (f == EF_FIX_ATTACKPAYOFF_MC) return FIX_ATTACKPAYOFF_MC;
     if (f == EF_DISABLE_MULTIPLAYER) return DISABLE_MULTIPLAYER;
 
