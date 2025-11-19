@@ -82,8 +82,14 @@ bool BulletinDrawer::bulletin_start_manual(BulletinManualPage page) {
 
 bool BulletinDrawer::bulletin_continue_manual(BulletinManualPage page) {
     L.debug("MANUAL PAGE %d", (int)page);
+
     bulletin_manual_page_current = page;
-    return bulletin_start_new_internal(false, -1, BM_Manual);
+
+    if (bulletin_start_new_internal(false, -1, BM_Manual)) {
+        bulletin_update(0);
+    }
+
+    return false;
 }
 
 bool BulletinDrawer::bulletin_start_new_internal(bool transition, int star_idx, BulletinMode mode) {

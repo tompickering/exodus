@@ -5744,6 +5744,7 @@ void GalaxyMap::planet_report_bulletin(int idx) {
         bulletin_set_next_text(report.content[i]);
     }
     bulletin_set_next_text(ENHANCED() ? "---" : "Report ends.");
+    bulletin_update(0);
 }
 
 void GalaxyMap::planet_report_summary_bulletin(int idx) {
@@ -5757,6 +5758,7 @@ void GalaxyMap::planet_report_summary_bulletin(int idx) {
     bulletin_set_report_summary_page(idx);
     bulletin_set_bg(IMG_ME1_MENU);
     bulletin_set_player_flag(player);
+    bulletin_update(0);
 }
 
 bool GalaxyMap::use_planet_summary() {
