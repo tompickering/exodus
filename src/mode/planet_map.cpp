@@ -789,11 +789,15 @@ ExodusMode PlanetMap::update(float delta) {
                         }
                     }
 
+                    bool resettling = false;
+                    int pop_pre_resettle = planet->get_population();
+
                     if (ok) {
                         bool proceed = false;
 
                         if (resettling_enabled && (active_tool == TOOL_Clear) && (existing == STONE_City)) {
                             proceed = true;
+                            resettling = true;
                             // Resettling still causes some unrest
                             planet->adjust_unrest(1);
                             player->give_mc(15, MC_Resettling);
@@ -837,6 +841,18 @@ ExodusMode PlanetMap::update(float delta) {
                                 return ExodusMode::MODE_None;
                             } else {
                                 planet->set_stone(block_x, block_y, construct_stone);
+                            }
+                        }
+
+                        if (resettling) {
+                            int pop_post_resettle = planet->get_population();
+
+                            int pop_resettled = pop_pre_resettle - pop_post_resettle;
+
+                            if (pop_resettled > 0) {
+                                if (planet->is_in_danger()) {
+                                    player->add_trace(TRACE_MillionsRescued, pop_resettled);
+                                }
                             }
                         }
                     }

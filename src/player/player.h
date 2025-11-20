@@ -358,6 +358,7 @@ enum Trace {
     TRACE_MineralsSold,          // 13
     TRACE_FoodSold,              // 14
     TRACE_AlliesHelped,          // 15
+    TRACE_MillionsRescued,
     TRACE_GOOD_END,
     TRACE_MAX
 };

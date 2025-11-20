@@ -372,6 +372,9 @@ ExodusMode Ending::update(float dt) {
                             case TRACE_AlliesHelped:
                                 snprintf(good_things[ctr], DEED_CHARS, "Assisted %d allies", n);
                                 break;
+                            case TRACE_MillionsRescued:
+                                snprintf(good_things[ctr], DEED_CHARS, "Saved %d million civilians", n);
+                                break;
                             default:
                                 L.error("Unknown trace in good deeds: %d", t);
                                 good_things[ctr][0] = '\0';
