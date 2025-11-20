@@ -400,7 +400,7 @@ ExodusMode AlienVessel::update(float delta) {
                     // FIXME: Do we care about maxima here?
                     if (type == VESSEL_Trading) {
                         f.transporters++;
-                        cap_str = "You have capptured a transporter ship.";
+                        cap_str = "You have captured a transporter ship.";
                         switch (rand() % 3) {
                             case 0:
                                 player->transfer_min(1);
@@ -413,7 +413,7 @@ ExodusMode AlienVessel::update(float delta) {
                                 break;
                         }
                     } else {
-                        cap_str = "You have capptured a scout ship.";
+                        cap_str = "You have captured a scout ship.";
                         f.scouts++;
                     }
 
