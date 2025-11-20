@@ -2568,7 +2568,21 @@ bool MenuDrawer::menu_row_clicked(int row) {
     if ((menu_clickable_rows & (1<<row)) == 0) {
         return false;
     }
-    return draw_manager.query_click(id_menu_lines[row]).id;
+
+    if (draw_manager.query_click(id_menu_lines[row]).id) {
+        return true;
+    }
+
+    if (draw_manager.clicked()) {
+        if (draw_manager.mouse_in_area({MENU_TEXT_X,
+                                        menu_get_y(row),
+                                        MENU_W,
+                                        20})) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void MenuDrawer::menu_open_player_select(MenuMode mode) {
