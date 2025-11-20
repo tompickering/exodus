@@ -593,6 +593,19 @@ void ExodusState::set_active_planet(int new_planet) {
     active_planet = new_planet;
 }
 
+void ExodusState::set_active_planet(Planet *new_planet) {
+    Star *s = get_star_for_planet(new_planet);
+    for (int i = 0; i < STAR_MAX_PLANETS; ++i) {
+        if (s->get_planet(i) == new_planet) {
+            set_active_flytarget(s);
+            set_active_planet(i);
+            return;
+        }
+    }
+
+    L.error("Planet could not be set active");
+}
+
 int ExodusState::tgt2loc(FlyTarget* tgt) {
     if (tgt == get_galaxy()->get_guild())
         return -1;

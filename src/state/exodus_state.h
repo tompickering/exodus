@@ -113,6 +113,7 @@ class ExodusState : public Saveable {
         FlyTarget* get_active_flytarget();
         void set_active_flytarget(FlyTarget*);
         void set_active_planet(int);
+        void set_active_planet(Planet*);
         int tgt2loc(FlyTarget*); // Convert between PlayerLocation
         FlyTarget* loc2tgt(int); // indicies and FlyTarget objects.
         int count_visited_stars(Player*);

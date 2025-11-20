@@ -2615,6 +2615,31 @@ ExodusMode GalaxyMap::month_pass_update() {
         next_mp_stage();
     }
 
+    if (mp_state.mp_stage == MP_CallToRescueCounsellor) {
+        if (comm_is_open()) {
+            comm_ensure_closed();
+        } else {
+            for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
+                Player *p = exostate().set_active_player(mp_state.mp_player_idx);
+
+                if (p->is_human()) {
+                    for (PlanetIterator pi(mp_state.mp_player_idx); !pi.complete(); ++pi) {
+                        Planet *pl = pi.get();
+                        if (pl->is_in_danger() && pl->has_stone(STONE_City)) {
+                            bulletin_ensure_closed();
+                            exostate().set_active_planet(pl);
+
+                            comm_open(DIA_S_CallToRescue);
+                            return ExodusMode::MODE_None;
+                        }
+                    }
+                }
+            }
+        }
+
+        next_mp_stage();
+    }
+
     if (mp_state.mp_stage == MP_SaveMC2) {
         for (; mp_state.mp_player_idx < N_PLAYERS; ++mp_state.mp_player_idx) {
             Player *p = exostate().set_active_player(mp_state.mp_player_idx);

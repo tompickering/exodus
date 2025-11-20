@@ -47,6 +47,7 @@ enum MonthPassStage {
     MP_AdvancedGalaxyMapUnlock,
     MP_AdvancedReportUnlock,
     MP_FinaliseReports,
+    MP_CallToRescueCounsellor,
     MP_SaveMC2,
     MP_End,
 };

@@ -1071,6 +1071,12 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img_caption("SCIENTISTS");
             comm_is_counsellor = true;
             break;
+        case DIA_S_CallToRescue:
+            comm_set_title("Message from counsellor");
+            comm_set_img(CI_Human);
+            comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
+            break;
         case DIA_S_Quit:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_HumanThoughtful);
@@ -2174,6 +2180,18 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_set_text(3, "");
                 comm_set_text(4, "And we could do more, you know,");
                 comm_set_text(5, "with sufficient funding...");
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_CallToRescue:
+            {
+                comm_prepare(6);
+                comm_set_text(0, "%s! The citizens of %s", comm_player->get_ref(), comm_planet->get_name());
+                comm_set_text(1, "are in danger!");
+                comm_set_text(2, "");
+                comm_set_text(3, "If our fleet were in the system,");
+                comm_set_text(4, "we could evacuate the civilians via");
+                comm_set_text(5, "resettling.");
                 comm_recv(DIA_R_Close);
             }
             break;
