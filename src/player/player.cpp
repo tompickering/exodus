@@ -105,66 +105,82 @@ bool Player::init_alien_name_character() {
         case CHAR_Yok1:
             set_title("Regent");
             set_name("Y'Ry");
+            set_gender(GENDER_Other);
             return true;
         case CHAR_Yok2:
             set_title("Regent");
             set_name("Tk'Terk");
+            set_gender(GENDER_Other);
             return true;
         case CHAR_Yok3:
             set_title("Regent");
             set_name("Gar'Xa");
+            set_gender(GENDER_Other);
             return true;
         case CHAR_Yok4:
             set_title("Regent");
             set_name("Z'Ren");
+            set_gender(GENDER_Other);
             return true;
         case CHAR_Ter1:
             set_title("Lady");
             set_name("Ye Nara");
+            set_gender(GENDER_Female);
             return true;
         case CHAR_Ter2:
             set_title("Lord");
             set_name("Ya Ni Noi");
+            set_gender(GENDER_Male);
             return true;
         case CHAR_Ter3:
             set_title("Lady");
             set_name("Ye Yeno");
+            set_gender(GENDER_Female);
             return true;
         case CHAR_Ter4:
             set_title("Lord");
             set_name("Ya Bakka");
+            set_gender(GENDER_Male);
             return true;
         case CHAR_Urk1:
             set_title("Lady");
             set_name("Kror");
+            set_gender(GENDER_Female);
             return true;
         case CHAR_Urk2:
             set_title("Lord");
             set_name("Zeish");
+            set_gender(GENDER_Male);
             return true;
         case CHAR_Urk3:
             set_title("Lady");
             set_name("Mzaa");
+            set_gender(GENDER_Female);
             return true;
         case CHAR_Urk4:
             set_title("Lord");
             set_name("Gecc");
+            set_gender(GENDER_Male);
             return true;
         case CHAR_Gor1:
             set_title("Lady");
+            set_gender(GENDER_Female);
             set_name("Bautre");
             return true;
         case CHAR_Gor2:
             set_title("Lord");
             set_name("Noubas");
+            set_gender(GENDER_Male);
             return true;
         case CHAR_Gor3:
             set_title("Elder");
             set_name("Toya");
+            set_gender(GENDER_Female);
             return true;
         case CHAR_Gor4:
             set_title("Lord");
             set_name("Troche");
+            set_gender(GENDER_Male);
             return true;
         default:
             break;
