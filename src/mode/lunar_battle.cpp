@@ -812,13 +812,13 @@ ExodusMode LunarBattle::update(float delta) {
                         active_unit->moves_remaining = 0;
                     }
 
-                    if (input_manager.consume(K_Up))
+                    if (input_manager.consume(K_Up) || input_manager.consume(K_W))
                         move_dir = DIR_Up;
-                    if (input_manager.consume(K_Down))
+                    if (input_manager.consume(K_Down) || input_manager.consume(K_S))
                         move_dir = DIR_Down;
-                    if (input_manager.consume(K_Left))
+                    if (input_manager.consume(K_Left) || input_manager.consume(K_A))
                         move_dir = DIR_Left;
-                    if (input_manager.consume(K_Right))
+                    if (input_manager.consume(K_Right) || input_manager.consume(K_D))
                         move_dir = DIR_Right;
                     if (input_manager.consume(K_Enter)) {
                         // We wish to end our movement phase early
@@ -1069,7 +1069,7 @@ ExodusMode LunarBattle::update(float delta) {
             } else {
                 if (!target_unit) {
                     if (human_turn) {
-                        if (draw_manager.query_click(active_unit->spr_id).id) {
+                        if (draw_manager.query_click(active_unit->spr_id).id || input_manager.consume(K_Enter)) {
                             // We are choosing not to fire
                             active_unit->shots_remaining = 0;
                             break;
