@@ -2630,6 +2630,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                             exostate().set_active_planet(pl);
 
                             comm_open(DIA_S_CallToRescue);
+                            ++mp_state.mp_player_idx;
                             return ExodusMode::MODE_None;
                         }
                     }
