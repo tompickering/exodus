@@ -221,62 +221,30 @@ ExodusMode GalaxyMap::update(float delta) {
             update_panel_info_player(TGT_Primary, exostate().get_player(0));
             update_panel_info_ft(TGT_Primary, exostate().get_player(0), selected_ft);
 
-            {
-                FlyTarget *fleet_pos = exostate().loc2tgt(player->get_location().get_target());
-                const char* marker_icon = IMG_TS1_DEST;
-                get_draw_position(fleet_pos, draw_x, draw_y);
-
-                if (!player->get_location().in_flight()) {
-                    switch (player->get_fleet_marker_idx()) {
-                        case 0:
-                            marker_icon = IMG_TS1_ICON1;
-                            break;
-                        case 1:
-                            marker_icon = IMG_TS1_ICON2;
-                            break;
-                        case 2:
-                            marker_icon = IMG_TS1_ICON3;
-                            break;
-                        case 3:
-                            marker_icon = IMG_TS1_ICON4;
-                            break;
-                        case 4:
-                            marker_icon = IMG_TS1_ICON5;
-                            break;
-                        default:
-                            L.fatal("Invalid fleet marker index");
-                            break;
-                    }
-                }
-
-                draw_manager.draw(
-                    id(ID::FLEET_MARKER),
-                    marker_icon,
-                    {draw_x - 10, draw_y + 10, 0.5, 0.5, 1, 1});
+            draw_fleet_marker(id(ID::FLEET_MARKER));
 
 #ifdef DBG
-                if (exodebug.show_player_markers) {
-                    char text[3];
-                    for (int i = 0; i < N_PLAYERS; ++i) {
-                        Player *p = exostate().get_player(i);
-                        FlyTarget *fleet_pos = exostate().loc2tgt(p->get_location().get_target());
-                        get_draw_position(fleet_pos, draw_x, draw_y);
-                        snprintf(text, sizeof(text), "%d", i);
-                        RGB col = {0, 0xFF, 0};
-                        if (p->get_location().in_flight()) {
-                            col = {0xFF, 0, 0};
-                        }
-                        draw_manager.draw_text(
-                            exodebug.player_markers[i],
-                            Font::Large,
-                            text,
-                            Justify::Left,
-                            draw_x - 10, draw_y - 10,
-                            col);
-                    };
-                }
-#endif
+            if (exodebug.show_player_markers) {
+                char text[3];
+                for (int i = 0; i < N_PLAYERS; ++i) {
+                    Player *p = exostate().get_player(i);
+                    FlyTarget *fleet_pos = exostate().loc2tgt(p->get_location().get_target());
+                    get_draw_position(fleet_pos, draw_x, draw_y);
+                    snprintf(text, sizeof(text), "%d", i);
+                    RGB col = {0, 0xFF, 0};
+                    if (p->get_location().in_flight()) {
+                        col = {0xFF, 0, 0};
+                    }
+                    draw_manager.draw_text(
+                        exodebug.player_markers[i],
+                        Font::Large,
+                        text,
+                        Justify::Left,
+                        draw_x - 10, draw_y - 10,
+                        col);
+                };
             }
+#endif
 
             click = draw_manager.query_click(id_panel);
             if (click.id) {
