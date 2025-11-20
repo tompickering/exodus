@@ -347,7 +347,8 @@ enum Trace {
     TRACE_VillagesAnnihilated,   //  6
     TRACE_PlutoniumSold,         //  7
     TRACE_PlanetsNuked,          //  8
-    TRACE_PlanetsBombed,         //  9
+    TRACE_PlanetsBombed,         //  10
+    TRACE_MillionsForsaken,
     TRACE_BAD_END,
     // Good things
     TRACE_GOOD,

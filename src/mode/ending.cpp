@@ -269,6 +269,9 @@ ExodusMode Ending::update(float dt) {
                             case TRACE_PlanetsBombed:
                                 snprintf(bad_things[ctr], DEED_CHARS, "Bombed %d planets", n);
                                 break;
+                            case TRACE_MillionsForsaken:
+                                snprintf(bad_things[ctr], DEED_CHARS, "Left %d million civilians to die", n);
+                                break;
                             default:
                                 L.error("Unknown trace in bad deeds: %d", t);
                                 bad_things[ctr][0] = '\0';
