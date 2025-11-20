@@ -2749,6 +2749,22 @@ void Planet::ai_update() {
     }
 }
 
+bool Planet::is_in_danger() {
+    if (!exists()) {
+        return false;
+    }
+
+    Star *s = exostate().get_star_for_planet(this);
+
+    if ((int)(s->get_size()) > (int)STAR_Huge) {
+        if (this == s->get_planet(0)) return true;
+        if (this == s->get_planet(1)) return true;
+        if (this == s->get_planet(2)) return true;
+    }
+
+    return false;
+}
+
 const char* Planet::get_academy_source(int i) {
     if (i == 0) return academy_source0;
     if (i == 1) return academy_source1;

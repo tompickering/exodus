@@ -351,6 +351,8 @@ class Planet : public Saveable {
         PlanetTrafficLight get_traffic_light(PlanetTrafficLightProperty);
         void ai_update();
 
+        bool is_in_danger();
+
         int get_n_academy_sources();
         const char* get_academy_source(int);
 
