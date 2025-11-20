@@ -239,6 +239,7 @@ class DrawManager {
         virtual void set_selectable(SprID);
         virtual void unset_selectable(SprID);
         virtual void cancel_transitions() = 0;
+        virtual int calc_text_overfill(int, Font, const char*) = 0;
 
         // Special VFX
         virtual void set_flag_vfx(SprID);

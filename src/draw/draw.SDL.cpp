@@ -1240,6 +1240,17 @@ void DrawManagerSDL::cancel_transitions() {
     fade_stages = 0;
 }
 
+int DrawManagerSDL::calc_text_overfill(int width, Font font, const char* text) {
+    int extent = 0;
+    int can_be_rendered = 0;
+
+    TTF_MeasureText((TTF_Font*)font_data[font], text, width, &extent, &can_be_rendered);
+
+    int chars = strlen(text);
+
+    return max((chars - can_be_rendered), 0);
+}
+
 void DrawManagerSDL::draw_flag_vfx() {
     for (auto it = flag_vfx_ids.begin(); it != flag_vfx_ids.end(); ++it) {
         SprID id = it->first;

@@ -79,6 +79,8 @@ class DrawManagerSDL : public DrawManager {
         virtual bool fade_active() override;
         virtual void get_upscale(float&, float&) override;
         virtual void cancel_transitions() override;
+        virtual int calc_text_overfill(int, Font, const char*) override;
+
     protected:
         virtual void* get_sprite_data(const char*) override;
     private:
