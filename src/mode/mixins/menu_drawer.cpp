@@ -5,6 +5,7 @@
 #include "save/save.h"
 #include "input/input.h"
 #include "util/iter.h"
+#include "util/str.h"
 
 #include "exodus_features.h"
 
@@ -2350,9 +2351,12 @@ bool MenuDrawer::menu_specific_update() {
             } else {
                 int y = menu_get_y(marker_being_set+2);
 
+                const char* text = input_manager.get_input_text(MAX_MARKER);
+                INPUT_CAP(text, 100)
+
                 draw_manager.draw_text(
                     id_menu_marker_entry_text,
-                    input_manager.get_input_text(MAX_MARKER),
+                    text,
                     Justify::Left,
                     MENU_TEXT_X + 54, y,
                     COL_TEXT);
@@ -2363,6 +2367,8 @@ bool MenuDrawer::menu_specific_update() {
 
                 if (input_manager.consume(K_Enter)) {
                     const char* new_marker = input_manager.get_input_text(MAX_MARKER);
+                    INPUT_CAP(new_marker, 100)
+
                     if (new_marker[0] != '\0') {
                         p->set_marker_tag(marker_being_set, new_marker);
                         input_manager.stop_text_input();
@@ -2384,6 +2390,7 @@ bool MenuDrawer::menu_specific_update() {
                 }
 
                 const char* name = input_manager.get_input_text(PLANET_MAX_NAME);
+                INPUT_CAP(name, 100)
 
                 draw_manager.draw_text(
                     id_menu_artplanname,

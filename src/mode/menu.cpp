@@ -4,6 +4,8 @@
 
 #include "audio/audio.h"
 
+#include "util/str.h"
+
 #include "exodus_features.h"
 
 #include "assetpaths.h"
@@ -676,6 +678,7 @@ ExodusMode Menu::update(float delta) {
 
             {
                 const char* input_name = input_manager.get_input_text(MAX_PLAYER_NAME);
+                INPUT_CAP(input_name, 100)
 
                 draw_manager.draw_text(
                         id(ID::PLAYER_NAME),
@@ -796,6 +799,7 @@ ExodusMode Menu::update(float delta) {
 
             {
                 const char* input_title = input_manager.get_input_text(MAX_PLAYER_TITLE);
+                INPUT_CAP(input_title, 100)
 
                 draw_manager.draw_text(
                         id(ID::PLAYER_TITLE),
@@ -853,6 +857,7 @@ ExodusMode Menu::update(float delta) {
 
             {
                 const char* input_ref = input_manager.get_input_text(MAX_PLAYER_REFERENCE);
+                INPUT_CAP(input_ref, 100)
 
                 draw_manager.draw_text(
                         id(ID::PLAYER_REF),

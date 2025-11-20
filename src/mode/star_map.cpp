@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include "galaxy/star.h"
+#include "util/str.h"
 #include "util/value.h"
 
 #include "assetpaths.h"
@@ -850,6 +851,7 @@ ExodusMode StarMap::update(float delta) {
         case SM_PlanetRename:
             {
                 const char* newname = input_manager.get_input_text(PLANET_MAX_NAME);
+                INPUT_CAP(newname, 100)
 
                 int x, y;
                 get_planet_draw_pos(rename_planet, x, y);

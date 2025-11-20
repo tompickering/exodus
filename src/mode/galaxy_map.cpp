@@ -808,6 +808,7 @@ ExodusMode GalaxyMap::update(float delta) {
                         // Constructing a planet
                         // FIXME: It's a bit hacky to rely on the input system to remember this...
                         const char* name = input_manager.get_input_text(PLANET_MAX_NAME);
+                        INPUT_CAP(name, 100)
 
                         if (exostate().construct_artificial_planet(s, player_idx, name)) {
                             set_stage(GM_Idle);
