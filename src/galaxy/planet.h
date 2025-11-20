@@ -51,6 +51,7 @@ enum PlanetTrafficLightProperty {
 // These are assigned the values that they had in the original.
 // This is inconsequential, but can help with debugging!
 enum Stone : uint8_t {
+    STONE_Invalid       =  0xFF,
     STONE_Clear         =  0,
     STONE_Base          =  1,
     STONE_Agri          =  2,
@@ -250,7 +251,7 @@ class Planet : public Saveable {
         void set_stone(int, int, Stone);
         Stone get_stone_wrap(int, int);
         void set_stone_wrap(int, int, Stone);
-        void wrap(int&, int&);
+        bool wrap(int&, int&);
         bool has_stone(Stone);
         Stone get_random_point(int&, int&);
         bool find_random_stone(Stone, int&, int&);
@@ -362,7 +363,7 @@ class Planet : public Saveable {
         void cull_stones_to_size();
         Stone _get_stone(int, int);
         void _set_stone(int, int, Stone);
-        void _to_real(int, int, int&, int&);
+        bool _to_real(int, int, int&, int&);
         bool _real_in_bounds(int, int);
 
         void _ai_make_space();

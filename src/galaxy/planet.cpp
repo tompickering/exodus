@@ -579,32 +579,44 @@ void Planet::unset_owner(PlanetOwnerChangedReason reason) {
  */
 Stone Planet::get_stone(int x, int y) {
     int real_x; int real_y;
-    _to_real(x, y, real_x, real_y);
-    return _get_stone(real_x, real_y);
+    if (_to_real(x, y, real_x, real_y)) {
+        return _get_stone(real_x, real_y);
+    }
+
+    return STONE_Invalid;
 }
 
 void Planet::set_stone(int x, int y, Stone stone) {
     int real_x; int real_y;
-    _to_real(x, y, real_x, real_y);
-    _set_stone(real_x, real_y, stone);
+    if (_to_real(x, y, real_x, real_y)) {
+        _set_stone(real_x, real_y, stone);
+    }
 }
 
 Stone Planet::get_stone_wrap(int x, int y) {
-    wrap(x, y);
-    return get_stone(x, y);
+    if (wrap(x, y)) {
+        return get_stone(x, y);
+    }
+
+    return STONE_Invalid;
 }
 
 void Planet::set_stone_wrap(int x, int y, Stone stone) {
-    wrap(x, y);
-    return set_stone(x, y, stone);
+    if (wrap(x, y)) {
+        set_stone(x, y, stone);
+    }
 }
 
-void Planet::wrap(int& x, int& y) {
+bool Planet::wrap(int& x, int& y) {
     int size = get_size_blocks();
     while (x < 0) x += size;
-    while (y < 0) y += size;
     x = x % size;
-    y = y % size;
+
+    if (y < 0 || y >= size) {
+        return false;
+    }
+
+    return true;
 }
 
 bool Planet::has_stone(Stone st) {
@@ -1041,7 +1053,7 @@ void Planet::cull_stones_to_size() {
 // co-ords into a space constrained by the planet's size.
 Stone Planet::_get_stone(int x, int y) {
     if (!_real_in_bounds(x, y))
-        return STONE_Clear;
+        return STONE_Invalid;
     return surf[y*PLANET_BLOCKS_LG + x];
 }
 
@@ -1052,13 +1064,18 @@ void Planet::_set_stone(int x, int y, Stone stone) {
     validate_army_funding();
 }
 
-void Planet::_to_real(int x, int y, int& real_x, int& real_y) {
+bool Planet::_to_real(int x, int y, int& real_x, int& real_y) {
     int sz = get_size_blocks();
     while (x < 0) x += sz;
-    while (y < 0) y += sz;
     int offset = (PLANET_BLOCKS_LG - sz) / 2;
     real_x = (x % sz) + offset;
-    real_y = (y % sz) + offset;
+    real_y = y + offset;
+
+    if (y < 0 || y >= sz) {
+        return false;
+    }
+
+    return true;
 }
 
 bool Planet::_real_in_bounds(int x, int y) {
