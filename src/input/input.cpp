@@ -108,6 +108,11 @@ const char* InputManager::get_input_text(int max_len) {
     return (const char*) text;
 }
 
+void InputManager::input_text_overfill(int overfill) {
+    int len = strnlen(text, INPUT_MAX_TEXT);
+    text[len - overfill] = '\0';
+}
+
 void InputManager::set_input_text(const char* text_to_set) {
     text[INPUT_MAX_TEXT] = '\0';
     strncpy(text, text_to_set, INPUT_MAX_TEXT);

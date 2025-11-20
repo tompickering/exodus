@@ -68,6 +68,7 @@ class InputManager {
         MousePos read_click();
         MousePos read_click_r();
         const char* get_input_text(int);
+        virtual void input_text_overfill(int overfill);
         virtual unsigned int read_numbers() = 0;
         virtual bool is_num_held(unsigned char) = 0;
         virtual void start_text_input() { text_input_is_active = true; }
