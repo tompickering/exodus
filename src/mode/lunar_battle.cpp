@@ -63,6 +63,7 @@ enum ID {
     ARROW_LEFT,
     ARROW_RIGHT,
     CURSOR,
+    TICK,
     EXPLOSION,
     HIGHLIGHT,
     TELE0,
@@ -2129,6 +2130,8 @@ void LunarBattle::draw_units() {
         hide_enemies = true;
     }
 
+    draw_manager.draw(id(ID::TICK), nullptr);
+
     for (int i = 0; i < n_tele; ++i) {
         draw_manager.draw(
             tele[i].spr_id,
@@ -2220,6 +2223,18 @@ void LunarBattle::draw_units() {
                 spr,
                 {dx, draw_y,
                  anchor_x, 0, 1, 1});
+
+            if (stage == LB_Move) {
+                if (   (active_unit == &units[i])
+                    && !unit_moving
+                    && draw_manager.query_mouseover(units[i].spr_id).id) {
+                    draw_manager.draw(
+                        id(ID::TICK),
+                        IMG_GF4_MA5,
+                        {draw_x + BLK_SZ/2, draw_y + BLK_SZ/2,
+                         0.5, 0.5, 1, 1});
+                }
+            }
 
             // Draw the firing sprite on top of the idle sprite
             if (draw_fire) {
