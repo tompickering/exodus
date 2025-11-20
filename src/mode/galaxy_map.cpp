@@ -518,6 +518,7 @@ ExodusMode GalaxyMap::update(float delta) {
         case GM_MonthPassStart:
             // Autosave
             save_manager.save(0);
+            ephstate.planet_report_idx = -1;
             set_stage(GM_MonthPassing);
             return ExodusMode::MODE_None;
         case GM_MonthPassing:
