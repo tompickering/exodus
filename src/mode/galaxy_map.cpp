@@ -1505,9 +1505,11 @@ ExodusMode GalaxyMap::month_pass_update() {
                             Player *owner = exostate().get_player(owner_idx);
                             if (owner->is_human()) {
                                 if (FEATURE(EF_RESETTLING)) {
-                                    int pop = fst->get_population();
-                                    if (pop > 0) {
-                                        owner->add_trace(TRACE_MillionsForsaken, pop);
+                                    if (fst->has_stone(STONE_City)) {
+                                        int pop = fst->get_population();
+                                        if (pop > 0) {
+                                            owner->add_trace(TRACE_MillionsForsaken, pop);
+                                        }
                                     }
                                 }
                                 achievement_manager.unlock(ACH_PlanetFried);
@@ -1535,9 +1537,11 @@ ExodusMode GalaxyMap::month_pass_update() {
                                 Player *owner = exostate().get_player(owner_idx);
                                 if (owner->is_human()) {
                                     if (FEATURE(EF_RESETTLING)) {
-                                        int pop = pl->get_population();
-                                        if (pop > 0) {
-                                            owner->add_trace(TRACE_MillionsForsaken, pop);
+                                        if (pl->has_stone(STONE_City)) {
+                                            int pop = pl->get_population();
+                                            if (pop > 0) {
+                                                owner->add_trace(TRACE_MillionsForsaken, pop);
+                                            }
                                         }
                                     }
                                     achievement_manager.unlock(ACH_PlanetFried);
