@@ -414,11 +414,24 @@ ExodusMode Menu::update(float delta) {
                             LOADFRAME_X+4+80, LOADFRAME_Y+2+((i+2)*LOADFRAME_STEP),
                             COL_TEXT);
 
-                        if (draw_manager.query_click(load_game_ids[i]).id) {
+                        bool clicked = (bool)(draw_manager.query_click(load_game_ids[i]).id);
+
+                        if (draw_manager.clicked()) {
+                            if (draw_manager.mouse_in_area({LOADFRAME_X,
+                                                            LOADFRAME_Y+2+((i+2)*LOADFRAME_STEP),
+                                                            LOADFRAME_W,
+                                                            LOADFRAME_STEP})) {
+                                clicked = true;
+                            }
+
+                        }
+
+                        if (clicked) {
                             load_slot = i;
                             set_stage(LoadStart);
                             return ExodusMode::MODE_None;
                         }
+
                     }
                 }
             }
