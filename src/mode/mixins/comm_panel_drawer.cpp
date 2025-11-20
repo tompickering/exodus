@@ -2185,9 +2185,10 @@ void CommPanelDrawer::comm_send(CommSend input) {
             break;
         case DIA_S_CallToRescue:
             {
+                Star *s = exostate().get_star_for_planet(comm_planet);
                 comm_prepare(6);
-                comm_set_text(0, "%s! The citizens of %s", comm_player->get_ref(), comm_planet->get_name());
-                comm_set_text(1, "are in danger!");
+                comm_set_text(0, "%s! The citizens of the", comm_player->get_ref());
+                comm_set_text(1, "%s system are in danger!", s->name);
                 comm_set_text(2, "");
                 comm_set_text(3, "If our fleet were in the system,");
                 comm_set_text(4, "we could evacuate the civilians via");
