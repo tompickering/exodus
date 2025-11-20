@@ -23,6 +23,7 @@ class GalaxyDrawer {
         void draw_mouseover_star_name();
     protected:
         void draw_galaxy(bool);
+        void draw_fleet_marker(SprID);
     private:
         SprID guild_id;
         SprID star_ids[GALAXY_MAX_STARS];

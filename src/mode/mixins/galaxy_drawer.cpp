@@ -164,6 +164,44 @@ void GalaxyDrawer::draw_galaxy(bool pixelswap) {
     }
 }
 
+void GalaxyDrawer::draw_fleet_marker(SprID id) {
+    Player *player = exostate().get_player(0);
+
+    int draw_x, draw_y;
+
+    FlyTarget *fleet_pos = exostate().loc2tgt(player->get_location().get_target());
+    const char* marker_icon = IMG_TS1_DEST;
+    get_draw_position(fleet_pos, draw_x, draw_y);
+
+    if (!player->get_location().in_flight()) {
+        switch (player->get_fleet_marker_idx()) {
+            case 0:
+                marker_icon = IMG_TS1_ICON1;
+                break;
+            case 1:
+                marker_icon = IMG_TS1_ICON2;
+                break;
+            case 2:
+                marker_icon = IMG_TS1_ICON3;
+                break;
+            case 3:
+                marker_icon = IMG_TS1_ICON4;
+                break;
+            case 4:
+                marker_icon = IMG_TS1_ICON5;
+                break;
+            default:
+                L.fatal("Invalid fleet marker index");
+                break;
+        }
+    }
+
+    draw_manager.draw(
+        id,
+        marker_icon,
+        {draw_x - 10, draw_y + 10, 0.5, 0.5, 1, 1});
+}
+
 void GalaxyDrawer::draw_planet_markers(bool pixelswap) {
     if (!FEATURE(EF_GALAXY_MAP_PLANET_MARKERS)) return;
 

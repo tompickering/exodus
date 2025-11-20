@@ -87,6 +87,7 @@ void GalaxyMap::enter() {
         ephstate.clear_ephemeral_state();
         set_stage(GM_Fly);
     } else if (ephstate.get_ephemeral_state() == EPH_SelectPlanet) {
+        draw_fleet_marker(id(ID::FLEET_MARKER));
         set_stage(GM_SelectStar);
     } else if (ephstate.get_ephemeral_state() == EPH_MovePlanet) {
         ephstate.clear_ephemeral_state();
