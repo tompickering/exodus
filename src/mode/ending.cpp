@@ -278,7 +278,7 @@ ExodusMode Ending::update(float dt) {
                         ctr++;
                     }
 
-                    int y = 100;
+                    int y = ENHANCED() ? 60 : 100;
 
                     draw_manager.draw_text(
                         TGT_Secondary,
@@ -378,7 +378,7 @@ ExodusMode Ending::update(float dt) {
                         ctr++;
                     }
 
-                    int y = 100;
+                    int y = ENHANCED() ? 60 : 100;
 
                     draw_manager.draw_text(
                         TGT_Secondary,
