@@ -3073,7 +3073,14 @@ void LunarBattle::update_panel_battle_new() {
                 char text[8];
                 snprintf(text, sizeof(text), "%d", panel_moves);
                 draw_manager.draw_text(id(ID::TOP_PANEL_MOVES), text, Justify::Centre, 414, 14, COL_TEXT);
-                snprintf(text, sizeof(text), "%d", draw_unit->fire_range);
+
+                int range = draw_unit->fire_range;
+
+                if (infinite_range()) {
+                    range = 99;
+                }
+
+                snprintf(text, sizeof(text), "%d", range);
                 draw_manager.draw_text(id(ID::TOP_PANEL_RANGE), text, Justify::Centre, 414, 36, COL_TEXT);
             } else {
                 // TODO
