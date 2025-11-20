@@ -117,6 +117,21 @@ static const char* tool_desc_clear[] = {
     "",
 };
 
+static const char* tool_desc_clear_resettling[] = {
+    "Clear ground / Resettle",
+    "This clears a land unit of the planet.",
+    "Everything previously located there",
+    "will be destroyed. Citizens do not like",
+    "to have their homes destroyed, so clearing",
+    "their cities will make them angry. However",
+    "when your fleet is in the system, they are",
+    "resettled via your ships. This allows you",
+    "to recover some MC from the city economy.",
+    "",
+    "If an alien village is cleared, its",
+    "inhabitants will not survive.",
+};
+
 static const char* tool_desc_inf[] = {
     "Infantry production",
     "This army production unit produces",
@@ -1813,8 +1828,13 @@ void PlanetMap::set_tool(Tool t) {
             tool_desc0 = "City";
             break;
         case TOOL_Clear:
-            tool_desc0 = "Clear";
-            tool_desc1 = "ground";
+            if (resettling_enabled) {
+                tool_desc0 = "Clear";
+                tool_desc1 = "/ Resettle";
+            } else {
+                tool_desc0 = "Clear";
+                tool_desc1 = "ground";
+            }
             break;
         case TOOL_Inf:
             tool_desc0 = "Infantry";
@@ -2672,7 +2692,11 @@ void PlanetMap::draw_frame_help(Tool tool) {
             desc = tool_desc_city;
             break;
         case TOOL_Clear:
-            desc = tool_desc_clear;
+            if (FEATURE(EF_RESETTLING)) {
+                desc = tool_desc_clear_resettling;
+            } else {
+                desc = tool_desc_clear;
+            }
             break;
         case TOOL_Inf:
             desc = tool_desc_inf;
