@@ -1556,8 +1556,8 @@ void Player::load(cJSON* j)
     LOAD_ARRAY_OF_NUM(j, mc_losses_lifetime);
     LOAD_ARRAY_OF_NUM(j, mc_gains_last_month);
     LOAD_ARRAY_OF_NUM(j, mc_losses_last_month);
-    SAVE_ARRAY_OF_NUM(j, mc_gains_over_last_month);
-    SAVE_ARRAY_OF_NUM(j, mc_losses_over_last_month);
+    LOAD_ARRAY_OF_NUM(j, mc_gains_over_last_month);
+    LOAD_ARRAY_OF_NUM(j, mc_losses_over_last_month);
     LOAD_ARRAY_OF_NUM(j, mc_gains_this_month);
     LOAD_ARRAY_OF_NUM(j, mc_losses_this_month);
     LOAD_ARRAY_OF_NUM(j, mc_history);
