@@ -50,9 +50,14 @@ Player::Player() {
     advanced_galmap_unlocked = false;
     ai_tactic = 0;
 
+    perk_starts_with_agri = 0;
+    perk_starts_with_mine = 0;
+    perk_starts_with_city = 0;
+    perk_starts_with_plu = 0;
+    perk_starts_with_park = 0;
+    perk_starts_with_trade_port = 0;
+    perk_starts_with_academy = 0;
     perk_starts_with_lunar_base = false;
-    perk_starts_with_trade_port = false;
-    perk_starts_with_academy = false;
     perk_easy_alliances = false;
 
     infraction_mask = 0;
@@ -240,21 +245,27 @@ void Player::init_character_perks() {
 
     switch (character) {
         case CHAR_Yok1:
+            perk_starts_with_city = 2;
+            perk_starts_with_agri = 8;
             break;
         case CHAR_Yok2:
             break;
         case CHAR_Yok3:
+            perk_starts_with_plu = 4;
             break;
         case CHAR_Yok4:
             break;
         case CHAR_Ter1:
-            perk_starts_with_academy = true;
+            perk_starts_with_academy = 1;
             perk_easy_alliances = true;
             break;
         case CHAR_Ter2:
+            perk_starts_with_mine = 2;
+            perk_starts_with_plu = 2;
             perk_easy_alliances = true;
             break;
         case CHAR_Ter3:
+            perk_starts_with_park = 5;
             break;
         case CHAR_Ter4:
             break;
@@ -269,7 +280,7 @@ void Player::init_character_perks() {
             set_officer(OFF_Battle, OFFQ_Average);
             break;
         case CHAR_Gor1:
-            perk_starts_with_trade_port = true;
+            perk_starts_with_trade_port = 1;
             break;
         case CHAR_Gor2:
             give_mc(500, MC_StartCredits);

@@ -534,9 +534,14 @@ class Player : public Saveable {
         static const char* get_officer_character_title_and_name(Officer, OfficerQuality);
 
         // AI character perks
+        int perk_starts_with_agri;
+        int perk_starts_with_mine;
+        int perk_starts_with_city;
+        int perk_starts_with_plu;
+        int perk_starts_with_park;
+        int perk_starts_with_trade_port;
+        int perk_starts_with_academy;
         bool perk_starts_with_lunar_base;
-        bool perk_starts_with_trade_port;
-        bool perk_starts_with_academy;
         bool perk_easy_alliances;
 
     private:

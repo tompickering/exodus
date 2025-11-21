@@ -1329,13 +1329,13 @@ void Planet::prepare_for_cpu_lord() {
 
         Player *owner = exostate().get_player(get_owner());
 
-        if (owner->perk_starts_with_trade_port) {
-            ai_place_stone(1, STONE_TradePort, STONE_City);
-        }
-
-        if (owner->perk_starts_with_academy) {
-            ai_place_stone(1, STONE_Academy, STONE_City);
-        }
+        ai_place_stone(owner->perk_starts_with_agri, STONE_Agri, STONE_Agri);
+        ai_place_stone(owner->perk_starts_with_mine, STONE_Mine, STONE_NaturalAnim);
+        ai_place_stone(owner->perk_starts_with_city, STONE_City, STONE_City);
+        ai_place_stone(owner->perk_starts_with_plu, STONE_Plu, STONE_NaturalLarge);
+        ai_place_stone(owner->perk_starts_with_park, STONE_Park, STONE_NaturalAnim);
+        ai_place_stone(owner->perk_starts_with_trade_port, STONE_TradePort, STONE_City);
+        ai_place_stone(owner->perk_starts_with_academy, STONE_Academy, STONE_City);
 
         if (owner->perk_starts_with_lunar_base) {
             build_lunar_base();
