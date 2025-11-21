@@ -1325,22 +1325,20 @@ void Planet::prepare_for_cpu_lord() {
             }
         }
 
-        if (FEATURE(EF_CHARACTERS)) {
-            if (FEATURE(EF_ACADEMIES)) {
-                Player *owner = exostate().get_player(get_owner());
+        /* Character perks */
 
-                if (owner->perk_starts_with_trade_port) {
-                    ai_place_stone(1, STONE_TradePort, STONE_City);
-                }
+        Player *owner = exostate().get_player(get_owner());
 
-                if (owner->perk_starts_with_academy) {
-                    ai_place_stone(1, STONE_Academy, STONE_City);
-                }
+        if (owner->perk_starts_with_trade_port) {
+            ai_place_stone(1, STONE_TradePort, STONE_City);
+        }
 
-                if (owner->perk_starts_with_lunar_base) {
-                    build_lunar_base();
-                }
-            }
+        if (owner->perk_starts_with_academy) {
+            ai_place_stone(1, STONE_Academy, STONE_City);
+        }
+
+        if (owner->perk_starts_with_lunar_base) {
+            build_lunar_base();
         }
     } else {
         // Ensure that there's enough agri to sustain it
