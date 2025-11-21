@@ -551,6 +551,7 @@ class Player : public Saveable {
         bool perk_always_promote;
         bool perk_citizens_become_happy;
         bool perk_easy_to_appease;
+        bool perk_species_hostility_link;
 
     private:
         void adjust_mc(int, MCReason);

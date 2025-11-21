@@ -67,6 +67,7 @@ Player::Player() {
     perk_always_promote = false;
     perk_citizens_become_happy = false;
     perk_easy_to_appease = false;
+    perk_species_hostility_link = false;
 
     infraction_mask = 0;
     ever_committed_infraction = false;
@@ -283,6 +284,7 @@ void Player::init_character_perks() {
             perk_easy_to_appease = true;
             break;
         case CHAR_Ter4:
+            perk_species_hostility_link = true;
             break;
         case CHAR_Urk1:
             perk_always_promote = true;
@@ -305,6 +307,7 @@ void Player::init_character_perks() {
             perk_starts_with_lunar_base = true;
             break;
         case CHAR_Gor4:
+            perk_species_hostility_link = true;
             break;
         default:
             break;
@@ -1261,9 +1264,14 @@ int Player::get_hostile_to() {
 
 void Player::set_hostile_to(int p) {
     L.debug("%s: HOSTILE TO %d", get_full_name(), p);
+
+    int previously_hostile_to = ai_hostile_to;
+
     ai_hostile_to = p;
 
-    if (p >= 0) {
+    if ((p >= 0) && (previously_hostile_to != p) && (!is_human())) {
+        exostate().register_species_hostility(this, p);
+
         if (exostate().count_hostile_players(p) >= 5) {
             achievement_manager.unlock(ACH_ManyEnemies);
         }
@@ -1511,6 +1519,7 @@ void Player::save(cJSON* j) const
     SAVE_BOOL(j, perk_always_promote);
     SAVE_BOOL(j, perk_citizens_become_happy);
     SAVE_BOOL(j, perk_easy_to_appease);
+    SAVE_BOOL(j, perk_species_hostility_link);
 }
 
 void Player::load(cJSON* j)
@@ -1584,4 +1593,5 @@ void Player::load(cJSON* j)
     LOAD_BOOL(j, perk_always_promote);
     LOAD_BOOL(j, perk_citizens_become_happy);
     LOAD_BOOL(j, perk_easy_to_appease);
+    LOAD_BOOL(j, perk_species_hostility_link);
 }

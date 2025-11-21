@@ -1363,6 +1363,30 @@ void ExodusState::finalise_planet_reports() {
     }
 }
 
+void ExodusState::register_species_hostility(Player *player, int hostile_to) {
+    if (player->is_human()) {
+        return;
+    }
+
+    Race race = player->get_race();
+
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        Player *p = get_player(i);
+
+        if (p == player) {
+            continue;
+        }
+
+        if (!p->is_participating()) {
+            continue;
+        }
+
+        if ((p->get_race() == race) && p->perk_species_hostility_link) {
+            p->set_hostile_to(hostile_to);
+        }
+    }
+}
+
 void ExodusState::run_planet_gift_events() {
     EnemyStart start = get_enemy_start();
 
