@@ -1363,6 +1363,31 @@ void ExodusState::finalise_planet_reports() {
     }
 }
 
+void ExodusState::run_planet_gift_events() {
+    EnemyStart start = get_enemy_start();
+
+    if (start == ENEMY_Weak) {
+        return;
+    }
+
+    // TODO: General gifts
+
+    // Perk gifts
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        Player *p = get_player(i);
+
+        if (!p->is_participating()) {
+            continue;
+        }
+
+        if (p->is_human()) {
+            continue;
+        }
+
+        // TODO: Perk gifts
+    }
+}
+
 /*
  * These two functions are the *only* places outside init
  * alliance_matrix is read or written.

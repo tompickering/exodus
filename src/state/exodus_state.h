@@ -189,6 +189,8 @@ class ExodusState : public Saveable {
         void save_planet_report(PlanetReport&);
         void finalise_planet_reports();
 
+        void run_planet_gift_events();
+
         bool first_city_done;
         bool first_spaceport_done;
 

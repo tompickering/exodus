@@ -1314,6 +1314,8 @@ void GalaxyMap::month_pass_end() {
 
     L.info("-------- MONTH PASSED --------");
 
+    exostate().run_planet_gift_events();
+
     Player *p;
 
     for (int i = 0; i < N_PLAYERS; ++i) {
