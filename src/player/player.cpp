@@ -61,6 +61,8 @@ Player::Player() {
     perk_starts_with_trade_port = 0;
     perk_starts_with_academy = 0;
     perk_starts_with_lunar_base = false;
+    perk_starts_with_airdef = 0;
+    perk_starts_with_robots = 0;
     perk_easy_alliances = false;
 
     infraction_mask = 0;
@@ -250,11 +252,13 @@ void Player::init_character_perks() {
         case CHAR_Yok1:
             perk_starts_with_city = 2;
             perk_starts_with_agri = 8;
+            perk_starts_with_robots = 10;
             break;
         case CHAR_Yok2:
             break;
         case CHAR_Yok3:
             perk_starts_with_plu = 4;
+            perk_starts_with_airdef = 10;
             break;
         case CHAR_Yok4:
             perk_starts_with_inf = 6;

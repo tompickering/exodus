@@ -545,6 +545,8 @@ class Player : public Saveable {
         int perk_starts_with_trade_port;
         int perk_starts_with_academy;
         bool perk_starts_with_lunar_base;
+        int perk_starts_with_airdef;
+        int perk_starts_with_robots;
         bool perk_easy_alliances;
 
     private:

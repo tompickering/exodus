@@ -1344,6 +1344,9 @@ void Planet::prepare_for_cpu_lord() {
         if (owner->perk_starts_with_lunar_base) {
             build_lunar_base();
         }
+
+        adjust_airdef_guns(owner->perk_starts_with_airdef);
+        adjust_robots(owner->perk_starts_with_robots);
     } else {
         // Ensure that there's enough agri to sustain it
         int agri_placed = 0;
