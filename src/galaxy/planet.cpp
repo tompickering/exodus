@@ -1329,21 +1329,12 @@ void Planet::prepare_for_cpu_lord() {
             if (FEATURE(EF_ACADEMIES)) {
                 Player *owner = exostate().get_player(get_owner());
 
+                if (owner->perk_starts_with_trade_port) {
+                    ai_place_stone(1, STONE_TradePort, STONE_City);
+                }
+
                 if (owner->perk_starts_with_academy) {
-                    while (true) {
-                        // Place an Academy
-                        x = rand() % blocks;
-                        y = rand() % blocks;
-                        s = get_stone(x, y);
-                        if (   s == STONE_Clear
-                            || s == STONE_NaturalSmall
-                            || s == STONE_Radiation
-                            || s == STONE_AgriDead
-                            || s == STONE_Rubble) {
-                            set_stone(x, y, STONE_Academy);
-                            break;
-                        }
-                    }
+                    ai_place_stone(1, STONE_Academy, STONE_City);
                 }
 
                 if (owner->perk_starts_with_lunar_base) {

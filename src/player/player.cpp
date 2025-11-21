@@ -51,6 +51,7 @@ Player::Player() {
     ai_tactic = 0;
 
     perk_starts_with_lunar_base = false;
+    perk_starts_with_trade_port = false;
     perk_starts_with_academy = false;
     perk_easy_alliances = false;
 
@@ -268,6 +269,7 @@ void Player::init_character_perks() {
             set_officer(OFF_Battle, OFFQ_Average);
             break;
         case CHAR_Gor1:
+            perk_starts_with_trade_port = true;
             break;
         case CHAR_Gor2:
             give_mc(500, MC_StartCredits);
