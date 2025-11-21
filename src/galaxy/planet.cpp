@@ -1329,6 +1329,10 @@ void Planet::prepare_for_cpu_lord() {
 
         Player *owner = exostate().get_player(get_owner());
 
+        adjust_army(owner->perk_starts_with_inf,
+                    owner->perk_starts_with_gli,
+                    owner->perk_starts_with_art);
+
         ai_place_stone(owner->perk_starts_with_agri, STONE_Agri, STONE_Agri);
         ai_place_stone(owner->perk_starts_with_mine, STONE_Mine, STONE_NaturalAnim);
         ai_place_stone(owner->perk_starts_with_city, STONE_City, STONE_City);

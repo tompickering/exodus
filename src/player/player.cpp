@@ -50,6 +50,9 @@ Player::Player() {
     advanced_galmap_unlocked = false;
     ai_tactic = 0;
 
+    perk_starts_with_inf = 0;
+    perk_starts_with_gli = 0;
+    perk_starts_with_art = 0;
     perk_starts_with_agri = 0;
     perk_starts_with_mine = 0;
     perk_starts_with_city = 0;
@@ -254,6 +257,9 @@ void Player::init_character_perks() {
             perk_starts_with_plu = 4;
             break;
         case CHAR_Yok4:
+            perk_starts_with_inf = 6;
+            perk_starts_with_gli = 4;
+            perk_starts_with_art = 2;
             break;
         case CHAR_Ter1:
             perk_starts_with_academy = 1;
