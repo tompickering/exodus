@@ -1270,7 +1270,9 @@ ExodusMode LunarBattle::update(float delta) {
                 if (FEATURE(EF_LUNAR_BATTLE_PROMOTION) && active_unit && !mine_damage) {
                     OfficerQuality offq = active_unit->defending ? def_officer : agg_officer;
 
-                    if (active_unit->try_promote(*target_unit, offq)) {
+                    Player *unit_owner = active_unit->defending ? defender : aggressor;
+
+                    if (active_unit->try_promote(unit_owner, *target_unit, offq)) {
                         L.info("Unit promoted: %s", active_unit->debug_info());
                         audio_manager.play_sfx(SFX_PROMOTION);
                     }
@@ -4136,7 +4138,7 @@ void BattleUnit::do_move(Direction d) {
     last_move = d;
 }
 
-bool BattleUnit::try_promote(const BattleUnit& killed_unit, OfficerQuality offq) {
+bool BattleUnit::try_promote(Player* p, const BattleUnit& killed_unit, OfficerQuality offq) {
     if (promoted || !may_be_promoted) {
         return false;
     }
@@ -4159,6 +4161,10 @@ bool BattleUnit::try_promote(const BattleUnit& killed_unit, OfficerQuality offq)
             break;
         default:
             break;
+    }
+
+    if (p && p->perk_always_promote) {
+        promoted = true;
     }
 
     if (promoted) {

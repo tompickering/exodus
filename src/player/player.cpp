@@ -64,6 +64,7 @@ Player::Player() {
     perk_starts_with_airdef = 0;
     perk_starts_with_robots = 0;
     perk_easy_alliances = false;
+    perk_always_promote = false;
 
     infraction_mask = 0;
     ever_committed_infraction = false;
@@ -280,6 +281,7 @@ void Player::init_character_perks() {
         case CHAR_Ter4:
             break;
         case CHAR_Urk1:
+            perk_always_promote = true;
             break;
         case CHAR_Urk2:
             break;

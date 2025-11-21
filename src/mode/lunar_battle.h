@@ -99,7 +99,7 @@ class BattleUnit {
 
         static bool use_alt_aliens;
 
-        bool try_promote(const BattleUnit&, OfficerQuality);
+        bool try_promote(Player*, const BattleUnit&, OfficerQuality);
 
         const char* get_type_str();
 

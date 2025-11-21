@@ -548,6 +548,7 @@ class Player : public Saveable {
         int perk_starts_with_airdef;
         int perk_starts_with_robots;
         bool perk_easy_alliances;
+        bool perk_always_promote;
 
     private:
         void adjust_mc(int, MCReason);
