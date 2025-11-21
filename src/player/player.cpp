@@ -1490,6 +1490,21 @@ void Player::save(cJSON* j) const
     SAVE_ARRAY_OF_NUM(j, mc_gains_this_month);
     SAVE_ARRAY_OF_NUM(j, mc_losses_this_month);
     SAVE_ARRAY_OF_NUM(j, mc_history);
+    SAVE_NUM(j, perk_starts_with_inf);
+    SAVE_NUM(j, perk_starts_with_gli);
+    SAVE_NUM(j, perk_starts_with_art);
+    SAVE_NUM(j, perk_starts_with_agri);
+    SAVE_NUM(j, perk_starts_with_mine);
+    SAVE_NUM(j, perk_starts_with_city);
+    SAVE_NUM(j, perk_starts_with_plu);
+    SAVE_NUM(j, perk_starts_with_park);
+    SAVE_NUM(j, perk_starts_with_trade_port);
+    SAVE_NUM(j, perk_starts_with_academy);
+    SAVE_BOOL(j, perk_starts_with_lunar_base);
+    SAVE_NUM(j, perk_starts_with_airdef);
+    SAVE_NUM(j, perk_starts_with_robots);
+    SAVE_BOOL(j, perk_easy_alliances);
+    SAVE_BOOL(j, perk_always_promote);
 }
 
 void Player::load(cJSON* j)
@@ -1546,4 +1561,19 @@ void Player::load(cJSON* j)
     LOAD_ARRAY_OF_NUM(j, mc_gains_this_month);
     LOAD_ARRAY_OF_NUM(j, mc_losses_this_month);
     LOAD_ARRAY_OF_NUM(j, mc_history);
+    LOAD_NUM(j, perk_starts_with_inf);
+    LOAD_NUM(j, perk_starts_with_gli);
+    LOAD_NUM(j, perk_starts_with_art);
+    LOAD_NUM(j, perk_starts_with_agri);
+    LOAD_NUM(j, perk_starts_with_mine);
+    LOAD_NUM(j, perk_starts_with_city);
+    LOAD_NUM(j, perk_starts_with_plu);
+    LOAD_NUM(j, perk_starts_with_park);
+    LOAD_NUM(j, perk_starts_with_trade_port);
+    LOAD_NUM(j, perk_starts_with_academy);
+    LOAD_BOOL(j, perk_starts_with_lunar_base);
+    LOAD_NUM(j, perk_starts_with_airdef);
+    LOAD_NUM(j, perk_starts_with_robots);
+    LOAD_BOOL(j, perk_easy_alliances);
+    LOAD_BOOL(j, perk_always_promote);
 }
