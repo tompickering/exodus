@@ -174,7 +174,7 @@ bool Player::init_alien_name_character() {
             return true;
         case CHAR_Gor3:
             set_title("Elder");
-            set_name("Toya");
+            set_name("Ciel");
             set_gender(GENDER_Female);
             return true;
         case CHAR_Gor4:
