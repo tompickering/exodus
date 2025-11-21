@@ -120,6 +120,7 @@ enum MonthPassPlanetStage {
     MPP_ResourceCap2,
     MPP_AdvanceUnrest,
     MPP_AmendMilitaryFunding,
+    MPP_PerkEffects,
     MPP_DisplayPlanetReport,
     MPP_EnsureComplete,
     MPP_End,

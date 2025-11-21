@@ -65,6 +65,8 @@ Player::Player() {
     perk_starts_with_robots = 0;
     perk_easy_alliances = false;
     perk_always_promote = false;
+    perk_citizens_become_happy = false;
+    perk_easy_to_appease = false;
 
     infraction_mask = 0;
     ever_committed_infraction = false;
@@ -277,6 +279,8 @@ void Player::init_character_perks() {
             break;
         case CHAR_Ter3:
             perk_starts_with_park = 5;
+            perk_citizens_become_happy = true;
+            perk_easy_to_appease = true;
             break;
         case CHAR_Ter4:
             break;
@@ -1505,6 +1509,8 @@ void Player::save(cJSON* j) const
     SAVE_NUM(j, perk_starts_with_robots);
     SAVE_BOOL(j, perk_easy_alliances);
     SAVE_BOOL(j, perk_always_promote);
+    SAVE_BOOL(j, perk_citizens_become_happy);
+    SAVE_BOOL(j, perk_easy_to_appease);
 }
 
 void Player::load(cJSON* j)
@@ -1576,4 +1582,6 @@ void Player::load(cJSON* j)
     LOAD_NUM(j, perk_starts_with_robots);
     LOAD_BOOL(j, perk_easy_alliances);
     LOAD_BOOL(j, perk_always_promote);
+    LOAD_BOOL(j, perk_citizens_become_happy);
+    LOAD_BOOL(j, perk_easy_to_appease);
 }

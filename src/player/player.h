@@ -549,6 +549,8 @@ class Player : public Saveable {
         int perk_starts_with_robots;
         bool perk_easy_alliances;
         bool perk_always_promote;
+        bool perk_citizens_become_happy;
+        bool perk_easy_to_appease;
 
     private:
         void adjust_mc(int, MCReason);

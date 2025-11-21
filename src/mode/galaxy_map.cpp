@@ -5407,6 +5407,13 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         next_mpp_stage();
     }
 
+    if (mp_state.mpp_stage == MPP_PerkEffects) {
+        if (owner && owner->perk_citizens_become_happy) {
+            p->adjust_unrest(-1);
+        }
+        next_mpp_stage();
+    }
+
     if (mp_state.mpp_stage == MPP_DisplayPlanetReport) {
         if (owner && owner->is_human()) {
             if (FEATURE(EF_PLANET_RECALLABLE_SUMMARIES)) {

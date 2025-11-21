@@ -1877,6 +1877,9 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     if (onein(3)) {
                         comm_ctx.mc *= 2;
                     }
+                    if (comm_other->perk_easy_to_appease) {
+                        comm_ctx.mc = max(comm_ctx.mc/8, 1);
+                    }
                     comm_set_speech("You could pay me %dMC...", comm_ctx.mc);
                     comm_ctx.mc2 = min((int)((float)comm_ctx.mc/1.5f), comm_player->get_mc());
                     comm_set_text(0, "That is too much! I offer %dMC.", comm_ctx.mc2);
