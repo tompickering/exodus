@@ -242,10 +242,6 @@ void ExodusState::init(GameConfig config) {
 
         set_random_hostility(players[i]);
 
-        if (FEATURE(EF_CHARACTERS)) {
-            players[i].set_character_hostility();
-        }
-
         for (int j = 0; j < OFFICER_MAX; ++j) {
             players[i].set_officer((Officer)j, OFFQ_Poor);
         }

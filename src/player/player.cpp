@@ -221,13 +221,23 @@ void Player::init_character(Character _character) {
 }
 
 void Player::init_character_perks() {
+    const Character character = get_character();
+
+    if (is_hostile_to(0)) {
+        clear_hostility();
+    }
+
+    if (character == CHAR_Urk1 || character == CHAR_Gor4) {
+        set_hostile_to(0);
+    }
+
     EnemyStart start = exostate().get_enemy_start();
 
     if (start == ENEMY_Weak) {
         return;
     }
 
-    switch (get_character()) {
+    switch (character) {
         case CHAR_Yok1:
             break;
         case CHAR_Yok2:
@@ -269,16 +279,6 @@ void Player::init_character_perks() {
             break;
         default:
             break;
-    }
-}
-
-void Player::set_character_hostility() {
-    if (is_hostile_to(0)) {
-        clear_hostility();
-    }
-
-    if (character == CHAR_Ter4 || character == CHAR_Urk1) {
-        set_hostile_to(0);
     }
 }
 
