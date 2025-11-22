@@ -1896,9 +1896,11 @@ bool MenuDrawer::menu_specific_update() {
                     } else if (clk.x < .66f) {
                         q = (OfficerQuality)(((int)q + 1) % (int)OFFQ_MAX);
                         menu_new_officer_quality = q;
+                        draw_manager.draw(id_menu_newoff_opt, nullptr);
                         menu_open(MM_NewOfficer);
                         return true;
                     } else {
+                        draw_manager.draw(id_menu_newoff_opt, nullptr);
                         menu_open(MM_OfficersAndTaxes);
                         return true;
                     }
@@ -2074,9 +2076,11 @@ bool MenuDrawer::menu_specific_update() {
                     } else if (clk.x < .66f) {
                         q = (OfficerQuality)(((int)q + 1) % (int)OFFQ_MAX);
                         menu_new_officer_quality = q;
+                        draw_manager.draw(id_menu_newoff_opt, nullptr);
                         menu_open(MM_NewOfficer);
                         return true;
                     } else {
+                        draw_manager.draw(id_menu_newoff_opt, nullptr);
                         menu_open(MM_OfficersAndTaxes);
                         return true;
                     }
