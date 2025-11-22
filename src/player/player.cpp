@@ -70,6 +70,7 @@ Player::Player() {
     perk_species_hostility_link = false;
     perk_species_alliance_link = false;
     perk_high_alliance_standards = false;
+    perk_planet_every_n_months = -1;
 
     infraction_mask = 0;
     ever_committed_infraction = false;
@@ -261,6 +262,7 @@ void Player::init_character_perks() {
             perk_starts_with_robots = 10;
             break;
         case CHAR_Yok2:
+            perk_planet_every_n_months = 37;
             break;
         case CHAR_Yok3:
             perk_starts_with_plu = 4;
@@ -1526,6 +1528,7 @@ void Player::save(cJSON* j) const
     SAVE_BOOL(j, perk_species_hostility_link);
     SAVE_BOOL(j, perk_species_alliance_link);
     SAVE_BOOL(j, perk_high_alliance_standards);
+    SAVE_NUM(j, perk_planet_every_n_months);
 }
 
 void Player::load(cJSON* j)
@@ -1602,4 +1605,5 @@ void Player::load(cJSON* j)
     LOAD_BOOL(j, perk_species_hostility_link);
     LOAD_BOOL(j, perk_species_alliance_link);
     LOAD_BOOL(j, perk_high_alliance_standards);
+    LOAD_NUM(j, perk_planet_every_n_months);
 }

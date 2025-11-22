@@ -1600,7 +1600,11 @@ void ExodusState::run_planet_gift_events() {
             continue;
         }
 
-        // TODO: Perk gifts
+        if (p->perk_planet_every_n_months > 0) {
+            if ((m % p->perk_planet_every_n_months) == 0) {
+                gift_planet_to(i);
+            }
+        }
     }
 }
 
