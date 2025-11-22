@@ -318,7 +318,7 @@ void ExodusState::init(GameConfig config) {
     L.debug("   Enemies: %d", enemy_start);
 }
 
-Planet* ExodusState::select_planet_for_cpu() {
+Planet* ExodusState::select_planet_for_cpu(bool worst) {
     // Assign initial planet to CPU lords. Orig: PROCstart_the_lords
     // We follow the original's logic of iterating over stars in the
     // same order for each lord, which affects the probability of
@@ -329,9 +329,19 @@ Planet* ExodusState::select_planet_for_cpu() {
     int chosen_planet_idx = 0;
     while(!initial_planet_selected) {
         int quality = 0;
+
+        if (worst) {
+            quality = 100;
+        }
+
         for (PlanetIterator piter; !piter.complete(); ++piter) {
             Planet *p = piter.get();
             if (!p->is_owned()) {
+
+                if (p->is_named()) {
+                    continue;
+                }
+
                 L.verb("Considering star %d planet %d", piter.get_star_idx(), piter.get_idx());
                 int planet_quality = 0;
                 if (p->get_class() == Forest)  planet_quality = 4;
@@ -340,7 +350,14 @@ Planet* ExodusState::select_planet_for_cpu() {
                 if (p->get_class() == Rock)    planet_quality = 3;
                 if (p->get_class() == Ice)     planet_quality = 2;
                 if (p->get_class() == Terra)   planet_quality = 5;
-                if (planet_quality > quality && RND(7) != 1) {
+
+                bool preferred = (planet_quality > quality);
+
+                if (worst) {
+                    preferred = (planet_quality < quality);
+                }
+
+                if (preferred && RND(7) != 1) {
                     L.verb("Checking existing ownership");
                     if (!p->is_owned()) {
                         L.verb("Updated planet candidate!");
@@ -367,7 +384,7 @@ void ExodusState::init_cpu_lords() {
     for (int i = n_human_players; i < N_PLAYERS; ++i) {
         L.verb("Choosing initial planet for CPU lord %d", i);
 
-        Planet *chosen_planet = select_planet_for_cpu();
+        Planet *chosen_planet = select_planet_for_cpu(false);
 
         if (!chosen_planet) {
             L.error("Could not find a planet for CPU");
@@ -1442,7 +1459,7 @@ void ExodusState::gift_planet_to(int player_idx) {
     }
 
     L.debug("Gifting planet to %s", p->get_name());
-    Planet *pl = select_planet_for_cpu();
+    Planet *pl = select_planet_for_cpu(true);
 
     if (!pl) {
         L.debug("Unable to find planet to gift to %s", p->get_name());

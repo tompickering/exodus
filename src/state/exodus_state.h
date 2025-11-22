@@ -90,7 +90,7 @@ class ExodusState : public Saveable {
         void init(GameConfig);
         void generate_galaxy();
         void finalise_galaxy();
-        Planet* select_planet_for_cpu();
+        Planet* select_planet_for_cpu(bool);
         void init_cpu_lords();
         Galaxy* get_galaxy();
         int get_n_human_players();
