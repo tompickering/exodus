@@ -1474,12 +1474,14 @@ Planet* ExodusState::gift_planet_to(int player_idx) {
         return nullptr;
     }
 
-    L.debug("Gifting planet to %s", p->get_name());
     Planet *pl = select_planet_for_cpu(true);
 
     if (pl) {
         pl->set_owner(player_idx, POCR_Gift);
         pl->prepare_for_cpu_lord();
+        pl->set_name(pl->get_name_suggestion());
+
+        L.debug("Gifted planet %s to %s", pl->get_name(), p->get_name());
     } else {
         L.debug("Unable to find planet to gift to %s", p->get_name());
     }
@@ -1507,6 +1509,7 @@ Planet* ExodusState::gift_art_planet_to(int player_idx) {
                 if (construct_artificial_planet(s, player_idx, nullptr)) {
                     art_planet = get_planet_under_construction(player_idx);
                     if (art_planet) {
+                        art_planet->set_name(art_planet->get_name_suggestion());
                         break;
                     }
                 }
@@ -1516,7 +1519,7 @@ Planet* ExodusState::gift_art_planet_to(int player_idx) {
 
     if (art_planet) {
         while (art_planet->advance_construction_phase()) {}
-        L.debug("Gifted artificial planet to %s at %s", p->get_name(), s->name);
+        L.debug("Gifted artificial planet %s to %s at %s", art_planet, p->get_name(), s->name);
     } else {
         L.debug("Could not gift artificial planet to %s", p->get_name());
     }
