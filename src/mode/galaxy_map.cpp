@@ -3538,11 +3538,6 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
 
                             ok = true;
 
-                            /*
-                             * FIXME: Strange that orig doesn't like alliance combinations here!
-                             * I suspect this may not have been intentional, and may reflect
-                             * and earlier design in which multiple alliances weren't possible.
-                             */
                             AIFlag f = player->get_flag(1);
                             if (f == AI_Hi || (f == AI_Md && onein(2))) {
                                 if (exostate().has_alliance(player_idx, owner, ALLY_NonAttack)) {
