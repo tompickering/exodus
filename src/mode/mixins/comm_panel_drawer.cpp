@@ -2549,7 +2549,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 int &d = comm_ctx.battle_strength_def;
 
                 if (d*3 >= a*2) {
-                    comm_set_speech("Indeed, I do so.");
+                    comm_set_speech("Indeed, I do.");
                 } else {
                     switch (comm_other->get_flag(0)) {
                         case AI_Lo:
@@ -2688,7 +2688,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             comm_prepare(4);
             if (onein(2)) {
                 comm_set_speech("Do you call THIS a defense?");
-                comm_set_text(0, "Indeed, I do so.");
+                comm_set_text(0, "Indeed, I do.");
                 comm_set_text(1, "I wanted peace.");
                 comm_set_text(2, "Go to hell.");
                 comm_set_text(3, "You will pay for this.");
