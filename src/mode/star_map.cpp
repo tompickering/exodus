@@ -954,7 +954,7 @@ void StarMap::draw_planets(float delta) {
                     }
                     draw_manager.draw_text(
                         id_planet_names[i],
-                        Font::Cybattler,
+                        Font::RussoOne,
                         name,
                         Justify::Centre,
                         draw_x,

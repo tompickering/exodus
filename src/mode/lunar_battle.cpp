@@ -2608,7 +2608,7 @@ void LunarBattle::update_panel_battle() {
                     const char* text_hits = "HITS:";
 
                     if (our_side) {
-                        draw_manager.draw_text(Font::Cybattler, text_hp, Justify::Left, 234, 34, COL_TEXT3);
+                        draw_manager.draw_text(Font::RussoOne, text_hp, Justify::Left, 234, 34, COL_TEXT3);
 
                         for (int i = 0; i < draw_unit->hp; ++i) {
                             draw_manager.draw(
@@ -2629,7 +2629,7 @@ void LunarBattle::update_panel_battle() {
                             dots_to_show = draw_unit->hp;
                         }
 
-                        draw_manager.draw_text(Font::Cybattler, text, Justify::Left, 234, 34, COL_TEXT3);
+                        draw_manager.draw_text(Font::RussoOne, text, Justify::Left, 234, 34, COL_TEXT3);
 
                         for (int i = 0; i < dots_to_show; ++i) {
                             draw_manager.draw(

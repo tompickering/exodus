@@ -2610,19 +2610,19 @@ void PlanetMap::draw_frame_unrest() {
     );
 
     draw_manager.draw_text(
-        Font::Cybattler,
+        Font::RussoOne,
         "HAPPY",
         Justify::Left,
         108, 124,
         {0x90, 0x90, 0x90});
     draw_manager.draw_text(
-        Font::Cybattler,
+        Font::RussoOne,
         "UNHAPPY",
         Justify::Left,
         108, 222,
         {0x90, 0x90, 0x90});
     draw_manager.draw_text(
-        Font::Cybattler,
+        Font::RussoOne,
         "ANGRY",
         Justify::Left,
         108, 320,

@@ -954,7 +954,7 @@ void DrawManagerSDL::draw_text(DrawTarget tgt, SprID id, Font font, const char* 
 
     const char* text = _text;
 
-    if (font == Font::_3x5) {
+    if (font == Font::_3x5 || font == Font::RussoOne) {
         text = tmp_caps(_text);
     }
 

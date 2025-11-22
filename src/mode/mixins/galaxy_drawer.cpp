@@ -274,14 +274,14 @@ void GalaxyDrawer::draw_mouseover_star_name() {
         if (ft == exostate().get_galaxy()->get_guild()) {
             draw_manager.draw_text(
                 star_name2_id,
-                Font::Cybattler,
+                Font::RussoOne,
                 "SPACE",
                 Justify::Centre,
                 x, y - 48,
                 {168, 85, 204});
             draw_manager.draw_text(
                 star_name_id,
-                Font::Cybattler,
+                Font::RussoOne,
                 "GUILD",
                 Justify::Centre,
                 x, y - 28,
@@ -289,7 +289,7 @@ void GalaxyDrawer::draw_mouseover_star_name() {
         } else {
             draw_manager.draw_text(
                 star_name_id,
-                Font::Cybattler,
+                Font::RussoOne,
                 tmp_caps(ft_name),
                 Justify::Centre,
                 x, y - 28,
@@ -337,7 +337,7 @@ void GalaxyDrawer::draw_markers(bool pixelswap, bool names_only) {
             draw_manager.draw_text(
                 tgt,
                 marker_text_ids[i],
-                Font::Cybattler,
+                Font::RussoOne,
                 marker->tag,
                 Justify::Centre,
                 x, y+14,
