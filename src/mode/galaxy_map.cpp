@@ -181,7 +181,9 @@ ExodusMode GalaxyMap::update(float delta) {
                 }
             }
 
-            draw_mouseover_star_name();
+            if (FEATURE(EF_GALMAP_MOUSEOVER_NAMES)) {
+                draw_mouseover_star_name();
+            }
 
             /*
              * Unfortunately, we need to redraw markers whilst idling.
