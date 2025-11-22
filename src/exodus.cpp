@@ -231,7 +231,7 @@ int Exodus::run(int argc, char** argv) {
         config.players[0].set_ref("milady");
         config.players[0].set_flag_idx(0);
         config.aim = AIM_Might;
-        config.enemy_start = ENEMY_Medium;
+        config.enemy_start = ENEMY_Strong;
         exostate().init(config);
         exostate().get_player(0)->set_intro_seen();
         exostate().get_player(0)->set_intro_comm_seen();
