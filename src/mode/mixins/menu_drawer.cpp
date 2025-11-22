@@ -2600,9 +2600,17 @@ void MenuDrawer::menu_print_other_players() {
     int row = 1;
     for (int i = 0; i < N_PLAYERS; ++i) {
         if (i == player_idx) continue;
+
         Player *tgt = exostate().get_player(i);
-        menu_line_players[row] = i;
-        menu_set_opt(row, tgt->get_full_name(), tgt->is_participating());
+
+        if (FEATURE(EF_LORD_DISCOVERY) && !exostate().check_lord_discovery(player_idx, i)) {
+            menu_line_players[row] = -1;
+            menu_set_opt(row, "????", false);
+        } else {
+            menu_line_players[row] = i;
+            menu_set_opt(row, tgt->get_full_name(), tgt->is_participating());
+        }
+
         row++;
     }
 }
@@ -2612,10 +2620,12 @@ bool MenuDrawer::menu_player_selected() {
     // FIXME: Need a way to go back if no options available
     for (int row = 1; row < MENU_LINES; ++row) {
         if (draw_manager.query_click(id_menu_lines[row]).id) {
-            Player *pl = exostate().get_player(menu_line_players[row]);
-            if (pl->is_participating()) {
-                menu_selected_player = pl;
-                return true;
+            if (menu_line_players[row] >= 0) {
+                Player *pl = exostate().get_player(menu_line_players[row]);
+                if (pl->is_participating()) {
+                    menu_selected_player = pl;
+                    return true;
+                }
             }
         }
     }
