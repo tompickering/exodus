@@ -400,11 +400,11 @@ void DrawManager::show_cursor(bool show) {
 }
 
 bool DrawManager::clicked() {
-    return clicked_this_frame;
+    return (clicked_this_frame && !active_button_press);
 }
 
 bool DrawManager::clicked_r() {
-    return clicked_this_frame_r;
+    return (clicked_this_frame_r && !active_button_press);
 }
 
 int DrawManager::right(SprID id) {
