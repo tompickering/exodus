@@ -131,6 +131,7 @@ enum Font {
     Default,
     _3x5,
     Cybattler,
+    PixelForce,
     Tiny,
     Small,
     Large,
