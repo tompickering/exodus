@@ -1065,6 +1065,14 @@ int ExodusState::get_total_net_income(int player_idx) {
     return total;
 }
 
+int ExodusState::get_total_army(int player_idx) {
+    int total = 0;
+    for (PlanetIterator piter(player_idx); !piter.complete(); ++piter) {
+        total += piter->get_army_size();
+    }
+    return total;
+}
+
 int ExodusState::count_alliances(int a) {
     int count = 0;
     for (int b = 0; b < N_PLAYERS; ++b) {
@@ -1412,6 +1420,123 @@ void ExodusState::register_species_hostility(Player *player, int hostile_to) {
     }
 }
 
+void ExodusState::gift_planet_to(int player_idx) {
+    Player *p = get_player(player_idx);
+
+    if (!(p && p->is_participating())) {
+        return;
+    }
+
+    L.debug("Gifting planet to %s", p->get_name());
+    // TODO
+}
+
+void ExodusState::planet_gift_event() {
+    L.debug("--- PLANET GIFTING ---");
+
+    // Gift a planet to:
+    // * The 3 strongest AI
+    // * The AI with most money
+    // * The AI with most planets
+
+    uint32_t recipients = 0;
+
+    int total_army[N_PLAYERS];
+
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        total_army[i] = -1;
+
+        Player *p = get_player(i);
+
+        if (p->is_human()) {
+            continue;
+        }
+
+        if (!p->is_participating()) {
+            continue;
+        }
+
+        total_army[i] = get_total_army(i);
+    }
+
+    for (int j = 0; j < 3; ++j) {
+        int max = -1;
+        int idx = -1;
+        for (int i = 0; i < N_PLAYERS; ++i) {
+            if (total_army[i] > max) {
+                max = total_army[i];
+                idx = i;
+            }
+        }
+        if (idx >= 0) {
+            recipients = recipients | (1 << idx);
+            total_army[idx] = -1;
+        }
+    }
+
+    int max_mc = -1;
+    int max_mc_idx = -1;
+
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        Player *p = get_player(i);
+
+        if (p->is_human()) {
+            continue;
+        }
+
+        if (!p->is_participating()) {
+            continue;
+        }
+
+        int mc = p->get_mc();
+
+        if (mc > max_mc) {
+            if (!(recipients & (1 << i))) {
+                max_mc = mc;
+                max_mc_idx = i;
+            }
+        }
+    }
+
+    if (max_mc_idx >= 0) {
+        recipients = recipients | (1 << max_mc_idx);
+    }
+
+    int max_planets = -1;
+    int max_planets_idx = -1;
+
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        Player *p = get_player(i);
+
+        if (p->is_human()) {
+            continue;
+        }
+
+        if (!p->is_participating()) {
+            continue;
+        }
+
+        int planets = get_n_planets(p);
+
+        if (planets > max_planets) {
+            if (!(recipients & (1 << i))) {
+                max_planets = planets;
+                max_planets_idx = i;
+            }
+        }
+    }
+
+    if (max_planets_idx >= 0) {
+        recipients = recipients | (1 << max_planets_idx);
+    }
+
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        if (recipients & (1 << i)) {
+            gift_planet_to(i);
+        }
+    }
+}
+
 void ExodusState::run_planet_gift_events() {
     EnemyStart start = get_enemy_start();
 
@@ -1419,7 +1544,11 @@ void ExodusState::run_planet_gift_events() {
         return;
     }
 
-    // TODO: General gifts
+    int m = get_month();
+
+    if (m == 60 || m == 120) {
+        planet_gift_event();
+    }
 
     // Perk gifts
     for (int i = 0; i < N_PLAYERS; ++i) {

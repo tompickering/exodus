@@ -146,6 +146,7 @@ class ExodusState : public Saveable {
         bool hostility_between(int, int);
         int get_total_income_ignoring_army(int);
         int get_total_net_income(int);
+        int get_total_army(int);
         bool is_allied(int, int);
         bool is_allied_with_race(int, Race);
         bool has_alliance(int, int, AllianceType);
@@ -191,6 +192,9 @@ class ExodusState : public Saveable {
         void finalise_planet_reports();
 
         void register_species_hostility(Player*, int);
+
+        void gift_planet_to(int);
+        void planet_gift_event();
         void run_planet_gift_events();
 
         bool first_city_done;
