@@ -287,6 +287,7 @@ ExodusMode LunarBattlePrep::update(float delta) {
         switch (bulletin_get_praction()) {
             case BPR_Close:
                 bulletin_ensure_closed();
+                draw_text();
                 break;
             default:
                 break;
@@ -342,31 +343,13 @@ ExodusMode LunarBattlePrep::update(float delta) {
             if (!stage_started) {
                 stage_started = true;
 
-                char text[32];
                 int invaders_approx = max(((int)(get_agg_total()/10))*10, 5);
                 draw_panel();
-                draw_manager.draw_text(
-                    "We have spotted about",
-                    Justify::Left,
-                    PANEL_X + 4, PANEL_Y + 4,
-                    COL_TEXT);
-                snprintf(text, 31, "%d invading units.", invaders_approx);
-                draw_manager.draw_text(
-                    text,
-                    Justify::Left,
-                    PANEL_X + 4, PANEL_Y + 24,
-                    COL_TEXT);
-                snprintf(text, 31, "%d machines defend", get_def_total());
-                draw_manager.draw_text(
-                    text,
-                    Justify::Left,
-                    PANEL_X + 4, PANEL_Y + 64,
-                    COL_TEXT);
-                draw_manager.draw_text(
-                    "our planet.",
-                    Justify::Left,
-                    PANEL_X + 4, PANEL_Y + 84,
-                    COL_TEXT);
+                snprintf(text0, sizeof(text0), "We have spotted about");
+                snprintf(text1, sizeof(text1), "%d invading units.", invaders_approx);
+                snprintf(text3, sizeof(text3), "%d machines defend", get_def_total());
+                snprintf(text4, sizeof(text4), "our planet.");
+                draw_text();
                 break;
             }
             if (draw_manager.clicked()) {
@@ -461,48 +444,24 @@ ExodusMode LunarBattlePrep::update(float delta) {
                         }
                     }
 
-                    char text[64];
-
                     draw_panel();
 
                     int total = support_inf + support_gli + support_art;
                     if (total > 0) {
-                        draw_manager.draw_text(
-                            "As a support, war-ally",
-                            Justify::Left,
-                            PANEL_X + 4, PANEL_Y + 4,
-                            COL_TEXT);
-
-                        snprintf(text, sizeof(text), "%s has sent you %d", player->get_full_name(), total);
-                        draw_manager.draw_text(
-                            text,
-                            Justify::Left,
-                            PANEL_X + 4, PANEL_Y + 24,
-                            COL_TEXT);
-
-                        draw_manager.draw_text(
-                            "units.",
-                            Justify::Left,
-                            PANEL_X + 4, PANEL_Y + 44,
-                            COL_TEXT);
+                        snprintf(text0, sizeof(text0), "As a support, war-ally");
+                        snprintf(text1, sizeof(text1), "%s has sent you %d", player->get_full_name(), total);
+                        snprintf(text2, sizeof(text1), "units.");
 
                         // N.B. We get to keep these after the battle.
                         b.defender_inf += support_inf;
                         b.defender_gli += support_gli;
                         b.defender_art += support_art;
                     } else {
-                        snprintf(text, sizeof(text), "Your war-ally %s", player->get_full_name());
-                        draw_manager.draw_text(
-                            text,
-                            Justify::Left,
-                            PANEL_X + 4, PANEL_Y + 4,
-                            COL_TEXT);
-                        draw_manager.draw_text(
-                            "does not support you.",
-                            Justify::Left,
-                            PANEL_X + 4, PANEL_Y + 24,
-                            COL_TEXT);
+                        snprintf(text0, sizeof(text0), "Your war-ally %s", player->get_full_name());
+                        snprintf(text1, sizeof(text1), "does not support you.");
                     }
+
+                    draw_text();
 
                     presented_dialogue = true;
 
@@ -544,16 +503,10 @@ ExodusMode LunarBattlePrep::update(float delta) {
                 b.aggressor_art += 10;
 
                 draw_panel();
-                draw_manager.draw_text(
-                    "The Space Guild sends",
-                    Justify::Left,
-                    PANEL_X + 4, PANEL_Y + 4,
-                    COL_TEXT);
-                draw_manager.draw_text(
-                    "20 battle units.",
-                    Justify::Left,
-                    PANEL_X + 4, PANEL_Y + 24,
-                    COL_TEXT);
+                snprintf(text0, sizeof(text0), "The Space Guild sends");
+                snprintf(text1, sizeof(text1), "20 battle units.");
+                draw_text();
+
                 break;
             }
 
@@ -580,31 +533,13 @@ ExodusMode LunarBattlePrep::update(float delta) {
                     break;
                 }
 
-                char text[32];
-
                 draw_panel();
-                draw_manager.draw_text(
-                    "A private concern offers",
-                    Justify::Left,
-                    PANEL_X + 4, PANEL_Y + 4,
-                    COL_TEXT);
-                snprintf(text, sizeof(text), "%d AntiGrav mines for", mines_available);
-                draw_manager.draw_text(
-                    text,
-                    Justify::Left,
-                    PANEL_X + 4, PANEL_Y + 24,
-                    COL_TEXT);
-                snprintf(text, sizeof(text), "%dMC each.", mines_price);
-                draw_manager.draw_text(
-                    text,
-                    Justify::Left,
-                    PANEL_X + 4, PANEL_Y + 44,
-                    COL_TEXT);
-                draw_manager.draw_text(
-                    "Buy:",
-                    Justify::Left,
-                    PANEL_X + 4, PANEL_Y + 84,
-                    COL_TEXT);
+                snprintf(text0, sizeof(text0), "A private concern offers");
+                snprintf(text1, sizeof(text1), "%d AntiGrav mines for", mines_available);
+                snprintf(text2, sizeof(text2), "%dMC each.", mines_price);
+                snprintf(text4, sizeof(text4), "Buy:");
+                draw_text();
+
                 draw_manager.draw(
                     id(ID::MINES_ADJUST),
                     IMG_BR3_EXPORT2,
@@ -679,30 +614,11 @@ ExodusMode LunarBattlePrep::update(float delta) {
                 }
 
                 draw_panel();
-                draw_manager.draw_text(
-                    t0,
-                    Justify::Left,
-                    PANEL_X + 4, PANEL_Y + 4,
-                    COL_TEXT);
-                draw_manager.draw_text(
-                    t1,
-                    Justify::Left,
-                    PANEL_X + 4, PANEL_Y + 24,
-                    COL_TEXT);
-                draw_manager.draw_text(
-                    t2,
-                    Justify::Left,
-                    PANEL_X + 4, PANEL_Y + 44,
-                    COL_TEXT);
-
-                char text[32];
-                snprintf(text, sizeof(text), "(%dMC)", OFFICER_UPGRADE_COST);
-
-                draw_manager.draw_text(
-                    text,
-                    Justify::Left,
-                    PANEL_X + 4, PANEL_Y + 84,
-                    COL_TEXT);
+                snprintf(text0, sizeof(text0), t0);
+                snprintf(text1, sizeof(text1), t1);
+                snprintf(text2, sizeof(text2), t2);
+                snprintf(text4, sizeof(text4), "(%dMC)", OFFICER_UPGRADE_COST);
+                draw_text();
 
                 draw_manager.draw(
                     id(ID::UPGRADE_YESNO),
@@ -745,11 +661,9 @@ ExodusMode LunarBattlePrep::update(float delta) {
                 stage_started = true;
 
                 draw_panel();
-                draw_manager.draw_text(
-                    "Sir, do you wish to...",
-                    Justify::Left,
-                    PANEL_X + 4, PANEL_Y + 4,
-                    COL_TEXT);
+                snprintf(text0, sizeof(text0), "Sir, do you wish to...");
+                draw_text();
+
                 break;
             }
 
@@ -779,11 +693,8 @@ ExodusMode LunarBattlePrep::update(float delta) {
                 stage_started = true;
 
                 draw_panel();
-                draw_manager.draw_text(
-                    "Please select:",
-                    Justify::Left,
-                    PANEL_X + 4, PANEL_Y + 4,
-                    COL_TEXT);
+                snprintf(text0, sizeof(text0), "Please select:");
+                draw_text();
                 break;
             }
 
@@ -819,26 +730,11 @@ ExodusMode LunarBattlePrep::update(float delta) {
                     stage_started = true;
 
                     draw_panel();
-                    draw_manager.draw_text(
-                        "Group size recommended:",
-                        Justify::Left,
-                        PANEL_X + 4, PANEL_Y + 4,
-                        COL_TEXT);
-                    draw_manager.draw_text(
-                        n,
-                        Justify::Left,
-                        PANEL_X + 240, PANEL_Y + 4,
-                        COL_TEXT);
-                    draw_manager.draw_text(
-                        "Your choice:",
-                        Justify::Left,
-                        PANEL_X + 4, PANEL_Y + 44,
-                        COL_TEXT);
-                    draw_manager.draw_text(
-                        "(Min: 2 Max: 20)",
-                        Justify::Left,
-                        PANEL_X + 4, PANEL_Y + 84,
-                        COL_TEXT);
+                    snprintf(text0, sizeof(text0), "Group size recommended: %s", n);
+                    snprintf(text2, sizeof(text2), "Your choice:");
+                    snprintf(text4, sizeof(text4), "(Min: 2 Max: 20)");
+                    draw_text();
+
                     draw_manager.draw(
                         id(ID::OPT_GROUP_ADJUST),
                         IMG_BR3_EXPORT2,
@@ -873,11 +769,8 @@ ExodusMode LunarBattlePrep::update(float delta) {
                 stage_started = true;
 
                 draw_panel();
-                draw_manager.draw_text(
-                    "Please select:",
-                    Justify::Left,
-                    PANEL_X + 4, PANEL_Y + 4,
-                    COL_TEXT);
+                snprintf(text0, sizeof(text0), "Please select:");
+                draw_text();
                 break;
             }
 
@@ -1065,6 +958,11 @@ ExodusMode LunarBattlePrep::update(float delta) {
 void LunarBattlePrep::set_stage(Stage new_stage) {
     stage = new_stage;
     stage_started = false;
+    text0[0] = '\0';
+    text1[0] = '\0';
+    text2[0] = '\0';
+    text3[0] = '\0';
+    text4[0] = '\0';
 }
 
 int LunarBattlePrep::get_agg_total() {
@@ -1095,4 +993,17 @@ void LunarBattlePrep::draw_panel() {
         id(ID::PANEL_PATTERN),
         {PANEL_X, PANEL_Y,
          PANEL_W, PANEL_H});
+}
+
+void LunarBattlePrep::draw_text() {
+    draw_manager.draw_text(text0, Justify::Left,
+        PANEL_X + 4, PANEL_Y + 4, COL_TEXT);
+    draw_manager.draw_text(text1, Justify::Left,
+        PANEL_X + 4, PANEL_Y + 24, COL_TEXT);
+    draw_manager.draw_text(text2, Justify::Left,
+        PANEL_X + 4, PANEL_Y + 44, COL_TEXT);
+    draw_manager.draw_text(text3, Justify::Left,
+        PANEL_X + 4, PANEL_Y + 64, COL_TEXT);
+    draw_manager.draw_text(text4, Justify::Left,
+        PANEL_X + 4, PANEL_Y + 84, COL_TEXT);
 }

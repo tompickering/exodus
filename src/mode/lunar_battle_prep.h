@@ -57,6 +57,13 @@ class LunarBattlePrep : ModeBase, BattleReport, BulletinDrawer {
         int get_def_total();
 
         void draw_panel();
+        void draw_text();
+
+        char text0[64];
+        char text1[64];
+        char text2[64];
+        char text3[64];
+        char text4[64];
 };
 
 #endif
