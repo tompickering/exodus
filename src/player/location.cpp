@@ -11,7 +11,8 @@ PlayerLocation::PlayerLocation() {
     target = -1;
     planet_target = 0;
     just_arrived = false;
-    visited = 0;
+    visited0 = 0;
+    visited1 = 0;
 }
 
 bool PlayerLocation::advance() {
@@ -22,7 +23,11 @@ bool PlayerLocation::advance() {
     if (just_arrived) {
         location = target;
         if (target >= 0) {
-            visited |= (uint64_t)1 << target;
+            if (target < 32) {
+                visited0 |= (uint64_t)1 << target;
+            } else {
+                visited1 |= (uint64_t)1 << (target - 32);
+            }
         }
     }
     return just_arrived;
@@ -75,7 +80,13 @@ bool PlayerLocation::has_visited(int query_target) {
     // Guild (-1) is always true
     if (query_target < 0)
         return true;
-    return (bool)(visited & ((uint64_t)1 << query_target));
+
+    if (query_target < 32)
+    {
+        return (bool)(visited0 & ((uint64_t)1 << query_target));
+    }
+
+    return (bool)(visited1 & ((uint64_t)1 << (query_target - 32)));
 }
 
 void PlayerLocation::unset_target() {
@@ -98,7 +109,8 @@ void PlayerLocation::save(cJSON* j) const {
     SAVE_NUM(j, planet_target);
     SAVE_NUM(j, months_to_arrive);
     SAVE_BOOL(j, just_arrived);
-    SAVE_NUM(j, visited);
+    SAVE_NUM(j, visited0);
+    SAVE_NUM(j, visited1);
 }
 
 void PlayerLocation::load(cJSON* j) {
@@ -108,5 +120,6 @@ void PlayerLocation::load(cJSON* j) {
     LOAD_NUM(j, planet_target);
     LOAD_NUM(j, months_to_arrive);
     LOAD_BOOL(j, just_arrived);
-    LOAD_NUM(j, visited);
+    LOAD_NUM(j, visited0);
+    LOAD_NUM(j, visited1);
 }

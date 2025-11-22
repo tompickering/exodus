@@ -34,7 +34,8 @@ class PlayerLocation : public Saveable {
         int planet_target;     // I think only used for CPU lords - Orig: TP
         int months_to_arrive;  // 'In flight' if > 0
         bool just_arrived;
-        uint64_t visited;
+        uint32_t visited0;
+        uint32_t visited1;
 };
 
 #endif
