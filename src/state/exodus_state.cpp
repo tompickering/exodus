@@ -334,7 +334,7 @@ Planet* ExodusState::select_planet_for_cpu(bool worst) {
             quality = 100;
         }
 
-        for (PlanetIterator piter; !piter.complete(); ++piter) {
+        for (PlanetIteratorRandom piter; !piter.complete(); ++piter) {
             Planet *p = piter.get();
             if (!p->is_owned()) {
 
