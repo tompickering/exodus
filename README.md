@@ -81,3 +81,6 @@ Thanks to the following font creators:
 * Patrick H. Lauke - Cybattler
     * (Creative Commons License, http://creativecommons.org/licenses/by/3.0/ )
     * https://fontstruct.com/fontstructions/show/1592816/cybattler
+* Vasily Draigo aka Daymarius - PixelForce
+    * (Free License)
+    * https://www.1001freefonts.com/pixelforce.font

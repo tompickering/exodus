@@ -12,6 +12,7 @@ const char* mpart2mus(int);
 extern const char *FONT_AUDIOWIDE;
 extern const char *FONT_3X5;
 extern const char *FONT_CYBATTLER;
+extern const char *FONT_PIXELFORCE;
 
 extern const char *SFX_SHOT;
 extern const char *SFX_EXPLOSION;
