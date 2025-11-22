@@ -147,6 +147,9 @@ static bool NEW_MINES = false;
 // Lower thresholds for converting Rock and Desert worlds into Terran
 static bool EASIER_CULTIVATION;
 
+// Planet gift events
+static bool PLANET_GIFT_EVENTS = false;
+
 // Fixes bug meaning some AI terrorist actions are never taken
 static bool FIX_AI_TERROR = false;
 
@@ -221,6 +224,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         TRADE_PORTS = false;
         NEW_MINES = false;
         EASIER_CULTIVATION = false;
+        PLANET_GIFT_EVENTS = false;
         FIX_AI_TERROR = false;
         FIX_FLEET_ADMIRAL = false;
         FIX_LUNAR_BATTLE_STALEMATE = true;
@@ -278,6 +282,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         TRADE_PORTS = true;
         NEW_MINES = true;
         EASIER_CULTIVATION = true;
+        PLANET_GIFT_EVENTS = true;
         FIX_AI_TERROR = true;
         FIX_FLEET_ADMIRAL = true;
         FIX_LUNAR_BATTLE_STALEMATE = true;
@@ -348,6 +353,7 @@ bool FEATURE(ExodusFeature f) {
     if (f == EF_TRADE_PORTS) return TRADE_PORTS;
     if (f == EF_NEW_MINES) return NEW_MINES;
     if (f == EF_EASIER_CULTIVATION) return EASIER_CULTIVATION;
+    if (f == EF_PLANET_GIFT_EVENTS) return PLANET_GIFT_EVENTS;
     if (f == EF_FIX_AI_TERROR) return FIX_AI_TERROR;
     if (f == EF_FIX_FLEET_ADMIRAL) return FIX_FLEET_ADMIRAL;
     if (f == EF_FIX_LUNAR_BATTLE_STALEMATE) return FIX_LUNAR_BATTLE_STALEMATE;

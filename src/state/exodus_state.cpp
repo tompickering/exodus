@@ -1525,6 +1525,10 @@ Planet* ExodusState::gift_art_planet_to(int player_idx) {
 }
 
 void ExodusState::planet_gift_event() {
+    if (!FEATURE(EF_PLANET_GIFT_EVENTS)) {
+        return;
+    }
+
     L.debug("--- PLANET GIFTING ---");
 
     // Gift a planet to:
