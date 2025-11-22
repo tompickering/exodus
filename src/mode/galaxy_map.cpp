@@ -3548,6 +3548,12 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                                 }
                             }
 
+                            if (exostate().has_alliance(player_idx, owner, ALLY_NonAttack)) {
+                                if (player->perk_high_alliance_standards) {
+                                    ok = false;
+                                }
+                            }
+
                             int star_idx = piter.get_star_idx();
                             int planet_idx = piter.get_idx();
 

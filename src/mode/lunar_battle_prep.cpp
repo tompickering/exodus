@@ -397,9 +397,11 @@ ExodusMode LunarBattlePrep::update(float delta) {
 
                     bool does_support = true;
 
-                    if (player->get_flag(4) == AI_Hi) {
-                        L.debug("%s offering no support (AI flags)", player->get_name());
-                        does_support = false;
+                    if (!player->perk_high_alliance_standards) {
+                        if (player->get_flag(4) == AI_Hi) {
+                            L.debug("%s offering no support (AI flags)", player->get_name());
+                            does_support = false;
+                        }
                     }
 
                     if (player->is_hostile_to(owner_idx)) {
