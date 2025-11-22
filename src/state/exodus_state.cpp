@@ -999,6 +999,28 @@ bool ExodusState::is_allied(int a, int b) {
     return get_alliances(a, b) > 0;
 }
 
+bool ExodusState::is_allied_with_race(int a, Race race) {
+    for (int i = 0; i < N_PLAYERS; ++i) {
+        if (i == a) {
+            continue;
+        }
+
+        Player *p = get_player(i);
+
+        if (!p->is_participating()) {
+            continue;
+        }
+
+        if (p->get_race() == race) {
+            if (is_allied(a, i)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 bool ExodusState::has_alliance(int a, int b, AllianceType t) {
     return (get_alliances(a, b) & (1<<(int)t)) > 0;
 }

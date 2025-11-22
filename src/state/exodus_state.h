@@ -147,6 +147,7 @@ class ExodusState : public Saveable {
         int get_total_income_ignoring_army(int);
         int get_total_net_income(int);
         bool is_allied(int, int);
+        bool is_allied_with_race(int, Race);
         bool has_alliance(int, int, AllianceType);
         bool has_only_alliance(int, int, AllianceType);
         bool has_all_alliances(int, int);

@@ -68,6 +68,7 @@ Player::Player() {
     perk_citizens_become_happy = false;
     perk_easy_to_appease = false;
     perk_species_hostility_link = false;
+    perk_species_alliance_link = false;
 
     infraction_mask = 0;
     ever_committed_infraction = false;
@@ -284,6 +285,7 @@ void Player::init_character_perks() {
             perk_easy_to_appease = true;
             break;
         case CHAR_Ter4:
+            perk_species_alliance_link = true;
             perk_species_hostility_link = true;
             break;
         case CHAR_Urk1:
@@ -1520,6 +1522,7 @@ void Player::save(cJSON* j) const
     SAVE_BOOL(j, perk_citizens_become_happy);
     SAVE_BOOL(j, perk_easy_to_appease);
     SAVE_BOOL(j, perk_species_hostility_link);
+    SAVE_BOOL(j, perk_species_alliance_link);
 }
 
 void Player::load(cJSON* j)
@@ -1594,4 +1597,5 @@ void Player::load(cJSON* j)
     LOAD_BOOL(j, perk_citizens_become_happy);
     LOAD_BOOL(j, perk_easy_to_appease);
     LOAD_BOOL(j, perk_species_hostility_link);
+    LOAD_BOOL(j, perk_species_alliance_link);
 }

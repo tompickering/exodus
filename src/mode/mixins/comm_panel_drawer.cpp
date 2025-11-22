@@ -1744,6 +1744,9 @@ void CommPanelDrawer::comm_send(CommSend input) {
         case DIA_S_ProposeAlliance:
             {
                 int idx = exostate().get_player_idx(comm_player);
+
+                bool species_alliance = exostate().is_allied_with_race(idx, comm_other->get_race());
+
                 if (comm_other->is_hostile_to(idx) || comm_player->get_reputation() < 1) {
                     comm_prepare(1);
                     comm_set_speech("I am not interested.");
@@ -1753,6 +1756,12 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 } else if (comm_other->get_flag(2) == AI_Lo) {
                     comm_prepare(1);
                     comm_set_speech("Sorry, but I have to refuse.");
+                    comm_exit_anim_action = CA_Abort;
+                    comm_recv(DIA_R_Close);
+                    break;
+                } else if (comm_other->perk_species_alliance_link && (!species_alliance)) {
+                    comm_prepare(1);
+                    comm_set_speech("You are no friend of our race.");
                     comm_exit_anim_action = CA_Abort;
                     comm_recv(DIA_R_Close);
                     break;
