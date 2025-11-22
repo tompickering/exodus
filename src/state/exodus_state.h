@@ -195,6 +195,7 @@ class ExodusState : public Saveable {
         void register_species_hostility(Player*, int);
 
         void gift_planet_to(int);
+        void gift_art_planet_to(int);
         void planet_gift_event();
         void run_planet_gift_events();
 

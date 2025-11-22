@@ -71,6 +71,7 @@ Player::Player() {
     perk_species_alliance_link = false;
     perk_high_alliance_standards = false;
     perk_planet_every_n_months = -1;
+    perk_art_planet_at_month = -1;
 
     infraction_mask = 0;
     ever_committed_infraction = false;
@@ -295,6 +296,7 @@ void Player::init_character_perks() {
             perk_always_promote = true;
             break;
         case CHAR_Urk2:
+            perk_art_planet_at_month = 100;
             break;
         case CHAR_Urk3:
             fleet.transporters += 100;
@@ -1529,6 +1531,7 @@ void Player::save(cJSON* j) const
     SAVE_BOOL(j, perk_species_alliance_link);
     SAVE_BOOL(j, perk_high_alliance_standards);
     SAVE_NUM(j, perk_planet_every_n_months);
+    SAVE_NUM(j, perk_art_planet_at_month);
 }
 
 void Player::load(cJSON* j)
@@ -1606,4 +1609,5 @@ void Player::load(cJSON* j)
     LOAD_BOOL(j, perk_species_alliance_link);
     LOAD_BOOL(j, perk_high_alliance_standards);
     LOAD_NUM(j, perk_planet_every_n_months);
+    LOAD_NUM(j, perk_art_planet_at_month);
 }

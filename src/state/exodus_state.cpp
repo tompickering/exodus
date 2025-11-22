@@ -1469,6 +1469,41 @@ void ExodusState::gift_planet_to(int player_idx) {
     pl->prepare_for_cpu_lord();
 }
 
+void ExodusState::gift_art_planet_to(int player_idx) {
+    Player *p = get_player(player_idx);
+
+    if (!(p && p->is_participating())) {
+        return;
+    }
+
+    L.debug("Gifting artificial planet to %s", p->get_name());
+
+    Planet *art_planet = get_planet_under_construction(player_idx);
+
+    Star *s = nullptr;
+
+    if (!art_planet) {
+        for (StarIteratorRandom si; !si.complete(); ++si) {
+            s = si.get();
+            if (artificial_planet_viable(s) == APV_Yes) {
+                if (construct_artificial_planet(s, player_idx, nullptr)) {
+                    art_planet = get_planet_under_construction(player_idx);
+                    if (art_planet) {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    if (art_planet) {
+        while (art_planet->advance_construction_phase()) {}
+        L.debug("Gifted artificial planet to %s at %s", p->get_name(), s->name);
+    } else {
+        L.debug("Could not gift artificial planet to %s", p->get_name());
+    }
+}
+
 void ExodusState::planet_gift_event() {
     L.debug("--- PLANET GIFTING ---");
 
@@ -1603,6 +1638,12 @@ void ExodusState::run_planet_gift_events() {
         if (p->perk_planet_every_n_months > 0) {
             if ((m % p->perk_planet_every_n_months) == 0) {
                 gift_planet_to(i);
+            }
+        }
+
+        if (p->perk_art_planet_at_month > 0) {
+            if (p->perk_art_planet_at_month == m) {
+                gift_art_planet_to(i);
             }
         }
     }

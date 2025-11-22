@@ -555,6 +555,7 @@ class Player : public Saveable {
         bool perk_species_alliance_link;
         bool perk_high_alliance_standards;
         int perk_planet_every_n_months;
+        int perk_art_planet_at_month;
 
     private:
         void adjust_mc(int, MCReason);
