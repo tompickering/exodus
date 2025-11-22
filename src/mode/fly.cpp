@@ -42,6 +42,7 @@ enum ID {
     THRUSTERS10,
     THRUSTERS11,
     WARP,
+    TEXT,
     END,
 };
 
@@ -144,8 +145,9 @@ void Fly::enter() {
     update_panel_info_player(TGT_Primary, player);
     update_panel_info_ft(TGT_Primary, player, tgt);
 
+    text[0] = '\0';
+
     if (arriving) {
-        char text[MAX_PLAYER_NAME + FT_MAX_NAME + 40];
         if (tgt == exostate().get_galaxy()->get_guild()) {
             snprintf(
                 text,
@@ -160,12 +162,6 @@ void Fly::enter() {
                 player->get_name(),
                 tgt->name);
         }
-
-        draw_manager.draw_text(
-            text,
-            Justify::Left,
-            10, 10,
-            COL_TEXT);
     }
 
     if (!arriving) {
@@ -224,6 +220,14 @@ ExodusMode Fly::update(float delta) {
                 return ExodusMode::MODE_Pop;
             }
         }
+
+        draw_manager.refresh_sprite_id(id(ID::TEXT));
+        draw_manager.draw_text(
+            id(ID::TEXT),
+            text,
+            Justify::Left,
+            10, 10,
+            COL_TEXT);
     } else {
         float fly_progress = 0.f;
 

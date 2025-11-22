@@ -22,6 +22,8 @@ class Fly : ModeBase, PanelDrawer, FrameDrawer {
         bool arriving;
         int current_thrust;
         int warp_stage;
+
+        char text[128];
 };
 
 #endif
