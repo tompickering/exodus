@@ -157,8 +157,6 @@ ExodusMode GalaxyMap::update(float delta) {
     while (selected_ft_blink > 2*BLINK_TIME)
         selected_ft_blink -= 2*BLINK_TIME;
 
-    clear_mouseover_star_name();
-
     switch (stage) {
         case GM_SwapIn:
             draw_manager.save_background();
@@ -167,6 +165,8 @@ ExodusMode GalaxyMap::update(float delta) {
             // Otherwise causes an annoying flicker e.g. at the end of Fly...
             return update(0);
         case GM_Idle:
+            clear_mouseover_star_name();
+
             if (player->get_race() == RACE_Human && !player->intro_seen()) {
                 exostate().set_active_flytarget(gal->get_guild());
                 return ExodusMode::MODE_GalaxyIntro;
