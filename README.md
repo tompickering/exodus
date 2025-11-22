@@ -84,3 +84,6 @@ Thanks to the following font creators:
 * Vasily Draigo aka Daymarius - PixelForce
     * (Free License)
     * https://www.1001freefonts.com/pixelforce.font
+* Jovanny Lemonad - Russo One
+    * (SIL Open Font License, Version 1.1 https://openfontlicense.org/open-font-license-official-text/ )
+    * https://www.1001freefonts.com/russo-one.font

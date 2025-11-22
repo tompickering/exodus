@@ -4,6 +4,7 @@ const char *FONT_AUDIOWIDE = "assets/font/audiowide/Audiowide-Regular.ttf";
 const char *FONT_3X5       = "assets/font/my_3x5_tiny_mono_pixel_font/my_3x5_tiny_mono_pixel_font.ttf";
 const char *FONT_CYBATTLER = "assets/font/cybattler/cybattler.otf";
 const char *FONT_PIXELFORCE= "assets/font/pixelforce/PixelForce.ttf";
+const char *FONT_RUSSO_ONE= "assets/font/russo_one/RussoOne-Regular.ttf";
 
 #define D_SFX "assets/sfx/"
 const char *SFX_SHOT            = D_SFX "1_2000";
