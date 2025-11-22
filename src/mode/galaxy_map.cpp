@@ -4993,6 +4993,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
                 if (FEATURE(EF_EASIER_CULTIVATION)) {
                     threshold -= (threshold / 2);
+                    threshold += 5;
                 }
 
                 if (p->count_stones(STONE_Agri) >= threshold) {
