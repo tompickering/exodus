@@ -15,7 +15,7 @@
 #define MAX_PLAYER_REFERENCE 12
 #define MAX_PLAYER_FULLNAME MAX_PLAYER_TITLE + 1 + MAX_PLAYER_NAME
 
-#define N_MARKERS             8
+#define N_MARKERS            12
 #define MAX_MARKER           12
 
 #define N_RACES 5
