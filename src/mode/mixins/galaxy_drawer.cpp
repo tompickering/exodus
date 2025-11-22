@@ -277,14 +277,14 @@ void GalaxyDrawer::draw_mouseover_star_name() {
                 Font::RussoOne,
                 "SPACE",
                 Justify::Centre,
-                x, y - 48,
+                x, y - 46,
                 {168, 85, 204});
             draw_manager.draw_text(
                 star_name_id,
                 Font::RussoOne,
                 "GUILD",
                 Justify::Centre,
-                x, y - 28,
+                x, y - 34,
                 {168, 85, 204});
         } else {
             draw_manager.draw_text(
