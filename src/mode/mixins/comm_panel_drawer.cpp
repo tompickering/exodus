@@ -1071,7 +1071,13 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img_caption("SCIENTISTS");
             comm_is_counsellor = true;
             break;
-        case DIA_S_CallToRescue:
+        case DIA_S_CallToRescueThisSystem:
+            comm_set_title("Message from counsellor");
+            comm_set_img(CI_Human);
+            comm_set_img_caption("COUNSELLOR");
+            comm_is_counsellor = true;
+            break;
+        case DIA_S_CallToRescueAnotherSystem:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_Human);
             comm_set_img_caption("COUNSELLOR");
@@ -2203,7 +2209,20 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_recv(DIA_R_Close);
             }
             break;
-        case DIA_S_CallToRescue:
+        case DIA_S_CallToRescueThisSystem:
+            {
+                Star *s = exostate().get_star_for_planet(comm_planet);
+                comm_prepare(6);
+                comm_set_text(0, "%s! The citizens of the", comm_player->get_ref());
+                comm_set_text(1, "%s system are in danger!", s->name);
+                comm_set_text(2, "");
+                comm_set_text(3, "Our fleet is in the system - we");
+                comm_set_text(4, "should evacuate the civilians via");
+                comm_set_text(5, "resettling!");
+                comm_recv(DIA_R_Close);
+            }
+            break;
+        case DIA_S_CallToRescueAnotherSystem:
             {
                 Star *s = exostate().get_star_for_planet(comm_planet);
                 comm_prepare(6);

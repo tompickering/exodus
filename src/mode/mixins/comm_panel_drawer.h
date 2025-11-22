@@ -124,7 +124,8 @@ enum CommSend {
     DIA_S_PlanetInvalidRadiation,
     DIA_S_AdvancedGalaxyMapUnlocked,
     DIA_S_AdvancedReportUnlocked,
-    DIA_S_CallToRescue,
+    DIA_S_CallToRescueThisSystem,
+    DIA_S_CallToRescueAnotherSystem,
     DIA_S_Quit,
     // For these, CPU is talking to us - so CPU is comm_player and human is comm_other
     DIA_S_CPU_Attack,

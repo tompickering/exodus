@@ -2632,7 +2632,14 @@ ExodusMode GalaxyMap::month_pass_update() {
                             bulletin_ensure_closed();
                             exostate().set_active_planet(pl);
 
-                            comm_open(DIA_S_CallToRescue);
+                            int s_idx = p->get_location().get_target();
+
+                            if (s_idx == pi.get_star_idx()) {
+                                comm_open(DIA_S_CallToRescueThisSystem);
+                            } else {
+                                comm_open(DIA_S_CallToRescueAnotherSystem);
+                            }
+
                             ++mp_state.mp_player_idx;
                             return ExodusMode::MODE_None;
                         }
