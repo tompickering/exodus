@@ -4803,7 +4803,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     bulletin_set_next_text("");
 
                     if (robots > 0) {
-                        bulletin_set_next_text("Your robots were unable to suppress");
+                        bulletin_set_next_text("Their robots were unable to suppress");
                         bulletin_set_next_text("the masses.");
                         bulletin_set_next_text("");
                     }
