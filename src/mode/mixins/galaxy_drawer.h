@@ -30,7 +30,9 @@ class GalaxyDrawer {
         SprID marker_ids[N_MARKERS];
         SprID marker_text_ids[N_MARKERS];
         SprID star_name_id;
+        SprID star_name_sh_id;
         SprID star_name2_id;
+        SprID star_name2_sh_id;
 };
 
 #endif
