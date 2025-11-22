@@ -1761,7 +1761,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     break;
                 } else if (comm_other->perk_species_alliance_link && (!species_alliance)) {
                     comm_prepare(1);
-                    comm_set_speech("You are no friend of our race.");
+                    comm_set_speech("You are no friend of the %s.", comm_other->get_race_str());
                     comm_exit_anim_action = CA_Abort;
                     comm_recv(DIA_R_Close);
                     break;
