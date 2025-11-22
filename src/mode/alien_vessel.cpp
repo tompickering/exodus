@@ -8,6 +8,7 @@
 
 enum ID {
     BACKGROUND,
+    BACKGROUND_FILL,
     INTRO_0,
     INTRO_1,
     VESSEL,
@@ -152,7 +153,12 @@ void AlienVessel::enter() {
     draw_manager.draw(
         id(ID::BACKGROUND),
         IMG_VS0_VPIC,
-        {6, 6, 0, 0, 1, 1});
+        {6, 10, 0, 0, 1, 1});
+
+    draw_manager.fill(
+        id(ID::BACKGROUND_FILL),
+        {6, 6, RES_X-12, 4},
+        {0, 0, 0});
 
     draw_manager.draw_text(
         id(ID::INTRO_0),
