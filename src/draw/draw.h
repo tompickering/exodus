@@ -132,6 +132,7 @@ enum Font {
     _3x5,
     Cybattler,
     PixelForce,
+    RussoOne,
     Tiny,
     Small,
     Large,
