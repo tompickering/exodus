@@ -615,7 +615,7 @@ void MenuDrawer::menu_open_specific_mode() {
 
                 if (FEATURE(EF_OFFICER_CHARACTERS)) {
                     menu_set_opt(3, "Dismiss Without Honours");
-                    menu_set_opt(4, "Incarcerate");
+                    menu_set_opt(4, "Arrest for crimes against the empire");
                 } else {
                     menu_set_opt(3, "Dismiss");
                     menu_set_opt(4, "Kill");
