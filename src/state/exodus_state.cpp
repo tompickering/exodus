@@ -318,51 +318,61 @@ void ExodusState::init(GameConfig config) {
     L.debug("   Enemies: %d", enemy_start);
 }
 
-void ExodusState::init_cpu_lords() {
-    for (int i = n_human_players; i < N_PLAYERS; ++i) {
-        // Assign initial planet to CPU lords. Orig: PROCstart_the_lords
-        // We follow the original's logic of iterating over stars in the
-        // same order for each lord, which affects the probability of
-        // neighbouring lords in the same system.
-        // N.B. Star indices are not correlated with their positions.
-        bool initial_planet_selected = false;
-        Star *chosen_star = nullptr;
-        int chosen_planet_idx = 0;
-        L.verb("Choosing initial planet for CPU lord %d", i);
-        while(!initial_planet_selected) {
-            int quality = 0;
-            for (PlanetIterator piter; !piter.complete(); ++piter) {
-                Planet *p = piter.get();
-                if (!p->is_owned()) {
-                    L.verb("Considering star %d planet %d", piter.get_star_idx(), piter.get_idx());
-                    int planet_quality = 0;
-                    if (p->get_class() == Forest)  planet_quality = 4;
-                    if (p->get_class() == Desert)  planet_quality = 2;
-                    if (p->get_class() == Volcano) planet_quality = 1;
-                    if (p->get_class() == Rock)    planet_quality = 3;
-                    if (p->get_class() == Ice)     planet_quality = 2;
-                    if (p->get_class() == Terra)   planet_quality = 5;
-                    if (planet_quality > quality && RND(7) != 1) {
-                        L.verb("Checking existing ownership");
-                        if (!p->is_owned()) {
-                            L.verb("Updated planet candidate!");
-                            quality = planet_quality;
-                            chosen_star = piter.get_star();
-                            chosen_planet_idx = piter.get_idx();
-                            initial_planet_selected = true;
-                            // N.B. we don't break here - we continue iterating
-                            // over stars, and are liable to change our mind if
-                            // we find a better offer!
-                        } else {
-                            L.verb("Can't choose this planet");
-                        }
+Planet* ExodusState::select_planet_for_cpu() {
+    // Assign initial planet to CPU lords. Orig: PROCstart_the_lords
+    // We follow the original's logic of iterating over stars in the
+    // same order for each lord, which affects the probability of
+    // neighbouring lords in the same system.
+    // N.B. Star indices are not correlated with their positions.
+    bool initial_planet_selected = false;
+    Star *chosen_star = nullptr;
+    int chosen_planet_idx = 0;
+    while(!initial_planet_selected) {
+        int quality = 0;
+        for (PlanetIterator piter; !piter.complete(); ++piter) {
+            Planet *p = piter.get();
+            if (!p->is_owned()) {
+                L.verb("Considering star %d planet %d", piter.get_star_idx(), piter.get_idx());
+                int planet_quality = 0;
+                if (p->get_class() == Forest)  planet_quality = 4;
+                if (p->get_class() == Desert)  planet_quality = 2;
+                if (p->get_class() == Volcano) planet_quality = 1;
+                if (p->get_class() == Rock)    planet_quality = 3;
+                if (p->get_class() == Ice)     planet_quality = 2;
+                if (p->get_class() == Terra)   planet_quality = 5;
+                if (planet_quality > quality && RND(7) != 1) {
+                    L.verb("Checking existing ownership");
+                    if (!p->is_owned()) {
+                        L.verb("Updated planet candidate!");
+                        quality = planet_quality;
+                        chosen_star = piter.get_star();
+                        chosen_planet_idx = piter.get_idx();
+                        initial_planet_selected = true;
+                        // N.B. we don't break here - we continue iterating
+                        // over stars, and are liable to change our mind if
+                        // we find a better offer!
+                    } else {
+                        L.verb("Can't choose this planet");
                     }
                 }
             }
         }
+    }
 
-        // We've settled on a planet - now claim it!
-        Planet *chosen_planet = chosen_star->get_planet(chosen_planet_idx);
+    Planet *chosen_planet = chosen_star->get_planet(chosen_planet_idx);
+    return chosen_planet;
+}
+
+void ExodusState::init_cpu_lords() {
+    for (int i = n_human_players; i < N_PLAYERS; ++i) {
+        L.verb("Choosing initial planet for CPU lord %d", i);
+
+        Planet *chosen_planet = select_planet_for_cpu();
+
+        if (!chosen_planet) {
+            L.error("Could not find a planet for CPU");
+        }
+
         chosen_planet->set_owner(i, POCR_Init);
         chosen_planet->prepare_for_cpu_lord();
 
