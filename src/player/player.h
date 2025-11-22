@@ -553,6 +553,7 @@ class Player : public Saveable {
         bool perk_easy_to_appease;
         bool perk_species_hostility_link;
         bool perk_species_alliance_link;
+        bool perk_high_alliance_standards;
 
     private:
         void adjust_mc(int, MCReason);

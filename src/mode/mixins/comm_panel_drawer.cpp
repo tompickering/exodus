@@ -1747,9 +1747,17 @@ void CommPanelDrawer::comm_send(CommSend input) {
 
                 bool species_alliance = exostate().is_allied_with_race(idx, comm_other->get_race());
 
+                bool high_standard = comm_player->is_guild_member() || (comm_player->get_reputation() >= 6);
+
                 if (comm_other->is_hostile_to(idx) || comm_player->get_reputation() < 1) {
                     comm_prepare(1);
                     comm_set_speech("I am not interested.");
+                    comm_exit_anim_action = CA_Abort;
+                    comm_recv(DIA_R_Close);
+                    break;
+                } else if (comm_other->perk_high_alliance_standards && (!high_standard)) {
+                    comm_prepare(1);
+                    comm_set_speech("Only when you prove your worth.");
                     comm_exit_anim_action = CA_Abort;
                     comm_recv(DIA_R_Close);
                     break;
@@ -3192,6 +3200,11 @@ void CommPanelDrawer::comm_process_responses() {
                         }
                         if (comm_other->get_flag(1) == AI_Hi) {
                             comm_ctx.alliance_prob = 2;
+                        }
+                        if (comm_other->perk_high_alliance_standards) {
+                            // Those with high standards wouldn't get this far in the
+                            // conversation unless the player had passed checks.
+                            comm_ctx.alliance_prob = 1;
                         }
                     }
                     comm_send(DIA_S_OfferAllianceResponse);
