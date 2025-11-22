@@ -1676,6 +1676,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                         L.error("No owner on completed artificial world");
                         continue;
                     }
+                    owner->art_planet_constructed = true;
                     bulletin_start_new(false);
                     bulletin_set_bg(p->sprites()->bulletin_bg);
                     bulletin_set_flag(flags[owner->get_flag_idx()]);

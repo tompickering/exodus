@@ -537,6 +537,11 @@ bool ExodusState::mission_complete() {
                     return false;
                 }
 
+                // Seizing a planet doesn't count - you need to construct at least one!
+                if (!player->art_planet_constructed) {
+                    return false;
+                }
+
                 bool artificial_owned = false;
                 int n_planets = 0;
 

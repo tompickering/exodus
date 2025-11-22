@@ -50,6 +50,8 @@ Player::Player() {
     advanced_galmap_unlocked = false;
     ai_tactic = 0;
 
+    art_planet_constructed = false;
+
     perk_starts_with_inf = 0;
     perk_starts_with_gli = 0;
     perk_starts_with_art = 0;
@@ -1510,6 +1512,7 @@ void Player::save(cJSON* j) const
     SAVE_ARRAY_OF_NUM(j, mc_gains_this_month);
     SAVE_ARRAY_OF_NUM(j, mc_losses_this_month);
     SAVE_ARRAY_OF_NUM(j, mc_history);
+    SAVE_BOOL(j, art_planet_constructed);
     SAVE_NUM(j, perk_starts_with_inf);
     SAVE_NUM(j, perk_starts_with_gli);
     SAVE_NUM(j, perk_starts_with_art);
@@ -1588,6 +1591,7 @@ void Player::load(cJSON* j)
     LOAD_ARRAY_OF_NUM(j, mc_gains_this_month);
     LOAD_ARRAY_OF_NUM(j, mc_losses_this_month);
     LOAD_ARRAY_OF_NUM(j, mc_history);
+    LOAD_BOOL(j, art_planet_constructed);
     LOAD_NUM(j, perk_starts_with_inf);
     LOAD_NUM(j, perk_starts_with_gli);
     LOAD_NUM(j, perk_starts_with_art);

@@ -533,6 +533,8 @@ class Player : public Saveable {
         static const char* get_officer_character_name(Officer, OfficerQuality);
         static const char* get_officer_character_title_and_name(Officer, OfficerQuality);
 
+        bool art_planet_constructed;
+
         // AI character perks
         int perk_starts_with_inf;
         int perk_starts_with_gli;
