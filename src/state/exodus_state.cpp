@@ -1438,7 +1438,14 @@ void ExodusState::gift_planet_to(int player_idx) {
     }
 
     L.debug("Gifting planet to %s", p->get_name());
-    // TODO
+    Planet *pl = select_planet_for_cpu();
+
+    if (!pl) {
+        L.debug("Unable to find planet to gift to %s", p->get_name());
+    }
+
+    pl->set_owner(player_idx, POCR_Gift);
+    pl->prepare_for_cpu_lord();
 }
 
 void ExodusState::planet_gift_event() {

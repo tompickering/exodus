@@ -170,6 +170,7 @@ enum PlanetOwnerChangedReason {
     POCR_Seized,
     POCR_Starved,
     POCR_RebelAppointed,
+    POCR_Gift,
 };
 
 struct PlanetOwnerChangedEvent : public Saveable {
