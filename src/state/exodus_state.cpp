@@ -409,6 +409,17 @@ void ExodusState::init_cpu_lords() {
 
     if (get_enemy_start() == ENEMY_Strong) {
         planet_gift_event();
+
+        for (int i = 0; i < N_PLAYERS; ++i) {
+            int m = players[i].perk_art_planet_at_month;
+            if (m > 0) {
+                Planet *art_planet = gift_art_planet_to(i);
+                if (art_planet) {
+                    art_planet->finalise_construction();
+                    players[i].perk_art_planet_at_month = -1;
+                }
+            }
+        }
     }
 }
 
@@ -1451,29 +1462,31 @@ void ExodusState::register_species_hostility(Player *player, int hostile_to) {
     }
 }
 
-void ExodusState::gift_planet_to(int player_idx) {
+Planet* ExodusState::gift_planet_to(int player_idx) {
     Player *p = get_player(player_idx);
 
     if (!(p && p->is_participating())) {
-        return;
+        return nullptr;
     }
 
     L.debug("Gifting planet to %s", p->get_name());
     Planet *pl = select_planet_for_cpu(true);
 
-    if (!pl) {
+    if (pl) {
+        pl->set_owner(player_idx, POCR_Gift);
+        pl->prepare_for_cpu_lord();
+    } else {
         L.debug("Unable to find planet to gift to %s", p->get_name());
     }
 
-    pl->set_owner(player_idx, POCR_Gift);
-    pl->prepare_for_cpu_lord();
+    return pl;
 }
 
-void ExodusState::gift_art_planet_to(int player_idx) {
+Planet* ExodusState::gift_art_planet_to(int player_idx) {
     Player *p = get_player(player_idx);
 
     if (!(p && p->is_participating())) {
-        return;
+        return nullptr;
     }
 
     L.debug("Gifting artificial planet to %s", p->get_name());
@@ -1502,6 +1515,8 @@ void ExodusState::gift_art_planet_to(int player_idx) {
     } else {
         L.debug("Could not gift artificial planet to %s", p->get_name());
     }
+
+    return art_planet;
 }
 
 void ExodusState::planet_gift_event() {
