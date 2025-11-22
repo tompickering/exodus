@@ -829,12 +829,6 @@ void CommPanelDrawer::comm_init(CommSend input) {
         comm_other = exostate().get_player(comm_planet->get_owner());
     }
 
-    if (comm_other) {
-        int idx_player = exostate().get_player_idx(comm_player);
-        int idx_other = exostate().get_player_idx(comm_other);
-        exostate().register_lord_discovery(idx_player, idx_other);
-    }
-
     switch (input) {
         case DIA_S_IntroComm:
             comm_set_img(CI_Human);
@@ -1133,6 +1127,12 @@ void CommPanelDrawer::comm_init(CommSend input) {
             break;
         default:
             L.warn("Unhandled comm input on init: %d", (int)input);
+    }
+
+    if (comm_other && !comm_is_counsellor) {
+        int idx_player = exostate().get_player_idx(comm_player);
+        int idx_other = exostate().get_player_idx(comm_other);
+        exostate().register_lord_discovery(idx_player, idx_other);
     }
 
     comm_planet_name_confirm_time = -1;
