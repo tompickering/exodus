@@ -46,7 +46,7 @@ const char* PLANET_NAMES_ICE[] = {
 };
 
 const char* PLANET_NAMES_TERRA[] = {
-    "Rainbow", "Alderan", "New Terra", "Dream", "Rain",
+    "Rainbow", "Titan", "New Terra", "Dream", "Rain",
     "Neverland", "New Earth", "Home", "Camelot", "Olympia",
     "Victoria", "Ra", "Vision", "Junction", "Eternity",
     "Atlantis", "Odyssey", "Treasure", "Pleasure", "Metropolis",
