@@ -1390,6 +1390,8 @@ void ExodusState::register_species_hostility(Player *player, int hostile_to) {
         return;
     }
 
+    int player_idx = get_player_idx(player);
+
     Race race = player->get_race();
 
     for (int i = 0; i < N_PLAYERS; ++i) {
@@ -1404,6 +1406,7 @@ void ExodusState::register_species_hostility(Player *player, int hostile_to) {
         }
 
         if ((p->get_race() == race) && p->perk_species_hostility_link) {
+            unset_alliances(player_idx, i);
             p->set_hostile_to(hostile_to);
         }
     }
