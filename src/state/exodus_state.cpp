@@ -389,6 +389,10 @@ void ExodusState::init_cpu_lords() {
         players[i].get_location().set(get_random_star_idx());
         players[i].get_location().unset_target();
     }
+
+    if (get_enemy_start() == ENEMY_Strong) {
+        planet_gift_event();
+    }
 }
 
 void ExodusState::generate_galaxy() {
