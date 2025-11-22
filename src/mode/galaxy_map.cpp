@@ -2851,6 +2851,16 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         if (owner->get_reputation() <= 0) {
                             continue;
                         }
+                        if (player->perk_species_alliance_link) {
+                            if (!exostate().is_allied_with_race(owner_idx, player->get_race())) {
+                                continue;
+                            }
+                        }
+                        if (player->perk_high_alliance_standards) {
+                            if (!(owner->is_guild_member() || owner->get_reputation() >= 6)) {
+                                continue;
+                            }
+                        }
                         mp_state.mpai_substage = 1;
                         // When we resume, we'll want to start with the next planet
                         mp_state.mpai_planet_idx++;
