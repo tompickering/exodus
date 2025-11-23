@@ -138,8 +138,6 @@ void GalaxyMap::enter() {
     draw_manager.show_cursor(true);
 }
 
-const float FADE_SPEED = 10.f;
-
 ExodusMode GalaxyMap::update(float delta) {
     int draw_x, draw_y;
     FlyTarget *ft;

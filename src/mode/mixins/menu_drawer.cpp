@@ -27,8 +27,6 @@ const int MENU_FLAG_BG_X = (RES_X / 2) - 48 - MENU_BORDER;
 const int MENU_FLAG_BG_Y = MENU_Y - 2 - 56 - MENU_BORDER*2;
 const int MENU_FLAG_BG_W = 96 + MENU_BORDER*2;
 const int MENU_FLAG_BG_H = 56 + MENU_BORDER*2;
-const int MENU_BG_X = MENU_X + MENU_BORDER;
-const int MENU_BG_Y = MENU_Y + MENU_BORDER;
 
 const int MARKER_ENTRY_W = 120;
 const int MARKER_ENTRY_H = 20;
