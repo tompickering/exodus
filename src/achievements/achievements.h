@@ -68,7 +68,7 @@ enum Achievement : uint8_t {
     ACH_MAX
 };
 
-static_assert(ACH_MAX <= 64);
+static_assert(ACH_MAX <= 64, "Cannot currently support 64+ achievements (uint64_t bitmask)");
 
 extern const char* ACHIEVEMENT_IDS[];
 

@@ -277,7 +277,7 @@ enum OfficerQuality {
 };
 
 #define OFFICERS_TOTAL 15
-static_assert(OFFICERS_TOTAL == (OFFICER_MAX*OFFQ_MAX));
+static_assert(OFFICERS_TOTAL == (OFFICER_MAX*OFFQ_MAX), "OFFICERS_TOTAL is not set correctly");
 
 enum Infraction : uint8_t {
     INF_TradePlu,

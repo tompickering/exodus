@@ -52,6 +52,6 @@ enum MCReason {
     MC_MAX,
 };
 
-static_assert(MC_MAX <= MAX_MC_CATEGORIES);
+static_assert(MC_MAX <= MAX_MC_CATEGORIES, "MAX_MC_CATEGORIES needs to be greater");
 
 #endif
