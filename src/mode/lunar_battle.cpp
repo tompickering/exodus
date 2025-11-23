@@ -3366,7 +3366,7 @@ Direction LunarBattle::ai_decide_move_direction2() {
         }
     }
 
-    if (abs(dx > 0)) {
+    if (abs(dx) > 0) {
         int nx = u.x + ((dx > 0) ? 1 : -1);
         if (ai_can_move_to(&u, nx, u.y)) {
             return (dx > 0) ? DIR_Right : DIR_Left;
