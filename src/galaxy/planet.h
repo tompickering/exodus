@@ -238,6 +238,7 @@ class Planet : public Saveable {
         bool has_spaceport();
         const char* get_name();      // Orig: SIn
         void set_name(const char*);
+        void set_unique_name_if_unnamed();
         bool is_named();
         const char* get_name_suggestion();
         const char* get_art_name_suggestion();

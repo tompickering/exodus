@@ -3641,38 +3641,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         p->set_owner(player_idx, POCR_Settled);
                         p->reset_unrest();
                         p->prepare_for_cpu_lord();
-                        if (!p->is_named()) {
-                            // Try to ensure unique name here. Orig suffixes ' 2', ' 3' etc
-
-                            bool named = false;
-                            const char* name = "";
-
-                            for (int i = 0; i < 20; ++i) {
-                                name = p->get_name_suggestion();
-
-                                if (!exostate().planet_name_taken(name)) {
-                                    p->set_name(name);
-                                    named = true;
-                                    break;
-                                }
-
-                                if (i > 10) {
-                                    char name2[PLANET_MAX_NAME];
-                                    snprintf(name2, sizeof(name2), "%s2", name);
-
-                                    if (!exostate().planet_name_taken(name2)) {
-                                        p->set_name(name2);
-                                        named = true;
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if (!named) {
-                                // Whatever
-                                p->set_name(p->get_name_suggestion());
-                            }
-                        }
+                        p->set_unique_name_if_unnamed();
                         int cap = p->get_resource_cap();
                         int p_inf, p_gli, p_art;
                         p->get_army(p_inf, p_gli, p_art);

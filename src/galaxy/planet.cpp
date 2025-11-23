@@ -237,6 +237,39 @@ void Planet::set_name(const char* _name) {
     strncpy(name, _name, PLANET_MAX_NAME);
 }
 
+void Planet::set_unique_name_if_unnamed() {
+    // Try to ensure unique name here. Orig suffixes ' 2', ' 3' etc
+
+    bool _named = false;
+    const char* _name = "";
+
+    for (int i = 0; i < 20; ++i) {
+        _name = get_name_suggestion();
+
+        if (!exostate().planet_name_taken(_name)) {
+            set_name(_name);
+            _named = true;
+            break;
+        }
+
+        if (i > 10) {
+            char _name2[PLANET_MAX_NAME];
+            snprintf(_name2, sizeof(_name2), "%s2", _name);
+
+            if (!exostate().planet_name_taken(_name2)) {
+                set_name(_name2);
+                _named = true;
+                break;
+            }
+        }
+    }
+
+    if (!_named) {
+        // Whatever
+        set_name(get_name_suggestion());
+    }
+}
+
 bool Planet::is_named() {
     return strnlen(name, 1) > 0;
 }
