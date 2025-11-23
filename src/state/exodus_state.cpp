@@ -95,7 +95,15 @@ void ExodusState::init(GameConfig config) {
 
         players[i].starship.reset();
         players[i].starship.crew = 5;
-        // SUGGEST: Perhaps we could start players with one bionic probe?
+
+        if (ENHANCED()) {
+            if (config.enemy_start == ENEMY_Medium) {
+                players[i].starship.bionic_probes = 2;
+            }
+            if (config.enemy_start == ENEMY_Strong) {
+                players[i].starship.bionic_probes = 5;
+            }
+        }
 
         players[i].fleet.scouts = 0;
         players[i].fleet.transporters = 0;
