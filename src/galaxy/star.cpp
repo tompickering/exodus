@@ -73,6 +73,11 @@ Planet* Star::construct_artificial_world(int player_idx, const char* name) {
         outer->set_name(name);
     } else {
         const char* name = "Genesis";
+
+        if (FEATURE(EF_IMPROVED_PLANET_NAMING)) {
+            name = outer->get_art_name_suggestion();
+        }
+
         if (!exostate().planet_name_taken(name)) {
             outer->set_name(name);
         } else {

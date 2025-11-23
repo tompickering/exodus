@@ -283,8 +283,15 @@ bool Planet::is_named() {
 
 const char* Planet::get_name_suggestion() {
     PlanetClass cls = get_class();
-    if (cls == Artificial)
-        return "Genesis";
+
+    if (cls == Artificial) {
+        if (FEATURE(EF_IMPROVED_PLANET_NAMING)) {
+            return get_art_name_suggestion();
+        } else {
+            return "Genesis";
+        }
+    }
+
     return get_names_for_class(cls)[rand() % N_PLANET_NAMES];
 }
 
