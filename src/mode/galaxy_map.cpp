@@ -5114,7 +5114,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             }
 
             int spent_on_science = income_net - income_orig;
-            !owner->attempt_spend_force(spent_on_science, MC_ScienceFunding);
+            owner->attempt_spend_force(spent_on_science, MC_ScienceFunding);
         }
         next_mpp_stage();
     }
