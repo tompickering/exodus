@@ -1329,7 +1329,7 @@ void GalaxyMap::month_pass_end() {
     }
 
     // Reset to the first active player
-    bool reset;
+    bool reset = false;
     for (int i = 0; i < N_PLAYERS; ++i) {
         p = exostate().set_active_player(i);
         if (p && p->is_participating() && p->is_human()) {
