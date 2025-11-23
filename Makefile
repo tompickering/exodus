@@ -29,6 +29,9 @@ LDLIBS=-lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
 CXXFLAGS=-Wall -Wno-reorder -Wno-class-memaccess -Wno-format-truncation -pedantic -DMONO -DSDL $(INCFLAGS)
 DBGFLAGS=-g -DDBG
 
+#CXX=clang++
+#CXXFLAGS=-Wall -Wno-reorder -Wno-class-memaccess -Wno-format-truncation -Wno-format-security -Wno-unknown-warning-option -pedantic -DMONO -DSDL $(INCFLAGS)
+
 PREFIX = /usr/local
 
 %.d: %.cpp
