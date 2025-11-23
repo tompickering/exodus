@@ -50,8 +50,8 @@ const char* PLANET_NAMES_TERRA[] = {
     "Neverland", "New Earth", "Home", "Camelot", "Olympia",
     "Victoria", "Ra", "Vision", "Junction", "Eternity",
     "Atlantis", "Odyssey", "Treasure", "Pleasure", "Metropolis",
-    "Isis", "Manticore", "Colony", "Pacifica", "Excalibur",
-    "Apollo", "Colony", "Destiny", "Eureka", "Misery"
+    "Isis", "Manticore", "Okavango", "Pacifica", "Excalibur",
+    "Apollo", "Horizon", "Destiny", "Eureka", "Misery"
 };
 
 // Not in orig
