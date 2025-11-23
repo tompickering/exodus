@@ -41,7 +41,6 @@ class StarIterator : public Iterator {
         int get_idx();
         Star* operator->() { return get(); }
     private:
-        int n_stars;
         Star* s;
 };
 

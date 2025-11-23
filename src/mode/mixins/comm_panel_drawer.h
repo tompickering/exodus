@@ -321,8 +321,6 @@ class CommPanelDrawer {
         SprID id_comm_input_frame;
         SprID id_comm_input_box;
 
-        CommAction comm_action;
-
         int comm_text_slots;
         int comm_text_y(int);
 
