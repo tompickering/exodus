@@ -66,7 +66,7 @@ struct DrawTransform {
 
 };
 
-typedef struct DrawArea {
+struct DrawArea {
     int x;
     int y;
     int w;
@@ -78,7 +78,7 @@ typedef struct DrawArea {
         if (y > o.y+o.h) return false;
         return true;
     }
-} DrawArea;
+};
 
 enum DrawType {
     DRAWTYPE_Unknown,
