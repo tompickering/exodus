@@ -86,7 +86,7 @@ void ExodusState::init(GameConfig config) {
     int i;
 
     for (i = 0; i < n_human_players; ++i) {
-        memcpy(&players[i], &config.players[i], sizeof(Player));
+        memcpy((void*)(&players[i]), (void*)(&config.players[i]), sizeof(Player));
     }
 
     // PLAYER INIT: Everyone (overridable)
