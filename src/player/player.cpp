@@ -1389,11 +1389,11 @@ const char* Player::get_officer_title_and_name(Officer officer) {
 }
 
 const char* Player::get_officer_character_desc(Officer o) {
-    if ((o == OFF_Science))    return O_SC;
-    if ((o == OFF_Fleet))      return O_FL;
-    if ((o == OFF_Battle))     return O_BA;
-    if ((o == OFF_Secret))     return O_SS;
-    if ((o == OFF_Counsellor)) return O_CO;
+    if (o == OFF_Science)    return O_SC;
+    if (o == OFF_Fleet)      return O_FL;
+    if (o == OFF_Battle)     return O_BA;
+    if (o == OFF_Secret)     return O_SS;
+    if (o == OFF_Counsellor) return O_CO;
     L.error("Unknown officer");
     return "<NONE>";
 }
