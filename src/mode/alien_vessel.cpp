@@ -481,8 +481,20 @@ void AlienVessel::set_comm_text() {
             comm_text[3] = "So prepare for a little fight!";
             break;
         case VESSEL_GuildPatrol:
-            comm_text[0] = "This is a Space Guild Patrol Flight.";
-            comm_text[1] = "Have a nice day, space fleet.";
+            {
+                Player *player = exostate().get_active_player();
+
+                if (FEATURE(EF_GUILD_PATROL_REPRIMAND)
+                 && player && player->committed_any_infractions()) {
+                    comm_text[0] = "This is a Space Guild Patrol Flight.";
+                    comm_text[1] = "You are in violation of Space Guild";
+                    comm_text[2] = "law. Please report to the infobot";
+                    comm_text[3] = "in the Guild Headquarters.";
+                } else {
+                    comm_text[0] = "This is a Space Guild Patrol Flight.";
+                    comm_text[1] = "Have a nice day, space fleet.";
+                }
+            }
             break;
         case VESSEL_Trading:
             // SUGGEST: Use player reference
