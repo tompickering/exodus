@@ -30,7 +30,7 @@ enum BattleOdds {
     ODDS_VGood
 };
 
-typedef struct {
+struct LunarBattleParams {
     AggressorType aggressor_type;
     int aggressor_idx;
     BattleOdds aggressor_odds;
@@ -52,9 +52,9 @@ typedef struct {
     int defender_mines;
     OfficerQuality aggressor_officer;
     OfficerQuality defender_officer;
-} LunarBattleParams;
+};
 
-typedef struct {
+struct UnitCount {
     int inf;
     int gli;
     int art;
@@ -71,9 +71,9 @@ typedef struct {
     int total_weighted() {
         return inf+2*gli+3*art+4*base;
     }
-} UnitCount;
+};
 
-typedef struct {
+struct LunarBattleReport {
     int defender_idx;
     AggressorType agg_type;
     // FIXME: These two would be better as a BattleResolution enum, since retreated => !won
@@ -103,21 +103,21 @@ typedef struct {
         def_surf.clear();
         agg_one_inf_stack = false;
     }
-} LunarBattleReport;
+};
 
-typedef struct {
+struct SpaceBattleParams {
     bool enemy_hostile;
     int enemy_ships;
     int enemy_cargo;
     int enemy_scouts;
-} SpaceBattleParams;
+};
 
 enum DestructionType {
     DESTROY_NStones,
     DESTROY_NRandom,
 };
 
-typedef struct {
+struct PlanetDestruction {
     DestructionType type;
     StoneSet tgt_stones;
     int n_strikes;
@@ -135,17 +135,17 @@ typedef struct {
     int real_destroyer_idx;
     bool terror;
     bool nuke;
-} PlanetDestruction;
+};
 
-typedef struct {
+struct Research {
     bool done;
     int cost;
-} Research;
+};
 
-typedef struct {
+struct FlyPlan {
     int loc;
     int months;
-} FlyPlan;
+};
 
 enum PostPlanetAction : uint8_t {
     PPA_BadLaws,

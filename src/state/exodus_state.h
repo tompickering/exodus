@@ -52,21 +52,21 @@ enum EnemyStart {
     ENEMY_Strong,
 };
 
-typedef struct {
+struct GameConfig {
     GalaxySize size;
     int n_players;
     Player players[MAX_HUMAN_PLAYERS];
     Aim aim;
     EnemyStart enemy_start;
-} GameConfig;
+};
 
-typedef struct {
+struct PlanetInfo {
     Planet* planet;
     Star* star;
     int planet_idx;
     int star_idx;
     int index;
-} PlanetInfo;
+};
 
 enum AllianceType : uint8_t {
     ALLY_Trade,

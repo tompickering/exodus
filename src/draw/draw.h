@@ -42,21 +42,21 @@ using std::vector;
  * Passing nullptr with the ID will terminate this behaviour.
  */
 
-typedef struct {
+struct DrawManagerOptions {
     bool fullscreen = true;
-} DrawManagerOptions;
+};
 
 typedef unsigned int SprID;
 
 extern const SprID ID_NONE;
 
-typedef struct {
+struct RGB {
     unsigned char r;
     unsigned char g;
     unsigned char b;
-} RGB;
+};
 
-typedef struct {
+struct DrawTransform {
     int x;
     int y;
     float anchor_x;
@@ -64,7 +64,7 @@ typedef struct {
     float scale_x;
     float scale_y;
 
-} DrawTransform;
+};
 
 typedef struct DrawArea {
     int x;
@@ -88,7 +88,7 @@ enum DrawType {
     DRAWTYPE_Pattern,
 };
 
-typedef struct {
+struct DrawnSprite {
     SprID id;
     DrawArea area;
     /*
@@ -102,13 +102,13 @@ typedef struct {
     DrawType type;
     const char *sprite;
     RGB colour;
-} DrawnSprite;
+};
 
-typedef struct {
+struct SpriteClick {
     SprID id;
     float x;
     float y;
-} SpriteClick;
+};
 
 /*
  * A 'button' can be a subregion of a larger sprite.
@@ -118,14 +118,14 @@ typedef struct {
  * which of the potentially multiple specific button areas
  * within the sprite we are tracking.
  */
-typedef struct {
+struct ButtonPress {
     SprID id;
     float x;
     float y;
     float t;
     DrawArea area;
     bool drawn;
-} ButtonPress;
+};
 
 enum Font {
     Default,

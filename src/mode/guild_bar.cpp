@@ -26,10 +26,10 @@ static const int SHERIFF_Y = 104;
 static const int SHERIFF_W = 410;
 static const int SHERIFF_H = 342;
 
-typedef struct {
+struct Rumour {
     char line0[RUMOUR_LINE_MAX];
     char line1[RUMOUR_LINE_MAX];
-} Rumour;
+};
 
 Rumour rumours[5];
 

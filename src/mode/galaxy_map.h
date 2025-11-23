@@ -126,7 +126,7 @@ enum MonthPassPlanetStage {
     MPP_End,
 };
 
-typedef struct {
+struct MPState {
     MonthPassStage mp_stage;
     MonthPassAIStage mpai_stage;
     MonthPassPlanetStage mpp_stage;
@@ -146,7 +146,7 @@ typedef struct {
     int mpai_bombings_max;
     int mpai_bombings_remain;
     int mpai_original_bombers;
-} MPState;
+};
 
 enum MissionState : uint8_t {
     MS_None,

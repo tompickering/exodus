@@ -126,7 +126,7 @@ enum MoonClass {
     MOON_Grass,
 };
 
-typedef struct {
+struct PlanetSpriteSet {
     const char *panel_icon;
     const char *landscape;
     const char *map_bg;
@@ -136,15 +136,15 @@ typedef struct {
     const char *spaceport;
     const char *spaceport2;
     const char *marker;
-} PlanetSpriteSet;
+};
 
-typedef struct {
+struct MoonSpriteSet {
     const char *bg;
     const char *cover0;
     const char *cover1;
-} MoonSpriteSet;
+};
 
-typedef struct {
+struct ProductionReport {
     bool no_money;
     bool no_space;
     bool no_plu;
@@ -152,7 +152,7 @@ typedef struct {
     int gli;
     int art;
     int not_produced;
-} ProductionReport;
+};
 
 struct TradeReport {
     TradeReport(): mi(0), fd(0), pl(0), mc(0) {}

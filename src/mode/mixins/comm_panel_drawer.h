@@ -222,7 +222,7 @@ enum CommRecv {
     DIA_R_B_CPU_RebelsAcceptOffer,
 };
 
-typedef struct {
+struct CommContext {
     int mc;
     int mc2;
     AllianceType alliance_type;
@@ -234,7 +234,7 @@ typedef struct {
     int battle_strength_att;
     int battle_strength_def;
     BattleOdds att_odds;
-} CommContext;
+};
 
 class CommPanelDrawer {
     public:

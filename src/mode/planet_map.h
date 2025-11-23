@@ -42,11 +42,11 @@ enum ExplodeState {
     EXP_Done,
 };
 
-typedef struct {
+struct ChainedExplosion {
     int x;
     int y;
     bool radiation;
-} ChainedExplosion;
+};
 
 class PlanetMap : ModeBase, CommPanelDrawer {
     public:
