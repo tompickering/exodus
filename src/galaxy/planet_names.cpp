@@ -58,5 +58,6 @@ const char* PLANET_NAMES_TERRA[] = {
 const char* PLANET_NAMES_ART[] = {
     "Tron", "Transistor", "Arc", "Ark", "Omen",
     "Despair", "Gateway", "Oddball", "Irondawn", "Volta",
-    "X", "Z", "Eon", "Legion", "Matrix"
+    "X", "Z", "Eon", "Legion", "Matrix",
+    "Icarus", "Corsair", "Atlas", "Copernicus", "Apollo", "Artemis"
 };
