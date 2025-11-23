@@ -1542,7 +1542,7 @@ Planet* ExodusState::gift_art_planet_to(int player_idx) {
 
     if (art_planet) {
         while (art_planet->advance_construction_phase()) {}
-        L.debug("Gifted artificial planet %s to %s at %s", art_planet, p->get_name(), s->name);
+        L.debug("Gifted artificial planet %s to %s at %s", art_planet->get_name(), p->get_name(), s->name);
     } else {
         L.debug("Could not gift artificial planet to %s", p->get_name());
     }
