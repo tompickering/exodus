@@ -238,6 +238,10 @@ void Planet::set_name(const char* _name) {
 }
 
 void Planet::set_unique_name_if_unnamed() {
+    if (is_named()) {
+        return;
+    }
+
     // Try to ensure unique name here. Orig suffixes ' 2', ' 3' etc
 
     const char* _name = "";
