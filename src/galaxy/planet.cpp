@@ -242,6 +242,18 @@ void Planet::set_unique_name_if_unnamed() {
 
     const char* _name = "";
 
+    // Try a bit harder to find a good name before numbering
+    if (FEATURE(EF_IMPROVED_PLANET_NAMING)) {
+        for (int i = 0; i < 20; ++i) {
+            _name = get_name_suggestion();
+
+            if (!exostate().planet_name_taken(_name)) {
+                set_name(_name);
+                return;
+            }
+        }
+    }
+
     for (int i = 0; i < 20; ++i) {
         _name = get_name_suggestion();
 
