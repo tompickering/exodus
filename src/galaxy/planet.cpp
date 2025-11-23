@@ -1407,6 +1407,8 @@ void Planet::prepare_for_cpu_lord() {
                 break;
         }
     }
+
+    set_unique_name_if_unnamed();
 }
 
 void Planet::reset_unrest() {

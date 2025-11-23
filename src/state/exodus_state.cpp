@@ -422,8 +422,6 @@ void ExodusState::init_cpu_lords() {
             players[i].mc = 0;
         }
 
-        chosen_planet->set_name(chosen_planet->get_name_suggestion());
-
         // PROCstart_the_lords sets 'firstplanet' here - we refer to owns_a_planet()
 
         players[i].get_location().set(get_random_star_idx());
@@ -1502,8 +1500,6 @@ Planet* ExodusState::gift_planet_to(int player_idx) {
     if (pl) {
         pl->set_owner(player_idx, POCR_Gift);
         pl->prepare_for_cpu_lord();
-        pl->set_name(pl->get_name_suggestion());
-
         L.debug("Gifted planet %s to %s", pl->get_name(), p->get_name());
     } else {
         L.debug("Unable to find planet to gift to %s", p->get_name());

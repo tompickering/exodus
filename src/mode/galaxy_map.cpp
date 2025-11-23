@@ -3641,7 +3641,6 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                         p->set_owner(player_idx, POCR_Settled);
                         p->reset_unrest();
                         p->prepare_for_cpu_lord();
-                        p->set_unique_name_if_unnamed();
                         int cap = p->get_resource_cap();
                         int p_inf, p_gli, p_art;
                         p->get_army(p_inf, p_gli, p_art);
