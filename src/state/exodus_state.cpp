@@ -123,6 +123,21 @@ void ExodusState::init(GameConfig config) {
         players[i].left_galaxy = false;
     }
 
+    int mc_weak = 300;
+    int mc_medium = 200;
+    int mc_strong = 50;
+
+    if (ENHANCED()) {
+        /*
+         * In Classic mode, the difficulty comes mainly from starting MC.
+         * In Enhanced mode, other factors increase difficulty, so we're
+         * a little kinder on the MC side.
+         */
+        mc_weak = 300;
+        mc_medium = 250;
+        mc_strong = 100;
+    }
+
     // PLAYER INIT: Human
     for (i = 0; i < n_human_players; ++i) {
         players[i].init_character(CHAR_Human);
@@ -137,19 +152,19 @@ void ExodusState::init(GameConfig config) {
         }
 
         if (config.enemy_start == ENEMY_Weak) {
-            players[i].mc = 300;
+            players[i].mc = mc_weak;
             players[i].fleet.transporters = 50;
             players[i].fleet.warships = 5;
         }
 
         if (config.enemy_start == ENEMY_Medium) {
-            players[i].mc = 200;
+            players[i].mc = mc_medium;
             players[i].fleet.transporters = 35;
             players[i].fleet.warships = 5;
         }
 
         if (config.enemy_start == ENEMY_Strong) {
-            players[i].mc = 50;
+            players[i].mc = mc_strong;
             players[i].fleet.transporters = 20;
             players[i].fleet.freight.minerals = 20;
         }
