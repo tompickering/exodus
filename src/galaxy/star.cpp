@@ -75,7 +75,13 @@ Planet* Star::construct_artificial_world(int player_idx, const char* name) {
         const char* name = "Genesis";
 
         if (FEATURE(EF_IMPROVED_PLANET_NAMING)) {
-            name = outer->get_art_name_suggestion();
+            Player *owner = exostate().get_player(player_idx);
+
+            if (owner->get_race() == RACE_Urkash) {
+                name = "Colony 100";
+            } else {
+                name = outer->get_art_name_suggestion();
+            }
         }
 
         if (!exostate().planet_name_taken(name)) {
