@@ -202,6 +202,8 @@ class ExodusState : public Saveable {
         bool first_city_done;
         bool first_spaceport_done;
 
+        const char* get_next_planet_name_for_race(Race);
+
     private:
         int _get_n_owned_planets(bool);
         uint8_t get_alliances(int, int);
@@ -231,6 +233,8 @@ class ExodusState : public Saveable {
 
         int recommended_planet_star_idx;
         int recommended_planet_idx;
+
+        int race_name_counters[N_RACES];
 
     friend class ExodusDebug;
 };

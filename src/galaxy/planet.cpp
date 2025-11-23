@@ -1283,6 +1283,8 @@ void Planet::prepare_for_cpu_lord() {
     Stone s = STONE_Clear;
     int blocks = get_size_blocks();
 
+    Player *owner = exostate().get_player(get_owner());
+
     if (no_station) {
         // Place a HQ randomly
         while (true) {
@@ -1378,8 +1380,6 @@ void Planet::prepare_for_cpu_lord() {
 
         /* Character perks */
 
-        Player *owner = exostate().get_player(get_owner());
-
         adjust_army(owner->perk_starts_with_inf,
                     owner->perk_starts_with_gli,
                     owner->perk_starts_with_art);
@@ -1416,6 +1416,13 @@ void Planet::prepare_for_cpu_lord() {
 
             if (rand() % 30 == 0)
                 break;
+        }
+    }
+
+    if (FEATURE(EF_IMPROVED_PLANET_NAMING)) {
+        const char* race_name = exostate().get_next_planet_name_for_race(owner->get_race());
+        if (race_name) {
+            set_name(race_name);
         }
     }
 

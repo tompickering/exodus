@@ -71,6 +71,10 @@ ExodusState::ExodusState() {
     active_flytarget_is_guild = true;
     first_city_done = false;
     first_spaceport_done = false;
+
+    for (int i = 0; i < N_RACES; ++i) {
+        race_name_counters[i] = 0;
+    }
 }
 
 void ExodusState::init(GameConfig config) {
@@ -84,6 +88,10 @@ void ExodusState::init(GameConfig config) {
     first_city_done = false;
     first_spaceport_done = false;
     int i;
+
+    for (i = 0; i < N_RACES; ++i) {
+        race_name_counters[i] = 0;
+    }
 
     for (i = 0; i < n_human_players; ++i) {
         memcpy((void*)(&players[i]), (void*)(&config.players[i]), sizeof(Player));
@@ -1695,6 +1703,41 @@ void ExodusState::run_planet_gift_events() {
     }
 }
 
+static const char* PLANET_NAMES_YOK[] = {
+    "Y-Aru", "Y-Bre", "Y-Cro", "Y-Dra", "Y-Eri", "Y-Fen", "Y-Gis", "Y-Hla",
+    "Y-Isk", "Y-Juy", "Y-Kan", "Y-Lor", "Y-Mun", "Y-Nas", "Y-Oro", "Y-Pry",
+    "Y-Qam", "Y-Rrr", "Y-Sto", "Y-Tri", "Y-Unn", "Y-Vos", "Y-Wac", "Y-Xun",
+    "Y-Yii", "Y-Zar"
+};
+
+static int N_PLANET_NAMES_YOK = 26;
+
+static const char* PLANET_NAMES_URK[] = {
+    "Colony 71", "Colony 13", "Colony 44", "Colony 42",
+    "Colony 94", "Colony 23", "Colony 84", "Colony 56",
+    "Colony 21", "Colony 18", "Colony 26", "Colony 39",
+    "Colony 48", "Colony 51", "Colony 67", "Colony 77",
+    "Colony 81", "Colony 98", "Colony 17", "Colony 24",
+    "Colony 32", "Colony 45", "Colony 57", "Colony 66",
+    "Colony 72", "Colony 83"
+};
+
+static int N_PLANET_NAMES_URK = 26;
+
+const char* ExodusState::get_next_planet_name_for_race(Race race) {
+    int& ctr = race_name_counters[(int)race];
+
+    if (race == RACE_Yokon && ctr < N_PLANET_NAMES_YOK) {
+        return PLANET_NAMES_YOK[ctr++];
+    }
+
+    if (race == RACE_Urkash && ctr < N_PLANET_NAMES_URK) {
+        return PLANET_NAMES_URK[ctr++];
+    }
+
+    return nullptr;
+}
+
 /*
  * These two functions are the *only* places outside init
  * alliance_matrix is read or written.
@@ -1783,6 +1826,7 @@ void ExodusState::save(cJSON* j) const {
     SAVE_ARRAY_OF_NUM(j, bombing_preventions);
     SAVE_NUM(j, recommended_planet_star_idx);
     SAVE_NUM(j, recommended_planet_idx);
+    SAVE_ARRAY_OF_NUM(j, race_name_counters);
 }
 
 void ExodusState::load(cJSON* j) {
@@ -1811,4 +1855,5 @@ void ExodusState::load(cJSON* j) {
     LOAD_ARRAY_OF_NUM(j, bombing_preventions);
     LOAD_NUM(j, recommended_planet_star_idx);
     LOAD_NUM(j, recommended_planet_idx);
+    LOAD_ARRAY_OF_NUM(j, race_name_counters);
 }
