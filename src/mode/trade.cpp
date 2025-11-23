@@ -92,7 +92,7 @@ void Trade::enter() {
 
     const Fleet fleet = p0->get_fleet();
     const Freight &freight = fleet.freight;
-    memcpy(&freight_initial, &freight, sizeof(Freight));
+    memcpy((void*)(&freight_initial), (void*)(&freight), sizeof(Freight));
 
     active_row = 0;
     sell = false;

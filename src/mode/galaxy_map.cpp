@@ -1630,7 +1630,7 @@ ExodusMode GalaxyMap::month_pass_update() {
                 L.info("Moving planet %s: %s -> %s", p->get_name(), current->name, tgt->name);
 
                 // 'Move' planet to new star
-                memcpy(tgt_slot, p, sizeof(Planet));
+                memcpy((void*)tgt_slot, (void*)p, sizeof(Planet));
                 // And wipe the original
                 new (p) Planet();
 
