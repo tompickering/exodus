@@ -1214,6 +1214,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             if (comm_player->get_starship().bionic_probes > 0) {
                 comm_prepare(6);
                 comm_set_text(0, "Shall we launch a bionic probe?");
+                comm_set_text(2, "(Probes on starship: %d)", comm_player->get_starship().bionic_probes);
                 comm_show_buttons(true);
                 comm_recv(DIA_R_SettleQueryProbe);
                 break;
