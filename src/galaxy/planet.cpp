@@ -240,7 +240,6 @@ void Planet::set_name(const char* _name) {
 void Planet::set_unique_name_if_unnamed() {
     // Try to ensure unique name here. Orig suffixes ' 2', ' 3' etc
 
-    bool _named = false;
     const char* _name = "";
 
     for (int i = 0; i < 20; ++i) {
@@ -248,8 +247,7 @@ void Planet::set_unique_name_if_unnamed() {
 
         if (!exostate().planet_name_taken(_name)) {
             set_name(_name);
-            _named = true;
-            break;
+            return;
         }
 
         if (i > 10) {
@@ -258,16 +256,13 @@ void Planet::set_unique_name_if_unnamed() {
 
             if (!exostate().planet_name_taken(_name2)) {
                 set_name(_name2);
-                _named = true;
-                break;
+                return;
             }
         }
     }
 
-    if (!_named) {
-        // Whatever
-        set_name(get_name_suggestion());
-    }
+    // Whatever
+    set_name(get_name_suggestion());
 }
 
 bool Planet::is_named() {
