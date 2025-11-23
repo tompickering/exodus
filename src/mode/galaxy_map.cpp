@@ -3527,11 +3527,12 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                             p->get_army(p_inf, p_gli, p_art);
                             int p_army_size = p_inf + p_gli + 2*p_art;
 
-                            /*
-                             * FIXME: Lunar bases are ignored in the planet's army size,
-                             * but it seems like they should factor in heavily!
-                             * OTOH maybe this would interfere with strong_star/strong_planet
-                             */
+                            if (FEATURE(EF_CPU_CONSIDER_LUNAR_BASE)) {
+                                if (p->has_lunar_base()) {
+                                    p_army_size += player->lunar_base_weight();
+                                }
+                            }
+
                             if (3*p_army_size >= 2*army_size) {
                                 continue;
                             }
@@ -3684,9 +3685,15 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                 if (mp_state.mpai_substage == 0) {
                     mp_state.mpai_substage_player_idx = 0;
                     if (p && p->exists() && p->is_owned() && p->get_owner() != player_idx) {
-                        // FIXME: Factor in lunar base here?
                         int p_army = p->get_army_size();
                         int army = player->get_fleet().freight.army_size();
+
+                        if (FEATURE(EF_CPU_CONSIDER_LUNAR_BASE)) {
+                            if (p->has_lunar_base()) {
+                                p_army += player->lunar_base_weight();
+                            }
+                        }
+
                         if (p_army > army) {
                             // FIXME: I think this is pointless - orig sets back to 0 afterwards anyway
                             player->set_tactic(1);

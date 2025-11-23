@@ -1238,6 +1238,23 @@ void Player::clear_infractions() {
     infraction_mask = 0;
 }
 
+int Player::lunar_base_weight() {
+    // True weight is 4 guns * 6HP * artillery_weight
+
+    if (perk_starts_with_lunar_base) {
+        // Lunar base specialists recognise its value
+        return 24;
+    }
+
+    if (get_race() == RACE_Yokon) {
+        // YoKon behaivour unchanged
+        return 0;
+    }
+
+    // Everyone else underestimates
+    return 10;
+}
+
 AIFlag Player::get_flag(int idx) {
     if (idx >= 9) {
         L.fatal("Tried to access AI flag > maximum (%d)", idx);

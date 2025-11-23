@@ -486,6 +486,8 @@ class Player : public Saveable {
         bool ever_committed_any_infractions();
         void clear_infractions();
 
+        int lunar_base_weight();
+
         // AI
         AIFlag get_flag(int);
         int get_tactic();
