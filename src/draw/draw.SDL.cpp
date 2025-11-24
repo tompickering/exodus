@@ -29,6 +29,7 @@ const float UPSCALE_Y = 1;
 DrawManagerSDL::DrawManagerSDL() {
     cursor_area = {0, 0, 0, 0};
     cursor_underlay = nullptr;
+    hardware_rendering = false;
 }
 
 bool DrawManagerSDL::init(const DrawManagerOptions& options) {
@@ -36,12 +37,40 @@ bool DrawManagerSDL::init(const DrawManagerOptions& options) {
 
     fullscreen = options.fullscreen;
 
+    renderer = nullptr;
+    texture = nullptr;
+
+    hardware_rendering = false;
+
+#if defined(STEAM) && defined(WINDOWS)
+    /*
+     * Poor old Windows can't seem to inject the Steam overlay
+     * for achievement popups etc unless there's *some* kind of
+     * fancy hardware graphics rendering.
+     */
+    hardware_rendering = true;
+#endif
+
     win = SDL_CreateWindow(PROG_NAME,
                            SDL_WINDOWPOS_UNDEFINED,
                            SDL_WINDOWPOS_UNDEFINED,
                            SCREEN_WIDTH,
                            SCREEN_HEIGHT,
                            SDL_WINDOW_SHOWN | (fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
+
+    if (hardware_rendering) {
+        renderer = SDL_CreateRenderer(
+                       win, -1,
+                       SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+
+        SDL_RenderSetLogicalSize(renderer, RES_X, RES_Y);
+
+        texture = SDL_CreateTexture(
+                      renderer,
+                      SDL_PIXELFORMAT_ARGB8888,
+                      SDL_TEXTUREACCESS_STREAMING,
+                      RES_X, RES_Y);
+    }
 
     if (!win) {
         L.error("Could not create SDL window");
@@ -161,7 +190,9 @@ void DrawManagerSDL::draw_init_image() {
 #ifndef CONTINUOUS_UPSCALING
     blit_surf_to_window();
 #endif
-    SDL_UpdateWindowSurface(win);
+    if (!hardware_rendering) {
+        SDL_UpdateWindowSurface(win);
+    }
 }
 
 void DrawManagerSDL::load_resources() {
@@ -321,7 +352,9 @@ void DrawManagerSDL::update(float delta, MousePos mouse_pos, MousePos new_click_
     blit_surf_to_window();
 #endif
 
-    SDL_UpdateWindowSurface(win);
+    if (!hardware_rendering) {
+        SDL_UpdateWindowSurface(win);
+    }
 
     if (render_cursor) {
         // Repair the surface where we rendered the cursor.
@@ -1393,6 +1426,28 @@ void DrawManagerSDL::draw_button_vfx() {
 
 void DrawManagerSDL::blit_surf_to_window()
 {
+    if (hardware_rendering) {
+        void* pixels = nullptr;
+        int pitch = 0;
+        SDL_LockTexture(texture, nullptr, &pixels, &pitch);
+
+        uint8_t *src = (uint8_t*)(surf->pixels);
+        uint8_t *dst = (uint8_t*)(pixels);
+
+        for (int y = 0; y < RES_Y; ++y) {
+            memcpy(dst + y*pitch,
+                   src + y*surf->pitch,
+                   RES_X*4);
+        }
+
+        SDL_UnlockTexture(texture);
+
+        SDL_RenderClear(renderer);
+        SDL_RenderCopy(renderer, texture, nullptr, nullptr);
+        SDL_RenderPresent(renderer);
+        return;
+    }
+
     if (fullscreen)
     {
         SDL_BlitScaled(surf, nullptr, win_surf, &fullscreen_area);

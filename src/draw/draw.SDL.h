@@ -112,6 +112,10 @@ class DrawManagerSDL : public DrawManager {
 
         SDL_Rect fullscreen_area;
         void blit_surf_to_window();
+
+        bool hardware_rendering;
+        SDL_Renderer *renderer;
+        SDL_Texture *texture;
 };
 
 #endif
