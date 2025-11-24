@@ -1535,6 +1535,10 @@ Planet* ExodusState::gift_art_planet_to(int player_idx) {
             if (artificial_planet_viable(s) == APV_Yes) {
                 if (construct_artificial_planet(s, player_idx, nullptr)) {
                     art_planet = get_planet_under_construction(player_idx);
+
+                    if (art_planet) {
+                        break;
+                    }
                 }
             }
         }
