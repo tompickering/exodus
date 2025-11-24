@@ -36,20 +36,10 @@ bool DrawManagerSDL::init(const DrawManagerOptions& options) {
     L.info("DrawManager Init...");
 
     fullscreen = options.fullscreen;
+    hardware_rendering = options.use_hardware_rendering;
 
     renderer = nullptr;
     texture = nullptr;
-
-    hardware_rendering = false;
-
-#if defined(STEAM) && defined(WINDOWS)
-    /*
-     * Poor old Windows can't seem to inject the Steam overlay
-     * for achievement popups etc unless there's *some* kind of
-     * fancy hardware graphics rendering.
-     */
-    hardware_rendering = true;
-#endif
 
     win = SDL_CreateWindow(PROG_NAME,
                            SDL_WINDOWPOS_UNDEFINED,

@@ -44,6 +44,7 @@ using std::vector;
 
 struct DrawManagerOptions {
     bool fullscreen = true;
+    bool use_hardware_rendering = false;
 };
 
 typedef unsigned int SprID;

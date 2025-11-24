@@ -111,6 +111,26 @@ bool Exodus::init() {
 
     DrawManagerOptions draw_manager_options;
     draw_manager_options.fullscreen = !has_option("windowed");
+    draw_manager_options.use_hardware_rendering = false;
+
+#if defined(STEAM) && defined(WINDOWS)
+    /*
+     * Poor old Windows can't seem to inject the Steam overlay
+     * for achievement popups etc unless there's *some* kind of
+     * fancy hardware graphics rendering.
+     */
+
+    draw_manager_options.use_hardware_rendering = true;
+#endif
+
+    if (has_option("force-hardware-rendering")) {
+        draw_manager_options.use_hardware_rendering = true;
+    }
+
+    if (has_option("force-software-rendering")) {
+        draw_manager_options.use_hardware_rendering = false;
+    }
+
     bool ok = draw_manager.init(draw_manager_options);
 
     if (ok) {
