@@ -86,10 +86,12 @@ void AchievementManager::set_unlocked(Achievement achievement) {
 
 void AchievementManager::unlock(Achievement achievement) {
     if (!achievements_enabled()) {
+        L.info("[ACHIEVEMENTS DISABLED] %d", (int)achievement);
         return;
     }
 
     if (is_unlocked(achievement)) {
+        L.info("[ACHIEVEMENT ALREADY UNLOCKED] %d", (int)achievement);
         return;
     }
 
