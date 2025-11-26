@@ -2174,6 +2174,11 @@ ExodusMode GalaxyMap::month_pass_update() {
 
                                     if (mission.type == MT_TerrorAgri) {
                                         L.debug("Mission type: Poison plants");
+
+                                        if (p->is_human()) {
+                                            achievement_manager.unlock(ACH_SecretMission);
+                                        }
+
                                         exostate().register_news(NI_PlantsPoisoned);
                                         bulletin_start_new(true, st);
                                         bulletin_set_bg(pl->sprites()->bulletin_bg);
