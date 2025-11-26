@@ -705,7 +705,11 @@ void MenuDrawer::menu_open_specific_mode() {
             menu_set_txt(2, COL_TEXT, "Please choose:");
             menu_set_opt(4, "Information Services (20+ MC)");
             menu_set_opt(5, "A Personal File (" STR(COST_FILE) " MC)");
-            menu_set_opt(6, "Terrorist Attacks (50+ MC)");
+            if (ENHANCED()) {
+                menu_set_opt(6, "Sabotage Missions (50+ MC)");
+            } else {
+                menu_set_opt(6, "Terrorist Attacks (50+ MC)");
+            }
             menu_set_opt(7, "Orbital Bomb Attacks (500+ MC)");
             menu_set_opt(14, "Exit Menu");
             break;

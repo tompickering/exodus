@@ -61,7 +61,7 @@ const char* NewsItem::get_string() const {
         case NI_AssassinCaptured:
              return "Assassin captured";
         case NI_TerroristAttack:
-             return "Terrorist attack";
+             return ENHANCED() ? "Sabotage mission" : "Terrorist attack";
         case NI_Meteor:
              return "Meteor has hit the planet";
         case NI_LeftGalaxy:
