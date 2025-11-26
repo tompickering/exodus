@@ -82,9 +82,9 @@ class StoneSet {
     public:
         StoneSet() {reset();}
         void reset() {stones=0; iter=(Stone)0; add(STONE_END);};
-        void add(Stone s) {stones|=(1<<(int)s);}
-        void remove(Stone s) {stones&=~(1<<(int)s);}
-        bool has(Stone s) {return (bool)(stones&(1<<(int)s));}
+        void add(Stone s) {stones|=(((uint64_t)1)<<(int)s);}
+        void remove(Stone s) {stones&=~(((uint64_t)1)<<(int)s);}
+        bool has(Stone s) {return (bool)(stones&(((uint64_t)1)<<(int)s));}
         void start_iter() {iter=(Stone)0;}
         Stone get_stone() {
             while (iter<STONE_END) {
@@ -97,7 +97,7 @@ class StoneSet {
             return STONE_END;
         }
     private:
-        uint32_t stones;
+        uint64_t stones;
         Stone iter;
 };
 
