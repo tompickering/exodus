@@ -77,11 +77,11 @@ bool AchievementManager::achievements_enabled() {
 }
 
 bool AchievementManager::is_unlocked(Achievement achievement) {
-    return (unlocked_achievements & (1 << achievement));
+    return (unlocked_achievements & ((uint64_t)1 << achievement));
 }
 
 void AchievementManager::set_unlocked(Achievement achievement) {
-    unlocked_achievements = unlocked_achievements | (1 << achievement);
+    unlocked_achievements = unlocked_achievements | ((uint64_t)1 << achievement);
 }
 
 void AchievementManager::unlock(Achievement achievement) {
