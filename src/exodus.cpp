@@ -231,6 +231,15 @@ int Exodus::run(int argc, char** argv) {
     mode_map[MODE_Ending] = (ModeBase*) &mode_ending;
 
     exodus_set_game_mode(EXODUSGAMEMODE_Enhanced);
+
+    if (has_option("mode=enhanced")) {
+        exodus_set_game_mode(EXODUSGAMEMODE_Enhanced);
+    }
+
+    if (has_option("mode=classic")) {
+        exodus_set_game_mode(EXODUSGAMEMODE_Classic);
+    }
+
     push_mode(MODE_Intro);
 
     running = true;
@@ -241,7 +250,6 @@ int Exodus::run(int argc, char** argv) {
 
 #ifdef DBG
     if (has_option("setup")) {
-        exodus_set_game_mode(EXODUSGAMEMODE_Enhanced);
         GameConfig config;
         config.n_players = 1;
         config.size = GAL_Medium;
@@ -262,8 +270,6 @@ int Exodus::run(int argc, char** argv) {
         push_mode(MODE_GalaxyMap);
     }
 #endif
-
-    exodus_set_game_mode(EXODUSGAMEMODE_Enhanced);
 
     while (running) {
         frame_start = game_timer.get_delta();
