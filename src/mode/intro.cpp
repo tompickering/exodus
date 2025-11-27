@@ -438,7 +438,7 @@ ExodusMode Intro::update(float delta) {
             }
 
             if (time < GUARD_FRAME) {
-                ONCE(oid_guard_1) draw_manager.draw(id(ID::GUARDSHOT), IMG_INTRO_BT1_FALL1, {315, 271, 0.5, 0.5, 2.0, 2.0});
+                ONCE(oid_guard_1) draw_manager.draw(id(ID::GUARDSHOT), IMG_INTRO_BT1_FALL1, {314, 271, 0.5, 0.5, 2.0, 2.0});
             } else if (time < GUARD_FRAME * 2) {
                 ONCE(oid_guard_2) draw_manager.draw(id(ID::GUARDSHOT), IMG_INTRO_BT1_FALL2, {291, 300, 0.5, 0.5, 2.0, 2.0});
             } else if (time < GUARD_FRAME * 3) {
