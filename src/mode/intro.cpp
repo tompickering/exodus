@@ -21,7 +21,7 @@ static const char* intro_text[] = {
     "starve in rotten cellars",
     "or fight against each other",
     "for the last food rations.",
-    "But a few bosses of once great concerns",
+    "But a few bosses of once great concern",
     "still live in wealth,",
     "protected by killer commandos.",
     "These mighty men have united",
