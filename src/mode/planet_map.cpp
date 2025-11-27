@@ -352,8 +352,14 @@ map<Stone, Anim> stone_anims_generic;
 map<PlanetClass, map<Stone, Anim>> construct_anims_specific;
 map<Stone, Anim> construct_anims_generic;
 
-Anim stone_anims_generic_tradeportx = Anim(2,  IMG_STONE_TPORTX,
-                                               IMG_STONE_TPORTX_OFF);
+Anim stone_anims_generic_tradeportx  = Anim(2,  IMG_STONE_TPORTX,
+                                                IMG_STONE_TPORTX_OFF);
+
+Anim stone_anims_generic_newmine_on  = Anim(3,  IMG_MINE_LIT,
+                                                IMG_MINE,
+                                                IMG_MINE_LIT);
+
+Anim stone_anims_generic_newmine_off = Anim(1,  IMG_MINE);
 
 bool stone_anims_initialised = false;
 
@@ -1605,17 +1611,7 @@ void init_stone_anims(Planet *p) {
     stone_anims_generic[STONE_Village]                   = Anim(1,  IMG_SU1_STONE22);
     stone_anims_generic[STONE_Base]                      = Anim(1,  IMG_SU1_STONE1);
 
-    if (FEATURE(EF_NEW_MINES)) {
-        if (p->get_minerals() > 0) {
-            stone_anims_generic[STONE_Mine]              = Anim(3,  IMG_MINE_LIT,
-                                                                    IMG_MINE,
-                                                                    IMG_MINE_LIT);
-        } else {
-            stone_anims_generic[STONE_Mine]              = Anim(1,  IMG_MINE);
-        }
-    } else {
-        stone_anims_generic[STONE_Mine]                  = Anim(1,  IMG_SU1_STONE3);
-    }
+    stone_anims_generic[STONE_Mine]                      = Anim(1,  IMG_SU1_STONE3);
 
     stone_anims_generic[STONE_Plu]                       = Anim(2,  IMG_SU1_STONE4,
                                                                     IMG_SU1_STONE4B);
@@ -1737,6 +1733,16 @@ Anim* PlanetMap::get_stone_anim(Stone stone) {
 
     if (stone == STONE_TradePort && !trade_port_operational) {
         return &stone_anims_generic_tradeportx;
+    }
+
+    if (stone == STONE_Mine) {
+        if (FEATURE(EF_NEW_MINES)) {
+            if (planet->get_minerals() > 0) {
+                return & stone_anims_generic_newmine_on;
+            } else {
+                return & stone_anims_generic_newmine_off;
+            }
+        }
     }
 
     if (stone_anims_generic.count(stone)) {
