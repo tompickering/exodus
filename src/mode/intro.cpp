@@ -446,11 +446,11 @@ ExodusMode Intro::update(float delta) {
             } else if (time < GUARD_FRAME * 4) {
                 ONCE(oid_guard_4) draw_manager.draw(id(ID::GUARDSHOT), IMG_INTRO_BT1_FALL4, {285, 391, 0.5, 0.5, 2.0, 2.0});
             } else if (time < GUARD_FRAME * 5) {
-                ONCE(oid_guard_5) draw_manager.draw(id(ID::GUARDSHOT), IMG_INTRO_BT1_FALL5, {272, 484, 0.5, 1.0, 2.0, 2.0});
+                ONCE(oid_guard_5) draw_manager.draw(id(ID::GUARDSHOT), IMG_INTRO_BT1_FALL5, {270, 484, 0.5, 1.0, 2.0, 2.0});
             } else if (time < GUARD_FRAME * 6) {
-                ONCE(oid_guard_6) draw_manager.draw(id(ID::GUARDSHOT), IMG_INTRO_BT1_FALL6, {272, 484, 0.5, 1.0, 2.0, 2.0});
+                ONCE(oid_guard_6) draw_manager.draw(id(ID::GUARDSHOT), IMG_INTRO_BT1_FALL6, {270, 484, 0.5, 1.0, 2.0, 2.0});
             } else if (time < GUARD_FRAME * 7) {
-                ONCE(oid_guard_7) draw_manager.draw(id(ID::GUARDSHOT), IMG_INTRO_BT1_FALL7, {272, 484, 0.5, 1.0, 2.0, 2.0});
+                ONCE(oid_guard_7) draw_manager.draw(id(ID::GUARDSHOT), IMG_INTRO_BT1_FALL7, {270, 484, 0.5, 1.0, 2.0, 2.0});
             } else {
                 next_stage(); return ExodusMode::MODE_None;
             }
