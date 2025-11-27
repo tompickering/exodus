@@ -204,14 +204,14 @@ ExodusMode Intro::update(float delta) {
     text_time += delta;
 
     if (input_manager.consume(K_Space) || input_manager.consume(K_Escape)) {
-        if (stage < Title) {
+        if (ENHANCED() || stage >= Title) {
+            stage = End;
+        } else {
             draw_manager.cancel_transitions();
             draw_manager.clear();
             while (stage < Title) {
                 next_stage();
             }
-        } else {
-            stage = End;
         }
         return ExodusMode::MODE_None;
     }
