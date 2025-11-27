@@ -1380,6 +1380,22 @@ const char *IMG_BTN_ENG          = D_NEW "btn_engage";
 const char *IMG_BTN_ENG_DOWN     = D_NEW "btn_engage_down";
 const char *IMG_BTN_INFO         = D_NEW "btn_info";
 const char *IMG_BTN_QUIT         = D_NEW "btn_quit";
+const char *IMG_NI_FALL1         = D_NEW "BT1_fall1";
+const char *IMG_NI_FALL2         = D_NEW "BT1_fall2";
+const char *IMG_NI_FALL3         = D_NEW "BT1_fall3";
+const char *IMG_NI_FALL4         = D_NEW "BT1_fall4";
+const char *IMG_NI_SHOT5         = D_NEW "FI1_shot5";
+const char *IMG_NI_GUARD         = D_NEW "GU1_guard";
+const char *IMG_NI_DOOR_L        = D_NEW "OD1_door_l";
+const char *IMG_NI_DOOR_R        = D_NEW "OD1_door_r";
+const char *IMG_NI_FRAME         = D_NEW "OD1_frame";
+const char *IMG_NI_SHUTTLE1      = D_NEW "SH4_shuttle1";
+const char *IMG_NI_SHUTTLE2      = D_NEW "SH4_shuttle2";
+const char *IMG_NI_SHUTTLE3      = D_NEW "SH4_shuttle3";
+const char *IMG_NI_SHUTTLE4      = D_NEW "SH4_shuttle4";
+const char *IMG_NI_CR1           = D_NEW "cr1";
+const char *IMG_NI_DR1           = D_NEW "dr1";
+const char *IMG_NI_GO1           = D_NEW "go1";
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2757,6 +2773,22 @@ const char *ASSETS_IMG[] = {
     IMG_BTN_ENG_DOWN,
     IMG_BTN_INFO,
     IMG_BTN_QUIT,
+    IMG_NI_FALL1,
+    IMG_NI_FALL2,
+    IMG_NI_FALL3,
+    IMG_NI_FALL4,
+    IMG_NI_SHOT5,
+    IMG_NI_GUARD,
+    IMG_NI_DOOR_L,
+    IMG_NI_DOOR_R,
+    IMG_NI_FRAME,
+    IMG_NI_SHUTTLE1,
+    IMG_NI_SHUTTLE2,
+    IMG_NI_SHUTTLE3,
+    IMG_NI_SHUTTLE4,
+    IMG_NI_CR1,
+    IMG_NI_DR1,
+    IMG_NI_GO1,
 
     "",
 };
