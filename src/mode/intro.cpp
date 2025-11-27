@@ -844,6 +844,11 @@ void Intro::next_stage() {
     }
     time = 0;
     text_time = 0;
+
+    // Skip keypad in Enhanced mode
+    if (ENHANCED() && (stage == Stage::Keypad)) {
+        next_stage();
+    }
 }
 
 void Intro::draw_text() {
