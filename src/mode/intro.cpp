@@ -582,17 +582,17 @@ ExodusMode Intro::update(float delta) {
 
             door_time = time - 2.6f;
             door_time = door_time < 0 ? 0 : door_time;
-            draw_manager.draw(id(ID::DOOR_L), IMG_INTRO_OD1_DOOR_L, {(int)(319 - door_time * DOOR_PX_PER_SEC), 218, 1.0, 0.5, 1.0, 1.0});
-            draw_manager.draw(id(ID::DOOR_R), IMG_INTRO_OD1_DOOR_R, {(int)(319 + door_time * DOOR_PX_PER_SEC), 218, 0.0, 0.5, 1.0, 1.0});
+            draw_manager.draw(id(ID::DOOR_L), IMG_INTRO_OD1_DOOR_L, {(int)(320 - door_time * DOOR_PX_PER_SEC), 219, 1.0, 0.5, 1.0, 1.0});
+            draw_manager.draw(id(ID::DOOR_R), IMG_INTRO_OD1_DOOR_R, {(int)(320 + door_time * DOOR_PX_PER_SEC), 219, 0.0, 0.5, 1.0, 1.0});
             draw_manager.draw(IMG_INTRO_OD1_FRAME , {320, 212, 0.5, 0.5, 1.0, 1.0});
             draw_manager.draw(IMG_INTRO_OD1_SEPP  , {319, 482, 0.5, 1.0, 1.0, 1.0});
 
             if (time > 0.9) {
-                draw_manager.draw(IMG_INTRO_OD1_OFF, {151,  97, 0.5, 0.5, 2.0, 2.0});
+                draw_manager.draw(IMG_INTRO_OD1_OFF, {152,  97, 0.5, 0.5, 2.0, 2.0});
             }
 
             if (time > 2.15) {
-                draw_manager.draw(IMG_INTRO_OD1_ON , {151, 97, 0.5, 0.5, 2.0, 2.0});
+                draw_manager.draw(IMG_INTRO_OD1_ON , {152, 97, 0.5, 0.5, 2.0, 2.0});
                 ONCE(oid_dooropen) text_time = 0;
                 draw_text();
                 if (text_time < MAX_TEXT_TIME) {
