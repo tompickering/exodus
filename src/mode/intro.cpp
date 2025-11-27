@@ -200,6 +200,10 @@ ExodusMode Intro::update(float delta) {
     unsigned char brightness;
     float door_time;
 
+    if (ENHANCED()) {
+        delta *= 0.92f;
+    }
+
     time += delta;
     text_time += delta;
 
