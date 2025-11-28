@@ -200,10 +200,6 @@ ExodusMode Intro::update(float delta) {
     unsigned char brightness;
     float door_time;
 
-    if (ENHANCED()) {
-        delta *= 0.92f;
-    }
-
     time += delta;
     text_time += delta;
 
@@ -887,11 +883,6 @@ void Intro::next_stage() {
     }
     time = 0;
     text_time = 0;
-
-    // Skip keypad in Enhanced mode
-    if (ENHANCED() && (stage == Stage::Keypad)) {
-        next_stage();
-    }
 }
 
 void Intro::draw_text() {
