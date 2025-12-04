@@ -111,17 +111,18 @@ bool Exodus::init() {
 
     DrawManagerOptions draw_manager_options;
     draw_manager_options.fullscreen = !has_option("windowed");
-    draw_manager_options.use_hardware_rendering = false;
 
-#if defined(STEAM) && defined(WINDOWS)
     /*
-     * Poor old Windows can't seem to inject the Steam overlay
-     * for achievement popups etc unless there's *some* kind of
-     * fancy hardware graphics rendering.
+     * Windows Steam can't inject the overlay unless there
+     * is *some* kind of fancy graphics rendering.
+     *
+     * It also seems to cause a problem for some Linux
+     * window managers when in fullscreen mode.
+     *
+     * It's a shame, but probably best just to enable it
+     * across the board.
      */
-
     draw_manager_options.use_hardware_rendering = true;
-#endif
 
     if (has_option("force-hardware-rendering")) {
         draw_manager_options.use_hardware_rendering = true;
