@@ -16,6 +16,7 @@ class Menu : ModeBase {
     private:
         enum Stage {
             Main,
+            Quit,
             Load,
             LoadStart,
             LoadWelcome,

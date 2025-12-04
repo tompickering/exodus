@@ -46,6 +46,7 @@ enum ID {
     NEWGAME_TXT,
     LOADGAME_TXT,
     CONTINUE_TXT,
+    QUIT_TXT,
     AUTOSAVE_WARN_TXT0,
     AUTOSAVE_WARN_TXT1,
     AUTOSAVE_WARN_TXT2,
@@ -236,6 +237,14 @@ ExodusMode Menu::update(float delta) {
                             COL_TEXT);
                 }
 
+                draw_manager.draw_text(TGT_Secondary,
+                        id(QUIT_TXT),
+                        Font::Large,
+                        "Leave the game",
+                        Justify::Centre,
+                        RES_X/2, RES_Y-100,
+                        COL_TEXT);
+
                 draw_manager.fill(
                     TGT_Secondary,
                     {0, RES_Y-40,
@@ -397,7 +406,18 @@ ExodusMode Menu::update(float delta) {
                 set_stage(LoadStart);
                 return ExodusMode::MODE_None;
             }
+
+            if (draw_manager.query_click(id(QUIT_TXT)).id) {
+                set_stage(Quit);
+                draw_manager.fade_black(1.2f, 24);
+                audio_manager.fade_out(1000);
+                return ExodusMode::MODE_None;
+            }
             break;
+        case Quit:
+            {
+                return ExodusMode::MODE_Quit;
+            }
         case Load:
             {
                 if (draw_manager.query_click(id(LOADFRAME_EXIT)).id) {
