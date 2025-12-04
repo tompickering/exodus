@@ -1486,7 +1486,7 @@ void LunarBattle::auto_run() {
      * For now, I'm going to adjust rpt.def_init to suggest that we only used 12 units...
      */
     auto_base = p->has_lunar_base() ? 12 : 0;
-    rpt.def_init.base = 12;
+    rpt.def_init.base = auto_base;
 
     bool resolved = false;
     int iter = 0;
