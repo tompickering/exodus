@@ -81,12 +81,18 @@ bool PlayerLocation::has_visited(int query_target) {
     if (query_target < 0)
         return true;
 
+    bool result = false;
     if (query_target < 32)
     {
-        return (bool)(visited0 & ((uint64_t)1 << query_target));
+        result = (bool)(visited0 & ((uint64_t)1 << query_target));
     }
 
-    return (bool)(visited1 & ((uint64_t)1 << (query_target - 32)));
+    if (!result)
+    {
+        result = (bool)(visited1 & ((uint64_t)1 << (query_target - 32)));
+    }
+
+    return result;
 }
 
 void PlayerLocation::unset_target() {
@@ -120,6 +126,6 @@ void PlayerLocation::load(cJSON* j) {
     LOAD_NUM(j, planet_target);
     LOAD_NUM(j, months_to_arrive);
     LOAD_BOOL(j, just_arrived);
-    LOAD_NUM(j, visited0);
+    LOAD_DOUBLE(j, visited0);
     LOAD_NUM(j, visited1);
 }

@@ -53,6 +53,7 @@
 }
 
 #define LOAD_NUM(j, k) k = (decltype(k))(cJSON_GetObjectItemCaseSensitive(j, #k)->valueint)
+#define LOAD_DOUBLE(j, k) k = (decltype(k))(cJSON_GetObjectItemCaseSensitive(j, #k)->valuedouble)
 #define LOAD_BOOL(j, k) k = (cJSON_GetObjectItemCaseSensitive(j, #k)->valueint != 0)
 #define LOAD_STR(j, k) snprintf(k, sizeof(k), cJSON_GetObjectItemCaseSensitive(j, #k)->valuestring)
 #define LOAD_ENUM(j, k) k = (decltype(k))(cJSON_GetObjectItemCaseSensitive(j, #k)->valueint)
