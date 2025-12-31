@@ -263,6 +263,7 @@ void ExodusState::init(GameConfig config) {
         snprintf(
             players[i].full_name,
             MAX_PLAYER_FULLNAME + 1,
+            "%s",
             fullname);
         players[i].guild_title = GUILDTITLE_None;
         players[i].dead = false;

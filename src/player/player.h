@@ -229,7 +229,7 @@ struct StarMarker : public Saveable {
     }
 
     void set_tag(const char* new_marker) {
-        snprintf(tag, MAX_MARKER, new_marker);
+        snprintf(tag, MAX_MARKER, "%s", new_marker);
     }
 };
 

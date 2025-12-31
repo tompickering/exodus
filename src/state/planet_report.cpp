@@ -15,7 +15,7 @@ PlanetReport& PlanetReport::operator=(const PlanetReport& other) {
 
     items = other.items;
     for (int i = 0; i < other.items; ++i) {
-        snprintf(content[i], REPORT_LINE_MAX, other.content[i]);
+        snprintf(content[i], REPORT_LINE_MAX, "%s", other.content[i]);
     }
 
     event_mask = other.event_mask;
