@@ -1559,9 +1559,9 @@ void Player::save(cJSON* j) const
 void Player::load(cJSON* j)
 {
     LOAD_NUM(j, nopirates);
-    LOAD_ARRAY_OF_NUM(j, officers_fired_nopay);
-    LOAD_ARRAY_OF_NUM(j, officers_quit);
-    LOAD_ARRAY_OF_NUM(j, officers_deceased);
+    LOAD_ARRAY_OF_BOOL(j, officers_fired_nopay);
+    LOAD_ARRAY_OF_BOOL(j, officers_quit);
+    LOAD_ARRAY_OF_BOOL(j, officers_deceased);
     LOAD_BOOL(j, invalid_placement_seen);
     LOAD_BOOL(j, advanced_report_unlocked);
     LOAD_BOOL(j, advanced_galmap_unlocked);
@@ -1589,12 +1589,12 @@ void Player::load(cJSON* j)
     LOAD_NUM(j, reputation);
     LOAD_BOOL(j, guild_member);
     LOAD_NUM(j, tax);
-    LOAD_ARRAY_OF_ENUM(j, officers);
+    LOAD_ARRAY_OF_ENUM(OfficerQuality, j, officers);
     LOAD_SAVEABLE(j, mission);
     LOAD_ARRAY_OF_SAVEABLE(j, star_markers);
     LOAD_NUM(j, infraction_mask);
     LOAD_BOOL(j, ever_committed_infraction);
-    LOAD_ARRAY_OF_ENUM(j, ai_flags);
+    LOAD_ARRAY_OF_ENUM(AIFlag, j, ai_flags);
     LOAD_NUM(j, ai_tactic);
     LOAD_NUM(j, ai_hostile_to);
     LOAD_NUM(j, ai_attack_star);

@@ -1847,7 +1847,7 @@ void ExodusState::load(cJSON* j) {
     LOAD_BOOL(j, galaxy_finalised);
     LOAD_BOOL(j, active_flytarget_is_guild);
     LOAD_ARRAY_OF_NUM(j, alliance_matrix);
-    LOAD_ARRAY_OF_NUM(j, lord_discovery_matrix);
+    LOAD_ARRAY_OF_BOOL(j, lord_discovery_matrix);
     LOAD_ARRAY_OF_NUM(j, alliance_requests);
     LOAD_NUM(j, newsitem_head);
     LOAD_ARRAY_OF_SAVEABLE(j, newsitems);
