@@ -207,9 +207,10 @@ bool SaveManager::load_data(uint32_t expected_version, int slot, char** data_met
 
     uint64_t size_game = strtoul(buf, NULL, 10);
 
-    (*data_meta) = (char*)malloc(size_meta);
+    (*data_meta) = (char*)malloc(size_meta + sizeof(""));
     in.read(*data_meta, size_meta);
     for (size_t i = 0; i < size_meta; ++i) (*data_meta)[i] ^= obfuscation_byte;
+    (*data_meta)[size_meta] = '\0';
 
     if (data_game != nullptr)
     {

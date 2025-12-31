@@ -85,6 +85,7 @@ void ExodusState::init(GameConfig config) {
     active_player = 0;
     active_star = 0;
     active_planet = -1;
+    planet_reports_head = 0;
     first_city_done = false;
     first_spaceport_done = false;
     int i;

@@ -492,10 +492,12 @@ void CommPanelDrawer::comm_set_img_caption_upper(const char* text, ...) {
 void CommPanelDrawer::comm_set_img_caption_lower(const char* text, ...) {
     va_list args;
     va_start(args, text);
-    vsnprintf(comm_img_caption_lower, COMM_MAX_TEXT - 1, text, args);
+    int n = vsnprintf(comm_img_caption_lower, COMM_MAX_TEXT - 1, text, args);
     va_end(args);
 
-    capitalise(comm_img_caption_lower, COMM_MAX_TEXT);
+    if (n > 0) {
+        capitalise(comm_img_caption_lower, min(n, COMM_MAX_TEXT));
+    }
 }
 
 void CommPanelDrawer::comm_set_text(int idx, const char* in_text, ...) {

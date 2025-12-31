@@ -36,6 +36,7 @@ const char* get_alien_name(Race race, int idx) {
 
 Player::Player() {
     name[0] = '\0';
+    title[0] = '\0';
     guild_title = GUILDTITLE_None;
     exists = true;
     dead = false;
