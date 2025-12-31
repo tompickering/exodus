@@ -3,6 +3,8 @@
 
 #include <cstdarg>
 
+#include "util/util.h"
+
 namespace Log {
 
     enum Level {VERBOSE, DEBUG, INFO, WARN, ERROR, FATAL};
@@ -18,7 +20,7 @@ namespace Log {
             void info(const char* fmt, ...);
             void warn(const char* fmt, ...);
             void error(const char* fmt, ...);
-            void fatal(const char* fmt, ...);
+            NORETURN void fatal(const char* fmt, ...);
             void set_level(Level);
         private:
             void vlog(Log::Level, const char*, va_list);
