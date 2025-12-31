@@ -1589,12 +1589,12 @@ void Player::load(cJSON* j)
     LOAD_NUM(j, reputation);
     LOAD_BOOL(j, guild_member);
     LOAD_NUM(j, tax);
-    LOAD_ARRAY_OF_ENUM(j, officers);
+    LOAD_ARRAY_OF_ENUM(OfficerQuality, j, officers);
     LOAD_SAVEABLE(j, mission);
     LOAD_ARRAY_OF_SAVEABLE(j, star_markers);
     LOAD_NUM(j, infraction_mask);
     LOAD_BOOL(j, ever_committed_infraction);
-    LOAD_ARRAY_OF_ENUM(j, ai_flags);
+    LOAD_ARRAY_OF_ENUM(AIFlag, j, ai_flags);
     LOAD_NUM(j, ai_tactic);
     LOAD_NUM(j, ai_hostile_to);
     LOAD_NUM(j, ai_attack_star);
