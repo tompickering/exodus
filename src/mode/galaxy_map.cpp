@@ -3175,6 +3175,7 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
                     break;
                 case AI_Md:
                     t = RND(3);
+                    break;
                 case AI_Lo:
                     r = RND(8);
                     if (r < 5) {
