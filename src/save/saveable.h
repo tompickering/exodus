@@ -71,6 +71,14 @@
     } \
 }
 
+#define LOAD_ARRAY_OF_BOOL(j, k) { \
+    cJSON* arr = cJSON_GetObjectItemCaseSensitive(j, #k); \
+    for (int i = 0; i < cJSON_GetArraySize(arr); ++i) { \
+        cJSON *o = cJSON_GetArrayItem(arr, i); \
+        k[i] = o->valueint != 0; \
+    } \
+}
+
 #define LOAD_ARRAY_OF_STR(j, k) { \
     cJSON* arr = cJSON_GetObjectItemCaseSensitive(j, #k); \
     for (int i = 0; i < cJSON_GetArraySize(arr); ++i) { \

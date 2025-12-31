@@ -1559,9 +1559,9 @@ void Player::save(cJSON* j) const
 void Player::load(cJSON* j)
 {
     LOAD_NUM(j, nopirates);
-    LOAD_ARRAY_OF_NUM(j, officers_fired_nopay);
-    LOAD_ARRAY_OF_NUM(j, officers_quit);
-    LOAD_ARRAY_OF_NUM(j, officers_deceased);
+    LOAD_ARRAY_OF_BOOL(j, officers_fired_nopay);
+    LOAD_ARRAY_OF_BOOL(j, officers_quit);
+    LOAD_ARRAY_OF_BOOL(j, officers_deceased);
     LOAD_BOOL(j, invalid_placement_seen);
     LOAD_BOOL(j, advanced_report_unlocked);
     LOAD_BOOL(j, advanced_galmap_unlocked);
