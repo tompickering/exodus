@@ -616,9 +616,9 @@ ExodusMode LunarBattlePrep::update(float delta) {
                 }
 
                 draw_panel();
-                snprintf(text0, sizeof(text0), t0);
-                snprintf(text1, sizeof(text1), t1);
-                snprintf(text2, sizeof(text2), t2);
+                snprintf(text0, sizeof(text0), "%s", t0);
+                snprintf(text1, sizeof(text1), "%s", t1);
+                snprintf(text2, sizeof(text2), "%s", t2);
                 snprintf(text4, sizeof(text4), "(%dMC)", OFFICER_UPGRADE_COST);
                 draw_text();
 

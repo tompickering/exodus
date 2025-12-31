@@ -2713,8 +2713,8 @@ ExodusMode GalaxyMap::month_pass_ai_update() {
             if (!(FEATURE(EF_CHARACTERS)) && onein(1000)) {
                 char oldname[MAX_PLAYER_NAME];
                 char oldfullname[MAX_PLAYER_FULLNAME];
-                snprintf(oldname, MAX_PLAYER_NAME, player->get_name());
-                snprintf(oldfullname, MAX_PLAYER_FULLNAME, player->get_full_name());
+                snprintf(oldname, MAX_PLAYER_NAME, "%s", player->get_name());
+                snprintf(oldfullname, MAX_PLAYER_FULLNAME, "%s", player->get_full_name());
                 Gender oldgender = player->get_gender();
                 if (exostate().kill(player)) {
                     audio_manager.target_music(mpart2mus(9));
@@ -5618,7 +5618,7 @@ void GalaxyMap::discover_species_bulletin(Planet* p) {
         int w = 0;
         int lim = (1 + RND(2));
         for (int i = 0; i < lim; ++i) {
-            w += snprintf(name+w, sizeof(name)-w, d0[rand()%20]);
+            w += snprintf(name+w, sizeof(name)-w, "%s", d0[rand()%20]);
             if (onein(4) && (i+1 < lim)) {
                 w += snprintf(name+w, sizeof(name)-w, "-");
             }
@@ -5672,7 +5672,7 @@ void GalaxyMap::discover_species_bulletin(Planet* p) {
         int w = 0;
         int lim = (1 + RND(2));
         for (int i = 0; i < lim; ++i) {
-            w += snprintf(name+w, sizeof(name)-w, d0[rand()%20]);
+            w += snprintf(name+w, sizeof(name)-w, "%s", d0[rand()%20]);
             if (onein(4) && (i+1 < lim)) {
                 w += snprintf(name+w, sizeof(name)-w, "-");
             }

@@ -15,7 +15,7 @@ const char* SaveManagerLinux::get_save_dir() {
     const char *data_home = getenv("XDG_DATA_HOME");
 
     if (data_home) {
-        snprintf(save_dir, sizeof(save_dir), data_home);
+        snprintf(save_dir, sizeof(save_dir), "%s", data_home);
     } else {
         const char *home = getenv("XDG_DATA_HOME");
 

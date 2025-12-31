@@ -2187,7 +2187,7 @@ bool Planet::do_academy_immigration(const char* source_name) {
         return false;
     }
 
-    snprintf(s, PLANET_MAX_NAME+1, source_name);
+    snprintf(s, PLANET_MAX_NAME+1, "%s", source_name);
     ++academy_sources_this_month_head;
 
     return true;

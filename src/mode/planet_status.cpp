@@ -119,11 +119,9 @@ void PlanetStatus::enter() {
         strncpy(agri, "None", 20);
     } else {
         if (p->agri_sufficient()) {
-            const char* t = ENHANCED() ? "Sufficient" : "Well";
-            snprintf(agri, 20, t);
+            snprintf(agri, 20, ENHANCED() ? "Sufficient" : "Well");
         } else {
-            const char* t = ENHANCED() ? "Insufficient" : "Not sufficient";
-            snprintf(agri, 20, t);
+            snprintf(agri, 20, ENHANCED() ? "Insufficient" : "Not sufficient");
         }
     }
 
