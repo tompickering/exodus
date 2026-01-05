@@ -2977,7 +2977,7 @@ void Planet::load(cJSON* j) {
     LOAD_ENUM(j, moon_cls);
     LOAD_ENUM(j, moon_cls);
     LOAD_STR(j, name);
-    LOAD_ARRAY_OF_ENUM(j, surf);
+    LOAD_ARRAY_OF_ENUM(Stone, j, surf);
     LOAD_NUM(j, construction_phase);
     LOAD_NUM(j, star_target);
     LOAD_NUM(j, pspeed);
