@@ -14,12 +14,13 @@ void FrameDrawer::frame_draw() {
         id_frame_r = draw_manager.new_sprite_id();
     }
     _frame_open = true;
-    draw_manager.fill(id_frame_t, {0, 0, RES_X, 7}, COL_BORDERS);
-    draw_manager.fill(id_frame_b, {0, 403, RES_X, 7}, COL_BORDERS);
-    draw_manager.fill(id_frame_l, {0, 0, 7, 403}, COL_BORDERS);
-    draw_manager.fill(id_frame_r, {RES_X - 7, 0, 7, 403}, COL_BORDERS);
+    draw_manager.fill(id_frame_t, {0, 0, RES_X, 6}, COL_BORDERS);
+    draw_manager.fill(id_frame_b, {0, 404, RES_X, 6}, COL_BORDERS);
+    draw_manager.fill(id_frame_l, {0, 0, 6, 404}, COL_BORDERS);
+    draw_manager.fill(id_frame_r, {RES_X - 6, 0, 6, 404}, COL_BORDERS);
 
     draw_manager.fill(FILL_3D_Out_Hollow, {0, 0, RES_X, 410}, COL_BORDERS);
+    draw_manager.fill(FILL_3D_In_Hollow, {4, 4, RES_X-8, 402}, COL_BORDERS);
 }
 
 void FrameDrawer::frame_remove() {
