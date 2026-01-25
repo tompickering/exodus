@@ -287,24 +287,6 @@ void DrawManagerSDL::update(float delta, MousePos mouse_pos, MousePos new_click_
     }
 
     if (render_cursor) {
-        if (fullscreen) {
-            /*
-             * This is a hack; neither SDL_SetWindowGrab nor SDL_SetRelativeMouseMode
-             * seem to truly confine the OS mouse to the window area. If it is allowed
-             * to move outside but the cursor stays on screen, then it appears to be
-             * 'stuck' to that edge of the screen while the user moves the cursor
-             * back towards the centre of the game screen.
-             *
-             * The nuclear hack here is simply to warp the cursor back if it tries
-             * to move outside.
-             */
-            int x = clamp(mouse_pos.x, 0, RES_X);
-            int y = clamp(mouse_pos.y, 0, RES_Y-10);
-            if (mouse_pos.x > RES_X || mouse_pos.y > RES_Y-10) {
-                SDL_WarpMouseInWindow(win, x, y);
-            }
-        }
-
         // To ensure that cursor drawing plays nicely with anything
         // else that might be animating on the main game screen,
         // we draw it at the very last minute, saving whatever's
