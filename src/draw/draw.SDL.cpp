@@ -1145,8 +1145,8 @@ void DrawManagerSDL::fill(FillEffect effect, DrawTarget tgt, DrawArea area, RGB 
 
         tl_h3 = t; tl_h3.w = m1;
         tl_v3 = l; tl_v3.h = m1;
-        br_h3 = br; br_h3.x -= m1; br_h3.w = m1;
-        br_v3 = br; br_h3.y -= m1; br_h3.h = m1;
+        br_h3 = br; br_h3.x -= (m1-m0); br_h3.w = m1; //JK: adjusted
+        br_v3 = br; br_v3.y -= (m1-m0); br_v3.h = m1; //JK: adjusted
 
         // FIXME: Derive these from col
         RGB l0 = {255, 255, 255};
