@@ -19,6 +19,11 @@ InputManager::InputManager() {
     text_input_is_active = false;
 }
 
+bool InputManager::init(const InputManagerOptions& input_options) {
+    options = input_options;
+    return true;
+}
+
 bool InputManager::update(float delta) {
     if (click_held) {
         click_held_time += delta;
