@@ -67,44 +67,45 @@ bool InputManagerSDL::update(float delta) {
     }
 
     SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
-    
-    //JK: Simple version would be following, but we might not have a renderer:
-    /*
-    float log_x, log_y;
-    SDL_RenderWindowToLogical(renderer, mouse_pos.x, mouse_pos.y, &log_x, &log_y);
-    mouse_pos.x = static_cast<int>(round(logX));
-    mouse_pos.y = static_cast<int>(round(logY));
-    */
-    
-    //JK: DIY Version: (only execute if fullscreen == true)
-    //JK: (Didn't modify code to get 'win' passed here, so that's still missing)
-    //JK: And maybe some unnecessary (float) distributed ;)
-    int win_w, win_h;
-    int mouse_global_x = mouse_pos.x;
-    int mouse_global_y = mouse_pos.y;
-    float log_x, log_y;
-    win_w=1440; // replace with SDL_GetWindowSize(win, &win_w, &win_h);
-    win_h=900;  // replace with SDL_GetWindowSize(win, &win_w, &win_h);
-    float upscaled_xsize     = (float)win_h/(float)RES_Y*(float)RES_X;
-    float scale_factor_x     = (float)RES_X/(float)upscaled_xsize;
-    float black_padding_x    = (float)(win_w-upscaled_xsize)/(float)2;
-    float padding_downscaled = black_padding_x*scale_factor_x;
-    log_x = (float)mouse_pos.x/(float)upscaled_xsize*(float)RES_X;
-    log_y = (float)mouse_pos.y/(float)win_h*(float)RES_Y;
-    mouse_pos.x = static_cast<int>(round(log_x))-padding_downscaled;
-    mouse_pos.y = static_cast<int>(round(log_y));
-    if(mouse_pos.x < 0) {
-        mouse_pos.x = 0;
-        //JK: Also keep "real" mouse inside drawing surface
-        SDL_WarpMouseGlobal(black_padding_x, mouse_global_y);
-    }
-    if(mouse_pos.x > RES_X) {
-        mouse_pos.x = RES_X;
-        //JK: Also keep "real" mouse inside drawing surface
-        SDL_WarpMouseGlobal(win_w-black_padding_x, mouse_global_y);
-    }
-    //JK: Note: mouse_pos.y can never exceed screen space.
 
+    if (options.fullscreen) {
+        //JK: Simple version would be following, but we might not have a renderer:
+        /*
+        float log_x, log_y;
+        SDL_RenderWindowToLogical(renderer, mouse_pos.x, mouse_pos.y, &log_x, &log_y);
+        mouse_pos.x = static_cast<int>(round(logX));
+        mouse_pos.y = static_cast<int>(round(logY));
+        */
+
+        //JK: DIY Version: (only execute if fullscreen == true)
+        //JK: (Didn't modify code to get 'win' passed here, so that's still missing)
+        //JK: And maybe some unnecessary (float) distributed ;)
+        int win_w, win_h;
+        int mouse_global_x = mouse_pos.x;
+        int mouse_global_y = mouse_pos.y;
+        float log_x, log_y;
+        win_w=1440; // replace with SDL_GetWindowSize(win, &win_w, &win_h);
+        win_h=900;  // replace with SDL_GetWindowSize(win, &win_w, &win_h);
+        float upscaled_xsize     = (float)win_h/(float)RES_Y*(float)RES_X;
+        float scale_factor_x     = (float)RES_X/(float)upscaled_xsize;
+        float black_padding_x    = (float)(win_w-upscaled_xsize)/(float)2;
+        float padding_downscaled = black_padding_x*scale_factor_x;
+        log_x = (float)mouse_pos.x/(float)upscaled_xsize*(float)RES_X;
+        log_y = (float)mouse_pos.y/(float)win_h*(float)RES_Y;
+        mouse_pos.x = static_cast<int>(round(log_x))-padding_downscaled;
+        mouse_pos.y = static_cast<int>(round(log_y));
+        if(mouse_pos.x < 0) {
+            mouse_pos.x = 0;
+            //JK: Also keep "real" mouse inside drawing surface
+            SDL_WarpMouseGlobal(black_padding_x, mouse_global_y);
+        }
+        if(mouse_pos.x > RES_X) {
+            mouse_pos.x = RES_X;
+            //JK: Also keep "real" mouse inside drawing surface
+            SDL_WarpMouseGlobal(win_w-black_padding_x, mouse_global_y);
+        }
+        //JK: Note: mouse_pos.y can never exceed screen space.
+    }
 
     SDL_Event e;
     while (SDL_PollEvent(&e) != 0) {

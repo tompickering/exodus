@@ -59,9 +59,14 @@ enum Input {
     K_END,
 };
 
+struct InputManagerOptions {
+    bool fullscreen = true;
+};
+
 class InputManager {
     public:
         InputManager();
+        virtual bool init(const InputManagerOptions&);
         bool read(Input);
         bool consume(Input);
         MousePos get_mouse_pos();
@@ -81,6 +86,7 @@ class InputManager {
         virtual bool is_click_held();
         virtual bool click_held_for(float);
     protected:
+        InputManagerOptions options;
         bool space;
         bool escape;
         bool enter;

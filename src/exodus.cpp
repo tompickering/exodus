@@ -138,6 +138,16 @@ bool Exodus::init() {
         register_buttons();
     }
 
+    if (ok) {
+        InputManagerOptions input_manager_options;
+        input_manager_options.fullscreen = draw_manager_options.fullscreen;
+
+        if (!input_manager.init(input_manager_options)) {
+            ok = false;
+            L.error("Input subsystem failed to initialise");
+        }
+    }
+
     if (!audio_manager.init()) {
         L.error("Audio subsystem failed to initialise - game will not feature sound");
     }
