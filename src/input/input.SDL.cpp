@@ -81,7 +81,10 @@ bool InputManagerSDL::update(float delta) {
         //JK: (Didn't modify code to get 'win' passed here, so that's still missing)
         //JK: And maybe some unnecessary (float) distributed ;)
         int win_w, win_h;
-        int mouse_global_x = mouse_pos.x;
+
+        // Currently unused; comment to avoid compile warning
+        //int mouse_global_x = mouse_pos.x;
+
         int mouse_global_y = mouse_pos.y;
         float log_x, log_y;
         win_w=1440; // replace with SDL_GetWindowSize(win, &win_w, &win_h);
