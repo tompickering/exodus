@@ -60,6 +60,8 @@ enum Input {
 };
 
 struct InputManagerOptions {
+    int win_w;
+    int win_h;
     bool fullscreen = true;
 };
 

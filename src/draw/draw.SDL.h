@@ -24,6 +24,7 @@ class DrawManagerSDL : public DrawManager {
     public:
         DrawManagerSDL();
         virtual bool init(const DrawManagerOptions&) override;
+        virtual bool get_window_dimensions(int&, int&) override;
         virtual void load_resources() override;
         virtual void update(float, MousePos, MousePos, MousePos, bool) override;
         virtual void clear() override;

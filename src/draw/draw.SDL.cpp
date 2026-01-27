@@ -152,6 +152,11 @@ bool DrawManagerSDL::init(const DrawManagerOptions& options) {
     return true;
 }
 
+bool DrawManagerSDL::get_window_dimensions(int& w, int& h) {
+    SDL_GetWindowSize(win, &w, &h);
+    return true;
+}
+
 SDL_Surface* DrawManagerSDL::load_normalised_image(const char* path) {
     char img_path[ASSET_PATH_LEN_MAX+1];
     SDL_Surface *load_surf;

@@ -163,6 +163,7 @@ class DrawManager {
     public:
         DrawManager();
         virtual bool init(const DrawManagerOptions&) = 0;
+        virtual bool get_window_dimensions(int&, int&) = 0;
         virtual void load_resources() = 0;
         virtual void update(float, MousePos, MousePos, MousePos, bool);
         virtual void save_background() = 0;

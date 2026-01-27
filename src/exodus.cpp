@@ -140,6 +140,17 @@ bool Exodus::init() {
 
     if (ok) {
         InputManagerOptions input_manager_options;
+
+        input_manager_options.win_w = 1440;
+        input_manager_options.win_h = 900;
+
+        if (!draw_manager.get_window_dimensions(
+                              input_manager_options.win_w,
+                              input_manager_options.win_h)) {
+            ok = false;
+            L.error("Could not query window size");
+        }
+
         input_manager_options.fullscreen = draw_manager_options.fullscreen;
 
         if (!input_manager.init(input_manager_options)) {
