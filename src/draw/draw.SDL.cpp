@@ -7,8 +7,21 @@
 #include <cstdlib>
 
 #include <SDL2/SDL.h>
+
+#ifdef MAC
+#include <SDL_image.h>  // JK: Changed Path
+#include <SDL_ttf.h>
+#endif
+
+#ifdef LINUX
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#endif
+
+#ifdef WINDOWS
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+#endif
 
 #include "shared.h"
 #include "assetpaths.h"
@@ -37,6 +50,10 @@ bool DrawManagerSDL::init(const DrawManagerOptions& options) {
 
     fullscreen = options.fullscreen;
     hardware_rendering = options.use_hardware_rendering;
+     
+#ifdef MAC
+    hardware_rendering = false; // JK: Hardware rendering currently not working
+#endif
 
     renderer = nullptr;
     texture = nullptr;
@@ -305,11 +322,6 @@ void DrawManagerSDL::update(float delta, MousePos mouse_pos, MousePos new_click_
         if (!click_held) {
             cursor_area.x = mouse_pos.x - cursor_area.w / 2;
             cursor_area.y = mouse_pos.y - cursor_area.h / 2;
-        }
-
-        if (fullscreen) {
-            cursor_area.x = clamp(cursor_area.x, 0, RES_X-cursor_area.w);
-            cursor_area.y = clamp(cursor_area.y, 0, RES_Y-cursor_area.h);
         }
 
         ca = cursor_area;
