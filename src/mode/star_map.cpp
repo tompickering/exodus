@@ -851,24 +851,6 @@ ExodusMode StarMap::update(float delta) {
         case SM_PlanetRename:
             {
                 const char* newname = input_manager.get_input_text(PLANET_MAX_NAME);
-
-                //JK: Check for UTF-8 two-byte identifier and, if found, remove and
-                //shift (+64) the following char into corresponding Latin characters of extended ASCII
-                //N.B. Check exactly for signed char -61 ('Atilde') or we'll undo shifted chars in the next pass
-                char next_to_last_char = newname[strlen(newname) - 2];
-                if (next_to_last_char==-61) {
-                    char last_char = newname[strlen(newname) - 1];
-                    char replacement_char[2];
-                    replacement_char[1]=0;
-                    if (last_char < -64) replacement_char[0] = last_char+64;
-                    char workstring[100];
-                    // Remove last 2 (UTF-8 two-byte) characters
-                    strncpy(workstring, newname, strlen(newname) - 2);
-                    // Add Latin special character within extended ASCII range
-                    strcat (workstring, replacement_char);
-                    input_manager.set_input_text(workstring);
-                }
-
                 INPUT_CAP(newname, 100)
 
                 int x, y;
