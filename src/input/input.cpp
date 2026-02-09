@@ -1,6 +1,7 @@
 #include "input.h"
 
 #include <cstring>
+#include "util/value.h"
 
 #define CLICK_REPEAT_DELAY .4f
 #define CLICK_REPEAT_DELAY2 1.2f
@@ -121,6 +122,25 @@ void InputManager::input_text_overfill(int overfill) {
 void InputManager::set_input_text(const char* text_to_set) {
     text[INPUT_MAX_TEXT] = '\0';
     strncpy(text, text_to_set, INPUT_MAX_TEXT);
+}
+
+void InputManager::append_input_text(const char* text_to_append) {
+    text[INPUT_MAX_TEXT] = '\0';
+
+    int len_current = strnlen(text, INPUT_MAX_TEXT);
+
+    if (len_current >= INPUT_MAX_TEXT) {
+        return;
+    }
+
+    int len_append_max = INPUT_MAX_TEXT - len_current;
+    int len_append = strnlen(text_to_append, INPUT_MAX_TEXT);
+
+    int bytes_to_append = min(len_append, len_append_max);
+
+    if (bytes_to_append > 0) {
+        strncat(text, text_to_append, bytes_to_append);
+    }
 }
 
 void InputManager::backspace() {

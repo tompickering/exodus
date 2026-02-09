@@ -144,10 +144,7 @@ bool InputManagerSDL::update(float delta) {
         } else if (e.type == SDL_TEXTINPUT) {
             if (!SDL_IsTextInputActive())
                 continue;
-            int len = strnlen(text, INPUT_MAX_TEXT);
-            if (len >= INPUT_MAX_TEXT)
-                continue;
-            strcat(text, e.text.text);
+            append_input_text(e.text.text);
         }
     }
 
