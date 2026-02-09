@@ -9,10 +9,11 @@
 #include "assetpaths.h"
 #include "shared.h"
 
-const int PNL_TOP        = 412;
-const int PNL_BORDER     = 4;
-const int PNL_Y_SEP      = TEXT_Y_SEP;
-const int PNL_PLAYER_PAD = 5;
+const int PNL_TOP          = 410;            //JK: Adjusted
+const int PNL_BORDER       = 6;              //JK: Adjusted
+const int PNL_Y_SEP        = TEXT_Y_SEP - 2; //JK: Adjusted
+const int PNL_PLAYER_Y_SEP = TEXT_Y_SEP;     //JK: Added
+const int PNL_PLAYER_PAD   = 5;
 
 const DrawArea galaxy_panel_area = {0, PNL_TOP, RES_X, RES_Y - PNL_TOP};
 
@@ -48,23 +49,25 @@ PanelDrawer::PanelDrawer(PanelType _type) : type(_type) {
     area_playerinfo = {
         galaxy_panel_area.x + PNL_BORDER,
         galaxy_panel_area.y + PNL_BORDER,
-        194,
+        190,                                                                             //  JK: Adjusted
         galaxy_panel_area.h - PNL_BORDER * 2};
     area_starinfo = {
-        area_playerinfo.x + area_playerinfo.w + PNL_BORDER,
+        area_playerinfo.x + area_playerinfo.w + PNL_BORDER - 2,                          //  JK: Adjusted
         galaxy_panel_area.y + PNL_BORDER,
-        RES_X - (area_playerinfo.x + area_playerinfo.w + PNL_BORDER) - PNL_BORDER,
-        474 - PNL_TOP};
+        RES_X - (area_playerinfo.x + area_playerinfo.w + PNL_BORDER) - PNL_BORDER + 2,   //  JK: Adjusted
+        472 - PNL_TOP};  //JK: adjusted
 }
 
 void PanelDrawer::draw_panel_bg(DrawTarget tgt) {
     draw_manager.fill(FILL_3D_Out, tgt, galaxy_panel_area, COL_BORDERS);
     draw_manager.fill_pattern(tgt, area_playerinfo);
+    draw_manager.fill(FILL_3D_In_Hollow, tgt, area_playerinfo, COL_BORDERS); // JK: added
     draw_manager.fill_pattern(tgt, area_starinfo);
+    draw_manager.fill(FILL_3D_In_Hollow, tgt, area_starinfo, COL_BORDERS);   // JK: added
     draw_manager.save_background();
 
     const char* pnl_spr = type == PNL_Galaxy ? IMG_BR9_EXPORT : IMG_BR10_EXPORT;
-    const int top = area_playerinfo.y + PNL_PLAYER_PAD;
+    const int top = area_playerinfo.y + PNL_PLAYER_PAD - 2;  // JK: Adjusted
 
     draw_manager.draw(
             tgt,
@@ -77,24 +80,24 @@ void PanelDrawer::draw_panel_bg(DrawTarget tgt) {
             id_month_txt,
             "Month: ",
             Justify::Left,
-            area_playerinfo.x + 4,
-            top + PNL_Y_SEP,
+            area_playerinfo.x + 6, // JK: adjusted
+            top + PNL_PLAYER_Y_SEP,
             COL_TEXT);
     draw_manager.draw_text(
             tgt,
             id_mc_txt,
             "MCredits: ",
             Justify::Left,
-            area_playerinfo.x + 4,
-            top + 2*PNL_Y_SEP,
+            area_playerinfo.x + 6, // JK: adjusted
+            top + 2*PNL_PLAYER_Y_SEP,
             COL_TEXT);
     draw_manager.draw_text(
             tgt,
             id_planets_txt,
             "Planets: ",
             Justify::Left,
-            area_playerinfo.x + 4,
-            top + 3*PNL_Y_SEP,
+            area_playerinfo.x + 6, // JK: adjusted
+            top + 3*PNL_PLAYER_Y_SEP,
             COL_TEXT);
 }
 
@@ -112,14 +115,14 @@ void PanelDrawer::update_panel_info_player(DrawTarget tgt, Player* player) {
         strcpy(planets_string, "");
     }
 
-    const int top = area_playerinfo.y + PNL_PLAYER_PAD;
+    const int top = area_playerinfo.y + PNL_PLAYER_PAD - 2;  // JK: Adjusted
 
     draw_manager.draw_text(
             tgt,
             id_name,
             player ? player->get_full_name() : "",
             Justify::Left,
-            area_playerinfo.x + 4,
+            area_playerinfo.x + 6, // JK: adjusted
             top,
             COL_TEXT);
     draw_manager.draw_text(
@@ -128,7 +131,7 @@ void PanelDrawer::update_panel_info_player(DrawTarget tgt, Player* player) {
             month_string,
             Justify::Left,
             draw_manager.right(id_month_txt),
-            top + PNL_Y_SEP,
+            top + PNL_PLAYER_Y_SEP,
             COL_TEXT2);
     draw_manager.draw_text(
             tgt,
@@ -136,7 +139,7 @@ void PanelDrawer::update_panel_info_player(DrawTarget tgt, Player* player) {
             mc_string,
             Justify::Left,
             draw_manager.right(id_mc_txt),
-            top + 2*PNL_Y_SEP,
+            top + 2*PNL_PLAYER_Y_SEP,
             COL_TEXT2);
     draw_manager.draw_text(
             tgt,
@@ -144,7 +147,7 @@ void PanelDrawer::update_panel_info_player(DrawTarget tgt, Player* player) {
             planets_string,
             Justify::Left,
             draw_manager.right(id_planets_txt),
-            top + 3*PNL_Y_SEP,
+            top + 3*PNL_PLAYER_Y_SEP,
             COL_TEXT2);
 }
 
@@ -267,8 +270,8 @@ void PanelDrawer::update_panel_info_ft(DrawTarget tgt, Player* player, FlyTarget
         id_desc,
         (const char*) ft_desc,
         Justify::Left,
-        area_starinfo.x + 4,
-        area_starinfo.y + 2,
+        area_starinfo.x + 6,  // JK: adjusted
+        area_starinfo.y + 4,  // JK: adjusted
         COL_TEXT);
 }
 
@@ -302,24 +305,24 @@ void PanelDrawer::update_panel_info_planet(DrawTarget tgt, Player *player, Plane
         id_desc,
         (const char*) planet_desc,
         Justify::Left,
-        area_starinfo.x + 4,
-        area_starinfo.y,
+        area_starinfo.x + 6,
+        area_starinfo.y + 2,  // JK: Adjusted
         COL_TEXT);
 
     draw_manager.draw_text(
         id_desc1,
         (const char*) planet_own,
         Justify::Left,
-        area_starinfo.x + 4,
-        area_starinfo.y + PNL_Y_SEP,
+        area_starinfo.x + 6,
+        area_starinfo.y + 2 + PNL_Y_SEP,  // JK: Adjusted
         COL_TEXT);
 
     draw_manager.draw_text(
         id_desc2,
         (const char*) planet_class,
         Justify::Left,
-        area_starinfo.x + 4,
-        area_starinfo.y + 2*PNL_Y_SEP,
+        area_starinfo.x + 6,
+        area_starinfo.y + 2 + 2*PNL_Y_SEP,  // JK: Adjusted
         COL_TEXT);
 
     draw_manager.draw(id_lord_thumb, nullptr);
