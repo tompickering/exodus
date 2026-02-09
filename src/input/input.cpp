@@ -152,21 +152,23 @@ void InputManager::append_input_text(const char* text_to_append) {
      *        arrives, but this should really be fixed.
      */
 
-    //JK: Check for UTF-8 two-byte identifier and, if found, remove and
-    //shift (+64) the following char into corresponding Latin characters of extended ASCII
-    //N.B. Check exactly for signed char -61 ('Atilde') or we'll undo shifted chars in the next pass
-    char next_to_last_char = text[len_new - 2];
-    if (next_to_last_char==-61) {
-        char last_char = text[len_new - 1];
-        char replacement_char[2];
-        replacement_char[1]=0;
-        if (last_char < -64) replacement_char[0] = last_char+64;
-        char workstring[INPUT_MAX_TEXT];
-        // Remove last 2 (UTF-8 two-byte) characters
-        strncpy(workstring, text, strlen(text) - 2);
-        // Add Latin special character within extended ASCII range
-        strcat(workstring, replacement_char);
-        set_input_text(workstring);
+    if (len_new >= 2) {
+        //JK: Check for UTF-8 two-byte identifier and, if found, remove and
+        //shift (+64) the following char into corresponding Latin characters of extended ASCII
+        //N.B. Check exactly for signed char -61 ('Atilde') or we'll undo shifted chars in the next pass
+        char next_to_last_char = text[len_new - 2];
+        if (next_to_last_char==-61) {
+            char last_char = text[len_new - 1];
+            char replacement_char[2];
+            replacement_char[1]=0;
+            if (last_char < -64) replacement_char[0] = last_char+64;
+            char workstring[INPUT_MAX_TEXT];
+            // Remove last 2 (UTF-8 two-byte) characters
+            strncpy(workstring, text, strlen(text) - 2);
+            // Add Latin special character within extended ASCII range
+            strcat(workstring, replacement_char);
+            set_input_text(workstring);
+        }
     }
 }
 
