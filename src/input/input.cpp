@@ -1,6 +1,7 @@
 #include "input.h"
 
 #include <cstring>
+#include "util/value.h"
 
 #define CLICK_REPEAT_DELAY .4f
 #define CLICK_REPEAT_DELAY2 1.2f
@@ -121,6 +122,52 @@ void InputManager::input_text_overfill(int overfill) {
 void InputManager::set_input_text(const char* text_to_set) {
     text[INPUT_MAX_TEXT] = '\0';
     strncpy(text, text_to_set, INPUT_MAX_TEXT);
+}
+
+void InputManager::append_input_text(const char* text_to_append) {
+    text[INPUT_MAX_TEXT] = '\0';
+
+    int len_current = strnlen(text, INPUT_MAX_TEXT);
+
+    if (len_current >= INPUT_MAX_TEXT) {
+        return;
+    }
+
+    int len_append_max = INPUT_MAX_TEXT - len_current;
+    int len_append = strnlen(text_to_append, INPUT_MAX_TEXT);
+
+    int bytes_to_append = min(len_append, len_append_max);
+
+    if (bytes_to_append < 0) {
+        return;
+    }
+
+    strncat(text, text_to_append, bytes_to_append);
+
+    int len_new = strnlen(text, INPUT_MAX_TEXT);
+
+    /*
+     * FIXME: This only assesses the most recent byte.
+     *        As it stands this is the only way in which input
+     *        arrives, but this should really be fixed.
+     */
+
+    //JK: Check for UTF-8 two-byte identifier and, if found, remove and
+    //shift (+64) the following char into corresponding Latin characters of extended ASCII
+    //N.B. Check exactly for signed char -61 ('Atilde') or we'll undo shifted chars in the next pass
+    char next_to_last_char = text[len_new - 2];
+    if (next_to_last_char==-61) {
+        char last_char = text[len_new - 1];
+        char replacement_char[2];
+        replacement_char[1]=0;
+        if (last_char < -64) replacement_char[0] = last_char+64;
+        char workstring[INPUT_MAX_TEXT];
+        // Remove last 2 (UTF-8 two-byte) characters
+        strncpy(workstring, text, strlen(text) - 2);
+        // Add Latin special character within extended ASCII range
+        strcat(workstring, replacement_char);
+        set_input_text(workstring);
+    }
 }
 
 void InputManager::backspace() {

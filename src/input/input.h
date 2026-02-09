@@ -82,6 +82,7 @@ class InputManager {
         virtual void stop_text_input() { text_input_is_active = false; }
         bool active_text_input() const { return text_input_is_active; }
         void set_input_text(const char*);
+        void append_input_text(const char*);
         void backspace();
         void enable_repeating_clicks(bool);
         void clear_click_held_state();
