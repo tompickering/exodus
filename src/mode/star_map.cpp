@@ -1047,7 +1047,7 @@ void StarMap::set_fleet_button(bool on) {
     draw_manager.draw(
         id(ID::FLEET_BUTTON),
         on ? IMG_TS2_M2_1 : IMG_TS2_M2_2,
-        {206, RES_Y - 6,
+        {202, RES_Y - 8, // JK: Adjusted
          0, 1, 1, 1});
 }
 

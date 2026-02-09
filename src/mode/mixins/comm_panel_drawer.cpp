@@ -582,12 +582,26 @@ void CommPanelDrawer::comm_open(CommSend input) {
          COMM_Y + COMM_BORDER,
          196, 208},
          {0, 0, 0});
+    draw_manager.fill(                              // JK: Added
+        FILL_3D_In_Hollow,
+        {COMM_X + COMM_BORDER - 2,
+         COMM_Y + COMM_BORDER - 2,
+         196 + 4, 208 + 4},
+         COL_BORDERS);
     draw_manager.fill_pattern(
         id_comm_bg_t,
         {COMM_RCOL_X,
          COMM_Y + COMM_BORDER,
          COMM_X + COMM_W - COMM_RCOL_X - COMM_BORDER,
          28});
+		 
+    draw_manager.fill(                              // JK: Added
+        FILL_3D_In_Hollow,
+        {COMM_RCOL_X -2,
+         COMM_Y + COMM_BORDER -2,
+         COMM_X + COMM_W - COMM_RCOL_X - COMM_BORDER + 4,
+         28 + 4},
+         COL_BORDERS);
     draw_manager.fill_pattern(
         id_comm_bg_b,
         {COMM_RCOL_X,
@@ -595,6 +609,13 @@ void CommPanelDrawer::comm_open(CommSend input) {
          COMM_X + COMM_W - COMM_RCOL_X - COMM_BORDER,
          172});
 
+    draw_manager.fill(                              // JK: Added
+        FILL_3D_In_Hollow,
+        {COMM_RCOL_X - 2,
+         COMM_Y + 28 + COMM_BORDER*2 - 2,
+         COMM_X + COMM_W - COMM_RCOL_X - COMM_BORDER + 4,
+         172 + 4},
+         COL_BORDERS);
     draw_manager.fill(
         id_comm_img_bg,
         {COMM_X + COMM_BORDER + 1,
@@ -1595,6 +1616,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
             if (onein(3)) {
                 comm_prepare(4);
                 comm_ctx.mc = min(comm_other->get_mc(), 100+(RND(10)*20));
+                if (comm_ctx.mc < 1) comm_ctx.mc = 1; // JK: Lords with negative MC would cause crash (and 0 feels silly)
                 comm_set_speech("Well... I offer %dMC...", comm_ctx.mc);
                 comm_set_text(0, "This is acceptable.");
                 comm_set_text(1, "I do not want your money...");
@@ -2465,6 +2487,7 @@ void CommPanelDrawer::comm_send(CommSend input) {
                     comm_ctx.mc = 100 - RND(3)*10;
                 }
                 comm_ctx.mc = min(comm_ctx.mc, comm_player->get_mc());
+                if (comm_ctx.mc < 1) comm_ctx.mc = 1; // JK: Lords with negative MC would cause crash (and 0 feels silly)
                 comm_set_speech("Well... I offer %dMC.", comm_ctx.mc);
             } else {
                 if (onein(2)) {
