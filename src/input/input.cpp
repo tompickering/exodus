@@ -159,15 +159,11 @@ void InputManager::append_input_text(const char* text_to_append) {
         char next_to_last_char = text[len_new - 2];
         if (next_to_last_char==-61) {
             char last_char = text[len_new - 1];
-            char replacement_char[2];
-            replacement_char[1]=0;
-            if (last_char < -64) replacement_char[0] = last_char+64;
-            char workstring[INPUT_MAX_TEXT];
-            // Remove last 2 (UTF-8 two-byte) characters
-            strncpy(workstring, text, strlen(text) - 2);
-            // Add Latin special character within extended ASCII range
-            strcat(workstring, replacement_char);
-            set_input_text(workstring);
+            char replacement_char = ' ';
+            if (last_char < -64) replacement_char = last_char+64;
+            unsigned long sl = strlen(text);
+            text[sl - 2] = replacement_char;
+            text[sl - 1] = '\0';
         }
     }
 }
