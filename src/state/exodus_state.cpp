@@ -367,6 +367,8 @@ Planet* ExodusState::select_planet_for_cpu(bool worst) {
             quality = 100;
         }
 
+        int planets_considered = 0;
+
         for (PlanetIteratorRandom piter; !piter.complete(); ++piter) {
             Planet *p = piter.get();
             if (!p->is_owned()) {
@@ -376,6 +378,9 @@ Planet* ExodusState::select_planet_for_cpu(bool worst) {
                 }
 
                 L.verb("Considering star %d planet %d", piter.get_star_idx(), piter.get_idx());
+
+                ++planets_considered;
+
                 int planet_quality = 0;
                 if (p->get_class() == Forest)  planet_quality = 4;
                 if (p->get_class() == Desert)  planet_quality = 2;
@@ -406,6 +411,10 @@ Planet* ExodusState::select_planet_for_cpu(bool worst) {
                     }
                 }
             }
+        }
+
+        if (planets_considered == 0) {
+            return nullptr;
         }
     }
 
