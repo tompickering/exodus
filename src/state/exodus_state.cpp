@@ -968,6 +968,26 @@ bool ExodusState::active_player_local() {
     return orbit == get_active_flytarget();
 }
 
+bool ExodusState::planets_free() { // JK: Added
+    bool unowned = false;
+    for (PlanetIterator piter; !piter.complete(); ++piter) {
+        Planet *p = piter.get();
+        if (!p->is_owned())
+            unowned = true;
+    }
+    return(unowned);
+}
+
+bool ExodusState::planets_free_unnamed() { // JK: Added
+    bool free_unnamed = false;
+    for (PlanetIterator piter; !piter.complete(); ++piter) {
+        Planet *p = piter.get();
+        if (!p->is_owned() && !p->is_named())
+            free_unnamed = true;
+    }
+    return(free_unnamed);
+}
+
 PlanetInfo ExodusState::recommend_planet() {
     PlanetInfo info;
     int quality = -1;
@@ -1560,6 +1580,10 @@ void ExodusState::planet_gift_event() {
     if (!FEATURE(EF_PLANET_GIFT_EVENTS)) {
         return;
     }
+    
+    if (!planets_free_unnamed()) {  // JK: Prevents game freeze if no planets available
+        return;
+    }
 
     L.debug("--- PLANET GIFTING ---");
 
@@ -1667,6 +1691,11 @@ void ExodusState::planet_gift_event() {
 }
 
 void ExodusState::run_planet_gift_events() {
+    
+    if (!planets_free_unnamed()) {  // JK: Prevents game freeze if no planets available
+        return;
+    }
+
     EnemyStart start = get_enemy_start();
 
     if (start == ENEMY_Weak) {
