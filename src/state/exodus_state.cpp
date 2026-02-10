@@ -977,9 +977,10 @@ bool ExodusState::active_player_local() {
     return orbit == get_active_flytarget();
 }
 
-PlanetInfo ExodusState::recommend_planet() {
-    PlanetInfo info;
+bool ExodusState::recommend_planet(PlanetInfo& info) {
     int quality = -1;
+
+    info.planet = nullptr;
 
     for (PlanetIterator piter; !piter.complete(); ++piter) {
         Planet *p = piter.get();
@@ -1007,7 +1008,8 @@ PlanetInfo ExodusState::recommend_planet() {
             info.index = piter.get_idx();
         }
     }
-    return info;
+
+    return (info.planet != nullptr);
 }
 
 void ExodusState::save_recommended_planet(const PlanetInfo& info) {

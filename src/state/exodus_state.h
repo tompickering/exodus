@@ -140,7 +140,7 @@ class ExodusState : public Saveable {
         bool owns_a_planet(Player*);
         bool any_human_has_visited(int);
         bool active_player_local(); // Is the active player at the active flytarget?
-        PlanetInfo recommend_planet();
+        bool recommend_planet(PlanetInfo&);
         Player* get_hostile_to(Player&);
         void set_random_hostility(Player&);
         int count_hostile_players(int);
