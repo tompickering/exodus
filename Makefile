@@ -26,7 +26,7 @@ INCFLAGS += -Isteamworks_sdk/sdk/public
 endif
 
 LDLIBS=-lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
-CXXFLAGS=-Wall -Wno-reorder -Wno-class-memaccess -Wno-format-truncation -pedantic -DMONO -DSDL $(INCFLAGS)
+CXXFLAGS=-std=c++11 -Wall -Wno-reorder -Wno-class-memaccess -Wno-format-truncation -pedantic -DMONO -DSDL $(INCFLAGS)
 DBGFLAGS=-g -DDBG
 
 #CXX=clang++
@@ -44,7 +44,7 @@ linux: ext=
 linux: CXXFLAGS += -DLINUX
 linux: bin
 
-mac: CXX=g++-13 -std=c++11
+mac: CXX=g++-13
 mac: ext=
 mac: CXXFLAGS += -O3 -DMAC
 mac: INCFLAGS += -I/opt/homebrew/include -L/opt/homebrew/lib
