@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cstdlib>
+#include <random>    //JK: Added for new shuffle method
 
 
 
@@ -34,7 +35,11 @@ void Iterator::set_random() {
         random_data[i] = i;
     }
 
-    std::random_shuffle(random_data, random_data+end);
+    //JK: Changed the method as it wasn't available in std anymore
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle (random_data, random_data+end, g);
+
 }
 
 int Iterator::get_effective_idx() {
