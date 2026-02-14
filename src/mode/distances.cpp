@@ -33,7 +33,7 @@ void Distances::enter() {
 
     for (int i = 1; i < DIST_RINGS; ++i)
     {
-        int r = i*DIST_STEP;
+        int r = i*DIST_STEP - 8;  // JK: Adjusted
         draw_manager.draw_circle(cx, cy, r, COL_TEXT2);
 
         int months = i+1;
