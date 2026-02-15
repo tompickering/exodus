@@ -7,21 +7,8 @@
 #include <cstdlib>
 
 #include <SDL2/SDL.h>
-
-#ifdef MAC
-#include <SDL_image.h>  // JK: Changed Path
-#include <SDL_ttf.h>
-#endif
-
-#ifdef LINUX
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#endif
-
-#ifdef WINDOWS
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-#endif
 
 #include "shared.h"
 #include "assetpaths.h"
