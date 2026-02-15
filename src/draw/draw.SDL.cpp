@@ -50,10 +50,6 @@ bool DrawManagerSDL::init(const DrawManagerOptions& options) {
 
     fullscreen = options.fullscreen;
     hardware_rendering = options.use_hardware_rendering;
-     
-#ifdef MAC
-    hardware_rendering = false; // JK: Hardware rendering currently not working
-#endif
 
     renderer = nullptr;
     texture = nullptr;
@@ -109,11 +105,15 @@ bool DrawManagerSDL::init(const DrawManagerOptions& options) {
         return false;
     }
 #else
-    win_surf = SDL_GetWindowSurface(win);
-
-    if (!win_surf) {
-        L.error("Could not create SDL window surface");
-        return false;
+    
+    if (!hardware_rendering) {
+        // JK: Using SDL_GetWindowSurface with hardware rendering fails with macOS/Metal
+        win_surf = SDL_GetWindowSurface(win);
+        
+        if (!win_surf) {
+            L.error("Could not create SDL window surface");
+            return false;
+        }
     }
 
     surf = SDL_CreateRGBSurface(0, RES_X, RES_Y, 32, 0, 0, 0, 0);
@@ -1435,15 +1435,16 @@ void DrawManagerSDL::blit_surf_to_window()
         SDL_RenderCopy(renderer, texture, nullptr, nullptr);
         SDL_RenderPresent(renderer);
         return;
-    }
-
-    if (fullscreen)
-    {
-        SDL_BlitScaled(surf, nullptr, win_surf, &fullscreen_area);
-    }
-    else
-    {
-        SDL_BlitScaled(surf, nullptr, win_surf, nullptr);
+    } else {
+        // JK: Using SDL_GetWindowSurface with hardware rendering fails with macOS/Metal
+        if (fullscreen)
+        {
+            SDL_BlitScaled(surf, nullptr, win_surf, &fullscreen_area);
+        }
+        else
+        {
+            SDL_BlitScaled(surf, nullptr, win_surf, nullptr);
+        }
     }
 }
 
