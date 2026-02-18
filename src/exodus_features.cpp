@@ -177,6 +177,9 @@ static bool FIX_LUNAR_BATTLE_SOFTLOCKS = false;
 // Fix MC going to player in attack payoff event
 static bool FIX_ATTACKPAYOFF_MC = false;
 
+//JK: Ask player before handing over a planet after a revolution
+static bool ACCEPT_REBEL_PLANET = false;
+
 
 static bool DISABLE_MULTIPLAYER = true;
 
@@ -246,6 +249,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         FIX_LUNAR_BATTLE_STALEMATE = true;
         FIX_LUNAR_BATTLE_SOFTLOCKS = true;
         FIX_ATTACKPAYOFF_MC = false;
+        ACCEPT_REBEL_PLANET = false; // JK: Feature EF_ACCEPT_REBEL_PLANET
         DISABLE_MULTIPLAYER = true;
     }
 
@@ -308,6 +312,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         FIX_LUNAR_BATTLE_STALEMATE = true;
         FIX_LUNAR_BATTLE_SOFTLOCKS = true;
         FIX_ATTACKPAYOFF_MC = true;
+        ACCEPT_REBEL_PLANET = true; // JK: Feature EF_ACCEPT_REBEL_PLANET
         DISABLE_MULTIPLAYER = true;
     }
 }
@@ -383,6 +388,7 @@ bool FEATURE(ExodusFeature f) {
     if (f == EF_FIX_LUNAR_BATTLE_STALEMATE) return FIX_LUNAR_BATTLE_STALEMATE;
     if (f == EF_FIX_LUNAR_BATTLE_SOFTLOCKS) return FIX_LUNAR_BATTLE_SOFTLOCKS;
     if (f == EF_FIX_ATTACKPAYOFF_MC) return FIX_ATTACKPAYOFF_MC;
+    if (f == EF_ACCEPT_REBEL_PLANET) return ACCEPT_REBEL_PLANET;        //JK: Feature EF_ACCEPT_REBEL_PLANET
     if (f == EF_DISABLE_MULTIPLAYER) return DISABLE_MULTIPLAYER;
 
     L.fatal("Unhandled feature %d", (int)f);

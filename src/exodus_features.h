@@ -66,6 +66,7 @@ enum ExodusFeature {
     EF_FIX_LUNAR_BATTLE_SOFTLOCKS,
     EF_FIX_ATTACKPAYOFF_MC,
     EF_DISABLE_MULTIPLAYER,
+    EF_ACCEPT_REBEL_PLANET,     // JK: Feature EF_ACCEPT_REBEL_PLANET
 };
 
 void exodus_set_game_mode(ExodusGameMode);

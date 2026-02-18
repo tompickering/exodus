@@ -92,6 +92,7 @@ enum MonthPassPlanetStage {
     MPP_CityEpidemic,
     MPP_RebelAttack,
     MPP_RebelAttackResult,
+    MPP_RebelAttackResult2, // JK: Feature EF_ACCEPT_REBEL_PLANET
     MPP_LawsIncreaseUnrest,
     MPP_ParksReduceUnrest,
     MPP_ClearRadiation,
@@ -136,6 +137,8 @@ struct MPState {
     int mp_planet_idx;
     Officer mp_officer;
     int mp_production_shutdown;
+    bool wait_player_takes_planet; // JK: Feature EF_ACCEPT_REBEL_PLANET
+    bool wait_player_idx;          // JK: Feature EF_ACCEPT_REBEL_PLANET
 
     int mpai_player_idx;
     int mpai_star_idx;
