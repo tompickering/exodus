@@ -4835,6 +4835,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     // Can cause the owner to change - we should return to ensure
     // that the 'owner' variable is updated when we resume processing.
     if (mp_state.mpp_stage == MPP_RebelAttackResult) {
+        mp_state.wait_player_takes_planet = false; // JK: Feature EF_ACCEPT_REBEL_PLANET
         if (ephstate.get_ephemeral_state() == EPH_LunarBattleReport) {
             LunarBattleReport &rpt = ephstate.lunar_battle_report;
             ephstate.clear_ephemeral_state();
@@ -4879,7 +4880,17 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 if (!republic) {
                     const char *new_owner_name = new_owner->get_full_name();
                     bulletin_set_next_text("have chosen %s to rule it!", new_owner_name);
-                    p->set_owner(new_owner_idx, POCR_RebelAppointed);
+                    if (new_owner->is_human() && FEATURE(EF_ACCEPT_REBEL_PLANET)) {
+                        // JK: Feature EF_ACCEPT_REBEL_PLANET
+                        bulletin_set_next_text("");
+                        bulletin_set_next_text("Do you accept?");
+                        audio_manager.target_music(mpart2mus(5));
+                        mp_state.wait_player_takes_planet = true;
+                        mp_state.wait_player_idx = new_owner_idx;
+                       bulletin_set_yesno();
+                    } else {
+                        p->set_owner(new_owner_idx, POCR_RebelAppointed);
+                    }
                 } else {
                     // Orig doesn't do this, but we can't find a new owner!
                     bulletin_set_next_text("have chosen to establish a republic!");
@@ -4916,6 +4927,21 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             }
             next_mpp_stage();
             return ExodusMode::MODE_None;
+        }
+        next_mpp_stage();
+    }
+    
+    // JK: Feature EF_ACCEPT_REBEL_PLANET
+    if (mp_state.mpp_stage == MPP_RebelAttackResult2) {
+        if (mp_state.wait_player_takes_planet == true) {
+            if (bulletin_was_yesno_yes()) {
+                p->set_owner(mp_state.wait_player_idx, POCR_RebelAppointed);
+            } else {
+                p->disown(POCR_RebelAppointed);
+                mp_state.mpp_stage = MPP_LosePlanetControl;
+                next_mpp_stage();
+                return ExodusMode::MODE_None;
+            }
         }
         next_mpp_stage();
     }
