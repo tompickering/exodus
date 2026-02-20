@@ -137,8 +137,7 @@ struct MPState {
     int mp_planet_idx;
     Officer mp_officer;
     int mp_production_shutdown;
-    bool wait_player_takes_planet; // JK: Feature EF_ACCEPT_REBEL_PLANET
-    bool wait_player_idx;          // JK: Feature EF_ACCEPT_REBEL_PLANET
+    int wait_player_idx;          // JK: Feature EF_ACCEPT_REBEL_PLANET
 
     int mpai_player_idx;
     int mpai_star_idx;
