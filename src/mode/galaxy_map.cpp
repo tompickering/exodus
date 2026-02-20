@@ -4835,7 +4835,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     // Can cause the owner to change - we should return to ensure
     // that the 'owner' variable is updated when we resume processing.
     if (mp_state.mpp_stage == MPP_RebelAttackResult) {
-        mp_state.wait_player_takes_planet = false; // JK: Feature EF_ACCEPT_REBEL_PLANET
+        mp_state.wait_player_idx = -1; // JK: Feature EF_ACCEPT_REBEL_PLANET
         if (ephstate.get_ephemeral_state() == EPH_LunarBattleReport) {
             LunarBattleReport &rpt = ephstate.lunar_battle_report;
             ephstate.clear_ephemeral_state();
@@ -4885,7 +4885,6 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                         bulletin_set_next_text("");
                         bulletin_set_next_text("Do you accept?");
                         audio_manager.target_music(mpart2mus(5));
-                        mp_state.wait_player_takes_planet = true;
                         mp_state.wait_player_idx = new_owner_idx;
                        bulletin_set_yesno();
                     } else {
@@ -4933,7 +4932,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     
     // JK: Feature EF_ACCEPT_REBEL_PLANET
     if (mp_state.mpp_stage == MPP_RebelAttackResult2) {
-        if (mp_state.wait_player_takes_planet == true) {
+        if (mp_state.wait_player_idx != -1) {
             if (bulletin_was_yesno_yes()) {
                 p->set_owner(mp_state.wait_player_idx, POCR_RebelAppointed);
             } else {
