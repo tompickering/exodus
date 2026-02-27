@@ -2,6 +2,7 @@
 
 #include "assetpaths.h"
 #include "shared.h"
+#include "util/str.h"   // JK: Feature EF_IMPROVED_REPORT_UX
 
 #include "input/input.h"
 
@@ -725,7 +726,11 @@ void BulletinDrawer::bulletin_write_planet_info(Star* s, Planet* p) {
         col = COL_TEXT2;
 
     bulletin_set_text_col(col);
-    bulletin_set_next_text("Planet %s, System %s", p->get_name(), s->name);
+    if (FEATURE(EF_IMPROVED_REPORT_UX)) {
+        bulletin_set_next_text("%s (%s System)", tmp_caps(p->get_name()), s->name); // JK: Feature EF_IMPROVED_REPORT_UX
+    } else {
+        bulletin_set_next_text("Planet %s, System %s", p->get_name(), s->name);
+    }
     bulletin_set_next_text("");
     bulletin_set_text_col(col);
     bulletin_set_next_text("%s", owner ? owner->get_full_name() : "");
