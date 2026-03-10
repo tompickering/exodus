@@ -4355,6 +4355,14 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
     int p_idx = exostate().get_active_planet_idx();
 
     Player *owner = nullptr;
+	
+    // JK: Feature EF_IMPROVED_REPORT_UX
+    char indent[3];
+    if (FEATURE(EF_IMPROVED_REPORT_UX)){
+        strcpy(indent, "  ");
+    } else {
+        indent[0] = '\0';
+    }
 
     // At the start of processing, planets will always be owned.
     // However, if they become disowned during processing, we
@@ -5164,9 +5172,9 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 report.register_major_problem();
             }
 
-            report.add_line("%s%s%s%s%s", rpt.no_money ? "No money" : "", s0,
-                                          rpt.no_space ? "No space" : "", s1,
-                                          rpt.no_plu ? "No plutonium" : "");
+            report.add_line("%s%s%s%s%s%s", indent, rpt.no_money ? "No money" : "", s0,   // JK: Feature EF_IMPROVED_REPORT_UX
+                                                    rpt.no_space ? "No space" : "", s1,
+                                                    rpt.no_plu ? "No plutonium" : "");
         }
         next_mpp_stage();
     }
@@ -5277,8 +5285,8 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                 TradeReport rpt = p->monthly_trade();
                 report.trade_mc = rpt.mc;
                 report.add_line("Trading Centre sold:");
-                report.add_line("Mi: %d / Fd: %d / Pl: %d => %d MC",
-                                 rpt.mi,  rpt.fd,  rpt.pl, rpt.mc);
+                report.add_line("%sMi: %d / Fd: %d / Pl: %d => %d MC", // JK: Feature EF_IMPROVED_REPORT_UX
+                                 indent, rpt.mi,  rpt.fd,  rpt.pl, rpt.mc);
             }
         }
         next_mpp_stage();
@@ -5293,8 +5301,8 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     TradeReport rpt = p->monthly_trade_port();
                     report.trade_mc = rpt.mc;
                     report.add_line("Trade Port sold:");
-                    report.add_line("Mi: %d / Fd: %d / Pl: %d => %d MC",
-                                     rpt.mi,  rpt.fd,  rpt.pl, rpt.mc);
+                    report.add_line("%sMi: %d / Fd: %d / Pl: %d => %d MC", // JK: Feature EF_IMPROVED_REPORT_UX
+                                     indent, rpt.mi,  rpt.fd,  rpt.pl, rpt.mc);
                 } else {
                     report.register_minor_problem();
                     report.add_line("Trade Port not in operation. No partners.");
@@ -5312,7 +5320,7 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
             owner->give_mc(mc, MC_VillageGifts);
             report.register_good_news();
             report.add_line("The native village inhabitants offer");
-            report.add_line("presents that are worth %d MC.", mc);
+            report.add_line("%spresents that are worth %d MC.", indent, mc); // JK: Feature EF_IMPROVED_REPORT_UX
             exostate().register_news(NI_NativesOfferPresents);
         }
         next_mpp_stage();
