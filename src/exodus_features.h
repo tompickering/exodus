@@ -68,6 +68,7 @@ enum ExodusFeature {
     EF_DISABLE_MULTIPLAYER,
     EF_ACCEPT_REBEL_PLANET,     // JK: Feature EF_ACCEPT_REBEL_PLANET
     EF_IMPROVED_REPORT_UX,      // JK: Feature EF_IMPROVED_REPORT_UX
+    EF_IMPROVED_PLANET_MAP_UX,  // JK: Feature EF_IMPROVED_PLANET_MAP_UX
 };
 
 void exodus_set_game_mode(ExodusGameMode);

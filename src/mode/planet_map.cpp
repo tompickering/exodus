@@ -472,6 +472,7 @@ void PlanetMap::enter() {
 
     for (int i = 0; i < MAX_STONES; ++i) {
         id_stones[i] = draw_manager.new_sprite_id();
+        id_overlays[i] = draw_manager.new_sprite_id(); // JK: Feature EF_IMPROVED_PLANET_MAP_UX
     }
 
     bool play_music = true;
@@ -594,6 +595,7 @@ void PlanetMap::enter() {
 void PlanetMap::exit() {
     for (int i = 0; i < MAX_STONES; ++i) {
         draw_manager.release_sprite_id(id_stones[i]);
+        draw_manager.release_sprite_id(id_overlays[i]); // JK: Feature EF_IMPROVED_PLANET_MAP_UX
     }
     for (ID i = LAW_JUSTICE; i <= LAW_EXIT; i = (ID)((int)i+1)) {
         draw_manager.unset_selectable(id(i));
@@ -753,6 +755,7 @@ ExodusMode PlanetMap::update(float delta) {
     switch(stage) {
         case PM_Idle:
             draw_stones();
+            draw_properties(); // JK: Feature EF_IMPROVED_PLANET_MAP_UX
             update_gauges();
             draw_mc();
 
@@ -943,6 +946,7 @@ ExodusMode PlanetMap::update(float delta) {
             break;
         case PM_Construct:
             draw_stones();
+            draw_properties(); // JK: Feature EF_IMPROVED_PLANET_MAP_UX
 
             if (!construct_anim) {
                 // Should not happen
@@ -1452,6 +1456,105 @@ ExodusMode PlanetMap::update(float delta) {
 
     return ExodusMode::MODE_None;
 }
+
+// JK: Feature EF_IMPROVED_PLANET_MAP_UX: Show property overlays
+void PlanetMap::draw_properties() {
+    if (!FEATURE(EF_IMPROVED_PLANET_MAP_UX)) return;
+    
+    int prod_inf = 0;
+    int prod_gli = 0;
+    int prod_art = 0;
+    int prod_mine = 0;
+    int can_produce[4];
+    
+    if ((active_tool == TOOL_Plu) || (active_tool == TOOL_Inf) || (active_tool == TOOL_Gli) || (active_tool == TOOL_Art) || (active_tool == TOOL_Mine) || (active_tool == TOOL_Clear)) {
+        //determine who has no power
+        //can be optimized by asking once if enough power for everyone is available and then skip.
+        int power_available =  planet->get_plu_production();
+
+        if (FEATURE(EF_OPTIMISE_ARMY_PRODUCTION_PRIORITIES)) {
+            can_produce[0] = planet->count_stones(STONE_Art);
+            can_produce[1] = planet->count_stones(STONE_Gli);
+            can_produce[2] = planet->count_stones(STONE_Inf);
+        } else {
+            can_produce[0] = planet->count_stones(STONE_Inf);
+            can_produce[1] = planet->count_stones(STONE_Gli);
+            can_produce[2] = planet->count_stones(STONE_Art);
+        }
+        can_produce[3] = planet->count_stones(STONE_Mine);
+
+        for (int i = 0; i < 4; i++) {
+            if (power_available > 0) {
+                power_available -= can_produce[i];
+                if (power_available <= 0) {
+                    can_produce[i] += power_available; // (deducts)
+                    power_available = 0;
+                }
+            } else {
+                can_produce[i] = 0;
+            }
+        }
+
+        if (FEATURE(EF_OPTIMISE_ARMY_PRODUCTION_PRIORITIES)) {
+            prod_art = can_produce[0];
+            prod_gli = can_produce[1];
+            prod_inf = can_produce[2];
+        } else {
+            prod_inf = can_produce[0];
+            prod_gli = can_produce[1];
+            prod_art = can_produce[2];
+        }
+        prod_mine = can_produce[3];
+    }
+    
+    bool overlay_drawn;
+        
+    for (int y = 0; y < blocks; ++y) {
+        for (int x = 0; x < blocks; ++x) {
+            Stone st = planet->get_stone(x, y);
+            
+            overlay_drawn = false;
+            
+            if ((active_tool == TOOL_Plu) || (active_tool == TOOL_Inf) || (active_tool == TOOL_Gli) || (active_tool == TOOL_Art) || (active_tool == TOOL_Mine) || (active_tool == TOOL_Clear)) {
+                // show if energy missing
+                bool no_power = false;
+                
+                switch (st) {
+                    case STONE_Inf:
+                        if (!prod_inf) no_power = true; else prod_inf --;
+                        break;
+                    case STONE_Gli:
+                        if (!prod_gli) no_power = true; else prod_gli --;
+                        break;
+                    case STONE_Art:
+                        if (!prod_art) no_power = true; else prod_art --;
+                        break;
+                    case STONE_Mine:
+                        if (!prod_mine) no_power = true; else prod_mine --;
+                        break;
+                    default:
+                        break;
+                }
+                
+                if (no_power) {
+                    bool draw_text_cursor = draw_manager.text_cursor_cycle < (TEXT_CURSOR_PERIOD/2.f);
+                    if (draw_text_cursor) {
+                        draw_manager.draw(
+                                          id_overlays[y*blocks+x],
+                                          IMG_OVR_NO_POWER,
+                                          {surf_x + x*STONE_SZ, surf_y + y*STONE_SZ,
+                                              0, 0, 1, 1});
+                        overlay_drawn = true;
+                    }
+                }
+            }
+			
+            if (!overlay_drawn) {
+                 draw_manager.draw(id_overlays[y*blocks+x], nullptr);
+             }
+         }
+     }
+ }
 
 /*
  * N.B. we use the term 'stone' from the original to mean 'any object

@@ -40,12 +40,12 @@ void DrawManager::update(float delta, MousePos new_mouse_pos, MousePos new_click
         fade_time += delta;
     }
 
-    if (text_cursor_enabled()) {
-        text_cursor_cycle -= delta;
-        while (text_cursor_cycle < 0) {
-            text_cursor_cycle += TEXT_CURSOR_PERIOD;
-        }
+//if (text_cursor_enabled()) { //JK: Overlay "No power" hijacks the cursor timer for overlays, so keep it running always
+    text_cursor_cycle -= delta;
+    while (text_cursor_cycle < 0) {
+        text_cursor_cycle += TEXT_CURSOR_PERIOD;
     }
+//}
 
     update_special_vfx(delta);
 
