@@ -83,6 +83,7 @@ class PlanetMap : ModeBase, CommPanelDrawer {
         int menu_y;
         int blocks;
         void draw_stones();
+        void draw_properties(); // JK: Feature EF_IMPROVED_PLANET_MAP_UX
         void update_gauges();
         void clear_surf(int, int);
 
@@ -147,6 +148,7 @@ class PlanetMap : ModeBase, CommPanelDrawer {
         bool trade_port_operational;
 
         SprID id_stones[MAX_STONES];
+        SprID id_overlays[MAX_STONES]; // JK: Feature EF_IMPROVED_PLANET_MAP_UX
 };
 
 #endif

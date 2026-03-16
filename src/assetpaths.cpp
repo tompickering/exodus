@@ -1396,6 +1396,7 @@ const char *IMG_NI_SHUTTLE4      = D_NEW "SH4_shuttle4";
 const char *IMG_NI_CR1           = D_NEW "cr1";
 const char *IMG_NI_DR1           = D_NEW "dr1";
 const char *IMG_NI_GO1           = D_NEW "go1";
+const char *IMG_OVR_NO_POWER     = D_NEW "ovr_no_power";     //JK: Feature EF_IMPROVED_PLANET_MAP_UX
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2789,6 +2790,7 @@ const char *ASSETS_IMG[] = {
     IMG_NI_CR1,
     IMG_NI_DR1,
     IMG_NI_GO1,
+    IMG_OVR_NO_POWER,     //JK: Feature EF_IMPROVED_PLANET_MAP_UX
 
     "",
 };

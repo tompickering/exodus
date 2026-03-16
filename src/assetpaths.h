@@ -1401,4 +1401,6 @@ extern const char *ASSETS_SFX[];
 extern const char *ASSETS_MUS[];
 extern const char *ASSETS_IMG[];
 
+extern const char *IMG_OVR_NO_POWER;     //JK: Feature EF_IMPROVED_PLANET_MAP_UX
+
 #endif
