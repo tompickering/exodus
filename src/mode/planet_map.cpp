@@ -1549,6 +1549,34 @@ void PlanetMap::draw_properties() {
                 }
             }
 			
+            if ((active_tool == TOOL_City) && (FEATURE(EF_CITY_RACES))) {
+                //show races on top of all cities
+                if (st == STONE_City) {
+                    const char* sprite = IMG_OVR_RACE_HUMAN;
+                    int race = planet->get_property(x, y, PROPERTY_Race);
+                    if (race==0) sprite = IMG_OVR_RACE_HUMAN;
+                    if (race==1) sprite = IMG_OVR_RACE_YOKON;
+                    if (race==2) sprite = IMG_OVR_RACE_TERI;
+                    if (race==3) sprite = IMG_OVR_RACE_URKASH;
+                    if (race==4) sprite = IMG_OVR_RACE_GORDOON;
+                   
+                    draw_manager.draw(
+                        id_overlays[y*blocks+x],
+                        sprite,
+                        {surf_x + x*STONE_SZ, surf_y + y*STONE_SZ,
+                        0, 0, 1, 1});
+                    overlay_drawn = true;
+                }
+                if (st == STONE_Village) {
+                    draw_manager.draw(
+                        id_overlays[y*blocks+x],
+                        IMG_OVR_RACE_NATIVE,
+                        {surf_x + x*STONE_SZ, surf_y + y*STONE_SZ,
+                        0, 0, 1, 1});
+                    overlay_drawn = true;
+                }
+            }
+			
             if (!overlay_drawn) {
                  draw_manager.draw(id_overlays[y*blocks+x], nullptr);
              }
