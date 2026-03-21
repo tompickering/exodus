@@ -239,22 +239,24 @@ void PanelDrawer::update_panel_info_ft(DrawTarget tgt, Player* player, FlyTarget
                 int fleets_drawn = 0;
                 for (int i = 0; i < N_PLAYERS && fleets_drawn < PNL_MAX_FLEETS; ++i) {
                     Player *pl = exostate().get_player(i);
+                    
+                    if (pl->is_participating()) {          //JK: Bugfix: Only show fleets from participating players
+                        const char* icon = IMG_TS1_SHICON;
 
-                    const char* icon = IMG_TS1_SHICON;
+                        if (pl == player) {
+                            icon = IMG_SHICON_H;
+                        }
 
-                    if (pl == player) {
-                        icon = IMG_SHICON_H;
-                    }
+                        if (pl->get_location().get_target() == ftloc) {
+                            draw_manager.draw(
+                                id_fleet_icons[PNL_MAX_FLEETS - 1 - fleets_drawn],
+                                icon,
+                                {area_starinfo.x + 4 + 44*fleets_drawn,
+                                 area_starinfo.y + 24,
+                                 0, 0, 1, 1});
 
-                    if (pl->get_location().get_target() == ftloc) {
-                        draw_manager.draw(
-                            id_fleet_icons[PNL_MAX_FLEETS - 1 - fleets_drawn],
-                            icon,
-                            {area_starinfo.x + 4 + 44*fleets_drawn,
-                             area_starinfo.y + 24,
-                             0, 0, 1, 1});
-
-                        fleets_drawn++;
+                            fleets_drawn++;
+                        }
                     }
                 }
             }
