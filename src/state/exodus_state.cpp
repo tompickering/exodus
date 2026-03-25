@@ -985,27 +985,30 @@ bool ExodusState::recommend_planet(PlanetInfo& info) {
     for (PlanetIterator piter; !piter.complete(); ++piter) {
         Planet *p = piter.get();
         int this_quality = p->get_quality();
-
-        Star *s = piter.get_star();
-
-        for (int i = 0;  i < STAR_MAX_PLANETS; ++i) {
-            if (i == piter.get_idx()) {
-                continue;
+        
+        if (this_quality > 0) {
+            
+            Star *s = piter.get_star();
+            
+            for (int i = 0;  i < STAR_MAX_PLANETS; ++i) {
+                if (i == piter.get_idx()) {
+                    continue;
+                }
+                Planet *neighbour = s->get_planet(i);
+                if (neighbour && neighbour->exists() && neighbour->is_owned()) {
+                    this_quality += 2;
+                    break;
+                }
             }
-            Planet *neighbour = s->get_planet(i);
-            if (neighbour && neighbour->exists() && neighbour->is_owned()) {
-                this_quality += 2;
-                break;
-            }
-        }
 
-        if (this_quality > quality) {
-            quality = this_quality;
-            info.planet = p;
-            info.star = s;
-            info.planet_idx = piter.get_idx();
-            info.star_idx = piter.get_star_idx();
-            info.index = piter.get_idx();
+            if (this_quality > quality) {
+                quality = this_quality;
+                info.planet = p;
+                info.star = s;
+                info.planet_idx = piter.get_idx();
+                info.star_idx = piter.get_star_idx();
+                info.index = piter.get_idx();
+            }
         }
     }
 
