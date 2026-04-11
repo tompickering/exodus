@@ -27,6 +27,7 @@ INCFLAGS += -Isteamworks_sdk/sdk/public
 endif
 
 LDLIBS=-lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
+CPPFLAGS=-MMD -MP
 CXXFLAGS=-std=c++11 -Wall -Wno-reorder -Wno-class-memaccess -Wno-format-truncation -pedantic -DMONO -DSDL $(INCFLAGS)
 DBGFLAGS=-g -DDBG
 
@@ -35,10 +36,8 @@ DBGFLAGS=-g -DDBG
 
 PREFIX = /usr/local
 
-%.d: %.cpp
-	$(CXX) $(INCFLAGS) -MM -MF $@ -MT $@ -MT $*.o $<
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
 all: linux
 all: CXXFLAGS += -O3
