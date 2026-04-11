@@ -3,6 +3,7 @@
 NAME=exodus
 BIN=src/exodus
 
+.SUFFIXES:
 .PHONY: clean all debug install
 
 all:
@@ -36,6 +37,8 @@ PREFIX = /usr/local
 
 %.d: %.cpp
 	$(CXX) $(INCFLAGS) -MM -MF $@ -MT $@ -MT $*.o $<
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 all: linux
 all: CXXFLAGS += -O3
