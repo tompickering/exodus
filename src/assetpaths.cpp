@@ -1396,6 +1396,12 @@ const char *IMG_NI_SHUTTLE4      = D_NEW "SH4_shuttle4";
 const char *IMG_NI_CR1           = D_NEW "cr1";
 const char *IMG_NI_DR1           = D_NEW "dr1";
 const char *IMG_NI_GO1           = D_NEW "go1";
+const char *IMG_OVR_RACE_HUMAN   = D_NEW "ovr_race_human";   //JK: Feature EF_CITY_RACES
+const char *IMG_OVR_RACE_TERI    = D_NEW "ovr_race_teri";    //JK: Feature EF_CITY_RACES
+const char *IMG_OVR_RACE_URKASH  = D_NEW "ovr_race_urkash";  //JK: Feature EF_CITY_RACES
+const char *IMG_OVR_RACE_GORDOON = D_NEW "ovr_race_gordoon"; //JK: Feature EF_CITY_RACES
+const char *IMG_OVR_RACE_YOKON   = D_NEW "ovr_race_yokon";   //JK: Feature EF_CITY_RACES
+const char *IMG_OVR_RACE_NATIVE  = D_NEW "ovr_race_native";  //JK: Feature EF_CITY_RACES
 const char *IMG_OVR_NO_POWER     = D_NEW "ovr_no_power";     //JK: Feature EF_IMPROVED_PLANET_MAP_UX
 
 // Special cases
@@ -2790,6 +2796,12 @@ const char *ASSETS_IMG[] = {
     IMG_NI_CR1,
     IMG_NI_DR1,
     IMG_NI_GO1,
+    IMG_OVR_RACE_HUMAN,   //JK: Feature EF_CITY_RACES
+    IMG_OVR_RACE_TERI,    //JK: Feature EF_CITY_RACES
+    IMG_OVR_RACE_URKASH,  //JK: Feature EF_CITY_RACES
+    IMG_OVR_RACE_GORDOON, //JK: Feature EF_CITY_RACES
+    IMG_OVR_RACE_YOKON,   //JK: Feature EF_CITY_RACES
+    IMG_OVR_RACE_NATIVE,  //JK: Feature EF_CITY_RACES
     IMG_OVR_NO_POWER,     //JK: Feature EF_IMPROVED_PLANET_MAP_UX
 
     "",

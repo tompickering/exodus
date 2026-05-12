@@ -14,6 +14,8 @@
 #include "util/iter.h"
 #include "util/value.h"
 
+//JK: Feature EF_CITY_RACES
+#include "player.h"
 
 
 PlanetSpriteSet sprite_sets[7];
@@ -640,6 +642,19 @@ Stone Planet::get_stone(int x, int y) {
 void Planet::set_stone(int x, int y, Stone stone) {
     int real_x; int real_y;
     if (_to_real(x, y, real_x, real_y)) {
+
+	    //JK: Feature EF_CITY_RACES
+	    //Set race of city
+	    if (stone == STONE_City) {
+	        Race city_race;
+	        if (get_owner() != -1) {
+	            city_race = exostate().get_player(get_owner())->get_race();
+	        } else {
+	            city_race = get_majority_race(); // fallback if planet is ownerless (e.g. republic doing academy steal)
+	        }
+	        set_property(x,y, PROPERTY_Race, city_race);
+	    }
+        
         _set_stone(real_x, real_y, stone);
     }
 }
@@ -655,6 +670,15 @@ Stone Planet::get_stone_wrap(int x, int y) {
 void Planet::set_stone_wrap(int x, int y, Stone stone) {
     if (wrap(x, y)) {
         set_stone(x, y, stone);
+    }
+}
+
+//JK: Feature EF_CITY_RACES
+//Set city + race
+void Planet::set_city_wrap(int x, int y, Race race) {
+    if (wrap(x, y)) {
+        set_stone(x, y, STONE_City);
+        set_property(x,y, PROPERTY_Race, race);
     }
 }
 
@@ -1106,6 +1130,92 @@ Stone Planet::_get_stone(int x, int y) {
     if (!_real_in_bounds(x, y))
         return STONE_Invalid;
     return surf[y*PLANET_BLOCKS_LG + x];
+}
+
+//JK: Feature EF_CITY_RACES
+Race Planet::get_majority_race(){
+    int RACES_MAX = 16;             // must correspond with bit mask of surf_property for races and placed elsewhere
+    Race majority = RACE_Human;     //TODO: JK: We need RACE_None also, and put it here.
+    int race_count[RACES_MAX];
+    
+    for (int i=0; i<RACES_MAX; i++) {
+        race_count[i]=0;
+    }
+    
+    //JK: Doesn't count Alien natives yet. (Requires weighted size/month; villages always 1m large)
+    for (int j = 0; j < get_size_blocks(); ++j) {
+        for (int i = 0; i < get_size_blocks(); ++i) {
+            if (get_stone(i, j) == STONE_City) {
+                int found_property = get_property(i, j, PROPERTY_Race);
+                ++race_count[found_property];
+            }
+        }
+    }
+    
+    int maj=0;
+    int maj_num=0;
+    //evaluate counted race
+    for (int i=0; i<RACES_MAX; i++) {
+        if (race_count[i] > maj_num) {
+            maj_num =race_count[i];
+            maj = i;
+        }
+    }
+    
+    // add: return "none" if maj_num == 0.
+         
+    // here just copying the enum order
+    if (maj==0) majority = RACE_Human;
+    if (maj==1) majority = RACE_Yokon;
+    if (maj==2) majority = RACE_Teri;
+    if (maj==3) majority = RACE_Urkash;
+    if (maj==4) majority = RACE_Gordoon;
+
+    return (majority);
+}
+
+//JK: Feature EF_CITY_RACES and potential future properties
+int Planet::get_property(int x, int y, Property property) {
+    
+    int real_x; int real_y;
+    if (_to_real(x, y, real_x, real_y)) {
+
+        //TODO: JK: Replace with bitwise evaluation when more than 1 property stored in surf_property
+        int read_value =surf_property[real_y*PLANET_BLOCKS_LG + real_x];
+        
+        return (read_value);
+    }
+    
+    return(false);
+}
+
+//JK: Feature EF_CITY_RACES and potential future properties
+void Planet::set_property(int x, int y, Property property, int value) {
+    
+    int PROPERTY_Race_Limit = 15; // TODO: Move to planet.h
+    int real_x; int real_y;
+    if (_to_real(x, y, real_x, real_y)) {
+
+        //TODO: JK: Use bitwise evaluation when more than 1 property stored in surf_property
+        
+        /* Working version with only 1 property */
+        int s = value;
+        
+        /* Probably working version with >1 properties (requires clearing of surf_property on planet generation)
+        int s = surf_property[real_y*PLANET_BLOCKS_LG + real_x];
+        switch(property) {
+            case PROPERTY_Race:
+                if (value <= PROPERTY_Race_Limit) {
+                    uint32_t mask = ~(uint32_t)15;
+                    s = s & mask;
+                    s = s | value;
+                }
+                break;
+        }
+        */
+        
+        surf_property[real_y*PLANET_BLOCKS_LG + real_x] = s;
+    }
 }
 
 void Planet::_set_stone(int x, int y, Stone stone) {
@@ -2078,19 +2188,23 @@ void Planet::disown(PlanetOwnerChangedReason reason) {
     L.debug("%s: DISOWN: Unrest reset to 0", name);
 }
 
-bool Planet::expand_city() {
-    return expand(STONE_City, true);
+//JK: Feature EF_CITY_RACES added parameters
+bool Planet::expand_city(bool override_local_race, Race race) {
+    return expand(STONE_City, true, override_local_race, race);
 }
 
+//JK: Feature EF_CITY_RACES added parameters
 bool Planet::expand_city_possible() {
-    return expand(STONE_City, false);
+    return expand(STONE_City, false, false, (Race)0);
 }
 
+//JK: Feature EF_CITY_RACES added parameters
 bool Planet::expand_village() {
-    return expand(STONE_Village, true);
+    return expand(STONE_Village, true, false, (Race)0);
 }
 
-bool Planet::expand(Stone st, bool do_place) {
+//JK: Feature EF_CITY_RACES added parameters
+bool Planet::expand(Stone st, bool do_place, bool override_local_race, Race overriding_race) {
     L.info("Expanding %d on %s", st, get_name());
 
     // Find expansion candidates
@@ -2150,8 +2264,17 @@ bool Planet::expand(Stone st, bool do_place) {
                             }
                             if (tgt_ok) {
                                 if (do_place) {
-                                    set_stone_wrap(i + i_off, j + j_off, st);
-                                    L.info("Expansion %d,%d", i, j);
+                                    if(st == STONE_City){
+                                        //JK: Feature EF_CITY_RACES Get origin city's race:
+                                        int new_city_race = get_property(i, j, PROPERTY_Race);
+                                        //JK: If city expands due to Academy steal, set race of immigrants:
+                                        if (override_local_race) new_city_race = overriding_race;
+                                        set_city_wrap(i + i_off, j + j_off, (Race)new_city_race);
+                                        L.info("City Expansion %d,%d", i, j);
+                                    } else {
+                                        set_stone_wrap(i + i_off, j + j_off, st);
+                                        L.info("Expansion %d,%d", i, j);
+                                    }
                                 }
                                 return true;
                             }
@@ -2168,8 +2291,8 @@ bool Planet::expand(Stone st, bool do_place) {
     return false;
 }
 
-bool Planet::do_academy_immigration(const char* source_name) {
-    if (!expand_city()) {
+bool Planet::do_academy_immigration(const char* source_name, Race race) {
+    if (!expand_city(true, race)) { //JK: Feature EF_CITY_RACES added parameters
         // Caller should verify expansion possible first
         L.error("Academy immigration called when city cannot expand");
         return false;
@@ -2969,6 +3092,7 @@ void Planet::save(cJSON* j) const {
     SAVE_NUM(j, failed_attacks_this_month);
     SAVE_NUM(j, bombings_this_month);
     SAVE_BOOL(j, processing_in_progress);
+    SAVE_ARRAY_OF_NUM(j, surf_property);  //JK: Feature EF_CITY_RACES and potential future properties
 }
 
 void Planet::load(cJSON* j) {
@@ -3016,4 +3140,5 @@ void Planet::load(cJSON* j) {
     LOAD_NUM(j, failed_attacks_this_month);
     LOAD_NUM(j, bombings_this_month);
     LOAD_BOOL(j, processing_in_progress);
+    LOAD_ARRAY_OF_NUM(j, surf_property);     //JK: Feature EF_CITY_RACES and potential future properties
 }

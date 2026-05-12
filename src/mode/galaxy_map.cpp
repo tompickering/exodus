@@ -4868,6 +4868,10 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     continue;
                 if (!pl->get_location().has_visited(star_idx))
                     continue;
+                if (FEATURE(EF_CITY_RACES)) { //JK: Feature EF_CITY_RACES
+                    if ( (p->get_majority_race() != pl->get_race()) && (!onein(5)) )
+                        continue;
+                }
                 new_owner_idx = idx;
                 new_owner = pl;
                 break;
@@ -5349,14 +5353,14 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
         for (int i = 0; i < p->count_stones(STONE_City); ++i) {
             if (onein(20)) {
                 if (Planet *thief = attempt_academy_expansion(p)) {
-                    if (thief->do_academy_immigration(p->get_name())) {
+                    if (thief->do_academy_immigration(p->get_name(), p->get_majority_race())) { //JK: Feature EF_CITY_RACES added parameters
                         report.register_minor_problem();
                         report.add_line("Emigrants left to study at %s.", thief->get_name());
                     } else {
                         L.error("attempt_academy_expansion should only return viable planets");
                     }
                 } else {
-                    if (p->expand_city()) {
+                    if (p->expand_city(false, (Race)0)) { //JK: Feature EF_CITY_RACES added parameters
                         report.register_good_news();
                         report.add_line("A city has expanded.");
                         if (owner && owner->is_human()) {
