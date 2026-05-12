@@ -3,11 +3,13 @@
 NAME=exodus
 BIN=src/exodus
 
+.SUFFIXES:
 .PHONY: clean all debug install
 
 all:
 
 OBJS := $(patsubst %.cpp,%.o,$(wildcard src/*.cpp src/*/*.cpp src/*/*/*.cpp src/*/*/*/*.cpp))
+OBJS += $(patsubst %.c,%.o,$(wildcard src/*.c src/*/*.c src/*/*/*.c src/*/*/*/*.c))
 DEPS = $(OBJS:%.o=%.d)
 CLEAN = $(BIN) $(OBJS) $(DEPS)
 
@@ -26,7 +28,9 @@ INCFLAGS += -Isteamworks_sdk/sdk/public
 endif
 
 LDLIBS=-lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
-CXXFLAGS=-std=c++11 -Wall -Wno-reorder -Wno-class-memaccess -Wno-format-truncation -pedantic -DMONO -DSDL $(INCFLAGS)
+CPPFLAGS=-MMD -MP
+CFLAGS=-std=c11 -Wall -Wextra -pedantic
+CXXFLAGS=-std=c++11 -Wall -Wno-reorder -Wno-class-memaccess -Wno-format-truncation -pedantic -DMONO -DSDL
 DBGFLAGS=-g -DDBG
 
 #CXX=clang++
@@ -34,18 +38,24 @@ DBGFLAGS=-g -DDBG
 
 PREFIX = /usr/local
 
-%.d: %.cpp
-	$(CXX) $(INCFLAGS) -MM -MF $@ -MT $@ -MT $*.o $<
+%.o: %.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(INCFLAGS) -c -o $@ $<
+
+%.o: %.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCFLAGS) -c -o $@ $<
 
 all: linux
+all: CFLAGS += -O3
 all: CXXFLAGS += -O3
 
 linux: ext=
 linux: CXXFLAGS += -DLINUX
 linux: bin
 
+mac: CC=gcc-13
 mac: CXX=g++-13
 mac: ext=
+mac: CFLAGS += -O3 -DMAC
 mac: CXXFLAGS += -O3 -DMAC
 mac: INCFLAGS += -I/opt/homebrew/include -L/opt/homebrew/lib
 mac: bin
@@ -54,6 +64,7 @@ mac: bin
 windows: CC = x86_64-w64-mingw32-gcc
 windows: CXX = x86_64-w64-mingw32-g++
 windows: ext=.exe
+windows: CFLAGS += -O3
 windows: CXXFLAGS += -O3 -DWINDOWS
 windows: INCFLAGS += -Iinclude -Iinclude/x86_64-linux-gnu
 windows: LDLIBS := -Llib -static -l:libSDL2.dll.a -l:libSDL2_image.dll.a -l:libSDL2_mixer.dll.a -l:libSDL2_ttf.dll.a
