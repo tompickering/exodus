@@ -535,21 +535,6 @@ ExodusMode GalaxyMap::update(float delta) {
                     bulletin_update(delta);
                     if (!bulletin_acknowledged()) {
                         break;
-                    } else if (do_first_city){
-                        do_first_city = false;
-                        bulletin_ensure_closed();
-                        draw_manager.draw(
-                            id(ID::FRAMED_IMG),
-                            ENHANCED() ? IMG_CITY : IMG_CT1_EXPORT,
-                            {5, 7, 0, 0, 1, 1});
-                        frame_draw();
-                        set_stage(GM_MP_FirstCity);
-                        achievement_manager.unlock(ACH_FirstCity);
-                        return ExodusMode::MODE_None;
-                    } else if (ephstate.get_ephemeral_state() == EPH_ResearchCheck) {
-                        ephstate.research.done = bulletin_was_yesno_yes();
-                        bulletin_ensure_closed();
-                        return ephstate.get_appropriate_mode();
                     } else if (do_guild_title != GUILDTITLE_None) {
                         bulletin_ensure_closed();
                         bulletin_start_new(false);
@@ -606,6 +591,21 @@ ExodusMode GalaxyMap::update(float delta) {
 
                         do_guild_title = GUILDTITLE_None;
                         return ExodusMode::MODE_None;
+                    } else if (do_first_city){
+                        do_first_city = false;
+                        bulletin_ensure_closed();
+                        draw_manager.draw(
+                            id(ID::FRAMED_IMG),
+                            ENHANCED() ? IMG_CITY : IMG_CT1_EXPORT,
+                            {5, 7, 0, 0, 1, 1});
+                        frame_draw();
+                        set_stage(GM_MP_FirstCity);
+                        achievement_manager.unlock(ACH_FirstCity);
+                        return ExodusMode::MODE_None;
+                    } else if (ephstate.get_ephemeral_state() == EPH_ResearchCheck) {
+                        ephstate.research.done = bulletin_was_yesno_yes();
+                        bulletin_ensure_closed();
+                        return ephstate.get_appropriate_mode();
                     }
                 }
 
