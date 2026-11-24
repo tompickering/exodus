@@ -910,6 +910,24 @@ ExodusMode LunarBattlePrep::update(float delta) {
                         if (i > cap) i += agg->transfer_inf(i - cap);
                         p->clear_army();
                         p->adjust_army(i, g, a);
+						
+                        //JK: Feature EF_CITY_RACES
+                        if (FEATURE(EF_CITY_RACES)) {
+                            // if they're not close to rioting, they react to conqueror's race:
+                            if (p->get_unrest() < 7 ) {
+                                if (p->get_majority_race() != exostate().get_player(b.aggressor_idx)->get_race()) {
+                                    L.info("Taken over planet of different race majority -> less happy");
+                                    p->adjust_unrest(3);
+                                } else {
+                                    L.info("Taken over planet of same race majority -> more happy");
+                                    p->adjust_unrest(-3);
+                                }
+                            } else {
+                                // if close to rioting, they wait what new ruler will bring:
+                                p->adjust_unrest(-1);
+                            }
+                        }
+						
                     } else {
                         NewsItem& news = exostate().register_news(NI_FailedTakeover);
                         news.player_0 = b.aggressor_idx;

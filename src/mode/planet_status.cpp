@@ -79,7 +79,28 @@ void PlanetStatus::enter() {
         owner ? "" : cost);
 
     char pop[31];
-    snprintf(pop, 30, "Population: %d million.", p->get_population());
+	
+    //JK: Feature EF_CITY_RACES
+    //TODO: JK: Replace the switch case with one method for getting a race string.
+    char race[20];
+    int n_cities = p->get_n_cities();
+    if ((FEATURE(EF_CITY_RACES)) && (n_cities > 0)) {
+        switch (p->get_majority_race()) {
+            case RACE_Human:
+                snprintf(race, 20, "Human"); break;
+            case RACE_Yokon:
+                snprintf(race, 20, "Yo' kon"); break;
+            case RACE_Teri:
+                snprintf(race, 20, "Teri"); break;
+            case RACE_Urkash:
+                snprintf(race, 20, "Urkash"); break;
+            case RACE_Gordoon:
+                snprintf(race, 20, "Gordoon"); break;
+        }
+        snprintf(pop, 50, "Population: %d million (%s majority)", p->get_population(), race);
+    } else {
+        snprintf(pop, 50, "Population: %d million", p->get_population());
+    }
 
     char day[51];
     snprintf(day, 50, "One day is %d standard hours long.", p->get_day_hours());
@@ -106,7 +127,7 @@ void PlanetStatus::enter() {
     }
 
     char cities[5];
-    int n_cities = p->get_n_cities();
+    n_cities = p->get_n_cities();
     if (n_cities == 0) {
         strncpy(cities, "None", 5);
     } else {

@@ -5,6 +5,9 @@
 
 #include "save/saveable.h"
 
+//JK: Feature EF_CITY_RACES: Include for Race enum:
+#include "player.h"
+
 #define PLANET_MAX_NAME 12
 #define PLANET_BLOCKS_SM 12
 #define PLANET_BLOCKS_MD 14
@@ -76,6 +79,11 @@ enum Stone : uint8_t {
     STONE_Academy       = 30,
     STONE_TradePort     = 31,
     STONE_END           = 32,
+};
+
+// JK: Feature EF_CITY_RACES (and future property-based features)
+enum Property {
+    PROPERTY_Race
 };
 
 class StoneSet {
@@ -341,10 +349,10 @@ class Planet : public Saveable {
         int get_reserves_plu();
         int get_total_reserves();
         void disown(PlanetOwnerChangedReason);
-        bool expand_city();
+        bool expand_city(bool, Race);                   //JK: Feature EF_CITY_RACES
         bool expand_village();
         bool expand_city_possible();
-        bool do_academy_immigration(const char*);
+        bool do_academy_immigration(const char*, Race); //JK: Feature EF_CITY_RACES
         bool agri_collapse();
         void monthly_processing_start();
         bool monthly_processing_in_progress();
@@ -357,10 +365,15 @@ class Planet : public Saveable {
 
         int get_n_academy_sources();
         const char* get_academy_source(int);
+		
+        int get_property(int x, int y, Property property);              //JK: Feature EF_CITY_RACES + future Properties
+        void set_property(int x, int y, Property property, int value);  //JK: Feature EF_CITY_RACES + future Properties
+        Race get_majority_race();                                       //JK: Feature EF_CITY_RACES + future Properties
+        void set_city_wrap(int x, int y, Race race);                    //JK: Feature EF_CITY_RACES + future Properties
 
     private:
         void init();
-        bool expand(Stone, bool);
+        bool expand(Stone, bool, bool, Race);                           //JK: Feature EF_CITY_RACES
 
         TradeReport do_monthly_trade(Stone);
 
@@ -382,6 +395,11 @@ class Planet : public Saveable {
         MoonClass moon_cls;    // Determines battle background. Orig was random each time.
         char name[PLANET_MAX_NAME + 1];
         Stone surf[MAX_STONES];
+        uint32_t surf_property[MAX_STONES]; //JK: Feature EF_CITY_RACES and more potential properties later.
+        /* JK: Property implemented:
+         * bits 1-4   (0-15)  Race, used by EF_CITY_RACES
+		 * Further properties can be flora, fauna, regional bonuses.
+         */
 
         int construction_phase;
         int star_target;       // Orig: ptarget

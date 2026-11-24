@@ -1401,6 +1401,12 @@ extern const char *ASSETS_SFX[];
 extern const char *ASSETS_MUS[];
 extern const char *ASSETS_IMG[];
 
+extern const char *IMG_OVR_RACE_HUMAN;   //JK: Feature EF_CITY_RACES
+extern const char *IMG_OVR_RACE_TERI;    //JK: Feature EF_CITY_RACES
+extern const char *IMG_OVR_RACE_URKASH;  //JK: Feature EF_CITY_RACES
+extern const char *IMG_OVR_RACE_GORDOON; //JK: Feature EF_CITY_RACES
+extern const char *IMG_OVR_RACE_YOKON;   //JK: Feature EF_CITY_RACES
+extern const char *IMG_OVR_RACE_NATIVE;  //JK: Feature EF_CITY_RACES
 extern const char *IMG_OVR_NO_POWER;     //JK: Feature EF_IMPROVED_PLANET_MAP_UX
 
 #endif
