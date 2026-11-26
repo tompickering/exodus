@@ -2613,6 +2613,26 @@ ExodusMode GalaxyMap::month_pass_update() {
         next_mp_stage();
     }
 
+    if (mp_state.mp_stage == MP_GovernorsUnlock) {          // JK: Feature EF_GOVERNORS
+        if (comm_is_open()) {
+            comm_ensure_closed();
+        } else {
+            if (FEATURE(EF_GOVERNORS)) {
+                // FIXME: Needs unlocking per-player in multiplayer
+                Player *player = exostate().get_player(0);
+                if (!player->governors_unlocked) {
+                    if (!exostate().multiplayer() && (exostate().get_n_planets(player) >= 11)) {
+                        player->governors_unlocked = true;
+                        bulletin_ensure_closed();
+                        comm_open(DIA_S_GovernorsUnlocked);
+                        return ExodusMode::MODE_None;
+                    }
+                }
+            }
+        }
+        next_mp_stage();
+    }
+
     if (mp_state.mp_stage == MP_FinaliseReports) {
         exostate().finalise_planet_reports();
 
@@ -5111,6 +5131,14 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
 
     if (mp_state.mpp_stage == MPP_Income) {
         if (owner) {
+            
+            if((p->is_governed()) && (owner->is_human())) {   // JK: Feature EF_GOVERNORS
+                // Governor must step in right before the income is processed
+                // in order to have the chance to adjust the income.
+                report.register_planet_governed();
+                governor_planet_update(p);
+            }
+ 
             int income_net = p->get_net_income();
 
             int income_base = p->get_base_income();
@@ -5173,7 +5201,9 @@ ExodusMode GalaxyMap::month_pass_planet_update() {
                     report.register_minor_problem();
                 }
             } else {
-                report.register_major_problem();
+                if (!p->is_governed()) {                // JK: Feature EF_GOVERNORS
+                    report.register_major_problem();
+                }
             }
 
             report.add_line("%s%s%s%s%s%s", indent, rpt.no_money ? "No money" : "", s0,   // JK: Feature EF_IMPROVED_REPORT_UX
@@ -5744,6 +5774,22 @@ void GalaxyMap::discover_species_bulletin(Planet* p) {
     }
 }
 
+void GalaxyMap::governor_planet_update(Planet* p) {     // JK: Feature EF_GOVERNORS
+    
+    bool governor_interfered = p->governor_update();
+    
+    if (p->get_n_cities() < 3) {
+        report.add_line("Governor asks for a city to be built.");
+    } else {
+        if (!governor_interfered) {
+            report.add_line("Governor monitors events.");
+        } else {
+            report.add_line("Governor made some adjustments.");
+        }
+    }
+
+}
+    
 void GalaxyMap::ai_planet_update(Planet* p) {
     // Orig: PROCenemytactics
     if (!(p && p->exists() && p->is_owned())) {

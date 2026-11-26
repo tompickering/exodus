@@ -526,6 +526,7 @@ class Player : public Saveable {
         bool invalid_placement_seen;
         bool advanced_report_unlocked;
         bool advanced_galmap_unlocked;
+        bool governors_unlocked;                        //JK: Feature EF_GOVERNORS
 
         const char* get_officer_title(Officer);
         const char* get_officer_name(Officer);

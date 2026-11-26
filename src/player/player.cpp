@@ -50,6 +50,7 @@ Player::Player() {
     invalid_placement_seen = false;
     advanced_report_unlocked = false;
     advanced_galmap_unlocked = false;
+    governors_unlocked = false;             //JK: Feature EF_GOVERNORS
     ai_tactic = 0;
 
     art_planet_constructed = false;
@@ -1486,6 +1487,7 @@ void Player::save(cJSON* j) const
     SAVE_BOOL(j, invalid_placement_seen);
     SAVE_BOOL(j, advanced_report_unlocked);
     SAVE_BOOL(j, advanced_galmap_unlocked);
+    SAVE_BOOL(j, governors_unlocked);               // JK: Feature EF_GOVERNORS
     SAVE_ENUM(j, character);
     SAVE_ENUM(j, gender);
     SAVE_STR(j, name);
@@ -1565,6 +1567,7 @@ void Player::load(cJSON* j)
     LOAD_BOOL(j, invalid_placement_seen);
     LOAD_BOOL(j, advanced_report_unlocked);
     LOAD_BOOL(j, advanced_galmap_unlocked);
+    LOAD_BOOL(j, governors_unlocked);               // JK: Feature EF_GOVERNORS
     LOAD_ENUM(j, character);
     LOAD_ENUM(j, gender);
     LOAD_STR(j, name);

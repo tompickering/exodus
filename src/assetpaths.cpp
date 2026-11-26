@@ -803,6 +803,7 @@ const char *IMG_SU1_BUILD        = D_SUB "su1_build";
 const char *IMG_SU1_CTA          = D_GRA "su1_cta";
 const char *IMG_SU1_CTB          = D_GRA "su1_ctb";
 const char *IMG_SU1_CTC          = D_GRA "su1_ctc";
+const char *IMG_SU1_CTD          = D_GRA "su1_ctd";             // JK: Feature EF_GOVERNORS
 const char *IMG_SU1_CTRL1        = D_GRA "su1_ctrl1";
 const char *IMG_SU1_CTRL2        = D_GRA "su1_ctrl2";
 const char *IMG_SU1_CTRL3        = D_GRA "su1_ctrl3";
@@ -1087,6 +1088,7 @@ const char *IMG_AR               = D_NEW "ar";
 const char *IMG_EXCL_CRIT        = D_NEW "excl_crit";
 const char *IMG_EXCL_WARN        = D_NEW "excl_warn";
 const char *IMG_EXCL_OK          = D_NEW "excl_ok";
+const char *IMG_EXCL_GOV         = D_NEW "excl_gov";            // JK: Feature EF_GOVERNORS
 const char *IMG_PL_ST            = D_NEW "pl_st";
 const char *IMG_FLAG_MAN         = D_NEW "flag_man";
 const char *IMG_FLAG_GALMAP      = D_NEW "flag_galmap";
@@ -1403,6 +1405,9 @@ const char *IMG_OVR_RACE_GORDOON = D_NEW "ovr_race_gordoon"; //JK: Feature EF_CI
 const char *IMG_OVR_RACE_YOKON   = D_NEW "ovr_race_yokon";   //JK: Feature EF_CITY_RACES
 const char *IMG_OVR_RACE_NATIVE  = D_NEW "ovr_race_native";  //JK: Feature EF_CITY_RACES
 const char *IMG_OVR_NO_POWER     = D_NEW "ovr_no_power";     //JK: Feature EF_IMPROVED_PLANET_MAP_UX
+const char *IMG_GOV_INACTIVE     = D_NEW "governor_inactive";//JK: Feature EF_GOVERNORS
+const char *IMG_GOV_ACTIVE       = D_NEW "governor_active";  //JK: Feature EF_GOVERNORS
+const char *IMG_GOV_FULL         = D_NEW "governor_full";    //JK: Feature EF_GOVERNORS
 
 // Special cases
 // These don't need to be present in ASSETS_IMG.
@@ -2204,6 +2209,7 @@ const char *ASSETS_IMG[] = {
     IMG_SU1_CTA,
     IMG_SU1_CTB,
     IMG_SU1_CTC,
+    IMG_SU1_CTD,                        // JK: Feature EF_GOVERNORS
     IMG_SU1_CTRL1,
     IMG_SU1_CTRL2,
     IMG_SU1_CTRL3,
@@ -2487,6 +2493,7 @@ const char *ASSETS_IMG[] = {
     IMG_EXCL_CRIT,
     IMG_EXCL_WARN,
     IMG_EXCL_OK,
+    IMG_EXCL_GOV,               // JK: Feature EF_GOVERNORS
     IMG_PL_ST,
     IMG_FLAG_MAN,
     IMG_FLAG_GALMAP,
@@ -2803,6 +2810,10 @@ const char *ASSETS_IMG[] = {
     IMG_OVR_RACE_YOKON,   //JK: Feature EF_CITY_RACES
     IMG_OVR_RACE_NATIVE,  //JK: Feature EF_CITY_RACES
     IMG_OVR_NO_POWER,     //JK: Feature EF_IMPROVED_PLANET_MAP_UX
+
+    IMG_GOV_INACTIVE,     //JK: Feature EF_GOVERNORS
+    IMG_GOV_ACTIVE,       //JK: Feature EF_GOVERNORS
+    IMG_GOV_FULL,         //JK: Feature EF_GOVERNORS
 
     "",
 };

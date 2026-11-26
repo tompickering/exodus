@@ -331,6 +331,26 @@ void PanelDrawer::update_panel_info_planet(DrawTarget tgt, Player *player, Plane
     draw_manager.draw(id_lord_emb, nullptr);
     draw_manager.draw(id_lord_status, nullptr);
 
+    if(player->governors_unlocked && planet->is_owned()) {    // JK: Feature EF_GOVERNORS
+        int p_idx = exostate().get_player_idx(player);
+        int o_idx = planet->get_owner();
+        if (p_idx == o_idx) {
+            if (planet->is_governed()) {
+                draw_manager.draw(
+                                  id_lord_thumb,
+                                  IMG_GOV_ACTIVE,
+                                  {area_starinfo.x + area_starinfo.w - 6, area_starinfo.y + 6,
+                                      1, 0, 1, 1});
+            } else {
+                draw_manager.draw(
+                                  id_lord_thumb,
+                                  IMG_GOV_INACTIVE,
+                                  {area_starinfo.x + area_starinfo.w - 6, area_starinfo.y + 6,
+                                      1, 0, 1, 1});
+            }
+        }
+    }
+
     if (FEATURE(EF_LORD_DISCOVERY) && planet->is_owned()) {
         int p_idx = exostate().get_player_idx(player);
         int o_idx = planet->get_owner();

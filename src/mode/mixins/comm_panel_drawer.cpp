@@ -25,6 +25,7 @@ Anim comm_anim_human(            7, IMG_LD0_LD0  , IMG_LD0_LD0_1,
 Anim comm_anim_human_thoughtful( 1, IMG_CS2_C  );
 Anim comm_anim_human_confident(  1, IMG_CS3_C  );
 Anim comm_anim_human_planet(     1, IMG_CS4_C  );
+Anim comm_anim_human_governor(   1, IMG_GOV_FULL);                 //JK: Feature EF_GOVERNORS
 Anim comm_anim_human_scientist(  7, IMG_SCIENTIST, IMG_SCIENTIST,
                                     IMG_SCIENTIST, IMG_SCIENTIST,
                                     IMG_SCIENTIST, IMG_SCIENTIST,
@@ -425,6 +426,9 @@ void CommPanelDrawer::comm_set_img(CommImg img) {
         case CI_HumanPlanet:
             comm_anim = comm_anim_human_planet;
             break;
+	    case CI_HumanGovernor:                         // JK: Feature EF_GOVERNORS
+	        comm_anim = comm_anim_human_governor;
+	        break;
         case CI_Yok1:
             comm_anim = comm_anim_yok1;
             break;
@@ -896,11 +900,17 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img_caption("COUNSELLOR");
             comm_is_counsellor = true;
             break;
-        case DIA_S_PlanetComm:
-            comm_set_img(CI_HumanPlanet);
-            comm_set_img_caption("COUNSELLOR");
-            comm_enable_throbber = true;
-            break;
+	    case DIA_S_PlanetComm:
+	        if (!comm_planet->is_governed()) {
+	            comm_set_img(CI_HumanPlanet);
+	            comm_set_img_caption("COUNSELLOR");
+	            comm_enable_throbber = true;
+	        } else {                                    // JK: Feature EF_GOVERNORS
+	            comm_set_img(CI_HumanGovernor);
+	            comm_set_img_caption("GOVERNOR");
+	            comm_enable_throbber = true;
+	        }
+	        break;
         case DIA_S_HailPlanet:
             comm_set_img_caption_upper(comm_other->get_full_name());
             comm_set_img_caption_lower("RACE: %s", comm_other->get_race_str());
@@ -1088,6 +1098,12 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img_caption("SCIENTISTS");
             comm_is_counsellor = true;
             break;
+	    case DIA_S_GovernorsUnlocked:                       // JK: Feature EF_GOVERNORS
+	        comm_set_title("Message from scientists");
+	        comm_set_img(CI_HumanScientist);
+	        comm_set_img_caption("SCIENTISTS");
+	        comm_is_counsellor = true;
+	        break;
         case DIA_S_CallToRescueThisSystem:
             comm_set_title("Message from counsellor");
             comm_set_img(CI_Human);
@@ -1148,6 +1164,12 @@ void CommPanelDrawer::comm_init(CommSend input) {
             comm_set_img_caption_lower("REBELS");
             comm_set_img(CI_Rebels);
             break;
+	    case DIA_S_GovernPlanet:                                     // JK: Feature EF_GOVERNORS
+	        comm_set_title("Message from counsellor");
+	        comm_set_img(CI_Human);
+	        comm_set_img_caption("COUNSELLOR");
+	        comm_is_counsellor = true;
+	        break;
         default:
             L.warn("Unhandled comm input on init: %d", (int)input);
     }
@@ -2234,6 +2256,18 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 comm_recv(DIA_R_Close);
             }
             break;
+	    case DIA_S_GovernorsUnlocked:                                       // JK: Feature EF_GOVERNORS
+	        {
+	            comm_prepare(6);
+	            comm_set_text(0, "Managing so many planets certainly");
+	            comm_set_text(1, "calls for improved administrative");
+	            comm_set_text(2, "structures!");
+	            comm_set_text(3, "");
+	            comm_set_text(4, "You can now assign governors to your");
+	            comm_set_text(5, "planets to help with maintenance.");
+	            comm_recv(DIA_R_Close);
+	        }
+            break;
         case DIA_S_CallToRescueThisSystem:
             {
                 Star *s = exostate().get_star_for_planet(comm_planet);
@@ -2874,6 +2908,31 @@ void CommPanelDrawer::comm_send(CommSend input) {
                 }
             }
             break;
+	        case DIA_S_GovernPlanet: // JK: Feature EF_GOVERNORS
+	            {
+	                comm_prepare(6);
+	                comm_show_buttons(true);
+	                if (!comm_planet->is_governed()) {
+	                    if (!comm_player->can_afford(300)) {
+	                        comm_set_text(0, "We do not have the money for");
+	                        comm_set_text(1, "establishing a governor on this");
+	                        comm_set_text(2, "planet.");
+	                        comm_set_text(4, "(Cost: 300 MC)");
+	                        comm_recv(DIA_R_GovernorCannotAfford);
+	                    } else {
+	                        comm_set_text(0, "A governor maintains the planet's");
+	                        comm_set_text(1, "stability using only local MC. The planet");
+	                        comm_set_text(2, "should have 5 or more cities.");
+	                        comm_set_text(4, "Establish governor for 300 MC?");
+	                        comm_recv(DIA_R_ProceedOrAbort);
+	                    }
+	                } else {
+	                    comm_set_text(0, "Dismiss the planet's governor?");
+	                    comm_recv(DIA_R_ProceedOrAbort);
+	                }
+	            }
+	            break;
+
         default:
             L.warn("Unhandled comm input on send: %d", (int)input);
             break;
@@ -2962,6 +3021,11 @@ void CommPanelDrawer::comm_process_responses() {
                 comm_report_action = CA_Abort;
             }
             break;
+	    case DIA_R_GovernorCannotAfford:        // JK: Feature EF_GOVERNORS
+	        if (clicked) {
+	            comm_report_action = CA_Abort;
+	        }
+	        break;
         case DIA_R_SettleQueryProbe:
             if (proceed) {
                 if (comm_player->get_starship().bionic_probes > 0) {

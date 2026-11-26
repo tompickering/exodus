@@ -23,6 +23,7 @@ PlanetReport& PlanetReport::operator=(const PlanetReport& other) {
     problems_major = other.problems_major;
     problems_minor = other.problems_minor;
     good_news = other.good_news;
+    planet_governed = other.planet_governed;                // JK: Feature EF_GOVERNORS
 
     prod_inf = other.prod_inf;
     prod_gli = other.prod_gli;
@@ -53,6 +54,9 @@ bool PlanetReport::operator>(const PlanetReport& other) const {
 
     if (good_news != other.good_news)
         return (good_news > other.good_news);
+
+    if (planet_governed != other.planet_governed)  // JK Feature EF_GOVERNORS - Don't know what this part is doing!
+        return (planet_governed);                  //TODO: Check with Tom if this is correct.
 
     return false;
 }
@@ -130,11 +134,16 @@ void PlanetReport::register_good_news() {
     ++good_news;
 }
 
+void PlanetReport::register_planet_governed() {   // JK: Feature EF_GOVERNORS
+    planet_governed = true;
+}
+
 PlanetReportEventLevel PlanetReport::get_level() const {
     if (problems_critical > 0) return PREL_Crit;
     if (problems_major > 0) return PREL_Crit;
-    if (problems_minor > 0) return PREL_Warn;
+    if ((problems_minor > 0) && (!planet_governed)) return PREL_Warn;    // JK: Feature EF_GOVERNORS
     if (good_news > 0) return PREL_Good;
+    if (planet_governed) return PREL_Gov;                                // JK: Feature EF_GOVERNORS
     return PREL_None;
 }
 
@@ -196,6 +205,7 @@ void PlanetReport::reset() {
     problems_major = 0;
     problems_minor = 0;
     good_news = 0;
+    planet_governed = false;  // JK: Feature EF_GOVERNORS
 
     prod_inf = 0;
     prod_gli = 0;
@@ -226,6 +236,7 @@ void PlanetReport::save(cJSON* j) const {
     SAVE_NUM(j, problems_major);
     SAVE_NUM(j, problems_minor);
     SAVE_NUM(j, good_news);
+    SAVE_NUM(j, planet_governed);           // JK: Feature EF_GOVERNORS
     SAVE_NUM(j, prod_inf);
     SAVE_NUM(j, prod_gli);
     SAVE_NUM(j, prod_art);
@@ -249,6 +260,7 @@ void PlanetReport::load(cJSON* j) {
     LOAD_NUM(j, problems_major);
     LOAD_NUM(j, problems_minor);
     LOAD_NUM(j, good_news);
+    LOAD_NUM(j, planet_governed);      // JK: Feature EF_GOVERNORS
     LOAD_NUM(j, prod_inf);
     LOAD_NUM(j, prod_gli);
     LOAD_NUM(j, prod_art);

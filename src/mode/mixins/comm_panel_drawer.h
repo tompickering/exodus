@@ -39,6 +39,7 @@ enum CommImg {
     CI_HumanConfident,
     CI_HumanPlanet,
     CI_HumanScientist,
+    CI_HumanGovernor,      // JK: Feature EF_GOVERNORS
     CI_Rebels,
     CI_Yokon,
     CI_Teri,
@@ -124,9 +125,11 @@ enum CommSend {
     DIA_S_PlanetInvalidRadiation,
     DIA_S_AdvancedGalaxyMapUnlocked,
     DIA_S_AdvancedReportUnlocked,
+    DIA_S_GovernorsUnlocked,            // JK: Feature EF_GOVERNORS
     DIA_S_CallToRescueThisSystem,
     DIA_S_CallToRescueAnotherSystem,
     DIA_S_Quit,
+    DIA_S_GovernPlanet,                 // JK: Feature EF_GOVERNORS
     // For these, CPU is talking to us - so CPU is comm_player and human is comm_other
     DIA_S_CPU_Attack,
     DIA_S_CPU_AttackAlly,
@@ -196,6 +199,7 @@ enum CommRecv {
     DIA_R_OfferAllianceMoneyResponse,
     DIA_R_CommentListen,
     DIA_R_CommentRequestCompensation,
+    DIA_R_GovernorCannotAfford,             // JK: Feature EF_GOVERNORS
     // For these, CPU is talking to us - so CPU is comm_player and human is comm_other
     DIA_R_CPU_AttackResponse,
     DIA_R_CPU_AttackResponseAllied,
