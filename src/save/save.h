@@ -35,6 +35,7 @@ class SaveMeta : public Saveable {
 
 class SaveManager {
     public:
+        static  uint32_t saved_version;                  //JK: Load Update: Version number as read from save file
         virtual const SaveMeta* get_all_meta(bool);
         virtual bool save(int);
         virtual bool load(int);

@@ -9,6 +9,7 @@
 #include "alien_names.h"
 #include "officer_names.h"
 #include "shared.h"
+#include "save/save.h" //JK: Load Update
 
 
 
@@ -1567,7 +1568,14 @@ void Player::load(cJSON* j)
     LOAD_BOOL(j, invalid_placement_seen);
     LOAD_BOOL(j, advanced_report_unlocked);
     LOAD_BOOL(j, advanced_galmap_unlocked);
-    LOAD_BOOL(j, governors_unlocked);               // JK: Feature EF_GOVERNORS
+
+    if (SaveManager::saved_version >= 3) {                 //JK: Load Update
+        LOAD_BOOL(j, governors_unlocked);                  //JK: Feature EF_GOVERNORS
+    }
+    else {
+        governors_unlocked = false;
+    }
+    
     LOAD_ENUM(j, character);
     LOAD_ENUM(j, gender);
     LOAD_STR(j, name);
