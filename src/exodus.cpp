@@ -1,6 +1,8 @@
 #include "exodus.h"
 
-const ExodusVersion EXODUS_VERSION = 2;
+const ExodusVersion EXODUS_VERSION = 3; //JK: Load Update: Incremented version to 3.
+// Version 2: Steam release version
+// Version 3: With EF_CITY_RACES and EF_GOVERNORS and smaller updates (updates Version 2 save games)
 
 #include "shared.h"
 

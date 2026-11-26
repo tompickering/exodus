@@ -20,6 +20,7 @@ using std::ios;
 static SaveMeta metadata[MAX_SLOTS];
 
 static uint8_t obfuscation_byte = 0xFA;
+uint32_t SaveManager::saved_version = 0; //JK: Load Update
 
 
 
@@ -181,11 +182,15 @@ bool SaveManager::load_data(uint32_t expected_version, int slot, char** data_met
     } while(buf[head-1] != '\n');
 
     uint32_t version = strtoul(buf, NULL, 10);
-
+    SaveManager::saved_version = version;     //JK: Load Update: Store loaded version
+    
+    //JK: Load Update: Remove strict version mismatch exit condition
+    /*
     if (version != expected_version) {
         L.error("SAVE DATA IS INCORRECT VERSION: %d (expected %d)", version, expected_version);
         return false;
     }
+    */
 
     head = 0;
 

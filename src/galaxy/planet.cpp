@@ -17,6 +17,8 @@
 //JK: Feature EF_CITY_RACES
 #include "player.h"
 
+#include "save/save.h" //JK: Load Update
+
 
 PlanetSpriteSet sprite_sets[7];
 MoonSpriteSet moon_sprite_sets[3];
@@ -3413,6 +3415,28 @@ void Planet::load(cJSON* j) {
     LOAD_NUM(j, failed_attacks_this_month);
     LOAD_NUM(j, bombings_this_month);
     LOAD_BOOL(j, processing_in_progress);
-    LOAD_ARRAY_OF_NUM(j, surf_property);     //JK: Feature EF_CITY_RACES and potential future properties
-    LOAD_BOOL(j, governor);                  //JK: Feature EF_GOVERNORS
+
+    if (SaveManager::saved_version >= 3) {       //JK: Load Update
+        LOAD_ARRAY_OF_NUM(j, surf_property);     //JK: Feature EF_CITY_RACES and potential future properties
+        LOAD_BOOL(j, governor);                  //JK: Feature EF_GOVERNORS
+    }
+    else {
+        L.info("Savegame Version=%d -> Augmenting city races", SaveManager::saved_version);
+        Race city_race;
+        if (_exists) {
+            if (get_owner() != -1) {
+                city_race = exostate().get_player(get_owner())->get_race();
+            } else {
+                city_race = RACE_Human; // fallback if planet is ownerless
+            }
+            for (int j = 0; j < get_size_blocks(); ++j) {
+                for (int i = 0; i < get_size_blocks(); ++i) {
+                    if (get_stone(i, j) == STONE_City)
+                        set_property(i,j, PROPERTY_Race, city_race);
+                }
+            }
+        }
+        // Set planet to non-governed
+        governor = false;
+    }
 }

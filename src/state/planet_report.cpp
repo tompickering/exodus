@@ -2,6 +2,8 @@
 
 #include "exodus_state.h"
 
+#include "save/save.h" //JK: Load Update
+
 PlanetReport::PlanetReport() {
     reset();
 }
@@ -260,7 +262,14 @@ void PlanetReport::load(cJSON* j) {
     LOAD_NUM(j, problems_major);
     LOAD_NUM(j, problems_minor);
     LOAD_NUM(j, good_news);
-    LOAD_NUM(j, planet_governed);      // JK: Feature EF_GOVERNORS
+    
+    if (SaveManager::saved_version >= 3) {              //JK: Load Update
+        LOAD_BOOL(j, planet_governed);                  //JK: Feature EF_GOVERNORS
+    }
+    else {
+        planet_governed = false;
+    }
+    
     LOAD_NUM(j, prod_inf);
     LOAD_NUM(j, prod_gli);
     LOAD_NUM(j, prod_art);
