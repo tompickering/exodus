@@ -36,6 +36,7 @@ enum PlanetReportEventLevel {
     PREL_Good,
     PREL_Warn,
     PREL_Crit,
+    PREL_Gov,               // JK: Feature EF_GOVERNORS
 };
 
 struct PlanetReport : public Saveable {
@@ -64,6 +65,7 @@ struct PlanetReport : public Saveable {
     int problems_major;
     int problems_minor;
     int good_news;
+    bool planet_governed;   // JK: Feature EF_GOVERNORS
 
     int prod_inf;
     int prod_gli;
@@ -81,6 +83,7 @@ struct PlanetReport : public Saveable {
     void register_major_problem();
     void register_minor_problem();
     void register_good_news();
+    void register_planet_governed();               // JK: Feature EF_GOVERNORS
     PlanetReportEventLevel get_level() const;
     void finalise();
     bool empty() const;

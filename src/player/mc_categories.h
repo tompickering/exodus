@@ -50,6 +50,7 @@ enum MCReason {
     MC_CPUWriteOffDebt,
     MC_ReturnToGalaxyReset,
     MC_MAX,
+    MC_Governor,                         // JK: Feature EF_GOVERNORS
 };
 
 static_assert(MC_MAX <= MAX_MC_CATEGORIES, "MAX_MC_CATEGORIES needs to be greater");

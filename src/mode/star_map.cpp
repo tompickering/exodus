@@ -355,6 +355,17 @@ ExodusMode StarMap::update(float delta) {
                 return ExodusMode::MODE_None;
             }
 
+            if (draw_manager.query_click(id_lord_thumb).id) { // JK: Feature EF_GOVERNORS
+                if (planet->is_owned()) {
+                    int owner_idx = planet->get_owner();
+                    if (owner_idx == player_idx) {
+                        comm_open(DIA_S_GovernPlanet);
+                        set_stage(SM_DecideGovernor);
+                    }
+                }
+                return ExodusMode::MODE_None;
+            }
+
             break;
         case SM_Fleet:
             {
@@ -646,6 +657,22 @@ ExodusMode StarMap::update(float delta) {
                 return ephstate.get_appropriate_mode();
             }
             break;
+	    case SM_DecideGovernor:                 // JK: Feature EF_GOVERNORS
+	        action = comm_update(delta);
+	        if (action == CA_Proceed) {
+	            bool governor_present = planet->is_governed();
+	            if (!governor_present) {
+	                player->attempt_spend(300, MC_Governor);
+	            }
+	            planet->set_governor(!governor_present);
+	            update_panel_info_planet(TGT_Primary, exostate().get_active_player(), planet);
+	            comm_close();
+	            set_stage(SM_Idle);
+	        } else if (action == CA_Abort) {
+	            comm_close();
+	            set_stage(SM_Idle);
+	        }
+	        break;
         case SM_PlanSettleFade:
             if (!draw_manager.fade_active()) {
                 return ExodusMode::MODE_PlanetColonise;

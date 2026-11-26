@@ -177,6 +177,9 @@ static bool FIX_LUNAR_BATTLE_SOFTLOCKS = false;
 // Fix MC going to player in attack payoff event
 static bool FIX_ATTACKPAYOFF_MC = false;
 
+//JK: Establish a governor to manage a planet
+static bool GOVERNORS = false;
+
 //JK: Ask player before handing over a planet after a revolution
 static bool ACCEPT_REBEL_PLANET = false;
 
@@ -258,6 +261,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         FIX_LUNAR_BATTLE_SOFTLOCKS = true;
         FIX_ATTACKPAYOFF_MC = false;
         CITY_RACES = false;          // JK: Feature EF_CITY_RACES
+        GOVERNORS = false;           // JK: Feature EF_GOVERNORS
         ACCEPT_REBEL_PLANET = false; // JK: Feature EF_ACCEPT_REBEL_PLANET
         IMPROVED_REPORT_UX = false;  // JK: Feature EF_IMPROVED_REPORT_UX
         IMPROVED_PLANET_MAP_UX = false; // JK: Feature EF_IMPROVED_PLANET_MAP_UX
@@ -324,6 +328,7 @@ void exodus_set_game_mode(ExodusGameMode game_mode) {
         FIX_LUNAR_BATTLE_SOFTLOCKS = true;
         FIX_ATTACKPAYOFF_MC = true;
         CITY_RACES = true;          // JK: Feature EF_CITY_RACES
+        GOVERNORS = true;           // JK: Feature EF_GOVERNORS
         ACCEPT_REBEL_PLANET = true; // JK: Feature EF_ACCEPT_REBEL_PLANET
         IMPROVED_REPORT_UX = true;  // JK: Feature EF_IMPROVED_REPORT_UX
         IMPROVED_PLANET_MAP_UX = true; // JK: Feature EF_IMPROVED_PLANET_MAP_UX
@@ -404,6 +409,7 @@ bool FEATURE(ExodusFeature f) {
     if (f == EF_FIX_ATTACKPAYOFF_MC) return FIX_ATTACKPAYOFF_MC;
     if (f == EF_CITY_RACES) return CITY_RACES;                          //JK: Feature EF_CITY_RACES
     if (f == EF_ACCEPT_REBEL_PLANET) return ACCEPT_REBEL_PLANET;        //JK: Feature EF_ACCEPT_REBEL_PLANET
+    if (f == EF_GOVERNORS) return GOVERNORS;                            //JK: Feature EF_GOVERNORS
     if (f == EF_IMPROVED_REPORT_UX) return IMPROVED_REPORT_UX;          //JK: Feature EF_IMPROVED_REPORT_UX
     if (f == EF_IMPROVED_PLANET_MAP_UX) return IMPROVED_PLANET_MAP_UX;  //JK: Feature EF_IMPROVED_PLANET_MAP_UX
     if (f == EF_DISABLE_MULTIPLAYER) return DISABLE_MULTIPLAYER;

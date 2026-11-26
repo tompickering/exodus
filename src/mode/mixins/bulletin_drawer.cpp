@@ -268,6 +268,7 @@ static const char* get_event_icon(PlanetReportEvent event) {
 static const char* get_light_spr(PlanetTrafficLight light) {
     if (light == PTL_Red) return IMG_SU1_CTA;
     if (light == PTL_Amber) return IMG_SU1_CTC;
+    if (light == PTL_Grey) return IMG_SU1_CTD;                  // JK: Feature EF_GOVERNORS
     return IMG_SU1_CTB;
 }
 
@@ -391,6 +392,9 @@ void BulletinDrawer::bulletin_draw_report_summary() {
             case PREL_Good:
                 icon_spr = IMG_EXCL_OK;
                 break;
+		    case PREL_Gov:                      //JK: Feature EF_GOVERNORS
+		        icon_spr = IMG_EXCL_GOV;
+		        break;
             default:
                 break;
         }

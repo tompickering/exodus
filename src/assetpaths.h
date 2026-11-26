@@ -801,6 +801,7 @@ extern const char *IMG_SU1_BUILD;
 extern const char *IMG_SU1_CTA;
 extern const char *IMG_SU1_CTB;
 extern const char *IMG_SU1_CTC;
+extern const char *IMG_SU1_CTD;                     // JK: Feature EF_GOVERNORS
 extern const char *IMG_SU1_CTRL1;
 extern const char *IMG_SU1_CTRL2;
 extern const char *IMG_SU1_CTRL3;
@@ -1084,6 +1085,7 @@ extern const char *IMG_AR;
 extern const char *IMG_EXCL_CRIT;
 extern const char *IMG_EXCL_WARN;
 extern const char *IMG_EXCL_OK;
+extern const char *IMG_EXCL_GOV;                // JK: Feature EF_GOVERNORS
 extern const char *IMG_PL_ST;
 extern const char *IMG_FLAG_MAN;
 extern const char *IMG_FLAG_GALMAP;
@@ -1408,5 +1410,9 @@ extern const char *IMG_OVR_RACE_GORDOON; //JK: Feature EF_CITY_RACES
 extern const char *IMG_OVR_RACE_YOKON;   //JK: Feature EF_CITY_RACES
 extern const char *IMG_OVR_RACE_NATIVE;  //JK: Feature EF_CITY_RACES
 extern const char *IMG_OVR_NO_POWER;     //JK: Feature EF_IMPROVED_PLANET_MAP_UX
+
+extern const char *IMG_GOV_INACTIVE; //JK: Feature EF_GOVERNORS
+extern const char *IMG_GOV_ACTIVE;   //JK: Feature EF_GOVERNORS
+extern const char *IMG_GOV_FULL;     //JK: Feature EF_GOVERNORS
 
 #endif

@@ -46,6 +46,7 @@ enum MonthPassStage {
     MP_GenerateLostPlanetReports,
     MP_AdvancedGalaxyMapUnlock,
     MP_AdvancedReportUnlock,
+    MP_GovernorsUnlock,                 // JK: Feature EF_GOVERNORS
     MP_FinaliseReports,
     MP_CallToRescueCounsellor,
     MP_SaveMC2,
@@ -211,6 +212,7 @@ class GalaxyMap : ModeBase, GalaxyDrawer, PanelDrawer, CommPanelDrawer, Bulletin
         void next_mpai_stage();
         void next_mpp_stage();
         void ai_planet_update(Planet*);
+        void governor_planet_update(Planet* p);     // JK: Feature EF_GOVERNORS
 
         PlanetReport report;
         void reset_planet_report();

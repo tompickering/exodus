@@ -100,6 +100,8 @@ Planet::Planet() {
     bombings_this_month = 0;
     processing_in_progress = false;
     moon_cls = MOON_Dirt;
+	
+    governor = false; // JK: Feature EF_GOVERNORS
 }
 
 Planet::Planet(PlanetClass _cls) : cls(_cls) {
@@ -114,6 +116,14 @@ void Planet::destroy() {
     L.info("PLANET DESTROYED");
     _exists = false;
     exostate().stabilise_disappeared_planet(this);
+}
+
+bool Planet::is_governed() {  // JK: Feature EF_GOVERNORS
+    return governor;
+}
+
+void Planet::set_governor(bool shall_govern) {  // JK: Feature EF_GOVERNORS
+    governor = shall_govern;
 }
 
 int Planet::get_construction_phase() {
@@ -367,6 +377,8 @@ void Planet::init() {
     failed_attacks_this_month = 0;
     bombings_this_month = 0;
     processing_in_progress = false;
+    
+    governor = false;   // JK: Feature EF_GOVERNORS
 
     for (int i = 0; i < (PLANET_BLOCKS_LG * PLANET_BLOCKS_LG); ++i) {
         surf[i] = STONE_Clear;
@@ -613,6 +625,8 @@ void Planet::set_owner(int new_owner, PlanetOwnerChangedReason reason) {
     }
 
     owner = new_owner;
+    governor = false;      // JK: Feature EF_GOVERNORS
+	
     /*
      * When an artificial planet is taken over, ensure any scheduled moves are cleared.
      * In original, this is part of PROCenemyattack and PROCenemyplayerattack; i.e. it
@@ -2454,7 +2468,17 @@ PlanetTrafficLight Planet::get_traffic_light(PlanetTrafficLightProperty prop) {
                 return PTL_Green;
             }
         case PTLP_Army:
-            return army_funding_sufficient() ? PTL_Green : PTL_Red;
+        {
+            if (army_funding_sufficient()) {
+                return PTL_Green;
+            } else {
+                if (is_governed()) {                      // JK: Feature EF_GOVERNORS
+                    return PTL_Grey;
+                } else {
+                    return PTL_Red;
+                }
+            }
+        }
     }
 
     L.error("No case for property %d", prop);
@@ -2467,6 +2491,254 @@ Stone random_military() {
     if (i == 1) return STONE_Gli;
     return STONE_Art;
 }
+
+bool Planet::governor_update() {      // JK: Feature EF_GOVERNORS
+    
+    /*
+     * Governor's job is to 'keep the balance' of a planet:
+     *  Prevent hunger
+     *  Prevent unrest
+     *  Maintain energy production
+     *  Adjust army MCredits
+     * Governor only performs 1 action per month.
+     */
+    
+    if (!is_owned()) {
+        L.warn("Governor update on unowned planet");
+        return (false);
+    }
+    
+    Player *owner = exostate().get_player(get_owner());
+    
+    bool governor_interfered = false;
+    
+    int free_space = count_stones(STONE_Clear) + count_stones(STONE_NaturalSmall);
+    int dirt_agri = count_stones(STONE_AgriDead);
+    const int dirt_rubble = count_stones(STONE_Rubble);
+    const int dirt = dirt_agri + dirt_rubble;
+    const int food = count_stones(STONE_Agri);
+    const int cities = count_stones(STONE_City);
+    const int produce_inf = count_stones(STONE_Inf);
+    const int produce_gli = count_stones(STONE_Gli);
+    const int produce_art = count_stones(STONE_Art);
+    const int pluton = count_stones(STONE_Plu);
+    const int mining = count_stones(STONE_Mine);
+    int action = 0;
+
+    int governor_budget =  get_base_income() + get_city_income();
+    int budget_spent = 0;
+    int stock_max = get_resource_cap();
+    
+    // if planet full: put army funding to zero, otherwise update according to requirements.
+    int new_army_funding = army_funding;
+    if ((army_inf+army_gli+army_art) == (stock_max*3)) {
+        new_army_funding = 0;
+    } else {
+        new_army_funding = produce_inf + produce_gli*2 + produce_art*3;
+        if (new_army_funding > governor_budget)
+            new_army_funding = governor_budget;
+    }
+    
+    if (army_funding != new_army_funding)
+    {
+        army_funding = new_army_funding;
+        governor_interfered = true;
+        L.info("%s Governor set army_funding to %d", get_name(), new_army_funding);
+    }
+    
+    // Clean up
+    if ((dirt > 3) && (governor_budget >= stone_cost(STONE_Clear))) {
+        action = 2;
+    }
+    
+    // Check energy
+    int require_energy = produce_inf + produce_gli + produce_art + mining;
+    int provide_energy = pluton;
+    if (cls == Volcano)
+        provide_energy *= 2;
+    if ((provide_energy < require_energy) && (governor_budget >= stone_cost(STONE_Plu)) && (free_space > 2))
+        action = 5;
+    
+    // Make people happy
+    if ((get_unrest() > 3) && (governor_budget >= 20))
+        action = 3;
+
+    // Counter food issues
+    int food_required = cities*CITY_FOOD_REQ + 4;
+    if (cls == Desert || cls == Volcano) {
+        food_required += 2;
+    }
+        
+    L.info("%s Governor looking at food requirement (%d) vs production (%d)", get_name(), food_required, food);
+    if ((food_required) > food) {
+        if (free_space > 2) {
+            action = 1;
+        } else {
+            if ((governor_budget >= stone_cost(STONE_Clear)+stone_cost(STONE_Agri)) && (cities > 0))
+                action = 4;
+            if ((dirt_agri > 6) && (governor_budget >= stone_cost(STONE_Clear)+stone_cost(STONE_Agri))) {
+                // if very dirty, try to clean+plant before removing cities.
+                action = 6;
+            }
+        }
+    }
+
+    switch (action) {
+        case 1:
+            // BUILD AGRI
+            {
+                int build_agri = cities*CITY_FOOD_REQ + 4 - food;
+                if (cls == Desert || cls == Volcano) {
+                    build_agri += 2;
+                }
+                int cost = build_agri*stone_cost(STONE_Agri);
+
+                if (cost > governor_budget)
+                    build_agri = (int)((int)governor_budget / (int)stone_cost(STONE_Agri));
+                
+                if (free_space < build_agri)
+                    build_agri = free_space;
+
+                if (build_agri > 0)
+                {
+                    int agri_placed = ai_place_stone(build_agri, STONE_Agri, STONE_Agri);
+                    free_space -= agri_placed;
+                    L.info("%s Governor built %d agriculture", get_name(), agri_placed);
+                    budget_spent += stone_cost(STONE_Agri) * agri_placed;
+                    governor_interfered = true;
+                }
+            }
+            break;
+        case 2:
+            // CLEAR 1 DEAD AGRI / RUBBLE
+            {
+                int sz = get_size_blocks();
+                bool placed = false;
+                
+                if (cities < 10) {
+                    // free space around cities (the first we find) so they can expand
+                    for (int y = 0; y < sz; ++y) {
+                        for (int x = 0; x < sz; ++x) {
+                            if ((!placed) && (get_stone(x, y) == STONE_City)) {
+                                if ((next_to_4(x, y, STONE_AgriDead)) || (next_to_4(x, y, STONE_Rubble))) {
+                                    for (int tries = 0; tries < 10; tries ++) {
+                                        if (!placed) {
+                                            int dir = rand() % 4;
+                                            int x_off = 0;
+                                            int y_off = 0;
+                                            if (dir == 0) x_off++;
+                                            if (dir == 1) x_off--;
+                                            if (dir == 2) y_off++;
+                                            if (dir == 3) y_off--;
+                                            Stone tgt = get_stone_wrap(x + x_off, y + y_off);
+                                            if ((tgt == STONE_AgriDead) || (tgt == STONE_Rubble)) {
+                                                set_stone_wrap(x + x_off, y + y_off, STONE_Clear);
+                                                L.info("%s Governor cleared 1 dirt around city", get_name());
+                                                budget_spent += stone_cost(STONE_Clear);
+                                                governor_interfered = true;
+                                                placed = true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (!placed) {
+                    for (int i = 0; i < 20; ++i) {
+                        for (int y = rand() % sz; y < sz; ++y) {
+                            for (int x = rand() % sz; x < sz; ++x) {
+                                Stone s = get_stone(x, y);
+                                if ((s == STONE_AgriDead || s == STONE_Rubble) && (!placed)) {
+                                    set_stone(x, y, STONE_Clear);
+                                    L.info("%s Governor cleared 1 dirt", get_name());
+                                    budget_spent += stone_cost(STONE_Clear);
+                                    governor_interfered = true;
+                                    placed = true;
+                                    break;
+                                }
+                            }
+                            if (placed) {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            break;
+        case 3:
+            // SMALL FESTIVAL
+            {
+                budget_spent += 20;
+                adjust_unrest(-1);
+                L.info("%s Governor held small festival", get_name());
+                governor_interfered = true;
+            }
+            break;
+        case 4:
+            // HANDLE HUNGER BY REPLACING A CITY WITH AGRI
+            {
+                bool placed = false;
+                int x, y;
+                while ((!placed) && (find_random_stone(STONE_City, x, y))) {
+                    budget_spent += stone_cost(STONE_Clear)+stone_cost(STONE_Agri);
+                    set_stone(x, y, STONE_Agri);
+                    adjust_unrest(3);
+                    L.info("%s Governor replaced a city with agriculture", get_name());
+                    governor_interfered = true;
+                    placed = true;
+                }
+            }
+            break;
+        case 5:
+            // PLACE A REACTOR
+            {
+                if (ai_place_stone(1, STONE_Plu, STONE_NaturalLarge) == 1) {
+                    budget_spent += stone_cost(STONE_Plu);
+                    L.info("%s Governor built a reactor", get_name());
+                    governor_interfered = true;
+                }
+            }
+            break;
+        case 6:
+            // HANDLE HUNGER BY REPLACING SEVERAL BROKEN AGRI WITH NEW AGRI
+            bool placed;
+            int x, y;
+            while ((dirt_agri >0) && (governor_budget-budget_spent >= stone_cost(STONE_Clear)+stone_cost(STONE_Agri))) {
+                placed = false;
+                while ((!placed) && (find_random_stone(STONE_AgriDead, x, y))) {
+                    budget_spent += stone_cost(STONE_Clear)+stone_cost(STONE_Agri);
+                    set_stone(x, y, STONE_Agri);
+                    L.info("%s Governor replaced 1 dead agri with new agri", get_name());
+                    governor_interfered = true;
+                    placed = true;
+                    dirt_agri --;
+                }
+            }
+        default:
+            break;
+    }
+    
+    // Pay, being sure we never spend more than our budget (should be checked nonetheless?)
+    if (budget_spent) {
+        if (budget_spent > (governor_budget - army_funding)) {
+            int dig_into_army_budget = budget_spent - (governor_budget - army_funding);
+            army_funding -= dig_into_army_budget;
+            L.info("%s Governor diverting %d MC army funding", get_name(), dig_into_army_budget);
+        }
+        // deduct from owner MC, allow negative, because we know that in the next step,
+        // owner will receive the monthly MC from the planet, therefore can't go net-negative.
+        // (Edge case: 1 city possibly gets removed, reducing the monthly MC by 2.)
+        owner->attempt_spend_force(budget_spent, MC_Governor);
+        L.info("%s Governor spent %d MC for upkeep", get_name(), budget_spent);
+
+    }
+            
+    return(governor_interfered);
+}
+
 
 void Planet::ai_update() {
     // AI planet developments originally done in PROCenemytactics / PROCeta*
@@ -3093,6 +3365,7 @@ void Planet::save(cJSON* j) const {
     SAVE_NUM(j, bombings_this_month);
     SAVE_BOOL(j, processing_in_progress);
     SAVE_ARRAY_OF_NUM(j, surf_property);  //JK: Feature EF_CITY_RACES and potential future properties
+    SAVE_BOOL(j, governor);               //JK: Feature EF_GOVERNORS
 }
 
 void Planet::load(cJSON* j) {
@@ -3141,4 +3414,5 @@ void Planet::load(cJSON* j) {
     LOAD_NUM(j, bombings_this_month);
     LOAD_BOOL(j, processing_in_progress);
     LOAD_ARRAY_OF_NUM(j, surf_property);     //JK: Feature EF_CITY_RACES and potential future properties
+    LOAD_BOOL(j, governor);                  //JK: Feature EF_GOVERNORS
 }

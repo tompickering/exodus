@@ -2067,7 +2067,12 @@ void PlanetMap::draw_army_funding() {
     snprintf(ar_str, 20, "Ar: %d/%d", planet->get_army_funding(), planet->get_income());
     RGB col = COL_TEXT;
     if (!planet->army_funding_sufficient()) {
-        col = COL_TEXT_BAD;
+        if (planet->is_governed()) {                    // JK: Feature EF_GOVERNORS
+            col = COL_TEXT_GREYED;
+        }
+        else {
+            col = COL_TEXT_BAD;
+        }
     }
     draw_manager.draw_text(
         id(ID::ARMY),

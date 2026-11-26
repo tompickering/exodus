@@ -43,6 +43,7 @@ class StarMap : ModeBase, PanelDrawer, CommPanelDrawer, FrameDrawer, Bombing, Bu
             SM_PlanetRename,
             SM_Manual,
             SM_Back2Gal,
+            SM_DecideGovernor,          // JK: Feature EF_GOVERNORS
         };
 
         Stage stage;

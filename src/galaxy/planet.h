@@ -42,6 +42,7 @@ enum PlanetTrafficLight {
     PTL_Green,
     PTL_Amber,
     PTL_Red,
+    PTL_Grey, //JK: Feature EF_GOVERNORS
 };
 
 enum PlanetTrafficLightProperty {
@@ -360,6 +361,7 @@ class Planet : public Saveable {
         const PlanetOwnerChangedEvent* get_human_lost_planet_event() const;
         PlanetTrafficLight get_traffic_light(PlanetTrafficLightProperty);
         void ai_update();
+        bool governor_update();                         // JK: Feature EF_GOVERNORS
 
         bool is_in_danger();
 
@@ -370,6 +372,9 @@ class Planet : public Saveable {
         void set_property(int x, int y, Property property, int value);  //JK: Feature EF_CITY_RACES + future Properties
         Race get_majority_race();                                       //JK: Feature EF_CITY_RACES + future Properties
         void set_city_wrap(int x, int y, Race race);                    //JK: Feature EF_CITY_RACES + future Properties
+		
+        bool is_governed();                                             // JK: Feature EF_GOVERNORS
+        void set_governor(bool shall_govern);                           // JK: Feature EF_GOVERNORS
 
     private:
         void init();
@@ -457,6 +462,8 @@ class Planet : public Saveable {
         uint32_t comms_this_month;
         uint32_t failed_attacks_this_month;
         uint32_t bombings_this_month;
+		
+        bool governor;         // JK: Feature EF_GOVERNORS
 };
 
 #endif
